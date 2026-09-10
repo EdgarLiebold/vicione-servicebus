@@ -6,7 +6,7 @@ using Npgsql;
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Adds a PostgreSQL enum value to a Dapper command with an explicit database type name.</summary>
-public class EnumParameter :
+internal sealed class EnumParameter :
     SqlMapper.ICustomQueryParameter
 {
     readonly string _dataTypeName;
@@ -18,7 +18,9 @@ public class EnumParameter :
     public EnumParameter(string? value, string dataTypeName)
     {
         _value = value;
-        _dataTypeName = dataTypeName;
+        _dataTypeName = string.IsNullOrWhiteSpace(dataTypeName)
+            ? throw new ArgumentException("The PostgreSQL enum type name must not be empty.", nameof(dataTypeName))
+            : dataTypeName;
     }
 
     /// <summary>Adds the typed enum parameter to a database command.</summary>
@@ -26,6 +28,9 @@ public class EnumParameter :
     /// <param name="name">The command parameter name.</param>
     public void AddParameter(IDbCommand command, string name)
     {
+        ArgumentNullException.ThrowIfNull(command);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
         var parameter = new NpgsqlParameter
         {
             ParameterName = name,

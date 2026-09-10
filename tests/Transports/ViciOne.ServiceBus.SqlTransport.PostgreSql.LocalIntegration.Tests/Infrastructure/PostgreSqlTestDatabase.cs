@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infr
 
 internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
 {
-    private readonly PostgresDatabaseMigrator _migrator;
+    private readonly PostgreSqlDatabaseMigrator _migrator;
     private bool _databaseCreated;
 
     private PostgreSqlTestDatabase(
@@ -21,12 +21,12 @@ internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
         ServerConnectionString = serverConnectionString;
         OperationTimeout = operationTimeout;
         Prefix = prefix;
-        _migrator = new PostgresDatabaseMigrator(NullLogger<PostgresDatabaseMigrator>.Instance);
+        _migrator = new PostgreSqlDatabaseMigrator(NullLogger<PostgreSqlDatabaseMigrator>.Instance);
     }
 
     public SqlTransportOptions Options { get; }
 
-    public string ConnectionString => PostgresSqlTransportConnection.CreateBuilder(Options).ConnectionString;
+    public string ConnectionString => PostgreSqlTransportConnection.CreateBuilder(Options).ConnectionString;
 
     public string ServerConnectionString { get; }
 
@@ -102,7 +102,7 @@ internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
     public NpgsqlDataSource CreateDataSource() => NpgsqlDataSource.Create(ConnectionString);
 
     public void ConfigureHost(ISqlBusFactoryConfigurator configurator) =>
-        configurator.UsePostgres(ConnectionString, host => host.Schema = Schema);
+        configurator.UsePostgreSql(ConnectionString, host => host.Schema = Schema);
 
     public async ValueTask DisposeAsync()
     {

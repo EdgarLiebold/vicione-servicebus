@@ -219,6 +219,34 @@ public class SqlReceiveLockContext :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExpiredAsync(CancellationToken cancellationToken = default)
     {
+        var transportHeaders = SqlTransportMessage.DeserializeHeaders(_message.TransportHeaders);
+        transportHeaders.Set(MessageHeaders.Reason, "expired");
+
+        await MoveToQueueAsync(
+            _settings.QueueName,
+            SqlQueueType.DeadLetterQueue,
+            _message.ExpirationTime,
+            transportHeaders,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Moves the locked delivery to an auxiliary queue and records that no further settlement is required.</summary>
+    /// <param name="queueName">The logical queue whose auxiliary destination receives the delivery.</param>
+    /// <param name="queueType">The auxiliary destination kind.</param>
+    /// <param name="expirationTime">The expiration time to persist on the moved delivery.</param>
+    /// <param name="transportHeaders">The transport headers to persist on the moved delivery.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    internal async Task MoveToQueueAsync(
+        string queueName,
+        SqlQueueType queueType,
+        DateTimeOffset? expirationTime,
+        SendHeaders transportHeaders,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        ArgumentNullException.ThrowIfNull(transportHeaders);
+
         if (_locked == false)
             return;
 
@@ -229,25 +257,23 @@ public class SqlReceiveLockContext :
             if (_renewLockTask != null)
                 await _renewLockTask.ConfigureAwait(false);
 
+            _clientContext.CancellationToken.ThrowIfCancellationRequested();
             cancellationToken.ThrowIfCancellationRequested();
             if (!_message.LockId.HasValue)
-                throw LockLost("dead-letter an expired delivery");
-
-            var transportHeaders = SqlTransportMessage.DeserializeHeaders(_message.TransportHeaders);
-            transportHeaders.Set(MessageHeaders.Reason, "expired");
+                throw LockLost("move");
 
             bool moved = await _clientContext.MoveMessageAsync(
                 _message.LockId.Value,
                 _message.MessageDeliveryId,
-                _settings.QueueName,
-                SqlQueueType.DeadLetterQueue,
-                _message.ExpirationTime,
+                queueName,
+                queueType,
+                expirationTime,
                 transportHeaders,
                 cancellationToken).ConfigureAwait(false);
 
             _locked = false;
             if (!moved)
-                throw LockLost("dead-letter an expired delivery");
+                throw LockLost("move");
         }
         catch
         {

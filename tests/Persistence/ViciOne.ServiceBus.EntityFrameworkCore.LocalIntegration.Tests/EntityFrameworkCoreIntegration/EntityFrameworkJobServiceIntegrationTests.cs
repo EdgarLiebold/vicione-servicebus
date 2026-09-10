@@ -260,7 +260,7 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
                         .EntityFrameworkRepository(repository =>
                         {
                             repository.UseExistingDbContext<JobServiceSagaDbContext>();
-                            repository.UsePostgres();
+                            repository.UsePostgreSql();
                         });
                     configuration.UsingInMemory((context, bus) =>
                     {

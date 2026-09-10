@@ -24,8 +24,8 @@ public sealed class EntityFrameworkProviderConfigurationTests
 
         outbox.UseSqlServer();
         Assert.IsType<SqlServerLockStatementProvider>(outbox.Provider);
-        outbox.UsePostgres();
-        Assert.IsType<PostgresLockStatementProvider>(outbox.Provider);
+        outbox.UsePostgreSql();
+        Assert.IsType<PostgreSqlLockStatementProvider>(outbox.Provider);
         Assert.Equal(IsolationLevel.ReadCommitted, outbox.Isolation);
         outbox.UseSqlite();
         Assert.IsType<SqliteLockStatementProvider>(outbox.Provider);
@@ -142,7 +142,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
             {
                 var concrete = Assert.IsType<EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>>(repository);
                 concrete.UseExistingDbContext<ConfigurationDbContext>();
-                concrete.UsePostgres();
+                concrete.UsePostgreSql();
                 concrete.IsolationLevel = IsolationLevel.ReadCommitted;
                 concrete.CustomizeQuery(query => query.Where(saga => saga.CorrelationId != Guid.Empty));
                 captured = concrete;
@@ -268,7 +268,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
         services.AddViciOneServiceBus(configuration =>
             configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
             {
-                outbox.UsePostgres();
+                outbox.UsePostgreSql();
                 outbox.DuplicateDetectionWindow = TimeSpan.FromMinutes(17);
                 outbox.QueryDelay = TimeSpan.FromSeconds(3);
                 outbox.QueryMessageLimit = 41;
@@ -289,7 +289,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
             ?? throw new InvalidOperationException("The registration callback did not expose the outbox configurator.");
         IEntityFrameworkBusOutboxConfigurator registeredBusOutbox = capturedBusOutbox
             ?? throw new InvalidOperationException("The registration callback did not expose the bus-outbox configurator.");
-        Assert.IsType<PostgresLockStatementProvider>(registeredOutbox.LockStatementProvider);
+        Assert.IsType<PostgreSqlLockStatementProvider>(registeredOutbox.LockStatementProvider);
         Assert.Equal(IsolationLevel.ReadCommitted, registeredOutbox.IsolationLevel);
         Assert.Equal(TimeSpan.FromMinutes(17), registeredOutbox.DuplicateDetectionWindow);
         Assert.Equal(TimeSpan.FromSeconds(3), registeredOutbox.QueryDelay);
@@ -320,7 +320,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
         OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, ConfigurationDbContext>> deliveryOptions = provider
             .GetRequiredService<IOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, ConfigurationDbContext>>>>().Value;
 
-        Assert.IsType<PostgresLockStatementProvider>(outboxOptions.LockStatementProvider);
+        Assert.IsType<PostgreSqlLockStatementProvider>(outboxOptions.LockStatementProvider);
         Assert.Equal(TimeSpan.FromMinutes(17), cleanupOptions.DuplicateDetectionWindow);
         Assert.Equal(TimeSpan.FromSeconds(3), cleanupOptions.QueryDelay);
         Assert.Equal(41, cleanupOptions.QueryMessageLimit);

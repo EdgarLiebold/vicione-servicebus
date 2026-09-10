@@ -104,7 +104,7 @@ public sealed class PostgreSqlLockRenewalTests
                     receiveLock,
                     fixture.OperationTimeout,
                     cancellationToken);
-                Assert.Contains("Message Lock Lost", exception.Message, StringComparison.Ordinal);
+                Assert.Contains("delivery lock was lost", exception.Message, StringComparison.OrdinalIgnoreCase);
             }
 
             Task stopTask = bus.StopAsync(CancellationToken.None);

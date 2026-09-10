@@ -39,7 +39,7 @@ public sealed class PostgreSqlPessimisticSagaQueryCustomizationTests
         }
 
         var executor = new PessimisticLoadQueryExecutor<NavigationSaga>(
-            new PostgresLockStatementProvider(),
+            new PostgreSqlLockStatementProvider(),
             query => query
                 .Include(saga => saga.Dependency)
                 .ThenInclude(dependency => dependency.InnerDependency));
@@ -91,7 +91,7 @@ public sealed class PostgreSqlPessimisticSagaQueryCustomizationTests
                 configuration.AddSaga<NavigationSaga, NavigationSagaDefinition>()
                     .EntityFrameworkRepository(repository =>
                     {
-                        repository.UsePostgres();
+                        repository.UsePostgreSql();
                         repository.CustomizeQuery(query => query
                             .Include(saga => saga.Dependency)
                             .ThenInclude(dependency => dependency.InnerDependency));

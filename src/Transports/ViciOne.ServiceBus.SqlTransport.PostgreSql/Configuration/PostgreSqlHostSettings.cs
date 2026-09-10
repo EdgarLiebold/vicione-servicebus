@@ -1,12 +1,11 @@
 using System;
-using System.Linq;
 using Npgsql;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Defines PostgreSQL connection and maintenance settings for a SQL transport host.</summary>
-public class PostgresSqlHostSettings :
+internal sealed class PostgreSqlHostSettings :
     ConfigurationSqlHostSettings
 {
     readonly NpgsqlDataSource? _dataSource;
@@ -14,21 +13,21 @@ public class PostgresSqlHostSettings :
 
     /// <summary>Initializes the settings from a PostgreSQL host address.</summary>
     /// <param name="hostAddress">The PostgreSQL host address.</param>
-    public PostgresSqlHostSettings(Uri hostAddress)
+    public PostgreSqlHostSettings(Uri hostAddress)
         : base(hostAddress)
     {
     }
 
     /// <summary>Initializes the settings from a PostgreSQL connection string.</summary>
     /// <param name="connectionString">The PostgreSQL connection string.</param>
-    public PostgresSqlHostSettings(string connectionString)
+    public PostgreSqlHostSettings(string connectionString)
     {
         ConnectionString = connectionString;
     }
 
     /// <summary>Initializes the settings with a caller-owned PostgreSQL data source.</summary>
     /// <param name="dataSource">The preconfigured data source used to open connections.</param>
-    public PostgresSqlHostSettings(NpgsqlDataSource dataSource)
+    public PostgreSqlHostSettings(NpgsqlDataSource dataSource)
     {
         if (dataSource == null)
             throw new ArgumentNullException(nameof(dataSource));
@@ -42,9 +41,9 @@ public class PostgresSqlHostSettings :
 
     /// <summary>Initializes the settings from SQL transport options.</summary>
     /// <param name="options">The SQL transport options.</param>
-    public PostgresSqlHostSettings(SqlTransportOptions options)
+    public PostgreSqlHostSettings(SqlTransportOptions options)
     {
-        var builder = PostgresSqlTransportConnection.CreateBuilder(options);
+        var builder = PostgreSqlTransportConnection.CreateBuilder(options);
 
         ParseHost(builder.Host);
         if (builder.Port > 0 && builder.Port != NpgsqlConnection.DefaultPort)
@@ -77,6 +76,8 @@ public class PostgresSqlHostSettings :
         {
             var builder = new NpgsqlConnectionStringBuilder(value);
 
+            MultipleHosts = null;
+            Port = null;
             ParseHost(builder.Host);
             if (builder.Port > 0 && builder.Port != NpgsqlConnection.DefaultPort)
                 Port = builder.Port;
@@ -118,29 +119,61 @@ public class PostgresSqlHostSettings :
     /// <returns>The PostgreSQL connection-context factory.</returns>
     public override ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
     {
-        return new PostgresConnectionContextFactory(hostConfiguration);
+        return new PostgreSqlConnectionContextFactory(hostConfiguration);
     }
 
     void ParseHost(string? host)
     {
-        var hostSegments = host?.Split(',');
-        if (hostSegments?.Length > 1)
+        if (string.IsNullOrWhiteSpace(host))
         {
-            Host = hostSegments[0].Split(':').First().Trim();
-            MultipleHosts = host!.Trim();
+            Host = host;
+            MultipleHosts = null;
+            return;
         }
-        else
-        {
-            var segments = host?.Split(':');
-            if (segments?.Length == 1)
-                Host = segments[0].Trim();
-            else if (segments?.Length == 2)
-            {
-                Host = segments[0].Trim();
 
-                if (int.TryParse(segments[1], out var port) && port != 0 && port != NpgsqlConnection.DefaultPort)
+        string[] hostSegments = host.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (hostSegments.Length == 0)
+        {
+            Host = null;
+            MultipleHosts = null;
+            return;
+        }
+
+        MultipleHosts = hostSegments.Length > 1 ? host.Trim() : null;
+        string firstHost = hostSegments[0];
+
+        if (firstHost[0] == '[')
+        {
+            int closingBracket = firstHost.IndexOf(']');
+            if (closingBracket > 1)
+            {
+                Host = firstHost[1..closingBracket];
+
+                if (hostSegments.Length == 1
+                    && closingBracket + 1 < firstHost.Length
+                    && firstHost[closingBracket + 1] == ':'
+                    && int.TryParse(firstHost[(closingBracket + 2)..], out int port)
+                    && port is > 0 and <= 65535
+                    && port != NpgsqlConnection.DefaultPort)
                     Port = port;
+
+                return;
             }
         }
+
+        int firstColon = firstHost.IndexOf(':');
+        int lastColon = firstHost.LastIndexOf(':');
+        if (firstColon > 0
+            && firstColon == lastColon
+            && int.TryParse(firstHost[(lastColon + 1)..], out int singleHostPort)
+            && singleHostPort is > 0 and <= 65535)
+        {
+            Host = firstHost[..lastColon];
+            if (hostSegments.Length == 1 && singleHostPort != NpgsqlConnection.DefaultPort)
+                Port = singleHostPort;
+            return;
+        }
+
+        Host = firstHost;
     }
 }

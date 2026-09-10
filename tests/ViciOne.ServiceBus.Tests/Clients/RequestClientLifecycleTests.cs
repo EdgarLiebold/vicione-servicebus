@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Context;

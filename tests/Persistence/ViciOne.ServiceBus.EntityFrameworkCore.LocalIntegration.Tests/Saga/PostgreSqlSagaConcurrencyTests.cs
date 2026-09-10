@@ -39,7 +39,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
                 configuration.AddSagaStateMachine<SerializedStateMachine, SerializedState, SerializedStateDefinition>()
                     .EntityFrameworkRepository(repository =>
                     {
-                        repository.UsePostgres();
+                        repository.UsePostgreSql();
                         repository.AddDbContext<DbContext, SerializedSagaDbContext>((services, builder) =>
                             builder.UseNpgsql(database.ConnectionString, options => options.EnableRetryOnFailure())
                                 .AddInterceptors(services.GetRequiredService<TransientSagaSaveProbe>()));
@@ -112,7 +112,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
                 configuration.AddSagaStateMachine<SerializedStateMachine, SerializedState, SerializedStateDefinition>()
                     .EntityFrameworkRepository(repository =>
                     {
-                        repository.UsePostgres();
+                        repository.UsePostgreSql();
                         repository.AddDbContext<DbContext, SerializedSagaDbContext>((services, builder) =>
                             builder.UseNpgsql(database.ConnectionString)
                                 .AddInterceptors(services.GetRequiredService<RowLockProbe>()));

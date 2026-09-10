@@ -464,13 +464,13 @@ public sealed class TransactionalOutboxRequestSagaTests
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
                 configuration.ConfigureEntityFrameworkTransactionalStore<RequestSagaDbContext>(outbox =>
                 {
-                    outbox.UsePostgres();
+                    outbox.UsePostgreSql();
                     outbox.DisableInboxCleanupService();
                 });
                 configuration.AddSagaStateMachine<RequestSagaStateMachine, RequestSagaState, RequestSagaStateDefinition>()
                     .EntityFrameworkRepository(repository =>
                     {
-                        repository.UsePostgres();
+                        repository.UsePostgreSql();
                         repository.UseExistingDbContext<RequestSagaDbContext>();
                     });
             });

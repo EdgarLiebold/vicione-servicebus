@@ -6,13 +6,13 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql;
 
-public sealed class PostgresSendFailureClassifierTests
+public sealed class PostgreSqlSendFailureClassifierTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-POSTGRES-SEND-FAILURE", "typed-chain-and-permanent-precedence")]
     public void TypedFailures_UseNpgsqlStateAndTheCompleteChainWithPermanentPrecedence()
     {
-        var classifier = new PostgresSendFailureClassifier();
+        var classifier = new PostgreSqlSendFailureClassifier();
 
         AssertKind(classifier, new NpgsqlException("outer", new IOException()), TransportSendFailureKind.Transient);
         AssertKind(classifier, new NpgsqlException("temporary text"), TransportSendFailureKind.Permanent);
@@ -34,25 +34,25 @@ public sealed class PostgresSendFailureClassifierTests
         using NpgsqlDataSource dataSource = new NpgsqlDataSourceBuilder(connectionString).Build();
 
         var defaultServices = new ServiceCollection();
-        defaultServices.AddViciOneServiceBus(configuration => configuration.UsingPostgres());
+        defaultServices.AddViciOneServiceBus(configuration => configuration.UsingPostgreSql());
         AssertRegistration(defaultServices);
 
         var connectionStringServices = new ServiceCollection();
-        connectionStringServices.AddViciOneServiceBus(configuration => configuration.UsingPostgres(connectionString));
+        connectionStringServices.AddViciOneServiceBus(configuration => configuration.UsingPostgreSql(connectionString));
         AssertRegistration(connectionStringServices);
 
         var dataSourceServices = new ServiceCollection();
-        dataSourceServices.AddViciOneServiceBus(configuration => configuration.UsingPostgres(dataSource));
+        dataSourceServices.AddViciOneServiceBus(configuration => configuration.UsingPostgreSql(dataSource));
         AssertRegistration(dataSourceServices);
 
         var dataSourceFactoryServices = new ServiceCollection();
-        dataSourceFactoryServices.AddViciOneServiceBus(configuration => configuration.UsingPostgres(_ => dataSource));
+        dataSourceFactoryServices.AddViciOneServiceBus(configuration => configuration.UsingPostgreSql(_ => dataSource));
         AssertRegistration(dataSourceFactoryServices);
 
         var services = new ServiceCollection();
         services
-            .AddViciOneServiceBus(configuration => configuration.UsingPostgres())
-            .AddViciOneServiceBus<ISecondBus>(configuration => configuration.UsingPostgres(connectionString));
+            .AddViciOneServiceBus(configuration => configuration.UsingPostgreSql())
+            .AddViciOneServiceBus<ISecondBus>(configuration => configuration.UsingPostgreSql(connectionString));
 
         AssertRegistration(services);
     }
@@ -62,7 +62,7 @@ public sealed class PostgresSendFailureClassifierTests
         ServiceDescriptor descriptor = Assert.Single(
             services,
             candidate => candidate.ServiceType == typeof(ITransportSendFailureClassifier));
-        Assert.Equal(typeof(PostgresSendFailureClassifier), descriptor.ImplementationType);
+        Assert.Equal(typeof(PostgreSqlSendFailureClassifier), descriptor.ImplementationType);
         Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
     }
 

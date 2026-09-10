@@ -435,7 +435,7 @@ public sealed class ReliableTransactionalOutboxTests
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
                 configuration.ConfigureEntityFrameworkTransactionalStore<ReliableOutboxDbContext>(outbox =>
                 {
-                    outbox.UsePostgres();
+                    outbox.UsePostgreSql();
                     outbox.DisableInboxCleanupService();
                 });
                 configuration.AddConsumer<ReliableCommandConsumer, ReliableCommandConsumerDefinition>();
@@ -443,7 +443,7 @@ public sealed class ReliableTransactionalOutboxTests
                 configuration.AddSagaStateMachine<ReliableStateMachine, ReliableState, ReliableStateDefinition>()
                     .EntityFrameworkRepository(repository =>
                     {
-                        repository.UsePostgres();
+                        repository.UsePostgreSql();
                         repository.UseExistingDbContext<ReliableOutboxDbContext>();
                     });
                 configuration.UsingInMemory((context, bus) =>

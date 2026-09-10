@@ -20,7 +20,7 @@ internal sealed class ReliableLockStatementProvider : ILockStatementProvider
         return context.Database.ProviderName switch
         {
             "Microsoft.EntityFrameworkCore.Sqlite" => new SqliteLockStatementProvider(),
-            "Npgsql.EntityFrameworkCore.PostgreSQL" => new PostgresLockStatementProvider(),
+            "Npgsql.EntityFrameworkCore.PostgreSQL" => new PostgreSqlLockStatementProvider(),
             "Microsoft.EntityFrameworkCore.SqlServer" => new SqlServerLockStatementProvider(serializable: true),
             string provider => throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(

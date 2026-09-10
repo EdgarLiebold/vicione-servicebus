@@ -610,7 +610,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
                         .EntityFrameworkRepository(repository =>
                         {
                             repository.UseExistingDbContext<FutureSagaDbContext>();
-                            repository.UsePostgres();
+                            repository.UsePostgreSql();
                         });
                     configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
                 });

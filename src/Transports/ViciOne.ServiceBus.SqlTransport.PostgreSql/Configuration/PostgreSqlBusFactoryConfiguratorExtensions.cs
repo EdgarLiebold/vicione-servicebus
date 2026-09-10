@@ -8,18 +8,21 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Provides PostgreSQL transport registration extensions.</summary>
-public static class PostgresBusFactoryConfiguratorExtensions
+public static class PostgreSqlBusFactoryConfiguratorExtensions
 {
     /// <summary>Configures the bus to use PostgreSQL settings resolved from dependency injection.</summary>
     /// <param name="configurator">The bus registration configurator.</param>
     /// <param name="configure">An optional callback that configures the SQL bus factory.</param>
-    public static void UsingPostgres(this IBusRegistrationConfigurator configurator,
+    /// <exception cref="ArgumentNullException"><paramref name="configurator" /> is <see langword="null" />.</exception>
+    public static void UsingPostgreSql(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
-        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgreSqlSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
-            cfg.UsePostgres(context);
+            cfg.UsePostgreSql(context);
 
             configure?.Invoke(context, cfg);
         }));
@@ -32,13 +35,18 @@ public static class PostgresBusFactoryConfiguratorExtensions
     /// used with this overload.
     /// </param>
     /// <param name="configure">An optional callback that configures the SQL bus factory.</param>
-    public static void UsingPostgres(this IBusRegistrationConfigurator configurator, string connectionString,
+    /// <exception cref="ArgumentNullException"><paramref name="configurator" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException"><paramref name="connectionString" /> is empty or contains only white-space characters.</exception>
+    public static void UsingPostgreSql(this IBusRegistrationConfigurator configurator, string connectionString,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
-        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgreSqlSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
-            cfg.UsePostgres(connectionString);
+            cfg.UsePostgreSql(connectionString);
 
             configure?.Invoke(context, cfg);
         }));
@@ -48,13 +56,17 @@ public static class PostgresBusFactoryConfiguratorExtensions
     /// <param name="configurator">The bus registration configurator.</param>
     /// <param name="dataSource">The preconfigured data source used to open PostgreSQL connections.</param>
     /// <param name="configure">An optional callback that configures the SQL bus factory.</param>
-    public static void UsingPostgres(this IBusRegistrationConfigurator configurator, NpgsqlDataSource dataSource,
+    /// <exception cref="ArgumentNullException"><paramref name="configurator" /> or <paramref name="dataSource" /> is <see langword="null" />.</exception>
+    public static void UsingPostgreSql(this IBusRegistrationConfigurator configurator, NpgsqlDataSource dataSource,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
-        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(dataSource);
+
+        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgreSqlSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
-            cfg.UsePostgres(dataSource);
+            cfg.UsePostgreSql(dataSource);
 
             configure?.Invoke(context, cfg);
         }));
@@ -64,13 +76,19 @@ public static class PostgresBusFactoryConfiguratorExtensions
     /// <param name="configurator">The bus registration configurator.</param>
     /// <param name="dataSourceProvider">A delegate that resolves the data source from the registration context.</param>
     /// <param name="configure">An optional callback that configures the SQL bus factory.</param>
-    public static void UsingPostgres(this IBusRegistrationConfigurator configurator, Func<IBusRegistrationContext, NpgsqlDataSource> dataSourceProvider,
+    /// <exception cref="ArgumentNullException"><paramref name="configurator" /> or <paramref name="dataSourceProvider" /> is <see langword="null" />.</exception>
+    public static void UsingPostgreSql(this IBusRegistrationConfigurator configurator, Func<IBusRegistrationContext, NpgsqlDataSource> dataSourceProvider,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
-        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(dataSourceProvider);
+
+        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgreSqlSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
-            cfg.UsePostgres(dataSourceProvider(context));
+            NpgsqlDataSource dataSource = dataSourceProvider(context)
+                ?? throw new InvalidOperationException("The PostgreSQL data-source provider returned null.");
+            cfg.UsePostgreSql(dataSource);
 
             configure?.Invoke(context, cfg);
         }));

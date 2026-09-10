@@ -3,20 +3,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Creates, removes, and provisions the PostgreSQL database infrastructure required by the SQL transport.</summary>
-public class PostgresDatabaseMigrator :
+internal sealed class PostgreSqlDatabaseMigrator :
     ISqlTransportDatabaseMigrator
 {
-    const string DbExistsSql = "SELECT COUNT(*) FROM pg_database WHERE datname = '{0}'";
+    const string DbExistsSql = "SELECT COUNT(*) FROM pg_database WHERE datname = @Name";
     const string DbCreateSql = """CREATE DATABASE "{0}" """;
     const string SchemaCreateSql = """CREATE SCHEMA IF NOT EXISTS "{0}" """;
     const string GrantConnectSql = """GRANT CONNECT ON DATABASE "{0}" to "{1}";""";
     const string DropSql = """DROP DATABASE "{0}" WITH (force)""";
-    const string RoleExistsSql = "SELECT COUNT(*) FROM pg_catalog.pg_roles WHERE rolname = '{0}'";
+    const string RoleExistsSql = "SELECT COUNT(*) FROM pg_catalog.pg_roles WHERE rolname = @Name";
     const string CreateRoleSql = """CREATE ROLE "{0}" """;
     const string GrantRoleToPrincipalSql = """GRANT "{0}" TO "{1}";""";
 
@@ -221,18 +220,23 @@ public class PostgresDatabaseMigrator :
         SELECT "{0}".create_index_if_not_exists('message_delivery_transport_message_id_ndx',
                 'CREATE INDEX IF NOT EXISTS message_delivery_transport_message_id_ndx ON "{0}".message_delivery (transport_message_id);');
 
-        CREATE OR REPLACE FUNCTION "{0}".create_queue(queue_name text, auto_delete integer DEFAULT NULL)
-            RETURNS integer
-        AS
-        $$
+        DO $cleanup$
         DECLARE
-            v_queue_id bigint;
+            routine_oid oid;
         BEGIN
-            RETURN "{0}".create_queue_v2(queue_name, auto_delete, NULL);
-        END;
-        $$ LANGUAGE plpgsql;
+            FOR routine_oid IN
+                SELECT p.oid
+                FROM pg_proc p
+                    INNER JOIN pg_namespace n ON n.oid = p.pronamespace
+                WHERE n.nspname = '{0}'
+                    AND p.proname IN ('create_queue', 'create_queue_v2', 'send_message', 'send_message_v2', 'publish_message', 'publish_message_v2')
+            LOOP
+                EXECUTE format('DROP FUNCTION %s', routine_oid::regprocedure);
+            END LOOP;
+        END
+        $cleanup$;
 
-        CREATE OR REPLACE FUNCTION "{0}".create_queue_v2(queue_name text, auto_delete integer DEFAULT NULL, max_delivery_count integer DEFAULT NULL)
+        CREATE FUNCTION "{0}".create_queue(queue_name text, auto_delete integer DEFAULT NULL, max_delivery_count integer DEFAULT NULL)
             RETURNS integer
         AS
         $$
@@ -246,21 +250,21 @@ public class PostgresDatabaseMigrator :
             INSERT INTO "{0}".queue (name, type, auto_delete, max_delivery_count) VALUES (queue_name, 1, auto_delete, COALESCE(max_delivery_count, 10))
                 ON CONFLICT ON CONSTRAINT unique_queue DO
                 UPDATE SET updated = (now() at time zone 'utc'),
-                           auto_delete = COALESCE(create_queue_v2.auto_delete, excluded.auto_delete),
-                           max_delivery_count = COALESCE(create_queue_v2.max_delivery_count, excluded.max_delivery_count, 10)
+                           auto_delete = COALESCE(create_queue.auto_delete, excluded.auto_delete),
+                           max_delivery_count = COALESCE(create_queue.max_delivery_count, excluded.max_delivery_count, 10)
                 RETURNING queue.id INTO v_queue_id;
 
             INSERT INTO "{0}".queue (name, type, auto_delete, max_delivery_count) VALUES (queue_name, 2, auto_delete, COALESCE(max_delivery_count, 10))
                 ON CONFLICT ON CONSTRAINT unique_queue DO
                 UPDATE SET updated = (now() at time zone 'utc'),
-                           auto_delete = COALESCE(create_queue_v2.auto_delete, excluded.auto_delete),
-                           max_delivery_count = COALESCE(create_queue_v2.max_delivery_count, excluded.max_delivery_count, 10);
+                           auto_delete = COALESCE(create_queue.auto_delete, excluded.auto_delete),
+                           max_delivery_count = COALESCE(create_queue.max_delivery_count, excluded.max_delivery_count, 10);
 
             INSERT INTO "{0}".queue (name, type, auto_delete, max_delivery_count) VALUES (queue_name, 3, auto_delete, COALESCE(max_delivery_count, 10))
                 ON CONFLICT ON CONSTRAINT unique_queue DO
                 UPDATE SET updated = (now() at time zone 'utc'),
-                           auto_delete = COALESCE(create_queue_v2.auto_delete, excluded.auto_delete),
-                           max_delivery_count = COALESCE(create_queue_v2.max_delivery_count, excluded.max_delivery_count, 10);
+                           auto_delete = COALESCE(create_queue.auto_delete, excluded.auto_delete),
+                           max_delivery_count = COALESCE(create_queue.max_delivery_count, excluded.max_delivery_count, 10);
 
             RETURN v_queue_id;
 
@@ -369,6 +373,7 @@ public class PostgresDatabaseMigrator :
         $$
         DECLARE
             v_transport_message_ids uuid[];
+            v_deleted_count bigint;
         BEGIN
             IF queue_name IS NULL OR LENGTH(queue_name) < 1 THEN
                 RAISE EXCEPTION 'Queue name must not be null';
@@ -382,13 +387,15 @@ public class PostgresDatabaseMigrator :
                            WHERE q.name = queue_name) mds
                     WHERE md.message_delivery_id = mds.message_delivery_id
                     RETURNING md.transport_message_id)
-                SELECT array_agg(msgs.transport_message_id) INTO v_transport_message_ids FROM msgs;
+                SELECT COUNT(*), array_agg(msgs.transport_message_id)
+                INTO v_deleted_count, v_transport_message_ids
+                FROM msgs;
 
             DELETE FROM "{0}".message m
                 WHERE m.transport_message_id = ANY(v_transport_message_ids)
                     AND NOT EXISTS(SELECT FROM "{0}".message_delivery md WHERE md.transport_message_id = m.transport_message_id);
 
-            RETURN 0;
+            RETURN v_deleted_count;
         END;
         $$ LANGUAGE plpgsql;
 
@@ -672,14 +679,19 @@ public class PostgresDatabaseMigrator :
         AS
         $$
         BEGIN
-            RETURN QUERY DELETE FROM "{0}".message tm
-                USING "{0}".message as m
-                LEFT JOIN "{0}".message_delivery md ON md.transport_message_id = m.transport_message_id
-            WHERE tm.transport_message_id = m.transport_message_id
-                AND m.scheduling_token_id = token_id
-                AND md.delivery_count = 0
-                AND md.lock_id IS NULL
-            RETURNING tm.transport_message_id;
+            RETURN QUERY
+            DELETE FROM "{0}".message m
+            WHERE m.scheduling_token_id = token_id
+                AND EXISTS (
+                    SELECT 1
+                    FROM "{0}".message_delivery md
+                    WHERE md.transport_message_id = m.transport_message_id)
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM "{0}".message_delivery md
+                    WHERE md.transport_message_id = m.transport_message_id
+                        AND (md.delivery_count <> 0 OR md.lock_id IS NOT NULL))
+            RETURNING m.transport_message_id;
         END;
         $$;
 
@@ -778,63 +790,7 @@ public class PostgresDatabaseMigrator :
         END;
         $$;
 
-        CREATE OR REPLACE FUNCTION "{0}".send_message(
-          entity_name text
-        , priority integer DEFAULT NULL
-        , transport_message_id uuid DEFAULT gen_random_uuid()
-        , body jsonb DEFAULT NULL
-        , binary_body bytea DEFAULT NULL
-        , content_type text DEFAULT NULL
-        , message_type text DEFAULT NULL
-        , message_id uuid DEFAULT NULL
-        , correlation_id uuid DEFAULT NULL
-        , conversation_id uuid DEFAULT NULL
-        , request_id uuid DEFAULT NULL
-        , initiator_id uuid DEFAULT NULL
-        , source_address text DEFAULT NULL
-        , destination_address text DEFAULT NULL
-        , response_address text DEFAULT NULL
-        , fault_address text DEFAULT NULL
-        , sent_time timestamptz DEFAULT NULL
-        , headers jsonb DEFAULT NULL
-        , host jsonb DEFAULT NULL
-        , partition_key text DEFAULT NULL
-        , routing_key text DEFAULT NULL
-        , delay interval DEFAULT INTERVAL '0 seconds'
-        , scheduling_token_id uuid DEFAULT NULL
-        , max_delivery_count int DEFAULT 10
-        )
-            RETURNS bigint AS
-        $$
-        BEGIN
-        RETURN "{0}".send_message_v2(entity_name
-        , priority
-        , transport_message_id
-        , body
-        , binary_body
-        , content_type
-        , message_type
-        , message_id
-        , correlation_id
-        , conversation_id
-        , request_id
-        , initiator_id
-        , source_address
-        , destination_address
-        , response_address
-        , fault_address
-        , sent_time
-        , NULL
-        , headers
-        , host
-        , partition_key
-        , routing_key
-        , delay
-        , scheduling_token_id);
-        END;
-        $$ LANGUAGE plpgsql;
-
-        CREATE OR REPLACE FUNCTION "{0}".send_message_v2(
+        CREATE FUNCTION "{0}".send_message(
           entity_name text
         , priority integer DEFAULT NULL
         , transport_message_id uuid DEFAULT gen_random_uuid()
@@ -886,71 +842,14 @@ public class PostgresDatabaseMigrator :
             VALUES (transport_message_id, body, binary_body, content_type, message_type, message_id, correlation_id, conversation_id, request_id, initiator_id,
                 source_address, destination_address, response_address, fault_address, sent_time, headers, host, scheduling_token_id);
             INSERT INTO "{0}".message_delivery (queue_id, transport_message_id, priority, enqueue_time, expiration_time, delivery_count, max_delivery_count, partition_key, routing_key)
-            VALUES (v_queue_id, send_message_v2.transport_message_id, send_message_v2.priority, v_enqueue_time, expiration_time, 0, v_max_delivery_count, send_message_v2.partition_key, send_message_v2.routing_key);
+            VALUES (v_queue_id, send_message.transport_message_id, send_message.priority, v_enqueue_time, expiration_time, 0, v_max_delivery_count, send_message.partition_key, send_message.routing_key);
 
             RETURN 1;
 
         END;
         $$ LANGUAGE plpgsql;
 
-        CREATE OR REPLACE FUNCTION "{0}".publish_message(
-          entity_name text
-        , priority integer DEFAULT NULL
-        , transport_message_id uuid DEFAULT gen_random_uuid()
-        , body jsonb DEFAULT NULL
-        , binary_body bytea DEFAULT NULL
-        , content_type text DEFAULT NULL
-        , message_type text DEFAULT NULL
-        , message_id uuid DEFAULT NULL
-        , correlation_id uuid DEFAULT NULL
-        , conversation_id uuid DEFAULT NULL
-        , request_id uuid DEFAULT NULL
-        , initiator_id uuid DEFAULT NULL
-        , source_address text DEFAULT NULL
-        , destination_address text DEFAULT NULL
-        , response_address text DEFAULT NULL
-        , fault_address text DEFAULT NULL
-        , sent_time timestamptz DEFAULT NULL
-        , headers jsonb DEFAULT NULL
-        , host jsonb DEFAULT NULL
-        , partition_key text DEFAULT NULL
-        , routing_key text DEFAULT NULL
-        , delay interval DEFAULT INTERVAL '0 seconds'
-        , scheduling_token_id uuid DEFAULT NULL
-        , max_delivery_count int DEFAULT 10
-        )
-            RETURNS bigint AS
-        $$
-        BEGIN
-        RETURN "{0}".publish_message_v2(entity_name
-        , priority
-        , transport_message_id
-        , body
-        , binary_body
-        , content_type
-        , message_type
-        , message_id
-        , correlation_id
-        , conversation_id
-        , request_id
-        , initiator_id
-        , source_address
-        , destination_address
-        , response_address
-        , fault_address
-        , sent_time
-        , NULL
-        , headers
-        , host
-        , partition_key
-        , routing_key
-        , delay
-        , scheduling_token_id);
-        END;
-        $$ LANGUAGE plpgsql;
-
-
-        CREATE OR REPLACE FUNCTION "{0}".publish_message_v2(
+        CREATE FUNCTION "{0}".publish_message(
           entity_name text
         , priority integer DEFAULT NULL
         , transport_message_id uuid DEFAULT gen_random_uuid()
@@ -1010,28 +909,28 @@ public class PostgresDatabaseMigrator :
                     LEFT JOIN "{0}".topic_subscription ts ON t.id = ts.source_id
                     AND CASE
                         WHEN ts.sub_type = 1 THEN true
-                        WHEN ts.sub_type = 2 THEN publish_message_v2.routing_key = ts.routing_key
-                        WHEN ts.sub_type = 3 THEN publish_message_v2.routing_key ~ ts.routing_key
+                        WHEN ts.sub_type = 2 THEN publish_message.routing_key = ts.routing_key
+                        WHEN ts.sub_type = 3 THEN publish_message.routing_key ~ ts.routing_key
                         ELSE false END
                     WHERE t.id = v_topic_id
 
-              UNION ALL
+              UNION
 
                 SELECT ts.source_id, ts.destination_id
                     FROM "{0}".topic_subscription ts, fabric
                     WHERE ts.source_id = fabric.destination_id
                     AND CASE
                         WHEN ts.sub_type = 1 THEN true
-                        WHEN ts.sub_type = 2 THEN publish_message_v2.routing_key = ts.routing_key
-                        WHEN ts.sub_type = 3 THEN publish_message_v2.routing_key ~ ts.routing_key
+                        WHEN ts.sub_type = 2 THEN publish_message.routing_key = ts.routing_key
+                        WHEN ts.sub_type = 3 THEN publish_message.routing_key ~ ts.routing_key
                         ELSE false END
                 )
-            SELECT DISTINCT qs.destination_id, publish_message_v2.transport_message_id, publish_message_v2.priority, v_enqueue_time, publish_message_v2.expiration_time, 0, q.max_delivery_count, publish_message_v2.partition_key, publish_message_v2.routing_key
+            SELECT DISTINCT qs.destination_id, publish_message.transport_message_id, publish_message.priority, v_enqueue_time, publish_message.expiration_time, 0, q.max_delivery_count, publish_message.partition_key, publish_message.routing_key
                 FROM "{0}".queue_subscription qs, "{0}".queue q, fabric
                 WHERE CASE
                     WHEN qs.sub_type = 1 THEN true
-                    WHEN qs.sub_type = 2 THEN publish_message_v2.routing_key = qs.routing_key
-                    WHEN qs.sub_type = 3 THEN publish_message_v2.routing_key ~ qs.routing_key
+                    WHEN qs.sub_type = 2 THEN publish_message.routing_key = qs.routing_key
+                    WHEN qs.sub_type = 3 THEN publish_message.routing_key ~ qs.routing_key
                     ELSE false END
                 AND qs.destination_id = q.id
                 AND (qs.source_id = fabric.destination_id OR qs.source_id = v_topic_id)
@@ -1039,7 +938,7 @@ public class PostgresDatabaseMigrator :
             SELECT COUNT(d.message_delivery_id) FROM delivered d INTO v_publish_count;
 
             IF v_publish_count = 0 THEN
-                DELETE FROM "{0}".message WHERE message.transport_message_id = publish_message_v2.transport_message_id;
+                DELETE FROM "{0}".message WHERE message.transport_message_id = publish_message.transport_message_id;
             END IF;
 
             RETURN v_publish_count;
@@ -1072,11 +971,13 @@ public class PostgresDatabaseMigrator :
                 SELECT 1
                 FROM pg_trigger t
                 JOIN pg_class c ON c.oid = t.tgrelid
+                JOIN pg_namespace n ON n.oid = c.relnamespace
                 WHERE c.relname = 'message_delivery'
+                  AND n.nspname = '{0}'
                   AND t.tgname = 'message_delivery_notify_trigger'
             ) THEN
                 CREATE TRIGGER message_delivery_notify_trigger AFTER INSERT OR UPDATE ON "{0}".message_delivery
-                    FOR EACH ROW EXECUTE PROCEDURE "{0}".notify_msg();
+                    FOR EACH ROW EXECUTE FUNCTION "{0}".notify_msg();
             END IF;
         END $$;
 
@@ -1457,16 +1358,16 @@ public class PostgresDatabaseMigrator :
         SET ROLE none;
         """;
 
-    readonly ILogger<PostgresDatabaseMigrator> _logger;
+    readonly ILogger<PostgreSqlDatabaseMigrator> _logger;
 
     /// <summary>Initializes the PostgreSQL database migrator.</summary>
     /// <param name="logger">The logger used to report migration failures.</param>
-    public PostgresDatabaseMigrator(ILogger<PostgresDatabaseMigrator> logger)
+    public PostgreSqlDatabaseMigrator(ILogger<PostgreSqlDatabaseMigrator> logger)
     {
-        _logger = logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <summary>Creates the configured PostgreSQL database and transport role when they do not exist.</summary>
+    /// <summary>Creates the configured PostgreSQL database when it does not exist.</summary>
     /// <param name="options">The database name, connection settings, and migration credentials.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -1481,15 +1382,20 @@ public class PostgresDatabaseMigrator :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
-        await using var connection = PostgresSqlTransportConnection.GetSystemDatabaseConnection(options);
+        ArgumentNullException.ThrowIfNull(options);
+        var database = PostgreSqlIdentifier.Validate(options.Database, nameof(options.Database));
+
+        await using var connection = PostgreSqlTransportConnection.GetSystemDatabaseConnection(options);
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-        var result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
+        var existsCommand = new CommandDefinition(DbExistsSql, new { Name = database }, cancellationToken: cancellationToken);
+        var result = await connection.Connection.ExecuteScalarAsync<int>(existsCommand).ConfigureAwait(false);
         if (result == 1)
         {
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(DropSql, options.Database)).ConfigureAwait(false);
+            var dropCommand = new CommandDefinition(string.Format(DropSql, database), cancellationToken: cancellationToken);
+            await connection.Connection.ExecuteScalarAsync<int>(dropCommand).ConfigureAwait(false);
 
-            _logger.LogInformation("Database {Database} deleted", options.Database);
+            _logger.LogInformation("Database {Database} deleted", database);
         }
     }
 
@@ -1499,44 +1405,40 @@ public class PostgresDatabaseMigrator :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
-        await using var connection = PostgresSqlTransportConnection.GetDatabaseConnection(options);
+        ArgumentNullException.ThrowIfNull(options);
+        var schema = PostgreSqlIdentifier.Validate(options.Schema, nameof(options.Schema));
+        var role = PostgreSqlIdentifier.Validate(options.Role, nameof(options.Role));
+
+        await using var connection = PostgreSqlTransportConnection.GetDatabaseConnection(options);
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-        try
-        {
-            string notifyChannelPrefix = NotifyChannel.CreatePrefix(options.Schema);
+        string notifyChannelPrefix = PostgreSqlNotificationChannel.CreatePrefix(schema);
+        var command = new CommandDefinition(
+            string.Format(CreateInfrastructureSql, schema, role, notifyChannelPrefix), cancellationToken: cancellationToken);
 
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateInfrastructureSql, options.Schema, options.Role, notifyChannelPrefix))
-                .ConfigureAwait(false);
+        await connection.Connection.ExecuteScalarAsync<int>(command).ConfigureAwait(false);
 
-            _logger.LogDebug("Transport infrastructure in schema {Schema} created (or updated)", options.Schema);
-        }
-        finally
-        {
-            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
+        _logger.LogDebug("Transport infrastructure in schema {Schema} created or updated", schema);
     }
 
     async Task CreateDatabaseIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
-        await using var connection = PostgresSqlTransportConnection.GetSystemDatabaseConnection(options);
+        ArgumentNullException.ThrowIfNull(options);
+        var database = PostgreSqlIdentifier.Validate(options.Database, nameof(options.Database));
+
+        await using var connection = PostgreSqlTransportConnection.GetSystemDatabaseConnection(options);
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-        try
+        var existsCommand = new CommandDefinition(DbExistsSql, new { Name = database }, cancellationToken: cancellationToken);
+        var result = await connection.Connection.ExecuteScalarAsync<int>(existsCommand).ConfigureAwait(false);
+        if (result == 1)
+            _logger.LogDebug("Database {Database} already exists", database);
+        else
         {
-            var result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
-            if (result == 1)
-                _logger.LogDebug("Database {Database} already exists", options.Database);
-            else
-            {
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(DbCreateSql, options.Database)).ConfigureAwait(false);
+            var createCommand = new CommandDefinition(string.Format(DbCreateSql, database), cancellationToken: cancellationToken);
+            await connection.Connection.ExecuteScalarAsync<int>(createCommand).ConfigureAwait(false);
 
-                _logger.LogInformation("Database {Database} created", options.Database);
-            }
-        }
-        finally
-        {
-            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            _logger.LogInformation("Database {Database} created", database);
         }
     }
 
@@ -1546,55 +1448,63 @@ public class PostgresDatabaseMigrator :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
-        await using var connection = PostgresSqlTransportConnection.GetDatabaseAdminConnection(options);
+        ArgumentNullException.ThrowIfNull(options);
+        var schema = PostgreSqlIdentifier.Validate(options.Schema, nameof(options.Schema));
+
+        await using var connection = PostgreSqlTransportConnection.GetDatabaseAdminConnection(options);
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-        try
-        {
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SchemaCreateSql, options.Schema)).ConfigureAwait(false);
+        var createCommand = new CommandDefinition(string.Format(SchemaCreateSql, schema), cancellationToken: cancellationToken);
+        await connection.Connection.ExecuteScalarAsync<int>(createCommand).ConfigureAwait(false);
 
-            _logger.LogDebug("Schema {Schema} created", options.Schema);
+        _logger.LogDebug("Schema {Schema} created or already exists", schema);
 
-            await GrantAccessAsync(connection, options);
-        }
-        finally
-        {
-            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
+        await GrantAccessAsync(connection, options, cancellationToken).ConfigureAwait(false);
     }
 
-    async Task GrantAccessAsync(IPostgresSqlTransportConnection connection, SqlTransportOptions options)
+    async Task GrantAccessAsync(IPostgreSqlTransportConnection connection, SqlTransportOptions options, CancellationToken cancellationToken)
     {
-        var result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(RoleExistsSql, options.Role)).ConfigureAwait(false);
+        var database = PostgreSqlIdentifier.Validate(options.Database, nameof(options.Database));
+        var role = PostgreSqlIdentifier.Validate(options.Role, nameof(options.Role));
+        var schema = PostgreSqlIdentifier.Validate(options.Schema, nameof(options.Schema));
+        var principal = PostgreSqlIdentifier.Validate(
+            PostgreSqlTransportConnection.GetAdminMigrationPrincipal(options), nameof(options.AdminUsername));
+
+        var roleExistsCommand = new CommandDefinition(RoleExistsSql, new { Name = role }, cancellationToken: cancellationToken);
+        var result = await connection.Connection.ExecuteScalarAsync<int>(roleExistsCommand).ConfigureAwait(false);
         if (result != 1)
         {
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateRoleSql, options.Role)).ConfigureAwait(false);
+            var createRoleCommand = new CommandDefinition(string.Format(CreateRoleSql, role), cancellationToken: cancellationToken);
+            await connection.Connection.ExecuteScalarAsync<int>(createRoleCommand).ConfigureAwait(false);
 
-            _logger.LogDebug("Role {Role} created", options.Role);
+            _logger.LogDebug("Role {Role} created", role);
         }
 
-        var principal = PostgresSqlTransportConnection.GetAdminMigrationPrincipal(options);
-        if (!string.Equals(options.Role, principal, StringComparison.Ordinal))
+        if (!string.Equals(role, principal, StringComparison.Ordinal))
         {
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(GrantRoleToPrincipalSql, options.Role, principal))
-                .ConfigureAwait(false);
+            var grantRoleCommand = new CommandDefinition(
+                string.Format(GrantRoleToPrincipalSql, role, principal), cancellationToken: cancellationToken);
+            await connection.Connection.ExecuteScalarAsync<int>(grantRoleCommand).ConfigureAwait(false);
         }
 
-        await connection.Connection.ExecuteScalarAsync<int>(string.Format(GrantRoleSql, options.Role, options.Schema, principal))
-            .ConfigureAwait(false);
+        var grantSchemaCommand = new CommandDefinition(string.Format(GrantRoleSql, role, schema), cancellationToken: cancellationToken);
+        await connection.Connection.ExecuteScalarAsync<int>(grantSchemaCommand).ConfigureAwait(false);
 
-        _logger.LogDebug("Role {Role} granted access to schema {Schema}", options.Role, options.Schema);
+        _logger.LogDebug("Role {Role} granted access to schema {Schema}", role, schema);
 
-        await connection.Connection.ExecuteScalarAsync<int>(string.Format(GrantConnectSql, options.Database, options.Role)).ConfigureAwait(false);
+        var grantConnectCommand = new CommandDefinition(string.Format(GrantConnectSql, database, role), cancellationToken: cancellationToken);
+        await connection.Connection.ExecuteScalarAsync<int>(grantConnectCommand).ConfigureAwait(false);
 
-        _logger.LogDebug("Role {Role} granted connect to database {Database}", options.Role, options.Database);
+        _logger.LogDebug("Role {Role} granted connect to database {Database}", role, database);
 
-        result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(RoleExistsSql, options.Username)).ConfigureAwait(false);
+        ArgumentException.ThrowIfNullOrWhiteSpace(options.Username);
+        var userExistsCommand = new CommandDefinition(RoleExistsSql, new { Name = options.Username }, cancellationToken: cancellationToken);
+        result = await connection.Connection.ExecuteScalarAsync<int>(userExistsCommand).ConfigureAwait(false);
         if (result != 1)
         {
-            await connection.Connection.ExecuteScalarAsync<int>(CreateUserSql,
-                    new { RoleName = options.Role, options.Username, options.Password })
-                .ConfigureAwait(false);
+            var createUserCommand = new CommandDefinition(CreateUserSql,
+                new { RoleName = role, options.Username, options.Password }, cancellationToken: cancellationToken);
+            await connection.Connection.ExecuteScalarAsync<int>(createUserCommand).ConfigureAwait(false);
 
             _logger.LogDebug("User role {Username} created", options.Username);
         }

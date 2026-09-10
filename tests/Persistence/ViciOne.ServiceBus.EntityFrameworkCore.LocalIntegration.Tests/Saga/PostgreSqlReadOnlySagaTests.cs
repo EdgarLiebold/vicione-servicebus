@@ -31,7 +31,7 @@ public sealed class PostgreSqlReadOnlySagaTests
                 configuration.AddSagaStateMachine<ReadOnlyStateMachine, ReadOnlyState, ReadOnlyStateDefinition>()
                     .EntityFrameworkRepository(repository =>
                     {
-                        repository.UsePostgres();
+                        repository.UsePostgreSql();
                         repository.AddDbContext<DbContext, ReadOnlySagaDbContext>((_, builder) =>
                             builder.UseNpgsql(database.ConnectionString));
                     });

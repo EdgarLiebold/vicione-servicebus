@@ -34,7 +34,7 @@ public class SqlMessageLatencyTransport :
         _provider = new ServiceCollection()
             .AddTextLogger(Console.Out)
             .AddSingleton(reportConsumerMetric)
-            .AddPostgresMigrationHostedService(true, true)
+            .AddPostgreSqlMigrationHostedService(true, true)
             .AddViciOneServiceBus(x =>
             {
                 x.Services.AddOptions<SqlTransportOptions>().Configure(options =>
@@ -51,7 +51,7 @@ public class SqlMessageLatencyTransport :
 
                 x.AddConsumer<MessageLatencyConsumer>();
 
-                x.UsingPostgres((context, cfg) =>
+                x.UsingPostgreSql((context, cfg) =>
                 {
                     cfg.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
                     {

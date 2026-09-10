@@ -3,7 +3,7 @@ using Npgsql;
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Exposes the PostgreSQL connection used by a SQL transport operation.</summary>
-public interface IPostgresSqlTransportConnection :
+internal interface IPostgreSqlTransportConnection :
     ISqlTransportConnection
 {
     /// <summary>Gets the underlying PostgreSQL connection.</summary>

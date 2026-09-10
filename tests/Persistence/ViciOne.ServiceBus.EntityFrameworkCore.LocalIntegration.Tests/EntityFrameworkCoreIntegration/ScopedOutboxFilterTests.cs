@@ -308,7 +308,7 @@ public sealed class ScopedOutboxFilterTests
                     .Register<ScopedSendCommand>("vicione.tests.ef.scoped-send-command"));
                 configuration.ConfigureEntityFrameworkTransactionalStore<ScopedOutboxDbContext>(outbox =>
                 {
-                    outbox.UsePostgres();
+                    outbox.UsePostgreSql();
                     outbox.DisableInboxCleanupService();
                     outbox.QueryDelay = TimeSpan.FromHours(1);
                     outbox.EnableTransactionalOutbox();

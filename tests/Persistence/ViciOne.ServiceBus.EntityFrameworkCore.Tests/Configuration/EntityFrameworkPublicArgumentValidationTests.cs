@@ -25,7 +25,7 @@ public sealed class EntityFrameworkPublicArgumentValidationTests
         ArgumentNullException sqlServer = Assert.Throws<ArgumentNullException>(() =>
             EntityFrameworkOutboxConfigurationExtensions.UseSqlServer(null!));
         ArgumentNullException postgres = Assert.Throws<ArgumentNullException>(() =>
-            EntityFrameworkOutboxConfigurationExtensions.UsePostgres(null!));
+            EntityFrameworkOutboxConfigurationExtensions.UsePostgreSql(null!));
         ArgumentNullException sqlite = Assert.Throws<ArgumentNullException>(() =>
             EntityFrameworkOutboxConfigurationExtensions.UseSqlite(null!));
 

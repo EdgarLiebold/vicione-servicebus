@@ -81,10 +81,10 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <summary>Selects PostgreSQL lock statements and read-committed transactions for the outbox.</summary>
     /// <param name="configurator">The outbox configuration on which PostgreSQL locking is selected.</param>
     /// <returns>The same outbox configurator.</returns>
-    public static IEntityFrameworkOutboxConfigurator UsePostgres(this IEntityFrameworkOutboxConfigurator configurator)
+    public static IEntityFrameworkOutboxConfigurator UsePostgreSql(this IEntityFrameworkOutboxConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        configurator.LockStatementProvider = new PostgresLockStatementProvider();
+        configurator.LockStatementProvider = new PostgreSqlLockStatementProvider();
         configurator.IsolationLevel = System.Data.IsolationLevel.ReadCommitted;
 
         return configurator;

@@ -1,5 +1,5 @@
 using Npgsql;
-using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
+using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -46,7 +46,7 @@ public sealed class PostgreSqlNotificationTests
             await using NpgsqlConnection inspection = fixture.CreateConnection();
             await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
             long queueId = await QueueIdAsync(inspection, fixture.Schema, queueName, cancellationToken);
-            string channel = NotifyChannel.CreateName(fixture.Schema, queueId);
+            string channel = PostgreSqlNotificationChannel.CreateName(fixture.Schema, queueId);
             await WaitUntilReceiverListensAsync(
                 inspection,
                 channel,

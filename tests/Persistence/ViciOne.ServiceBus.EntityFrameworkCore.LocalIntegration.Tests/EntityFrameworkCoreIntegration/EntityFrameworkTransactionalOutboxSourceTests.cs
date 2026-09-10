@@ -590,7 +590,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
                 configuration.Contracts(contracts => contracts.Register<OutboxProbe>("vicione.tests.ef.outbox-probe"));
                 configuration.ConfigureEntityFrameworkTransactionalStore<BusOutboxDbContext>(outbox =>
                 {
-                    outbox.UsePostgres();
+                    outbox.UsePostgreSql();
                     outbox.DisableInboxCleanupService();
                     outbox.QueryDelay = TimeSpan.FromHours(1);
                     outbox.EnableTransactionalOutbox(busOutbox =>

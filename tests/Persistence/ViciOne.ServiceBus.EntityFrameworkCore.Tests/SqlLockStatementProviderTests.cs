@@ -113,7 +113,7 @@ public sealed class SqlLockStatementProviderTests
     private static ILockStatementProvider CreateProvider(string provider) => provider switch
     {
         "sql-server" => new SqlServerLockStatementProvider(),
-        "postgresql" => new PostgresLockStatementProvider(),
+        "postgresql" => new PostgreSqlLockStatementProvider(),
         "sqlite" => new SqliteLockStatementProvider(),
         _ => throw new ArgumentOutOfRangeException(nameof(provider), provider, null),
     };

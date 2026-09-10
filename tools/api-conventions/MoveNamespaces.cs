@@ -101,7 +101,7 @@ HashSet<string> configurationEntryPointFiles = new(StringComparer.Ordinal)
     "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
     "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegrationExtensions.cs",
     "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
-    "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresBusFactoryConfiguratorExtensions.cs",
+    "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgreSqlBusFactoryConfiguratorExtensions.cs",
     "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerBusFactoryConfiguratorExtensions.cs",
 };
 

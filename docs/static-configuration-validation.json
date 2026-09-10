@@ -319,7 +319,7 @@
       "type": "SqlTransportMigrationOptions",
       "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlTransportMigrationOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresSqlTransportConfigurationExtensions.cs",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgreSqlTransportConfigurationExtensions.cs",
       "invariantCount": 1,
       "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "InvalidMigrationOptions_FailAtStartupBeforeDatabaseIo" },
       "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "CoherentMigrationOptions_PassTheSameStartupBoundary" }
@@ -328,7 +328,7 @@
       "type": "SqlTransportOptions",
       "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlTransportOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresSqlTransportConfigurationExtensions.cs",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgreSqlTransportConfigurationExtensions.cs",
       "invariantCount": 3,
       "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "InvalidMigrationOptions_FailAtStartupBeforeDatabaseIo" },
       "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "CoherentMigrationOptions_PassTheSameStartupBoundary" }

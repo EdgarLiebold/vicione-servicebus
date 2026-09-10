@@ -120,7 +120,7 @@ public sealed class PostgreSqlDeliveryStateTests
         Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
         Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
 
-        await PurgeAsync(connection, fixture.Schema, queueName, cancellationToken);
+        Assert.Equal(3, await PurgeAsync(connection, fixture.Schema, queueName, cancellationToken));
 
         Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
         Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
@@ -131,7 +131,7 @@ public sealed class PostgreSqlDeliveryStateTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0135", "postgresql-native-owner")]
-    public async Task DeleteScheduledMessage_DeletesOnlyAnUndeliveredUnlockedDeliveryAsync()
+    public async Task DeleteScheduledMessage_DeletesOnlyWhenEveryDeliveryIsUndeliveredAndUnlockedAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -142,7 +142,8 @@ public sealed class PostgreSqlDeliveryStateTests
         var cancellable = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "ready");
         var delivered = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "delivered");
         var locked = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "locked");
-        await SendScheduledAsync(fixture, queueName, [cancellable, delivered, locked], cancellationToken);
+        var partiallyLocked = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "partially-locked");
+        await SendScheduledAsync(fixture, queueName, [cancellable, delivered, locked, partiallyLocked], cancellationToken);
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
         await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
@@ -160,13 +161,22 @@ public sealed class PostgreSqlDeliveryStateTests
             deliveryCount: 0,
             lockId: Guid.NewGuid(),
             cancellationToken));
+        Assert.Equal(1, await DuplicateDeliveryAsLockedErrorAsync(
+            connection,
+            fixture.Schema,
+            queueName,
+            partiallyLocked.MessageId,
+            cancellationToken));
 
         Assert.Equal(1, await DeleteScheduledAsync(connection, fixture.Schema, cancellable.TokenId, cancellationToken));
         Assert.Equal(0, await DeleteScheduledAsync(connection, fixture.Schema, delivered.TokenId, cancellationToken));
         Assert.Equal(0, await DeleteScheduledAsync(connection, fixture.Schema, locked.TokenId, cancellationToken));
+        Assert.Equal(0, await DeleteScheduledAsync(connection, fixture.Schema, partiallyLocked.TokenId, cancellationToken));
         Assert.Equal(0, await connection.MessageCountAsync(fixture.Schema, cancellable.MessageId, cancellationToken));
         Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, delivered.MessageId, cancellationToken));
         Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, locked.MessageId, cancellationToken));
+        Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, partiallyLocked.MessageId, cancellationToken));
+        Assert.Equal(2, await connection.DeliveryCountForMessageAsync(fixture.Schema, partiallyLocked.MessageId, cancellationToken));
     }
 
     [Theory]
@@ -360,7 +370,7 @@ public sealed class PostgreSqlDeliveryStateTests
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task PurgeAsync(
+    private static async Task<long> PurgeAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -368,7 +378,7 @@ public sealed class PostgreSqlDeliveryStateTests
     {
         await using var command = new NpgsqlCommand($"SELECT \"{schema}\".purge_queue(@queueName)", connection);
         command.Parameters.AddWithValue("queueName", queueName);
-        await command.ExecuteScalarAsync(cancellationToken);
+        return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
     private static async Task<int> SetDeliveryStateAsync(
@@ -401,6 +411,31 @@ public sealed class PostgreSqlDeliveryStateTests
             connection);
         command.Parameters.AddWithValue("tokenId", tokenId);
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
+    }
+
+    private static async Task<int> DuplicateDeliveryAsLockedErrorAsync(
+        NpgsqlConnection connection,
+        string schema,
+        string queueName,
+        Guid messageId,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new NpgsqlCommand(
+            $"INSERT INTO \"{schema}\".message_delivery "
+            + "(transport_message_id, queue_id, priority, enqueue_time, expiration_time, partition_key, routing_key, consumer_id, lock_id, "
+            + "delivery_count, max_delivery_count, last_delivered, transport_headers) "
+            + $"SELECT d.transport_message_id, q.id, d.priority, d.enqueue_time, d.expiration_time, d.partition_key, d.routing_key, "
+            + "d.consumer_id, @lockId, d.delivery_count, d.max_delivery_count, d.last_delivered, d.transport_headers "
+            + $"FROM \"{schema}\".message_delivery d "
+            + $"INNER JOIN \"{schema}\".message m ON m.transport_message_id = d.transport_message_id "
+            + $"INNER JOIN \"{schema}\".queue q ON q.name = @queueName AND q.type = 2 "
+            + "WHERE m.message_id = @messageId AND d.lock_id IS NULL",
+            connection);
+        command.Parameters.AddWithValue("lockId", Guid.NewGuid());
+        command.Parameters.AddWithValue("queueName", queueName);
+        command.Parameters.AddWithValue("messageId", messageId);
+
+        return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private static async Task<ErrorExpiration> ErrorExpirationForMessageAsync(

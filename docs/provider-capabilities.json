@@ -139,7 +139,7 @@
       "kind": "bus-transport",
       "package": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
       "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
-      "registration": "UsingPostgres",
+      "registration": "UsingPostgreSql",
       "send": "supported",
       "publish": "supported",
       "request": "supported",

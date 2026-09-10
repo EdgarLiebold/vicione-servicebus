@@ -31,14 +31,14 @@ public sealed class PostgreSqlBusOutboxTests
             configuration.Contracts(contracts => contracts.Register<OutboxProbe>("vicione.tests.postgres.outbox-probe"));
             configuration.ConfigureEntityFrameworkTransactionalStore<OutboxDbContext>(outbox =>
             {
-                outbox.UsePostgres();
+                outbox.UsePostgreSql();
                 outbox.DisableInboxCleanupService();
                 outbox.QueryDelay = TimeSpan.FromHours(1);
                 outbox.EnableTransactionalOutbox(busOutbox => busOutbox.MessageDeliveryLimit = 10);
             });
             configuration.AddConsumer<OutboxMessageConsumer>()
                 .Endpoint(endpoint => endpoint.Name = endpointName);
-            configuration.UsingPostgres(database.ConnectionString, (context, bus) =>
+            configuration.UsingPostgreSql(database.ConnectionString, (context, bus) =>
             {
                 bus.ConfigureEndpoints(context);
             });

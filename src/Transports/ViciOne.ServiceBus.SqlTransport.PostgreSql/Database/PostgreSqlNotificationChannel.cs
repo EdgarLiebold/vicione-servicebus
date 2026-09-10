@@ -2,10 +2,10 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Creates deterministic, schema-scoped PostgreSQL notification channel names.</summary>
-internal static class NotifyChannel
+internal static class PostgreSqlNotificationChannel
 {
     const int NamespaceDiscriminatorBytes = 17;
     const string ChannelPrefix = "vsb_";

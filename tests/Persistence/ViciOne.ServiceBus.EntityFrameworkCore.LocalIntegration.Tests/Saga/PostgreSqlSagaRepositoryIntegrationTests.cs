@@ -30,7 +30,7 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
             transactions,
             configureRepository: repository =>
             {
-                repository.UsePostgres();
+                repository.UsePostgreSql();
             });
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 

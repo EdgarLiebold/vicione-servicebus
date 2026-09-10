@@ -284,7 +284,7 @@ public sealed class QuartzTransactionalOutboxTests
                 configuration.AddQuartzScheduling(provider => provider.GetRequiredService<ISchedulerFactory>());
                 configuration.ConfigureEntityFrameworkTransactionalStore<QuartzOutboxDbContext>(outbox =>
                 {
-                    outbox.UsePostgres();
+                    outbox.UsePostgreSql();
                     outbox.DisableInboxCleanupService();
                 });
                 configuration.AddConsumer<ScheduleThroughOutboxConsumer, ScheduleThroughOutboxConsumerDefinition>();

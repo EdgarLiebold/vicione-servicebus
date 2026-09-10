@@ -110,7 +110,7 @@ public sealed class PostgreSqlMaintenanceTests
         CancellationToken cancellationToken)
     {
         await using var command = new NpgsqlCommand(
-            $"SELECT \"{schema}\".create_queue_v2(@queueName, NULL, NULL)",
+            $"SELECT \"{schema}\".create_queue(@queueName, NULL, NULL)",
             connection);
         command.Parameters.AddWithValue("queueName", queueName);
         long queueId = Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));

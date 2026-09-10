@@ -27,7 +27,7 @@ public sealed class PostgreSqlIsolationTests
         string queueName = fixture.Name("isolation-input");
         IBusControl bus = SqlBusFactory.Create(configurator =>
         {
-            configurator.UsePostgres(fixture.ConnectionString, host =>
+            configurator.UsePostgreSql(fixture.ConnectionString, host =>
             {
                 host.Schema = fixture.Schema;
                 if (configureIsolation)

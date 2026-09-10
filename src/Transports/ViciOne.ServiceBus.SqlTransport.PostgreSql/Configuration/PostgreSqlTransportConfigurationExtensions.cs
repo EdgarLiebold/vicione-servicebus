@@ -6,16 +6,19 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Provides PostgreSQL database migration registration extensions.</summary>
-public static class PostgresSqlTransportConfigurationExtensions
+public static class PostgreSqlTransportConfigurationExtensions
 {
     /// <summary>Registers the PostgreSQL migration hosted service with create and delete switches.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
     /// <param name="create">Whether to create the database, schema, and transport infrastructure.</param>
     /// <param name="delete">Whether to delete the transport database before creation.</param>
     /// <returns>The same service collection.</returns>
-    public static IServiceCollection AddPostgresMigrationHostedService(this IServiceCollection services, bool create = true, bool delete = false)
+    /// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
+    public static IServiceCollection AddPostgreSqlMigrationHostedService(this IServiceCollection services, bool create = true, bool delete = false)
     {
-        services.AddPostgresMigrationHostedService(options =>
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddPostgreSqlMigrationHostedService(options =>
         {
             options.CreateDatabase = create;
             options.CreateSchema = create;
@@ -30,9 +33,12 @@ public static class PostgresSqlTransportConfigurationExtensions
     /// <param name="services">The dependency-injection service collection.</param>
     /// <param name="configure">An optional callback that selects migration operations.</param>
     /// <returns>The same service collection.</returns>
-    public static IServiceCollection AddPostgresMigrationHostedService(this IServiceCollection services, Action<SqlTransportMigrationOptions>? configure)
+    /// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
+    public static IServiceCollection AddPostgreSqlMigrationHostedService(this IServiceCollection services, Action<SqlTransportMigrationOptions>? configure)
     {
-        services.AddTransient<ISqlTransportDatabaseMigrator, PostgresDatabaseMigrator>();
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddTransient<ISqlTransportDatabaseMigrator, PostgreSqlDatabaseMigrator>();
 
         services.AddOptions<SqlTransportOptions>()
             .Validate(

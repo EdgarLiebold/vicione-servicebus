@@ -163,11 +163,11 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <typeparam name="T">The saga state type.</typeparam>
     /// <param name="configurator">The typed repository configuration on which PostgreSQL locking is selected.</param>
     /// <returns>The same repository configurator.</returns>
-    public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
+    public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgreSql<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
         where T : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        configurator.LockStatementProvider = new PostgresLockStatementProvider();
+        configurator.LockStatementProvider = new PostgreSqlLockStatementProvider();
 
         return configurator;
     }
@@ -177,14 +177,14 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <param name="configurator">The typed repository configuration on which PostgreSQL locking is selected.</param>
     /// <param name="schemaName">The schema name to use if the table schema cannot be discovered.</param>
     /// <returns>The same repository configurator.</returns>
-    public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator,
+    public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgreSql<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator,
         string schemaName)
         where T : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentException.ThrowIfNullOrWhiteSpace(schemaName);
 
-        configurator.LockStatementProvider = new PostgresLockStatementProvider(schemaName);
+        configurator.LockStatementProvider = new PostgreSqlLockStatementProvider(schemaName);
 
         return configurator;
     }
@@ -192,10 +192,10 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <summary>Selects PostgreSQL row locking for a non-generic saga repository configuration.</summary>
     /// <param name="configurator">The repository configuration on which PostgreSQL locking is selected.</param>
     /// <returns>The same repository configurator.</returns>
-    public static IEntityFrameworkSagaRepositoryConfigurator UsePostgres(this IEntityFrameworkSagaRepositoryConfigurator configurator)
+    public static IEntityFrameworkSagaRepositoryConfigurator UsePostgreSql(this IEntityFrameworkSagaRepositoryConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        configurator.LockStatementProvider = new PostgresLockStatementProvider();
+        configurator.LockStatementProvider = new PostgreSqlLockStatementProvider();
 
         return configurator;
     }
@@ -204,13 +204,13 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <param name="configurator">The repository configuration on which PostgreSQL locking is selected.</param>
     /// <param name="schemaName">The schema name to use if the table schema cannot be discovered.</param>
     /// <returns>The same repository configurator.</returns>
-    public static IEntityFrameworkSagaRepositoryConfigurator UsePostgres(this IEntityFrameworkSagaRepositoryConfigurator configurator,
+    public static IEntityFrameworkSagaRepositoryConfigurator UsePostgreSql(this IEntityFrameworkSagaRepositoryConfigurator configurator,
         string schemaName)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentException.ThrowIfNullOrWhiteSpace(schemaName);
 
-        configurator.LockStatementProvider = new PostgresLockStatementProvider(schemaName);
+        configurator.LockStatementProvider = new PostgreSqlLockStatementProvider(schemaName);
 
         return configurator;
     }

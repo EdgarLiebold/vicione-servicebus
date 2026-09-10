@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-static class SqlStatements
+internal static class PostgreSqlStatements
 {
-    public const string DbCreateQueueSql = """SELECT * FROM "{0}".create_queue_v2(@queue_name,@auto_delete,@max_delivery_count)""";
+    public const string DbCreateQueueSql = """SELECT * FROM "{0}".create_queue(@queue_name,@auto_delete,@max_delivery_count)""";
     public const string DbCreateTopicSql = """SELECT * FROM "{0}".create_topic(@topic_name)""";
 
     public const string DbCreateTopicSubscriptionSql =
@@ -16,16 +16,16 @@ static class SqlStatements
     public const string DbDeadLetterMessagesSql = """SELECT * FROM "{0}".dead_letter_messages(@queue_name,@message_count)""";
 
     public const string DbEnqueueSql = """
-        SELECT * FROM "{0}".send_message_v2(@entity_name,@priority,@transport_message_id,@body,@binary_body,@content_type,
+        SELECT * FROM "{0}".send_message(@entity_name,@priority,@transport_message_id,@body,@binary_body,@content_type,
         @message_type,@message_id,@correlation_id,@conversation_id,@request_id,@initiator_id,@source_address,@destination_address,@response_address,@fault_address,
         @sent_time,@expiration_time,@headers,@host,@partition_key,@routing_key,@delay,@scheduling_token_id)
         """;
 
     public const string DbPublishSql = """
-                                       SELECT * FROM "{0}".publish_message_v2(@entity_name,@priority,@transport_message_id,@body,@binary_body,@content_type,
-                                       @message_type,@message_id,@correlation_id,@conversation_id,@request_id,@initiator_id,@source_address,@destination_address,@response_address,@fault_address,
-                                       @sent_time,@expiration_time,@headers,@host,@partition_key,@routing_key,@delay,@scheduling_token_id)
-                                       """;
+        SELECT * FROM "{0}".publish_message(@entity_name,@priority,@transport_message_id,@body,@binary_body,@content_type,
+        @message_type,@message_id,@correlation_id,@conversation_id,@request_id,@initiator_id,@source_address,@destination_address,@response_address,@fault_address,
+        @sent_time,@expiration_time,@headers,@host,@partition_key,@routing_key,@delay,@scheduling_token_id)
+        """;
 
     public const string DbProcessMetricsSql = """SELECT * FROM "{0}".process_metrics(@row_limit)""";
     public const string DbPurgeTopologySql = """SELECT * FROM "{0}".purge_topology()""";

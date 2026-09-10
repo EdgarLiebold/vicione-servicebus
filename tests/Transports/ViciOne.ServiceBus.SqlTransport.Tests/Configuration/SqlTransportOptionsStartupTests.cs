@@ -65,7 +65,7 @@ public sealed class SqlTransportOptionsStartupTests
         };
 
         if (provider == DatabaseProvider.PostgreSql)
-            services.AddPostgresMigrationHostedService(configure);
+            services.AddPostgreSqlMigrationHostedService(configure);
         else
             services.AddSqlServerMigrationHostedService(configure);
 

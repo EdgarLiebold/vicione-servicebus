@@ -124,7 +124,7 @@ public sealed class ApiSurfaceArchitectureTests
             ("src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs", "public static void UsingAzureServiceBus"),
             ("src/Transports/ViciOne.ServiceBus.EventHubs/Configuration/EventHubIntegrationExtensions.cs", "public static void UsingEventHub"),
             ("src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs", "public static void UsingRabbitMq"),
-            ("src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresBusFactoryConfiguratorExtensions.cs", "public static void UsingPostgres"),
+            ("src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgreSqlBusFactoryConfiguratorExtensions.cs", "public static void UsingPostgreSql"),
             ("src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerBusFactoryConfiguratorExtensions.cs", "public static void UsingSqlServer"),
         ];
         Assert.All(transportSelectionEntryPoints, entry =>

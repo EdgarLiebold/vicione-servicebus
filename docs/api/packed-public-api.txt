@@ -7397,13 +7397,13 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkCoreSaga
   METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator, System.Action<ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<TSaga>> configure)
   METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator, ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepository sagaRepository, System.Action<ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<TSaga>> configure = null, System.Action<Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<TSaga>> configureSagaMapping = null)
   METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator, ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepository sagaRepository, System.Action<ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<TSaga>> configure = null, ViciOne.ServiceBus.EntityFrameworkCore.ISagaClassMap<TSaga> sagaClassMap = null)
-  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UsePostgres(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator)
-  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UsePostgres(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator, System.String schemaName)
+  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UsePostgreSql(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator)
+  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UsePostgreSql(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator, System.String schemaName)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UseSqlServer(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UseSqlServer(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator, System.String schemaName)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator UseSqlite(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator configurator)
-  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
-  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator, System.String schemaName)
+  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgreSql<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
+  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgreSql<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator, System.String schemaName)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlServer<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlServer<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator, System.String schemaName)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlite<T>(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
@@ -7488,7 +7488,7 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxCo
   METHOD public static System.Void ConfigureOutboxMessageEntity(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ViciOne.ServiceBus.EntityFrameworkCore.OutboxMessage> outbox)
   METHOD public static System.Void ConfigureOutboxStateEntity(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ViciOne.ServiceBus.EntityFrameworkCore.OutboxState> outbox)
   METHOD public static System.Void UseEntityFrameworkOutbox<TDbContext>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IOutboxOptionsConfigurator> configure = null)
-  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator UsePostgres(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator configurator)
+  METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator UsePostgreSql(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator configurator)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator UseSqlServer(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator configurator)
   METHOD public static ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator UseSqlite(ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator configurator)
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxOptions<TDbContext> [sealed]
@@ -7651,9 +7651,9 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.OutboxState
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Status { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode LastFailureCode { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind LastFailureKind { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.PostgresLockStatementProvider [base=ViciOne.ServiceBus.EntityFrameworkCore.SqlLockStatementProvider]
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.PostgresLockStatementProvider()
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.PostgresLockStatementProvider(System.String schemaName)
+TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.PostgreSqlLockStatementProvider [base=ViciOne.ServiceBus.EntityFrameworkCore.SqlLockStatementProvider]
+  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.PostgreSqlLockStatementProvider()
+  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.PostgreSqlLockStatementProvider(System.String schemaName)
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.SqlLockStatementProvider
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.SqlLockStatementProvider(System.String defaultSchema, ViciOne.ServiceBus.EntityFrameworkCore.ILockStatementFormatter formatter)
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.SqlLockStatementProvider(ViciOne.ServiceBus.EntityFrameworkCore.ILockStatementFormatter formatter)
@@ -12955,102 +12955,19 @@ TYPE class public ViciOne.ServiceBus.SignalR.ViciOneServiceBusSignalRConfigurati
   METHOD public static System.Void AddSignalRHub<THub>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator busConfigurator, System.Action<ViciOne.ServiceBus.SignalR.IHubLifetimeManagerOptions<THub>> configureHubLifetimeOptions = null)
 
 ASSEMBLY ViciOne.ServiceBus.SqlTransport.PostgreSql VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.Configuration.PostgresBusFactoryConfiguratorExtensions [static]
-  METHOD public static System.Void UsingPostgres(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, Npgsql.NpgsqlDataSource dataSource, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
-  METHOD public static System.Void UsingPostgres(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
-  METHOD public static System.Void UsingPostgres(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Func<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,Npgsql.NpgsqlDataSource> dataSourceProvider, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
-  METHOD public static System.Void UsingPostgres(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.String connectionString, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.EnumParameter
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.EnumParameter(System.String value, System.String dataTypeName)
-  METHOD public virtual System.Void AddParameter(System.Data.IDbCommand command, System.String name)
-TYPE interface public ViciOne.ServiceBus.SqlTransport.PostgreSql.IPostgresSqlHostConfigurator
-TYPE interface public ViciOne.ServiceBus.SqlTransport.PostgreSql.IPostgresSqlTransportConnection
-  METHOD public abstract Npgsql.NpgsqlCommand CreateCommand(System.String commandText)
-  PROPERTY Npgsql.NpgsqlConnection Connection { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.JsonParameter
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.JsonParameter(System.String value)
-  METHOD public virtual System.Void AddParameter(System.Data.IDbCommand command, System.String name)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresClientContext [base=ViciOne.ServiceBus.SqlTransport.SqlClientContext]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresClientContext(ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresDbConnectionContext context, System.Threading.CancellationToken cancellationToken)
-  METHOD public System.Threading.Tasks.Task PublishAsync<T>(System.String topicName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task SendAsync<T>(System.String queueName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task TouchQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> DeleteMessageAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> DeleteScheduledMessageAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> MoveMessageAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.String queueName, ViciOne.ServiceBus.Providers.Transports.SqlQueueType queueType, System.Nullable<System.DateTimeOffset> expirationTime, ViciOne.ServiceBus.Advanced.SendHeaders sendHeaders, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> RenewLockAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.TimeSpan duration, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> UnlockAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.TimeSpan delay, ViciOne.ServiceBus.Advanced.SendHeaders sendHeaders, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SqlTransport.SqlTransportMessage>> ReceiveMessagesAsync(System.String queueName, ViciOne.ServiceBus.Providers.Transports.SqlReceiveMode mode, System.Int32 messageLimit, System.Int32 concurrentLimit, System.TimeSpan lockDuration, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateQueueAsync(ViciOne.ServiceBus.SqlTransport.Topology.Queue queue, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateQueueSubscriptionAsync(ViciOne.ServiceBus.SqlTransport.Topology.TopicToQueueSubscription subscription, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateTopicAsync(ViciOne.ServiceBus.SqlTransport.Topology.Topic topic, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateTopicSubscriptionAsync(ViciOne.ServiceBus.SqlTransport.Topology.TopicToTopicSubscription subscription, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> PurgeQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Nullable<System.Int32>> DeadLetterQueueAsync(System.String queueName, System.Int32 messageCount, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresConnectionContextFactory [base=ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresConnectionContextFactory(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration)
-  METHOD protected ViciOne.ServiceBus.SqlTransport.ConnectionContext CreateConnection(ViciOne.ServiceBus.Transports.ITransportSupervisor<ViciOne.ServiceBus.SqlTransport.ConnectionContext> supervisor)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresDatabaseMigrator
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresDatabaseMigrator(Microsoft.Extensions.Logging.ILogger<ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresDatabaseMigrator> logger)
-  METHOD public virtual System.Threading.Tasks.Task CreateDatabaseAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task CreateInfrastructureAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task CreateSchemaIfNotExistAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task DeleteDatabaseAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresDbConnectionContext [base=ViciOne.ServiceBus.Middleware.BasePipeContext]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresDbConnectionContext(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.ITransportSupervisor<ViciOne.ServiceBus.SqlTransport.ConnectionContext> supervisor)
-  METHOD public virtual System.Threading.Tasks.Task DelayUntilMessageReadyAsync(System.Int64 queueId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<T> QueryAsync<T>(System.Func<System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.Tasks.Task<T>> callback, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual ViciOne.ServiceBus.SqlTransport.ClientContext CreateClientContext(System.Threading.CancellationToken cancellationToken)
-  PROPERTY System.Data.IsolationLevel IsolationLevel { public-get;  }
-  PROPERTY System.String Schema { public-get;  }
-  PROPERTY System.Uri HostAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology Topology { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresHostConfigurationExtensions [static]
-  METHOD public static System.Void UsePostgres(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, Npgsql.NpgsqlDataSource dataSource, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
-  METHOD public static System.Void UsePostgres(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, System.String connectionString, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
-  METHOD public static System.Void UsePostgres(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, System.Uri hostAddress, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
-  METHOD public static System.Void UsePostgres(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, ViciOne.ServiceBus.Configuration.IBusRegistrationContext context, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSendFailureClassifier [sealed]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSendFailureClassifier()
-  METHOD public virtual System.Boolean TryClassify(System.Exception exception, out ViciOne.ServiceBus.Providers.Transports.TransportSendFailureKind failureKind)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostConfigurator [base=ViciOne.ServiceBus.SqlTransport.Configuration.SqlHostConfigurator]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostConfigurator(Npgsql.NpgsqlDataSource dataSource)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostConfigurator(System.String connectionString)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostConfigurator(System.Uri hostAddress)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostConfigurator(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostConfigurator(ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostSettings settings)
-  PROPERTY System.String ConnectionString {  public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.SqlHostSettings Settings { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostSettings [base=ViciOne.ServiceBus.SqlTransport.Configuration.ConfigurationSqlHostSettings]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostSettings(Npgsql.NpgsqlDataSource dataSource)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostSettings(System.String connectionString)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostSettings(System.Uri hostAddress)
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlHostSettings(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public Npgsql.NpgsqlDataSource GetDataSource()
-  METHOD public ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory CreateConnectionContextFactory(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration)
-  PROPERTY System.Boolean IsProvidedDataSource { public-get;  }
-  PROPERTY System.String ConnectionString {  public-set; }
-  PROPERTY System.String MultipleHosts { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlTransportConfigurationExtensions [static]
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPostgresMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Providers.Transports.SqlTransportMigrationOptions> configure)
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPostgresMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Boolean create = true, System.Boolean delete = false)
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlTransportConnection
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlTransportConnection(Npgsql.NpgsqlConnection connection)
-  METHOD public System.Threading.Tasks.Task CloseAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task OpenAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static Npgsql.NpgsqlConnectionStringBuilder CreateBuilder(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static System.String GetAdminMigrationPrincipal(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlTransportConnection GetDatabaseAdminConnection(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlTransportConnection GetDatabaseConnection(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgresSqlTransportConnection GetSystemDatabaseConnection(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public virtual Npgsql.NpgsqlCommand CreateCommand(System.String commandText)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  PROPERTY Npgsql.NpgsqlConnection Connection { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.UriTypeHandler [base=Dapper.SqlMapper.TypeHandler<System.Uri>]
-  CTOR public ViciOne.ServiceBus.SqlTransport.PostgreSql.UriTypeHandler()
-  METHOD public System.Uri Parse(System.Object value)
-  METHOD public System.Void SetValue(System.Data.IDbDataParameter parameter, System.Uri value)
+TYPE class public ViciOne.ServiceBus.Configuration.PostgreSqlBusFactoryConfiguratorExtensions [static]
+  METHOD public static System.Void UsingPostgreSql(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, Npgsql.NpgsqlDataSource dataSource, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
+  METHOD public static System.Void UsingPostgreSql(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
+  METHOD public static System.Void UsingPostgreSql(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Func<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,Npgsql.NpgsqlDataSource> dataSourceProvider, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
+  METHOD public static System.Void UsingPostgreSql(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.String connectionString, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
+TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgreSqlHostConfigurationExtensions [static]
+  METHOD public static System.Void UsePostgreSql(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, Npgsql.NpgsqlDataSource dataSource, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
+  METHOD public static System.Void UsePostgreSql(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, System.String connectionString, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
+  METHOD public static System.Void UsePostgreSql(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, System.Uri hostAddress, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
+  METHOD public static System.Void UsePostgreSql(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, ViciOne.ServiceBus.Configuration.IBusRegistrationContext context, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
+TYPE class public ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgreSqlTransportConfigurationExtensions [static]
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPostgreSqlMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Providers.Transports.SqlTransportMigrationOptions> configure)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPostgreSqlMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Boolean create = true, System.Boolean delete = false)
 
 ASSEMBLY ViciOne.ServiceBus.SqlTransport.SqlServer VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.Configuration.SqlServerBusFactoryConfiguratorExtensions [static]

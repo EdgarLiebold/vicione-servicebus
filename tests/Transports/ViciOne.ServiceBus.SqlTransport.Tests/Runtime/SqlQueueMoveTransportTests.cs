@@ -24,11 +24,17 @@ public sealed class SqlQueueMoveTransportTests
 
         ClientContext clientContext = DispatchProxy.Create<ClientContext, ClientContextProxy>();
         var clientProxy = (ClientContextProxy)(object)clientContext;
+        var lockContext = new SqlReceiveLockContext(
+            new Uri("db://localhost/transport/input"),
+            message,
+            new TestReceiveSettings(),
+            clientContext,
+            TimeProvider.System);
 
         ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, PayloadContextProxy>();
         var receiveProxy = (PayloadContextProxy)(object)receiveContext;
         receiveProxy.Payloads[typeof(SqlMessageContext)] = messageContext;
-        receiveProxy.Payloads[typeof(ClientContext)] = clientContext;
+        receiveProxy.Payloads[typeof(SqlReceiveLockContext)] = lockContext;
 
         var transport = new SqlQueueDeadLetterTransport("input", SqlQueueType.DeadLetterQueue);
         using var cancellation = new CancellationTokenSource();
@@ -41,6 +47,10 @@ public sealed class SqlQueueMoveTransportTests
         Assert.Equal("input", clientProxy.ObservedQueueName);
         Assert.Equal(SqlQueueType.DeadLetterQueue, clientProxy.ObservedQueueType);
         Assert.Equal("expired", clientProxy.ObservedHeaders!.Get(MessageHeaders.Reason, string.Empty));
+
+        await lockContext.CompleteAsync(cancellation.Token);
+
+        Assert.Equal(0, clientProxy.DeleteCallCount);
     }
 
     private class PayloadContextProxy : DispatchProxy
@@ -89,10 +99,14 @@ public sealed class SqlQueueMoveTransportTests
         public string? ObservedQueueName { get; private set; }
         public SqlQueueType ObservedQueueType { get; private set; }
         public SendHeaders? ObservedHeaders { get; private set; }
+        public int DeleteCallCount { get; private set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
+
+            if (targetMethod.Name == "get_CancellationToken")
+                return CancellationToken.None;
 
             if (targetMethod.Name == "MoveMessageAsync")
             {
@@ -105,7 +119,33 @@ public sealed class SqlQueueMoveTransportTests
                 return Task.FromResult(true);
             }
 
+            if (targetMethod.Name == "DeleteMessageAsync")
+            {
+                DeleteCallCount++;
+                return Task.FromResult(true);
+            }
+
             throw new NotSupportedException(targetMethod.Name);
         }
+    }
+
+    private sealed class TestReceiveSettings : ReceiveSettings
+    {
+        public string QueueName => "input";
+        public TimeSpan? AutoDeleteOnIdle => null;
+        public int? MaxDeliveryCount => 10;
+        public long? QueueId => 1;
+        public int PrefetchCount => 1;
+        public int ConcurrentMessageLimit => 1;
+        public int ConcurrentDeliveryLimit => 1;
+        public SqlReceiveMode ReceiveMode => SqlReceiveMode.Normal;
+        public bool PurgeOnStartup => false;
+        public TimeSpan LockDuration => TimeSpan.FromHours(1);
+        public TimeSpan PollingInterval => TimeSpan.FromSeconds(1);
+        public TimeSpan? UnlockDelay => null;
+        public TimeSpan MaxLockDuration => TimeSpan.FromHours(2);
+        public string EntityName => QueueName;
+        public int MaintenanceBatchSize => 100;
+        public bool DeadLetterExpiredMessages => false;
     }
 }

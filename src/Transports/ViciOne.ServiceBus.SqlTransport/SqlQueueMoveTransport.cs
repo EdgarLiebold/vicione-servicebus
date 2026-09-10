@@ -29,8 +29,8 @@ public class SqlQueueMoveTransport
         if (!context.TryGetPayload(out SqlMessageContext? messageContext))
             throw new ArgumentException("The receive context must contain a SQL message context.", nameof(context));
 
-        if (!context.TryGetPayload(out ClientContext? clientContext))
-            throw new ArgumentException("The receive context must contain a SQL client context.", nameof(context));
+        if (!context.TryGetPayload(out SqlReceiveLockContext? lockContext))
+            throw new ArgumentException("The receive context must contain a SQL receive lock context.", nameof(context));
 
         if (!messageContext.LockId.HasValue)
             throw new ArgumentException("The SQL message context does not contain a delivery lock identifier.", nameof(context));
@@ -41,7 +41,11 @@ public class SqlQueueMoveTransport
 
         preSend(message, transportHeaders);
 
-        await clientContext.MoveMessageAsync(messageContext.LockId.Value, messageContext.DeliveryMessageId, _queueName, _queueType,
-            message.ExpirationTime, transportHeaders, cancellationToken).ConfigureAwait(false);
+        await lockContext.MoveToQueueAsync(
+            _queueName,
+            _queueType,
+            message.ExpirationTime,
+            transportHeaders,
+            cancellationToken).ConfigureAwait(false);
     }
 }

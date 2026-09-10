@@ -30,7 +30,7 @@ public sealed class PostgreSqlPessimisticSagaLockTests
         }
 
         var executor = new PessimisticLoadQueryExecutor<PessimisticSaga>(
-            new PostgresLockStatementProvider(),
+            new PostgreSqlLockStatementProvider(),
             queryCustomization: null);
         await using var owner = new PessimisticSagaDbContext(options);
         await owner.Database.OpenConnectionAsync(cancellationToken);

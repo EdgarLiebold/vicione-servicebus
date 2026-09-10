@@ -311,11 +311,11 @@ public sealed class PostgreSqlJobServiceTests
                         .EntityFrameworkRepository(repository =>
                         {
                             repository.UseExistingDbContext<JobServiceSagaDbContext>();
-                            repository.UsePostgres();
+                            repository.UsePostgreSql();
                         });
                     configuration.AddJobService(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10))
                         .ConfigureEndpoint(endpoint => endpoint.PrefetchCount = 100);
-                    configuration.UsingPostgres(database.ConnectionString, (context, bus) =>
+                    configuration.UsingPostgreSql(database.ConnectionString, (context, bus) =>
                     {
                         bus.ConfigureSqlMessageScheduler();
                         bus.UseJobSagaPartitionKeyFormatters();

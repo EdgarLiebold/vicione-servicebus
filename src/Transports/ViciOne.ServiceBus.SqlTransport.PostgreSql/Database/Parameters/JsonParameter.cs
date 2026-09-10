@@ -7,7 +7,7 @@ using NpgsqlTypes;
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 /// <summary>Adds a JSONB value to a Dapper command.</summary>
-public class JsonParameter :
+internal sealed class JsonParameter :
     SqlMapper.ICustomQueryParameter
 {
     readonly string? _value;
@@ -24,6 +24,9 @@ public class JsonParameter :
     /// <param name="name">The command parameter name.</param>
     public void AddParameter(IDbCommand command, string name)
     {
+        ArgumentNullException.ThrowIfNull(command);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
         var parameter = new NpgsqlParameter(name, NpgsqlDbType.Jsonb) { Value = _value != null ? _value : DBNull.Value };
 
         command.Parameters.Add(parameter);

@@ -117,7 +117,7 @@ public sealed class SqlProvisioningCredentialTests
             AdminUsername = provider.UserName,
             AdminPassword = provider.Password,
         };
-        var migrator = new PostgresDatabaseMigrator(NullLogger<PostgresDatabaseMigrator>.Instance);
+        var migrator = new PostgreSqlDatabaseMigrator(NullLogger<PostgreSqlDatabaseMigrator>.Instance);
         bool databaseCreated = false;
         try
         {

@@ -317,7 +317,7 @@ public sealed class TransactionalOutboxFaultTests
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
                 configuration.ConfigureEntityFrameworkTransactionalStore<TransactionalOutboxDbContext>(outbox =>
                 {
-                    outbox.UsePostgres();
+                    outbox.UsePostgreSql();
                     outbox.DisableInboxCleanupService();
                     outbox.QueryDelay = TimeSpan.FromHours(1);
                 });

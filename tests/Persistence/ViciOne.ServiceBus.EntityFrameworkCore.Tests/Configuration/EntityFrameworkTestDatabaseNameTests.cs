@@ -8,7 +8,7 @@ public sealed class EntityFrameworkTestDatabaseNameTests
 {
     public static TheoryData<string> ProviderVariants => new()
     {
-        "PostgresTestDbParameters",
+        "PostgreSqlTestDbParameters",
         "SqlServerTestDbParameters",
         "SqlServerResiliencyTestDbParameters",
     };

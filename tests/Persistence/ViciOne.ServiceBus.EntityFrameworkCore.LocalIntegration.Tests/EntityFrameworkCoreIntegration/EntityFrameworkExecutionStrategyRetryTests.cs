@@ -57,7 +57,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
             configuration.SetTestTimeouts(operationTimeout, operationTimeout);
             configuration.ConfigureEntityFrameworkTransactionalStore<RetryDbContext>(outbox =>
             {
-                outbox.UsePostgres();
+                outbox.UsePostgreSql();
                 outbox.DisableInboxCleanupService();
             });
             configuration.AddConsumer<RetryConsumer, RetryConsumerDefinition>();

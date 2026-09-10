@@ -148,7 +148,7 @@ public sealed class PostgreSqlReceiveConfigurationTests
         await using NpgsqlConnection connection = fixture.CreateConnection();
         await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         await using var command = new NpgsqlCommand(
-            $"SELECT \"{fixture.Schema}\".create_queue_v2(@queueName, NULL, NULL)",
+            $"SELECT \"{fixture.Schema}\".create_queue(@queueName, NULL, NULL)",
             connection);
         command.Parameters.AddWithValue("queueName", queueName);
         Assert.True(Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)) > 0);

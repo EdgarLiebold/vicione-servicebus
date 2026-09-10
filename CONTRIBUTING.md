@@ -30,7 +30,7 @@ under `artifacts/test-results`.
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 3818 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 4896 \
   --max-parallel-test-modules 1
 ```
 

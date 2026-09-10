@@ -42,7 +42,7 @@ public sealed class InboxOutboxConcurrencyTests
                 .Register<InboxEffect>("vicione.tests.ef.inbox-effect"));
             configuration.ConfigureEntityFrameworkTransactionalStore<InboxOutboxDbContext>(outbox =>
             {
-                outbox.UsePostgres();
+                outbox.UsePostgreSql();
                 outbox.DisableInboxCleanupService();
             });
             configuration.AddConsumer<InboxCommandConsumer, InboxCommandConsumerDefinition>();

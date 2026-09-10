@@ -21,7 +21,7 @@ public sealed class PostgreSqlBasicTransportTests
         var delivered = NewObservation<ConsumeContext<BasicMessage>>();
         IBusControl bus = SqlBusFactory.Create(configurator =>
         {
-            configurator.UsePostgres(dataSource);
+            configurator.UsePostgreSql(dataSource);
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<BasicMessage>(context =>
             {
                 delivered.TrySetResult(context);

@@ -1,5 +1,5 @@
-using System.Reflection;
 using System.Linq.Expressions;
+using System.Reflection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
