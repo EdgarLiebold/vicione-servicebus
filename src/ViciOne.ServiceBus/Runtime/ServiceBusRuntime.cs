@@ -65,42 +65,44 @@ internal sealed partial class ServiceBusRuntime :
         _publishEndpoint = new PublishEndpoint(_receiveEndpoint);
     }
 
-    ConnectHandle IConsumePipeConnector.ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+    ConnectHandle IConsumePipeConnector.ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
         return WaitForBusEndpoint(_consumePipe.ConnectConsumePipe(pipe));
     }
 
-    ConnectHandle IConsumePipeConnector.ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+    ConnectHandle IConsumePipeConnector.ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe, ConnectPipeOptions options)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
         return WaitForBusEndpoint(_consumePipe.ConnectConsumePipe(pipe, options));
     }
 
-    ConnectHandle IRequestPipeConnector.ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+    ConnectHandle IRequestPipeConnector.ConnectRequestPipe<TMessage>(Guid requestId, IPipe<ConsumeContext<TMessage>> pipe)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
         return WaitForBusEndpoint(_consumePipe.ConnectRequestPipe(requestId, pipe));
     }
 
-    Task IPublishEndpoint.PublishAsync<T>(T message, CancellationToken cancellationToken)
+    Task IPublishEndpoint.PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
         return _publishEndpoint.PublishAsync(message, cancellationToken);
     }
 
-    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<TMessage>(TMessage message, IPipe<PublishContext<TMessage>> publishPipe,
+        CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
         return _publishEndpoint.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<TMessage>(TMessage message, IPipe<PublishContext> publishPipe,
+        CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
@@ -138,14 +140,14 @@ internal sealed partial class ServiceBusRuntime :
         return _publishEndpoint.PublishAsync(message, messageType, publishPipe, cancellationToken);
     }
 
-    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(object values, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<TMessage>(object values, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.PublishAsync<T>(values, cancellationToken);
+        return _publishEndpoint.PublishAsync<TMessage>(values, cancellationToken);
     }
 
-    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe,
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<TMessage>(object values, IPipe<PublishContext<TMessage>> publishPipe,
         CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
@@ -153,12 +155,12 @@ internal sealed partial class ServiceBusRuntime :
         return _publishEndpoint.PublishAsync(values, publishPipe, cancellationToken);
     }
 
-    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(object values, IPipe<PublishContext> publishPipe,
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<TMessage>(object values, IPipe<PublishContext> publishPipe,
         CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.PublishAsync<T>(values, publishPipe, cancellationToken);
+        return _publishEndpoint.PublishAsync<TMessage>(values, publishPipe, cancellationToken);
     }
 
     public Uri Address { get; }
@@ -214,12 +216,12 @@ internal sealed partial class ServiceBusRuntime :
         return _host.ConnectPublishObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
-        where T : class
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<TMessage>(CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _receiveEndpoint.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
+        return _receiveEndpoint.GetPublishSendEndpointAsync<TMessage>(cancellationToken: cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)

@@ -89,35 +89,35 @@ public static class TypeMetadataCache
 
 
 /// <summary>Provides immutable cached metadata for a compile-time message-contract type.</summary>
-/// <typeparam name="T">The message contract type.</typeparam>
-public static class TypeMetadataCache<T>
+/// <typeparam name="TMessage">The message contract type.</typeparam>
+public static class TypeMetadataCache<TMessage>
 {
-    static readonly Lazy<Type> ImplementationTypeCache = new(() => TypeMetadataCache.GetImplementationType(typeof(T)));
+    static readonly Lazy<Type> ImplementationTypeCache = new(() => TypeMetadataCache.GetImplementationType(typeof(TMessage)));
 
-    /// <summary>Gets the concrete runtime type used to materialize <typeparamref name="T" />.</summary>
+    /// <summary>Gets the concrete runtime type used to materialize <typeparamref name="TMessage" />.</summary>
     public static Type ImplementationType => ImplementationTypeCache.Value;
 
-    /// <summary>Gets the canonical short diagnostic name of <typeparamref name="T" />.</summary>
-    public static string ShortName => TypeCache<T>.ShortName;
+    /// <summary>Gets the canonical short diagnostic name of <typeparamref name="TMessage" />.</summary>
+    public static string ShortName => TypeCache<TMessage>.ShortName;
 
-    /// <summary>Gets the canonical diagnostic address of <typeparamref name="T" />.</summary>
-    public static string DiagnosticAddress => MessageTypeCache<T>.DiagnosticAddress;
+    /// <summary>Gets the canonical diagnostic address of <typeparamref name="TMessage" />.</summary>
+    public static string DiagnosticAddress => MessageTypeCache<TMessage>.DiagnosticAddress;
 
-    /// <summary>Gets the immutable public message properties exposed by <typeparamref name="T" />.</summary>
-    public static IReadOnlyList<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
+    /// <summary>Gets the immutable public message properties exposed by <typeparamref name="TMessage" />.</summary>
+    public static IReadOnlyList<PropertyInfo> Properties => MessageTypeCache<TMessage>.Properties;
 
-    /// <summary>Gets a value indicating whether <typeparamref name="T" /> satisfies the message-contract rules.</summary>
-    public static bool IsValidMessageType => MessageTypeCache<T>.IsValidMessageType;
+    /// <summary>Gets a value indicating whether <typeparamref name="TMessage" /> satisfies the message-contract rules.</summary>
+    public static bool IsValidMessageType => MessageTypeCache<TMessage>.IsValidMessageType;
 
-    /// <summary>Gets the validation failure when <typeparamref name="T" /> is not a valid message type.</summary>
-    public static string? InvalidMessageTypeReason => MessageTypeCache<T>.InvalidMessageTypeReason;
+    /// <summary>Gets the validation failure when <typeparamref name="TMessage" /> is not a valid message type.</summary>
+    public static string? InvalidMessageTypeReason => MessageTypeCache<TMessage>.InvalidMessageTypeReason;
 
-    /// <summary>Gets a value indicating whether <typeparamref name="T" /> is an anonymous or otherwise temporary message shape.</summary>
-    public static bool IsTemporaryMessageType => MessageTypeCache<T>.IsTemporaryMessageType;
+    /// <summary>Gets a value indicating whether <typeparamref name="TMessage" /> is an anonymous or otherwise temporary message shape.</summary>
+    public static bool IsTemporaryMessageType => MessageTypeCache<TMessage>.IsTemporaryMessageType;
 
-    /// <summary>Gets the immutable set of runtime message types represented by <typeparamref name="T" />.</summary>
-    public static IReadOnlyList<Type> MessageTypes => MessageTypeCache<T>.MessageTypes;
+    /// <summary>Gets the immutable set of runtime message types represented by <typeparamref name="TMessage" />.</summary>
+    public static IReadOnlyList<Type> MessageTypes => MessageTypeCache<TMessage>.MessageTypes;
 
-    /// <summary>Gets the immutable set of wire type identifiers represented by <typeparamref name="T" />.</summary>
-    public static IReadOnlyList<string> MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
+    /// <summary>Gets the immutable set of wire type identifiers represented by <typeparamref name="TMessage" />.</summary>
+    public static IReadOnlyList<string> MessageTypeNames => MessageTypeCache<TMessage>.MessageTypeNames;
 }

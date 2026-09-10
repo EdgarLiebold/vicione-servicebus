@@ -9,9 +9,9 @@ internal sealed class ReplaceMessageFactory<TMessage> :
     IMessageFactory<TMessage>
     where TMessage : class
 {
-    /// <summary>Creates the requested value.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Uses the available transform input as the initialized message.</summary>
+    /// <param name="context">The initialization context carrying the source transform.</param>
+    /// <returns>An initialization context containing the existing message instance.</returns>
     public InitializeContext<TMessage> Create(InitializeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

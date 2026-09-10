@@ -15,10 +15,10 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
     where TBus : class, IBus
 {
-    private readonly IDurableSendAdmission<TBus> _admission;
-    private readonly TBus _bus;
-    private readonly IMessageContractCatalog _contractCatalog;
-    private readonly PayloadAdmissionRuntime<TBus>? _payloadAdmission;
+    readonly IDurableSendAdmission<TBus> _admission;
+    readonly TBus _bus;
+    readonly IMessageContractCatalog _contractCatalog;
+    readonly PayloadAdmissionRuntime<TBus>? _payloadAdmission;
 
     public TypedDurableSender(
         TBus bus,

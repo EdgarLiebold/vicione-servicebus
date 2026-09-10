@@ -94,5 +94,4 @@ internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
             throw;
         }
     }
-
 }

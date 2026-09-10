@@ -13,8 +13,8 @@ internal sealed class SendTransformContext<TMessage> :
 {
     readonly SendContext<TMessage> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a transform view over an outbound send operation.</summary>
+    /// <param name="context">The send context whose message and envelope metadata are exposed.</param>
     public SendTransformContext(SendContext<TMessage> context)
         : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
@@ -31,9 +31,9 @@ internal sealed class SendTransformContext<TMessage> :
     public Guid? ConversationId => _context.ConversationId;
     /// <summary>Gets the initiator id.</summary>
     public Guid? InitiatorId => _context.InitiatorId;
-    /// <summary>Gets the expiration time.</summary>
+    /// <summary>Gets the expiration time calculated from the current clock and time to live.</summary>
     public DateTimeOffset? ExpirationTime => _context.TimeToLive.HasValue
-        ? _context.GetTimeProvider().GetUtcNow().UtcDateTime + _context.TimeToLive.Value
+        ? _context.GetTimeProvider().GetUtcNow() + _context.TimeToLive.Value
         : null;
     /// <summary>Gets the source address.</summary>
     public Uri? SourceAddress => _context.SourceAddress;
@@ -43,7 +43,7 @@ internal sealed class SendTransformContext<TMessage> :
     public Uri? ResponseAddress => _context.ResponseAddress;
     /// <summary>Gets the fault address.</summary>
     public Uri? FaultAddress => _context.FaultAddress;
-    /// <summary>Gets the sent time.</summary>
+    /// <summary>Gets no sent timestamp because the outbound message has not reached the transport.</summary>
     public DateTimeOffset? SentTime => default;
     /// <summary>Gets the headers.</summary>
     public Headers Headers => _context.Headers;

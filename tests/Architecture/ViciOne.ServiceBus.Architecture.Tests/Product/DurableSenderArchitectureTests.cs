@@ -149,7 +149,7 @@ public sealed class DurableSenderArchitectureTests
     public void ReliableMessaging_HasOneDeliveryLoopAndOneQuarantineOperationsApi()
     {
         string sourceRoot = Path.Combine(RepositoryLayout.Root, "src");
-        string[] deliveryLoops = Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+        string[] deliveryLoopDeclarations = Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
             .Where(path =>
             {
                 string source = File.ReadAllText(path);
@@ -158,10 +158,17 @@ public sealed class DurableSenderArchitectureTests
                     || source.Contains("class BusOutboxDeliveryService<", StringComparison.Ordinal);
             })
             .Select(path => Path.GetRelativePath(RepositoryLayout.Root, path))
+            .Order(StringComparer.Ordinal)
             .ToArray();
         Assert.Equal(
-            ["src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs"],
-            deliveryLoops);
+            [
+                "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+                "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+                "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+                "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+                "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+            ],
+            deliveryLoopDeclarations);
 
         string[] retiredEntryPoints = ["UseInMemoryOutbox", "AddEntityFrameworkOutbox", "UseBusOutbox"];
         string[] applicationRoots =

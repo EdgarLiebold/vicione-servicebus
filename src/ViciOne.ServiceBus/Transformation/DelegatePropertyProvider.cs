@@ -15,9 +15,9 @@ internal sealed class DelegatePropertyProvider<TInput, TProperty> :
     readonly IPropertyProvider<TInput, TProperty> _inputProvider;
     readonly Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> _valueProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="inputProvider">The input provider.</param>
-    /// <param name="valueProvider">The value provider.</param>
+    /// <summary>Creates a provider that transforms the current value resolved by another property provider.</summary>
+    /// <param name="inputProvider">The provider that resolves the current source-property value.</param>
+    /// <param name="valueProvider">The transform applied to the current value and message context.</param>
     public DelegatePropertyProvider(IPropertyProvider<TInput, TProperty> inputProvider,
         Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> valueProvider)
     {
@@ -25,13 +25,14 @@ internal sealed class DelegatePropertyProvider<TInput, TProperty> :
         _valueProvider = valueProvider ?? throw new ArgumentNullException(nameof(valueProvider));
     }
 
-    /// <summary>Gets property.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
-    public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
-        where T : class
+    /// <summary>Resolves and transforms the property when a source transform context is available.</summary>
+    /// <typeparam name="TMessage">The message being initialized.</typeparam>
+    /// <param name="context">The initialization context that carries the source transform.</param>
+    /// <param name="cancellationToken">The token used to cancel property resolution.</param>
+    /// <returns>A task containing the transformed property value, or the default value when no source input is available.</returns>
+    public Task<TProperty?> GetPropertyAsync<TMessage>(InitializeContext<TMessage, TInput> context,
+        CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         if (!context.TryGetPayload(out TransformContext<TInput>? transformContext))
             return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);

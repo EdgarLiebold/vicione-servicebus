@@ -1,15 +1,15 @@
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>A transform property context, which includes the <see cref="TransformContext" />, as well as the current input property value, if present.</summary>
-/// <typeparam name="TProperty">The property type.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Exposes a source-property value together with its message-level transform context.</summary>
+/// <typeparam name="TProperty">The source-property type.</typeparam>
+/// <typeparam name="TMessage">The source-message type.</typeparam>
 public interface TransformPropertyContext<out TProperty, out TMessage> :
     TransformContext<TMessage>
     where TMessage : class
 {
-    /// <summary>True if the value is present from the source.</summary>
+    /// <summary>Gets a value indicating whether the source property was evaluated.</summary>
     bool HasValue { get; }
 
-    /// <summary>The value.</summary>
+    /// <summary>Gets the evaluated source-property value, which may be <see langword="null" /> when <see cref="HasValue" /> is true.</summary>
     TProperty? Value { get; }
 }

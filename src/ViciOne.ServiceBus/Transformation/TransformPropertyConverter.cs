@@ -13,19 +13,19 @@ internal sealed class TransformPropertyConverter<TProperty> :
 {
     readonly IMessageInitializer<TProperty> _initializer;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Creates a converter backed by the nested property's message initializer.</summary>
+    /// <param name="initializer">The initializer that transforms non-null property values.</param>
     public TransformPropertyConverter(IMessageInitializer<TProperty> initializer)
     {
         _initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
     }
 
-    /// <summary>Converts the supplied value.</summary>
+    /// <summary>Transforms a non-null nested property while preserving its parent message context.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="input">The input.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the converted value.</returns>
+    /// <param name="context">The parent message initialization context.</param>
+    /// <param name="input">The nested source property, or <see langword="null" /> when no transform can be applied.</param>
+    /// <param name="cancellationToken">The token used to cancel nested initialization.</param>
+    /// <returns>A task containing the transformed property, or the default value when no source transform is available.</returns>
     public Task<TProperty?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, TProperty? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {

@@ -12,9 +12,9 @@ internal sealed class ConsumeTransformContext<TInput> :
 {
     readonly ConsumeContext _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="input">The input.</param>
+    /// <summary>Creates a transform view over an inbound consume operation.</summary>
+    /// <param name="context">The consume context whose envelope metadata is exposed.</param>
+    /// <param name="input">The source message supplied to the transform.</param>
     public ConsumeTransformContext(ConsumeContext context, TInput input)
         : base(context ?? throw new ArgumentNullException(nameof(context)))
     {

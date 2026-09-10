@@ -18616,8 +18616,8 @@ TYPE class public ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits [s
   PROPERTY System.Int32 MaximumEntries { public-get;  }
   PROPERTY System.Int32 MaximumEntryBytes { public-get;  }
   PROPERTY System.TimeSpan RetentionPeriod { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Metadata.IMessageDataConverter<T>
-  METHOD public abstract System.Threading.Tasks.Task<T> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
+TYPE interface public ViciOne.ServiceBus.Metadata.IMessageDataConverter<TValue>
+  METHOD public abstract System.Threading.Tasks.Task<TValue> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
 TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache [static]
   METHOD public static System.Boolean IsTemporaryMessageType(System.Type type)
   METHOD public static System.Boolean IsValidMessageDataType(System.Type type)
@@ -18627,7 +18627,7 @@ TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache [static]
   METHOD public static System.Collections.Generic.IReadOnlyList<System.Type> GetMessageTypes(System.Type type)
   METHOD public static System.String GetShortName(System.Type type)
   METHOD public static System.Type GetImplementationType(System.Type type)
-TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache<T> [static]
+TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache<TMessage> [static]
   PROPERTY System.Boolean IsTemporaryMessageType { public-get;  }
   PROPERTY System.Boolean IsValidMessageType { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<System.Reflection.PropertyInfo> Properties { public-get;  }

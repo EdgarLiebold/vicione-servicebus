@@ -8,6 +8,7 @@ using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Monitoring.Telemetry;
+
 /// <summary>
 /// Records exception-isolated messaging telemetry for one typed bus. The host owns listeners,
 /// exporters, sampling, retention, access control and telemetry endpoints.

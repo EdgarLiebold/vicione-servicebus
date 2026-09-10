@@ -13,9 +13,9 @@ internal sealed class MessageTransformPropertyContext<TProperty, TInput> :
 {
     readonly TransformContext<TInput> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="value">The value to process.</param>
+    /// <summary>Creates a property-level view over a message transform.</summary>
+    /// <param name="context">The message transform context whose metadata and source input are exposed.</param>
+    /// <param name="value">The evaluated source-property value, including an explicit <see langword="null" />.</param>
     public MessageTransformPropertyContext(TransformContext<TInput> context, TProperty? value)
         : base(context ?? throw new ArgumentNullException(nameof(context)))
     {

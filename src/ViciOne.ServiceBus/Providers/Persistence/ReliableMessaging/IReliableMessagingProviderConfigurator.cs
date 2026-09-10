@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
+
 /// <summary>Extension surface used by persistence and transport provider packages.</summary>
 public interface IReliableMessagingProviderConfigurator
 {

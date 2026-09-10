@@ -5,9 +5,9 @@ using System.Linq;
 namespace ViciOne.ServiceBus.Events;
 
 /// <summary>Materializes the fault contract published for a message that failed during consumption.</summary>
-/// <typeparam name="T">The faulted message type.</typeparam>
-internal sealed class FaultEvent<T> :
-    Fault<T>
+/// <typeparam name="TMessage">The faulted message type.</typeparam>
+internal sealed class FaultEvent<TMessage> :
+    Fault<TMessage>
 {
     const int MaximumExceptionCount = 16;
 
@@ -23,7 +23,7 @@ internal sealed class FaultEvent<T> :
     /// <param name="exception">The consumer or pipeline failure.</param>
     /// <param name="faultMessageTypes">The message type identifiers declared by the failed envelope.</param>
     /// <param name="timeProvider">The time source used to timestamp the fault.</param>
-    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes,
+    public FaultEvent(TMessage message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes,
         TimeProvider? timeProvider = null)
         : this(message, faultedMessageId, host, GetExceptions(exception), faultMessageTypes, timeProvider)
     {
@@ -36,7 +36,7 @@ internal sealed class FaultEvent<T> :
     /// <param name="exceptions">The exception snapshots to include, in reporting order.</param>
     /// <param name="faultMessageTypes">The message type identifiers declared by the failed envelope.</param>
     /// <param name="timeProvider">The time source used to timestamp the fault.</param>
-    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes,
+    public FaultEvent(TMessage message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes,
         TimeProvider? timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -78,7 +78,7 @@ internal sealed class FaultEvent<T> :
     public string[] FaultMessageTypes { get; set; } = null!;
 
     /// <summary>Gets or sets the message whose consumption failed.</summary>
-    public T Message { get; set; } = default!;
+    public TMessage Message { get; set; } = default!;
 
     static ExceptionInfo[] GetExceptions(Exception exception)
     {
@@ -91,7 +91,6 @@ internal sealed class FaultEvent<T> :
             ?? [new FaultExceptionInfo(exception)];
     }
 }
-
 
 /// <summary>Materializes the non-generic fault contract during serialization.</summary>
 internal sealed class FaultEvent :

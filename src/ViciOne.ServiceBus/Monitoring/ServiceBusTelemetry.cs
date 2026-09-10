@@ -16,11 +16,11 @@ public static class ServiceBusTelemetry
     /// <summary>Defines the OpenTelemetry metric instrument names emitted by the service bus.</summary>
     public static class Metrics
     {
-        /// <summary>Counts messages submitted by messaging clients.</summary>
+        /// <summary>Counts messages that producers attempted to send to a broker.</summary>
         public const string SentMessages = "messaging.client.sent.messages";
-        /// <summary>Counts messages received by messaging clients.</summary>
+        /// <summary>Counts messages delivered to an application.</summary>
         public const string ConsumedMessages = "messaging.client.consumed.messages";
-        /// <summary>Measures send and receive client-operation durations in seconds.</summary>
+        /// <summary>Measures messaging client-operation durations in seconds.</summary>
         public const string ClientOperationDuration = "messaging.client.operation.duration";
         /// <summary>Measures consumer and handler processing durations in seconds.</summary>
         public const string ProcessDuration = "messaging.process.duration";

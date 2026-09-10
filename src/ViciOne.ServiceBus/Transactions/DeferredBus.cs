@@ -26,29 +26,29 @@ internal abstract class DeferredBus :
         return _bus.ConnectPublishObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
-        where T : class
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<TMessage>(CancellationToken cancellationToken = default)
+        where TMessage : class
     {
-        return _publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
+        return _publishEndpointProvider.GetPublishSendEndpointAsync<TMessage>(cancellationToken: cancellationToken);
     }
 
-    public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
-        where T : class
+    public Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(message);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, token), cancellationToken);
     }
 
-    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
-        where T : class
+    public Task PublishAsync<TMessage>(TMessage message, IPipe<PublishContext<TMessage>> publishPipe, CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, publishPipe, token), cancellationToken);
     }
 
-    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
-        where T : class
+    public Task PublishAsync<TMessage>(TMessage message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(publishPipe);
@@ -83,27 +83,27 @@ internal abstract class DeferredBus :
         return AddAsync(token => _publishEndpoint.PublishAsync(message, messageType, publishPipe, token), cancellationToken);
     }
 
-    public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
-        where T : class
+    public Task PublishAsync<TMessage>(object values, CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(values);
-        return AddAsync(token => _publishEndpoint.PublishAsync<T>(values, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync<TMessage>(values, token), cancellationToken);
     }
 
-    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
-        where T : class
+    public Task PublishAsync<TMessage>(object values, IPipe<PublishContext<TMessage>> publishPipe, CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync(values, publishPipe, token), cancellationToken);
     }
 
-    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
-        where T : class
+    public Task PublishAsync<TMessage>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(publishPipe);
-        return AddAsync(token => _publishEndpoint.PublishAsync<T>(values, publishPipe, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync<TMessage>(values, publishPipe, token), cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -118,26 +118,26 @@ internal abstract class DeferredBus :
         return new DeferredBusSendEndpoint(this, endpoint);
     }
 
-    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
-        where T : class
+    public ConnectHandle ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe)
+        where TMessage : class
     {
         return _bus.ConnectConsumePipe(pipe);
     }
 
-    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-        where T : class
+    public ConnectHandle ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe, ConnectPipeOptions options)
+        where TMessage : class
     {
         return _bus.ConnectConsumePipe(pipe, options);
     }
 
-    public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
-        where T : class
+    public ConnectHandle ConnectRequestPipe<TMessage>(Guid requestId, IPipe<ConsumeContext<TMessage>> pipe)
+        where TMessage : class
     {
         return _bus.ConnectRequestPipe(requestId, pipe);
     }
 
-    public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
-        where T : class
+    public ConnectHandle ConnectConsumeMessageObserver<TMessage>(IConsumeMessageObserver<TMessage> observer)
+        where TMessage : class
     {
         return _bus.ConnectConsumeMessageObserver(observer);
     }

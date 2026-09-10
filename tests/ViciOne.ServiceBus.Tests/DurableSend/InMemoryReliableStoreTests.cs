@@ -449,7 +449,7 @@ public sealed class InMemoryReliableStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "scheduled-outbox-intent-is-hidden-until-fake-clock-reaches-due-time")]
-    public async Task Schedule_BecomesClaimableAtDueTimeAndCanBeCancelledBeforeClaimAsync()
+    public async Task Schedule_BecomesClaimableAtDueTimeAndCanBeCanceledBeforeClaimAsync()
     {
         StoreHarness store = Store();
         var clock = new FakeTimeProvider(Epoch);
@@ -477,7 +477,7 @@ public sealed class InMemoryReliableStoreTests
             cancelledMessage.Id,
             TestContext.Current.CancellationToken);
         Assert.Equal(ReliableMessagingOperationDisposition.Applied, cancelled.Disposition);
-        Assert.Equal("Cancelled", cancelled.CurrentState);
+        Assert.Equal("Canceled", cancelled.CurrentState);
 
         clock.Advance(TimeSpan.FromMinutes(15) - TimeSpan.FromTicks(1));
         Assert.Empty(await store.ClaimDueAsync(clock.GetUtcNow(), 10, TimeSpan.FromMinutes(1)));

@@ -28,12 +28,12 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    public async Task SendAsync<T>(
-        ConsumeContext<T> context,
+    public async Task SendAsync<TMessage>(
+        ConsumeContext<TMessage> context,
         OutboxConsumeOptions options,
-        IPipe<OutboxConsumeContext<T>> next,
+        IPipe<OutboxConsumeContext<TMessage>> next,
         CancellationToken cancellationToken = default)
-        where T : class
+        where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(options);
@@ -43,7 +43,7 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
             : context.CancellationToken;
         operationCancellationToken.ThrowIfCancellationRequested();
         Guid messageId = context.GetOriginalMessageId()
-            ?? throw new MessageException(typeof(T), "MessageId required to use reliable messaging");
+            ?? throw new MessageException(typeof(TMessage), "MessageId required to use reliable messaging");
         var key = new ReliableInboxKey(messageId, options.ConsumerId).Validate();
 
         while (true)
@@ -72,7 +72,7 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
 
             ReliableInboxLease lease = acquisition.Lease
                 ?? throw new InvalidOperationException($"Reliable inbox '{key}' was acquired without a lease.");
-            var reliableContext = new InMemoryReliableInboxContext<TBus, T>(
+            var reliableContext = new InMemoryReliableInboxContext<TBus, TMessage>(
                 context,
                 options,
                 _provider,

@@ -89,8 +89,8 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
     public override Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default) =>
         CompletedOrCanceledAsync(ResolveOperationCancellationToken(cancellationToken));
 
-    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
-        where T : class
+    public override Task AddSendAsync<TOutgoingMessage>(SendContext<TOutgoingMessage> context, CancellationToken cancellationToken = default)
+        where TOutgoingMessage : class
     {
         ArgumentNullException.ThrowIfNull(context);
         CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
@@ -100,14 +100,14 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
                 : CancellationToken;
         operationCancellationToken.ThrowIfCancellationRequested();
         if (!context.MessageId.HasValue)
-            throw new MessageException(typeof(T), "The SendContext MessageId must be present");
+            throw new MessageException(typeof(TOutgoingMessage), "The SendContext MessageId must be present");
         Uri destination = context.DestinationAddress
-            ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
+            ?? throw new MessageException(typeof(TOutgoingMessage), "The SendContext DestinationAddress must be present");
         DateTimeOffset now = _timeProvider.GetUtcNow();
         var message = new SerializedDurableSend
         {
             Id = new DurableSendId(context.MessageId.Value),
-            ContractIdentity = _contracts.GetIdentity(typeof(T)),
+            ContractIdentity = _contracts.GetIdentity(typeof(TOutgoingMessage)),
             DestinationAddress = destination,
             ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
             Body = context.Serializer.GetMessageBody(context).GetBytes(),

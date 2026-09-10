@@ -14,9 +14,9 @@ internal sealed class PropertyTransformContext<TMessage, TProperty> :
 {
     readonly TransformContext<TMessage> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="property">The property.</param>
+    /// <summary>Creates a nested transform context for a source property.</summary>
+    /// <param name="context">The parent message transform context.</param>
+    /// <param name="property">The non-null source property to transform.</param>
     public PropertyTransformContext(TransformContext<TMessage> context, TProperty property)
         : base(context ?? throw new ArgumentNullException(nameof(context)))
     {

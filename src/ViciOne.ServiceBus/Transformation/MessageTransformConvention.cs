@@ -16,28 +16,28 @@ internal sealed class MessageTransformConvention<TMessage> :
 {
     readonly IDictionary<string, IPropertyInitializer<TMessage, TMessage>> _initializers;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty property-transform registry.</summary>
     public MessageTransformConvention()
     {
         _initializers = new Dictionary<string, IPropertyInitializer<TMessage, TMessage>>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>Gets the count.</summary>
+    /// <summary>Gets the number of explicitly configured property transforms.</summary>
     public int Count => _initializers.Count;
 
     /// <summary>Attempts to get property initializer.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TTarget">The message type being initialized.</typeparam>
     /// <typeparam name="TInput">The input type.</typeparam>
     /// <typeparam name="TProperty">The property type.</typeparam>
     /// <param name="propertyInfo">The property info.</param>
     /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryGetPropertyInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
-        [NotNullWhen(true)] out IPropertyInitializer<T, TInput>? initializer)
-        where T : class
+    public bool TryGetPropertyInitializer<TTarget, TInput, TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyInitializer<TTarget, TInput>? initializer)
+        where TTarget : class
         where TInput : class
     {
-        if (this is IInitializerConvention<T, TInput> convention)
+        if (this is IInitializerConvention<TTarget, TInput> convention)
             return convention.TryGetPropertyInitializer<TProperty>(propertyInfo, out initializer);
 
         initializer = default;
@@ -45,18 +45,18 @@ internal sealed class MessageTransformConvention<TMessage> :
     }
 
     /// <summary>Attempts to get header initializer.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TTarget">The message type being initialized.</typeparam>
     /// <typeparam name="TInput">The input type.</typeparam>
     /// <typeparam name="TProperty">The property type.</typeparam>
     /// <param name="propertyInfo">The property info.</param>
     /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryGetHeaderInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
-        [NotNullWhen(true)] out IHeaderInitializer<T, TInput>? initializer)
-        where T : class
+    public bool TryGetHeaderInitializer<TTarget, TInput, TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TTarget, TInput>? initializer)
+        where TTarget : class
         where TInput : class
     {
-        if (this is IInitializerConvention<T, TInput> convention)
+        if (this is IInitializerConvention<TTarget, TInput> convention)
             return convention.TryGetHeaderInitializer<TProperty>(propertyInfo, out initializer);
 
         initializer = default;
@@ -64,18 +64,18 @@ internal sealed class MessageTransformConvention<TMessage> :
     }
 
     /// <summary>Attempts to get headers initializer.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TTarget">The message type being initialized.</typeparam>
     /// <typeparam name="TInput">The input type.</typeparam>
     /// <typeparam name="TProperty">The property type.</typeparam>
     /// <param name="propertyInfo">The property info.</param>
     /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryGetHeadersInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
-        [NotNullWhen(true)] out IHeaderInitializer<T, TInput>? initializer)
-        where T : class
+    public bool TryGetHeadersInitializer<TTarget, TInput, TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TTarget, TInput>? initializer)
+        where TTarget : class
         where TInput : class
     {
-        if (this is IInitializerConvention<T, TInput> convention)
+        if (this is IInitializerConvention<TTarget, TInput> convention)
             return convention.TryGetHeaderInitializer<TProperty>(propertyInfo, out initializer);
 
         initializer = default;
@@ -174,9 +174,9 @@ internal sealed class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="propertyName">The property name.</param>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Adds the initializer for one message property.</summary>
+    /// <param name="propertyName">The case-insensitive property name.</param>
+    /// <param name="initializer">The initializer that applies the configured transform.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage, TMessage> initializer)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);

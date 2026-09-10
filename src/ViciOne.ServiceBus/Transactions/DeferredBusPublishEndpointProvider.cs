@@ -20,10 +20,10 @@ internal sealed class DeferredBusPublishEndpointProvider :
         return _publishEndpointProvider.ConnectPublishObserver(observer);
     }
 
-    public async Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
-        where T : class
+    public async Task<ISendEndpoint> GetPublishSendEndpointAsync<TMessage>(CancellationToken cancellationToken = default)
+        where TMessage : class
     {
-        ISendEndpoint endpoint = await _publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        ISendEndpoint endpoint = await _publishEndpointProvider.GetPublishSendEndpointAsync<TMessage>(cancellationToken: cancellationToken).ConfigureAwait(false);
         return new DeferredBusSendEndpoint(_bus, endpoint);
     }
 }

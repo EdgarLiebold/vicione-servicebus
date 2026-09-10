@@ -18,9 +18,9 @@ internal sealed class TransformPropertyInitializer<TMessage, TInput, TProperty> 
     readonly IWriteProperty<TMessage, TProperty> _messageProperty;
     readonly IPropertyProvider<TInput, TProperty> _propertyProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="propertyProvider">The property provider.</param>
-    /// <param name="propertyInfo">The property info.</param>
+    /// <summary>Creates an initializer for one writable message property.</summary>
+    /// <param name="propertyProvider">The provider that produces the transformed property value.</param>
+    /// <param name="propertyInfo">The writable target property.</param>
     public TransformPropertyInitializer(IPropertyProvider<TInput, TProperty> propertyProvider, PropertyInfo propertyInfo)
     {
         _propertyProvider = propertyProvider ?? throw new ArgumentNullException(nameof(propertyProvider));
@@ -29,10 +29,10 @@ internal sealed class TransformPropertyInitializer<TMessage, TInput, TProperty> 
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(propertyInfo);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Resolves and assigns the transformed property when this initializer owns the runtime message type.</summary>
+    /// <param name="context">The message initialization context.</param>
+    /// <param name="cancellationToken">The token used to cancel property resolution.</param>
+    /// <returns>A task that completes after property resolution and conditional assignment.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
         Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
