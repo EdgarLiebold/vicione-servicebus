@@ -112,10 +112,8 @@ public sealed class InMemoryErrorTransportTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
             IPublishedMessage<Fault<DisabledFaultMessage>>[] faults = harness.Published
-                .Select<Fault<DisabledFaultMessage>>(completed.Token)
+                .Snapshot<Fault<DisabledFaultMessage>>()
                 .ToArray();
 
             Assert.Equal(6, Volatile.Read(ref attempts));

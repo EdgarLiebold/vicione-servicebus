@@ -24,12 +24,15 @@ public sealed class TestingServiceProviderExtensionsTests
         try
         {
             Guid expectedId = NewId.NextGuid();
-            Task<ConsumeContext<PublishedMessage>> selected = await harness.ConnectPublishHandlerAsync<PublishedMessage>(context => context.Message.CorrelationId == expectedId, cancellationToken: TestContext.Current.CancellationToken);
+            await using IPublishMessageObservation<PublishedMessage> observation =
+                await harness.ObservePublishedMessageAsync<PublishedMessage>(
+                    context => context.Message.CorrelationId == expectedId,
+                    cancellationToken);
 
             await harness.Bus.PublishAsync(new PublishedMessage(NewId.NextGuid(), "rejected"), cancellationToken);
             await harness.Bus.PublishAsync(new PublishedMessage(expectedId, "expected"), cancellationToken);
 
-            ConsumeContext<PublishedMessage> context = await selected.WaitAsync(timeout, cancellationToken);
+            ConsumeContext<PublishedMessage> context = await observation.Message.WaitAsync(timeout, cancellationToken);
             Assert.Equal(expectedId, context.Message.CorrelationId);
             Assert.Equal("expected", context.Message.Value);
             Assert.Equal(context.Message.CorrelationId, context.CorrelationId);
@@ -60,12 +63,13 @@ public sealed class TestingServiceProviderExtensionsTests
         Assert.Equal(2, tasks.Length);
         Assert.Same(sources[0].Task, tasks[0]);
         Assert.Same(sources[1].Task, tasks[1]);
-        Assert.Same(tasks[1], required);
+        Assert.NotSame(tasks[1], required);
         Assert.False(tasks[0].IsCompleted);
         Assert.False(tasks[1].IsCompleted);
 
         sources[1].SetResult("second");
         Assert.Equal("second", await tasks[1]);
+        Assert.Equal("second", await required);
         Assert.False(tasks[0].IsCompleted);
 
         sources[0].SetResult("first");
@@ -83,8 +87,10 @@ public sealed class TestingServiceProviderExtensionsTests
         ITestHarness harness = DispatchProxy.Create<ITestHarness, PendingHarnessProxy>();
         ((PendingHarnessProxy)(object)harness).Configure(bus, timeProvider, TimeSpan.FromSeconds(1));
 
-        Task<Task<ConsumeContext<PublishedMessage>>> connection =
-            harness.ConnectPublishHandlerAsync<PublishedMessage>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
+        Task<IPublishMessageObservation<PublishedMessage>> connection =
+            harness.ObservePublishedMessageAsync<PublishedMessage>(
+                _ => true,
+                cancellationToken: TestContext.Current.CancellationToken);
         Assert.False(connection.IsCompleted);
 
         timeProvider.Advance(TimeSpan.FromSeconds(1));
@@ -100,7 +106,10 @@ public sealed class TestingServiceProviderExtensionsTests
     public async Task ConnectPublishHandler_RejectsMissingRequiredDependenciesBeforeEndpointCreationAsync()
     {
         ArgumentNullException missingHarness = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            TestingServiceProviderExtensions.ConnectPublishHandlerAsync<PublishedMessage>(null!, _ => true, TestContext.Current.CancellationToken));
+            TestingServiceProviderExtensions.ObservePublishedMessageAsync<PublishedMessage>(
+                null!,
+                _ => true,
+                TestContext.Current.CancellationToken));
         Assert.Equal("harness", missingHarness.ParamName);
 
         await using ServiceProvider provider = new ServiceCollection()
@@ -109,8 +118,48 @@ public sealed class TestingServiceProviderExtensionsTests
         ITestHarness harness = provider.GetTestHarness();
 
         ArgumentNullException missingFilter = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            harness.ConnectPublishHandlerAsync<PublishedMessage>(null!, cancellationToken: TestContext.Current.CancellationToken));
+            harness.ObservePublishedMessageAsync<PublishedMessage>(
+                null!,
+                cancellationToken: TestContext.Current.CancellationToken));
         Assert.Equal("filter", missingFilter.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "harness-bound-task-caller-cancellation")]
+    public async Task GetTaskAsync_CallerCancellationEndsOnlyTheWaitAndPreservesTheExactTokenAsync()
+    {
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration => configuration.AddTaskCompletionSource<string>())
+            .BuildServiceProvider(validateScopes: true);
+        TaskCompletionSource<string> source = provider.GetRequiredService<TaskCompletionSource<string>>();
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+
+        Task<string> wait = provider.GetTaskAsync<string>(cancellation.Token);
+        cancellation.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => wait);
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.False(source.Task.IsCompleted);
+
+        source.SetResult("still-usable");
+        Assert.Equal("still-usable", await source.Task);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "required-provider-input")]
+    public void TaskResolution_RejectsANullProvider()
+    {
+        Assert.Equal(
+            "provider",
+            Assert.Throws<ArgumentNullException>(() => ServiceProviderTestExtensions.GetTasks<string>(null!)).ParamName);
+        Assert.Equal(
+            "provider",
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = ServiceProviderTestExtensions.GetTaskAsync<string>(
+                    null!,
+                    TestContext.Current.CancellationToken);
+            }).ParamName);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()

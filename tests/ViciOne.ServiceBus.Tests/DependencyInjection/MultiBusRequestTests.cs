@@ -51,7 +51,7 @@ public sealed class MultiBusRequestTests
         {
             var message = new SharedMessage(NewId.NextGuid());
             await harness.Bus.PublishAsync(message, cancellationToken);
-            IReceivedMessage<SharedMessage> received = await harness.Consumed
+            IConsumedMessage<SharedMessage> received = await harness.Consumed
                 .SelectAsync<SharedMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 

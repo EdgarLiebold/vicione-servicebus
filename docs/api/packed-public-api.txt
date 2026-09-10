@@ -13835,116 +13835,18 @@ TYPE class public ViciOne.ServiceBus.StateMachineVisualizer.StateMachineMermaidG
   METHOD public System.String Generate()
 
 ASSEMBLY ViciOne.ServiceBus.Testing VERSION=1.0.0.0
-TYPE class public Microsoft.Extensions.DependencyInjection.DependencyInjectionTestingExtensions [static]
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTelemetryListener(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Boolean includeDetails = false)
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTelemetryListener(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.IO.TextWriter textWriter, System.Boolean includeDetails = false)
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViciOneServiceBusInMemoryTestHarness(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator> configure = null)
+TYPE class public Microsoft.Extensions.DependencyInjection.ViciOneServiceBusTestingServiceCollectionExtensions [static]
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViciOneServiceBusTestHarness(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator> configure = null)
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViciOneServiceBusTestHarness(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.IO.TextWriter textWriter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator> configure = null)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViciOneServiceBusTestTelemetry(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Boolean includeDetails = false)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViciOneServiceBusTestTelemetry(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.IO.TextWriter textWriter, System.Boolean includeDetails = false)
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViciOneServiceBusTextWriterLogger(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.IO.TextWriter textWriter = null)
-  METHOD public static System.Void AddConsumerContainerTestHarness<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection configurator)
-  METHOD public static System.Void AddSagaContainerTestHarness<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
-  METHOD public static System.Void AddSagaStateMachineContainerTestHarness<TStateMachine,T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
-  METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator SetTestContextSaveMode(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, ViciOne.ServiceBus.Testing.TestContextSaveMode saveMode, System.Int32 maximumSavedContexts = 4096)
+  METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator SetTestContextRetention(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, ViciOne.ServiceBus.Testing.TestContextSaveMode saveMode, System.Int32 maximumSavedContexts = 4096)
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator SetTestTimeouts(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Nullable<System.TimeSpan> testTimeout = null, System.Nullable<System.TimeSpan> testInactivityTimeout = null)
-TYPE class public ViciOne.ServiceBus.Configuration.TestHarnessRegistrationConfigurator
-  CTOR public ViciOne.ServiceBus.Configuration.TestHarnessRegistrationConfigurator(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator)
-  METHOD public System.Void SetSagaRepositoryProvider(ViciOne.ServiceBus.Configuration.ISagaRepositoryRegistrationProvider provider)
-  METHOD public ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator<TActivity,TArguments,TLog> AddActivity<TActivity,TArguments,TLog>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute = null, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configureCompensate = null)
-  METHOD public ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator<TActivity,TArguments,TLog> AddActivity<TActivity,TArguments,TLog>(System.Type activityDefinitionType, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute = null, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configureCompensate = null)
-  METHOD public ViciOne.ServiceBus.Configuration.IExecuteActivityRegistrationConfigurator<TActivity,TArguments> AddExecuteActivity<TActivity,TArguments>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configure = null)
-  METHOD public ViciOne.ServiceBus.Configuration.IExecuteActivityRegistrationConfigurator<TActivity,TArguments> AddExecuteActivity<TActivity,TArguments>(System.Type executeActivityDefinitionType, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configure = null)
-  METHOD public ViciOne.ServiceBus.Configuration.IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(System.Type futureDefinitionType = null)
-  METHOD public ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSaga<T>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ISagaConfigurator<T>> configure = null)
-  METHOD public ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSaga<T>(System.Type sagaDefinitionType, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ISagaConfigurator<T>> configure = null)
-  METHOD public ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSagaRepository<T>()
-  METHOD public ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine,T>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ISagaConfigurator<T>> configure = null)
-  METHOD public ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine,T>(System.Type sagaDefinitionType, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ISagaConfigurator<T>> configure = null)
-  METHOD public virtual System.Void AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.ConfigureEndpointsCallback callback)
-  METHOD public virtual System.Void AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.ConfigureEndpointsProviderCallback callback)
-  METHOD public virtual System.Void AddEndpoint(System.Type endpointDefinition)
-  METHOD public virtual System.Void AddEndpoint<TDefinition,T>(ViciOne.ServiceBus.Configuration.IRegistration registration, ViciOne.ServiceBus.Configuration.IEndpointSettings<ViciOne.ServiceBus.Configuration.IEndpointDefinition<T>> settings = null)
-  METHOD public virtual System.Void AddRequestClient(System.Type requestType, System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
-  METHOD public virtual System.Void AddRequestClient(System.Type requestType, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
-  METHOD public virtual System.Void AddRequestClient<T>(System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
-  METHOD public virtual System.Void AddRequestClient<T>(ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
-  METHOD public virtual System.Void AddRider(System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationConfigurator> configure)
-  METHOD public virtual System.Void SetBusFactory<T>(T busFactory)
-  METHOD public virtual System.Void SetDefaultRequestTimeout(ViciOne.ServiceBus.Advanced.RequestTimeout timeout)
-  METHOD public virtual System.Void SetEndpointNameFormatter(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter)
-  METHOD public virtual System.Void SetRequestClientFactory(System.Func<ViciOne.ServiceBus.IBus,ViciOne.ServiceBus.Advanced.RequestTimeout,ViciOne.ServiceBus.Advanced.IClientFactory> clientFactory)
-  METHOD public virtual TParticipant GetOrAddRegistrationCompletionParticipant<TParticipant>(System.Func<TParticipant> factory)
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IConsumerRegistrationConfigurator<T> AddConsumer<T>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IConsumerRegistrationConfigurator<T> AddConsumer<T>(System.Type consumerDefinitionType, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure = null)
-  PROPERTY Microsoft.Extensions.DependencyInjection.IServiceCollection Services { public-get;  }
-  PROPERTY System.Boolean UseDefaultBusFactory { public-get;  }
-  PROPERTY System.Type BusType { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Configuration.IContainerRegistrar Registrar { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Testing.ConsumerContainerTestHarnessRegistration<TConsumer>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Testing.ConsumerContainerTestHarnessRegistration<TConsumer>(ViciOne.ServiceBus.Testing.ITestHarness testHarness)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> DecorateConsumerFactory(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory)
-  PROPERTY ViciOne.ServiceBus.Testing.ReceivedMessageList Consumed { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Testing.ContainerTestHarness
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Testing.ContainerTestHarness(System.IServiceProvider provider, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Testing.TestHarnessOptions> options, System.TimeProvider timeProvider)
-  METHOD public System.Void PostCreate(ViciOne.ServiceBus.IBus bus)
-  METHOD public System.Void PostStart(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetConsumerEndpointAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetExecuteActivityEndpointAsync<T,TArguments>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetHandlerEndpointAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSagaEndpointAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.TaskCompletionSource<T> GetTask<T>()
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual System.Uri GetConsumerAddress<T>()
-  METHOD public virtual System.Uri GetExecuteActivityAddress<T,TArguments>()
-  METHOD public virtual System.Uri GetHandlerAddress<T>()
-  METHOD public virtual System.Uri GetSagaAddress<T>()
-  METHOD public virtual System.Void Cancel()
-  METHOD public virtual System.Void ForceInactive()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeObserver(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.IRequestClient<T> GetRequestClient<T>()
-  METHOD public virtual ViciOne.ServiceBus.Testing.IConsumerTestHarness<T> GetConsumerHarness<T>()
-  METHOD public virtual ViciOne.ServiceBus.Testing.ISagaStateMachineTestHarness<TStateMachine,T> GetSagaStateMachineHarness<TStateMachine,T>()
-  METHOD public virtual ViciOne.ServiceBus.Testing.ISagaTestHarness<T> GetSagaHarness<T>()
-  PROPERTY Microsoft.Extensions.DependencyInjection.IServiceScope Scope { public-get;  }
-  PROPERTY System.IServiceProvider Provider { public-get;  }
-  PROPERTY System.Int32 MaximumSavedContexts { public-get;  }
-  PROPERTY System.Threading.CancellationToken CancellationToken { public-get;  }
-  PROPERTY System.Threading.CancellationToken InactivityToken { public-get;  }
-  PROPERTY System.Threading.Tasks.Task InactivityTask { public-get;  }
-  PROPERTY System.TimeProvider TimeProvider { public-get;  }
-  PROPERTY System.TimeSpan TestInactivityTimeout { public-get; public-set; }
-  PROPERTY System.TimeSpan TestTimeout { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.IEndpointNameFormatter EndpointNameFormatter { public-get;  }
-  PROPERTY ViciOne.ServiceBus.IBus Bus { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IPublishedMessageList Published { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ISentMessageList Sent { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.TestContextSaveMode ContextSaveMode { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Testing.ContainerTestHarnessBusObserver
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Testing.ContainerTestHarnessBusObserver(ViciOne.ServiceBus.DependencyInjection.Testing.ContainerTestHarness harness)
-  METHOD public virtual System.Threading.Tasks.Task PostStartAsync(ViciOne.ServiceBus.IBus bus, System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.BusReady> busReady)
-  METHOD public virtual System.Threading.Tasks.Task PostStopAsync(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task PreStartAsync(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task PreStopAsync(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task StartFaultedAsync(ViciOne.ServiceBus.IBus bus, System.Exception exception)
-  METHOD public virtual System.Threading.Tasks.Task StopFaultedAsync(ViciOne.ServiceBus.IBus bus, System.Exception exception)
-  METHOD public virtual System.Void CreateFaulted(System.Exception exception)
-  METHOD public virtual System.Void PostCreate(ViciOne.ServiceBus.IBus bus)
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Testing.SagaContainerTestHarnessRegistration<TSaga>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Testing.SagaContainerTestHarnessRegistration<TSaga>(ViciOne.ServiceBus.Testing.ITestHarness testHarness)
-  METHOD public virtual ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> DecorateSagaRepository(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository)
-  PROPERTY System.TimeProvider TimeProvider { public-get;  }
-  PROPERTY System.TimeSpan TestTimeout { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.Implementations.SagaList<TSaga> Created { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.Implementations.SagaList<TSaga> Sagas { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ReceivedMessageList Consumed { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.ActiveTestHarnessExtensions [static]
   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Testing.ActiveTestResult> ActAsync(ViciOne.ServiceBus.Testing.IBaseTestHarness harness, System.Func<System.Threading.Tasks.Task> action, System.String operationName = null, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Testing.ActiveTestResult [sealed]
-  CTOR public ViciOne.ServiceBus.Testing.ActiveTestResult(System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage> consumed, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage> published, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISentMessage> sent)
+  CTOR public ViciOne.ServiceBus.Testing.ActiveTestResult(System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage> consumed, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage> published, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISentMessage> sent)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
@@ -13952,8 +13854,8 @@ TYPE class public ViciOne.ServiceBus.Testing.ActiveTestResult [sealed]
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Testing.ActiveTestResult left, ViciOne.ServiceBus.Testing.ActiveTestResult right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Testing.ActiveTestResult left, ViciOne.ServiceBus.Testing.ActiveTestResult right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Testing.ActiveTestResult other)
+  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IConsumedMessage> Consumed { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IPublishedMessage> Published { public-get;  }
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IReceivedMessage> Consumed { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISentMessage> Sent { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Courier.IActivityFactory<TActivity,TArguments,TLog> activityFactory, System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute, System.Action<ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configureCompensate)
@@ -13966,26 +13868,36 @@ TYPE class public ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArgu
   PROPERTY System.Uri ExecuteAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.ActivityTestHarnessExtensions [static]
   METHOD public static ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog> Activity<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Testing.BusTestHarness harness)
-  METHOD public static ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog> Activity<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<TArguments,TActivity> executeFactoryMethod, System.Func<TLog,TActivity> compensateFactoryMethod)
+  METHOD public static ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog> Activity<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<TArguments,TActivity> executeFactory, System.Func<TLog,TActivity> compensateFactory)
   METHOD public static ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments> ExecuteActivity<TActivity,TArguments>(ViciOne.ServiceBus.Testing.BusTestHarness harness)
-  METHOD public static ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments> ExecuteActivity<TActivity,TArguments>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<TArguments,TActivity> executeFactoryMethod)
+  METHOD public static ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments> ExecuteActivity<TActivity,TArguments>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<TArguments,TActivity> executeFactory)
+TYPE class public ViciOne.ServiceBus.Testing.AsyncElementList<TElement> [abstract]
+  CTOR protected ViciOne.ServiceBus.Testing.AsyncElementList<TElement>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
+  CTOR protected ViciOne.ServiceBus.Testing.AsyncElementList<TElement>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
+  METHOD protected System.Void Add(TElement element)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<TElement> SelectAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<TElement> Snapshot()
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY System.Int32 Count { public-get;  }
+  PROPERTY System.Int32 MaximumSavedElements { public-get;  }
+  PROPERTY System.TimeProvider TimeProvider { protected-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.TestContextSaveMode SaveMode { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.AsyncElementListExtensions [static]
-  METHOD public static System.Collections.Generic.IAsyncEnumerable<TResult> SelectAsync<TElement,TResult>(System.Collections.Generic.IAsyncEnumerable<TElement> elements, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Int32 Count<TElement>(ViciOne.ServiceBus.Testing.IAsyncElementList<TElement> elements, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Collections.Generic.IAsyncEnumerable<TResult> OfTypeAsync<TResult>(System.Collections.Generic.IAsyncEnumerable<System.Object> elements, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Boolean> AnyObservedAsync<TElement>(System.Collections.Generic.IAsyncEnumerable<TElement> elements, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Int32> CountObservedAsync<TElement>(System.Collections.Generic.IAsyncEnumerable<TElement> elements, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<TElement> FirstObservedAsync<TElement>(System.Collections.Generic.IAsyncEnumerable<TElement> elements, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<TElement> FirstObservedOrDefaultAsync<TElement>(System.Collections.Generic.IAsyncEnumerable<TElement> elements, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Void Deconstruct(ViciOne.ServiceBus.Testing.ISentMessage sent, out System.Object message, out ViciOne.ServiceBus.Advanced.SendContext context)
-  METHOD public static System.Void Deconstruct<TMessage>(ViciOne.ServiceBus.Testing.ISentMessage<TMessage> sent, out TMessage message, out ViciOne.ServiceBus.Advanced.SendContext context)
+  METHOD public static System.Void Deconstruct<TMessage>(ViciOne.ServiceBus.Testing.ISentMessage<TMessage> sent, out TMessage message, out ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
 TYPE class public ViciOne.ServiceBus.Testing.AsyncTestHarness [abstract]
   CTOR protected ViciOne.ServiceBus.Testing.AsyncTestHarness()
   CTOR protected ViciOne.ServiceBus.Testing.AsyncTestHarness(System.TimeProvider timeProvider)
   METHOD protected System.Threading.Tasks.TaskCompletionSource<T> CreateTask<T>(System.Threading.CancellationToken cancellationToken)
   METHOD public System.Threading.Tasks.TaskCompletionSource<T> GetTask<T>()
   METHOD public System.Void BeginTestScope()
-  METHOD public ViciOne.ServiceBus.Testing.Implementations.TestConsumeMessageObserver<T> GetConsumeObserver<T>()
-  METHOD public ViciOne.ServiceBus.Testing.Implementations.TestConsumeObserver GetConsumeObserver()
+  METHOD public ViciOne.ServiceBus.Testing.TestConsumeMessageObserver<T> GetConsumeObserver<T>()
+  METHOD public ViciOne.ServiceBus.Testing.TestConsumeObserver GetConsumeObserver()
   METHOD public virtual System.Void Cancel()
   METHOD public virtual System.Void Dispose()
   METHOD public virtual System.Void ForceInactive()
@@ -13996,8 +13908,17 @@ TYPE class public ViciOne.ServiceBus.Testing.AsyncTestHarness [abstract]
   PROPERTY System.TimeProvider TimeProvider { public-get;  }
   PROPERTY System.TimeSpan TestInactivityTimeout { public-get; public-set; }
   PROPERTY System.TimeSpan TestTimeout { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Testing.Implementations.IInactivityObserver InactivityObserver { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.TestContextSaveMode ContextSaveMode { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.Testing.BaseSagaTestHarness<TSaga> [abstract]
+  CTOR protected ViciOne.ServiceBus.Testing.BaseSagaTestHarness<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> querySagaRepository, ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> loadSagaRepository, System.TimeSpan testTimeout, System.TimeProvider timeProvider)
+  METHOD protected System.Threading.Tasks.Task<TResult> PollAsync<TResult>(System.Func<System.Threading.Tasks.Task<TResult>> probe, System.Func<TResult,System.Boolean> completed, TResult timeoutResult, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Guid>> WaitForSagasAsync(System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY System.TimeProvider TimeProvider { protected-get;  }
+  PROPERTY System.TimeSpan TestTimeout { protected-get;  }
+  PROPERTY ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> LoadSagaRepository { protected-get;  }
+  PROPERTY ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> QuerySagaRepository { protected-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.BusTestHarness [abstract,base=ViciOne.ServiceBus.Testing.AsyncTestHarness]
   CTOR protected ViciOne.ServiceBus.Testing.BusTestHarness()
   CTOR protected ViciOne.ServiceBus.Testing.BusTestHarness(System.TimeProvider timeProvider)
@@ -14036,9 +13957,45 @@ TYPE class public ViciOne.ServiceBus.Testing.BusTestHarness [abstract,base=ViciO
   PROPERTY ViciOne.ServiceBus.IBusControl BusControl { public-get;  }
   PROPERTY ViciOne.ServiceBus.ISendEndpoint BusSendEndpoint { public-get;  }
   PROPERTY ViciOne.ServiceBus.ISendEndpoint InputQueueSendEndpoint { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.IPublishedMessageList Published { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISentMessageList Sent { public-get;  }
+TYPE class public ViciOne.ServiceBus.Testing.ConsumedMessage<TMessage> [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessage<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.Exception exception = null)
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessage<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.Exception exception, System.TimeProvider timeProvider)
+  PROPERTY System.DateTimeOffset StartTime { public-get;  }
+  PROPERTY System.Nullable<System.Guid> ElementId { public-get;  }
+  PROPERTY System.TimeSpan ElapsedTime { public-get;  }
+TYPE class public ViciOne.ServiceBus.Testing.ConsumedMessageFilter [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessageFilter()
+  METHOD public System.Boolean Any(ViciOne.ServiceBus.Testing.IConsumedMessage element)
+  METHOD public System.Boolean None(ViciOne.ServiceBus.Testing.IConsumedMessage element)
+  PROPERTY ViciOne.ServiceBus.Testing.ConsumedMessageFilterSet Excludes { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.ConsumedMessageFilterSet Includes { public-get;  }
+TYPE class public ViciOne.ServiceBus.Testing.ConsumedMessageFilterSet [sealed,base=ViciOne.ServiceBus.Testing.FilterSet<ViciOne.ServiceBus.Testing.IConsumedMessage>]
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessageFilterSet()
+  METHOD public ViciOne.ServiceBus.Testing.ConsumedMessageFilterSet Add<TMessage>()
+  METHOD public ViciOne.ServiceBus.Testing.ConsumedMessageFilterSet Add<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter)
+TYPE class public ViciOne.ServiceBus.Testing.ConsumedMessageList [sealed,base=ViciOne.ServiceBus.Testing.AsyncElementList<ViciOne.ServiceBus.Testing.IConsumedMessage>]
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
+  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context)
+  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.Exception exception)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> SelectAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> SelectAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.ConsumedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> Snapshot<TMessage>()
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> Snapshot<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.ConsumedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Testing.ConsumedMessageList<TMessage> [sealed,base=ViciOne.ServiceBus.Testing.AsyncElementList<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>>]
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessageList<TMessage>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
+  CTOR public ViciOne.ServiceBus.Testing.ConsumedMessageList<TMessage>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
+  METHOD public System.Void Add(ViciOne.ServiceBus.ConsumeContext<TMessage> context)
+  METHOD public System.Void Add(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.Exception exception)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer>
   CTOR public ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory)
   CTOR public ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer>> configure)
@@ -14046,62 +14003,40 @@ TYPE class public ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer>
   CTOR public ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.String queueName)
   METHOD protected virtual System.Void ConfigureNamedReceiveEndpoint(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.String queueName)
   METHOD protected virtual System.Void ConfigureReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.ConsumerTestHarnessExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure, System.String queueName = null)
-  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<T> consumerFactoryMethod, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure, System.String queueName = null)
-  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<T> consumerFactoryMethod, System.String queueName = null)
-  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.String queueName = null)
-  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.IConsumerFactory<T> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure, System.String queueName = null)
-  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.IConsumerFactory<T> consumerFactory, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer> Consumer<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer>> configure, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer> Consumer<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<TConsumer> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer>> configure, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer> Consumer<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.Func<TConsumer> consumerFactory, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer> Consumer<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer> Consumer<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer>> configure, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<TConsumer> Consumer<TConsumer>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.String queueName = null)
 TYPE class public ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments> activityFactory, System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute)
   EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> ExecuteReceiveEndpointConfiguring { public-add; public-remove; }
   PROPERTY System.String ExecuteQueueName { public-get;  }
   PROPERTY System.String Name { public-get;  }
   PROPERTY System.Uri ExecuteAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.ExtensionMethodsForSagas [static]
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldNotContainSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldNotContainSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldNotContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldNotContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldNotContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldNotContainSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
 TYPE delegate public ViciOne.ServiceBus.Testing.FilterDelegate<TContext> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.FilterDelegate<TContext>(System.Object object, System.IntPtr method)
   METHOD public virtual System.Boolean EndInvoke(System.IAsyncResult result)
   METHOD public virtual System.Boolean Invoke(TContext context)
   METHOD public virtual System.IAsyncResult BeginInvoke(TContext context, System.AsyncCallback callback, System.Object object)
-TYPE class public ViciOne.ServiceBus.Testing.FilterSet<T>
-  CTOR protected ViciOne.ServiceBus.Testing.FilterSet<T>()
-  METHOD protected ViciOne.ServiceBus.Testing.FilterSet<T> Add(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter)
-  METHOD public System.Boolean All(T target)
-  METHOD public System.Boolean Any(T target)
-  METHOD public System.Boolean None(T target)
-  METHOD public System.Boolean NotAny(T target)
+TYPE class public ViciOne.ServiceBus.Testing.FilterSet<TContext> [abstract]
+  CTOR protected ViciOne.ServiceBus.Testing.FilterSet<TContext>()
+  METHOD protected ViciOne.ServiceBus.Testing.FilterSet<TContext> Add(ViciOne.ServiceBus.Testing.FilterDelegate<TContext> filter)
+  METHOD public System.Boolean All(TContext target)
+  METHOD public System.Boolean Any(TContext target)
+  METHOD public System.Boolean None(TContext target)
+  METHOD public System.Boolean NotAny(TContext target)
 TYPE class public ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Advanced.MessageHandler<TMessage> handler)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList<TMessage> Consumed { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList<TMessage> Consumed { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.HandlerTestHarnessExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Testing.HandlerTestHarness<T> Handler<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness)
-  METHOD public static ViciOne.ServiceBus.Testing.HandlerTestHarness<T> Handler<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.MessageHandler<T> handler)
+  METHOD public static ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage> Handler<TMessage>(ViciOne.ServiceBus.Testing.BusTestHarness harness)
+  METHOD public static ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage> Handler<TMessage>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.MessageHandler<TMessage> handler)
 TYPE interface public ViciOne.ServiceBus.Testing.IAsyncElementList<TElement>
   METHOD public abstract System.Collections.Generic.IAsyncEnumerable<TElement> SelectAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<TElement> Select(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Collections.Generic.IReadOnlyList<TElement> Snapshot()
   METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
   PROPERTY System.Int32 Count { public-get;  }
@@ -14119,18 +14054,36 @@ TYPE interface public ViciOne.ServiceBus.Testing.IBaseTestHarness
   PROPERTY System.TimeProvider TimeProvider { public-get;  }
   PROPERTY System.TimeSpan TestInactivityTimeout { public-get; public-set; }
   PROPERTY System.TimeSpan TestTimeout { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.IPublishedMessageList Published { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISentMessageList Sent { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.TestContextSaveMode ContextSaveMode { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Testing.IConsumedMessage
+  PROPERTY System.DateTimeOffset StartTime { public-get;  }
   PROPERTY System.Exception Exception { public-get;  }
+  PROPERTY System.Object MessageObject { public-get;  }
+  PROPERTY System.String ShortTypeName { public-get;  }
+  PROPERTY System.TimeSpan ElapsedTime { public-get;  }
   PROPERTY System.Type MessageType { public-get;  }
   PROPERTY ViciOne.ServiceBus.ConsumeContext Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.IConsumedMessage<T>
-  PROPERTY ViciOne.ServiceBus.ConsumeContext<T> Context { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>
+  PROPERTY ViciOne.ServiceBus.ConsumeContext<TMessage> Context { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Testing.IConsumedMessageList
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> SelectAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> SelectAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.ConsumedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> Snapshot<TMessage>()
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> Snapshot<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.ConsumedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+TYPE interface public ViciOne.ServiceBus.Testing.IConsumedMessageList<TMessage>
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IConsumedMessage<TMessage>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Testing.IConsumerTestHarness<TConsumer>
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Testing.IPublishMessageObservation<TMessage>
+  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.ConsumeContext<TMessage>> Message { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Testing.IPublishedMessage
   PROPERTY System.DateTimeOffset StartTime { public-get;  }
   PROPERTY System.Exception Exception { public-get;  }
@@ -14139,62 +14092,39 @@ TYPE interface public ViciOne.ServiceBus.Testing.IPublishedMessage
   PROPERTY System.TimeSpan ElapsedTime { public-get;  }
   PROPERTY System.Type MessageType { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.SendContext Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.IPublishedMessage<T>
-  PROPERTY ViciOne.ServiceBus.Advanced.PublishContext<T> Context { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>
+  PROPERTY ViciOne.ServiceBus.Advanced.PublishContext<TMessage> Context { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Testing.IPublishedMessageList
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> SelectAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> SelectAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> apply, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> Select<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> Select<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> apply = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Testing.IReceivedMessage
-  PROPERTY System.DateTimeOffset StartTime { public-get;  }
-  PROPERTY System.Exception Exception { public-get;  }
-  PROPERTY System.Object MessageObject { public-get;  }
-  PROPERTY System.String ShortTypeName { public-get;  }
-  PROPERTY System.TimeSpan ElapsedTime { public-get;  }
-  PROPERTY System.Type MessageType { public-get;  }
-  PROPERTY ViciOne.ServiceBus.ConsumeContext Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.IReceivedMessage<T>
-  PROPERTY ViciOne.ServiceBus.ConsumeContext<T> Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.IReceivedMessageList
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> SelectAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> SelectAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.ReceivedMessageFilter> apply, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> Select<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> Select<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.ReceivedMessageFilter> apply = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Testing.IReceivedMessageList<T>
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> Select(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> SelectAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> SelectAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> Snapshot<TMessage>()
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> Snapshot<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+TYPE interface public ViciOne.ServiceBus.Testing.ISagaInstance<TSaga>
+  PROPERTY TSaga Saga { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Testing.ISagaList<TSaga>
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<TSaga>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<TSaga>> SelectAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TSaga> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISagaInstance<TSaga>> Snapshot(ViciOne.ServiceBus.Testing.FilterDelegate<TSaga> filter)
   METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Testing.ISagaInstance<T>
-  PROPERTY T Saga { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.ISagaList<T>
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<T>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<T>> SelectAsync(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<T>> Select(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract T Contains(System.Guid sagaId)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TSaga> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract TSaga FindById(System.Guid sagaId)
 TYPE interface public ViciOne.ServiceBus.Testing.ISagaStateMachineTestHarness<TStateMachine,TInstance>
-  METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> ExistsAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> ExistsAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Guid>> WaitForSagasInStateAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Guid>> WaitForSagasInStateAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync(System.Guid correlationId, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync(System.Guid correlationId, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.StateMachineEventObservation> Events { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.StateMachineStateChange> StateChanges { public-get;  }
   PROPERTY TStateMachine StateMachine { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Testing.ISagaTestHarness<TSaga>
-  METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> MatchAsync(System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> NotExistsAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
+  METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Guid>> WaitForSagasAsync(System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TSaga> Created { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TSaga> Sagas { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Testing.ISentMessage
@@ -14208,14 +14138,14 @@ TYPE interface public ViciOne.ServiceBus.Testing.ISentMessage
 TYPE interface public ViciOne.ServiceBus.Testing.ISentMessage<TMessage>
   PROPERTY ViciOne.ServiceBus.Advanced.SendContext<TMessage> Context { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Testing.ISentMessageList
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> SelectAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> SelectAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> apply, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> Select<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> Select<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> apply = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> SelectAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> SelectAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> Snapshot<TMessage>()
+  METHOD public abstract System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> Snapshot<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Testing.ITestHarness
   METHOD public abstract System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetConsumerEndpointAsync<T>(System.Threading.CancellationToken cancellationToken = null)
@@ -14235,215 +14165,6 @@ TYPE interface public ViciOne.ServiceBus.Testing.ITestHarness
   PROPERTY System.IServiceProvider Provider { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.IEndpointNameFormatter EndpointNameFormatter { public-get;  }
   PROPERTY ViciOne.ServiceBus.IBus Bus { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<TElement> [abstract]
-  CTOR protected ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<TElement>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
-  CTOR protected ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<TElement>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD protected System.Void Add(TElement context)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<TElement> SelectAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<TElement> Select(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IReadOnlyList<TElement> Snapshot()
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(ViciOne.ServiceBus.Testing.FilterDelegate<TElement> filter, System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY System.Int32 Count { public-get;  }
-  PROPERTY System.Int32 MaximumSavedElements { public-get;  }
-  PROPERTY System.TimeProvider TimeProvider { protected-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.TestContextSaveMode SaveMode { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.AsyncInactivityObserver
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.AsyncInactivityObserver(System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.AsyncInactivityObserver(System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken, System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task NoActivityAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Connected(ViciOne.ServiceBus.Testing.Implementations.IInactivityObservationSource source)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void ForceInactive()
-  PROPERTY System.Threading.CancellationToken InactivityToken { public-get;  }
-  PROPERTY System.Threading.Tasks.Task InactivityTask { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BaseBusActivityIndicatorConnectable [abstract,base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Testing.Implementations.IConditionObserver>]
-  CTOR protected ViciOne.ServiceBus.Testing.Implementations.BaseBusActivityIndicatorConnectable()
-  METHOD protected System.Threading.Tasks.Task ConditionUpdatedAsync()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConditionObserver(ViciOne.ServiceBus.Testing.Implementations.IConditionObserver observer)
-  PROPERTY System.Boolean IsMet { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BaseSagaTestHarness<TSaga> [abstract]
-  CTOR protected ViciOne.ServiceBus.Testing.Implementations.BaseSagaTestHarness<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> querySagaRepository, ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> loadSagaRepository, System.TimeSpan testTimeout, System.TimeProvider timeProvider)
-  METHOD protected System.Threading.Tasks.Task<TResult> PollAsync<TResult>(System.Func<System.Threading.Tasks.Task<TResult>> probe, System.Func<TResult,System.Boolean> completed, TResult timeoutResult, System.Nullable<System.TimeSpan> timeout = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> MatchAsync(System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> NotExistsAsync(System.Guid correlationId, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY System.TimeProvider TimeProvider { protected-get;  }
-  PROPERTY System.TimeSpan TestTimeout { protected-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> LoadSagaRepository { protected-get;  }
-  PROPERTY ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> QuerySagaRepository { protected-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusActivityConsumeIndicator [base=ViciOne.ServiceBus.Testing.Implementations.BaseBusActivityIndicatorConnectable]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityConsumeIndicator()
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityConsumeIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource)
-  METHOD public virtual System.Void Signal()
-  PROPERTY System.Boolean IsMet { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusActivityPublishIndicator [base=ViciOne.ServiceBus.Testing.Implementations.BaseBusActivityIndicatorConnectable]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityPublishIndicator()
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityPublishIndicator(System.TimeSpan receiveIdleTimeout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityPublishIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityPublishIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource, System.TimeSpan receiveIdleTimeout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityPublishIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource, System.TimeSpan receiveIdleTimeout, System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task PostPublishAsync<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task PrePublishAsync<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task PublishFaultAsync<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context, System.Exception exception)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void Signal()
-  PROPERTY System.Boolean IsMet { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusActivityReceiveIndicator [base=ViciOne.ServiceBus.Testing.Implementations.BaseBusActivityIndicatorConnectable]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityReceiveIndicator()
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityReceiveIndicator(System.TimeSpan receiveIdleTimeout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityReceiveIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityReceiveIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource, System.TimeSpan receiveIdleTimeout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivityReceiveIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource, System.TimeSpan receiveIdleTimeout, System.TimeProvider timeProvider)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void Signal()
-  PROPERTY System.Boolean IsMet { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusActivitySendIndicator [base=ViciOne.ServiceBus.Testing.Implementations.BaseBusActivityIndicatorConnectable]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivitySendIndicator()
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivitySendIndicator(System.TimeSpan receiveIdleTimeout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivitySendIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivitySendIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource, System.TimeSpan receiveIdleTimeout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusActivitySendIndicator(ViciOne.ServiceBus.Testing.Implementations.ISignalResource signalResource, System.TimeSpan receiveIdleTimeout, System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task PostSendAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task PreSendAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task SendFaultAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Exception exception)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void Signal()
-  PROPERTY System.Boolean IsMet { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusTestConsumeObserver [base=ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestConsumeObserver(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestConsumeObserver(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeFaultAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.Exception exception)
-  METHOD public virtual System.Threading.Tasks.Task PostConsumeAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task PreConsumeAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context)
-  PROPERTY System.Boolean IsInactive { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Messages { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusTestPublishObserver [base=ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestPublishObserver(System.TimeSpan timeout, System.TimeSpan inactivityTimout, System.Threading.CancellationToken testCompleted = null)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestPublishObserver(System.TimeSpan timeout, System.TimeSpan inactivityTimout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  PROPERTY ViciOne.ServiceBus.Testing.IPublishedMessageList Messages { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusTestReceiveObserver [base=ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestReceiveObserver(System.TimeSpan inactivityTimout)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestReceiveObserver(System.TimeSpan inactivityTimout, System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeFaultAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.TimeSpan duration, System.String consumerType, System.Exception exception)
-  METHOD public virtual System.Threading.Tasks.Task PostConsumeAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.TimeSpan duration, System.String consumerType)
-  METHOD public virtual System.Threading.Tasks.Task PostReceiveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context)
-  METHOD public virtual System.Threading.Tasks.Task PreReceiveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context)
-  METHOD public virtual System.Threading.Tasks.Task ReceiveFaultAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.Exception exception)
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.BusTestSendObserver [base=ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestSendObserver(System.TimeSpan timeout, System.TimeSpan inactivityTimout, System.Threading.CancellationToken testCompleted = null)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.BusTestSendObserver(System.TimeSpan timeout, System.TimeSpan inactivityTimout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task PostSendAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task PreSendAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  METHOD public virtual System.Threading.Tasks.Task SendFaultAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Exception exception)
-  PROPERTY ViciOne.ServiceBus.Testing.ISentMessageList Messages { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.ConditionExpression
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.ConditionExpression(ViciOne.ServiceBus.Testing.Implementations.ISignalResource resource)
-  METHOD public System.Boolean CheckCondition()
-  METHOD public System.Void AddConditionBlock(ViciOne.ServiceBus.Testing.Implementations.IObservableCondition[] conditions)
-  METHOD public System.Void ClearAllConditions()
-  METHOD public virtual System.Threading.Tasks.Task ConditionUpdatedAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Dispose()
-TYPE interface public ViciOne.ServiceBus.Testing.Implementations.ICondition
-  PROPERTY System.Boolean IsMet { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.Implementations.IConditionObserver
-  METHOD public abstract System.Threading.Tasks.Task ConditionUpdatedAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Testing.Implementations.IInactivityObservationSource
-  METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectInactivityObserver(ViciOne.ServiceBus.Testing.Implementations.IInactivityObserver observer)
-  PROPERTY System.Boolean IsInactive { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Testing.Implementations.IInactivityObserver
-  METHOD public abstract System.Threading.Tasks.Task NoActivityAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Void Connected(ViciOne.ServiceBus.Testing.Implementations.IInactivityObservationSource source)
-  METHOD public abstract System.Void ForceInactive()
-TYPE interface public ViciOne.ServiceBus.Testing.Implementations.IObservableCondition
-  METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConditionObserver(ViciOne.ServiceBus.Testing.Implementations.IConditionObserver observer)
-TYPE interface public ViciOne.ServiceBus.Testing.Implementations.ISignalResource
-  METHOD public abstract System.Void Signal()
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.InMemoryTestHarnessBusInstance
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.InMemoryTestHarnessBusInstance(ViciOne.ServiceBus.Testing.InMemoryTestHarness testHarness, ViciOne.ServiceBus.Configuration.IBusRegistrationContext busRegistrationContext)
-  METHOD public virtual System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)
-  METHOD public virtual TRider GetRider<TRider>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
-  PROPERTY System.String Name { public-get;  }
-  PROPERTY System.Type InstanceType { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Configuration.IHostConfiguration HostConfiguration { public-get;  }
-  PROPERTY ViciOne.ServiceBus.IBus Bus { public-get;  }
-  PROPERTY ViciOne.ServiceBus.IBusControl BusControl { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.InMemoryTestHarness Harness { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver [abstract,base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Testing.Implementations.IInactivityObserver>]
-  CTOR protected ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver()
-  CTOR protected ViciOne.ServiceBus.Testing.Implementations.InactivityTestObserver(System.TimeProvider timeProvider)
-  METHOD protected System.Threading.Tasks.Task NotifyInactiveAsync()
-  METHOD protected System.Void StartTimer(System.TimeSpan inactivityTimout)
-  METHOD public System.Threading.Tasks.Task RestartTimerAsync(System.Boolean activityDetected = true, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectInactivityObserver(ViciOne.ServiceBus.Testing.Implementations.IInactivityObserver observer)
-  PROPERTY System.Boolean IsInactive { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.RegistrationConsumerTestHarness<TConsumer>
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.RegistrationConsumerTestHarness<TConsumer>(ViciOne.ServiceBus.DependencyInjection.Testing.ConsumerContainerTestHarnessRegistration<TConsumer> registration)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.RegistrationSagaStateMachineTestHarness<TStateMachine,TInstance> [base=ViciOne.ServiceBus.Testing.Implementations.BaseSagaTestHarness<TInstance>]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.RegistrationSagaStateMachineTestHarness<TStateMachine,TInstance>(ViciOne.ServiceBus.DependencyInjection.Testing.SagaContainerTestHarnessRegistration<TInstance> registration, ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TInstance> querySagaRepository, ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TInstance> loadSagaRepository, TStateMachine stateMachine, ViciOne.ServiceBus.Testing.ITestHarness testHarness)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> ExistsAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> ExistsAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Dispose()
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.StateMachineEventObservation> Events { public-get;  }
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.StateMachineStateChange> StateChanges { public-get;  }
-  PROPERTY TStateMachine StateMachine { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TInstance> Created { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TInstance> Sagas { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.RegistrationSagaTestHarness<TSaga> [base=ViciOne.ServiceBus.Testing.Implementations.BaseSagaTestHarness<TSaga>]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.RegistrationSagaTestHarness<TSaga>(ViciOne.ServiceBus.DependencyInjection.Testing.SagaContainerTestHarnessRegistration<TSaga> registration, ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> loadRepository, ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> queryRepository)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TSaga> Created { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TSaga> Sagas { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.SagaInstance<T>
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.SagaInstance<T>(T saga)
-  PROPERTY System.Nullable<System.Guid> ElementId { public-get;  }
-  PROPERTY T Saga { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.SagaList<T> [base=ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<ViciOne.ServiceBus.Testing.ISagaInstance<T>>]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.SagaList<T>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.SagaList<T>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public System.Void Add(ViciOne.ServiceBus.Advanced.SagaConsumeContext<T> context)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<T>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<T>> SelectAsync(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISagaInstance<T>> Select(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(ViciOne.ServiceBus.Testing.FilterDelegate<T> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual T Contains(System.Guid sagaId)
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.StateMachineSagaTestHarness<TInstance,TStateMachine> [base=ViciOne.ServiceBus.Testing.SagaTestHarness<TInstance>]
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.StateMachineSagaTestHarness<TInstance,TStateMachine>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TInstance> querySagaRepository, ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TInstance> loadSagaRepository, TStateMachine stateMachine, System.String queueName)
-  METHOD protected System.Void ConfigureNamedReceiveEndpoint(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.String queueName)
-  METHOD protected System.Void ConfigureReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> ExistsAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IList<System.Guid>> ExistsAsync(System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<System.Guid>> ExistsAsync(System.Guid correlationId, ViciOne.ServiceBus.Sagas.State state, System.Nullable<System.TimeSpan> timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Dispose()
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.StateMachineEventObservation> Events { public-get;  }
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.StateMachineStateChange> StateChanges { public-get;  }
-  PROPERTY TStateMachine StateMachine { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.TestConsumeMessageObserver<T>
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.TestConsumeMessageObserver<T>(System.Threading.Tasks.TaskCompletionSource<T> preConsumed, System.Threading.Tasks.TaskCompletionSource<T> postConsumed, System.Threading.Tasks.TaskCompletionSource<T> consumeFaulted)
-  PROPERTY System.Threading.Tasks.Task<T> ConsumeFaulted { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> PostConsumed { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> PreConsumed { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.TestConsumeObserver
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.TestConsumeObserver(System.TimeSpan timeout, System.Threading.CancellationToken inactivityToken)
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.TestConsumeObserver(System.TimeSpan timeout, System.Threading.CancellationToken inactivityToken, System.TimeProvider timeProvider)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Messages { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator<TConsumer>
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator<TConsumer>(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, ViciOne.ServiceBus.Testing.ReceivedMessageList received)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Testing.Implementations.TestReceiveEndpointObserver
-  CTOR public ViciOne.ServiceBus.Testing.Implementations.TestReceiveEndpointObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver publishObserver)
-  METHOD public virtual System.Threading.Tasks.Task CompletedAsync(ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointCompleted completed)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync(ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointFaulted faulted)
-  METHOD public virtual System.Threading.Tasks.Task ReadyAsync(ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady ready)
-  METHOD public virtual System.Threading.Tasks.Task StoppingAsync(ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointStopping stopping)
 TYPE class public ViciOne.ServiceBus.Testing.InMemoryTestHarness [base=ViciOne.ServiceBus.Testing.BusTestHarness]
   CTOR public ViciOne.ServiceBus.Testing.InMemoryTestHarness(System.String virtualHost = null)
   CTOR public ViciOne.ServiceBus.Testing.InMemoryTestHarness(System.String virtualHost, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IBusInstanceSpecification> specifications)
@@ -14462,7 +14183,7 @@ TYPE class public ViciOne.ServiceBus.Testing.InMemoryTestHarness [base=ViciOne.S
 TYPE class public ViciOne.ServiceBus.Testing.MediatorTestHarness [base=ViciOne.ServiceBus.Testing.AsyncTestHarness]
   CTOR public ViciOne.ServiceBus.Testing.MediatorTestHarness()
   CTOR public ViciOne.ServiceBus.Testing.MediatorTestHarness(System.TimeProvider timeProvider)
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> OnConfigureMediator { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> MediatorConfiguring { public-add; public-remove; }
   METHOD protected virtual System.Void ConfigureMediator(ViciOne.ServiceBus.Configuration.IMediatorConfigurator configurator)
   METHOD public System.Void Dispose()
   METHOD public virtual System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken = null)
@@ -14472,128 +14193,123 @@ TYPE class public ViciOne.ServiceBus.Testing.MediatorTestHarness [base=ViciOne.S
   METHOD public virtual ViciOne.ServiceBus.IRequestClient<TRequest> CreateRequestClient<TRequest>()
   PROPERTY System.Threading.CancellationToken CancellationToken { public-get;  }
   PROPERTY ViciOne.ServiceBus.Mediator.IMediator Mediator { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.IPublishedMessageList Published { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISentMessageList Sent { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.MultiTestConsumer
-  CTOR public ViciOne.ServiceBus.Testing.MultiTestConsumer(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
-  CTOR public ViciOne.ServiceBus.Testing.MultiTestConsumer(System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken testCompleted = null)
+TYPE class public ViciOne.ServiceBus.Testing.MultiTestConsumer [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.MultiTestConsumer(System.TimeSpan timeout, System.Threading.CancellationToken testCancellationToken = null)
+  CTOR public ViciOne.ServiceBus.Testing.MultiTestConsumer(System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken testCancellationToken = null)
   METHOD public System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator)
-  METHOD public ViciOne.ServiceBus.Advanced.ConnectHandle Connect(ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector bus)
-  METHOD public ViciOne.ServiceBus.Testing.ReceivedMessageList<T> Consume<T>()
-  METHOD public ViciOne.ServiceBus.Testing.ReceivedMessageList<T> Fault<T>()
+  METHOD public ViciOne.ServiceBus.Advanced.ConnectHandle Connect(ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector connector)
+  METHOD public ViciOne.ServiceBus.Testing.IConsumedMessageList<TMessage> AddConsumer<TMessage>()
+  METHOD public ViciOne.ServiceBus.Testing.IConsumedMessageList<TMessage> AddFaultingConsumer<TMessage>()
   PROPERTY System.TimeSpan Timeout { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Received { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.PublishedMessage<T>
-  CTOR public ViciOne.ServiceBus.Testing.PublishedMessage<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context, System.Exception exception = null)
-  CTOR public ViciOne.ServiceBus.Testing.PublishedMessage<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context, System.Exception exception, System.TimeProvider timeProvider)
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
+TYPE class public ViciOne.ServiceBus.Testing.PublishedMessage<TMessage> [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.PublishedMessage<TMessage>(ViciOne.ServiceBus.Advanced.PublishContext<TMessage> context, System.Exception exception = null)
+  CTOR public ViciOne.ServiceBus.Testing.PublishedMessage<TMessage>(ViciOne.ServiceBus.Advanced.PublishContext<TMessage> context, System.Exception exception, System.TimeProvider timeProvider)
   PROPERTY System.DateTimeOffset StartTime { public-get;  }
   PROPERTY System.Exception Exception { public-get;  }
   PROPERTY System.Nullable<System.Guid> ElementId { public-get;  }
   PROPERTY System.String ShortTypeName { public-get;  }
   PROPERTY System.TimeSpan ElapsedTime { public-get;  }
   PROPERTY System.Type MessageType { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.PublishedMessageFilter
+TYPE class public ViciOne.ServiceBus.Testing.PublishedMessageFilter [sealed]
   CTOR public ViciOne.ServiceBus.Testing.PublishedMessageFilter()
   METHOD public System.Boolean Any(ViciOne.ServiceBus.Testing.IPublishedMessage element)
   METHOD public System.Boolean None(ViciOne.ServiceBus.Testing.IPublishedMessage element)
   PROPERTY ViciOne.ServiceBus.Testing.PublishedMessageFilterSet Excludes { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.PublishedMessageFilterSet Includes { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet [base=ViciOne.ServiceBus.Testing.FilterSet<ViciOne.ServiceBus.Testing.IPublishedMessage>]
+TYPE class public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet [sealed,base=ViciOne.ServiceBus.Testing.FilterSet<ViciOne.ServiceBus.Testing.IPublishedMessage>]
   CTOR public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet()
-  METHOD public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet Add<T>()
-  METHOD public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet Add<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter)
-TYPE class public ViciOne.ServiceBus.Testing.PublishedMessageList [base=ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<ViciOne.ServiceBus.Testing.IPublishedMessage>]
+  METHOD public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet Add<TMessage>()
+  METHOD public ViciOne.ServiceBus.Testing.PublishedMessageFilterSet Add<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter)
+TYPE class public ViciOne.ServiceBus.Testing.PublishedMessageList [sealed,base=ViciOne.ServiceBus.Testing.AsyncElementList<ViciOne.ServiceBus.Testing.IPublishedMessage>]
   CTOR public ViciOne.ServiceBus.Testing.PublishedMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
   CTOR public ViciOne.ServiceBus.Testing.PublishedMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public System.Void Add<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context)
-  METHOD public System.Void Add<T>(ViciOne.ServiceBus.Advanced.PublishContext<T> context, System.Exception exception)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> SelectAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> SelectAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> apply, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> Select<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> Select<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> apply = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Testing.ReceivedMessage<T>
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessage<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.Exception exception = null)
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessage<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.Exception exception, System.TimeProvider timeProvider)
-  PROPERTY System.DateTimeOffset StartTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ElementId { public-get;  }
-  PROPERTY System.TimeSpan ElapsedTime { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.ReceivedMessageFilter
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessageFilter()
-  METHOD public System.Boolean Any(ViciOne.ServiceBus.Testing.IReceivedMessage element)
-  METHOD public System.Boolean None(ViciOne.ServiceBus.Testing.IReceivedMessage element)
-  PROPERTY ViciOne.ServiceBus.Testing.ReceivedMessageFilterSet Excludes { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.ReceivedMessageFilterSet Includes { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.ReceivedMessageFilterSet [base=ViciOne.ServiceBus.Testing.FilterSet<ViciOne.ServiceBus.Testing.IReceivedMessage>]
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessageFilterSet()
-  METHOD public ViciOne.ServiceBus.Testing.ReceivedMessageFilterSet Add<T>()
-  METHOD public ViciOne.ServiceBus.Testing.ReceivedMessageFilterSet Add<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter)
-TYPE class public ViciOne.ServiceBus.Testing.ReceivedMessageList [base=ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<ViciOne.ServiceBus.Testing.IReceivedMessage>]
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public System.Void Add<T>(ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public System.Void Add<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.Exception exception)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> SelectAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> SelectAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.ReceivedMessageFilter> apply, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> Select<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> Select<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.ReceivedMessageFilter> apply = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Testing.ReceivedMessageList<T> [base=ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<ViciOne.ServiceBus.Testing.IReceivedMessage<T>>]
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessageList<T>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
-  CTOR public ViciOne.ServiceBus.Testing.ReceivedMessageList<T>(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public System.Void Add(ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public System.Void Add(ViciOne.ServiceBus.ConsumeContext<T> context, System.Exception exception)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> SelectAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.IReceivedMessage<T>> Select(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Testing.SagaTestHarness<TSaga> [base=ViciOne.ServiceBus.Testing.Implementations.BaseSagaTestHarness<TSaga>]
+  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.Advanced.PublishContext<TMessage> context)
+  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.Advanced.PublishContext<TMessage> context, System.Exception exception)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> SelectAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> SelectAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.IPublishedMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> Snapshot<TMessage>()
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> Snapshot<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.PublishedMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.IPublishedMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Testing.SagaRepositoryTestingExtensions [static]
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.Func<TSaga,System.Boolean> condition, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filter, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync<TSaga>(ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync<TSaga>(ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaRemovalAsync<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.Guid correlationId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Testing.SagaStateMachineObservationExtensions [static]
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine stateMachine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine stateMachine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine stateMachine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine stateMachine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> filter, TStateMachine stateMachine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> filter, TStateMachine stateMachine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> filter, TStateMachine stateMachine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> WaitForSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> filter, TStateMachine stateMachine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static TInstance FindByIdInState<TInstance>(ViciOne.ServiceBus.Testing.ISagaList<TInstance> sagas, System.Guid correlationId, ViciOne.ServiceBus.Sagas.SagaStateMachine<TInstance> stateMachine, ViciOne.ServiceBus.Sagas.State state)
+  METHOD public static TInstance FindByIdInState<TStateMachine,TInstance>(ViciOne.ServiceBus.Testing.ISagaList<TInstance> sagas, System.Guid correlationId, TStateMachine stateMachine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector)
+TYPE class public ViciOne.ServiceBus.Testing.SagaTestHarness<TSaga> [base=ViciOne.ServiceBus.Testing.BaseSagaTestHarness<TSaga>]
   CTOR public ViciOne.ServiceBus.Testing.SagaTestHarness<TSaga>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> querySagaRepository, ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga> loadSagaRepository, System.String queueName)
   METHOD protected virtual System.Void ConfigureNamedReceiveEndpoint(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.String queueName)
   METHOD protected virtual System.Void ConfigureReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator)
-  PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList Consumed { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> TestRepository { protected-get;  }
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Consumed { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TSaga> Created { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.ISagaList<TSaga> Sagas { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Testing.TestSagaRepositoryDecorator<TSaga> TestRepository { protected-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.SagaTestHarnessExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Testing.SagaTestHarness<T> Saga<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.String queueName = null)
-  METHOD public static ViciOne.ServiceBus.Testing.SagaTestHarness<T> Saga<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Sagas.ISagaRepository<T> repository, System.String queueName = null)
-TYPE class public ViciOne.ServiceBus.Testing.SentMessage<T>
-  CTOR public ViciOne.ServiceBus.Testing.SentMessage<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Exception exception = null)
-  CTOR public ViciOne.ServiceBus.Testing.SentMessage<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Exception exception, System.TimeProvider timeProvider)
+  METHOD public static ViciOne.ServiceBus.Testing.SagaTestHarness<TSaga> Saga<TSaga>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.String queueName = null)
+  METHOD public static ViciOne.ServiceBus.Testing.SagaTestHarness<TSaga> Saga<TSaga>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> repository, System.String queueName = null)
+TYPE class public ViciOne.ServiceBus.Testing.SentMessage<TMessage> [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.SentMessage<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Exception exception = null)
+  CTOR public ViciOne.ServiceBus.Testing.SentMessage<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Exception exception, System.TimeProvider timeProvider)
   PROPERTY System.DateTimeOffset StartTime { public-get;  }
   PROPERTY System.Nullable<System.Guid> ElementId { public-get;  }
   PROPERTY System.String ShortTypeName { public-get;  }
   PROPERTY System.TimeSpan ElapsedTime { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.SentMessageFilter
+TYPE class public ViciOne.ServiceBus.Testing.SentMessageFilter [sealed]
   CTOR public ViciOne.ServiceBus.Testing.SentMessageFilter()
   METHOD public System.Boolean Any(ViciOne.ServiceBus.Testing.ISentMessage element)
   METHOD public System.Boolean None(ViciOne.ServiceBus.Testing.ISentMessage element)
   PROPERTY ViciOne.ServiceBus.Testing.SentMessageFilterSet Excludes { public-get;  }
   PROPERTY ViciOne.ServiceBus.Testing.SentMessageFilterSet Includes { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.SentMessageFilterSet [base=ViciOne.ServiceBus.Testing.FilterSet<ViciOne.ServiceBus.Testing.ISentMessage>]
+TYPE class public ViciOne.ServiceBus.Testing.SentMessageFilterSet [sealed,base=ViciOne.ServiceBus.Testing.FilterSet<ViciOne.ServiceBus.Testing.ISentMessage>]
   CTOR public ViciOne.ServiceBus.Testing.SentMessageFilterSet()
-  METHOD public ViciOne.ServiceBus.Testing.SentMessageFilterSet Add<T>()
-  METHOD public ViciOne.ServiceBus.Testing.SentMessageFilterSet Add<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter)
-TYPE class public ViciOne.ServiceBus.Testing.SentMessageList [base=ViciOne.ServiceBus.Testing.Implementations.AsyncElementList<ViciOne.ServiceBus.Testing.ISentMessage>]
+  METHOD public ViciOne.ServiceBus.Testing.SentMessageFilterSet Add<TMessage>()
+  METHOD public ViciOne.ServiceBus.Testing.SentMessageFilterSet Add<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter)
+TYPE class public ViciOne.ServiceBus.Testing.SentMessageList [sealed,base=ViciOne.ServiceBus.Testing.AsyncElementList<ViciOne.ServiceBus.Testing.ISentMessage>]
   CTOR public ViciOne.ServiceBus.Testing.SentMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted = null)
   CTOR public ViciOne.ServiceBus.Testing.SentMessageList(System.TimeSpan timeout, System.Threading.CancellationToken testCompleted, System.TimeProvider timeProvider)
-  METHOD public System.Void Add<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  METHOD public System.Void Add<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Exception exception)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> SelectAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> SelectAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> apply, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> Select<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<T>> Select<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> apply = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<T>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<T>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
+  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Exception exception)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> SelectAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> SelectAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IAsyncEnumerable<ViciOne.ServiceBus.Testing.ISentMessage> SelectAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> Snapshot<TMessage>()
+  METHOD public virtual System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> Snapshot<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync(System.Action<ViciOne.ServiceBus.Testing.SentMessageFilter> configureFilter = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.Task<System.Boolean> AnyAsync<TMessage>(ViciOne.ServiceBus.Testing.FilterDelegate<ViciOne.ServiceBus.Testing.ISentMessage<TMessage>> filter, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Testing.ServiceProviderTestExtensions [static]
   METHOD public static System.Threading.Tasks.Task<T> GetTaskAsync<T>(System.IServiceProvider provider, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<T>[] GetTasks<T>(System.IServiceProvider provider)
@@ -14618,16 +14334,6 @@ TYPE class public ViciOne.ServiceBus.Testing.StateMachineEventObservation [seale
   PROPERTY System.Type DataType { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.Testing.StateMachineEventExecutionStatus Status { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Testing.StateMachineSagaTestHarnessExtensions [static]
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine machine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine machine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine machine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Guid correlationId, TStateMachine machine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, TStateMachine machine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, TStateMachine machine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, TStateMachine machine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Nullable<System.Guid>> ShouldContainSagaInStateAsync<TStateMachine,TInstance>(ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> expression, TStateMachine machine, ViciOne.ServiceBus.Sagas.State state, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static T ContainsInState<T>(ViciOne.ServiceBus.Testing.ISagaList<T> sagas, System.Guid correlationId, ViciOne.ServiceBus.Sagas.SagaStateMachine<T> machine, ViciOne.ServiceBus.Sagas.State state)
-  METHOD public static TInstance ContainsInState<TStateMachine,TInstance>(ViciOne.ServiceBus.Testing.ISagaList<TInstance> sagas, System.Guid correlationId, TStateMachine machine, System.Func<TStateMachine,ViciOne.ServiceBus.Sagas.State> stateSelector)
   METHOD public static ViciOne.ServiceBus.Testing.ISagaStateMachineTestHarness<TStateMachine,TInstance> StateMachineSaga<TInstance,TStateMachine>(ViciOne.ServiceBus.Testing.BusTestHarness harness, TStateMachine stateMachine, System.String queueName = null)
   METHOD public static ViciOne.ServiceBus.Testing.ISagaStateMachineTestHarness<TStateMachine,TInstance> StateMachineSaga<TInstance,TStateMachine>(ViciOne.ServiceBus.Testing.BusTestHarness harness, TStateMachine stateMachine, ViciOne.ServiceBus.Sagas.ISagaRepository<TInstance> repository, System.String queueName = null)
 TYPE class public ViciOne.ServiceBus.Testing.StateMachineStateChange [sealed]
@@ -14643,20 +14349,26 @@ TYPE class public ViciOne.ServiceBus.Testing.StateMachineStateChange [sealed]
   PROPERTY System.Guid SagaId { public-get; public-set; }
   PROPERTY System.String CurrentState { public-get; public-set; }
   PROPERTY System.String PreviousState { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Testing.TelemetryMonitorExtensions [static]
-  METHOD public static System.Threading.Tasks.Task WaitAsync(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Func<ViciOne.ServiceBus.IPublishEndpoint,System.Threading.Tasks.Task> callback, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task WaitAsync(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Func<ViciOne.ServiceBus.IPublishEndpoint,System.Threading.Tasks.Task> callback, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task WaitAsync(ViciOne.ServiceBus.ISendEndpoint sendEndpoint, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> callback, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task WaitAsync(ViciOne.ServiceBus.ISendEndpoint sendEndpoint, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> callback, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>> WaitAsync<T,T1,T2,T3>(ViciOne.ServiceBus.IRequestClient<T> client, System.Func<ViciOne.ServiceBus.IRequestClient<T>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>>> callback, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>> WaitAsync<T,T1,T2,T3>(ViciOne.ServiceBus.IRequestClient<T> client, System.Func<ViciOne.ServiceBus.IRequestClient<T>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>>> callback, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>> WaitAsync<T,T1,T2>(ViciOne.ServiceBus.IRequestClient<T> client, System.Func<ViciOne.ServiceBus.IRequestClient<T>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>>> callback, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>> WaitAsync<T,T1,T2>(ViciOne.ServiceBus.IRequestClient<T> client, System.Func<ViciOne.ServiceBus.IRequestClient<T>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>>> callback, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1>> WaitAsync<T,T1>(ViciOne.ServiceBus.IRequestClient<T> client, System.Func<ViciOne.ServiceBus.IRequestClient<T>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1>>> callback, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1>> WaitAsync<T,T1>(ViciOne.ServiceBus.IRequestClient<T> client, System.Func<ViciOne.ServiceBus.IRequestClient<T>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1>>> callback, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Testing.TestActivityListener
-  CTOR public ViciOne.ServiceBus.Testing.TestActivityListener(System.IO.TextWriter writer, System.String methodName, System.String className, System.Boolean includeDetails)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
+TYPE class public ViciOne.ServiceBus.Testing.TelemetryActivityExtensions [static]
+  METHOD public static System.Threading.Tasks.Task ExecuteAndWaitForIdleAsync(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Func<ViciOne.ServiceBus.IPublishEndpoint,System.Threading.Tasks.Task> action, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task ExecuteAndWaitForIdleAsync(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Func<ViciOne.ServiceBus.IPublishEndpoint,System.Threading.Tasks.Task> action, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task ExecuteAndWaitForIdleAsync(ViciOne.ServiceBus.ISendEndpoint sendEndpoint, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> action, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task ExecuteAndWaitForIdleAsync(ViciOne.ServiceBus.ISendEndpoint sendEndpoint, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> action, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2,TResponse3>> ExecuteAndWaitForIdleAsync<TRequest,TResponse1,TResponse2,TResponse3>(ViciOne.ServiceBus.IRequestClient<TRequest> client, System.Func<ViciOne.ServiceBus.IRequestClient<TRequest>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2,TResponse3>>> action, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2,TResponse3>> ExecuteAndWaitForIdleAsync<TRequest,TResponse1,TResponse2,TResponse3>(ViciOne.ServiceBus.IRequestClient<TRequest> client, System.Func<ViciOne.ServiceBus.IRequestClient<TRequest>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2,TResponse3>>> action, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2>> ExecuteAndWaitForIdleAsync<TRequest,TResponse1,TResponse2>(ViciOne.ServiceBus.IRequestClient<TRequest> client, System.Func<ViciOne.ServiceBus.IRequestClient<TRequest>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2>>> action, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2>> ExecuteAndWaitForIdleAsync<TRequest,TResponse1,TResponse2>(ViciOne.ServiceBus.IRequestClient<TRequest> client, System.Func<ViciOne.ServiceBus.IRequestClient<TRequest>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse1,TResponse2>>> action, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>> ExecuteAndWaitForIdleAsync<TRequest,TResponse>(ViciOne.ServiceBus.IRequestClient<TRequest> client, System.Func<ViciOne.ServiceBus.IRequestClient<TRequest>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>>> action, System.Nullable<System.TimeSpan> timeout = null, System.Nullable<System.TimeSpan> idleTimeout = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>> ExecuteAndWaitForIdleAsync<TRequest,TResponse>(ViciOne.ServiceBus.IRequestClient<TRequest> client, System.Func<ViciOne.ServiceBus.IRequestClient<TRequest>,System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>>> action, System.Nullable<System.TimeSpan> timeout, System.Nullable<System.TimeSpan> idleTimeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Testing.TestConsumeMessageObserver<TMessage> [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.TestConsumeMessageObserver<TMessage>(System.Threading.Tasks.TaskCompletionSource<TMessage> preConsumed, System.Threading.Tasks.TaskCompletionSource<TMessage> postConsumed, System.Threading.Tasks.TaskCompletionSource<TMessage> consumeFaulted)
+  PROPERTY System.Threading.Tasks.Task<TMessage> ConsumeFaulted { public-get;  }
+  PROPERTY System.Threading.Tasks.Task<TMessage> PostConsumed { public-get;  }
+  PROPERTY System.Threading.Tasks.Task<TMessage> PreConsumed { public-get;  }
+TYPE class public ViciOne.ServiceBus.Testing.TestConsumeObserver [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.TestConsumeObserver(System.TimeSpan timeout, System.Threading.CancellationToken inactivityToken)
+  CTOR public ViciOne.ServiceBus.Testing.TestConsumeObserver(System.TimeSpan timeout, System.Threading.CancellationToken inactivityToken, System.TimeProvider timeProvider)
+  PROPERTY ViciOne.ServiceBus.Testing.IConsumedMessageList Messages { public-get;  }
 TYPE enum public ViciOne.ServiceBus.Testing.TestContextSaveMode
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.Testing.TestContextSaveMode All = 0
@@ -14668,25 +14380,23 @@ TYPE class public ViciOne.ServiceBus.Testing.TestHarnessOptions [sealed]
   PROPERTY System.TimeSpan TestInactivityTimeout { public-get; public-set; }
   PROPERTY System.TimeSpan TestTimeout { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.Testing.TestContextSaveMode ContextSaveMode { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Testing.TestSagaRepositoryDecorator<TSaga>
-  CTOR public ViciOne.ServiceBus.Testing.TestSagaRepositoryDecorator<TSaga>(ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> sagaRepository, ViciOne.ServiceBus.Testing.ReceivedMessageList received, ViciOne.ServiceBus.Testing.Implementations.SagaList<TSaga> created, ViciOne.ServiceBus.Testing.Implementations.SagaList<TSaga> sagas)
 TYPE class public ViciOne.ServiceBus.Testing.TestingServiceProviderExtensions [static]
-  METHOD public static System.Threading.Tasks.Task AddOrUpdateSagaInstanceAsync<T>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Nullable<System.Guid> correlationId = null, System.Action<T> callback = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task AddOrUpdateSagaInstanceAsync<TSaga>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Nullable<System.Guid> correlationId = null, System.Action<TSaga> configureSaga = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task RestartHostedServicesAsync(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task StopAsync(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Boolean> TryRemoveSagaInstanceAsync<T>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Guid correlationId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Threading.Tasks.Task<ViciOne.ServiceBus.ConsumeContext<T>>> ConnectPublishHandlerAsync<T>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Func<ViciOne.ServiceBus.ConsumeContext<T>,System.Boolean> filter, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Boolean> TryRemoveSagaInstanceAsync<TSaga>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Guid correlationId, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Testing.IPublishMessageObservation<TMessage>> ObservePublishedMessageAsync<TMessage>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Func<ViciOne.ServiceBus.ConsumeContext<TMessage>,System.Boolean> filter, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Testing.ITestHarness> StartTestHarnessAsync(System.IServiceProvider provider, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Void AddSagaInstance<T>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Nullable<System.Guid> correlationId = null, System.Action<T> callback = null)
-  METHOD public static System.Void AddTaskCompletionSource<T>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator)
+  METHOD public static System.Void AddSagaInstance<TSaga>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Nullable<System.Guid> correlationId = null, System.Action<TSaga> configureSaga = null)
+  METHOD public static System.Void AddTaskCompletionSource<TResult>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator)
   METHOD public static ViciOne.ServiceBus.Testing.ITestHarness GetTestHarness(System.IServiceProvider provider)
 TYPE class public ViciOne.ServiceBus.Testing.TimelineExtensions [static]
-  METHOD public static System.Threading.Tasks.Task OutputTimelineAsync(ViciOne.ServiceBus.Testing.IBaseTestHarness harness, System.IO.TextWriter textWriter, System.Action<ViciOne.ServiceBus.Testing.TimelineExtensions.OutputTimelineOptions> configure = null, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Testing.TimelineExtensions.OutputTimelineOptions [sealed]
-  CTOR public ViciOne.ServiceBus.Testing.TimelineExtensions.OutputTimelineOptions()
-  METHOD public ViciOne.ServiceBus.Testing.TimelineExtensions.OutputTimelineOptions IncludeAddress()
-  METHOD public ViciOne.ServiceBus.Testing.TimelineExtensions.OutputTimelineOptions IncludeNamespace()
-  METHOD public ViciOne.ServiceBus.Testing.TimelineExtensions.OutputTimelineOptions Now()
+  METHOD public static System.Threading.Tasks.Task OutputTimelineAsync(ViciOne.ServiceBus.Testing.IBaseTestHarness harness, System.IO.TextWriter textWriter, System.Action<ViciOne.ServiceBus.Testing.TimelineOutputOptions> configure = null, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Testing.TimelineOutputOptions [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.TimelineOutputOptions()
+  METHOD public ViciOne.ServiceBus.Testing.TimelineOutputOptions IncludeEndpointAddress()
+  METHOD public ViciOne.ServiceBus.Testing.TimelineOutputOptions IncludeMessageNamespace()
+  METHOD public ViciOne.ServiceBus.Testing.TimelineOutputOptions RenderImmediately()
 
 ASSEMBLY ViciOne.ServiceBus VERSION=1.0.0.0
 TYPE class public Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions [static]

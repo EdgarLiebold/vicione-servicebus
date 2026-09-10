@@ -88,9 +88,9 @@ public sealed class InMemoryOutboxRedeliveryTests
             Assert.Equal(4, observation.Attempts.Length);
             Assert.Equal([0, 0, 1, 1], observation.Attempts.Select(attempt => attempt.RedeliveryCount));
             Assert.Equal(0, observation.SideEffectCount);
-            Assert.Empty(harness.Sent.Select<OutboxSideEffect>(SnapshotOnlyToken()));
-            Assert.Empty(harness.Published.Select<OutboxSideEffect>(SnapshotOnlyToken()));
-            Assert.Single(harness.Published.Select<Fault<OutboxCommand>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<OutboxSideEffect>());
+            Assert.Empty(harness.Published.Snapshot<OutboxSideEffect>());
+            Assert.Single(harness.Published.Snapshot<Fault<OutboxCommand>>());
         }
         finally
         {
@@ -99,7 +99,6 @@ public sealed class InMemoryOutboxRedeliveryTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

@@ -236,8 +236,8 @@ public sealed class DelayedRedeliveryIntegrationTests
 
         Assert.Equal(3, secondAttempts.Count);
         Assert.Equal(2, scheduled.Count);
-        Assert.Single(harness.Published.Select<Fault<SecondFilterMessage>>(SnapshotOnlyToken()));
-        Assert.Empty(harness.Published.Select<Fault<FirstFilterMessage>>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<Fault<SecondFilterMessage>>());
+        Assert.Empty(harness.Published.Snapshot<Fault<FirstFilterMessage>>());
     }
 
     [Fact]
@@ -299,14 +299,13 @@ public sealed class DelayedRedeliveryIntegrationTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Consumed.Select<OutboundMessage>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<OutboundMessage>());
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record IntervalMessage(string Value);
     public sealed record IdentityMessage(string Value);

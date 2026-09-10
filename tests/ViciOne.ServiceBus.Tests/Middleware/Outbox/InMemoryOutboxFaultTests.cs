@@ -47,7 +47,7 @@ public sealed class InMemoryOutboxFaultTests
                 timeout,
                 cancellationToken);
             ISentMessage<Fault<OutboxRequest>> sentFault = Assert.Single(
-                harness.Sent.Select<Fault<OutboxRequest>>(SnapshotOnlyToken()));
+                harness.Sent.Snapshot<Fault<OutboxRequest>>());
 
             Assert.Equal(correlationId, consumed.Message.CorrelationId);
             Assert.Equal(consumed.RequestId, sentFault.Context.RequestId);
@@ -55,7 +55,7 @@ public sealed class InMemoryOutboxFaultTests
                 sentFault.Context.Message.Exceptions,
                 exception => exception.ExceptionType == TypeCache<ExpectedHandlerException>.ShortName);
             Assert.Contains(TypeCache<OutboxRequest>.ShortName, fault.Message);
-            Assert.Empty(harness.Sent.Select<OutboxResponse>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<OutboxResponse>());
         }
         finally
         {
@@ -63,7 +63,6 @@ public sealed class InMemoryOutboxFaultTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

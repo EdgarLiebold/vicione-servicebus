@@ -87,14 +87,13 @@ public sealed class ContainerStateMachineScopeTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<ContainerScopeStarted>(SnapshotOnlyToken()));
-        Assert.Single(harness.Published.Select<ContainerScopeUpdated>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<ContainerScopeStarted>());
+        Assert.Single(harness.Published.Snapshot<ContainerScopeUpdated>());
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record ContainerScopeStart(Guid CorrelationId, string Key) : CorrelatedBy<Guid>;
 

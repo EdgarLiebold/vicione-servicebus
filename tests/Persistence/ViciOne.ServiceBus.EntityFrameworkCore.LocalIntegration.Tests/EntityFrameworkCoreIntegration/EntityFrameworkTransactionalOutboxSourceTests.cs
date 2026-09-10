@@ -583,7 +583,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
             services.AddDbContext<BusOutboxDbContext>(builder => builder
                 .UseNpgsql(database.ConnectionString, options => options.EnableRetryOnFailure())
                 .AddInterceptors(drains));
-            services.AddTelemetryListener(TextWriter.Null);
+            services.AddViciOneServiceBusTestTelemetry(TextWriter.Null);
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);

@@ -97,9 +97,7 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
             Assert.Equal(sagaId, updated.Context.Message.CorrelationId);
             Assert.Equal(1, updated.Context.Message.Value);
             Assert.Equal(2, conflict.UpdateSaveAttempts);
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
-            Assert.Single(harness.Published.Select<OptimisticSagaUpdated>(completed.Token));
+            Assert.Single(harness.Published.Snapshot<OptimisticSagaUpdated>());
             await using OptimisticSagaDbContext verification = database.CreateContext();
             OptimisticSaga stored = await verification.Sagas.AsNoTracking()
                 .SingleAsync(saga => saga.CorrelationId == sagaId, cancellationToken);

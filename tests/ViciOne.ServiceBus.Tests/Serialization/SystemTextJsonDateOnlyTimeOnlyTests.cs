@@ -65,7 +65,7 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
             ConsumeContext<TemporalTransportMessage> context = await received.Task.WaitAsync(
                 timeout,
                 cancellationToken);
-            IReceivedMessage<TemporalTransportMessage> observation = await harness.Consumed
+            IConsumedMessage<TemporalTransportMessage> observation = await harness.Consumed
                 .SelectAsync<TemporalTransportMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 

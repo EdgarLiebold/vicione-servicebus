@@ -82,8 +82,8 @@ public sealed class ContainerNamespaceDiscoveryTests
             Assert.Equal(routingCorrelationId, slipCompleted.Context.Message.TrackingNumber);
             Assert.Equal(messageId, response.Message.CorrelationId);
             Assert.Equal(messageId, pingCompleted.Context.Message.CorrelationId);
-            var saga = sagaHarness.Sagas.Contains(messageId);
-            var machineSaga = machineHarness.Sagas.Contains(messageId);
+            var saga = sagaHarness.Sagas.FindById(messageId);
+            var machineSaga = machineHarness.Sagas.FindById(messageId);
             Assert.NotNull(saga);
             Assert.NotNull(machineSaga);
             Assert.Equal(messageId, saga.CorrelationId);

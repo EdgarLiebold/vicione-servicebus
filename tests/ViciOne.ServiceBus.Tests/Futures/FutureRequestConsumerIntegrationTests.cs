@@ -22,8 +22,8 @@ public sealed class FutureRequestConsumerIntegrationTests
 
         Assert.Equal(orderLineId, response.Message.CorrelationId);
         Assert.Equal(1234.55m, response.Message.Amount);
-        Assert.Equal(2, fixture.Harness.Consumed.Select<CalculatePrice>(SnapshotOnlyToken()).Count());
-        Assert.Empty(fixture.Harness.Published.Select<Fault<CalculatePrice>>(SnapshotOnlyToken()));
+        Assert.Equal(2, fixture.Harness.Consumed.Snapshot<CalculatePrice>().Count());
+        Assert.Empty(fixture.Harness.Published.Snapshot<Fault<CalculatePrice>>());
     }
 
     [Fact]
@@ -45,10 +45,9 @@ public sealed class FutureRequestConsumerIntegrationTests
         ExceptionInfo fault = Assert.Single(typedFault.Exceptions);
         Assert.Equal(typeof(ExpectedPriceException).FullName, fault.ExceptionType);
         Assert.Contains("missing", fault.Message, StringComparison.Ordinal);
-        Assert.Equal(2, fixture.Harness.Consumed.Select<CalculatePrice>(SnapshotOnlyToken()).Count());
+        Assert.Equal(2, fixture.Harness.Consumed.Snapshot<CalculatePrice>().Count());
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public interface CalculatePrice : CorrelatedBy<Guid>
     {

@@ -138,29 +138,68 @@ public sealed class AsyncElementListTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "synchronous-virtual-timeout")]
-    public async Task SynchronousSelection_UsesTheSameVirtualTimeoutAsync()
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "caller-cancellation-propagates")]
+    public async Task CallerCancellation_EndsAsyncObservationAndPreservesTheExactTokenAsync()
     {
-        var timeProvider = new ObservableTimeProvider(StartTime);
-        var messages = new SentMessageList(TimeSpan.FromMinutes(1), CancellationToken.None, timeProvider);
-        Task<int> observation = Task.Run(
-            () => messages.Select<MessageA>(TestContext.Current.CancellationToken).Count(),
-            TestContext.Current.CancellationToken);
+        var messages = new SentMessageList(
+            TimeSpan.FromMinutes(1),
+            CancellationToken.None,
+            new FakeTimeProvider(StartTime));
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task<bool> observation = messages.AnyAsync<MessageA>(cancellation.Token);
 
-        await timeProvider.WaitForTimerCountAsync(1);
-        timeProvider.Advance(TimeSpan.FromMinutes(1));
+        cancellation.Cancel();
 
-        Assert.Equal(0, await observation);
+        OperationCanceledException exception =
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => observation);
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "caller-cancellation-propagates-through-helper")]
+    public async Task CallerCancellation_PropagatesThroughAnyObservedAsync()
+    {
+        var messages = new SentMessageList(
+            TimeSpan.FromMinutes(1),
+            CancellationToken.None,
+            new FakeTimeProvider(StartTime));
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task<bool> observation = messages
+            .SelectAsync<MessageA>(TestContext.Current.CancellationToken)
+            .AnyObservedAsync(cancellation.Token);
+
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => observation);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "stable-snapshot-after-completion")]
+    public void Snapshot_IsStableAndRemainsReadableAfterTestCompletion()
+    {
+        using var completed = new CancellationTokenSource();
+        var messages = new SentMessageList(TimeSpan.FromMinutes(1), completed.Token, new FakeTimeProvider(StartTime));
+        Add(messages, new MessageA("first"));
+        IReadOnlyList<ISentMessage<MessageA>> snapshot = messages.Snapshot<MessageA>();
+
+        Add(messages, new MessageA("second"));
+        completed.Cancel();
+
+        Assert.Equal("first", Assert.Single(snapshot).Context.Message.Value);
+        Assert.Collection(
+            messages.Snapshot<MessageA>(),
+            first => Assert.Equal("first", first.Context.Message.Value),
+            second => Assert.Equal("second", second.Context.Message.Value));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "synchronous-filter-outside-monitor")]
-    public void SynchronousFilter_DoesNotBlockAConcurrentProducer()
+    public void SnapshotFilter_DoesNotBlockAConcurrentProducer()
     {
         var messages = CreateList();
         Add(messages, new MessageA("first"));
 
-        ISentMessage<MessageA> first = messages.Select<MessageA>(
+        ISentMessage<MessageA> first = messages.Snapshot<MessageA>(
             message =>
             {
                 var producer = new Thread(() => Add(messages, new MessageB("second")))
@@ -171,12 +210,11 @@ public sealed class AsyncElementListTests
                 producer.Join();
 
                 return message.Context.Message.Value == "first";
-            },
-            TestContext.Current.CancellationToken).First();
+            }).Single();
 
         ISentMessage<MessageB> second = messages
-            .Select<MessageB>(TestContext.Current.CancellationToken)
-            .First();
+            .Snapshot<MessageB>()
+            .Single();
 
         Assert.Equal("first", first.Context.Message.Value);
         Assert.Equal("second", second.Context.Message.Value);

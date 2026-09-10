@@ -51,7 +51,7 @@ public sealed class ReliableInMemoryIntegrationTests
         Assert.Equal(100, observation.Events.Count);
         Assert.Equal(Enumerable.Range(0, 100).Select(index => $"{index:0000}"), observation.Events.Keys.Order());
         Assert.All(observation.Events.Values, count => Assert.Equal(1, count));
-        Assert.Equal(100, harness.Consumed.Select<InboxEvent>(SnapshotOnlyToken()).Count());
+        Assert.Equal(100, harness.Consumed.Snapshot<InboxEvent>().Count());
     }
 
     [Theory]
@@ -96,7 +96,7 @@ public sealed class ReliableInMemoryIntegrationTests
         Assert.Equal(new[] { "First", "Second" }, observation.Events.Keys.Order());
         Assert.All(observation.Events.Values, count => Assert.Equal(1, count));
         Assert.Equal(new[] { "alpha", "beta" }, observation.RoutingKeys.Order());
-        ReliableEvent[] events = harness.Consumed.Select<ReliableEvent>(SnapshotOnlyToken())
+        ReliableEvent[] events = harness.Consumed.Snapshot<ReliableEvent>()
             .Select(message => message.Context.Message)
             .Where(message => message.MessageId == messageId)
             .ToArray();
@@ -151,7 +151,7 @@ public sealed class ReliableInMemoryIntegrationTests
 
         Assert.Equal(3, observation.ConsumerAttempts);
         Assert.Empty(observation.Events);
-        Assert.Empty(harness.Published.Select<Fault<ReliableCommand>>(SnapshotOnlyToken()));
+        Assert.Empty(harness.Published.Snapshot<Fault<ReliableCommand>>());
     }
 
     [Theory]
@@ -193,7 +193,7 @@ public sealed class ReliableInMemoryIntegrationTests
                 new CreateReliableState(correlationId, failure),
                 context => context.MessageId = messageId,
                 cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, state => state.Verified, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, state => state.Verified, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
@@ -202,8 +202,8 @@ public sealed class ReliableInMemoryIntegrationTests
 
         Assert.Equal(expectedCreateAttempts, observation.SagaCreateAttempts);
         Assert.Equal(failure == ReliableSagaFailure.FirstDeliveryAttempt ? 1 : 0, observation.SagaDeliveryFailures);
-        Assert.Single(harness.Consumed.Select<ReliableStateVerified>(SnapshotOnlyToken()));
-        Assert.Empty(harness.Published.Select<Fault<CreateReliableState>>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<ReliableStateVerified>());
+        Assert.Empty(harness.Published.Snapshot<Fault<CreateReliableState>>());
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -238,7 +238,6 @@ public sealed class ReliableInMemoryIntegrationTests
         });
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed class InboxObservation
     {

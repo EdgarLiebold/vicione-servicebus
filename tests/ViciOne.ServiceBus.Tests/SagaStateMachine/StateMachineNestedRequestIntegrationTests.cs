@@ -34,7 +34,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
             Assert.Equal(link, response.Message.Link);
             Assert.Equal(link, response.Message.ShortLink);
             Assert.NotEqual(Guid.Empty, response.Message.CorrelationId);
-            Assert.Equal(response.Message.CorrelationId, await sagaHarness.ExistsAsync(response.Message.CorrelationId, machine.Valid, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(response.Message.CorrelationId, await sagaHarness.WaitForSagaInStateAsync(response.Message.CorrelationId, machine.Valid, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
@@ -42,10 +42,10 @@ public sealed class StateMachineNestedRequestIntegrationTests
         }
 
         ISentMessage<RequestShortLink> nested = Assert.Single(
-            harness.Sent.Select<RequestShortLink>(SnapshotOnlyToken()));
+            harness.Sent.Snapshot<RequestShortLink>());
         Assert.Equal(link, nested.Context.Message.Link);
-        Assert.Single(harness.Consumed.Select<RequestShortLink>(SnapshotOnlyToken()));
-        Assert.Empty(harness.Published.Select<Fault<RequestShortLink>>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<RequestShortLink>());
+        Assert.Empty(harness.Published.Snapshot<Fault<RequestShortLink>>());
     }
 
     [Fact]
@@ -84,9 +84,9 @@ public sealed class StateMachineNestedRequestIntegrationTests
         }
 
         ISentMessage<RequestShortLink> nested = Assert.Single(
-            harness.Sent.Select<RequestShortLink>(SnapshotOnlyToken()));
+            harness.Sent.Snapshot<RequestShortLink>());
         Assert.Equal(link, nested.Context.Message.Link);
-        Assert.Single(harness.Consumed.Select<RequestShortLink>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<RequestShortLink>());
     }
 
     private static InMemoryTestHarness CreateHarness(string suffix, TimeSpan timeout, bool failRequest)
@@ -116,7 +116,6 @@ public sealed class StateMachineNestedRequestIntegrationTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record CreateShortLink(Uri Link);
 

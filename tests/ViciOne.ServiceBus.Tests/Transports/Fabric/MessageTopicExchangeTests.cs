@@ -18,7 +18,7 @@ public sealed class MessageTopicExchangeTests
 
         Delivery delivery = await DeliverAsync(exchange, "alpha", "matching");
 
-        Assert.Equal(new[] { new ReceivedMessage("alpha", "matching") }, sink.Messages);
+        Assert.Equal(new[] { new ConsumedMessage("alpha", "matching") }, sink.Messages);
         Assert.True(delivery.WasAlreadyDelivered(sink));
     }
 
@@ -34,7 +34,7 @@ public sealed class MessageTopicExchangeTests
         await DeliverAsync(exchange, "bus.green", "bad-green");
         Delivery matchingDelivery = await DeliverAsync(exchange, "car.blue", "good");
 
-        Assert.Equal(new[] { new ReceivedMessage("car.blue", "good") }, sink.Messages);
+        Assert.Equal(new[] { new ConsumedMessage("car.blue", "good") }, sink.Messages);
         Assert.True(matchingDelivery.WasAlreadyDelivered(sink));
     }
 
@@ -51,7 +51,7 @@ public sealed class MessageTopicExchangeTests
         await DeliverAsync(exchange, "bus.green.small", "bad-bus-small");
         Delivery matchingDelivery = await DeliverAsync(exchange, "car.blue.large", "good");
 
-        Assert.Equal(new[] { new ReceivedMessage("car.blue.large", "good") }, sink.Messages);
+        Assert.Equal(new[] { new ConsumedMessage("car.blue.large", "good") }, sink.Messages);
         Assert.True(matchingDelivery.WasAlreadyDelivered(sink));
     }
 
@@ -65,11 +65,11 @@ public sealed class MessageTopicExchangeTests
     private sealed class RecordingSink :
         IMessageSink<TopicMessage>
     {
-        public List<ReceivedMessage> Messages { get; } = [];
+        public List<ConsumedMessage> Messages { get; } = [];
 
         public Task DeliverAsync(DeliveryContext<TopicMessage> context, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Messages.Add(new ReceivedMessage(context.RoutingKey!, context.Message.Value));
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Messages.Add(new ConsumedMessage(context.RoutingKey!, context.Message.Value));
             return Task.CompletedTask;
         }
 
@@ -102,5 +102,5 @@ public sealed class MessageTopicExchangeTests
     }
 
     private sealed record TopicMessage(string Value);
-    private sealed record ReceivedMessage(string RoutingKey, string Value);
+    private sealed record ConsumedMessage(string RoutingKey, string Value);
 }

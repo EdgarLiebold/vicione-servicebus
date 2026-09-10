@@ -45,8 +45,8 @@ public sealed class SagaConnectorTests
             await harness.InputQueueSendEndpoint.SendAsync(new DuplicateRoleMessage(correlationId), cancellationToken);
 
             Assert.True(await sagaHarness.Consumed.AnyAsync<DuplicateRoleMessage>(cancellationToken));
-            Guid? createdId = await sagaHarness.ExistsAsync(correlationId, timeout, TestContext.Current.CancellationToken);
-            DuplicateRoleSaga? created = sagaHarness.Created.Contains(correlationId);
+            Guid? createdId = await sagaHarness.WaitForSagaAsync(correlationId, timeout, TestContext.Current.CancellationToken);
+            DuplicateRoleSaga? created = sagaHarness.Created.FindById(correlationId);
 
             Assert.Equal(correlationId, createdId);
             Assert.NotNull(created);
@@ -75,8 +75,8 @@ public sealed class SagaConnectorTests
             await harness.InputQueueSendEndpoint.SendAsync(new PropertySagaMessage(correlationId), cancellationToken);
 
             Assert.True(await sagaHarness.Consumed.AnyAsync<PropertySagaMessage>(cancellationToken));
-            Guid? createdId = await sagaHarness.ExistsAsync(correlationId, timeout, TestContext.Current.CancellationToken);
-            PropertySaga? created = sagaHarness.Created.Contains(correlationId);
+            Guid? createdId = await sagaHarness.WaitForSagaAsync(correlationId, timeout, TestContext.Current.CancellationToken);
+            PropertySaga? created = sagaHarness.Created.FindById(correlationId);
 
             Assert.Equal(correlationId, createdId);
             Assert.NotNull(created);

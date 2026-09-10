@@ -60,14 +60,13 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Sent.Select<RoutingSlipActivityCompleted>(SnapshotOnlyToken()));
-        Assert.Single(harness.Sent.Select<RoutingSlipCompleted>(SnapshotOnlyToken()));
+        Assert.Single(harness.Sent.Snapshot<RoutingSlipActivityCompleted>());
+        Assert.Single(harness.Sent.Snapshot<RoutingSlipCompleted>());
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record RequestingArguments(string Value);
 

@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
-using ViciOne.ServiceBus.DependencyInjection.Testing;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Testing.Internal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -148,7 +148,7 @@ public sealed class DependencyInjectionTestHarnessTests
             Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                 new RequestMessage(correlationId),
                 cancellationToken);
-            IReceivedMessage<RequestMessage> consumed = await harness.Consumed
+            IConsumedMessage<RequestMessage> consumed = await harness.Consumed
                 .SelectAsync<RequestMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             ISentMessage<ResponseMessage> sent = await harness.Sent
@@ -193,20 +193,20 @@ public sealed class DependencyInjectionTestHarnessTests
             Task<IPublishedMessage<Fault<RetryingMessage>>> terminalFaultTask = harness.Published
                 .SelectAsync<Fault<RetryingMessage>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<RetryingMessage>> terminalConsumeTask = harness.Consumed
+            Task<IConsumedMessage<RetryingMessage>> terminalConsumeTask = harness.Consumed
                 .SelectAsync<RetryingMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await harness.Bus.PublishAsync(new RetryingMessage(correlationId), cancellationToken);
             IPublishedMessage<Fault<RetryingMessage>> terminalFault = await terminalFaultTask.WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<RetryingMessage> terminalConsume = await terminalConsumeTask.WaitAsync(timeout, cancellationToken);
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
+            IConsumedMessage<RetryingMessage> terminalConsume = await terminalConsumeTask.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<Fault<RetryingMessage>>[] faults = harness.Published
-                .Select<Fault<RetryingMessage>>(completed.Token)
+                .Snapshot()
+                .OfType<IPublishedMessage<Fault<RetryingMessage>>>()
                 .ToArray();
-            IReceivedMessage<RetryingMessage>[] consumed = harness.Consumed
-                .Select<RetryingMessage>(completed.Token)
+            IConsumedMessage<RetryingMessage>[] consumed = harness.Consumed
+                .Snapshot()
+                .OfType<IConsumedMessage<RetryingMessage>>()
                 .ToArray();
 
             Assert.Equal(4, counter.Count);
@@ -245,7 +245,7 @@ public sealed class DependencyInjectionTestHarnessTests
         harness.AddSagaInstance<ManagedSaga>(correlationId, saga => saga.Value = "initial");
 
         Assert.Equal(1, repository.Count);
-        Assert.Equal("initial", Assert.IsType<SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
+        Assert.Equal("initial", Assert.IsType<ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
         ArgumentException duplicate = Assert.Throws<ArgumentException>(() =>
             harness.AddSagaInstance<ManagedSaga>(correlationId));
         Assert.Equal("correlationId", duplicate.ParamName);
@@ -256,7 +256,7 @@ public sealed class DependencyInjectionTestHarnessTests
             TestContext.Current.CancellationToken);
 
         Assert.Equal(1, repository.Count);
-        Assert.Equal("updated", Assert.IsType<SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
+        Assert.Equal("updated", Assert.IsType<ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
         Assert.True(await harness.TryRemoveSagaInstanceAsync<ManagedSaga>(
             correlationId,
             TestContext.Current.CancellationToken));
@@ -290,10 +290,10 @@ public sealed class DependencyInjectionTestHarnessTests
             Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                 new RequestMessage(correlationId),
                 cancellationToken);
-            IReceivedMessage<RequestMessage> busObservation = await harness.Consumed
+            IConsumedMessage<RequestMessage> busObservation = await harness.Consumed
                 .SelectAsync<RequestMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            IReceivedMessage<RequestMessage> consumerObservation = await consumerHarness.Consumed
+            IConsumedMessage<RequestMessage> consumerObservation = await consumerHarness.Consumed
                 .SelectAsync<RequestMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -332,7 +332,7 @@ public sealed class DependencyInjectionTestHarnessTests
 
             await harness.Bus.PublishAsync(new SubmitThroughDependency(correlationId, "expected"), cancellationToken);
 
-            IReceivedMessage<SubmitThroughDependency> consumed = await harness.Consumed
+            IConsumedMessage<SubmitThroughDependency> consumed = await harness.Consumed
                 .SelectAsync<SubmitThroughDependency>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IPublishedMessage<SubmittedThroughDependency> published = await harness.Published
@@ -382,17 +382,14 @@ public sealed class DependencyInjectionTestHarnessTests
 
             ISagaTestHarness<SagaTestHarnessBehaviorTests.ClassicSaga> sagaHarness =
                 harness.GetSagaHarness<SagaTestHarnessBehaviorTests.ClassicSaga>();
-            IReceivedMessage<SagaTestHarnessBehaviorTests.StartSaga> received = await sagaHarness.Consumed
+            IConsumedMessage<SagaTestHarnessBehaviorTests.StartSaga> received = await sagaHarness.Consumed
                 .SelectAsync<SagaTestHarnessBehaviorTests.StartSaga>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            SagaTestHarnessBehaviorTests.ClassicSaga? created = sagaHarness.Created.Contains(sagaId);
-            SagaTestHarnessBehaviorTests.ClassicSaga? observed = sagaHarness.Sagas.Contains(sagaId);
+            SagaTestHarnessBehaviorTests.ClassicSaga? created = sagaHarness.Created.FindById(sagaId);
+            SagaTestHarnessBehaviorTests.ClassicSaga? observed = sagaHarness.Sagas.FindById(sagaId);
             IPublishedMessage<SagaTestHarnessBehaviorTests.SagaStarted> published = await harness.Published
                 .SelectAsync<SagaTestHarnessBehaviorTests.SagaStarted>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
-
             Assert.Equal(sagaId, received.Context.Message.CorrelationId);
             Assert.Null(received.Exception);
             Assert.NotNull(created);
@@ -401,7 +398,7 @@ public sealed class DependencyInjectionTestHarnessTests
             Assert.Equal(["first", "second"], created.Values);
             Assert.Equal(sagaId, published.Context.Message.CorrelationId);
             Assert.Equal("container", published.Context.Message.Value);
-            Assert.Empty(harness.Published.Select<UnexpectedSagaPublication>(completed.Token));
+            Assert.Empty(harness.Published.Snapshot().OfType<IPublishedMessage<UnexpectedSagaPublication>>());
         }
         finally
         {
@@ -433,7 +430,7 @@ public sealed class DependencyInjectionTestHarnessTests
 
             await endpoint.SendAsync(new ContainerStart(sagaId, "expected"), cancellationToken);
 
-            IReceivedMessage<ContainerStart> received = await harness.Consumed
+            IConsumedMessage<ContainerStart> received = await harness.Consumed
                 .SelectAsync<ContainerStart>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IPublishedMessage<ContainerStarted> published = await harness.Published
@@ -441,11 +438,10 @@ public sealed class DependencyInjectionTestHarnessTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             ISagaStateMachineTestHarness<ContainerMetadataStateMachine, ContainerMetadataState> sagaHarness =
                 harness.GetSagaStateMachineHarness<ContainerMetadataStateMachine, ContainerMetadataState>();
-            Guid? running = await sagaHarness.ExistsAsync(sagaId, machine => machine.Running, timeout, TestContext.Current.CancellationToken);
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
+            Guid? running = await sagaHarness.WaitForSagaInStateAsync(sagaId, machine => machine.Running, timeout, TestContext.Current.CancellationToken);
             ContainerMetadataState? created = sagaHarness.Created
-                .Select(instance => instance.CorrelationId == sagaId, completed.Token)
+                .Snapshot()
+                .Where(instance => instance.Saga.CorrelationId == sagaId)
                 .Select(instance => instance.Saga)
                 .SingleOrDefault();
 
@@ -502,8 +498,8 @@ public sealed class DependencyInjectionTestHarnessTests
                 harness.GetSagaStateMachineHarness<
                     SagaTestHarnessBehaviorTests.ResponsiveStateMachine,
                     SagaTestHarnessBehaviorTests.ResponsiveState>();
-            Guid? responded = await sagaHarness.ExistsAsync(sagaId, machine => machine.Responded, timeout, TestContext.Current.CancellationToken);
-            SagaTestHarnessBehaviorTests.ResponsiveState? state = sagaHarness.Sagas.Contains(sagaId);
+            Guid? responded = await sagaHarness.WaitForSagaInStateAsync(sagaId, machine => machine.Responded, timeout, TestContext.Current.CancellationToken);
+            SagaTestHarnessBehaviorTests.ResponsiveState? state = sagaHarness.Sagas.FindById(sagaId);
 
             Assert.Equal(sagaId, response.Message.CorrelationId);
             Assert.Equal("response:container", response.Message.Value);

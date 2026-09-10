@@ -44,13 +44,13 @@ public sealed class InMemoryTransportIsolationTests
             Uri externalBusAddress = externalHarness.BusAddress;
             Guid messageId = Guid.Parse("56d68b7c-d828-4548-b66d-08f0091382d0");
             var message = new IsolationMessage(Guid.Parse("3111f42a-648a-49da-ad71-c63a9494eb80"));
-            Task<IReceivedMessage<IsolationMessage>> externalRelayObserved = externalRelay.Consumed
+            Task<IConsumedMessage<IsolationMessage>> externalRelayObserved = externalRelay.Consumed
                 .SelectAsync<IsolationMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<IsolationMessage>> internalRelayObserved = internalRelay.Consumed
+            Task<IConsumedMessage<IsolationMessage>> internalRelayObserved = internalRelay.Consumed
                 .SelectAsync<IsolationMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<IsolationMessage>> realConsumerObserved = realConsumer.Consumed
+            Task<IConsumedMessage<IsolationMessage>> realConsumerObserved = realConsumer.Consumed
                 .SelectAsync<IsolationMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -60,7 +60,7 @@ public sealed class InMemoryTransportIsolationTests
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
 
-            IReceivedMessage<IsolationMessage>[] observations = await Task.WhenAll(
+            IConsumedMessage<IsolationMessage>[] observations = await Task.WhenAll(
                     externalRelayObserved,
                     internalRelayObserved,
                     realConsumerObserved)
@@ -98,9 +98,9 @@ public sealed class InMemoryTransportIsolationTests
             Assert.Equal(messageId, delivery.MessageId);
             Assert.Equal(externalBusAddress, delivery.SourceAddress);
             Assert.Equal(internalHarness.InputQueueAddress, delivery.InputAddress);
-            Assert.Single(externalRelay.Consumed.Select<IsolationMessage>(SnapshotOnlyToken()));
-            Assert.Single(internalRelay.Consumed.Select<IsolationMessage>(SnapshotOnlyToken()));
-            Assert.Single(realConsumer.Consumed.Select<IsolationMessage>(SnapshotOnlyToken()));
+            Assert.Single(externalRelay.Consumed.Snapshot<IsolationMessage>());
+            Assert.Single(internalRelay.Consumed.Snapshot<IsolationMessage>());
+            Assert.Single(realConsumer.Consumed.Snapshot<IsolationMessage>());
         }
         finally
         {
@@ -122,7 +122,6 @@ public sealed class InMemoryTransportIsolationTests
             TestInactivityTimeout = timeout,
         };
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static string GetVirtualHost(Uri address) => address.AbsolutePath
         .Split('/', StringSplitOptions.RemoveEmptyEntries)

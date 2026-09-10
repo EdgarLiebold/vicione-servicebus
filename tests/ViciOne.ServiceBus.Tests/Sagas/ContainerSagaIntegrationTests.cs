@@ -44,16 +44,16 @@ public sealed class ContainerSagaIntegrationTests
             await sagaHarness.Consumed.SelectAsync<SagaThird>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            ContainerLifecycleSaga? instance = sagaHarness.Sagas.Contains(correlationId);
+            ContainerLifecycleSaga? instance = sagaHarness.Sagas.FindById(correlationId);
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.NotNull(instance);
             Assert.Equal(correlationId, instance.CorrelationId);
             Assert.Equal(new[] { "first", "second", "third" }, instance.Values);
-            Assert.Single(sagaHarness.Consumed.Select<SagaFirst>(SnapshotOnlyToken()));
-            Assert.Single(sagaHarness.Consumed.Select<SagaSecond>(SnapshotOnlyToken()));
-            Assert.Single(sagaHarness.Consumed.Select<SagaThird>(SnapshotOnlyToken()));
+            Assert.Single(sagaHarness.Consumed.Snapshot<SagaFirst>());
+            Assert.Single(sagaHarness.Consumed.Snapshot<SagaSecond>());
+            Assert.Single(sagaHarness.Consumed.Snapshot<SagaThird>());
         }
         finally
         {
@@ -95,13 +95,13 @@ public sealed class ContainerSagaIntegrationTests
             ISagaTestHarness<InlineEndpointSaga> inlineHarness = harness.GetSagaHarness<InlineEndpointSaga>();
             ISagaTestHarness<DefinitionEndpointSaga> definitionHarness =
                 harness.GetSagaHarness<DefinitionEndpointSaga>();
-            IReceivedMessage<InlineSagaStart> inlineReceived = await inlineHarness.Consumed
+            IConsumedMessage<InlineSagaStart> inlineReceived = await inlineHarness.Consumed
                 .SelectAsync<InlineSagaStart>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<DefinitionSagaStart> definitionReceived = await definitionHarness.Consumed
+            IConsumedMessage<DefinitionSagaStart> definitionReceived = await definitionHarness.Consumed
                 .SelectAsync<DefinitionSagaStart>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            Assert.Equal(inlineId, Assert.IsType<InlineEndpointSaga>(inlineHarness.Sagas.Contains(inlineId)).CorrelationId);
-            Assert.Equal(definitionId, Assert.IsType<DefinitionEndpointSaga>(definitionHarness.Sagas.Contains(definitionId)).CorrelationId);
+            Assert.Equal(inlineId, Assert.IsType<InlineEndpointSaga>(inlineHarness.Sagas.FindById(inlineId)).CorrelationId);
+            Assert.Equal(definitionId, Assert.IsType<DefinitionEndpointSaga>(definitionHarness.Sagas.FindById(definitionId)).CorrelationId);
             Assert.Equal("custom-container-saga", inlineReceived.Context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
             Assert.Equal("custom-definition-saga", definitionReceived.Context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
         }
@@ -114,7 +114,6 @@ public sealed class ContainerSagaIntegrationTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record SagaFirst(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
     public sealed record SagaSecond(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;

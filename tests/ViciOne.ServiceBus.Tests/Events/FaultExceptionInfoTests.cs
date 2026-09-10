@@ -370,15 +370,17 @@ public sealed class FaultExceptionInfoTests
             Task<IPublishedMessage<Fault<DiagnosticFailure>>> publishedFaultTask = harness.Published
                 .SelectAsync<Fault<DiagnosticFailure>>(cancellationToken)
                 .FirstObservedAsync();
-            Task<ConsumeContext<Fault<DiagnosticFailure>>> receivedFaultTask =
-                await harness.ConnectPublishHandlerAsync<Fault<DiagnosticFailure>>(_ => true);
+            await using IPublishMessageObservation<Fault<DiagnosticFailure>> faultObservation =
+                await harness.ObservePublishedMessageAsync<Fault<DiagnosticFailure>>(
+                    _ => true,
+                    cancellationToken);
 
             await harness.Bus.PublishAsync(new DiagnosticFailure(source), cancellationToken);
             await publishedFaultTask.WaitAsync(timeout, cancellationToken);
             Fault<DiagnosticFailure> fault =
-                (await receivedFaultTask.WaitAsync(timeout, cancellationToken)).Message;
+                (await faultObservation.Message.WaitAsync(timeout, cancellationToken)).Message;
 
-            Assert.Single(harness.Published.Select<Fault<DiagnosticFailure>>(new CancellationToken(canceled: true)));
+            Assert.Single(harness.Published.Snapshot<Fault<DiagnosticFailure>>());
             return fault;
         }
         finally

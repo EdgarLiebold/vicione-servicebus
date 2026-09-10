@@ -26,18 +26,18 @@ public sealed class InterfaceMessageDispatchTests
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            Task<IReceivedMessage<FirstMessageContract>> firstDelivery = first.Consumed
+            Task<IConsumedMessage<FirstMessageContract>> firstDelivery = first.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<SecondMessageContract>> secondDelivery = second.Consumed
+            Task<IConsumedMessage<SecondMessageContract>> secondDelivery = second.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await harness.InputQueueSendEndpoint.Advanced().SendAsync((object)message, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await Task.WhenAll(firstDelivery, secondDelivery).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<FirstMessageContract> firstReceived = await firstDelivery;
-            IReceivedMessage<SecondMessageContract> secondReceived = await secondDelivery;
+            IConsumedMessage<FirstMessageContract> firstReceived = await firstDelivery;
+            IConsumedMessage<SecondMessageContract> secondReceived = await secondDelivery;
 
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
@@ -51,8 +51,8 @@ public sealed class InterfaceMessageDispatchTests
             Assert.Equal(message.Age, secondMessage.Age);
             Assert.Equal(message.Name, projectedSecond.Message.Name);
             Assert.Equal(message.Age, projectedSecond.Message.Age);
-            Assert.Single(first.Consumed.Select(SnapshotOnlyToken()));
-            Assert.Single(second.Consumed.Select(SnapshotOnlyToken()));
+            Assert.Single(first.Consumed.Snapshot());
+            Assert.Single(second.Consumed.Snapshot());
         }
         finally
         {
@@ -61,7 +61,6 @@ public sealed class InterfaceMessageDispatchTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

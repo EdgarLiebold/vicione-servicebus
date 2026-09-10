@@ -117,7 +117,7 @@ public sealed class SerializationContractIntegrationTests
             Assert.Equal("Every interface accessor survives.", context.Message.Body);
             Assert.Equal(ComplaintArea.Appearance, context.Message.Area);
             Assert.NotSame(initialized.Message, context.Message);
-            Assert.Single(harness.Consumed.Select<ComplaintContract>(SnapshotOnlyToken()));
+            Assert.Single(harness.Consumed.Snapshot<ComplaintContract>());
         }
         finally
         {
@@ -361,7 +361,6 @@ public sealed class SerializationContractIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static void AssertScalarMessage(ScalarMessage expected, ScalarMessage actual)
     {

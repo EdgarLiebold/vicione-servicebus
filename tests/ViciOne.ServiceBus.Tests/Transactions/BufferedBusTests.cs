@@ -40,16 +40,16 @@ public sealed class BufferedBusTests
             IBufferedBus bufferedBus = scopedProvider.GetRequiredService<IBufferedBus>();
             await publishEndpoint.PublishAsync(message, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
 
             await bufferedBus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<TransactionalMessage> received = await consumer.Consumed
+            IConsumedMessage<TransactionalMessage> received = await consumer.Consumed
                 .SelectAsync<TransactionalMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await bufferedBus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
-            Assert.Single(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<TransactionalMessage>());
         }
         finally
         {
@@ -86,17 +86,17 @@ public sealed class BufferedBusTests
             await harness.Bus.PublishAsync(trigger, cancellationToken);
             await coordinator.Buffered.Task.WaitAsync(timeout, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<BufferedConsumerResult>(SnapshotOnlyToken()));
-            Assert.Empty(harness.Sent.Select<BufferedConsumerSendResult>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<BufferedConsumerResult>());
+            Assert.Empty(harness.Sent.Snapshot<BufferedConsumerSendResult>());
 
             coordinator.Release.TrySetResult();
             await coordinator.Flushed.Task.WaitAsync(timeout, cancellationToken);
 
             BufferedConsumerResult actual = Assert.Single(harness.Published
-                .Select<BufferedConsumerResult>(SnapshotOnlyToken()))
+                .Snapshot<BufferedConsumerResult>())
                 .Context.Message;
             BufferedConsumerSendResult sent = Assert.Single(harness.Sent
-                .Select<BufferedConsumerSendResult>(SnapshotOnlyToken()))
+                .Snapshot<BufferedConsumerSendResult>())
                 .Context.Message;
             Assert.Equal(new BufferedConsumerResult(trigger.CorrelationId), actual);
             Assert.Equal(new BufferedConsumerSendResult(trigger.CorrelationId), sent);
@@ -125,16 +125,16 @@ public sealed class BufferedBusTests
 
             await driver.Bus.PublishAsync(message, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<TransactionalMessage> received = await handler.Consumed
+            IConsumedMessage<TransactionalMessage> received = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
-            Assert.Single(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<TransactionalMessage>());
         }
         finally
         {
@@ -160,16 +160,16 @@ public sealed class BufferedBusTests
 
             await endpoint.SendAsync(message, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<TransactionalMessage> received = await handler.Consumed
+            IConsumedMessage<TransactionalMessage> received = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
-            Assert.Single(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<TransactionalMessage>());
         }
         finally
         {
@@ -206,7 +206,7 @@ public sealed class BufferedBusTests
             await driver.Bus.PublishAsync<TransactionalMessage>(Values(expected[8]), typedPipe, cancellationToken);
             await driver.Bus.PublishAsync<TransactionalMessage>(Values(expected[9]), untypedPipe, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             await handler.Consumed.SelectAsync(
@@ -215,7 +215,7 @@ public sealed class BufferedBusTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(expected, harness.Published
-                .Select<TransactionalMessage>(SnapshotOnlyToken())
+                .Snapshot<TransactionalMessage>()
                 .Select(item => item.Context.Message));
         }
         finally
@@ -242,16 +242,16 @@ public sealed class BufferedBusTests
 
             await endpoint.SendAsync(message, cancellationToken);
 
-            Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<TransactionalMessage> received = await handler.Consumed
+            IConsumedMessage<TransactionalMessage> received = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
-            Assert.Single(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Sent.Snapshot<TransactionalMessage>());
         }
         finally
         {
@@ -289,7 +289,7 @@ public sealed class BufferedBusTests
             await endpoint.SendAsync<TransactionalMessage>(Values(expected[8]), typedPipe, cancellationToken);
             await endpoint.SendAsync<TransactionalMessage>(Values(expected[9]), untypedPipe, cancellationToken);
 
-            Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             await handler.Consumed.SelectAsync(
@@ -298,7 +298,7 @@ public sealed class BufferedBusTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(expected, harness.Sent
-                .Select<TransactionalMessage>(SnapshotOnlyToken())
+                .Snapshot<TransactionalMessage>()
                 .Select(item => item.Context.Message));
         }
         finally
@@ -673,7 +673,6 @@ public sealed class BufferedBusTests
         Assert.Equal(capacity, actual.ActualValue);
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static object Values(TransactionalMessage message) => new
     {

@@ -217,7 +217,7 @@ public sealed class RoutingSlipFaultIntegrationTests
             ExceptionInfo actual = Assert.Single(slipFailure.Message.ActivityExceptions).ExceptionInfo;
             Assert.Equal(TypeCache<CourierExpectedException>.ShortName, actual.ExceptionType);
             Assert.Equal("thrown-courier-failure", actual.Message);
-            Assert.Empty(harness.Published.Select<Fault<RoutingSlip>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<Fault<RoutingSlip>>());
         }
         finally
         {
@@ -293,7 +293,7 @@ public sealed class RoutingSlipFaultIntegrationTests
             Assert.Equal("knife", slipFailure.GetVariable<string>("SlipVariable"));
             Assert.Equal("fault-output", slipFailure.GetVariable<string>("FaultVariable"));
             Assert.Single(slipFailure.Message.ActivityExceptions);
-            Assert.Empty(harness.Published.Select<Fault<RoutingSlip>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<Fault<RoutingSlip>>());
         }
         finally
         {
@@ -376,7 +376,7 @@ public sealed class RoutingSlipFaultIntegrationTests
 
             Assert.Single(activityFaulted.Messages);
             Assert.Single(slipFaulted.Messages);
-            Assert.Empty(harness.Published.Select<Fault<RoutingSlip>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<Fault<RoutingSlip>>());
         }
         finally
         {
@@ -384,5 +384,4 @@ public sealed class RoutingSlipFaultIntegrationTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 }

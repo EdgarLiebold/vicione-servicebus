@@ -116,10 +116,8 @@ public sealed class AzureTableSagaConcurrencyTests
                 .Create<ConcurrentState>(() => fixture.Table);
             ConcurrentState persisted = Assert.IsType<ConcurrentState>(
                 await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
             ConcurrentSagaIncremented[] published = harness.Published
-                .Select<ConcurrentSagaIncremented>(completed.Token)
+                .Snapshot<ConcurrentSagaIncremented>()
                 .Where(observed => observed.Context.Message.CorrelationId == sagaId)
                 .Select(observed => observed.Context.Message)
                 .ToArray();

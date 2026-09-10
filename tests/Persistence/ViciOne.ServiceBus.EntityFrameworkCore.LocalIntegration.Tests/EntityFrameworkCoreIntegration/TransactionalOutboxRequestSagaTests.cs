@@ -48,10 +48,8 @@ public sealed class TransactionalOutboxRequestSagaTests
 
         await Assert.ThrowsAsync<RequestFaultException>(() =>
             fixture.Client.GetResponseAsync<RequestSagaStarted>(request, fixture.CancellationToken));
-        using var snapshot = new CancellationTokenSource();
-        snapshot.Cancel();
         ISentMessage<Fault<StartRequestSaga>>[] faults = fixture.Harness.Sent
-            .Select<Fault<StartRequestSaga>>(snapshot.Token)
+            .Snapshot<Fault<StartRequestSaga>>()
             .Where(message => message.Context.Message.Message.CorrelationId == request.CorrelationId)
             .ToArray();
 
@@ -143,7 +141,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         Task<Response<RequestSagaStarted>> responseTask = fixture.Client.GetResponseAsync<RequestSagaStarted>(
             request,
             fixture.CancellationToken);
-        IReceivedMessage<StartRequestSaga> consumed = await fixture.Harness.Consumed
+        IConsumedMessage<StartRequestSaga> consumed = await fixture.Harness.Consumed
             .SelectAsync<StartRequestSaga>(
                 context => context.Context.Message.CorrelationId == request.CorrelationId,
                 fixture.CancellationToken)

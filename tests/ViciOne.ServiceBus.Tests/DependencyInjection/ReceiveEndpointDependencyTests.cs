@@ -53,14 +53,12 @@ public sealed class ReceiveEndpointDependencyTests
             dependency.Release();
             Guid consumed = await observation.Consumed.Task.WaitAsync(timeout, cancellationToken);
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-            using var terminal = new CancellationTokenSource();
-            terminal.Cancel();
-            IReceivedMessage<DependentMessage>[] messages = harness.Consumed
-                .Select<DependentMessage>(terminal.Token)
+            IConsumedMessage<DependentMessage>[] messages = harness.Consumed
+                .Snapshot<DependentMessage>()
                 .ToArray();
 
             Assert.Equal(correlationId, consumed);
-            IReceivedMessage<DependentMessage> message = Assert.Single(messages);
+            IConsumedMessage<DependentMessage> message = Assert.Single(messages);
             Assert.Equal(correlationId, message.Context.Message.CorrelationId);
             Assert.Null(message.Exception);
         }

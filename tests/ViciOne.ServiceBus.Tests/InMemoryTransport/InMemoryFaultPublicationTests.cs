@@ -92,11 +92,9 @@ public sealed class InMemoryFaultPublicationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
             Fault<StormMessage>[] faults = recorder.Faults;
             IPublishedMessage<Fault<StormMessage>>[] publishedFaults = harness.Published
-                .Select<Fault<StormMessage>>(completed.Token)
+                .Snapshot<Fault<StormMessage>>()
                 .ToArray();
             Assert.Equal(StormSize, faults.Length);
             Assert.Equal(StormSize, publishedFaults.Length);

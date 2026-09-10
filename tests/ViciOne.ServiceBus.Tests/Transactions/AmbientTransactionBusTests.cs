@@ -32,7 +32,7 @@ public sealed class AmbientTransactionBusTests
                     cancellationToken));
 
             Assert.Same(expected, actual);
-            Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
             Assert.Equal(0, driver.PendingTransactionCount);
         }
         finally
@@ -58,7 +58,7 @@ public sealed class AmbientTransactionBusTests
             TransactionAbortedException actual = await Assert.ThrowsAsync<TransactionAbortedException>(ExecuteAsync);
 
             Assert.Same(expected, actual.InnerException);
-            Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
             Assert.Equal(0, driver.PendingTransactionCount);
 
             async Task ExecuteAsync()
@@ -106,16 +106,16 @@ public sealed class AmbientTransactionBusTests
                 IPublishEndpoint publishEndpoint = harness.Scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
                 await publishEndpoint.PublishAsync(message, cancellationToken);
 
-                Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+                Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
                 transaction.Complete();
             }
 
-            IReceivedMessage<TransactionalMessage> received = await consumer.Consumed
+            IConsumedMessage<TransactionalMessage> received = await consumer.Consumed
                 .SelectAsync<TransactionalMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(message, received.Context.Message);
-            Assert.Single(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<TransactionalMessage>());
         }
         finally
         {
@@ -152,17 +152,17 @@ public sealed class AmbientTransactionBusTests
             await harness.Bus.PublishAsync(trigger, cancellationToken);
             await coordinator.Enlisted.Task.WaitAsync(timeout, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<AmbientConsumerResult>(SnapshotOnlyToken()));
-            Assert.Empty(harness.Sent.Select<AmbientConsumerSendResult>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<AmbientConsumerResult>());
+            Assert.Empty(harness.Sent.Snapshot<AmbientConsumerSendResult>());
 
             coordinator.Release.TrySetResult();
             await coordinator.Committed.Task.WaitAsync(timeout, cancellationToken);
 
             AmbientConsumerResult actual = Assert.Single(harness.Published
-                .Select<AmbientConsumerResult>(SnapshotOnlyToken()))
+                .Snapshot<AmbientConsumerResult>())
                 .Context.Message;
             AmbientConsumerSendResult sent = Assert.Single(harness.Sent
-                .Select<AmbientConsumerSendResult>(SnapshotOnlyToken()))
+                .Snapshot<AmbientConsumerSendResult>())
                 .Context.Message;
             Assert.Equal(new AmbientConsumerResult(trigger.CorrelationId), actual);
             Assert.Equal(new AmbientConsumerSendResult(trigger.CorrelationId), sent);
@@ -194,7 +194,7 @@ public sealed class AmbientTransactionBusTests
             {
                 await bus.PublishAsync(first, cancellationToken);
                 await bus.PublishAsync(second, cancellationToken);
-                Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+                Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
                 transaction.Complete();
             }
 
@@ -203,7 +203,7 @@ public sealed class AmbientTransactionBusTests
                     cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             TransactionalMessage[] published = harness.Published
-                .Select<TransactionalMessage>(SnapshotOnlyToken())
+                .Snapshot<TransactionalMessage>()
                 .Select(item => item.Context.Message)
                 .ToArray();
 
@@ -237,7 +237,7 @@ public sealed class AmbientTransactionBusTests
             {
                 await endpoint.SendAsync(first, cancellationToken);
                 await endpoint.SendAsync(second, cancellationToken);
-                Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+                Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
                 transaction.Complete();
             }
 
@@ -246,7 +246,7 @@ public sealed class AmbientTransactionBusTests
                     cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             TransactionalMessage[] sent = harness.Sent
-                .Select<TransactionalMessage>(SnapshotOnlyToken())
+                .Snapshot<TransactionalMessage>()
                 .Select(item => item.Context.Message)
                 .ToArray();
 
@@ -275,7 +275,7 @@ public sealed class AmbientTransactionBusTests
             using (CreateTransactionScope(timeout))
                 await bus.PublishAsync(new TransactionalMessage(NewId.NextGuid(), "discard-publish"), cancellationToken);
 
-            Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<TransactionalMessage>());
             Assert.Equal(0, driver.PendingTransactionCount);
         }
         finally
@@ -301,7 +301,7 @@ public sealed class AmbientTransactionBusTests
             using (CreateTransactionScope(timeout))
                 await endpoint.SendAsync(new TransactionalMessage(NewId.NextGuid(), "discard-send"), cancellationToken);
 
-            Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
             Assert.Equal(0, driver.PendingTransactionCount);
         }
         finally
@@ -484,7 +484,6 @@ public sealed class AmbientTransactionBusTests
         Assert.All(observed.Values, count => Assert.Equal(1, count));
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

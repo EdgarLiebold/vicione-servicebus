@@ -74,7 +74,7 @@ public sealed class TimeoutCancellationIntegrationTests
             Assert.Contains(messageTimeout.ToString(), exception.Message, StringComparison.Ordinal);
             Assert.Equal(TypeCache<TaskCanceledException>.ShortName, exception.InnerException!.ExceptionType);
             Assert.False(continued);
-            Assert.Single(harness.Published.Select<Fault<TimeoutMessage>>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<Fault<TimeoutMessage>>());
         }
         finally
         {
@@ -206,7 +206,7 @@ public sealed class TimeoutCancellationIntegrationTests
             stopped = true;
             await canceled.Task.WaitAsync(operationTimeout, cancellationToken);
 
-            Assert.Empty(harness.Published.Select<Fault<ShutdownMessage>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<Fault<ShutdownMessage>>());
         }
         finally
         {
@@ -255,7 +255,7 @@ public sealed class TimeoutCancellationIntegrationTests
             await observation.Canceled.Task.WaitAsync(operationTimeout, cancellationToken);
 
             Assert.Equal(1, observation.Attempts);
-            Assert.Empty(harness.Published.Select<Fault<RetryStopMessage>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<Fault<RetryStopMessage>>());
         }
         finally
         {
@@ -299,7 +299,7 @@ public sealed class TimeoutCancellationIntegrationTests
             ExceptionInfo exception = Assert.Single(fault.Exceptions);
             Assert.Equal(TypeCache<TaskCanceledException>.ShortName, exception.ExceptionType);
             Assert.Equal("A task was canceled.", exception.Message);
-            Assert.Single(harness.Published.Select<Fault<IndependentCancellationMessage>>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<Fault<IndependentCancellationMessage>>());
         }
         finally
         {
@@ -307,7 +307,6 @@ public sealed class TimeoutCancellationIntegrationTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

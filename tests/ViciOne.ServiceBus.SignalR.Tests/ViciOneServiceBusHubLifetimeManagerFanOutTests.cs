@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.SignalR.Tests;
 public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifetime
 {
     private static readonly TimeSpan NoMessageWindow = TimeSpan.FromMilliseconds(250);
-    private static readonly CancellationToken SnapshotOnly = new(canceled: true);
     private HubLifetimeManagerTestEnvironment<TestHub> _environment = null!;
     private SignalRBackplaneEndpoint<TestHub> _first = null!;
     private SignalRBackplaneEndpoint<TestHub> _second = null!;
@@ -74,7 +73,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifet
         await AssertNoInvocationAsync(notSelected);
 
         var publishedGroups = _first.Group.Consumed
-            .Select<Group<TestHub>>(SnapshotOnly)
+            .Snapshot<Group<TestHub>>()
             .Select(received => received.Context.Message.GroupName)
             .Distinct(StringComparer.Ordinal)
             .Order(StringComparer.Ordinal)
@@ -125,13 +124,13 @@ public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifet
             TestContext.Current.CancellationToken);
 
         Assert.Empty(
-            _first.Connection.Consumed.Select<Connection<TestHub>>(SnapshotOnly));
-        Assert.Empty(_first.Group.Consumed.Select<Group<TestHub>>(SnapshotOnly));
-        Assert.Empty(_first.User.Consumed.Select<User<TestHub>>(SnapshotOnly));
+            _first.Connection.Consumed.Snapshot<Connection<TestHub>>());
+        Assert.Empty(_first.Group.Consumed.Snapshot<Group<TestHub>>());
+        Assert.Empty(_first.User.Consumed.Snapshot<User<TestHub>>());
         Assert.Empty(
-            _second.Connection.Consumed.Select<Connection<TestHub>>(SnapshotOnly));
-        Assert.Empty(_second.Group.Consumed.Select<Group<TestHub>>(SnapshotOnly));
-        Assert.Empty(_second.User.Consumed.Select<User<TestHub>>(SnapshotOnly));
+            _second.Connection.Consumed.Snapshot<Connection<TestHub>>());
+        Assert.Empty(_second.Group.Consumed.Snapshot<Group<TestHub>>());
+        Assert.Empty(_second.User.Consumed.Snapshot<User<TestHub>>());
     }
 
     private static async Task AssertInvocationAsync(HubConnectionTestClient client)

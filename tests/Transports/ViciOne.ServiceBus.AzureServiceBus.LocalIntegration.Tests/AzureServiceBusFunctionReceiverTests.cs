@@ -1,8 +1,8 @@
 using global::Azure.Messaging.ServiceBus;
 using global::Azure.Messaging.ServiceBus.Administration;
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.AzureServiceBus.Testing;
 using ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.Infrastructure;
+using ViciOne.ServiceBus.AzureServiceBus.Testing;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -47,7 +47,7 @@ public sealed class AzureServiceBusFunctionReceiverTests
             Assert.Same(ledger.Failure, exception);
             Assert.Equal(4, ledger.Attempts);
             IPublishedMessage<Fault<FunctionMessage>> fault = Assert.Single(
-                harness.Published.Select<Fault<FunctionMessage>>(new CancellationToken(canceled: true)));
+                harness.Published.Snapshot<Fault<FunctionMessage>>());
             Assert.Equal(ledger.Failure.Message, Assert.Single(fault.Context.Message.Exceptions).Message);
         }
         finally

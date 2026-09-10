@@ -30,7 +30,7 @@ public sealed class PublishObserverTests
             var published = new PublishedEvent(NewId.NextGuid(), "event");
 
             await harness.Bus.PublishAsync(published, cancellationToken);
-            IReceivedMessage<PublishedEvent> consumed = await eventHandler.Consumed
+            IConsumedMessage<PublishedEvent> consumed = await eventHandler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 

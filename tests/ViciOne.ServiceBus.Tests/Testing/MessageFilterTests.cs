@@ -72,7 +72,7 @@ public sealed class MessageFilterTests
     public void TypedFilterSets_RejectNullDelegatesAtConfigurationTime()
     {
         var published = new PublishedMessageFilterSet();
-        var received = new ReceivedMessageFilterSet();
+        var received = new ConsumedMessageFilterSet();
         var sent = new SentMessageFilterSet();
 
         ArgumentNullException publishedException = Assert.Throws<ArgumentNullException>(() =>
@@ -91,16 +91,16 @@ public sealed class MessageFilterTests
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-FILTER", "received-and-sent-include-exclude-composition")]
     public void ReceivedAndSentMessageFilters_ApplyTheSameTypedIncludeExcludeContract()
     {
-        var received = new ReceivedMessageFilter();
+        var received = new ConsumedMessageFilter();
         received.Includes.Add<FilterMessage>(message => ((FilterMessage)message.MessageObject).Value > 0);
         received.Excludes.Add<FilterMessage>(message => ((FilterMessage)message.MessageObject).Value == 2);
         var sent = new SentMessageFilter();
         sent.Includes.Add<FilterMessage>(message => ((FilterMessage)message.MessageObject).Value > 0);
         sent.Excludes.Add<FilterMessage>(message => ((FilterMessage)message.MessageObject).Value == 2);
 
-        Assert.True(received.Any(new StubReceivedMessage<FilterMessage>(new FilterMessage(1))));
-        Assert.False(received.Any(new StubReceivedMessage<FilterMessage>(new FilterMessage(2))));
-        Assert.False(received.Any(new StubReceivedMessage<OtherFilterMessage>(new OtherFilterMessage(1))));
+        Assert.True(received.Any(new StubConsumedMessage<FilterMessage>(new FilterMessage(1))));
+        Assert.False(received.Any(new StubConsumedMessage<FilterMessage>(new FilterMessage(2))));
+        Assert.False(received.Any(new StubConsumedMessage<OtherFilterMessage>(new OtherFilterMessage(1))));
         Assert.True(sent.Any(new StubSentMessage<FilterMessage>(new FilterMessage(1))));
         Assert.False(sent.Any(new StubSentMessage<FilterMessage>(new FilterMessage(2))));
         Assert.False(sent.Any(new StubSentMessage<OtherFilterMessage>(new OtherFilterMessage(1))));
@@ -111,7 +111,7 @@ public sealed class MessageFilterTests
     public void MessageFilters_ExposeStableReadOnlyConfigurationSets()
     {
         var published = new PublishedMessageFilter();
-        var received = new ReceivedMessageFilter();
+        var received = new ConsumedMessageFilter();
         var sent = new SentMessageFilter();
 
         Assert.Same(published.Includes, published.Includes);
@@ -122,8 +122,8 @@ public sealed class MessageFilterTests
         Assert.Same(sent.Excludes, sent.Excludes);
         Assert.Null(typeof(PublishedMessageFilter).GetProperty(nameof(PublishedMessageFilter.Includes))!.SetMethod);
         Assert.Null(typeof(PublishedMessageFilter).GetProperty(nameof(PublishedMessageFilter.Excludes))!.SetMethod);
-        Assert.Null(typeof(ReceivedMessageFilter).GetProperty(nameof(ReceivedMessageFilter.Includes))!.SetMethod);
-        Assert.Null(typeof(ReceivedMessageFilter).GetProperty(nameof(ReceivedMessageFilter.Excludes))!.SetMethod);
+        Assert.Null(typeof(ConsumedMessageFilter).GetProperty(nameof(ConsumedMessageFilter.Includes))!.SetMethod);
+        Assert.Null(typeof(ConsumedMessageFilter).GetProperty(nameof(ConsumedMessageFilter.Excludes))!.SetMethod);
         Assert.Null(typeof(SentMessageFilter).GetProperty(nameof(SentMessageFilter.Includes))!.SetMethod);
         Assert.Null(typeof(SentMessageFilter).GetProperty(nameof(SentMessageFilter.Excludes))!.SetMethod);
     }
@@ -160,14 +160,14 @@ public sealed class MessageFilterTests
         public object MessageObject => message;
     }
 
-    private sealed class StubReceivedMessage<T>(T message) : IReceivedMessage<T>
+    private sealed class StubConsumedMessage<T>(T message) : IConsumedMessage<T>
         where T : class
     {
         public Guid? ElementId => null;
 
         public ConsumeContext<T> Context => null!;
 
-        ConsumeContext IReceivedMessage.Context => Context.Advanced();
+        ConsumeContext IConsumedMessage.Context => Context.Advanced();
 
         public DateTimeOffset StartTime => default;
 

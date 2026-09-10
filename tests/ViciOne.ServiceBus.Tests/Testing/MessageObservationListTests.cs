@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Testing;
-using ViciOne.ServiceBus.Testing.Implementations;
+using ViciOne.ServiceBus.Testing.Internal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -36,10 +36,14 @@ public sealed class MessageObservationListTests
             Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(cancellationToken));
             Assert.True(await harness.Consumed.AnyAsync<OtherMessage>(cancellationToken));
 
-            CancellationToken snapshotOnly = new(canceled: true);
-            Assert.Equal(expected, Assert.Single(harness.Sent.Select<ObservedMessage>(snapshotOnly)).Context.Message);
-            Assert.Equal(expected, Assert.Single(harness.Sent.Select<ObservedMessage>(
-                message => message.Context.Message.Value == "expected", snapshotOnly)).Context.Message);
+            Assert.Equal(
+                expected,
+                Assert.Single(harness.Sent.Snapshot().OfType<ISentMessage<ObservedMessage>>()).Context.Message);
+            Assert.Equal(
+                expected,
+                Assert.Single(
+                    harness.Sent.Snapshot().OfType<ISentMessage<ObservedMessage>>(),
+                    message => message.Context.Message.Value == "expected").Context.Message);
             Assert.Equal(expected, (await harness.Sent.SelectAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
@@ -79,10 +83,14 @@ public sealed class MessageObservationListTests
             await harness.Bus.PublishAsync(expected, cancellationToken);
             await harness.Bus.PublishAsync(other, cancellationToken);
 
-            CancellationToken snapshotOnly = new(canceled: true);
-            Assert.Equal(expected, Assert.Single(harness.Published.Select<ObservedMessage>(snapshotOnly)).Context.Message);
-            Assert.Equal(expected, Assert.Single(harness.Published.Select<ObservedMessage>(
-                message => message.Context.Message.Value == "expected", snapshotOnly)).Context.Message);
+            Assert.Equal(
+                expected,
+                Assert.Single(harness.Published.Snapshot().OfType<IPublishedMessage<ObservedMessage>>()).Context.Message);
+            Assert.Equal(
+                expected,
+                Assert.Single(
+                    harness.Published.Snapshot().OfType<IPublishedMessage<ObservedMessage>>(),
+                    message => message.Context.Message.Value == "expected").Context.Message);
             Assert.Equal(expected, (await harness.Published.SelectAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
@@ -136,10 +144,14 @@ public sealed class MessageObservationListTests
             Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(cancellationToken));
             Assert.True(await harness.Consumed.AnyAsync<OtherMessage>(cancellationToken));
 
-            CancellationToken snapshotOnly = new(canceled: true);
-            Assert.Same(expectedContext, Assert.Single(harness.Consumed.Select<ObservedMessage>(snapshotOnly)).Context);
-            Assert.Same(expectedContext, Assert.Single(harness.Consumed.Select<ObservedMessage>(
-                message => message.Context.Message.Value == "expected", snapshotOnly)).Context);
+            Assert.Same(
+                expectedContext,
+                Assert.Single(harness.Consumed.Snapshot().OfType<IConsumedMessage<ObservedMessage>>()).Context);
+            Assert.Same(
+                expectedContext,
+                Assert.Single(
+                    harness.Consumed.Snapshot().OfType<IConsumedMessage<ObservedMessage>>(),
+                    message => message.Context.Message.Value == "expected").Context);
             Assert.Same(expectedContext, (await harness.Consumed.SelectAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
@@ -157,10 +169,12 @@ public sealed class MessageObservationListTests
             Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(
                 message => message.Context.Message.Value == "expected", cancellationToken));
 
-            var typed = new ReceivedMessageList<ObservedMessage>(timeout, snapshotOnly, new FakeTimeProvider(ObservationTime));
+            using var completed = new CancellationTokenSource();
+            completed.Cancel();
+            var typed = new ConsumedMessageList<ObservedMessage>(timeout, completed.Token, new FakeTimeProvider(ObservationTime));
             typed.Add(expectedContext);
 
-            Assert.Same(expectedContext, Assert.Single(typed.Select(snapshotOnly)).Context);
+            Assert.Same(expectedContext, Assert.Single(typed.Snapshot()).Context);
             Assert.Same(expectedContext, (await typed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context);
             Assert.True(await typed.AnyAsync(cancellationToken));
         }
@@ -199,9 +213,12 @@ public sealed class MessageObservationListTests
         timeProvider.SetUtcNow(publishFault.SentTime!.Value + TimeSpan.FromSeconds(4));
         await publish.PublishFaultAsync(publishFault, expectedFailure);
 
-        CancellationToken snapshotOnly = new(canceled: true);
-        ISentMessage<ObservedMessage>[] sent = sendObserver.Messages.Select<ObservedMessage>(snapshotOnly).ToArray();
-        IPublishedMessage<ObservedMessage>[] published = publishObserver.Messages.Select<ObservedMessage>(snapshotOnly).ToArray();
+        ISentMessage<ObservedMessage>[] sent = sendObserver.Messages.Snapshot()
+            .OfType<ISentMessage<ObservedMessage>>()
+            .ToArray();
+        IPublishedMessage<ObservedMessage>[] published = publishObserver.Messages.Snapshot()
+            .OfType<IPublishedMessage<ObservedMessage>>()
+            .ToArray();
 
         Assert.Equal(2, sent.Length);
         Assert.Equal(2, published.Length);
@@ -230,7 +247,7 @@ public sealed class MessageObservationListTests
         list.Record(new TestElement(duplicateId, "first"));
         list.Record(new TestElement(duplicateId, "duplicate"));
 
-        TestElement element = Assert.Single(list.Select(_ => true, new CancellationToken(canceled: true)));
+        TestElement element = Assert.Single(list.Snapshot());
         Assert.Equal(duplicateId, element.ElementId);
         Assert.Equal("first", element.Value);
     }
@@ -260,7 +277,7 @@ public sealed class MessageObservationListTests
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             EmptyAsync<TestElement>().FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Equal("Message List was empty, or timed out", exception.Message);
+        Assert.Equal("The observation sequence completed without an element.", exception.Message);
         Assert.Null(await EmptyAsync<TestElement>().FirstObservedOrDefaultAsync(TestContext.Current.CancellationToken));
         Assert.Equal(0, await EmptyAsync<TestElement>().CountObservedAsync(TestContext.Current.CancellationToken));
         Assert.False(await EmptyAsync<TestElement>().AnyObservedAsync(TestContext.Current.CancellationToken));
@@ -322,7 +339,7 @@ public sealed class MessageObservationListTests
                 await endpointPublished.Task.WaitAsync(timeout, cancellationToken);
 
                 IPublishedMessage<EndpointEvent> observation = Assert.Single(
-                    published.Messages.Select<EndpointEvent>(new CancellationToken(canceled: true)));
+                    published.Messages.Snapshot().OfType<IPublishedMessage<EndpointEvent>>());
                 Assert.Equal(request.CorrelationId, observation.Context.Message.CorrelationId);
                 Assert.Equal(request.CorrelationId, observation.Context.CorrelationId);
                 Assert.Null(observation.Exception);
@@ -349,9 +366,9 @@ public sealed class MessageObservationListTests
         Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() =>
             new PublishedMessageList(timeout, CancellationToken.None, null!)).ParamName);
         Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() =>
-            new ReceivedMessageList(timeout, CancellationToken.None, null!)).ParamName);
+            new ConsumedMessageList(timeout, CancellationToken.None, null!)).ParamName);
         Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() =>
-            new ReceivedMessageList<ObservedMessage>(timeout, CancellationToken.None, null!)).ParamName);
+            new ConsumedMessageList<ObservedMessage>(timeout, CancellationToken.None, null!)).ParamName);
         Assert.Equal("publishObserver", Assert.Throws<ArgumentNullException>(() =>
             new TestReceiveEndpointObserver(null!)).ParamName);
     }

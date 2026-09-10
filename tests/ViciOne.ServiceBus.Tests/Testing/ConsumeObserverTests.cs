@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Testing;
-using ViciOne.ServiceBus.Testing.Implementations;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -36,7 +35,7 @@ public sealed class ConsumeObserverTests
 
             ObservedMessage preConsumed = await typed.PreConsumed.WaitAsync(timeout, cancellationToken);
             ObservedMessage postConsumed = await typed.PostConsumed.WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<ObservedMessage> observed = await untyped.Messages
+            IConsumedMessage<ObservedMessage> observed = await untyped.Messages
                 .SelectAsync<ObservedMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -52,7 +51,7 @@ public sealed class ConsumeObserverTests
             Assert.Equal(ObservationTime.UtcDateTime - observed.ElapsedTime, observed.StartTime);
             Assert.False(typed.ConsumeFaulted.IsCompleted);
             Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() =>
-                new ReceivedMessage<ObservedMessage>(observed.Context, null, null!)).ParamName);
+                new ConsumedMessage<ObservedMessage>(observed.Context, null, null!)).ParamName);
         }
         finally
         {
@@ -85,7 +84,7 @@ public sealed class ConsumeObserverTests
             FailingObservedMessage preConsumed = await typed.PreConsumed.WaitAsync(timeout, cancellationToken);
             InvalidOperationException typedFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 typed.ConsumeFaulted.WaitAsync(timeout, cancellationToken));
-            IReceivedMessage<FailingObservedMessage> observed = await untyped.Messages
+            IConsumedMessage<FailingObservedMessage> observed = await untyped.Messages
                 .SelectAsync<FailingObservedMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -149,7 +148,7 @@ public sealed class ConsumeObserverTests
         };
         TestConsumeMessageObserver<ObservedRequest> typed = harness.GetConsumeObserver<ObservedRequest>();
         TestConsumeObserver untyped = harness.GetConsumeObserver();
-        harness.OnConfigureMediator += configurator => configurator.Handler<ObservedRequest>(context =>
+        harness.MediatorConfiguring += configurator => configurator.Handler<ObservedRequest>(context =>
             context.RespondAsync(new ObservedResponse(context.Message.CorrelationId, $"response:{context.Message.Value}")));
 
         await harness.StartAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
@@ -163,10 +162,10 @@ public sealed class ConsumeObserverTests
             cancellationToken).WaitAsync(timeout, cancellationToken);
 
         ObservedRequest typedRequest = await typed.PostConsumed.WaitAsync(timeout, cancellationToken);
-        IReceivedMessage<ObservedRequest> request = await untyped.Messages
+        IConsumedMessage<ObservedRequest> request = await untyped.Messages
             .SelectAsync<ObservedRequest>(cancellationToken)
             .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
-        IReceivedMessage<ObservedResponse> observedResponse = await untyped.Messages
+        IConsumedMessage<ObservedResponse> observedResponse = await untyped.Messages
             .SelectAsync<ObservedResponse>(cancellationToken)
             .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 

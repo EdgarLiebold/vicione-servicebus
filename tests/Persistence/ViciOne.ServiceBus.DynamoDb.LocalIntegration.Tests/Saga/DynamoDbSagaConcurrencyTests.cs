@@ -159,12 +159,10 @@ public sealed class DynamoDbSagaConcurrencyTests
                 new DynamoDbSagaRepositoryOptions<ChoirSaga>(fixture.TableName));
             ChoirSaga persisted = Assert.IsType<ChoirSaga>(
                 await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
             ChoirVoiceRecorded[] published =
             [
                 .. harness.Published
-                    .Select<ChoirVoiceRecorded>(completed.Token)
+                    .Snapshot<ChoirVoiceRecorded>()
                     .Where(observed => observed.Context.Message.CorrelationId == sagaId)
                     .Select(observed => observed.Context.Message),
             ];

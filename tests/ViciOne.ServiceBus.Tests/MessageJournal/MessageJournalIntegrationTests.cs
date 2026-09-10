@@ -148,7 +148,7 @@ public sealed class MessageJournalIntegrationTests
             var message = new JournalMessage(NewId.NextGuid(), "delivered");
 
             await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
-            IReceivedMessage<JournalMessage> consumed = await handler.Consumed
+            IConsumedMessage<JournalMessage> consumed = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await store.ExpectedAttemptsReached.WaitAsync(timeout, cancellationToken);

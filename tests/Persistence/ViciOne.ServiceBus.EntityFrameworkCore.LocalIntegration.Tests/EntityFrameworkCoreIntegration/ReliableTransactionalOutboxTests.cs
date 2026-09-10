@@ -60,10 +60,10 @@ public sealed class ReliableTransactionalOutboxTests
         var command = new CreateReliableState(NewId.NextGuid(), FailFirstAttempt: false);
 
         await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
-        IReceivedMessage<CreateReliableState> created = await fixture.ConsumedAsync(
+        IConsumedMessage<CreateReliableState> created = await fixture.ConsumedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
-        IReceivedMessage<StateVerified> verified = await fixture.VerifiedAsync(
+        IConsumedMessage<StateVerified> verified = await fixture.VerifiedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
         ReliableState state = await fixture.ReadStateAsync(command.CorrelationId);
@@ -84,7 +84,7 @@ public sealed class ReliableTransactionalOutboxTests
         var command = new CreateReliableState(NewId.NextGuid(), FailFirstAttempt: true);
 
         await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
-        IReceivedMessage<StateVerified> verified = await fixture.VerifiedAsync(
+        IConsumedMessage<StateVerified> verified = await fixture.VerifiedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
         ReliableState state = await fixture.ReadStateAsync(command.CorrelationId);
@@ -103,7 +103,7 @@ public sealed class ReliableTransactionalOutboxTests
         var command = new CreateReliableState(NewId.NextGuid(), FailFirstAttempt: false);
 
         await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
-        IReceivedMessage<StateVerified> verified = await fixture.VerifiedAsync(
+        IConsumedMessage<StateVerified> verified = await fixture.VerifiedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
         ReliableState state = await fixture.ReadStateAsync(command.CorrelationId);
@@ -484,7 +484,7 @@ public sealed class ReliableTransactionalOutboxTests
             }
         }
 
-        public Task<IReceivedMessage<CreateReliableState>> ConsumedAsync(
+        public Task<IConsumedMessage<CreateReliableState>> ConsumedAsync(
             Guid correlationId,
             CancellationToken cancellationToken) => Harness.Consumed
             .SelectAsync<CreateReliableState>(
@@ -501,7 +501,7 @@ public sealed class ReliableTransactionalOutboxTests
                 .SingleAsync(state => state.CorrelationId == correlationId, CancellationToken);
         }
 
-        public Task<IReceivedMessage<StateVerified>> VerifiedAsync(
+        public Task<IConsumedMessage<StateVerified>> VerifiedAsync(
             Guid correlationId,
             CancellationToken cancellationToken) => Harness.Consumed
             .SelectAsync<StateVerified>(
@@ -510,11 +510,9 @@ public sealed class ReliableTransactionalOutboxTests
             .FirstObservedAsync(cancellationToken: cancellationToken)
             .WaitAsync(OperationTimeout, cancellationToken);
 
-        public IReceivedMessage<StateVerified>[] VerifiedSnapshot(Guid correlationId)
+        public IConsumedMessage<StateVerified>[] VerifiedSnapshot(Guid correlationId)
         {
-            using var snapshot = new CancellationTokenSource();
-            snapshot.Cancel();
-            return Harness.Consumed.Select<StateVerified>(snapshot.Token)
+            return Harness.Consumed.Snapshot<StateVerified>()
                 .Where(message => message.Context.Message.CorrelationId == correlationId && message.Exception is null)
                 .ToArray();
         }

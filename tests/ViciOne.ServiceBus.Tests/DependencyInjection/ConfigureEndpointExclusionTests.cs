@@ -49,7 +49,7 @@ public sealed class ConfigureEndpointExclusionTests
             Guid correlationId = NewId.NextGuid();
             await harness.Bus.PublishAsync(new ExcludedMessage(correlationId), cancellationToken);
             await harness.Bus.PublishAsync(new ControlMessage(correlationId), cancellationToken);
-            IReceivedMessage<ControlMessage> control = await harness.Consumed
+            IConsumedMessage<ControlMessage> control = await harness.Consumed
                 .SelectAsync<ControlMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             Assert.Equal(correlationId, control.Context.Message.CorrelationId);
@@ -60,8 +60,8 @@ public sealed class ConfigureEndpointExclusionTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Consumed.Select<ControlMessage>(SnapshotOnlyToken()));
-        Assert.Empty(harness.Consumed.Select<ExcludedMessage>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<ControlMessage>());
+        Assert.Empty(harness.Consumed.Snapshot<ExcludedMessage>());
     }
 
     private static void RegisterExcludedOwner(
@@ -132,7 +132,6 @@ public sealed class ConfigureEndpointExclusionTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

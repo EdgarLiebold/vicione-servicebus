@@ -11,8 +11,6 @@ namespace ViciOne.ServiceBus.Tests.Testing;
 public sealed class TestHarnessOptionsStartupValidationTests
 {
     [Theory]
-    [InlineData(InvalidOption.TestTimeout, "TestTimeout")]
-    [InlineData(InvalidOption.InactivityTimeout, "TestInactivityTimeout")]
     [InlineData(InvalidOption.SaveMode, "ContextSaveMode")]
     [InlineData(InvalidOption.MaximumSavedContexts, "MaximumSavedContexts")]
     [InlineData(InvalidOption.LogLevel, "LogLevel")]
@@ -25,6 +23,17 @@ public sealed class TestHarnessOptionsStartupValidationTests
             () => provider.GetRequiredService<IStartupValidator>().Validate());
 
         Assert.Contains(property, exception.ToString(), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(InvalidOption.TestTimeout, "testTimeout")]
+    [InlineData(InvalidOption.InactivityTimeout, "testInactivityTimeout")]
+    [RequirementCoverage("REQ-VSB-TEST-OPTIONS-STARTUP", "invalid-timeout-rejected-at-configuration-boundary")]
+    public void InvalidTimeout_IsRejectedAtTheConfigurationBoundary(InvalidOption invalid, string parameter)
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => Provider(invalid));
+
+        Assert.Equal(parameter, exception.ParamName);
     }
 
     [Fact]

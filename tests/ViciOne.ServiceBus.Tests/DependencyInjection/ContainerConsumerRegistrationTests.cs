@@ -168,10 +168,10 @@ public sealed class ContainerConsumerRegistrationTests
             var control = new GlobalControlMessage(NewId.NextGuid());
             await harness.Bus.PublishAsync(faulting, cancellationToken);
             await harness.Bus.PublishAsync(control, cancellationToken);
-            IReceivedMessage<GlobalFaultMessage> failed = await harness.Consumed
+            IConsumedMessage<GlobalFaultMessage> failed = await harness.Consumed
                 .SelectAsync<GlobalFaultMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<GlobalControlMessage> consumed = await harness.Consumed
+            IConsumedMessage<GlobalControlMessage> consumed = await harness.Consumed
                 .SelectAsync<GlobalControlMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -185,7 +185,7 @@ public sealed class ContainerConsumerRegistrationTests
                 globalConfiguration.EndpointNames);
             Assert.Contains(DefaultEndpointNameFormatter.Instance.Consumer<GlobalControlConsumer>(),
                 globalConfiguration.EndpointNames);
-            Assert.Empty(harness.Published.Select<Fault<GlobalFaultMessage>>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<Fault<GlobalFaultMessage>>());
         }
         finally
         {
@@ -292,7 +292,6 @@ public sealed class ContainerConsumerRegistrationTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

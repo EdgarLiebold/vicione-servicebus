@@ -223,8 +223,8 @@
       "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "CoherentOutboxInboxAndDeliveryOptions_PassTheSameStartupBoundary" }
     },
     {
-      "type": "OutputTimelineOptions",
-      "source": "src/ViciOne.ServiceBus.Testing/TimelineExtensions.cs",
+      "type": "TimelineOutputOptions",
+      "source": "src/ViciOne.ServiceBus.Testing/Diagnostics/TimelineOutputOptions.cs",
       "boundary": "configuration-materialization",
       "invariantCount": 0,
       "negativeTest": null,
@@ -335,9 +335,9 @@
     },
     {
       "type": "TestHarnessOptions",
-      "source": "src/ViciOne.ServiceBus.Testing/Configuration/DependencyInjection/TestHarnessOptions.cs",
+      "source": "src/ViciOne.ServiceBus.Testing/DependencyInjection/TestHarnessOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus.Testing/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
       "invariantCount": 4,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "InvalidHarnessOrLoggerOption_FailsBeforeTheHarnessStarts" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "CoherentHarnessAndLoggerOptions_PassTheSameStartupBoundary" }
@@ -354,7 +354,7 @@
       "type": "TextWriterLoggerOptions",
       "source": "src/ViciOne.ServiceBus/Logging/TextWriterLoggerOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus.Testing/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
       "invariantCount": 2,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "InvalidHarnessOrLoggerOption_FailsBeforeTheHarnessStarts" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "CoherentHarnessAndLoggerOptions_PassTheSameStartupBoundary" }

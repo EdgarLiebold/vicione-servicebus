@@ -39,7 +39,7 @@ public sealed class InMemoryScheduledPublishTests
         {
             IMessageScheduler scheduler = harness.Scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
             IInMemoryDelayProvider delayProvider = harness.Scope.ServiceProvider.GetRequiredService<IInMemoryDelayProvider>();
-            Task<IReceivedMessage<ScheduledMessage>> consumed = harness.Consumed
+            Task<IConsumedMessage<ScheduledMessage>> consumed = harness.Consumed
                 .SelectAsync<ScheduledMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -59,7 +59,7 @@ public sealed class InMemoryScheduledPublishTests
                 cancellationToken)).Context;
 
             Assert.Equal("scheduled", context.Message.Value);
-            Assert.Single(harness.Consumed.Select<ScheduledMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Consumed.Snapshot<ScheduledMessage>());
         }
         finally
         {
@@ -95,7 +95,6 @@ public sealed class InMemoryScheduledPublishTests
             && method.DeclaringType == typeof(Task));
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static IEnumerable<MethodBase> ReadCalledMethods(MethodInfo method)
     {

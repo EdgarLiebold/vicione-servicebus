@@ -46,7 +46,7 @@ public sealed class ContainerMediatorIntegrationTests
             var command = new MediatorBridgeCommand(NewId.NextGuid(), route);
 
             await mediator.SendAsync(command, cancellationToken).WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<MediatorBridgeMessage> received = await harness.Consumed
+            IConsumedMessage<MediatorBridgeMessage> received = await harness.Consumed
                 .SelectAsync<MediatorBridgeMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -158,7 +158,7 @@ public sealed class ContainerMediatorIntegrationTests
 
         await mediator.SendAsync(new StartMediatorOrder(correlationId, "90210"), cancellationToken)
             .WaitAsync(timeout, cancellationToken);
-        Guid? found = await repository.ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken);
+        Guid? found = await repository.WaitForSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(correlationId, found);
     }

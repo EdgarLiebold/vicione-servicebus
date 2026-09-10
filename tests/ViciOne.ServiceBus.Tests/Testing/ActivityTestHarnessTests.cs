@@ -52,10 +52,10 @@ public sealed class ActivityTestHarnessTests
             string compensatedValue = await compensated.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal("Recording", activity.Name);
-            Assert.Equal("execute_recordingactivity", activity.ExecuteQueueName);
-            Assert.Equal("compensate_recordingactivity", activity.CompensateQueueName);
+            Assert.Equal("Recording_execute", activity.ExecuteQueueName);
+            Assert.Equal("Recording_compensate", activity.CompensateQueueName);
             Assert.Equal("Failing", failure.Name);
-            Assert.Equal("execute_failingactivity", failure.ExecuteQueueName);
+            Assert.Equal("Failing_execute", failure.ExecuteQueueName);
             Assert.Equal(1, executeConfigured);
             Assert.Equal(1, compensateConfigured);
             Assert.Equal(new Uri(harness.BaseAddress, activity.ExecuteQueueName), activity.ExecuteAddress);
@@ -103,7 +103,7 @@ public sealed class ActivityTestHarnessTests
             int value = await executed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal("ExecuteOnly", activity.Name);
-            Assert.Equal("execute_executeonlyactivity", activity.ExecuteQueueName);
+            Assert.Equal("ExecuteOnly_execute", activity.ExecuteQueueName);
             Assert.Equal(new Uri(harness.BaseAddress, activity.ExecuteQueueName), activity.ExecuteAddress);
             Assert.Equal(1, executeConfigured);
             Assert.Equal(42, value);

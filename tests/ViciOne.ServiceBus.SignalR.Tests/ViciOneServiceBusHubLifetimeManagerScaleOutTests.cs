@@ -9,7 +9,6 @@ namespace ViciOne.ServiceBus.SignalR.Tests;
 public sealed class ViciOneServiceBusHubLifetimeManagerScaleOutTests : IAsyncLifetime
 {
     private static readonly TimeSpan NoMessageWindow = TimeSpan.FromMilliseconds(250);
-    private static readonly CancellationToken SnapshotOnly = new(canceled: true);
     private HubLifetimeManagerTestEnvironment<TestHub> _environment = null!;
     private SignalRBackplaneEndpoint<TestHub> _first = null!;
     private SignalRBackplaneEndpoint<TestHub> _second = null!;
@@ -203,7 +202,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerScaleOutTests : IAsyncLif
 
         Assert.NotNull(
             _first.Group.Consumed
-                .Select<Group<TestHub>>(TestContext.Current.CancellationToken)
+                .Snapshot<Group<TestHub>>()
                 .Skip(1)
                 .FirstOrDefault());
         await AssertNoInvocationAsync(client);
@@ -222,8 +221,8 @@ public sealed class ViciOneServiceBusHubLifetimeManagerScaleOutTests : IAsyncLif
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.Empty(_first.Connection.Consumed.Select<Connection<TestHub>>(SnapshotOnly));
-        Assert.Empty(_second.Connection.Consumed.Select<Connection<TestHub>>(SnapshotOnly));
+        Assert.Empty(_first.Connection.Consumed.Snapshot<Connection<TestHub>>());
+        Assert.Empty(_second.Connection.Consumed.Snapshot<Connection<TestHub>>());
         await AssertInvocationAsync(client);
         Assert.Null(client.TryReadInvocation());
     }

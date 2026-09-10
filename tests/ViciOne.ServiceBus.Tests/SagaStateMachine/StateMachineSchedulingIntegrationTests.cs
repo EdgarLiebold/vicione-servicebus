@@ -48,7 +48,7 @@ public sealed class StateMachineSchedulingIntegrationTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            Task<IReceivedMessage<TimeoutNotice>> timeoutDelivery = sagaHarness.Consumed
+            Task<IConsumedMessage<TimeoutNotice>> timeoutDelivery = sagaHarness.Consumed
                 .SelectAsync<TimeoutNotice>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IPublishedMessage<ScheduleCompleted>> completed = harness.Published
@@ -56,7 +56,7 @@ public sealed class StateMachineSchedulingIntegrationTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await harness.Bus.PublishAsync(new ScheduleStart(correlationId, InstanceDelay), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, state => state.Waiting, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, state => state.Waiting, timeout, TestContext.Current.CancellationToken));
             Assert.Equal(
                 await scheduleObservation.Expected.Task.WaitAsync(timeout, cancellationToken),
                 await scheduleObservation.Actual.Task.WaitAsync(timeout, cancellationToken));
@@ -67,7 +67,7 @@ public sealed class StateMachineSchedulingIntegrationTests
             Assert.False(timeoutDelivery.IsCompleted);
 
             delayProvider.Advance(TimeSpan.FromTicks(1));
-            IReceivedMessage<TimeoutNotice> received = await timeoutDelivery.WaitAsync(timeout, cancellationToken);
+            IConsumedMessage<TimeoutNotice> received = await timeoutDelivery.WaitAsync(timeout, cancellationToken);
             ScheduleCompleted result = (await completed.WaitAsync(timeout, cancellationToken)).Context.Message;
 
             Assert.Null(received.Exception);
@@ -80,11 +80,10 @@ public sealed class StateMachineSchedulingIntegrationTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(sagaHarness.Consumed.Select<TimeoutNotice>(SnapshotOnlyToken()));
-        Assert.Single(harness.Published.Select<ScheduleCompleted>(SnapshotOnlyToken()));
+        Assert.Single(sagaHarness.Consumed.Snapshot<TimeoutNotice>());
+        Assert.Single(harness.Published.Snapshot<ScheduleCompleted>());
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

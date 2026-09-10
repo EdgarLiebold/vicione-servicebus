@@ -24,8 +24,8 @@ public sealed class MultiTestConsumerBehaviorTests
             TestInactivityTimeout = timeout,
         };
         var consumer = new MultiTestConsumer(timeout, timeProvider, harness.InactivityToken);
-        ReceivedMessageList<FirstMessage> firstMessages = consumer.Consume<FirstMessage>();
-        ReceivedMessageList<SecondMessage> secondMessages = consumer.Consume<SecondMessage>();
+        IConsumedMessageList<FirstMessage> firstMessages = consumer.AddConsumer<FirstMessage>();
+        IConsumedMessageList<SecondMessage> secondMessages = consumer.AddConsumer<SecondMessage>();
         harness.InMemoryReceiveEndpointConfiguring += consumer.Configure;
 
         await harness.StartAsync(cancellationToken);
@@ -41,12 +41,13 @@ public sealed class MultiTestConsumerBehaviorTests
                 cancellationToken);
             await harness.InputQueueSendEndpoint.SendAsync(new SecondMessage("second"), cancellationToken);
 
-            IReceivedMessage<FirstMessage>[] first = firstMessages
-                .Select(cancellationToken)
+            Assert.Equal(2, await firstMessages
+                .SelectAsync(cancellationToken)
                 .Take(2)
-                .ToArray();
-            IReceivedMessage<SecondMessage> second = await secondMessages.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            IReceivedMessage[] aggregate = consumer.Received.Select(_ => true, cancellationToken).Take(3).ToArray();
+                .CountObservedAsync(TestContext.Current.CancellationToken));
+            IConsumedMessage<FirstMessage>[] first = firstMessages.Snapshot().ToArray();
+            IConsumedMessage<SecondMessage> second = await secondMessages.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            IConsumedMessage[] aggregate = consumer.Consumed.Snapshot().Take(3).ToArray();
 
             Assert.Equal(
                 new[] { firstCorrelationId, repeatedCorrelationId }.Order(),
@@ -78,7 +79,7 @@ public sealed class MultiTestConsumerBehaviorTests
             TestInactivityTimeout = timeout,
         };
         var consumer = new MultiTestConsumer(timeout, harness.InactivityToken);
-        ReceivedMessageList<FaultMessage> faultMessages = consumer.Fault<FaultMessage>();
+        IConsumedMessageList<FaultMessage> faultMessages = consumer.AddFaultingConsumer<FaultMessage>();
         harness.InMemoryReceiveEndpointConfiguring += consumer.Configure;
 
         await harness.StartAsync(cancellationToken);
@@ -86,17 +87,17 @@ public sealed class MultiTestConsumerBehaviorTests
         {
             await harness.InputQueueSendEndpoint.SendAsync(new FaultMessage("fault"), cancellationToken);
 
-            IReceivedMessage<FaultMessage> consumerObservation = await faultMessages
+            IConsumedMessage<FaultMessage> consumerObservation = await faultMessages
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            IReceivedMessage<FaultMessage> pipelineObservation = await harness.Consumed
+            IConsumedMessage<FaultMessage> pipelineObservation = await harness.Consumed
                 .SelectAsync<FaultMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal("fault", consumerObservation.Context.Message.Value);
             Assert.Null(consumerObservation.Exception);
             InvalidOperationException exception = Assert.IsType<InvalidOperationException>(pipelineObservation.Exception);
-            Assert.Equal("This is intentional from a test", exception.Message);
+            Assert.Equal("The configured test consumer faulted intentionally.", exception.Message);
         }
         finally
         {

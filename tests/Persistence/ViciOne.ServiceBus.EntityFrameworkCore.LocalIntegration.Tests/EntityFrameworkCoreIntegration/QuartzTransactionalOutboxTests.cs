@@ -41,7 +41,7 @@ public sealed class QuartzTransactionalOutboxTests
             fixture.Gate.Release();
         }
 
-        IReceivedMessage<ScheduleThroughOutbox> consumed = await fixture.Harness.Consumed
+        IConsumedMessage<ScheduleThroughOutbox> consumed = await fixture.Harness.Consumed
             .SelectAsync<ScheduleThroughOutbox>(
                 context => context.Context.Message.CorrelationId == command.CorrelationId,
                 fixture.CancellationToken)

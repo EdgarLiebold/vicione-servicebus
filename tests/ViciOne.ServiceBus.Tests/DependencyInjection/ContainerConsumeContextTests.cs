@@ -106,9 +106,9 @@ public sealed class ContainerConsumeContextTests
 
             Assert.Same(snapshot.ConsumeContext, snapshot.PublishEndpoint);
             Assert.Same(snapshot.ConsumeContext, snapshot.SendEndpointProvider);
-            Assert.Empty(harness.Published.Select<DeferredSideEffect>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Snapshot<DeferredSideEffect>());
             Assert.Equal(IsBatch(shape) ? 4 : 1,
-                harness.Published.Select<Fault<ContextCommand>>(SnapshotOnlyToken()).Count());
+                harness.Published.Snapshot<Fault<ContextCommand>>().Count());
             Assert.Equal(0, observation.DeliveredSideEffects);
         }
         finally
@@ -188,7 +188,6 @@ public sealed class ContainerConsumeContextTests
         OutboxShape.BatchPlainWithRegistrationContext or
         OutboxShape.DirectWithRegistrationContext;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

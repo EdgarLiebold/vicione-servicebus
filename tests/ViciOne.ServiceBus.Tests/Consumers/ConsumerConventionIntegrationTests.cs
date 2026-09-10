@@ -62,8 +62,8 @@ public sealed class ConsumerConventionIntegrationTests
             ConsumerConvention.Remove<MessageOnlyConsumerConvention>();
         }
 
-        Assert.Single(harness.Consumed.Select<FirstHandled>(SnapshotOnlyToken()));
-        Assert.Single(harness.Consumed.Select<SecondHandled>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<FirstHandled>());
+        Assert.Single(harness.Consumed.Snapshot<SecondHandled>());
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public sealed class ConsumerConventionIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Consumed.Select<DefaultHandled>(SnapshotOnlyToken()));
+        Assert.Single(harness.Consumed.Snapshot<DefaultHandled>());
     }
 
     private static InMemoryTestHarness CreateHarness(string suffix, TimeSpan timeout) =>
@@ -101,7 +101,6 @@ public sealed class ConsumerConventionIntegrationTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public interface FirstHandled
     {

@@ -45,13 +45,13 @@ public sealed class StateMachineRequestIntegrationTests
             Task<IPublishedMessage<MemberRegistrationResult>> published = harness.Published
                 .SelectAsync<MemberRegistrationResult>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<ValidateName>> nameRequest = harness.Consumed
+            Task<IConsumedMessage<ValidateName>> nameRequest = harness.Consumed
                 .SelectAsync<ValidateName>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<ValidateSurname>> surnameRequest = harness.Consumed
+            Task<IConsumedMessage<ValidateSurname>> surnameRequest = harness.Consumed
                 .SelectAsync<ValidateSurname>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<RegisterMember>> start = sagaHarness.Consumed
+            Task<IConsumedMessage<RegisterMember>> start = sagaHarness.Consumed
                 .SelectAsync<RegisterMember>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -60,8 +60,8 @@ public sealed class StateMachineRequestIntegrationTests
                 cancellationToken);
 
             Assert.Null((await start.WaitAsync(timeout, cancellationToken)).Exception);
-            IReceivedMessage<ValidateName> nameDelivery = await nameRequest.WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<ValidateSurname> surnameDelivery = await surnameRequest.WaitAsync(timeout, cancellationToken);
+            IConsumedMessage<ValidateName> nameDelivery = await nameRequest.WaitAsync(timeout, cancellationToken);
+            IConsumedMessage<ValidateSurname> surnameDelivery = await surnameRequest.WaitAsync(timeout, cancellationToken);
             AssertValidationDelivery(
                 nameDelivery.Exception,
                 outcome is CompositeOutcome.NameRejected or CompositeOutcome.BothRejected,
@@ -72,8 +72,8 @@ public sealed class StateMachineRequestIntegrationTests
                 $"surname:{surname}");
             MemberRegistrationResult result = (await published.WaitAsync(timeout, cancellationToken)).Context.Message;
             State expectedState = outcome == CompositeOutcome.Success ? machine.Registered : machine.Rejected;
-            Guid? located = await sagaHarness.ExistsAsync(memberId, expectedState, timeout, TestContext.Current.CancellationToken);
-            CompositeRequestState? instance = sagaHarness.Sagas.Contains(memberId);
+            Guid? located = await sagaHarness.WaitForSagaInStateAsync(memberId, expectedState, timeout, TestContext.Current.CancellationToken);
+            CompositeRequestState? instance = sagaHarness.Sagas.FindById(memberId);
 
             Assert.Equal(memberId, located);
             Assert.NotNull(instance);
@@ -92,7 +92,7 @@ public sealed class StateMachineRequestIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<MemberRegistrationResult>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<MemberRegistrationResult>());
     }
 
     [Theory]
@@ -127,10 +127,10 @@ public sealed class StateMachineRequestIntegrationTests
             Task<IPublishedMessage<MemberRejected>> published = harness.Published
                 .SelectAsync<MemberRejected>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<ValidateMember>> request = harness.Consumed
+            Task<IConsumedMessage<ValidateMember>> request = harness.Consumed
                 .SelectAsync<ValidateMember>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<BeginMemberValidation>> start = sagaHarness.Consumed
+            Task<IConsumedMessage<BeginMemberValidation>> start = sagaHarness.Consumed
                 .SelectAsync<BeginMemberValidation>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -138,7 +138,7 @@ public sealed class StateMachineRequestIntegrationTests
 
             Assert.Null((await start.WaitAsync(timeout, cancellationToken)).Exception);
             ISentMessage<ValidateMember> sentRequest = Assert.Single(
-                harness.Sent.Select<ValidateMember>(SnapshotOnlyToken()));
+                harness.Sent.Snapshot<ValidateMember>());
             Assert.Equal(serviceAddress, sentRequest.Context.DestinationAddress);
             Assert.True(sentRequest.Context.Headers.TryGetHeader(MessageHeaders.Request.Accept, out object? acceptHeader));
             IList<string> acceptedTypes = Assert.IsAssignableFrom<IList<string>>(acceptHeader);
@@ -152,8 +152,8 @@ public sealed class StateMachineRequestIntegrationTests
                 acceptedTypes);
             await request.WaitAsync(timeout, cancellationToken);
             MemberRejected rejected = (await published.WaitAsync(timeout, cancellationToken)).Context.Message;
-            Guid? registered = await sagaHarness.ExistsAsync(correlationId, machine.Registered, timeout, TestContext.Current.CancellationToken);
-            MultiResponseState? instance = sagaHarness.Sagas.Contains(correlationId);
+            Guid? registered = await sagaHarness.WaitForSagaInStateAsync(correlationId, machine.Registered, timeout, TestContext.Current.CancellationToken);
+            MultiResponseState? instance = sagaHarness.Sagas.FindById(correlationId);
 
             Assert.Equal(correlationId, registered);
             Assert.NotNull(instance);
@@ -167,7 +167,7 @@ public sealed class StateMachineRequestIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<MemberRejected>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<MemberRejected>());
     }
 
     private static Task HandleValidateNameAsync(ConsumeContext<ValidateName> context, CompositeOutcome outcome) =>
@@ -199,7 +199,6 @@ public sealed class StateMachineRequestIntegrationTests
             TestInactivityTimeout = timeout,
         };
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

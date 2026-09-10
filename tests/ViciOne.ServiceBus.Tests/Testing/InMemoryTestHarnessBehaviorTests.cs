@@ -157,7 +157,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
                 context => context.ResponseAddress = harness.BusAddress,
                 cancellationToken);
 
-            IReceivedMessage<HandlerRequest> handled = await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            IConsumedMessage<HandlerRequest> handled = await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             ISentMessage<HandlerResponse> response = await harness.Sent.SelectAsync<HandlerResponse>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(41, handled.Context.Message.Value);
@@ -186,8 +186,8 @@ public sealed class InMemoryTestHarnessBehaviorTests
         {
             await harness.InputQueueSendEndpoint.SendAsync(new FailingHandlerMessage(), cancellationToken);
 
-            IReceivedMessage<FailingHandlerMessage> handled = await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            IReceivedMessage<FailingHandlerMessage> pipeline = await harness.Consumed
+            IConsumedMessage<FailingHandlerMessage> handled = await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            IConsumedMessage<FailingHandlerMessage> pipeline = await harness.Consumed
                 .SelectAsync<FailingHandlerMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -215,7 +215,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
             await harness.InputQueueSendEndpoint.SendAsync(new PassiveHandlerMessage("sent"), cancellationToken);
             await harness.InputQueueSendEndpoint.SendAsync(new UnconsumedPassiveMessage("also-sent"), cancellationToken);
 
-            IReceivedMessage<PassiveHandlerMessage> handled = await handler.Consumed
+            IConsumedMessage<PassiveHandlerMessage> handled = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -245,7 +245,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         {
             await harness.Bus.PublishAsync(new ConcretePassiveHandlerMessage("published"), cancellationToken);
 
-            IReceivedMessage<IPassiveHandlerContract> handled = await handler.Consumed
+            IConsumedMessage<IPassiveHandlerContract> handled = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -276,10 +276,10 @@ public sealed class InMemoryTestHarnessBehaviorTests
         {
             await harness.InputQueueSendEndpoint.SendAsync(new FailingConsumerMessage(), cancellationToken);
 
-            IReceivedMessage<FailingConsumerMessage> consumerObservation = await consumer.Consumed
+            IConsumedMessage<FailingConsumerMessage> consumerObservation = await consumer.Consumed
                 .SelectAsync<FailingConsumerMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            IReceivedMessage<FailingConsumerMessage> pipelineObservation = await harness.Consumed
+            IConsumedMessage<FailingConsumerMessage> pipelineObservation = await harness.Consumed
                 .SelectAsync<FailingConsumerMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -308,7 +308,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
             ISendEndpoint endpoint = await harness.GetSendEndpointAsync(new Uri(harness.BaseAddress, queueName), TestContext.Current.CancellationToken);
             await endpoint.SendAsync(new NamedConsumerMessage("expected"), cancellationToken);
 
-            IReceivedMessage<NamedConsumerMessage> received = await consumer.Consumed
+            IConsumedMessage<NamedConsumerMessage> received = await consumer.Consumed
                 .SelectAsync<NamedConsumerMessage>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 

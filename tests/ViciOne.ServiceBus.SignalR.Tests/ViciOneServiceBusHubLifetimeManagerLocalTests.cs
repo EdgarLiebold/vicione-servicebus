@@ -9,7 +9,6 @@ namespace ViciOne.ServiceBus.SignalR.Tests;
 public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifetime
 {
     private static readonly TimeSpan NoMessageWindow = TimeSpan.FromMilliseconds(250);
-    private static readonly CancellationToken SnapshotOnly = new(canceled: true);
     private HubLifetimeManagerTestEnvironment<TestHub> _environment = null!;
     private SignalRBackplaneEndpoint<TestHub> _endpoint = null!;
 
@@ -125,7 +124,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
         Assert.Empty(
             _endpoint.GroupManagement.Consumed
-                .Select<GroupManagement<TestHub>>(SnapshotOnly));
+                .Snapshot<GroupManagement<TestHub>>());
     }
 
     [Fact]

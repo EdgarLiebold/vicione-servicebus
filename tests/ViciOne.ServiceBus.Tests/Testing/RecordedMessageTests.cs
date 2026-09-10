@@ -75,7 +75,7 @@ public sealed class RecordedMessageTests
         Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() =>
             new PublishedMessage<ObservedMessage>(publishContext, null, null!)).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
-            new ReceivedMessage<ObservedMessage>(null!, null, TimeProvider.System)).ParamName);
+            new ConsumedMessage<ObservedMessage>(null!, null, TimeProvider.System)).ParamName);
     }
 
     private sealed record ObservedMessage(string Value);

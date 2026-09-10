@@ -1,7 +1,7 @@
-using global::Azure;
-using global::Azure.Core;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
+using global::Azure;
+using global::Azure.Core;
 using ViciOne.ServiceBus.AzureServiceBus.Testing;
 using Xunit;
 

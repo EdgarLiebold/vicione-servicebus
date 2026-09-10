@@ -60,7 +60,7 @@ public sealed class PolymorphicFaultDispatchTests
                 harness.GetConsumerHarness<FaultMessageConsumer<T>>();
             IConsumerTestHarness<FaultMessageConsumer<IPolymorphicMessage>> interfaceConsumer =
                 harness.GetConsumerHarness<FaultMessageConsumer<IPolymorphicMessage>>();
-            Task<IReceivedMessage<T>> failedConsumeTask = harness.Consumed
+            Task<IConsumedMessage<T>> failedConsumeTask = harness.Consumed
                 .SelectAsync<T>(cancellationToken)
                 .FirstObservedAsync();
             Task<IPublishedMessage<Fault<T>>> typedPublishTask = harness.Published
@@ -73,25 +73,23 @@ public sealed class PolymorphicFaultDispatchTests
 
             await harness.Bus.PublishAsync(message, cancellationToken);
 
-            IReceivedMessage<T> failedConsume = await failedConsumeTask.WaitAsync(timeout, cancellationToken);
+            IConsumedMessage<T> failedConsume = await failedConsumeTask.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<Fault<T>> typedPublished = await typedPublishTask.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<Fault<IPolymorphicMessage>> interfacePublished =
                 await interfacePublishTask.WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<Fault<T>> typedConsumed = await typedConsumer.Consumed
+            IConsumedMessage<Fault<T>> typedConsumed = await typedConsumer.Consumed
                 .SelectAsync<Fault<T>>(cancellationToken)
                 .FirstObservedAsync()
                 .WaitAsync(timeout, cancellationToken);
-            IReceivedMessage<Fault<IPolymorphicMessage>> interfaceConsumed = await interfaceConsumer.Consumed
+            IConsumedMessage<Fault<IPolymorphicMessage>> interfaceConsumed = await interfaceConsumer.Consumed
                 .SelectAsync<Fault<IPolymorphicMessage>>(cancellationToken)
                 .FirstObservedAsync()
                 .WaitAsync(timeout, cancellationToken);
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
-            Assert.Single(harness.Published.Select<Fault<T>>(completed.Token));
-            Assert.Single(harness.Published.Select<Fault<IPolymorphicMessage>>(completed.Token));
+            Assert.Single(harness.Published.Snapshot<Fault<T>>());
+            Assert.Single(harness.Published.Snapshot<Fault<IPolymorphicMessage>>());
             Assert.IsType<PolymorphicFailureException>(failedConsume.Exception);
             Assert.Equal(message.CorrelationId, typedPublished.Context.Message.Message.CorrelationId);
             Assert.Equal(message.CorrelationId, interfacePublished.Context.Message.Message.CorrelationId);

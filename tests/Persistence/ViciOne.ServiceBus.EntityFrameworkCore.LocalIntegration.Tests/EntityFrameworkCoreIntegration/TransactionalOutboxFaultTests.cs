@@ -47,10 +47,8 @@ public sealed class TransactionalOutboxFaultTests
             .AsNoTracking()
             .OrderBy(entity => entity.Id)
             .ToArrayAsync(fixture.CancellationToken);
-        using var snapshot = new CancellationTokenSource();
-        snapshot.Cancel();
         IPublishedMessage<Fault<PersistEntityCommand>>[] faults = fixture.Harness.Published
-            .Select<Fault<PersistEntityCommand>>(snapshot.Token)
+            .Snapshot<Fault<PersistEntityCommand>>()
             .Where(message => message.Context.Message.Message.CommandId == duplicate.CommandId)
             .ToArray();
 
@@ -94,9 +92,7 @@ public sealed class TransactionalOutboxFaultTests
                 .Order()
                 .ToArray());
         Assert.Equal(2, fixture.Deliveries.RetryCount);
-        using var snapshot = new CancellationTokenSource();
-        snapshot.Cancel();
-        Assert.Empty(fixture.Harness.Published.Select<Fault<RetryOutboxCommand>>(snapshot.Token));
+        Assert.Empty(fixture.Harness.Published.Snapshot<Fault<RetryOutboxCommand>>());
     }
 
     public sealed record PersistEntityCommand(Guid CommandId, Guid EntityId);

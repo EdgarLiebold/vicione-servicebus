@@ -64,7 +64,7 @@ public sealed class BatchDeliveryIntegrationTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
-            BatchResult[] results = Snapshot(token => harness.Published.Select<BatchResult>(token))
+            BatchResult[] results = harness.Published.Snapshot<BatchResult>()
                 .Select(observation => observation.Context.Message)
                 .ToArray();
             Assert.Equal(expectedResults, results.Length);
@@ -127,7 +127,7 @@ public sealed class BatchDeliveryIntegrationTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
-            Fault<BatchItem>[] faults = Snapshot(token => harness.Published.Select<Fault<BatchItem>>(token))
+            Fault<BatchItem>[] faults = harness.Published.Snapshot<Fault<BatchItem>>()
                 .Select(observation => observation.Context.Message)
                 .ToArray();
             Assert.Equal(2, faults.Length);
@@ -173,8 +173,8 @@ public sealed class BatchDeliveryIntegrationTests
             Assert.Equal(1, published.Context.Message.Count);
             Assert.Equal(BatchCompletionMode.Time, published.Context.Message.Mode);
             Assert.Equal(item.CorrelationId, Assert.Single(published.Context.Message.ItemIds));
-            Assert.Single(Snapshot(token => harness.Consumed.Select<BatchItem>(token)));
-            Assert.Single(Snapshot(token => harness.Published.Select<BatchResult>(token)));
+            Assert.Single(harness.Consumed.Snapshot<BatchItem>());
+            Assert.Single(harness.Published.Snapshot<BatchResult>());
         }
         finally
         {
@@ -205,7 +205,7 @@ public sealed class BatchDeliveryIntegrationTests
             await harness.Bus.PublishBatchAsync(
                 [new BatchItem(NewId.NextGuid(), 0), new BatchItem(NewId.NextGuid(), 1)],
                 cancellationToken);
-            IReceivedMessage<Batch<BatchItem>> failed = await consumer.Consumed
+            IConsumedMessage<Batch<BatchItem>> failed = await consumer.Consumed
                 .SelectAsync<Batch<BatchItem>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -213,7 +213,7 @@ public sealed class BatchDeliveryIntegrationTests
             started = false;
 
             Assert.IsType<BatchFailureException>(failed.Exception);
-            Assert.Empty(Snapshot(token => harness.Published.Select<BatchResult>(token)));
+            Assert.Empty(harness.Published.Snapshot<BatchResult>());
         }
         finally
         {
@@ -498,7 +498,7 @@ public sealed class BatchDeliveryIntegrationTests
 
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
-            GroupBatchResult[] results = Snapshot(token => harness.Published.Select<GroupBatchResult>(token))
+            GroupBatchResult[] results = harness.Published.Snapshot<GroupBatchResult>()
                 .Select(observation => observation.Context.Message)
                 .ToArray();
 
@@ -529,13 +529,6 @@ public sealed class BatchDeliveryIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-
-    private static T[] Snapshot<T>(Func<CancellationToken, IEnumerable<T>> source)
-    {
-        using var completed = new CancellationTokenSource();
-        completed.Cancel();
-        return source(completed.Token).ToArray();
-    }
 
     private static Task CompleteAsync<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
         where T : class

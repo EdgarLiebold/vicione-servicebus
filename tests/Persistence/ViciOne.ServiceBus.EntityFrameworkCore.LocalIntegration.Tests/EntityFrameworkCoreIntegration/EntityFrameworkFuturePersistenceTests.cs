@@ -20,13 +20,13 @@ public sealed class EntityFrameworkFuturePersistenceTests
         var command = new CalculateValue(NewId.NextGuid(), 21, fail: false);
 
         Response<ValueCalculated> response = await fixture.RequestAsync(command);
-        IReceivedMessage<CalculateValue> consumedCommand = await fixture.Harness.Consumed
+        IConsumedMessage<CalculateValue> consumedCommand = await fixture.Harness.Consumed
             .SelectAsync<CalculateValue>(
                 message => message.Context.Message.CorrelationId == command.CorrelationId
                     && IsConsumedByCalculationFuture(message.Context.Advanced()),
                 TestContext.Current.CancellationToken)
             .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-        IReceivedMessage<ValueCalculated> consumedResult = await fixture.Harness.Consumed
+        IConsumedMessage<ValueCalculated> consumedResult = await fixture.Harness.Consumed
             .SelectAsync<ValueCalculated>(
                 message => message.Context.Message.CorrelationId == command.CorrelationId
                     && IsConsumedByCalculationFuture(message.Context.Advanced()),

@@ -70,7 +70,7 @@ public sealed class TestHarnessObservationPolicyTests
             Assert.Contains(result.Sent, message => message.MessageObject is ActiveMessage("tracked"));
             Assert.DoesNotContain(result.Sent, message => message.MessageObject is ActiveMessage("unrelated"));
 
-            IList<IReceivedMessage> exposedConsumed = Assert.IsAssignableFrom<IList<IReceivedMessage>>(result.Consumed);
+            IList<IConsumedMessage> exposedConsumed = Assert.IsAssignableFrom<IList<IConsumedMessage>>(result.Consumed);
             Assert.Throws<NotSupportedException>(() => exposedConsumed.Clear());
             Assert.Throws<NotSupportedException>(() => exposedConsumed[0] = result.Consumed[0]);
         }
@@ -145,7 +145,7 @@ public sealed class TestHarnessObservationPolicyTests
             Assert.Equal(2, handler.Consumed.MaximumSavedElements);
 
             Assert.Equal(expectedValues, harness.Consumed.Snapshot()
-                .OfType<IReceivedMessage<RetentionMessage>>()
+                .OfType<IConsumedMessage<RetentionMessage>>()
                 .Select(message => message.Context.Message.Value));
             Assert.Equal(expectedValues, handler.Consumed.Snapshot()
                 .Select(message => message.Context.Message.Value));

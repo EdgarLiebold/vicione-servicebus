@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Time.Testing;
-using ViciOne.ServiceBus.DependencyInjection.Testing;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
@@ -420,7 +419,7 @@ public sealed class MessagePipelineMetricsTests
         try
         {
             await harness.Bus.PublishAsync(new ObservedMessage("still-delivered"), TestCancellationToken);
-            IReceivedMessage<ObservedMessage> consumed = await harness.Consumed
+            IConsumedMessage<ObservedMessage> consumed = await harness.Consumed
                 .SelectAsync<ObservedMessage>(TestCancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 

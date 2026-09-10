@@ -46,8 +46,8 @@ public sealed class HandlerRegistrationTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        IReceivedMessage<HandlerMessage> consumed = Assert.Single(
-            harness.Consumed.Select<HandlerMessage>(SnapshotOnlyToken()));
+        IConsumedMessage<HandlerMessage> consumed = Assert.Single(
+            harness.Consumed.Snapshot<HandlerMessage>());
         Assert.Equal(messageId, consumed.Context.Message.MessageId);
         Assert.Null(consumed.Exception);
         Assert.Equal(1, probe.Count);
@@ -106,10 +106,10 @@ public sealed class HandlerRegistrationTests
                 ? "native-handler-custom"
                 : nameof(HandlerRequest),
             sourceAddress!.GetEndpointName());
-        IReceivedMessage<HandlerRequest> consumed = Assert.Single(
-            harness.Consumed.Select<HandlerRequest>(SnapshotOnlyToken()));
+        IConsumedMessage<HandlerRequest> consumed = Assert.Single(
+            harness.Consumed.Snapshot<HandlerRequest>());
         ISentMessage<HandlerResponse> sent = Assert.Single(
-            harness.Sent.Select<HandlerResponse>(SnapshotOnlyToken()));
+            harness.Sent.Snapshot<HandlerResponse>());
         Assert.Equal(response, sent.Context.Message);
         Assert.Equal(requestId, consumed.Context.RequestId);
         Assert.Equal(requestId, sent.Context.RequestId);
@@ -253,7 +253,6 @@ public sealed class HandlerRegistrationTests
         where TShape : struct, Enum =>
         shape.ToString().StartsWith("Context", StringComparison.Ordinal);
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

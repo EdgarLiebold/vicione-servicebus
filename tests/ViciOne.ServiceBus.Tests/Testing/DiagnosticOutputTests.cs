@@ -43,7 +43,8 @@ public sealed class DiagnosticOutputTests
                 .CountObservedAsync(TestContext.Current.CancellationToken);
             using var writer = new StringWriter();
 
-            await harness.OutputTimelineAsync(writer, options => options.Now().IncludeAddress(), cancellationToken: TestContext.Current.CancellationToken);
+            await harness.OutputTimelineAsync(writer, options => options.RenderImmediately().IncludeEndpointAddress(),
+                cancellationToken: TestContext.Current.CancellationToken);
 
             string output = writer.ToString();
             string[] lines = output.Split('\n');

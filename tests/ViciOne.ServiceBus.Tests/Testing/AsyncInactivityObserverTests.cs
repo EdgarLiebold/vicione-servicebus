@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.Testing.Implementations;
+using ViciOne.ServiceBus.Testing.Internal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -44,14 +44,14 @@ public sealed class AsyncInactivityObserverTests
     {
         var observer = CreateObserver();
         var source = new ControlledSource { IsInactive = false };
-        observer.Connected(source);
+        observer.RegisterSource(source);
         Task inactivity = observer.InactivityTask;
 
-        await observer.NoActivityAsync(TestContext.Current.CancellationToken);
+        await observer.EvaluateInactivityAsync(TestContext.Current.CancellationToken);
         Assert.False(inactivity.IsCompleted);
 
         source.IsInactive = true;
-        await observer.NoActivityAsync(TestContext.Current.CancellationToken);
+        await observer.EvaluateInactivityAsync(TestContext.Current.CancellationToken);
 
         await inactivity;
         Assert.True(observer.InactivityToken.IsCancellationRequested);
@@ -64,7 +64,7 @@ public sealed class AsyncInactivityObserverTests
         var timeProvider = new ObservableTimeProvider(StartTime);
         var observer = new AsyncInactivityObserver(Interval, CancellationToken.None, timeProvider);
         var source = new QueryRecordingSource();
-        observer.Connected(source);
+        observer.RegisterSource(source);
         Task inactivity = observer.InactivityTask;
 
         await timeProvider.WaitForTimerCountAsync(1);
@@ -88,7 +88,7 @@ public sealed class AsyncInactivityObserverTests
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var observer = new AsyncInactivityObserver(Interval, CancellationToken.None, timeProvider);
-        observer.Connected(new FailingSource());
+        observer.RegisterSource(new FailingSource());
         Task inactivity = observer.InactivityTask;
 
         await timeProvider.WaitForTimerCountAsync(1);
@@ -106,6 +106,19 @@ public sealed class AsyncInactivityObserverTests
             new AsyncInactivityObserver(Interval, CancellationToken.None, null!));
 
         Assert.Equal("timeProvider", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [RequirementCoverage("REQ-VSB-INACTIVITY-OBSERVER", "positive-interval-validation")]
+    public void Construction_RejectsNonPositiveIntervals(int intervalMilliseconds)
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new AsyncInactivityObserver(TimeSpan.FromMilliseconds(intervalMilliseconds), CancellationToken.None,
+                new ObservableTimeProvider(StartTime)));
+
+        Assert.Equal("timeout", exception.ParamName);
     }
 
     private static AsyncInactivityObserver CreateObserver() =>

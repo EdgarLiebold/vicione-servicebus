@@ -184,7 +184,7 @@ public sealed class ContainerEndpointRoutingTests
             Assert.Equal(command.CorrelationId, fault.Context.Message.Message.CorrelationId);
             Assert.Contains(fault.Context.Message.Exceptions,
                 exception => exception.Message.Contains(nameof(IMissingDependency), StringComparison.Ordinal));
-            Assert.Single(harness.Published.Select<Fault<MissingDependencyCommand>>(SnapshotOnlyToken()));
+            Assert.Single(harness.Published.Snapshot<Fault<MissingDependencyCommand>>());
         }
         finally
         {
@@ -211,7 +211,6 @@ public sealed class ContainerEndpointRoutingTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record PlainCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
     public sealed record PlainEvent(Guid CorrelationId) : CorrelatedBy<Guid>;

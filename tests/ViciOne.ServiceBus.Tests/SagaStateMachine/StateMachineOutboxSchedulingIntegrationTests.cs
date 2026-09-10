@@ -72,27 +72,26 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
             Assert.Equal([2], failures.FailedCounts);
             Assert.Equal(1, coordinator.SignalCount);
             Assert.Equal(correlationId, coordinator.TerminalCorrelationId);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine => machine.Failed, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, machine => machine.Failed, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<LoopCompleted>(SnapshotOnlyToken()));
-        Assert.Empty(harness.Published.Select<Fault<StartLoop>>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<LoopCompleted>());
+        Assert.Empty(harness.Published.Snapshot<Fault<StartLoop>>());
         Assert.DoesNotContain(
-            sagaHarness.Consumed.Select<ScheduledLoopEvent>(SnapshotOnlyToken()),
+            sagaHarness.Consumed.Snapshot<ScheduledLoopEvent>(),
             received => received.Context.Message.Count == 2);
-        IReceivedMessage<LoopRequest>[] requests = harness.Consumed
-            .Select<LoopRequest>(SnapshotOnlyToken())
+        IConsumedMessage<LoopRequest>[] requests = harness.Consumed
+            .Snapshot<LoopRequest>()
             .ToArray();
         Assert.NotEmpty(requests);
         Assert.All(requests, received => Assert.True(received.Context.Message.Count > 0));
-        Assert.Equal(requests.Length, harness.Sent.Select<LoopResponse>(SnapshotOnlyToken()).Count());
+        Assert.Equal(requests.Length, harness.Sent.Snapshot<LoopResponse>().Count());
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

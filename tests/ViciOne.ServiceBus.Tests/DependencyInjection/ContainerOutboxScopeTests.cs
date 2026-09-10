@@ -60,8 +60,8 @@ public sealed class ContainerOutboxScopeTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<OutboxPublished>(SnapshotOnlyToken()));
-        Assert.Single(harness.Consumed.Select<OutboxPublished>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<OutboxPublished>());
+        Assert.Single(harness.Consumed.Snapshot<OutboxPublished>());
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public sealed class ContainerOutboxScopeTests
             ISendEndpoint endpoint = await harness.Bus
                 .GetSendEndpointAsync(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<FaultingConsumer>()}"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             await endpoint.SendAsync(command, cancellationToken);
-            IReceivedMessage<Fault<FaultingCommand>> fault = await harness.Consumed
+            IConsumedMessage<Fault<FaultingCommand>> fault = await harness.Consumed
                 .SelectAsync<Fault<FaultingCommand>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -107,14 +107,13 @@ public sealed class ContainerOutboxScopeTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<Fault<FaultingCommand>>(SnapshotOnlyToken()));
-        Assert.Single(harness.Consumed.Select<Fault<FaultingCommand>>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<Fault<FaultingCommand>>());
+        Assert.Single(harness.Consumed.Snapshot<Fault<FaultingCommand>>());
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed class ScopeMarker;
 

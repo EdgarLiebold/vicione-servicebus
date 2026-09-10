@@ -28,7 +28,7 @@ public sealed class SendObserverTests
             var first = new ObservedSend(NewId.NextGuid(), "first");
 
             await harness.InputQueueSendEndpoint.SendAsync(first, cancellationToken);
-            IReceivedMessage<ObservedSend> firstConsumed = await handler.Consumed
+            IConsumedMessage<ObservedSend> firstConsumed = await handler.Consumed
                 .SelectAsync(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -40,7 +40,7 @@ public sealed class SendObserverTests
             var second = new ObservedSend(NewId.NextGuid(), "second");
 
             await harness.InputQueueSendEndpoint.SendAsync(second, cancellationToken);
-            IReceivedMessage<ObservedSend> secondConsumed = await handler.Consumed
+            IConsumedMessage<ObservedSend> secondConsumed = await handler.Consumed
                 .SelectAsync(observation => observation.Context.Message.CorrelationId == second.CorrelationId, cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 

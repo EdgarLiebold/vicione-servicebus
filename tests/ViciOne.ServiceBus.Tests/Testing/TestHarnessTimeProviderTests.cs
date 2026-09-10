@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Testing;
-using ViciOne.ServiceBus.Testing.Implementations;
+using ViciOne.ServiceBus.Testing.Internal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Util;
 using Xunit;
@@ -264,7 +264,10 @@ public sealed class TestHarnessTimeProviderTests
 
         Assert.Throws<ObjectDisposedException>(harness.BeginTestScope);
         Assert.Throws<ObjectDisposedException>(() => harness.TestCancellationToken);
-        Assert.Throws<ObjectDisposedException>(() => harness.InactivityObserver);
+        Assert.Throws<ObjectDisposedException>(() =>
+        {
+            _ = harness.InactivityTask;
+        });
         Assert.Throws<ObjectDisposedException>(harness.Cancel);
         Assert.Throws<ObjectDisposedException>(harness.ForceInactive);
     }

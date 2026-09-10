@@ -144,13 +144,15 @@ public sealed class MessagePackTransportIntegrationTests
 
         try
         {
-            Task<ConsumeContext<IDispatchMessage>> received =
-                await harness.ConnectPublishHandlerAsync<IDispatchMessage>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
+            await using IPublishMessageObservation<IDispatchMessage> observation =
+                await harness.ObservePublishedMessageAsync<IDispatchMessage>(
+                    _ => true,
+                    cancellationToken: TestContext.Current.CancellationToken);
             await harness.Bus.PublishAsync<IDispatchMessage>(
                 new { Value = "preserved" },
                 TestContext.Current.CancellationToken);
 
-            var context = await received.WaitAsync(
+            var context = await observation.Message.WaitAsync(
                 harness.TestTimeout,
                 TestContext.Current.CancellationToken);
 
@@ -275,7 +277,7 @@ public sealed class MessagePackTransportIntegrationTests
         var scheduled = new MessagePackScheduledObserver();
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
         Guid originalMessageId = Guid.Parse("9d004f10-c5a8-42f7-bfd0-bf5df26fab78");
-        IList<IReceivedMessage<RetryMessage>> deliveries;
+        IList<IConsumedMessage<RetryMessage>> deliveries;
 
         try
         {
@@ -353,14 +355,16 @@ public sealed class MessagePackTransportIntegrationTests
 
         try
         {
-            Task<ConsumeContext<MixedPong>> pongReceived =
-                await harness.ConnectPublishHandlerAsync<MixedPong>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
+            await using IPublishMessageObservation<MixedPong> pongObservation =
+                await harness.ObservePublishedMessageAsync<MixedPong>(
+                    _ => true,
+                    cancellationToken: TestContext.Current.CancellationToken);
             await harness.Bus.PublishAsync(
                     new MixedPing(correlationId, "json"),
                     cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
             ping = await pingReceived.Task.WaitAsync(operationTimeout, cancellationToken);
-            pong = await pongReceived.WaitAsync(operationTimeout, cancellationToken);
+            pong = await pongObservation.Message.WaitAsync(operationTimeout, cancellationToken);
         }
         finally
         {

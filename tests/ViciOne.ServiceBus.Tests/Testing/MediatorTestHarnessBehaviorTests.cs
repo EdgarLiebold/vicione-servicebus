@@ -23,7 +23,7 @@ public sealed class MediatorTestHarnessBehaviorTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureMediator += configurator => configurator.Handler<MediatorRequest>(context =>
+        harness.MediatorConfiguring += configurator => configurator.Handler<MediatorRequest>(context =>
             context.RespondAsync(new MediatorResponse($"response:{context.Message.Value}")));
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
@@ -32,7 +32,7 @@ public sealed class MediatorTestHarnessBehaviorTests
             new MediatorRequest("expected"),
             cancellationToken);
 
-        IReceivedMessage<MediatorRequest> consumed = await harness.Consumed
+        IConsumedMessage<MediatorRequest> consumed = await harness.Consumed
             .SelectAsync<MediatorRequest>(cancellationToken)
             .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         ISentMessage<MediatorResponse> sent = await harness.Sent
@@ -59,13 +59,13 @@ public sealed class MediatorTestHarnessBehaviorTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureMediator += configurator => configurator.Handler<MediatorFailureMessage>(_ => Task.FromException(expected));
+        harness.MediatorConfiguring += configurator => configurator.Handler<MediatorFailureMessage>(_ => Task.FromException(expected));
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             harness.Mediator.SendAsync(new MediatorFailureMessage(), cancellationToken));
-        IReceivedMessage<MediatorFailureMessage> observed = await harness.Consumed
+        IConsumedMessage<MediatorFailureMessage> observed = await harness.Consumed
             .SelectAsync<MediatorFailureMessage>(cancellationToken)
             .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 

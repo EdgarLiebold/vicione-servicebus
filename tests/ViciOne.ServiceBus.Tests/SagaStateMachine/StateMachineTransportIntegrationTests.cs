@@ -38,9 +38,9 @@ public sealed class StateMachineTransportIntegrationTests
             await harness.InputQueueSendEndpoint.SendAsync(start, cancellationToken);
             ConsumeContext<PublishedNotice> published = await recorder.Published.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<SentNotice> sent = await recorder.Sent.Task.WaitAsync(timeout, cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
 
-            TransportState? instance = sagaHarness.Sagas.Contains(correlationId);
+            TransportState? instance = sagaHarness.Sagas.FindById(correlationId);
             Assert.NotNull(instance);
             Assert.Equal(correlationId, instance.CorrelationId);
             Assert.Equal("owner", instance.Name);
@@ -60,8 +60,8 @@ public sealed class StateMachineTransportIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Published.Select<PublishedNotice>(SnapshotOnlyToken()));
-        Assert.Single(harness.Sent.Select<SentNotice>(SnapshotOnlyToken()));
+        Assert.Single(harness.Published.Snapshot<PublishedNotice>());
+        Assert.Single(harness.Sent.Snapshot<SentNotice>());
     }
 
     [Fact]
@@ -80,12 +80,12 @@ public sealed class StateMachineTransportIntegrationTests
         {
             Guid serviceId = NewId.NextGuid();
             await harness.Bus.PublishAsync(new DynamicStart(serviceId), cancellationToken);
-            Assert.Equal(serviceId, await sagaHarness.ExistsAsync(serviceId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(serviceId, await sagaHarness.WaitForSagaInStateAsync(serviceId, machine.Running, timeout, TestContext.Current.CancellationToken));
 
             await harness.Bus.PublishAsync(new DynamicStop(serviceId), cancellationToken);
-            Assert.Equal(serviceId, await sagaHarness.ExistsAsync(serviceId, machine.Final, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(serviceId, await sagaHarness.WaitForSagaInStateAsync(serviceId, machine.Final, timeout, TestContext.Current.CancellationToken));
 
-            DynamicEventState? instance = sagaHarness.Sagas.Contains(serviceId);
+            DynamicEventState? instance = sagaHarness.Sagas.FindById(serviceId);
             Assert.NotNull(instance);
             Assert.Equal(1, instance.StartCount);
             Assert.Equal(1, instance.StopCount);
@@ -95,8 +95,8 @@ public sealed class StateMachineTransportIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(sagaHarness.Consumed.Select<DynamicStart>(SnapshotOnlyToken()));
-        Assert.Single(sagaHarness.Consumed.Select<DynamicStop>(SnapshotOnlyToken()));
+        Assert.Single(sagaHarness.Consumed.Snapshot<DynamicStart>());
+        Assert.Single(sagaHarness.Consumed.Snapshot<DynamicStop>());
     }
 
     [Fact]
@@ -125,26 +125,26 @@ public sealed class StateMachineTransportIntegrationTests
         {
             Guid correlationId = NewId.NextGuid();
             await harness.Bus.PublishAsync(new NoTopologyStart(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
 
             await harness.Bus.PublishAsync(new NoTopologySuspend(correlationId), cancellationToken);
             ConsumeContext<NoTopologySuspend> independent = await suspended.Task.WaitAsync(timeout, cancellationToken);
             Assert.Equal(correlationId, independent.Message.CorrelationId);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
-            Assert.Equal(0, Assert.IsType<NoTopologyState>(sagaHarness.Sagas.Contains(correlationId)).SuspendCount);
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(0, Assert.IsType<NoTopologyState>(sagaHarness.Sagas.FindById(correlationId)).SuspendCount);
 
             await harness.Bus.PublishAsync(new NoTopologyStop(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Final, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, machine.Final, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Empty(sagaHarness.Consumed.Select<NoTopologySuspend>(SnapshotOnlyToken()));
-        Assert.Single(harness.Consumed.Select<NoTopologySuspend>(SnapshotOnlyToken()));
-        Assert.Single(sagaHarness.Consumed.Select<NoTopologyStart>(SnapshotOnlyToken()));
-        Assert.Single(sagaHarness.Consumed.Select<NoTopologyStop>(SnapshotOnlyToken()));
+        Assert.Empty(sagaHarness.Consumed.Snapshot<NoTopologySuspend>());
+        Assert.Single(harness.Consumed.Snapshot<NoTopologySuspend>());
+        Assert.Single(sagaHarness.Consumed.Snapshot<NoTopologyStart>());
+        Assert.Single(sagaHarness.Consumed.Snapshot<NoTopologyStop>());
     }
 
     [Fact]
@@ -168,19 +168,19 @@ public sealed class StateMachineTransportIntegrationTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            Task<IReceivedMessage<ExecuteRule>> request = harness.Consumed
+            Task<IConsumedMessage<ExecuteRule>> request = harness.Consumed
                 .SelectAsync<ExecuteRule>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
-            Task<IReceivedMessage<ExecuteRuleResponse>> response = sagaHarness.Consumed
+            Task<IConsumedMessage<ExecuteRuleResponse>> response = sagaHarness.Consumed
                 .SelectAsync<ExecuteRuleResponse>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await harness.InputQueueSendEndpoint.SendAsync(new StartRule(correlationId), cancellationToken);
             Assert.Null((await request.WaitAsync(timeout, cancellationToken)).Exception);
             Assert.Null((await response.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Waiting, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaInStateAsync(correlationId, machine.Waiting, timeout, TestContext.Current.CancellationToken));
 
-            EnterRequestState? instance = sagaHarness.Sagas.Contains(correlationId);
+            EnterRequestState? instance = sagaHarness.Sagas.FindById(correlationId);
             Assert.NotNull(instance);
             Assert.Equal(1, instance.EnterCount);
             Assert.Equal(1, instance.ResponseCount);
@@ -191,10 +191,10 @@ public sealed class StateMachineTransportIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        ISentMessage<ExecuteRule> sent = Assert.Single(harness.Sent.Select<ExecuteRule>(SnapshotOnlyToken()));
+        ISentMessage<ExecuteRule> sent = Assert.Single(harness.Sent.Snapshot<ExecuteRule>());
         Assert.Equal(serviceAddress, sent.Context.DestinationAddress);
         Assert.Equal(sent.Context.Message.CorrelationId, sent.Context.InitiatorId);
-        Assert.Single(sagaHarness.Consumed.Select<ExecuteRuleResponse>(SnapshotOnlyToken()));
+        Assert.Single(sagaHarness.Consumed.Snapshot<ExecuteRuleResponse>());
     }
 
     private static InMemoryTestHarness CreateHarness(string prefix, TimeSpan timeout) =>
@@ -204,7 +204,6 @@ public sealed class StateMachineTransportIntegrationTests
             TestInactivityTimeout = timeout,
         };
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

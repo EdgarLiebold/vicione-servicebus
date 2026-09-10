@@ -234,10 +234,8 @@ public sealed class ConsumeContextEndpointExtensionsTests
             await harness.StopAsync(TestContext.Current.CancellationToken);
             started = false;
 
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
-            Assert.Single(harness.Published.Select<Fault<BaseFaultCommand>>(completed.Token));
-            Assert.Single(harness.Published.Select<Fault<DerivedFaultCommand>>(completed.Token));
+            Assert.Single(harness.Published.Snapshot<Fault<BaseFaultCommand>>());
+            Assert.Single(harness.Published.Snapshot<Fault<DerivedFaultCommand>>());
             Assert.Equal(commandId, derivedContext.Message.CommandId);
             Assert.Equal("fault me", derivedContext.Message.Value);
             Assert.Equal(commandId, baseFault.Message.Message.CommandId);

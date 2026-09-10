@@ -42,7 +42,7 @@ public sealed class ScopedSchedulingTests
         {
             Guid correlationId = NewId.NextGuid();
             await harness.Bus.PublishAsync(new ScheduleCommand(correlationId), cancellationToken);
-            IReceivedMessage<ScheduleCommand> command = await harness.Consumed
+            IConsumedMessage<ScheduleCommand> command = await harness.Consumed
                 .SelectAsync<ScheduleCommand>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -55,7 +55,7 @@ public sealed class ScopedSchedulingTests
             Assert.Equal(result.InitiatingScopeId, result.FilterScopeId);
             Assert.Equal(result.InitiatingScopeId.ToString("N"), result.HeaderValue);
             Assert.Equal(1, observation.FilterInvocations);
-            Assert.Single(harness.Sent.Select<ScheduledMessage>(SnapshotOnlyToken()));
+            Assert.Single(harness.Sent.Snapshot<ScheduledMessage>());
         }
         finally
         {
@@ -63,7 +63,6 @@ public sealed class ScopedSchedulingTests
         }
     }
 
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

@@ -71,14 +71,12 @@ public sealed class PostgreSqlSagaConcurrencyTests
             await using var verification = CreateContext(database.ConnectionString);
             SerializedState persisted = await verification.States.AsNoTracking()
                 .SingleAsync(state => state.CorrelationId == sagaId, cancellationToken);
-            using var completed = new CancellationTokenSource();
-            completed.Cancel();
 
             Assert.Equal(1, incremented.Context.Message.Counter);
             Assert.Equal(1, persisted.Counter);
             Assert.Equal(2, handler.InvocationCount);
             Assert.Equal(2, transientFailure.SaveAttempts);
-            Assert.Single(harness.Published.Select<SerializedSagaIncremented>(completed.Token));
+            Assert.Single(harness.Published.Snapshot<SerializedSagaIncremented>());
         }
         finally
         {

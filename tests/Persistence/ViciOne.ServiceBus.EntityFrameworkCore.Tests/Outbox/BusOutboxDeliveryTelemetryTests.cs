@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using ViciOne.ServiceBus.DependencyInjection.Testing;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Monitoring;
