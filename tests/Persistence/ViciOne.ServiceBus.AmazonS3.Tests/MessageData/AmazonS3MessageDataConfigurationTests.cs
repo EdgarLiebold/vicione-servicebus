@@ -113,9 +113,9 @@ public sealed class AmazonS3MessageDataConfigurationTests
         await Assert.ThrowsAsync<ArgumentNullException>(
             () => repository.PutAsync(null!, cancellationToken: cancellationToken));
         await Assert.ThrowsAsync<ArgumentException>(() => repository.PutAsync(unreadable, cancellationToken: cancellationToken));
-        await Assert.ThrowsAsync<NotSupportedException>(
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
             () => repository.PutAsync(new MemoryStream([1]), TimeSpan.Zero, cancellationToken));
-        await Assert.ThrowsAsync<NotSupportedException>(
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
             () => repository.PutAsync(new MemoryStream([1]), TimeSpan.FromDays(-1), cancellationToken));
         await Assert.ThrowsAsync<NotSupportedException>(
             () => repository.PutAsync(new MemoryStream([1]), TimeSpan.FromHours(1), cancellationToken));

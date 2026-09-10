@@ -47,10 +47,18 @@ public sealed class AmazonS3MessageDataRepositoryOptions
         if (timeToLive is null)
             return;
 
-        if (timeToLive <= TimeSpan.Zero || timeToLive.Value.Ticks % TimeSpan.TicksPerDay != 0)
+        if (timeToLive <= TimeSpan.Zero)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(timeToLive),
+                timeToLive,
+                "Message-data time to live must be positive.");
+        }
+
+        if (timeToLive.Value.Ticks % TimeSpan.TicksPerDay != 0)
         {
             throw new NotSupportedException(
-                "Amazon S3 message-data retention supports only positive whole-day values.");
+                "Amazon S3 message-data retention supports only whole-day values.");
         }
 
         long days = timeToLive.Value.Ticks / TimeSpan.TicksPerDay;

@@ -12,27 +12,57 @@ public sealed class AzureStorageMessageDataTimeProviderTests
 {
     private static readonly DateTimeOffset Now = new(2045, 6, 7, 8, 9, 10, TimeSpan.Zero);
 
-    [Theory]
-    [InlineData(5, 5)]
-    [InlineData(0, 1)]
-    [InlineData(-5, 1)]
-    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "ttl-and-minimum-expiration-use-injected-clock")]
-    public async Task TimeToLiveMetadata_UsesTheInjectedClockAndMinimumExpirationAsync(int requestedMinutes, int expectedMinutes)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "ttl-metadata-is-atomic-and-uses-injected-clock")]
+    public async Task TimeToLiveMetadata_IsWrittenAtomicallyUsingTheInjectedClockAsync()
     {
         var handler = new RecordingBlobHandler();
         var repository = CreateRepository(handler, new FixedTimeProvider(Now));
 
         Uri address = await repository.PutAsync(
             new MemoryStream([1, 2, 3]),
-            TimeSpan.FromMinutes(requestedMinutes),
+            TimeSpan.FromMinutes(5),
             TestContext.Current.CancellationToken);
 
         Assert.StartsWith("https://clock.blob.core.windows.net/message-data/", address.AbsoluteUri, StringComparison.Ordinal);
-        Assert.Equal(2, handler.Requests.Count);
-        RecordedRequest metadata = Assert.Single(handler.Requests, request => request.IsMetadata);
-        Assert.Equal(HttpMethod.Put, metadata.Method);
-        Assert.Equal((Now.UtcDateTime + TimeSpan.FromMinutes(expectedMinutes)).ToString("O"), metadata.ValidUntilUtc);
-        Assert.True(metadata.CancellationToken.CanBeCanceled);
+        RecordedRequest upload = Assert.Single(handler.Requests);
+        Assert.Equal(HttpMethod.Put, upload.Method);
+        Assert.Equal((Now.UtcDateTime + TimeSpan.FromMinutes(5)).ToString("O"), upload.ValidUntilUtc);
+        Assert.True(upload.CancellationToken.CanBeCanceled);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-5)]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "nonpositive-ttl-is-rejected-before-upload")]
+    public async Task NonPositiveTimeToLive_IsRejectedBeforeUploadAsync(int requestedMinutes)
+    {
+        var handler = new RecordingBlobHandler();
+        var repository = CreateRepository(handler, new FixedTimeProvider(Now));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => repository.PutAsync(
+                new MemoryStream([1, 2, 3]),
+                TimeSpan.FromMinutes(requestedMinutes),
+                TestContext.Current.CancellationToken));
+
+        Assert.Empty(handler.Requests);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "overflowing-expiration-is-rejected-before-upload")]
+    public async Task ExpirationOutsideDateTimeOffsetRange_IsRejectedBeforeUploadAsync()
+    {
+        var handler = new RecordingBlobHandler();
+        var repository = CreateRepository(handler, new FixedTimeProvider(DateTimeOffset.MaxValue.AddMinutes(-1)));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => repository.PutAsync(
+                new MemoryStream([1, 2, 3]),
+                TimeSpan.FromMinutes(5),
+                TestContext.Current.CancellationToken));
+
+        Assert.Empty(handler.Requests);
     }
 
     [Fact]
@@ -45,16 +75,15 @@ public sealed class AzureStorageMessageDataTimeProviderTests
         await repository.PutAsync(new MemoryStream([4, 5, 6]), cancellationToken: TestContext.Current.CancellationToken);
 
         RecordedRequest upload = Assert.Single(handler.Requests);
-        Assert.False(upload.IsMetadata);
         Assert.Null(upload.ValidUntilUtc);
         Assert.True(upload.CancellationToken.CanBeCanceled);
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "metadata-write-honors-cancellation")]
-    public async Task TimeToLiveMetadata_HonorsCallerCancellationAsync()
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "atomic-ttl-upload-honors-cancellation")]
+    public async Task TimeToLiveUpload_HonorsCallerCancellationAsync()
     {
-        var handler = new RecordingBlobHandler { BlockMetadata = true };
+        var handler = new RecordingBlobHandler { BlockUpload = true };
         var repository = CreateRepository(handler, new FixedTimeProvider(Now));
         using var cancellation = new CancellationTokenSource();
 
@@ -62,13 +91,13 @@ public sealed class AzureStorageMessageDataTimeProviderTests
             new MemoryStream([7, 8, 9]),
             TimeSpan.FromMinutes(5),
             cancellation.Token);
-        await handler.MetadataStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
+        await handler.UploadStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
         await cancellation.CancelAsync();
 
         Task completed = await Task.WhenAny(
             put,
             Task.Delay(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken));
-        handler.ReleaseMetadata();
+        handler.ReleaseUpload();
 
         Assert.Same(put, completed);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => put);
@@ -92,35 +121,34 @@ public sealed class AzureStorageMessageDataTimeProviderTests
 
     private sealed class RecordingBlobHandler : HttpMessageHandler
     {
-        private readonly TaskCompletionSource _metadataRelease = new(
+        private readonly TaskCompletionSource _uploadRelease = new(
             TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public bool BlockMetadata { get; init; }
+        public bool BlockUpload { get; init; }
 
-        public TaskCompletionSource MetadataStarted { get; } = new(
+        public TaskCompletionSource UploadStarted { get; } = new(
             TaskCreationOptions.RunContinuationsAsynchronously);
 
         public List<RecordedRequest> Requests { get; } = [];
 
-        public void ReleaseMetadata() => _metadataRelease.TrySetResult();
+        public void ReleaseUpload() => _uploadRelease.TrySetResult();
 
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken = default)
         {
-            bool isMetadata = request.RequestUri?.Query.Contains("comp=metadata", StringComparison.Ordinal) == true;
             string? validUntilUtc = request.Headers.TryGetValues("x-ms-meta-ValidUntilUtc", out IEnumerable<string>? values)
                 ? Assert.Single(values)
                 : null;
-            Requests.Add(new RecordedRequest(request.Method, isMetadata, validUntilUtc, cancellationToken));
+            Requests.Add(new RecordedRequest(request.Method, validUntilUtc, cancellationToken));
 
-            if (isMetadata && BlockMetadata)
+            if (validUntilUtc is not null && BlockUpload)
             {
-                MetadataStarted.TrySetResult();
-                await _metadataRelease.Task.WaitAsync(cancellationToken);
+                UploadStarted.TrySetResult();
+                await _uploadRelease.Task.WaitAsync(cancellationToken);
             }
 
-            var response = new HttpResponseMessage(isMetadata ? HttpStatusCode.OK : HttpStatusCode.Created)
+            var response = new HttpResponseMessage(HttpStatusCode.Created)
             {
                 Content = new ByteArrayContent([]),
                 RequestMessage = request,
@@ -135,7 +163,6 @@ public sealed class AzureStorageMessageDataTimeProviderTests
 
     private sealed record RecordedRequest(
         HttpMethod Method,
-        bool IsMetadata,
         string? ValidUntilUtc,
         CancellationToken CancellationToken);
 }

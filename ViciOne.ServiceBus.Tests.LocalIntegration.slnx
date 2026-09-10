@@ -3,6 +3,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj" />
+    <Project Path="tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.csproj" />
@@ -25,6 +26,7 @@
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj" />
+    <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.DynamoDb/ViciOne.ServiceBus.DynamoDb.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />

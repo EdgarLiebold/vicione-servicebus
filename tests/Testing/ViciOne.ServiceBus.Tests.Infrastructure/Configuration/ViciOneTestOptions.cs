@@ -171,6 +171,7 @@ public sealed class ViciOneTestOptions
                 LocalTestResource.PostgreSql => LocalInfrastructure.PostgreSql,
                 LocalTestResource.SqlServer => LocalInfrastructure.SqlServer,
                 LocalTestResource.AzureTable => LocalInfrastructure.AzureTable,
+                LocalTestResource.AzureBlob => LocalInfrastructure.AzureBlob,
                 LocalTestResource.EventHubs => LocalInfrastructure.EventHubs,
                 LocalTestResource.AzureServiceBus => LocalInfrastructure.AzureServiceBus,
                 LocalTestResource.LocalStack => LocalInfrastructure.LocalStack,
@@ -209,6 +210,8 @@ public enum LocalTestResource
     EventHubs = 7,
 
     AzureServiceBus = 8,
+
+    AzureBlob = 9,
 }
 
 /// <summary>External providers currently supported by the test configuration contract.</summary>
@@ -232,6 +235,8 @@ public sealed class LocalInfrastructureOptions
     public SqlServerLocalOptions? SqlServer { get; set; }
 
     public AzureTableLocalOptions? AzureTable { get; set; }
+
+    public AzureBlobLocalOptions? AzureBlob { get; set; }
 
     public EventHubsLocalOptions? EventHubs { get; set; }
 
@@ -363,6 +368,26 @@ public sealed class SqlServerLocalOptions : ILocalTestResourceConfiguration
 }
 
 public sealed class AzureTableLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? Port { get; set; }
+
+    public string? AccountName { get; set; }
+
+    public string? AccountKey { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (string.IsNullOrWhiteSpace(AccountName)) yield return nameof(AccountName);
+        if (string.IsNullOrWhiteSpace(AccountKey)) yield return nameof(AccountKey);
+    }
+}
+
+/// <summary>Run-scoped Azurite Blob endpoint and account.</summary>
+public sealed class AzureBlobLocalOptions : ILocalTestResourceConfiguration
 {
     public string? Host { get; set; }
 

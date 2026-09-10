@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using Azure.Core.Pipeline;
 using Azure.Storage.Blobs;
 using ViciOne.ServiceBus.Advanced.Observers;
@@ -34,13 +35,16 @@ public sealed class AzureBlobMessageDataRepositoryTests
         Assert.Equal(payload, upload.Body);
         Assert.True(upload.CancellationToken.CanBeCanceled);
         Assert.False(upload.IsMetadata);
+        Assert.Null(upload.ContentEncoding);
+        Assert.Null(upload.ValidUntilUtc);
+        Assert.Equal("*", upload.IfNoneMatch);
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-UPLOAD", "compressed-payload-address-and-cancellation")]
-    public async Task PutAsync_CompressesPayloadAndForwardsCancellationAsync()
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-UPLOAD", "bounded-compressed-payload-and-cancellation")]
+    public async Task PutAsync_StreamsCompressedPayloadInBoundedBlocksAndForwardsCancellationAsync()
     {
-        byte[] payload = [.. Enumerable.Range(0, 256).Select(value => (byte)value)];
+        byte[] payload = RandomNumberGenerator.GetBytes(700_000);
         var handler = new RecordingBlobHandler();
         AzureBlobMessageDataRepository repository = CreateRepository(
             handler,
@@ -53,11 +57,40 @@ public sealed class AzureBlobMessageDataRepositoryTests
             cancellationToken: cancellationToken);
 
         Assert.Equal(
-            "https://account.blob.core.windows.net/message-data/compressed-payload.gz",
+            "https://account.blob.core.windows.net/message-data/compressed-payload",
             address.AbsoluteUri);
-        RecordedRequest upload = Assert.Single(handler.Requests);
-        Assert.True(upload.CancellationToken.CanBeCanceled);
-        Assert.Equal(payload, Decompress(upload.Body));
+        RecordedRequest[] blocks = [.. handler.Requests.Where(request => request.IsBlock)];
+        Assert.True(blocks.Length >= 3);
+        Assert.All(blocks, block =>
+        {
+            Assert.InRange(block.Body.Length, 1, 256 * 1024);
+            Assert.True(block.CancellationToken.CanBeCanceled);
+        });
+        Assert.Equal(payload, Decompress([.. blocks.SelectMany(block => block.Body)]));
+        RecordedRequest commit = Assert.Single(handler.Requests, request => request.IsBlockList);
+        Assert.Equal("gzip", commit.ContentEncoding);
+        Assert.Null(commit.ValidUntilUtc);
+        Assert.Equal("*", commit.IfNoneMatch);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-UPLOAD", "compression-failure-does-not-commit-partial-blob")]
+    public async Task PutAsync_WhenCompressionSourceFails_DoesNotCommitPartialBlobAsync()
+    {
+        byte[] payload = RandomNumberGenerator.GetBytes(400_000);
+        var handler = new RecordingBlobHandler();
+        AzureBlobMessageDataRepository repository = CreateRepository(
+            handler,
+            "failed-compression",
+            compress: true);
+        using var source = new FailingReadStream(payload, failureOffset: 350_000);
+
+        IOException exception = await Assert.ThrowsAsync<IOException>(
+            () => repository.PutAsync(source, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("Synthetic source failure.", exception.Message);
+        Assert.Contains(handler.Requests, request => request.IsBlock);
+        Assert.DoesNotContain(handler.Requests, request => request.IsBlockList);
     }
 
     [Fact]
@@ -95,8 +128,8 @@ public sealed class AzureBlobMessageDataRepositoryTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-DOWNLOAD", "format-is-derived-from-persisted-address")]
-    public async Task GetAsync_DerivesCompressionFromThePersistedBlobAddressAsync()
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-DOWNLOAD", "format-is-derived-from-persisted-content-encoding")]
+    public async Task GetAsync_DerivesCompressionFromPersistedContentEncodingAsync()
     {
         byte[] payload = [2, 4, 6, 8, 10];
 
@@ -106,18 +139,18 @@ public sealed class AzureBlobMessageDataRepositoryTests
             "unused",
             compress: true);
         await using Stream plain = await currentlyCompressingRepository.GetAsync(
-            new Uri("https://account.blob.core.windows.net/message-data/previously-plain"),
+            new Uri("https://account.blob.core.windows.net/message-data/previously-plain.gz"),
             TestContext.Current.CancellationToken);
         Assert.Equal(payload, await ReadAllBytesAsync(plain));
 
         byte[] compressedPayload = Compress(payload);
-        var compressedHandler = new RecordingBlobHandler(compressedPayload);
+        var compressedHandler = new RecordingBlobHandler(compressedPayload, contentEncoding: "gzip");
         AzureBlobMessageDataRepository currentlyPlainRepository = CreateRepository(
             compressedHandler,
             "unused",
             compress: false);
         await using Stream compressed = await currentlyPlainRepository.GetAsync(
-            new Uri("https://account.blob.core.windows.net/message-data/previously-compressed.gz"),
+            new Uri("https://account.blob.core.windows.net/message-data/previously-compressed"),
             TestContext.Current.CancellationToken);
         Assert.Equal(payload, await ReadAllBytesAsync(compressed));
 
@@ -138,6 +171,9 @@ public sealed class AzureBlobMessageDataRepositoryTests
             new("https://foreign.blob.core.windows.net/message-data/blob", UriKind.Absolute),
             new("https://account.blob.core.windows.net/foreign/blob", UriKind.Absolute),
             new("https://account.blob.core.windows.net/message-data", UriKind.Absolute),
+            new("https://account.blob.core.windows.net/message-data/blob?sig=foreign", UriKind.Absolute),
+            new("https://account.blob.core.windows.net/message-data/blob#fragment", UriKind.Absolute),
+            new("https://user@account.blob.core.windows.net/message-data/blob", UriKind.Absolute),
         ];
 
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -155,6 +191,21 @@ public sealed class AzureBlobMessageDataRepositoryTests
             () => repository.GetAsync(
                 new Uri("https://account.blob.core.windows.net/message-data/blob"),
                 cancellation.Token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-DOWNLOAD", "unsupported-content-encoding-is-rejected")]
+    public async Task GetAsync_RejectsUnsupportedContentEncodingAsync()
+    {
+        var handler = new RecordingBlobHandler([1, 2, 3], contentEncoding: "br");
+        AzureBlobMessageDataRepository repository = CreateRepository(handler, "unused");
+
+        MessageDataException exception = await Assert.ThrowsAsync<MessageDataException>(
+            () => repository.GetAsync(
+                new Uri("https://account.blob.core.windows.net/message-data/encoded"),
+                TestContext.Current.CancellationToken));
+
+        Assert.Contains("br", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -202,8 +253,8 @@ public sealed class AzureBlobMessageDataRepositoryTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-OBSERVER", "lifecycle-validation-and-best-effort-startup")]
-    public async Task BusObserverLifecycle_ValidatesArgumentsAndKeepsAzureStartupBestEffortAsync()
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-OBSERVER", "lifecycle-validation-and-fail-closed-startup")]
+    public async Task BusObserverLifecycle_ValidatesArgumentsAndPropagatesAzureStartupFailuresAsync()
     {
         var handler = new RecordingBlobHandler(forcedFailure: HttpStatusCode.ServiceUnavailable);
         AzureBlobMessageDataRepository repository = CreateRepository(handler, "unused");
@@ -212,7 +263,8 @@ public sealed class AzureBlobMessageDataRepositoryTests
 
         repository.PostCreate(bus);
         repository.CreateFaulted(failure);
-        await repository.PreStartAsync(bus);
+        await Assert.ThrowsAsync<global::Azure.RequestFailedException>(
+            () => repository.PreStartAsync(bus));
         await repository.PostStartAsync(bus, Task.FromResult<BusReady>(null!));
         await repository.StartFaultedAsync(bus, failure);
         await repository.PreStopAsync(bus);
@@ -284,6 +336,44 @@ public sealed class AzureBlobMessageDataRepositoryTests
         public string GenerateBlobName() => blobName;
     }
 
+    private sealed class FailingReadStream(byte[] content, int failureOffset) : Stream
+    {
+        private int _position;
+
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => content.Length;
+
+        public override long Position
+        {
+            get => _position;
+            set => throw new NotSupportedException();
+        }
+
+        public override ValueTask<int> ReadAsync(
+            Memory<byte> buffer,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (_position >= failureOffset)
+                throw new IOException("Synthetic source failure.");
+
+            int readableLength = Math.Min(
+                Math.Min(buffer.Length, content.Length - _position),
+                failureOffset - _position);
+            content.AsMemory(_position, readableLength).CopyTo(buffer);
+            _position += readableLength;
+            return ValueTask.FromResult(readableLength);
+        }
+
+        public override void Flush() => throw new NotSupportedException();
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
+
     private class NoOpDispatchProxy : DispatchProxy
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
@@ -293,7 +383,8 @@ public sealed class AzureBlobMessageDataRepositoryTests
     private sealed class RecordingBlobHandler(
         byte[]? downloadContent = null,
         bool containerExists = true,
-        HttpStatusCode? forcedFailure = null) : HttpMessageHandler
+        HttpStatusCode? forcedFailure = null,
+        string? contentEncoding = null) : HttpMessageHandler
     {
         private readonly byte[] _downloadContent = downloadContent ?? [];
 
@@ -309,14 +400,36 @@ public sealed class AzureBlobMessageDataRepositoryTests
                 ? []
                 : await request.Content.ReadAsByteArrayAsync(cancellationToken);
             bool isMetadata = request.RequestUri?.Query.Contains("comp=metadata", StringComparison.Ordinal) == true;
+            bool isBlock = request.RequestUri?.Query.Contains("comp=block&", StringComparison.Ordinal) == true;
+            bool isBlockList = request.RequestUri?.Query.Contains("comp=blocklist", StringComparison.Ordinal) == true;
             bool isContainerRequest =
                 request.RequestUri?.AbsolutePath.TrimEnd('/').Equals("/message-data", StringComparison.Ordinal) == true;
+            string? requestContentEncoding = request.Headers.TryGetValues(
+                "x-ms-blob-content-encoding",
+                out IEnumerable<string>? contentEncodingValues)
+                ? Assert.Single(contentEncodingValues)
+                : null;
+            string? validUntilUtc = request.Headers.TryGetValues(
+                "x-ms-meta-ValidUntilUtc",
+                out IEnumerable<string>? expirationValues)
+                ? Assert.Single(expirationValues)
+                : null;
+            string? ifNoneMatch = request.Headers.TryGetValues(
+                "If-None-Match",
+                out IEnumerable<string>? conditionValues)
+                ? Assert.Single(conditionValues)
+                : null;
             Requests.Add(new RecordedRequest(
                 request.Method,
                 request.RequestUri!,
                 body,
                 isMetadata,
+                isBlock,
+                isBlockList,
                 isContainerRequest,
+                requestContentEncoding,
+                validUntilUtc,
+                ifNoneMatch,
                 cancellationToken));
 
             if (forcedFailure is { } failureStatus)
@@ -355,7 +468,7 @@ public sealed class AzureBlobMessageDataRepositoryTests
                 []);
         }
 
-        private static HttpResponseMessage CreateResponse(
+        private HttpResponseMessage CreateResponse(
             HttpRequestMessage request,
             HttpStatusCode statusCode,
             byte[] content)
@@ -369,6 +482,8 @@ public sealed class AzureBlobMessageDataRepositoryTests
             response.Content.Headers.LastModified = new DateTimeOffset(2045, 6, 7, 8, 9, 10, TimeSpan.Zero);
             response.Headers.TryAddWithoutValidation("x-ms-request-id", "test-request");
             response.Headers.TryAddWithoutValidation("x-ms-version", "2025-11-05");
+            if (!string.IsNullOrWhiteSpace(contentEncoding))
+                response.Content.Headers.ContentEncoding.Add(contentEncoding);
             return response;
         }
     }
@@ -378,6 +493,11 @@ public sealed class AzureBlobMessageDataRepositoryTests
         Uri Uri,
         byte[] Body,
         bool IsMetadata,
+        bool IsBlock,
+        bool IsBlockList,
         bool IsContainerRequest,
+        string? ContentEncoding,
+        string? ValidUntilUtc,
+        string? IfNoneMatch,
         CancellationToken CancellationToken);
 }

@@ -20,8 +20,9 @@ public sealed class AzureBlobMessageDataRepository :
     IMessageDataRepository,
     IBusObserver
 {
-    private const string CompressedBlobSuffix = ".gz";
+    private const int CompressedUploadBufferSize = 256 * 1024;
     private const string ExpirationMetadataName = "ValidUntilUtc";
+    private const string GzipContentEncoding = "gzip";
 
     private readonly BlobContainerClient _containerClient;
     private readonly IBlobNameGenerator _blobNameGenerator;
@@ -76,24 +77,14 @@ public sealed class AzureBlobMessageDataRepository :
 
     /// <summary>Ensures that the configured container exists before the bus starts.</summary>
     /// <param name="bus">The bus that is about to start.</param>
-    /// <returns>A task that completes after the best-effort container initialization.</returns>
+    /// <returns>A task that completes after the container is available.</returns>
     public async Task PreStartAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
 
-        try
-        {
-            global::Azure.Response<bool> containerExists = await _containerClient.ExistsAsync().ConfigureAwait(false);
-            if (!containerExists.Value)
-                await _containerClient.CreateIfNotExistsAsync().ConfigureAwait(false);
-        }
-        catch (RequestFailedException exception)
-        {
-            LogContext.Warning?.Log(
-                exception,
-                "Azure Blob Storage container initialization failed: {Address}",
-                _containerClient.Uri);
-        }
+        global::Azure.Response<bool> containerExists = await _containerClient.ExistsAsync().ConfigureAwait(false);
+        if (!containerExists.Value)
+            await _containerClient.CreateIfNotExistsAsync().ConfigureAwait(false);
     }
 
     /// <summary>Observes successful bus startup; this repository requires no post-start work.</summary>
@@ -163,10 +154,18 @@ public sealed class AzureBlobMessageDataRepository :
                 .DownloadStreamingAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             Stream stream = response.Value.Content;
+            string? contentEncoding = response.Value.Details.ContentEncoding;
 
-            return blobClient.Name.EndsWith(CompressedBlobSuffix, StringComparison.OrdinalIgnoreCase)
-                ? new GZipStream(stream, CompressionMode.Decompress, leaveOpen: false)
-                : stream;
+            if (string.IsNullOrWhiteSpace(contentEncoding))
+                return stream;
+
+            if (string.Equals(contentEncoding.Trim(), GzipContentEncoding, StringComparison.OrdinalIgnoreCase))
+                return new GZipStream(stream, CompressionMode.Decompress, leaveOpen: false);
+
+            stream.Dispose();
+            throw new MessageDataException(
+                $"Message-data content uses unsupported content encoding '{contentEncoding}': " +
+                $"{blobClient.BlobContainerName}/{blobClient.Name}");
         }
         catch (RequestFailedException exception)
         {
@@ -190,6 +189,8 @@ public sealed class AzureBlobMessageDataRepository :
         if (!stream.CanRead)
             throw new ArgumentException("The message-data stream must be readable.", nameof(stream));
 
+        IDictionary<string, string>? metadata = CreateExpirationMetadata(timeToLive, _timeProvider);
+
         string blobName = _blobNameGenerator.GenerateBlobName();
         if (string.IsNullOrWhiteSpace(blobName))
         {
@@ -197,25 +198,29 @@ public sealed class AzureBlobMessageDataRepository :
                 "The configured blob-name generator returned an empty blob name.");
         }
 
-        if (_compress)
-            blobName += CompressedBlobSuffix;
-
         BlobClient blobClient = _containerClient.GetBlobClient(blobName);
 
         if (_compress)
         {
-            using var compressedStream = new MemoryStream();
-            using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Compress, leaveOpen: true))
-                await stream.CopyToAsync(gzipStream, cancellationToken).ConfigureAwait(false);
-
-            compressedStream.Position = 0;
-            await blobClient.UploadAsync(compressedStream, cancellationToken).ConfigureAwait(false);
+            await UploadCompressedAsync(
+                    _containerClient.GetBlockBlobClient(blobName),
+                    stream,
+                    metadata,
+                    cancellationToken)
+                .ConfigureAwait(false);
         }
         else
-            await blobClient.UploadAsync(stream, cancellationToken).ConfigureAwait(false);
-
-        await SetBlobExpirationAsync(blobClient, timeToLive, _timeProvider, cancellationToken)
-            .ConfigureAwait(false);
+        {
+            await blobClient.UploadAsync(
+                    stream,
+                    new BlobUploadOptions
+                    {
+                        Conditions = new BlobRequestConditions { IfNoneMatch = ETag.All },
+                        Metadata = metadata,
+                    },
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
 
         LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", blobClient.Uri, blobClient.Name);
 
@@ -248,10 +253,16 @@ public sealed class AzureBlobMessageDataRepository :
         }
 
         BlobClient blobClient = _containerClient.GetBlobClient(addressBuilder.BlobName);
-        if (!string.Equals(
-                blobClient.Uri.AbsolutePath,
-                address.AbsolutePath,
-                StringComparison.Ordinal))
+        bool containsAmbiguousComponents =
+            !string.IsNullOrEmpty(address.UserInfo) ||
+            !string.IsNullOrEmpty(address.Fragment);
+        bool differsFromRepositoryAddress = Uri.Compare(
+                blobClient.Uri,
+                address,
+                UriComponents.SchemeAndServer | UriComponents.PathAndQuery,
+                UriFormat.UriEscaped,
+                StringComparison.Ordinal) != 0;
+        if (containsAmbiguousComponents || differsFromRepositoryAddress)
         {
             throw new ArgumentException(
                 "The message-data address must identify a blob in the configured container.",
@@ -261,26 +272,52 @@ public sealed class AzureBlobMessageDataRepository :
         return blobClient;
     }
 
-    private static async Task SetBlobExpirationAsync(
-        BlobBaseClient blobClient,
+    private static IDictionary<string, string>? CreateExpirationMetadata(
         TimeSpan? timeToLive,
-        TimeProvider timeProvider,
-        CancellationToken cancellationToken)
+        TimeProvider timeProvider)
     {
         if (timeToLive is null)
-            return;
+            return null;
+
+        if (timeToLive <= TimeSpan.Zero)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(timeToLive),
+                timeToLive,
+                "Message-data time to live must be positive.");
+        }
 
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
-        DateTimeOffset expiration = utcNow + timeToLive.Value;
-        if (expiration <= utcNow)
-            expiration = utcNow + TimeSpan.FromMinutes(1);
+        if (timeToLive > DateTimeOffset.MaxValue - utcNow)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(timeToLive),
+                timeToLive,
+                "Message-data expiration exceeds the supported UTC timestamp range.");
+        }
 
-        var metadata = new Dictionary<string, string>
+        DateTimeOffset expiration = utcNow + timeToLive.Value;
+        return new Dictionary<string, string>
         {
             [ExpirationMetadataName] = expiration.UtcDateTime.ToString("O", CultureInfo.InvariantCulture),
         };
+    }
 
-        await blobClient.SetMetadataAsync(metadata, cancellationToken: cancellationToken)
+    private static async Task UploadCompressedAsync(
+        BlockBlobClient blobClient,
+        Stream source,
+        IDictionary<string, string>? metadata,
+        CancellationToken cancellationToken)
+    {
+        await using var destination = new BlockBlobUploadStream(
+            blobClient,
+            CompressedUploadBufferSize);
+        await using (var gzip = new GZipStream(destination, CompressionMode.Compress, leaveOpen: true))
+        {
+            await source.CopyToAsync(gzip, cancellationToken).ConfigureAwait(false);
+        }
+
+        await destination.CommitAsync(metadata, GzipContentEncoding, cancellationToken)
             .ConfigureAwait(false);
     }
 }

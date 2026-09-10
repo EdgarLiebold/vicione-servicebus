@@ -54,6 +54,7 @@
     <Project Path="tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/ViciOne.ServiceBus.Azure.Storage.Tests.csproj" />
+    <Project Path="tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/ViciOne.ServiceBus.DynamoDb.Tests.csproj" />
     <Project Path="tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj" />

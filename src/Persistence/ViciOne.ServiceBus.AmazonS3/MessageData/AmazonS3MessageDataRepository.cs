@@ -152,13 +152,14 @@ public sealed class AmazonS3MessageDataRepository :
 
         if (!bucketExists)
         {
+            ValidateClientRegion();
             try
             {
                 await _client.PutBucketAsync(
                         new PutBucketRequest
                         {
                             BucketName = _options.BucketName,
-                            BucketRegionName = ClientRegion(),
+                            UseClientRegion = true,
                         },
                         cancellationToken)
                     .ConfigureAwait(false);
@@ -251,8 +252,8 @@ public sealed class AmazonS3MessageDataRepository :
     {
         try
         {
-            await _client.GetBucketAclAsync(
-                    new GetBucketAclRequest { BucketName = _options.BucketName },
+            await _client.HeadBucketAsync(
+                    new HeadBucketRequest { BucketName = _options.BucketName },
                     cancellationToken)
                 .ConfigureAwait(false);
             return true;
@@ -263,20 +264,16 @@ public sealed class AmazonS3MessageDataRepository :
         {
             return false;
         }
-        catch (AmazonS3Exception exception) when (
-            exception.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.MovedPermanently ||
-            exception.ErrorCode is "AccessDenied" or "PermanentRedirect")
-        {
-            // Existence is established even when this client must use another endpoint or lacks ACL access.
-            return true;
-        }
     }
 
-    private string ClientRegion() =>
-        _client.Config.AuthenticationRegion ??
-        _client.Config.RegionEndpoint?.SystemName ??
-        throw new InvalidOperationException(
-            "The Amazon S3 client must own an authentication region before the repository can create a bucket.");
+    private void ValidateClientRegion()
+    {
+        if (_client.Config.AuthenticationRegion is null && _client.Config.RegionEndpoint is null)
+        {
+            throw new InvalidOperationException(
+                "The Amazon S3 client must own an authentication region before the repository can create a bucket.");
+        }
+    }
 
     private string ParseObjectKey(Uri address)
     {

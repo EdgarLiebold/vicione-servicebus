@@ -32,6 +32,7 @@ public sealed class TestConfigurationProviderTests
         PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
         SqlServerLocalOptions sqlServer = Assert.IsType<SqlServerLocalOptions>(localInfrastructure.SqlServer);
         AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
+        AzureBlobLocalOptions azureBlob = Assert.IsType<AzureBlobLocalOptions>(localInfrastructure.AzureBlob);
         EventHubsLocalOptions eventHubs = Assert.IsType<EventHubsLocalOptions>(localInfrastructure.EventHubs);
         AzureServiceBusLocalOptions serviceBus = Assert.IsType<AzureServiceBusLocalOptions>(localInfrastructure.AzureServiceBus);
         LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(localInfrastructure.LocalStack);
@@ -52,6 +53,8 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal("master", sqlServer.Database);
         Assert.Equal("localhost", azureTable.Host);
         Assert.Equal(10002, azureTable.Port);
+        Assert.Equal("localhost", azureBlob.Host);
+        Assert.Equal(10000, azureBlob.Port);
         Assert.Equal("localhost", eventHubs.Host);
         Assert.Equal(5672, eventHubs.Port);
         Assert.Equal("localhost", eventHubs.StorageHost);
@@ -337,13 +340,28 @@ public sealed class TestConfigurationProviderTests
     [InlineData("VICIONE_SERVICEBUS_AZURITE_BLOB_PORT", "31000", "31000")]
     [InlineData("VICIONE_SERVICEBUS_AZURITE_ACCOUNT", "run-account", "run-account")]
     [InlineData("VICIONE_SERVICEBUS_AZURITE_KEY", "run-secret", "run-secret")]
-    public void CanonicalEventHubsAndAzuriteVariables_MapIntoOneTypedResource(
+    public void CanonicalEventHubsAndAzuriteVariables_MapIntoTypedResources(
         string key,
         string value,
         string expected)
     {
         EventHubsLocalOptions eventHubs = Assert.IsType<EventHubsLocalOptions>(
             ProviderWith((key, value)).GetOptions().LocalInfrastructure?.EventHubs);
+
+        if (key.StartsWith("VICIONE_SERVICEBUS_AZURITE_", StringComparison.Ordinal))
+        {
+            AzureBlobLocalOptions azureBlob = Assert.IsType<AzureBlobLocalOptions>(
+                ProviderWith((key, value)).GetOptions().LocalInfrastructure?.AzureBlob);
+            string blobActual = key switch
+            {
+                "VICIONE_SERVICEBUS_AZURITE_HOST" => azureBlob.Host!,
+                "VICIONE_SERVICEBUS_AZURITE_BLOB_PORT" => azureBlob.Port!.Value.ToString(),
+                "VICIONE_SERVICEBUS_AZURITE_ACCOUNT" => azureBlob.AccountName!,
+                "VICIONE_SERVICEBUS_AZURITE_KEY" => azureBlob.AccountKey!,
+                _ => throw new InvalidOperationException(key),
+            };
+            Assert.Equal(expected, blobActual);
+        }
 
         string actual = key switch
         {
@@ -357,6 +375,24 @@ public sealed class TestConfigurationProviderTests
         };
 
         Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void AzureBlobSelection_RejectsEveryMissingCoordinate()
+    {
+        ViciOneTestOptions options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__AzureBlob__Host", ""),
+            ("VICIONE_TESTS__LocalInfrastructure__AzureBlob__Port", "0"),
+            ("VICIONE_TESTS__LocalInfrastructure__AzureBlob__AccountName", ""),
+            ("VICIONE_TESTS__LocalInfrastructure__AzureBlob__AccountKey", "")).GetOptions();
+
+        IReadOnlyList<string> errors = options.ValidateForLocal(LocalTestResource.AzureBlob);
+
+        Assert.Contains("LocalInfrastructure:AzureBlob:Host", errors);
+        Assert.Contains("LocalInfrastructure:AzureBlob:Port", errors);
+        Assert.Contains("LocalInfrastructure:AzureBlob:AccountName", errors);
+        Assert.Contains("LocalInfrastructure:AzureBlob:AccountKey", errors);
     }
 
     [Theory]
@@ -641,7 +677,7 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["ActiveMq", "Artemis", "AzureServiceBus", "AzureTable", "EventHubs", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
+            ["ActiveMq", "Artemis", "AzureBlob", "AzureServiceBus", "AzureTable", "EventHubs", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
             ["Host", "ManagementPort", "Password", "Port", "UserName"],
@@ -661,6 +697,9 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal(
             ["AccountKey", "AccountName", "Host", "Port"],
             PublicPropertyNames<AzureTableLocalOptions>());
+        Assert.Equal(
+            ["AccountKey", "AccountName", "Host", "Port"],
+            PublicPropertyNames<AzureBlobLocalOptions>());
         Assert.Equal(
             ["Host", "Port", "StorageAccountKey", "StorageAccountName", "StorageHost", "StoragePort"],
             PublicPropertyNames<EventHubsLocalOptions>());
@@ -687,6 +726,7 @@ public sealed class TestConfigurationProviderTests
         Assert.Empty(PublicFields<PostgreSqlLocalOptions>());
         Assert.Empty(PublicFields<SqlServerLocalOptions>());
         Assert.Empty(PublicFields<AzureTableLocalOptions>());
+        Assert.Empty(PublicFields<AzureBlobLocalOptions>());
         Assert.Empty(PublicFields<EventHubsLocalOptions>());
         Assert.Empty(PublicFields<AzureServiceBusLocalOptions>());
         Assert.Empty(PublicFields<LocalStackLocalOptions>());

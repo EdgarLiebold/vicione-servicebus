@@ -174,16 +174,22 @@ public sealed class TestConfigurationProvider
             ["VICIONE_SERVICEBUS_SERVICEBUS_KEY_NAME"] = ["LocalInfrastructure:AzureServiceBus:SharedAccessKeyName"],
             ["VICIONE_SERVICEBUS_SERVICEBUS_KEY"] = ["LocalInfrastructure:AzureServiceBus:SharedAccessKey"],
             ["VICIONE_SERVICEBUS_AZURITE_HOST"] = [
+                "LocalInfrastructure:AzureBlob:Host",
                 "LocalInfrastructure:AzureTable:Host",
                 "LocalInfrastructure:EventHubs:StorageHost",
             ],
-            ["VICIONE_SERVICEBUS_AZURITE_BLOB_PORT"] = ["LocalInfrastructure:EventHubs:StoragePort"],
+            ["VICIONE_SERVICEBUS_AZURITE_BLOB_PORT"] = [
+                "LocalInfrastructure:AzureBlob:Port",
+                "LocalInfrastructure:EventHubs:StoragePort",
+            ],
             ["VICIONE_SERVICEBUS_AZURITE_TABLE_PORT"] = ["LocalInfrastructure:AzureTable:Port"],
             ["VICIONE_SERVICEBUS_AZURITE_ACCOUNT"] = [
+                "LocalInfrastructure:AzureBlob:AccountName",
                 "LocalInfrastructure:AzureTable:AccountName",
                 "LocalInfrastructure:EventHubs:StorageAccountName",
             ],
             ["VICIONE_SERVICEBUS_AZURITE_KEY"] = [
+                "LocalInfrastructure:AzureBlob:AccountKey",
                 "LocalInfrastructure:AzureTable:AccountKey",
                 "LocalInfrastructure:EventHubs:StorageAccountKey",
             ],

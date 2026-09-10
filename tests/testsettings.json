@@ -32,6 +32,10 @@
       "Host": "localhost",
       "Port": 10002
     },
+    "AzureBlob": {
+      "Host": "localhost",
+      "Port": 10000
+    },
     "EventHubs": {
       "Host": "localhost",
       "Port": 5672,

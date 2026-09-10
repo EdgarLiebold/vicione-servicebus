@@ -47,7 +47,7 @@ tests fail.
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 4896 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 4900 \
   --max-parallel-test-modules 1
 ```
 
@@ -107,7 +107,7 @@ python3 tools/ci/run_broker_category.py \
   dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/local-integration \
-    --minimum-expected-tests 326 --max-parallel-test-modules 1
+    --minimum-expected-tests 332 --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
 python3 tools/ci/run_broker_category.py --broker mssql --command -- \
