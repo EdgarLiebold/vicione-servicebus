@@ -4,6 +4,7 @@ using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Consumers;
@@ -30,6 +31,52 @@ public sealed class ConsumerConventionIntegrationTests
         {
             ConsumerConvention.Remove<SnapshotMarkerConsumerConvention>();
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "versioned-metadata-and-connector-snapshots")]
+    public void RegistrationChanges_RefreshSubsequentMetadataAndConnectorResolution()
+    {
+        IConsumePipe factoryPipe = new ConsumePipeSpecification().BuildConsumePipe();
+        IConsumePipe instancePipe = new ConsumePipeSpecification().BuildConsumePipe();
+        IReadOnlyList<IMessageInterfaceType> beforeRegistration = ConsumerMetadataCache<LateBoundConsumer>.ConsumerTypes;
+        Assert.Empty(beforeRegistration);
+        Assert.Throws<ConfigurationException>(() => _ = ConsumerConnectorCache<LateBoundConsumer>.Connector);
+        Assert.Throws<ConfigurationException>(() =>
+        {
+            _ = ConsumerConnectorCache.Connect(factoryPipe, typeof(LateBoundConsumer), _ => new LateBoundConsumer());
+        });
+        Assert.Throws<ConfigurationException>(() => _ = InstanceConnectorCache.GetInstanceConnector(typeof(LateBoundConsumer)));
+
+        try
+        {
+            Assert.True(ConsumerConvention.Register<LateBoundConsumerConvention>());
+
+            IReadOnlyList<IMessageInterfaceType> afterRegistration = ConsumerMetadataCache<LateBoundConsumer>.ConsumerTypes;
+            Assert.Single(afterRegistration);
+            Assert.Equal(typeof(LateBoundMessage), afterRegistration[0].MessageType);
+            Assert.NotSame(beforeRegistration, afterRegistration);
+            Assert.NotNull(ConsumerConnectorCache<LateBoundConsumer>.Connector);
+
+            using ConnectHandle factoryHandle = ConsumerConnectorCache.Connect(
+                factoryPipe,
+                typeof(LateBoundConsumer),
+                _ => new LateBoundConsumer());
+            IInstanceConnector instanceConnector = InstanceConnectorCache.GetInstanceConnector(typeof(LateBoundConsumer));
+            using ConnectHandle instanceHandle = instanceConnector.ConnectInstance(instancePipe, new LateBoundConsumer());
+        }
+        finally
+        {
+            ConsumerConvention.Remove<LateBoundConsumerConvention>();
+        }
+
+        Assert.Empty(ConsumerMetadataCache<LateBoundConsumer>.ConsumerTypes);
+        Assert.Throws<ConfigurationException>(() => _ = ConsumerConnectorCache<LateBoundConsumer>.Connector);
+        Assert.Throws<ConfigurationException>(() =>
+        {
+            _ = ConsumerConnectorCache.Connect(factoryPipe, typeof(LateBoundConsumer), _ => new LateBoundConsumer());
+        });
+        Assert.Throws<ConfigurationException>(() => _ = InstanceConnectorCache.GetInstanceConnector(typeof(LateBoundConsumer)));
     }
 
     [Fact]
@@ -143,6 +190,95 @@ public sealed class ConsumerConventionIntegrationTests
     }
 
     private sealed class SnapshotConsumer;
+
+    private sealed class LateBoundConsumer : ILateBoundHandler<LateBoundMessage>
+    {
+        public LateBoundMessage? LastMessage { get; private set; }
+
+        public void Handle(LateBoundMessage message) => LastMessage = message;
+    }
+
+    private sealed record LateBoundMessage;
+
+    private interface ILateBoundHandler<in TMessage>
+    {
+        void Handle(TMessage message);
+    }
+
+    private sealed class LateBoundConsumerConvention : IConsumerConvention
+    {
+        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<TConsumer>() =>
+            new LateBoundConsumerMessageConvention<TConsumer>();
+    }
+
+    private sealed class LateBoundConsumerMessageConvention<TConsumer> : IConsumerMessageConvention
+        where TConsumer : class
+    {
+        public IEnumerable<IMessageInterfaceType> GetMessageTypes() =>
+            typeof(TConsumer) == typeof(LateBoundConsumer)
+                ? [new LateBoundMessageInterfaceType(typeof(TConsumer))]
+                : [];
+    }
+
+    private sealed class LateBoundMessageInterfaceType : IMessageInterfaceType
+    {
+        private readonly Lazy<IMessageConnectorFactory> _factory;
+
+        public LateBoundMessageInterfaceType(Type consumerType)
+        {
+            _factory = new Lazy<IMessageConnectorFactory>(() => (IMessageConnectorFactory)Activator.CreateInstance(
+                typeof(LateBoundConnectorFactory<,>).MakeGenericType(consumerType, typeof(LateBoundMessage)))!);
+        }
+
+        public Type MessageType => typeof(LateBoundMessage);
+
+        public IConsumerMessageConnector<TConsumer> GetConsumerConnector<TConsumer>()
+            where TConsumer : class =>
+            _factory.Value.CreateConsumerConnector<TConsumer>();
+
+        public IInstanceMessageConnector<TConsumer> GetInstanceConnector<TConsumer>()
+            where TConsumer : class =>
+            _factory.Value.CreateInstanceConnector<TConsumer>();
+    }
+
+    private sealed class LateBoundConnectorFactory<TConsumer, TMessage> : IMessageConnectorFactory
+        where TConsumer : class, ILateBoundHandler<TMessage>
+        where TMessage : class
+    {
+        private readonly ConsumerMessageConnector<TConsumer, TMessage> _consumer =
+            new(new LateBoundConsumerFilter<TConsumer, TMessage>());
+        private readonly InstanceMessageConnector<TConsumer, TMessage> _instance =
+            new(new LateBoundConsumerFilter<TConsumer, TMessage>());
+
+        public IConsumerMessageConnector<TRequestedConsumer> CreateConsumerConnector<TRequestedConsumer>()
+            where TRequestedConsumer : class =>
+            _consumer as IConsumerMessageConnector<TRequestedConsumer>
+            ?? throw new ArgumentException("The consumer type did not match the connector type.");
+
+        public IInstanceMessageConnector<TRequestedConsumer> CreateInstanceConnector<TRequestedConsumer>()
+            where TRequestedConsumer : class =>
+            _instance as IInstanceMessageConnector<TRequestedConsumer>
+            ?? throw new ArgumentException("The consumer type did not match the connector type.");
+    }
+
+    private sealed class LateBoundConsumerFilter<TConsumer, TMessage> : IConsumerMessageFilter<TConsumer, TMessage>
+        where TConsumer : class, ILateBoundHandler<TMessage>
+        where TMessage : class
+    {
+        public Task SendAsync(
+            ConsumerConsumeContext<TConsumer, TMessage> context,
+            IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+        {
+            context.Consumer.Handle(context.Message);
+            return next.SendAsync(context);
+        }
+
+        public void Probe(ProbeContext context)
+        {
+            ProbeContext scope = context.CreateScope("consume");
+            scope.Add("method", $"Handle({TypeCache<TMessage>.ShortName} message)");
+        }
+    }
 
     private sealed class SnapshotMarkerConsumerConvention : IConsumerConvention
     {

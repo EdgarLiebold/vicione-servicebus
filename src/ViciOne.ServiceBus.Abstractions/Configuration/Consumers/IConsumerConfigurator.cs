@@ -27,24 +27,24 @@ public interface IConsumerConfigurator<TConsumer> :
     where TConsumer : class
 {
     /// <summary>Configures middleware invoked before the consumer instance is obtained.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
+    /// <typeparam name="TMessage">The message contract to configure.</typeparam>
     /// <param name="configure">The callback to configure the message pipeline.</param>
-    void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure = null)
-        where T : class;
+    void Message<TMessage>(Action<IConsumerMessageConfigurator<TMessage>>? configure = null)
+        where TMessage : class;
 
     /// <summary>
     /// Configures message-specific middleware invoked after the consumer instance is obtained.
     /// </summary>
-    /// <typeparam name="T">The message type.</typeparam>
+    /// <typeparam name="TMessage">The message contract to configure.</typeparam>
     /// <param name="configure">The callback to configure the message pipeline.</param>
-    void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TConsumer, T>>? configure = null)
-        where T : class;
+    void ConsumerMessage<TMessage>(Action<IConsumerMessageConfigurator<TConsumer, TMessage>>? configure = null)
+        where TMessage : class;
 
     /// <summary>
     /// Applies bounded, strongly typed partition mutual exclusion to one message contract
     /// consumed by this consumer.
     /// </summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract partitioned by the policy.</typeparam>
     /// <typeparam name="TKey">The non-null partition-key type.</typeparam>
     /// <param name="partitionCount">The fixed number of mutual-exclusion partitions.</param>
     /// <param name="selector">The function that selects a partition key from each message context.</param>

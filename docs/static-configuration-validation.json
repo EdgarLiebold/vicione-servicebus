@@ -436,7 +436,7 @@
     {
       "id": "consumer-concurrency",
       "boundary": "registration",
-      "source": "src/ViciOne.ServiceBus/Consumers/Configuration/ConsumerSpecification.cs",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
       "test": "tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyConfigurationTests.cs",
       "testMethod": "TypedPartitionPolicy_CannotBeLayeredOrRegisteredTwice",
       "exception": "ConfigurationException",
