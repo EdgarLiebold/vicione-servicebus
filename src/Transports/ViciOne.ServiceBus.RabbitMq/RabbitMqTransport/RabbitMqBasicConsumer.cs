@@ -98,7 +98,7 @@ public class RabbitMqBasicConsumer :
 
         LogContext.Debug?.Log(
             "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}, {ReplyCode}-{ReplyText}",
-            _context.InputAddress, _consumerTag, ConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
+            _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
 
         TrySetConsumeCanceled();
 
@@ -137,7 +137,7 @@ public class RabbitMqBasicConsumer :
         {
             LogContext.Error?.Log(exception,
                 "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}",
-                _context.InputAddress, _consumerTag, ConcurrentDeliveryCount);
+                _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount);
 
             _channel.NotifyFaulted(exception, _context.InputAddress);
 
@@ -147,7 +147,7 @@ public class RabbitMqBasicConsumer :
         {
             LogContext.Error?.Log(exception,
                 "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}",
-                _context.InputAddress, _consumerTag, ConcurrentDeliveryCount);
+                _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount);
 
             _channel.NotifyFaulted(exception, _context.InputAddress);
 
@@ -200,7 +200,7 @@ public class RabbitMqBasicConsumer :
 
         LogContext.Debug?.Log(
             "Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}, {ReplyCode}-{ReplyText}",
-            _context.InputAddress, _consumerTag, ConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
+            _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
 
         TrySetConsumeCanceled();
 

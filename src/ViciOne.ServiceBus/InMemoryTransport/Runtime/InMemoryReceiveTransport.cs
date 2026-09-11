@@ -192,7 +192,7 @@ internal sealed class InMemoryReceiveTransport :
 
             await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, this).ConfigureAwait(false);
 
-            _context.LogConsumerCompleted(DeliveryCount, ConcurrentDeliveryCount);
+            _context.LogConsumerCompleted(DeliveryCount, MaxConcurrentDeliveryCount);
         }
     }
 }

@@ -70,7 +70,7 @@ public class RabbitMqConsumerFilter :
             RabbitMqDeliveryMetrics metrics = consumer;
             await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
-            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount, metrics.ConsumerTag);
+            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount, metrics.ConsumerTag);
         }
 
         await next.SendAsync(context).ConfigureAwait(false);

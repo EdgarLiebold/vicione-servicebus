@@ -11,6 +11,6 @@ internal interface IMessageSink<TMessage> :
     /// <summary>Delivers a message to this destination.</summary>
     /// <param name="context">The message delivery.</param>
     /// <param name="cancellationToken">The token that cancels this delivery attempt.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the sink has accepted the delivery.</returns>
     Task DeliverAsync(IMessageDeliveryContext<TMessage> context, CancellationToken cancellationToken = default);
 }

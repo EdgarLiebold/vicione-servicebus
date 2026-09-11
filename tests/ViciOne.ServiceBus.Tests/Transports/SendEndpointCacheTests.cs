@@ -17,8 +17,8 @@ public sealed class SendEndpointCacheTests
         TrackedTransportEndpoint endpoint = DispatchProxy.Create<TrackedTransportEndpoint, TrackedTransportEndpointProxy>();
         var tracker = (TrackedTransportEndpointProxy)(object)endpoint;
 
-        ISendEndpoint first = await cache.GetSendEndpointAsync("queue-a", _ => Task.FromResult<ISendEndpoint>(endpoint), TestContext.Current.CancellationToken);
-        ISendEndpoint second = await cache.GetSendEndpointAsync("queue-a", _ => throw new InvalidOperationException("The cached value must win."), TestContext.Current.CancellationToken);
+        ISendEndpoint first = await cache.GetSendEndpointAsync("queue-a", (_, _) => Task.FromResult<ISendEndpoint>(endpoint), TestContext.Current.CancellationToken);
+        ISendEndpoint second = await cache.GetSendEndpointAsync("queue-a", (_, _) => throw new InvalidOperationException("The cached value must win."), TestContext.Current.CancellationToken);
 
         Assert.Same(first, second);
         Assert.IsAssignableFrom<IAsyncDisposable>(cache);
@@ -33,6 +33,46 @@ public sealed class SendEndpointCacheTests
         await disposal.WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(1, tracker.DisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-ENDPOINT-CACHE-LIFETIME", "creation-uses-cache-owned-cancellation")]
+    public async Task CacheMiss_SeparatesCallerWaitCancellationFromOwnedCreationCancellationAsync()
+    {
+        var cache = new SendEndpointCache<string>();
+        var creationStarted = new TaskCompletionSource<CancellationToken>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var creationCanceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var callerCancellation = new CancellationTokenSource();
+        Task<ISendEndpoint> lookup = cache.GetSendEndpointAsync(
+            "queue-a",
+            async (_, cancellationToken) =>
+            {
+                creationStarted.TrySetResult(cancellationToken);
+                try
+                {
+                    await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+                    throw new InvalidOperationException("The cache-owned creation token was expected to be canceled.");
+                }
+                catch (OperationCanceledException)
+                {
+                    creationCanceled.TrySetResult();
+                    throw;
+                }
+            },
+            callerCancellation.Token);
+
+        CancellationToken creationToken = await creationStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
+        Assert.NotEqual(callerCancellation.Token, creationToken);
+        Assert.True(creationToken.CanBeCanceled);
+
+        callerCancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => lookup);
+        Assert.False(creationToken.IsCancellationRequested);
+
+        Task disposal = cache.DisposeAsync().AsTask();
+        await creationCanceled.Task.WaitAsync(TestContext.Current.CancellationToken);
+        await disposal.WaitAsync(TestContext.Current.CancellationToken);
+        Assert.True(creationToken.IsCancellationRequested);
     }
 
     [Fact]

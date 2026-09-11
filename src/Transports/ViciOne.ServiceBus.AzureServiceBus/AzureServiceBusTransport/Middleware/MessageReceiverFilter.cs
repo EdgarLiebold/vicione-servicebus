@@ -50,11 +50,11 @@ public class MessageReceiverFilter :
         }
         finally
         {
-            DeliveryMetrics metrics = receiver;
+            IDeliveryMetrics metrics = receiver;
 
             await _transportObserver.NotifyCompletedAsync(Context.InputAddress, metrics).ConfigureAwait(false);
 
-            Context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
+            Context.LogConsumerCompleted(metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount);
         }
 
         await next.SendAsync(context).ConfigureAwait(false);

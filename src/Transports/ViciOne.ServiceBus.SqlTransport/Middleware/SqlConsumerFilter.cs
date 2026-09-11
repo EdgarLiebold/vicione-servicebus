@@ -36,11 +36,11 @@ public class SqlConsumerFilter :
         }
         finally
         {
-            DeliveryMetrics metrics = receiver;
+            IDeliveryMetrics metrics = receiver;
 
             await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
-            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
+            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount);
         }
     }
 }

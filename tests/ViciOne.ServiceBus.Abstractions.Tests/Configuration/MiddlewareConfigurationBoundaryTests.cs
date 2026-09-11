@@ -221,7 +221,7 @@ public sealed class MiddlewareConfigurationBoundaryTests
     {
         public long DeliveryCount => 0;
 
-        public long ConcurrentDeliveryCount => 0;
+        public int MaxConcurrentDeliveryCount => 0;
 
         public Uri InputAddress { get; } = new("loopback://dependency");
 

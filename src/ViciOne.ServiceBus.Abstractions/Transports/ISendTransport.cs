@@ -17,15 +17,13 @@ public interface ISendTransport :
         where T : class;
 
     /// <summary>
-    /// Send a message to the transport. The transport creates the OldSendContext, and calls back to
-    /// allow the context to be modified to customize the message delivery.
-    /// The transport specifies the defaults for the message as configured, and then allows the
-    /// caller to modify the send context to include the required settings (durable, mandatory, etc.).
+    /// Sends a message after the transport creates its provider-specific send context and the supplied
+    /// pipeline applies delivery settings.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe invoked when sending a message, to do extra stuff.</param>
-    /// <param name="cancellationToken">Cancel the send operation (if possible).</param>
+    /// <param name="pipe">The pipeline that configures the send context before dispatch.</param>
+    /// <param name="cancellationToken">The token that cancels the send operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;

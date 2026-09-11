@@ -12,6 +12,6 @@ internal interface IMessageReceiver<in TMessage> :
     /// <summary>Delivers a message to the receiver.</summary>
     /// <param name="message">The message to deliver.</param>
     /// <param name="cancellationToken">The token that cancels delivery.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the receiver finishes the delivery.</returns>
     Task DeliverAsync(TMessage message, CancellationToken cancellationToken);
 }

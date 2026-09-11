@@ -939,7 +939,7 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ISendObserver
 TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ISendObserverConnector
   METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
 TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointCompleted
-  PROPERTY System.Int64 ConcurrentDeliveryCount { public-get;  }
+  PROPERTY System.Int32 MaxConcurrentDeliveryCount { public-get;  }
   PROPERTY System.Int64 DeliveryCount { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointEvent
   PROPERTY System.Uri InputAddress { public-get;  }
@@ -952,7 +952,7 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady
 TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointStopping
   PROPERTY System.Boolean Removed { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ReceiveTransportCompleted
-  PROPERTY System.Int64 ConcurrentDeliveryCount { public-get;  }
+  PROPERTY System.Int32 MaxConcurrentDeliveryCount { public-get;  }
   PROPERTY System.Int64 DeliveryCount { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.Observers.ReceiveTransportEvent
   PROPERTY System.Uri InputAddress { public-get;  }
@@ -19608,11 +19608,6 @@ TYPE interface public ViciOne.ServiceBus.Transactions.IBufferedBus
 TYPE interface public ViciOne.ServiceBus.Transformation.TransformPropertyContext<TProperty,TMessage>
   PROPERTY System.Boolean HasValue { public-get;  }
   PROPERTY TProperty Value { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.AddressEqualityComparer
-  CTOR public ViciOne.ServiceBus.Transports.AddressEqualityComparer()
-  FIELD public static readonly System.Collections.Generic.IEqualityComparer<System.Uri> Comparer
-  METHOD public virtual System.Boolean Equals(System.Uri x, System.Uri y)
-  METHOD public virtual System.Int32 GetHashCode(System.Uri obj)
 TYPE delegate public ViciOne.ServiceBus.Transports.AllowTransportHeader [sealed]
   CTOR public ViciOne.ServiceBus.Transports.AllowTransportHeader(System.Object object, System.IntPtr method)
   METHOD public virtual System.Boolean EndInvoke(System.IAsyncResult result)
@@ -19726,32 +19721,6 @@ TYPE class public ViciOne.ServiceBus.Transports.BusTopology [abstract]
   METHOD public virtual ViciOne.ServiceBus.Advanced.Topology.IMessageTopology<T> Message<T>()
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.IPublishTopology PublishTopology { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.ISendTopology SendTopology { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.CachedSendEndpoint<TKey>
-  CTOR public ViciOne.ServiceBus.Transports.CachedSendEndpoint<TKey>(TKey key, ViciOne.ServiceBus.ISendEndpoint endpoint)
-  EVENT System.Action Used { public-add; public-remove; }
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Type messageType, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  PROPERTY TKey Key { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ConsumeSendEndpoint [base=ViciOne.ServiceBus.Transports.SendEndpointProxy]
-  CTOR public ViciOne.ServiceBus.Transports.ConsumeSendEndpoint(ViciOne.ServiceBus.ISendEndpoint endpoint, ViciOne.ServiceBus.ConsumeContext context, System.Nullable<System.Guid> requestId = null)
-  METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> GetPipeProxy<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe = null)
-  METHOD public System.Threading.Tasks.Task SendAsync<T>(T message, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Transports.ConsumeSendPipeAdapter<TMessage> [base=ViciOne.ServiceBus.Transports.SendContextPipeAdapter<TMessage>]
-  CTOR public ViciOne.ServiceBus.Transports.ConsumeSendPipeAdapter<TMessage>(ViciOne.ServiceBus.ConsumeContext consumeContext, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Nullable<System.Guid> requestId)
-  METHOD protected System.Void Send(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-  METHOD protected System.Void Send<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
 TYPE class public ViciOne.ServiceBus.Transports.ConsumerAgent<TKey> [abstract,base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
   CTOR protected ViciOne.ServiceBus.Transports.ConsumerAgent<TKey>(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Collections.Generic.IEqualityComparer<TKey> equalityComparer = null)
   METHOD protected System.Threading.Tasks.Task DispatchAsync<TContext>(TKey key, TContext context, ViciOne.ServiceBus.Transports.ReceiveLockContext receiveLockContext)
@@ -19765,25 +19734,26 @@ TYPE class public ViciOne.ServiceBus.Transports.ConsumerAgent<TKey> [abstract,ba
   METHOD protected virtual System.Threading.Tasks.Task ActiveAndActualAgentsCompletedAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext context)
   PROPERTY System.Boolean IsGracefulShutdown { protected-get;  }
   PROPERTY System.Boolean IsIdle { protected-get;  }
-  PROPERTY System.Int32 ConcurrentDeliveryCount { public-get;  }
+  PROPERTY System.Int32 MaxConcurrentDeliveryCount { public-get;  }
   PROPERTY System.Int64 ActiveDispatchCount { protected-get;  }
   PROPERTY System.Int64 DeliveryCount { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ConsumerReceiveEndpointDispatcher<T>
+TYPE class public ViciOne.ServiceBus.Transports.ConsumerReceiveEndpointDispatcher<T> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ConsumerReceiveEndpointDispatcher<T>()
   METHOD public virtual ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher Create(ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcherFactory factory, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Transports.DefaultMessageNameFormatter
+TYPE class public ViciOne.ServiceBus.Transports.DefaultMessageNameFormatter [sealed]
   CTOR public ViciOne.ServiceBus.Transports.DefaultMessageNameFormatter(System.String genericArgumentSeparator, System.String genericTypeSeparator, System.String namespaceSeparator, System.String nestedTypeSeparator)
   CTOR public ViciOne.ServiceBus.Transports.DefaultMessageNameFormatter(System.String genericArgumentSeparator, System.String genericTypeSeparator, System.String namespaceSeparator, System.String nestedTypeSeparator, System.Boolean includeNamespace)
   METHOD public virtual System.String GetMessageName(System.Type type)
-TYPE class public ViciOne.ServiceBus.Transports.DelegatePartitionKeyFormatter<TMessage>
+TYPE class public ViciOne.ServiceBus.Transports.DelegatePartitionKeyFormatter<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.DelegatePartitionKeyFormatter<TMessage>(System.Func<ViciOne.ServiceBus.Advanced.SendContext<TMessage>,System.String> formatter)
   METHOD public virtual System.String FormatPartitionKey(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-TYPE class public ViciOne.ServiceBus.Transports.DelegateRoutingKeyFormatter<TMessage>
+TYPE class public ViciOne.ServiceBus.Transports.DelegateRoutingKeyFormatter<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.DelegateRoutingKeyFormatter<TMessage>(System.Func<ViciOne.ServiceBus.Advanced.SendContext<TMessage>,System.String> formatter)
   METHOD public virtual System.String FormatRoutingKey(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-TYPE interface public ViciOne.ServiceBus.Transports.DeliveryMetrics
-  PROPERTY System.Int32 ConcurrentDeliveryCount { public-get;  }
-  PROPERTY System.Int64 DeliveryCount { public-get;  }
+TYPE class public ViciOne.ServiceBus.Transports.EndpointAddressComparer [sealed]
+  METHOD public virtual System.Boolean Equals(System.Uri x, System.Uri y)
+  METHOD public virtual System.Int32 GetHashCode(System.Uri obj)
+  PROPERTY ViciOne.ServiceBus.Transports.EndpointAddressComparer Instance { public-get;  }
 TYPE class public ViciOne.ServiceBus.Transports.HostConfigurationRetryExtensions [static]
   METHOD public static System.Threading.Tasks.Task RetryAsync(ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, System.Func<System.Threading.Tasks.Task> factory, System.Threading.CancellationToken stoppingToken, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task RetryAsync(ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, System.Func<System.Threading.Tasks.Task> factory, System.TimeProvider timeProvider, System.Threading.CancellationToken stoppingToken, System.Threading.CancellationToken cancellationToken = null)
@@ -19798,9 +19768,12 @@ TYPE interface public ViciOne.ServiceBus.Transports.IBusInstance
 TYPE interface public ViciOne.ServiceBus.Transports.IBusInstance<TBus>
   PROPERTY TBus Bus { public-get;  }
   PROPERTY ViciOne.ServiceBus.Transports.IBusInstance BusInstance { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Transports.IDeliveryMetrics
+  PROPERTY System.Int32 MaxConcurrentDeliveryCount { public-get;  }
+  PROPERTY System.Int64 DeliveryCount { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Transports.IDispatchMetrics
-  EVENT ViciOne.ServiceBus.Transports.ZeroActiveDispatchHandler ZeroActivity { public-add; public-remove; }
-  METHOD public abstract ViciOne.ServiceBus.Transports.DeliveryMetrics GetMetrics()
+  EVENT ViciOne.ServiceBus.Transports.ZeroActivityHandler ZeroActivity { public-add; public-remove; }
+  METHOD public abstract ViciOne.ServiceBus.Transports.IDeliveryMetrics GetMetrics()
   PROPERTY System.Int32 ActiveDispatchCount { public-get;  }
   PROPERTY System.Int32 MaxConcurrentDispatchCount { public-get;  }
   PROPERTY System.Int64 DispatchCount { public-get;  }
@@ -19848,26 +19821,24 @@ TYPE interface public ViciOne.ServiceBus.Transports.IRiderCollection
   METHOD public abstract ViciOne.ServiceBus.Transports.IRider Get(System.String name)
 TYPE interface public ViciOne.ServiceBus.Transports.IRoutingKeyFormatter
   METHOD public abstract System.String FormatRoutingKey<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-TYPE interface public ViciOne.ServiceBus.Transports.ISendEndpointCache<TKey>
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync(TKey key, ViciOne.ServiceBus.Transports.SendEndpointFactory<TKey> factory, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Transports.ITransportSendEndpoint
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
 TYPE interface public ViciOne.ServiceBus.Transports.ITypeReceiveEndpointDispatcherFactory
   METHOD public abstract ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher Create(ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcherFactory factory, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Transports.JsonTransportHeaders
+TYPE class public ViciOne.ServiceBus.Transports.JsonTransportHeaders [sealed]
   CTOR public ViciOne.ServiceBus.Transports.JsonTransportHeaders(ViciOne.ServiceBus.Transports.IHeaderProvider provider)
   METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
   METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
   METHOD public virtual System.Collections.Generic.IEnumerator<ViciOne.ServiceBus.Advanced.HeaderValue> GetEnumerator()
   METHOD public virtual System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue)
   METHOD public virtual T Get<T>(System.String key, T defaultValue)
-TYPE class public ViciOne.ServiceBus.Transports.MessagePartitionKeyFormatter<TMessage>
+TYPE class public ViciOne.ServiceBus.Transports.MessagePartitionKeyFormatter<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.MessagePartitionKeyFormatter<TMessage>(ViciOne.ServiceBus.Transports.IPartitionKeyFormatter formatter)
   METHOD public virtual System.String FormatPartitionKey(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-TYPE class public ViciOne.ServiceBus.Transports.MessageRoutingKeyFormatter<TMessage>
+TYPE class public ViciOne.ServiceBus.Transports.MessageRoutingKeyFormatter<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.MessageRoutingKeyFormatter<TMessage>(ViciOne.ServiceBus.Transports.IRoutingKeyFormatter formatter)
   METHOD public virtual System.String FormatRoutingKey(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-TYPE class public ViciOne.ServiceBus.Transports.MultiBusInstance<TBus>
+TYPE class public ViciOne.ServiceBus.Transports.MultiBusInstance<TBus> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.MultiBusInstance<TBus>(TBus bus, ViciOne.ServiceBus.Transports.IBusInstance instance)
   METHOD public virtual System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public virtual TRider GetRider<TRider>()
@@ -19879,19 +19850,6 @@ TYPE class public ViciOne.ServiceBus.Transports.MultiBusInstance<TBus>
   PROPERTY ViciOne.ServiceBus.IBus Bus { public-get;  }
   PROPERTY ViciOne.ServiceBus.IBusControl BusControl { public-get;  }
   PROPERTY ViciOne.ServiceBus.Transports.IBusInstance BusInstance { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.PendingReceiveLockContext
-  CTOR public ViciOne.ServiceBus.Transports.PendingReceiveLockContext()
-  METHOD public System.Boolean Enqueue(ViciOne.ServiceBus.Transports.BaseReceiveContext receiveContext, ViciOne.ServiceBus.Transports.ReceiveLockContext receiveLockContext)
-  METHOD public System.Void Cancel()
-  METHOD public virtual System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task ValidateLockStatusAsync(System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY System.Boolean IsEmpty { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.PublishEndpointProvider
-  CTOR public ViciOne.ServiceBus.Transports.PublishEndpointProvider(ViciOne.ServiceBus.Transports.IPublishTransportProvider transportProvider, System.Uri hostAddress, ViciOne.ServiceBus.Observables.PublishObservable publishObservers, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, ViciOne.ServiceBus.Transports.IPublishPipe publishPipe, ViciOne.ServiceBus.Advanced.Topology.IPublishTopology publishTopology)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetPublishSendEndpointAsync<T>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
 TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpoint [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpoint(ViciOne.ServiceBus.Transports.IReceiveTransport transport, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context)
   METHOD public ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveEndpointObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveEndpointObserver observer)
@@ -19916,12 +19874,13 @@ TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpoint [sealed]
   PROPERTY ViciOne.ServiceBus.Transports.ReceiveEndpoint.State CurrentState { public-get;  }
 TYPE enum public ViciOne.ServiceBus.Transports.ReceiveEndpoint.State
   FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Completed = 3
-  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Faulted = 4
-  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Final = 5
+  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Faulted = 6
   FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Initial = 0
+  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Paused = 5
   FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Ready = 2
-  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Started = 1
+  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Starting = 1
+  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Stopped = 4
+  FIELD public const ViciOne.ServiceBus.Transports.ReceiveEndpoint.State Stopping = 3
 TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointCollection [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpointCollection()
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.EndpointHealthResult> CheckEndpointHealth()
@@ -19957,9 +19916,9 @@ TYPE interface public ViciOne.ServiceBus.Transports.ReceiveEndpointContext
   PROPERTY ViciOne.ServiceBus.ISendEndpointProvider SendEndpointProvider { public-get;  }
   PROPERTY ViciOne.ServiceBus.Logging.ILogContext LogContext { public-get;  }
   PROPERTY ViciOne.ServiceBus.Transports.IReceivePipe ReceivePipe { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher
+TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context)
-  EVENT ViciOne.ServiceBus.Transports.ZeroActiveDispatchHandler ZeroActivity { public-add; public-remove; }
+  EVENT ViciOne.ServiceBus.Transports.ZeroActivityHandler ZeroActivity { public-add; public-remove; }
   METHOD public virtual System.Threading.Tasks.Task DispatchAsync(System.Byte[] body, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> headers, System.Object[] payloads, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeMessageObserver<T>(ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver<T> observer)
@@ -19967,15 +19926,15 @@ TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Transports.DeliveryMetrics GetMetrics()
+  METHOD public virtual ViciOne.ServiceBus.Transports.IDeliveryMetrics GetMetrics()
   PROPERTY System.Int32 ActiveDispatchCount { public-get;  }
   PROPERTY System.Int32 MaxConcurrentDispatchCount { public-get;  }
   PROPERTY System.Int64 DispatchCount { public-get;  }
   PROPERTY System.Uri InputAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher<T>
+TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher<T> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher<T>(ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcherFactory factory)
   CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher<T>(ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcherFactory factory, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-  EVENT ViciOne.ServiceBus.Transports.ZeroActiveDispatchHandler ZeroActivity { public-add; public-remove; }
+  EVENT ViciOne.ServiceBus.Transports.ZeroActivityHandler ZeroActivity { public-add; public-remove; }
   METHOD public virtual System.Threading.Tasks.Task DispatchAsync(System.Byte[] body, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> headers, System.Object[] payloads, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeMessageObserver<T1>(ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver<T1> observer)
@@ -19983,26 +19942,22 @@ TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcher<T>
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Transports.DeliveryMetrics GetMetrics()
+  METHOD public virtual ViciOne.ServiceBus.Transports.IDeliveryMetrics GetMetrics()
   PROPERTY System.Int32 ActiveDispatchCount { public-get;  }
   PROPERTY System.Int32 MaxConcurrentDispatchCount { public-get;  }
   PROPERTY System.Int64 DispatchCount { public-get;  }
   PROPERTY System.Uri InputAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcherFactory
+TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcherFactory [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcherFactory(ViciOne.ServiceBus.Configuration.IBusRegistrationContext registration, ViciOne.ServiceBus.Transports.IBusInstance busInstance)
   METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
   METHOD public virtual ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher CreateReceiver(System.String queueName)
   METHOD public virtual ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher CreateReceiver(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext> configure)
   METHOD public virtual ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher CreateRegistrationReceiver(System.Type registrationType, System.String fallbackQueueName, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcherReceiveContext [sealed,base=ViciOne.ServiceBus.Transports.BaseReceiveContext]
-  CTOR public ViciOne.ServiceBus.Transports.ReceiveEndpointDispatcherReceiveContext(ViciOne.ServiceBus.Transports.ReceiveEndpointContext receiveEndpointContext, System.Byte[] body, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> headers, System.Object[] payloads)
-  PROPERTY ViciOne.ServiceBus.Advanced.MessageBody Body { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Transports.IHeaderProvider HeaderProvider { protected-get;  }
 TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointLoggingExtensions [static]
   METHOD public static System.Void LogCanceled<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.TimeSpan duration, System.String consumerType)
   METHOD public static System.Void LogConsumed<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.TimeSpan duration, System.String consumerType)
-  METHOD public static System.Void LogConsumerCompleted(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Int64 deliveryCount, System.Int32 concurrentDeliveryCount)
-  METHOD public static System.Void LogConsumerCompleted(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Int64 deliveryCount, System.Int32 concurrentDeliveryCount, System.String tag)
+  METHOD public static System.Void LogConsumerCompleted(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Int64 deliveryCount, System.Int32 maxConcurrentDeliveryCount)
+  METHOD public static System.Void LogConsumerCompleted(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Int64 deliveryCount, System.Int32 maxConcurrentDeliveryCount, System.String tag)
   METHOD public static System.Void LogFaulted(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.Exception exception)
   METHOD public static System.Void LogFaulted<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Exception exception)
   METHOD public static System.Void LogFaulted<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.TimeSpan duration, System.String consumerType, System.Exception exception)
@@ -20018,22 +19973,7 @@ TYPE interface public ViciOne.ServiceBus.Transports.ReceiveLockContext
   METHOD public abstract System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task FaultedAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task ValidateLockStatusAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Transports.ReceivePipeDispatcher
-  CTOR public ViciOne.ServiceBus.Transports.ReceivePipeDispatcher(ViciOne.ServiceBus.Transports.IReceivePipe receivePipe, ViciOne.ServiceBus.Observables.ReceiveObservable observers, ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, System.Uri inputAddress)
-  EVENT ViciOne.ServiceBus.Transports.ZeroActiveDispatchHandler ZeroActivity { public-add; public-remove; }
-  METHOD public virtual System.Threading.Tasks.Task DispatchAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, ViciOne.ServiceBus.Transports.ReceiveLockContext receiveLock, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeMessageObserver<T>(ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver<T> observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeObserver(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe, ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions options)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRequestPipe<T>(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
-  METHOD public virtual ViciOne.ServiceBus.Transports.DeliveryMetrics GetMetrics()
-  PROPERTY System.Int32 ActiveDispatchCount { public-get;  }
-  PROPERTY System.Int32 MaxConcurrentDispatchCount { public-get;  }
-  PROPERTY System.Int64 DispatchCount { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ReceiveTransport<TContext>
+TYPE class public ViciOne.ServiceBus.Transports.ReceiveTransport<TContext> [sealed]
   CTOR public ViciOne.ServiceBus.Transports.ReceiveTransport<TContext>(ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Func<ViciOne.ServiceBus.Transports.ITransportSupervisor<TContext>> supervisorFactory, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> transportPipe)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
@@ -20045,10 +19985,10 @@ TYPE class public ViciOne.ServiceBus.Transports.ReceiveTransport<TContext>
 TYPE interface public ViciOne.ServiceBus.Transports.ReceiveTransportHandle
   METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Transports.ReceiveTransportObserverExtensions [static]
-  METHOD public static System.Threading.Tasks.Task NotifyCompletedAsync(ViciOne.ServiceBus.Advanced.Observers.IReceiveTransportObserver observer, System.Uri inputAddress, ViciOne.ServiceBus.Transports.DeliveryMetrics metrics, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task NotifyCompletedAsync(ViciOne.ServiceBus.Advanced.Observers.IReceiveTransportObserver observer, System.Uri inputAddress, ViciOne.ServiceBus.Transports.IDeliveryMetrics metrics, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task NotifyFaultedAsync(ViciOne.ServiceBus.Advanced.Observers.IReceiveTransportObserver observer, System.Uri inputAddress, System.Exception exception, System.Boolean isTerminal, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task NotifyReadyAsync(ViciOne.ServiceBus.Advanced.Observers.IReceiveTransportObserver observer, System.Uri inputAddress, System.Boolean isStarted = true, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Transports.RiderCollection [base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
+TYPE class public ViciOne.ServiceBus.Transports.RiderCollection [sealed,base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
   CTOR public ViciOne.ServiceBus.Transports.RiderCollection()
   METHOD protected System.Threading.Tasks.Task StopAgentAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext context)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.EndpointHealthResult> CheckEndpointHealth()
@@ -20061,35 +20001,6 @@ TYPE class public ViciOne.ServiceBus.Transports.SendContextPipeAdapter<TMessage>
   METHOD protected abstract System.Void Send(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
   METHOD protected abstract System.Void Send<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Transports.SendEndpoint
-  CTOR public ViciOne.ServiceBus.Transports.SendEndpoint(ViciOne.ServiceBus.Transports.ISendTransport transport, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Uri destinationAddress, ViciOne.ServiceBus.Transports.ISendPipe sendPipe, ViciOne.ServiceBus.Advanced.ConnectHandle observerHandle = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Type messageType, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-TYPE class public ViciOne.ServiceBus.Transports.SendEndpointCache<TKey>
-  CTOR public ViciOne.ServiceBus.Transports.SendEndpointCache<TKey>()
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync(TKey key, ViciOne.ServiceBus.Transports.SendEndpointFactory<TKey> factory, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-TYPE delegate public ViciOne.ServiceBus.Transports.SendEndpointFactory<TKey> [sealed]
-  CTOR public ViciOne.ServiceBus.Transports.SendEndpointFactory<TKey>(System.Object object, System.IntPtr method)
-  METHOD public virtual System.IAsyncResult BeginInvoke(TKey key, System.AsyncCallback callback, System.Object object)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> EndInvoke(System.IAsyncResult result)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> Invoke(TKey key)
-TYPE class public ViciOne.ServiceBus.Transports.SendEndpointProvider
-  CTOR public ViciOne.ServiceBus.Transports.SendEndpointProvider(ViciOne.ServiceBus.Transports.ISendTransportProvider provider, ViciOne.ServiceBus.Observables.SendObservable observers, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, ViciOne.ServiceBus.Transports.ISendPipe sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync(System.Uri address, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
 TYPE class public ViciOne.ServiceBus.Transports.SendEndpointProxy [abstract]
   CTOR protected ViciOne.ServiceBus.Transports.SendEndpointProxy(ViciOne.ServiceBus.ISendEndpoint endpoint)
   METHOD protected abstract ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> GetPipeProxy<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe = null)
@@ -20106,7 +20017,7 @@ TYPE class public ViciOne.ServiceBus.Transports.SendEndpointProxy [abstract]
   METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
   PROPERTY ViciOne.ServiceBus.ISendEndpoint Endpoint { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.SendTransport<TContext> [base=ViciOne.ServiceBus.Advanced.Middleware.Supervisor]
+TYPE class public ViciOne.ServiceBus.Transports.SendTransport<TContext> [sealed,base=ViciOne.ServiceBus.Advanced.Middleware.Supervisor]
   CTOR public ViciOne.ServiceBus.Transports.SendTransport<TContext>(ViciOne.ServiceBus.Transports.SendTransportContext<TContext> context)
   METHOD protected System.Threading.Tasks.Task StopSupervisorAsync(ViciOne.ServiceBus.Advanced.Middleware.StopSupervisorContext context)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
@@ -20141,23 +20052,23 @@ TYPE class public ViciOne.ServiceBus.Transports.TransportBusInstance<TEndpointCo
   PROPERTY ViciOne.ServiceBus.IBus Bus { public-get;  }
   PROPERTY ViciOne.ServiceBus.IBusControl BusControl { public-get;  }
 TYPE class public ViciOne.ServiceBus.Transports.TransportLogMessages [static]
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String,System.String> DeleteSubscription
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> ConnectHost
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> ConnectedHost
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> CreateExchange
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> CreateQueue
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> CreateTopic
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> DeleteQueue
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> DeleteTopic
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> DisconnectHost
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> DisconnectedHost
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.String> StoppingSendTransport
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.Uri,System.String> ConnectSubscriptionEndpoint
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.Uri> ConnectReceiveEndpoint
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.Uri> CreatePublishTransport
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.Uri> CreateReceiveTransport
-  FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<System.Uri> CreateSendTransport
-TYPE class public ViciOne.ServiceBus.Transports.TransportPipeContextSupervisor<T> [base=ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor<T>]
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String,System.String> DeleteSubscription { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> ConnectHost { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> ConnectedHost { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> CreateExchange { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> CreateQueue { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> CreateTopic { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> DeleteQueue { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> DeleteTopic { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> DisconnectHost { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> DisconnectedHost { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.String> StoppingSendTransport { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.Uri,System.String> ConnectSubscriptionEndpoint { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.Uri> ConnectReceiveEndpoint { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.Uri> CreatePublishTransport { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.Uri> CreateReceiveTransport { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.LogMessage<System.Uri> CreateSendTransport { public-get;  }
+TYPE class public ViciOne.ServiceBus.Transports.TransportPipeContextSupervisor<T> [abstract,base=ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor<T>]
   CTOR protected ViciOne.ServiceBus.Transports.TransportPipeContextSupervisor<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory<T> factory)
   METHOD protected System.Threading.Tasks.Task StopSupervisorAsync(ViciOne.ServiceBus.Advanced.Middleware.StopSupervisorContext context)
   METHOD public virtual System.Void AddConsumeAgent<TAgent>(TAgent agent)
@@ -20166,8 +20077,8 @@ TYPE class public ViciOne.ServiceBus.Transports.TransportPipeContextSupervisor<T
   PROPERTY System.Threading.CancellationToken SendStopping { public-get;  }
 TYPE class public ViciOne.ServiceBus.Transports.TransportStartExtensions [static]
   METHOD public static System.Threading.Tasks.Task OnTransportStartupAsync<T>(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, ViciOne.ServiceBus.Transports.ITransportSupervisor<T> supervisor, System.Threading.CancellationToken cancellationToken)
-TYPE delegate public ViciOne.ServiceBus.Transports.ZeroActiveDispatchHandler [sealed]
-  CTOR public ViciOne.ServiceBus.Transports.ZeroActiveDispatchHandler(System.Object object, System.IntPtr method)
+TYPE delegate public ViciOne.ServiceBus.Transports.ZeroActivityHandler [sealed]
+  CTOR public ViciOne.ServiceBus.Transports.ZeroActivityHandler(System.Object object, System.IntPtr method)
   METHOD public virtual System.IAsyncResult BeginInvoke(System.AsyncCallback callback, System.Object object)
   METHOD public virtual System.Threading.Tasks.Task EndInvoke(System.IAsyncResult result)
   METHOD public virtual System.Threading.Tasks.Task Invoke()

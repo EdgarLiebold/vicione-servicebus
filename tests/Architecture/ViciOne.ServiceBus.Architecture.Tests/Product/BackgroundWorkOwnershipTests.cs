@@ -56,7 +56,7 @@ public sealed class BackgroundWorkOwnershipTests
             Assert.DoesNotContain("Task.Run(", source, StringComparison.Ordinal);
         }
 
-        string consumerAgent = Source("src/ViciOne.ServiceBus/Transports/ConsumerAgent.cs");
+        string consumerAgent = Source("src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs");
         Assert.DoesNotContain("Task.Run(", consumerAgent, StringComparison.Ordinal);
         Assert.DoesNotContain(".ContinueWith(", consumerAgent, StringComparison.Ordinal);
         Assert.Contains("_consumeTaskObserver = ObserveConsumeTaskAsync(consumeTask);", consumerAgent, StringComparison.Ordinal);

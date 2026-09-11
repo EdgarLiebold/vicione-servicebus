@@ -69,14 +69,14 @@ public class ActiveMqConsumerFilter :
         }
         finally
         {
-            DeliveryMetrics[] consumerMetrics = actualConsumers.Cast<DeliveryMetrics>().ToArray();
+            IDeliveryMetrics[] consumerMetrics = actualConsumers.Cast<IDeliveryMetrics>().ToArray();
 
-            DeliveryMetrics metrics = new CombinedDeliveryMetrics(consumerMetrics.Sum(x => x.DeliveryCount),
-                consumerMetrics.Max(x => x.ConcurrentDeliveryCount));
+            IDeliveryMetrics metrics = new CombinedDeliveryMetrics(consumerMetrics.Sum(x => x.DeliveryCount),
+                consumerMetrics.Max(x => x.MaxConcurrentDeliveryCount));
 
             await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
-            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
+            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount);
 
             await executor.DisposeAsync().ConfigureAwait(false);
         }
@@ -191,15 +191,15 @@ public class ActiveMqConsumerFilter :
 
 
     class CombinedDeliveryMetrics :
-        DeliveryMetrics
+        IDeliveryMetrics
     {
         public CombinedDeliveryMetrics(long deliveryCount, int concurrentDeliveryCount)
         {
             DeliveryCount = deliveryCount;
-            ConcurrentDeliveryCount = concurrentDeliveryCount;
+            MaxConcurrentDeliveryCount = concurrentDeliveryCount;
         }
 
         public long DeliveryCount { get; }
-        public int ConcurrentDeliveryCount { get; }
+        public int MaxConcurrentDeliveryCount { get; }
     }
 }

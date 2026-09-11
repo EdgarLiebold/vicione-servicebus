@@ -10,7 +10,7 @@ public sealed class PayloadAdmissionArchitectureTests
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ARCHITECTURE", "common-physical-boundary-precedes-observers-and-provider")]
     public void CommonPhysicalSendBoundary_AdmitsBeforeObserversAndProviderIo()
     {
-        string source = Source("src/ViciOne.ServiceBus/Transports/SendTransport.cs");
+        string source = Source("src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs");
         int admission = source.IndexOf("transportContext.ApplyPayloadAdmission(sendContext)", StringComparison.Ordinal);
         Assert.True(admission >= 0, "The common physical send boundary must apply payload admission.");
 
@@ -74,7 +74,7 @@ public sealed class PayloadAdmissionArchitectureTests
         Assert.Equal(
             [
                 "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
-                "src/ViciOne.ServiceBus/Transports/SendTransport.cs",
+                "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
             ],
             owners);
     }

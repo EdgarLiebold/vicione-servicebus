@@ -7,6 +7,6 @@ public interface ReceiveTransportCompleted :
     /// <summary>Gets the number of deliveries accepted by the transport.</summary>
     long DeliveryCount { get; }
 
-    /// <summary>Gets the deliveries still executing when transport completion was observed.</summary>
-    long ConcurrentDeliveryCount { get; }
+    /// <summary>Gets the highest number of deliveries observed concurrently.</summary>
+    int MaxConcurrentDeliveryCount { get; }
 }

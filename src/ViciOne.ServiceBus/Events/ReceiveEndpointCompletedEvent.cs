@@ -21,8 +21,8 @@ internal sealed class ReceiveEndpointCompletedEvent :
     public Uri InputAddress => _completed.InputAddress;
     /// <summary>Gets the completed transport's delivery count.</summary>
     public long DeliveryCount => _completed.DeliveryCount;
-    /// <summary>Gets the completed transport's remaining concurrent delivery count.</summary>
-    public long ConcurrentDeliveryCount => _completed.ConcurrentDeliveryCount;
+    /// <summary>Gets the completed transport's peak concurrent delivery count.</summary>
+    public int MaxConcurrentDeliveryCount => _completed.MaxConcurrentDeliveryCount;
 
     /// <summary>Gets the endpoint that owns the completed transport.</summary>
     public IReceiveEndpoint ReceiveEndpoint { get; }

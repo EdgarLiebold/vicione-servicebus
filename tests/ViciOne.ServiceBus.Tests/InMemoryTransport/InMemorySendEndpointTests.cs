@@ -3,12 +3,56 @@ using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.InMemoryTransport;
 
 public sealed class InMemorySendEndpointTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-PIPELINE", "dual-contract-pipe-executes-each-contract-once")]
+    public async Task PipeImplementingTypedAndUntypedContracts_ExecutesEachCompositionStageOnceAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = new InMemoryTestHarness($"send-pipe-contract-{NewId.NextGuid():N}")
+        {
+            TestTimeout = timeout,
+            TestInactivityTimeout = timeout,
+        };
+        var delivered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
+            endpoint.Handler<PipeContractMessage>(_ =>
+            {
+                delivered.TrySetResult();
+                return Task.CompletedTask;
+            });
+        var pipe = new DualContractSendPipe();
+        bool started = false;
+
+        try
+        {
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            started = true;
+
+            await harness.InputQueueSendEndpoint.SendAsync(
+                new PipeContractMessage(),
+                (IPipe<SendContext<PipeContractMessage>>)pipe,
+                cancellationToken);
+            await delivered.Task.WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal(2, pipe.InvocationCount);
+            Assert.Equal(1, pipe.UntypedInvocationCount);
+            Assert.Equal(1, pipe.TypedInvocationCount);
+        }
+        finally
+        {
+            if (started)
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("north")]
@@ -162,11 +206,46 @@ public sealed class InMemorySendEndpointTests
 
     private sealed record TransportPropertyMessage(string Value);
 
+    private sealed class PipeContractMessage;
+
     private sealed record TransportPropertyObservation(
         string ActivitySystem,
         IDictionary<string, object>? Properties);
 
     private sealed record SendObservation(int Sequence, Guid? RequestId, string Contract);
+
+    private sealed class DualContractSendPipe :
+        IPipe<SendContext<PipeContractMessage>>,
+        ISendContextPipe
+    {
+        private int _typedInvocationCount;
+        private int _untypedInvocationCount;
+
+        public int InvocationCount => TypedInvocationCount + UntypedInvocationCount;
+        public int TypedInvocationCount => Volatile.Read(ref _typedInvocationCount);
+        public int UntypedInvocationCount => Volatile.Read(ref _untypedInvocationCount);
+
+        public Task SendAsync(SendContext<PipeContractMessage> context)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            Interlocked.Increment(ref _typedInvocationCount);
+            return Task.CompletedTask;
+        }
+
+        public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
+            where T : class
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            cancellationToken.ThrowIfCancellationRequested();
+            Interlocked.Increment(ref _untypedInvocationCount);
+            return Task.CompletedTask;
+        }
+
+        public void Probe(ProbeContext context)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+        }
+    }
 
     private sealed class SendRecorder(int expectedCount)
     {
