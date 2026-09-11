@@ -194,7 +194,7 @@ internal sealed class HubLifetimeManagerConsumerFactory<TConsumer, THub>(
 
         try
         {
-            await next.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, consumer))
+            await next.SendAsync(new ConsumerContext<TMessage>(context, consumer))
                 .ConfigureAwait(false);
         }
         finally
@@ -205,6 +205,14 @@ internal sealed class HubLifetimeManagerConsumerFactory<TConsumer, THub>(
 
     public void Probe(ProbeContext context) =>
         context.CreateConsumerFactoryScope<TConsumer>("signalRHubLifetimeManagerFactory");
+
+    private sealed class ConsumerContext<TMessage>(ConsumeContext<TMessage> context, TConsumer consumer) :
+        ConsumeContextScope<TMessage>(context),
+        ConsumerConsumeContext<TConsumer, TMessage>
+        where TMessage : class
+    {
+        public TConsumer Consumer { get; } = consumer;
+    }
 }
 
 internal sealed class BusHubLifetimeScopeProvider(IBus bus) : IHubLifetimeScopeProvider

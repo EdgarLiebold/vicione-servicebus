@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Consumer;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Logging;
 

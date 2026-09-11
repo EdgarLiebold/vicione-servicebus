@@ -2,6 +2,7 @@ using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Testing;

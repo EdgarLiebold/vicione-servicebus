@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Saga;
+using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 

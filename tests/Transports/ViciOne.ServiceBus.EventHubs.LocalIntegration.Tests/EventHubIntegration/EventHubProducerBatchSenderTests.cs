@@ -1,6 +1,9 @@
+using System.Net.Mime;
 using System.Runtime.Serialization;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
@@ -103,7 +106,7 @@ public sealed class EventHubProducerBatchSenderTests
         var producer = new RecordingProducerContext();
         EventHubMessageSendContext<TestMessage> invalid =
             CreateContext(2, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken);
-        invalid.Serializer = null!;
+        invalid.Serializer = new RejectingMessageSerializer();
         EventHubMessageSendContext<TestMessage>[] contexts =
         [
             CreateContext(1, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken),
@@ -183,6 +186,15 @@ public sealed class EventHubProducerBatchSenderTests
     private sealed record TestMessage(int Value);
 
     private sealed record Route(string? PartitionId, string? PartitionKey);
+
+    private sealed class RejectingMessageSerializer : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/vnd.vicione.rejected-event");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context)
+            where T : class =>
+            throw new SerializationException("The Event Hubs message could not be serialized.");
+    }
 
     private sealed class RecordingProducerContext :
         BasePipeContext,

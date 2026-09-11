@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox.InMemory;
 

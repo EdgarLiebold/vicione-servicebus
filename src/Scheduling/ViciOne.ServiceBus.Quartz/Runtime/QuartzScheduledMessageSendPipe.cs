@@ -7,6 +7,7 @@ using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Quartz.Runtime;
 

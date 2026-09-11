@@ -62,6 +62,8 @@ public sealed class DeferredBusRegistrationTests
             ["ViciOne.ServiceBus.Transactions.DeferredBus"] = false,
             ["ViciOne.ServiceBus.Transactions.DeferredBusPublishEndpointProvider"] = true,
             ["ViciOne.ServiceBus.Transactions.DeferredBusSendEndpoint"] = true,
+            ["ViciOne.ServiceBus.Transactions.SystemTransactionContext"] = true,
+            ["ViciOne.ServiceBus.Transactions.SystemTransactionContextFactory"] = true,
         };
         Type[] implementationTypes = assembly.GetTypes()
             .Where(type => !type.IsNested

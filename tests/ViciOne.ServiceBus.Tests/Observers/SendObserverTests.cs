@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.Serialization;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Observers;
@@ -77,7 +78,7 @@ public sealed class SendObserverTests
             SerializationException failure = await Assert.ThrowsAsync<SerializationException>(() =>
                 harness.InputQueueSendEndpoint.SendAsync(
                     message,
-                    context => context.Serializer = null!,
+                    context => context.Serializer = new RejectingMessageSerializer("The sent message could not be serialized."),
                     cancellationToken));
 
             AssertFaultedSend(busObserver.Events, message, harness.InputQueueAddress, failure);
@@ -105,7 +106,7 @@ public sealed class SendObserverTests
             {
                 await context.Advanced().RespondAsync(
                     new ResponseMessage(context.Message.CorrelationId),
-                    sendContext => sendContext.Serializer = null!);
+                    sendContext => sendContext.Serializer = new RejectingMessageSerializer("The response could not be serialized."));
             }
             catch (Exception exception)
             {

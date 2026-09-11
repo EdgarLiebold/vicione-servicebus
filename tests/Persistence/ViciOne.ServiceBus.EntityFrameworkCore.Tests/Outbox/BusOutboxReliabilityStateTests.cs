@@ -10,6 +10,7 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;

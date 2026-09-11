@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 

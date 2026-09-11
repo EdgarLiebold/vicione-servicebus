@@ -10,6 +10,7 @@ using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;

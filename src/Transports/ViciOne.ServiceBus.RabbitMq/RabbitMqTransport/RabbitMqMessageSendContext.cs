@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 

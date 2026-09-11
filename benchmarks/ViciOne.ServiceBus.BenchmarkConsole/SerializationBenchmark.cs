@@ -4,6 +4,7 @@ using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessagePack;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.BenchmarkConsole;
 

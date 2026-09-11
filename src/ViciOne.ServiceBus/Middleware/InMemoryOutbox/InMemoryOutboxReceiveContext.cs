@@ -1,4 +1,5 @@
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 

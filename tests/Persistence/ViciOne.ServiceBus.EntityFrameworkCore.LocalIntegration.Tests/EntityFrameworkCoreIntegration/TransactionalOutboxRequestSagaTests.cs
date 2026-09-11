@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Testing;
@@ -106,8 +107,8 @@ public sealed class TransactionalOutboxRequestSagaTests
 
         Assert.Equal(request.CorrelationId, response.Message.CorrelationId);
         Assert.Equal(request.CorrelationId, observation.CorrelationId);
-        Assert.Equal(typeof(CorrelationIdConsumeContextProxy<StartRequestSaga>), observation.PublishEndpointType);
-        Assert.Equal(typeof(CorrelationIdConsumeContextProxy<StartRequestSaga>), observation.SendEndpointProviderType);
+        Assert.Equal("ViciOne.ServiceBus.Middleware.CorrelationIdConsumeContextProxy`1", observation.PublishEndpointType.GetGenericTypeDefinition().FullName);
+        Assert.Same(observation.PublishEndpointType, observation.SendEndpointProviderType);
     }
 
     [Fact]

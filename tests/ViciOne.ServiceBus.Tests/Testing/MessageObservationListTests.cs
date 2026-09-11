@@ -4,6 +4,7 @@ using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Testing.Internal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Testing;

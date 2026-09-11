@@ -1,6 +1,7 @@
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 

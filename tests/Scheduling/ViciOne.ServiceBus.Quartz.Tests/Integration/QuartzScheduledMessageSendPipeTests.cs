@@ -12,6 +12,7 @@ using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Quartz.Runtime;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Quartz.Tests.Integration;

@@ -1,6 +1,7 @@
 using System.Transactions;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transactions;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 

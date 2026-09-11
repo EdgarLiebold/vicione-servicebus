@@ -3,6 +3,7 @@ using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.SqlTransport.Tests.Scheduling;

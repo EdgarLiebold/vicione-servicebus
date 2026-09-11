@@ -2,6 +2,7 @@ using System;
 using BenchmarkDotNet.Attributes;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.BenchmarkConsole;
 

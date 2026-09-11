@@ -6,6 +6,7 @@ using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration;

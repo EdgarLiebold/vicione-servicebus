@@ -11,6 +11,7 @@ using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
+using ViciOne.ServiceBus.Tests.Serialization;
 using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
 
@@ -242,7 +243,7 @@ public sealed class MessagePipelineMetricsTests
             ISendEndpoint endpoint = await harness.GetHandlerEndpointAsync<ObservedMessage>(TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
             await Assert.ThrowsAsync<SerializationException>(() => endpoint.SendAsync(
                 new ObservedMessage("faulted-send"),
-                context => context.Serializer = null!,
+                context => context.Serializer = new RejectingMessageSerializer("The observed send could not be serialized."),
                 TestCancellationToken));
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.SentMessages,
@@ -894,7 +895,7 @@ public sealed class MessagePipelineMetricsTests
                 configuration.AddHandler<OutboxFaultRequest>((ConsumeContext<OutboxFaultRequest> context) =>
                     context.Advanced().PublishAsync(
                         new OutboxResult(context.Message.Value),
-                        sendContext => sendContext.Serializer = null!,
+                        sendContext => sendContext.Serializer = new RejectingMessageSerializer("The outbox message could not be serialized."),
                         context.CancellationToken));
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });

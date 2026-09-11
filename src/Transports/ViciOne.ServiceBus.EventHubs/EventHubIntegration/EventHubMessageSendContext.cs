@@ -1,5 +1,6 @@
 using System.Threading;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 

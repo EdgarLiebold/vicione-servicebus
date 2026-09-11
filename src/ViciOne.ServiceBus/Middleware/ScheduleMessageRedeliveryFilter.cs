@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Middleware;
 

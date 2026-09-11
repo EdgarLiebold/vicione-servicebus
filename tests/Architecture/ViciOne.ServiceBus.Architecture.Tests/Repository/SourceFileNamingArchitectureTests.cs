@@ -140,6 +140,53 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "context-runtime-files-belong-to-owning-capabilities")]
+    public void ContextRuntimeFiles_AreOwnedByTheirCapabilities()
+    {
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            ("src/ViciOne.ServiceBus/Batching/Contexts", "ViciOne.ServiceBus.Batching", ["BatchConsumeContext.cs"]),
+            ("src/ViciOne.ServiceBus/Consumer/Contexts", "ViciOne.ServiceBus.Consumer",
+                ["ConsumerConsumeContextProxy.cs", "ConsumerConsumeContextScope.cs"]),
+            ("src/ViciOne.ServiceBus/Context/Activities", "ViciOne.ServiceBus.Context",
+                ["ActivityContextProxy.cs", "ActivityContextScope.cs", "CompensateContextProxy.cs", "CompensateContextScope.cs",
+                    "ExecuteContextProxy.cs", "ExecuteContextScope.cs", "HostCompensateActivityContext.cs", "HostExecuteActivityContext.cs"]),
+            ("src/ViciOne.ServiceBus/Context/Consumption", "ViciOne.ServiceBus.Context",
+                ["BaseConsumeContext.cs", "ConsumeContextProxy.cs", "ConsumeContextScope.cs", "DeserializerConsumeContext.cs",
+                    "MessageConsumeContext.cs"]),
+            ("src/ViciOne.ServiceBus.Mediator/Contexts", "ViciOne.ServiceBus.Mediator.Contexts",
+                ["MediatorConsumeContext.cs", "MediatorSendMessageContext.cs"]),
+            ("src/ViciOne.ServiceBus/Middleware/Contexts", "ViciOne.ServiceBus.Middleware",
+                ["BindContextProxy.cs", "CorrelationIdConsumeContextProxy.cs"]),
+            ("src/ViciOne.ServiceBus/RetryPolicies/Contexts", "ViciOne.ServiceBus.RetryPolicies",
+                ["RetryCompensateContext.cs", "RetryExecuteContext.cs"]),
+            ("src/ViciOne.ServiceBus/Scheduling/Contexts", "ViciOne.ServiceBus.Scheduling",
+                ["ConsumeMessageSchedulerContext.cs", "ScheduleMessageRedeliveryContext.cs"]),
+            ("src/ViciOne.ServiceBus/Transactions/Contexts", "ViciOne.ServiceBus.Transactions",
+                ["IManagedTransactionContext.cs", "ITransactionContextFactory.cs", "SystemTransactionContext.cs",
+                    "SystemTransactionContextFactory.cs"]),
+            ("src/ViciOne.ServiceBus/Transports/Receiving", "ViciOne.ServiceBus.Transports",
+                ["NoLockReceiveContext.cs", "ReceiveContextProxy.cs", "TransportReceiveContext.cs"]),
+            ("src/ViciOne.ServiceBus/Transports/Sending", "ViciOne.ServiceBus.Transports",
+                ["MessageSendContext.cs", "TransportSendContext.cs"]),
+        ];
+
+        foreach ((string relativeDirectory, string expectedNamespace, string[] files) in groups)
+        {
+            string directory = Path.Combine(RepositoryLayout.Root, relativeDirectory);
+            Assert.All(files, file =>
+            {
+                string path = Path.Combine(directory, file);
+                Assert.True(File.Exists(path), RepositoryLayout.RelativeToRoot(path));
+                Assert.Equal([expectedNamespace], ReadNamespaces(path, TestContext.Current.CancellationToken));
+            });
+        }
+
+        string formerFlatDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Context");
+        Assert.Empty(Directory.EnumerateFiles(formerFlatDirectory, "*.cs", SearchOption.TopDirectoryOnly));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "core-project-root-contains-only-project-infrastructure")]
     public void CoreProjectRoot_ContainsOnlyProjectInfrastructure()
     {

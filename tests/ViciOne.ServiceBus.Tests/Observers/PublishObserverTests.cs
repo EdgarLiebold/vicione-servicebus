@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.Serialization;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Observers;
@@ -89,7 +90,7 @@ public sealed class PublishObserverTests
             SerializationException failure = await Assert.ThrowsAsync<SerializationException>(() =>
                 harness.Bus.PublishAsync(
                     message,
-                    context => context.Serializer = null!,
+                    context => context.Serializer = new RejectingMessageSerializer("The published message could not be serialized."),
                     cancellationToken));
 
             PublishObservation[] events = publishObserver.Events;

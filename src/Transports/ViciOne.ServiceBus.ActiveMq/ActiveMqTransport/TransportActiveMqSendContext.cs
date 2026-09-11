@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Apache.NMS;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 

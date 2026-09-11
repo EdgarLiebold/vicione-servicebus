@@ -14,6 +14,7 @@ using ViciOne.ServiceBus.Providers.Configuration;
 using ViciOne.ServiceBus.Quartz.Runtime;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Quartz.Consumers;
 
