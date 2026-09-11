@@ -477,3 +477,55 @@ attack into semantic protection; its final focused profile passes 30 tests on an
 The final architecture assembly passes 289 tests and the complete sequential Unit solution passes
 5,323 tests with no failures or skips. The protected `review/` and untracked `TestResults/` trees
 remain outside the iteration commit.
+
+## Iteration 79 outcome
+
+Make the abstractions project root a strict application-contract boundary. Separate the
+consume-scoped outgoing implementation into its owning context capability, prove all five outgoing
+operations and their argument/dependency boundaries directly, pin the named conservative message
+policy, and retain every public feature while making file, type, namespace, and comment ownership
+deterministic.
+
+## Iteration 79 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-SOURCE-NAVIGATION` | exact abstractions project-root files and namespaces | architecture tests | root contains only reviewed application contracts and project infrastructure |
+| `REQ-VSB-SOURCE-NAVIGATION` | public outgoing contract versus internal context implementation | architecture tests | exact declared type identities in `IOutgoingMessages.cs` and `Context/ConsumeContextOutgoingMessages.cs` |
+| `REQ-VSB-APPLICATION-CONSUME-OUTGOING` | routed and explicit sends | core context tests | exact route, endpoint resolution, message/options/token forwarding, and dependency-call counts |
+| `REQ-VSB-APPLICATION-CONSUME-OUTGOING` | default and configured publish | core context tests | exact publish endpoint resolution, message/options/token forwarding, and dependency-call counts |
+| `REQ-VSB-APPLICATION-CONSUME-OUTGOING` | scheduled send and unavailable scheduler | core context tests | exact destination/due time/message/token/result identity and fail-before-scheduler behavior |
+| `REQ-VSB-APPLICATION-CONSUME-OUTGOING` | constructor and every public null boundary | core context tests | exact parameter name and zero downstream work |
+| `REQ-VSB-MESSAGE-LIMITS` | named conservative policy | configuration tests | exact five values and stable singleton identity |
+| `REQ-VSB-SOURCE-COMMENTS` | all comments in the bounded root scope and moved implementation | manual review plus hygiene tests | comments describe only current behavior, completion, ownership, and failure semantics |
+
+## Iteration 79 mutation obligations
+
+- Reinsert an implementation into an application contract file or add an unreviewed root file: the
+  exact source-navigation inventory must fail on the changed path or declared type set.
+- Ignore the configured route, alter the routed destination, or resolve/send more than once: the
+  routed-send test must fail on exact route, address, message, token, or call count.
+- Drop explicit options or replace either caller token: the direct send/publish tests must fail on
+  reference identity or token equality.
+- Bypass default publication or invoke a downstream provider for a null message: the publish
+  partition must fail on exact call count or boundary exception.
+- Ignore the consume-context scheduler, alter due time/destination/message/token, or manufacture a
+  different result: the scheduled-send test must fail on exact forwarding and result identity.
+- Remove one null guard or move it after dependency work: the boundary matrix must fail on exact
+  parameter name or nonzero dependency calls.
+- Change one value of `MessageLimits.Conservative` or allocate a replacement per access: the named
+  policy contract must fail.
+- Restore generic task-filler wording or stale ownership language in the bounded comments: manual
+  review and the repository comment-hygiene gate must reject the changed source.
+
+## Iteration 79 completion
+
+The fifteen original Abstractions application-root files and the project definition were read
+manually in full. The root is now an exact application-contract boundary: the internal consume
+outgoing implementation moved to `Context`, all five operations and their argument/dependency
+boundaries have direct tests, the real InMemory journey covers routed and default operations, and
+the conservative message policy is pinned exactly. Seven isolated product/structure mutations were
+killed and restored. The final Release build has no warnings or errors; the complete sequential
+Unit solution passes 5,332 tests, the Async guard passes 30 tests, and fresh package/API validation
+preserves the 19,773-line public contract. The overall goal remains open; iteration 80 continues
+with the Abstractions `Context` owner.

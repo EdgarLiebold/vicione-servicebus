@@ -405,6 +405,56 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "abstractions-root-is-an-application-contract-boundary")]
+    public void AbstractionsProjectRoot_ContainsOnlyApplicationContractsAndProjectInfrastructure()
+    {
+        string abstractionsRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Abstractions");
+        string[] expectedRootFiles =
+        [
+            "ConsumeContext.cs",
+            "GlobalUsings.cs",
+            "IBus.cs",
+            "IBusControl.cs",
+            "IConsumer.cs",
+            "IOutgoingMessages.cs",
+            "IPublishEndpoint.cs",
+            "ISendEndpoint.cs",
+            "ISendEndpointProvider.cs",
+            "MessageHeaders.cs",
+            "MessageLimits.cs",
+            "PublishOptions.cs",
+            "RequestOptions.cs",
+            "ScheduleOptions.cs",
+            "SendOptions.cs",
+            "ViciOne.ServiceBus.Abstractions.csproj",
+            "ViciOne.ServiceBus.Abstractions.csproj.DotSettings",
+            "packages.lock.json",
+        ];
+
+        Assert.Equal(
+            expectedRootFiles,
+            Directory.EnumerateFiles(abstractionsRoot, "*", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Order(StringComparer.Ordinal));
+
+        string[] applicationContracts = expectedRootFiles
+            .Where(static file => file.EndsWith(".cs", StringComparison.Ordinal) && file != "GlobalUsings.cs")
+            .ToArray();
+        Assert.All(applicationContracts, file => Assert.Equal(
+            ["ViciOne.ServiceBus"],
+            ReadNamespaces(Path.Combine(abstractionsRoot, file), TestContext.Current.CancellationToken)));
+
+        SourceFileInspection outgoingContract = Inspect(Path.Combine(abstractionsRoot, "IOutgoingMessages.cs"));
+        Assert.Equal(["public interface IOutgoingMessages`0"], outgoingContract.TypeIdentities);
+
+        string implementationPath = Path.Combine(abstractionsRoot, "Context", "ConsumeContextOutgoingMessages.cs");
+        Assert.True(File.Exists(implementationPath), RepositoryLayout.RelativeToRoot(implementationPath));
+        Assert.Equal(["ViciOne.ServiceBus.Context"], ReadNamespaces(implementationPath, TestContext.Current.CancellationToken));
+        Assert.Equal(["internal class ConsumeContextOutgoingMessages`0"], Inspect(implementationPath).TypeIdentities);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "client-files-have-explicit-responsibility-owners")]
     public void ClientFiles_AreGroupedByPublicFactoryContextsEndpointsAndRequestMechanics()
     {

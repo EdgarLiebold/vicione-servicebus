@@ -337,3 +337,48 @@ architecture profile passes 289 tests, and the final sequential Unit solution pa
 with no failures or skips. A transient SQL test failure was traced to a non-atomic counter in its
 concurrent recording spy, corrected with interlocked access, and then passed 20 repetitions, the
 126-test SQL module, and the complete solution.
+
+## Confirmed iteration-79 abstractions-root findings
+
+The fifteen non-generated C# files directly in `src/ViciOne.ServiceBus.Abstractions` and the owning
+project file were read manually before implementation. They comprise the intended application
+contracts (`IBus`, `IBusControl`, `IConsumer`, `IOutgoingMessages`, send/publish endpoints and
+provider, `ConsumeContext`, message headers and limits, and the four application option records)
+plus `GlobalUsings.cs`. This is a project root, not a duplicate `ViciOne.ServiceBus` source folder.
+Keeping these application-layer contracts at that root agrees with the reviewed five-layer API
+model and gives callers one stable root namespace.
+
+1. `IOutgoingMessages.cs` violates that ownership boundary by combining the public application
+   contract with the internal `ConsumeContextOutgoingMessages` runtime implementation. The
+   implementation belongs in the existing `Context` capability and `ViciOne.ServiceBus.Context`
+   namespace; the contract file should declare only its interface.
+2. The general source-file naming gate only requires one matching primary type. It therefore
+   accepts a correctly named contract file containing an unrelated secondary implementation. An
+   exact abstractions-root inventory and type-ownership assertion is required to prevent recurrence.
+3. The public `IOutgoingMessages` contract has five operations. Existing direct evidence exercises
+   only explicit send and configured publish in one in-memory journey. Routed send, default publish,
+   scheduled send, exact cancellation forwarding, dependency-call counts, missing route/scheduler,
+   and all null argument boundaries lack direct ownership tests.
+4. `MessageLimits.Conservative` is a public named policy used throughout the repository, but no test
+   pins all five values or proves that the published singleton is stable. Configuration tests cover
+   all eight invalid invariant classes and binding/duplicate-owner behavior, not the named policy's
+   exact contract.
+5. The other root contracts, type groupings, names, namespaces, and comments match their current
+   behavior. `ConsumeContext` and `IConsumer` are cohesive generic/non-generic interface families;
+   `MessageHeaders` is a deliberate constant catalog whose exact values are already in the packed API
+   baseline; and the option records are covered by snapshot and forwarding tests.
+
+The unchanged baseline passes the existing application consume-outgoing test (1/1) and every
+existing source-file navigation test (15/15). That green baseline is evidence of the detection gap,
+not evidence that the embedded implementation is correctly placed.
+
+The completed remediation moved the internal implementation into the context capability and added
+an exact root/type inventory, seven direct outgoing tests, one exact `MessageLimits.Conservative`
+test, and stronger real InMemory evidence. Seven isolated mutations were killed and restored. The
+final Release build reports no warning or error, the sequential Unit solution passes 5,332 tests,
+the bidirectional Async guard passes 30 tests, and the fresh-package gate preserves the exact
+19,773-line API hash. Core instrumentation reports 85.71% line and 85.00% branch coverage for the
+two executable iteration files. The separate Abstractions project passes 537 tests but cannot emit
+numeric coverage with its current MTP dependencies, so no percentage is inferred. A related read
+identified generic/stale wording in `Middleware/BasePipeContext.cs`; it remains explicitly queued
+for the future manual Middleware/Context owner pass rather than being changed outside this scope.
