@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Monitoring.Telemetry;
+using ViciOne.ServiceBus.Operations.ReliableMessaging;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 

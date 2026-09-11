@@ -251,4 +251,22 @@ public sealed class HostedServiceLifecycleOwnershipTests
             await driver.DisposeAsync();
         }
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "background-start-failure-is-observed-and-reported")]
+    public async Task BackgroundStartFailure_IsObservedAndReportedAsync()
+    {
+        await using var driver = new HostedServiceLifecycleTestDriver(waitUntilStarted: false);
+        var expected = new InvalidOperationException("expected background startup failure");
+
+        Task hostStart = driver.StartAsync(TestContext.Current.CancellationToken);
+        await driver.StartEntered.WaitAsync(TestContext.Current.CancellationToken);
+        driver.FailStart(expected);
+
+        Assert.True(hostStart.IsCompletedSuccessfully);
+        Exception observed = await driver.BackgroundStartFailureObserved.WaitAsync(
+            TimeSpan.FromSeconds(2),
+            TestContext.Current.CancellationToken);
+        Assert.Same(expected, observed);
+    }
 }

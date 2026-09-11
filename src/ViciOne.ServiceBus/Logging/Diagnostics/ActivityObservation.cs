@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ViciOne.ServiceBus.Logging;
 
-namespace ViciOne.ServiceBus.Logging;
+namespace ViciOne.ServiceBus.Logging.Diagnostics;
 
-/// <summary>Represents an observation of activity.</summary>
+/// <summary>Isolates message processing from exceptions raised by application-owned activity listeners.</summary>
 internal static class ActivityObservation
 {
     public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,
@@ -120,7 +121,7 @@ internal static class ActivityObservation
         }
         catch
         {
-            // Logging is observational too; a secondary logging fault remains invisible to delivery semantics.
+            // A secondary logging failure cannot replace the messaging operation's outcome.
         }
     }
 }

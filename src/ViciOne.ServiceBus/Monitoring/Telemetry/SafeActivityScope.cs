@@ -1,12 +1,19 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace ViciOne.ServiceBus.Monitoring.Telemetry;
 
-/// <summary>Owns an optional activity without allowing telemetry failures to change messaging outcomes.</summary>
-internal readonly struct SafeActivityScope : IDisposable
+/// <summary>Owns one optional activity without allowing telemetry failures to change messaging outcomes.</summary>
+internal sealed class SafeActivityScope : IDisposable
 {
-    readonly Activity? _activity;
+    Activity? _activity;
+
+    private SafeActivityScope()
+    {
+    }
+
+    public static SafeActivityScope None { get; } = new();
 
     public SafeActivityScope(Activity activity)
     {
@@ -15,13 +22,14 @@ internal readonly struct SafeActivityScope : IDisposable
 
     public void SetFailure(string errorType)
     {
-        if (_activity is null)
+        Activity? activity = Volatile.Read(ref _activity);
+        if (activity is null)
             return;
 
         try
         {
-            _activity.SetStatus(ActivityStatusCode.Error);
-            _activity.SetTag(ServiceBusTelemetry.Attributes.ErrorType, errorType);
+            activity.SetStatus(ActivityStatusCode.Error);
+            activity.SetTag(ServiceBusTelemetry.Attributes.ErrorType, errorType);
         }
         catch
         {
@@ -31,12 +39,13 @@ internal readonly struct SafeActivityScope : IDisposable
 
     public void SetTag(string name, object? value)
     {
-        if (_activity is null)
+        Activity? activity = Volatile.Read(ref _activity);
+        if (activity is null)
             return;
 
         try
         {
-            _activity.SetTag(name, value);
+            activity.SetTag(name, value);
         }
         catch
         {
@@ -46,12 +55,13 @@ internal readonly struct SafeActivityScope : IDisposable
 
     public void Dispose()
     {
-        if (_activity is null)
+        Activity? activity = Interlocked.Exchange(ref _activity, null);
+        if (activity is null)
             return;
 
         try
         {
-            _activity.Dispose();
+            activity.Dispose();
         }
         catch
         {

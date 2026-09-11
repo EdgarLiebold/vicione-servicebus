@@ -98,6 +98,22 @@ public sealed class GreenfieldApiArchitectureTests
             $"Provider-neutral bridge overloads must adapt their callback before dispatching to a provider-specific overload:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-RUNTIME", "dynamic-pipe-registration-does-not-block-on-readiness")]
+    public void DynamicPipeRegistration_DoesNotUseSynchronousReadinessWaiting()
+    {
+        string runtimeDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Runtime");
+        string[] violations = Directory.EnumerateFiles(runtimeDirectory, "ServiceBusRuntime*.cs", SearchOption.TopDirectoryOnly)
+            .Where(path => File.ReadAllText(path).Contains("TaskBlocking", StringComparison.Ordinal))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Dynamic pipe registration must remain a direct, non-blocking connection operation:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
     private static bool ContainsSerializableAttribute(string path)
     {
         CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))

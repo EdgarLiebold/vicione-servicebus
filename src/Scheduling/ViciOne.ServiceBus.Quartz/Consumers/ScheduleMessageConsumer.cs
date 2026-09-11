@@ -10,6 +10,7 @@ using Quartz.Util;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Providers.Configuration;
 using ViciOne.ServiceBus.Quartz.Runtime;
 using ViciOne.ServiceBus.Scheduling;
@@ -212,9 +213,9 @@ internal sealed class ScheduleMessageConsumer<TBus> :
     static string? SerializeHeaders(Headers source)
     {
         List<KeyValuePair<string, object>> headers = source.GetAll().ToList();
-        PreserveTraceHeader(source, headers, DiagnosticHeaders.ActivityId);
-        PreserveTraceHeader(source, headers, DiagnosticHeaders.ActivityCorrelationContext);
-        PreserveTraceHeader(source, headers, DiagnosticHeaders.ActivityPropagation);
+        PreserveTraceHeader(source, headers, DiagnosticPropagationHeaders.ActivityId);
+        PreserveTraceHeader(source, headers, DiagnosticPropagationHeaders.Baggage);
+        PreserveTraceHeader(source, headers, DiagnosticPropagationHeaders.ParentMode);
 
         return headers.Count == 0
             ? null

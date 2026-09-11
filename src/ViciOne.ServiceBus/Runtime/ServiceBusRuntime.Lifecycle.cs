@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Runtime;
 
 internal sealed partial class ServiceBusRuntime
 {
@@ -66,15 +66,12 @@ internal sealed partial class ServiceBusRuntime
                     LogContext.Warning?.Log(stopException, "Bus start canceled, bus stop faulted: {HostAddress}", _host.Address);
                 }
 
-                await busHandle.Ready.ConfigureAwait(false);
                 throw;
             }
 
             await _busObservable.PostStartAsync(this, busHandle.Ready).ConfigureAwait(false);
 
             _busHandle = busHandle;
-            _terminalFault = new TerminalFaultObserver();
-            _terminalFaultHandle = (_receiveEndpoint as ReceiveEndpoint)?.ConnectReceiveEndpointObserver(_terminalFault);
             _busState = BusState.Started;
             _healthMessage = "";
 
@@ -137,9 +134,6 @@ internal sealed partial class ServiceBusRuntime
 
             await _busHandle.StopAsync(cancellationToken).ConfigureAwait(false);
 
-            _terminalFaultHandle?.Disconnect();
-            _terminalFaultHandle = null;
-            _terminalFault = null;
             _busHandle = null;
         }
         finally

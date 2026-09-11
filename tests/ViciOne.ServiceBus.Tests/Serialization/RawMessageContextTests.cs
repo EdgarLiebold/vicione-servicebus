@@ -1,6 +1,7 @@
 using System.Text.Json;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -20,7 +21,7 @@ public sealed class RawMessageContextTests
         var transportHeaders = new DictionarySendHeaders();
         transportHeaders.Set(MessageHeaders.MessageId, MessageId.ToString("D"));
         transportHeaders.Set(MessageHeaders.Host.Info, "{}");
-        transportHeaders.Set(DiagnosticHeaders.ActivityId, "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
+        transportHeaders.Set(DiagnosticPropagationHeaders.ActivityId, "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
         transportHeaders.Set("application-header", "visible");
         var context = new RawMessageContext(transportHeaders, new Uri("loopback://input"), RawSerializerOptions.CopyHeaders);
 
@@ -31,7 +32,7 @@ public sealed class RawMessageContextTests
         Assert.False(context.Headers.TryGetHeader(MessageHeaders.MessageId, out _));
         Assert.Null(context.Headers.Get<string>(MessageHeaders.MessageId));
         Assert.False(context.Headers.TryGetHeader(MessageHeaders.Host.Info.ToLowerInvariant(), out _));
-        Assert.True(context.Headers.TryGetHeader(DiagnosticHeaders.ActivityId.ToLowerInvariant(), out object? activityId));
+        Assert.True(context.Headers.TryGetHeader(DiagnosticPropagationHeaders.ActivityId.ToLowerInvariant(), out object? activityId));
         Assert.Equal("00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01", activityId);
         Assert.Equal(2, context.Headers.GetAll().Count());
         Assert.Equal(2, context.Headers.Count());

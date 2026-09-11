@@ -352,10 +352,10 @@
     },
     {
       "type": "TextWriterLoggerOptions",
-      "source": "src/ViciOne.ServiceBus/Logging/TextWriterLoggerOptions.cs",
+      "source": "src/ViciOne.ServiceBus.Testing/Logging/TextWriterLoggerOptions.cs",
       "boundary": "host-start",
       "registrationSource": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
-      "invariantCount": 2,
+      "invariantCount": 1,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "InvalidHarnessOrLoggerOption_FailsBeforeTheHarnessStarts" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "CoherentHarnessAndLoggerOptions_PassTheSameStartupBoundary" }
     },

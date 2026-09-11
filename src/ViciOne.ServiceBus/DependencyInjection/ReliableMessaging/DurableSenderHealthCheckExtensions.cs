@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Operations.ReliableMessaging;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

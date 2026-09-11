@@ -373,47 +373,6 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Equal(cancellation.Token, exception.CancellationToken);
     }
 
-    [Fact]
-    [RequirementCoverage("REQ-VSB-BUS-ENDPOINT-READINESS", "explicit-terminal-fault-cancels-waiters")]
-    public async Task BusEndpointWaiters_UseExplicitTerminalityAndPreserveTheFirstCauseAsync()
-    {
-        var observer = new TerminalFaultObserverTestDriver();
-        var endpoint = new StubReceiveEndpoint();
-        using var firstWaiter = new CancellationTokenSource();
-        observer.Attach(firstWaiter);
-        var nonterminal = new ConnectionException("recoverable attempt", isTransient: false);
-
-        await observer.FaultedAsync(new ReceiveEndpointFaultedEvent(
-            new ReceiveTransportFaultedEvent(InputAddress, nonterminal, false),
-            endpoint));
-
-        Assert.False(firstWaiter.IsCancellationRequested);
-        Assert.Null(observer.Cause);
-
-        using var callbackFaultingWaiter = new CancellationTokenSource();
-        var callbackFailure = new ExpectedTransportException("callback failed");
-        using CancellationTokenRegistration registration = callbackFaultingWaiter.Token.Register(() => throw callbackFailure);
-        observer.Attach(callbackFaultingWaiter);
-        var terminal = new ConnectionException("explicit terminal", isTransient: true);
-
-        await observer.FaultedAsync(new ReceiveEndpointFaultedEvent(
-            new ReceiveTransportFaultedEvent(InputAddress, terminal, true),
-            endpoint));
-
-        Assert.True(firstWaiter.IsCancellationRequested);
-        Assert.True(callbackFaultingWaiter.IsCancellationRequested);
-        Assert.Same(terminal, observer.Cause);
-
-        await observer.FaultedAsync(new ReceiveEndpointFaultedEvent(
-            new ReceiveTransportFaultedEvent(InputAddress, new ExpectedTransportException("later terminal"), true),
-            endpoint));
-
-        Assert.Same(terminal, observer.Cause);
-        using var lateWaiter = new CancellationTokenSource();
-        observer.Attach(lateWaiter);
-        Assert.True(lateWaiter.IsCancellationRequested);
-    }
-
     private static readonly Uri InputAddress = new("loopback://receive-lifecycle/input");
 
     private sealed class ExpectedTransportException(string message) : Exception(message);

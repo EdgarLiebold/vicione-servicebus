@@ -1024,6 +1024,76 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         Assert.DoesNotContain("destination", string.Join('|', entry.Value.Data.Keys), StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-HEALTH", "quarantine-staleness-and-hard-bound-have-distinct-statuses")]
+    public async Task HealthCheck_DistinguishesOperationalDegradationFromHardBoundViolationAsync()
+    {
+        IOutboxStore<ITestBus> inner = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        var store = new ObservingStore(inner);
+        var time = new FakeTimeProvider(Epoch);
+        var healthCheck = new ViciOne.ServiceBus.Operations.ReliableMessaging.DurableSenderHealthCheck<ITestBus>(
+            [store],
+            HealthPolicy(maximumStoredCount: 2, maximumStoredBytes: 100),
+            time);
+        var context = new HealthCheckContext();
+
+        store.SnapshotOverride = new DurableSendStoreSnapshot(1, 10, 0, 0, 0, 1, null);
+        HealthCheckResult quarantined = await healthCheck.CheckHealthAsync(context, TestCancellationToken);
+        Assert.Equal(HealthStatus.Degraded, quarantined.Status);
+        Assert.Contains("quarantined", quarantined.Description, StringComparison.OrdinalIgnoreCase);
+
+        store.SnapshotOverride = new DurableSendStoreSnapshot(1, 10, 1, 0, 0, 0, Epoch.AddMinutes(-15));
+        HealthCheckResult stale = await healthCheck.CheckHealthAsync(context, TestCancellationToken);
+        Assert.Equal(HealthStatus.Degraded, stale.Status);
+        Assert.Contains("age", stale.Description, StringComparison.OrdinalIgnoreCase);
+
+        store.SnapshotOverride = new DurableSendStoreSnapshot(3, 10, 3, 0, 0, 0, Epoch);
+        HealthCheckResult exceeded = await healthCheck.CheckHealthAsync(context, TestCancellationToken);
+        Assert.Equal(HealthStatus.Unhealthy, exceeded.Status);
+        Assert.Contains("exceeded", exceeded.Description, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(3, exceeded.Data["storedCount"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-HEALTH", "snapshot-failure-is-sanitized-and-caller-cancellation-is-preserved")]
+    public async Task HealthCheck_SanitizesStoreFailuresAndPreservesCallerCancellationAsync()
+    {
+        IOutboxStore<ITestBus> inner = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        var store = new ObservingStore(inner);
+        var healthCheck = new ViciOne.ServiceBus.Operations.ReliableMessaging.DurableSenderHealthCheck<ITestBus>(
+            [store],
+            HealthPolicy(maximumStoredCount: 2, maximumStoredBytes: 100),
+            new FakeTimeProvider(Epoch));
+        var context = new HealthCheckContext();
+        var failure = new InvalidDataException("secret payload and destination");
+        store.SnapshotTaskOverride = _ => Task.FromException<DurableSendStoreSnapshot>(failure);
+
+        HealthCheckResult failed = await healthCheck.CheckHealthAsync(context, TestCancellationToken);
+
+        Assert.Equal(HealthStatus.Unhealthy, failed.Status);
+        Assert.Contains(typeof(InvalidDataException).FullName!, failed.Description, StringComparison.Ordinal);
+        Assert.DoesNotContain(failure.Message, failed.Description, StringComparison.Ordinal);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        store.SnapshotTaskOverride = token => Task.FromCanceled<DurableSendStoreSnapshot>(token);
+        OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            healthCheck.CheckHealthAsync(context, cancellation.Token));
+        Assert.Equal(cancellation.Token, canceled.CancellationToken);
+    }
+
+    private static ReliableMessagingPolicy<ITestBus> HealthPolicy(
+        int maximumStoredCount,
+        long maximumStoredBytes) =>
+        new ReliableMessagingOptions<ITestBus>
+        {
+            MaximumStoredCount = maximumStoredCount,
+            MaximumStoredBytes = maximumStoredBytes,
+            Retention = TimeSpan.FromDays(1),
+            StoreLimitsConfigured = true,
+            DeliveryConfigured = true,
+            RetentionConfigured = true,
+        }.ValidateAndFreeze();
+
     private static IServiceCollection Services(
         IOutboxStore<ITestBus> store,
         TimeProvider timeProvider,
@@ -1159,6 +1229,8 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         IInboxStore<ITestBus>
     {
         public DurableSendAdmissionResult? AdmissionResultOverride { get; init; }
+        public DurableSendStoreSnapshot? SnapshotOverride { get; set; }
+        public Func<CancellationToken, Task<DurableSendStoreSnapshot>>? SnapshotTaskOverride { get; set; }
         public int AdmitCalls { get; private set; }
         public SerializedDurableSend? LastMessage { get; private set; }
         public DurableSendStoreLimits LastLimits { get; private set; }
@@ -1258,6 +1330,11 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
         {
             SnapshotCancellationToken = cancellationToken;
+            if (SnapshotTaskOverride is not null)
+                return SnapshotTaskOverride(cancellationToken);
+            if (SnapshotOverride.HasValue)
+                return Task.FromResult(SnapshotOverride.Value);
+
             return inner.GetSnapshotAsync(cancellationToken);
         }
 

@@ -128,11 +128,11 @@ public static class ViciOneServiceBusTestingServiceCollectionExtensions
 
         services.AddOptions<TextWriterLoggerOptions>()
             .Validate(
-                static options => Enum.IsDefined(options.LogLevel),
-                "Test logger for bus 'default': LogLevel is not defined. Select a valid LogLevel value.")
+                static options => Enum.IsDefined(options.MinimumLevel),
+                "Test logger for bus 'default': MinimumLevel is not defined. Select a valid LogLevel value.")
             .ValidateOnStart();
         services.TryAddSingleton<ILoggerFactory>(provider =>
-            new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>(),
+            new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>().Value,
                 provider.GetService<TimeProvider>()));
         services.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
 

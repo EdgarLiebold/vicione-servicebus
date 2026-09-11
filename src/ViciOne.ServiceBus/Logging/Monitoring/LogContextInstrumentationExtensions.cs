@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
@@ -8,18 +10,39 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Internal;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus.Logging;
+namespace ViciOne.ServiceBus.Logging.Monitoring;
 
 /// <summary>Creates failure-isolated OpenTelemetry metric scopes for service-bus operations.</summary>
-public static class LogContextInstrumentationExtensions
+internal static class LogContextInstrumentationExtensions
 {
     private static readonly ConditionalWeakTable<ILogContext, LogContextInstrumentationState> LogContextStates = new();
     private static readonly ConditionalWeakTable<IMeterFactory, Lazy<LogContextInstrumentationState>> MeterFactoryStates = new();
+    private static readonly FrozenDictionary<string, string> MessagingSystemAliases =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["loopback"] = ServiceBusTelemetry.MessagingSystems.InMemory,
+            ["in-memory"] = ServiceBusTelemetry.MessagingSystems.InMemory,
+            ["rabbitmq"] = ServiceBusTelemetry.MessagingSystems.RabbitMq,
+            ["activemq"] = ServiceBusTelemetry.MessagingSystems.ActiveMq,
+            ["aws.sns"] = ServiceBusTelemetry.MessagingSystems.AmazonSns,
+            ["amazonsqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
+            ["amazon_sqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
+            ["aws-sqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
+            ["aws_sqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
+            ["eventhubs"] = ServiceBusTelemetry.MessagingSystems.AzureEventHubs,
+            ["sb"] = ServiceBusTelemetry.MessagingSystems.AzureServiceBus,
+            ["azure-service-bus"] = ServiceBusTelemetry.MessagingSystems.AzureServiceBus,
+            ["servicebus"] = ServiceBusTelemetry.MessagingSystems.AzureServiceBus,
+            ["db"] = ServiceBusTelemetry.MessagingSystems.Sql,
+            ["sql"] = ServiceBusTelemetry.MessagingSystems.Sql,
+        }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
     private static readonly object BindingLock = new();
     private static readonly object FallbackLock = new();
 
@@ -353,19 +376,15 @@ public static class LogContextInstrumentationExtensions
             ? NormalizeSystem(transport.ActivitySystem)
             : SystemName(context.InputAddress);
 
-    internal static string NormalizeSystem(string? system) => system?.ToLowerInvariant() switch
+    internal static string NormalizeSystem(string? system)
     {
-        "loopback" or "in-memory" => ServiceBusTelemetry.MessagingSystems.InMemory,
-        "rabbitmq" => ServiceBusTelemetry.MessagingSystems.RabbitMq,
-        "activemq" => ServiceBusTelemetry.MessagingSystems.ActiveMq,
-        "aws.sns" => ServiceBusTelemetry.MessagingSystems.AmazonSns,
-        "amazonsqs" or "amazon_sqs" or "aws-sqs" or "aws_sqs" => ServiceBusTelemetry.MessagingSystems.AmazonSqs,
-        "eventhubs" => ServiceBusTelemetry.MessagingSystems.AzureEventHubs,
-        "sb" or "azure-service-bus" or "servicebus" => ServiceBusTelemetry.MessagingSystems.AzureServiceBus,
-        "db" or "sql" => ServiceBusTelemetry.MessagingSystems.Sql,
-        { Length: > 0 } => ServiceBusTelemetry.MessagingSystems.Other,
-        _ => ServiceBusTelemetry.MessagingSystems.Unknown,
-    };
+        if (string.IsNullOrEmpty(system))
+            return ServiceBusTelemetry.MessagingSystems.Unknown;
+
+        return MessagingSystemAliases.TryGetValue(system, out string? normalized)
+            ? normalized
+            : ServiceBusTelemetry.MessagingSystems.Other;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void Observe(Action observation)

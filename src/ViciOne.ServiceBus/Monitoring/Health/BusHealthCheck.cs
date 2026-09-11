@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus.Monitoring;
+namespace ViciOne.ServiceBus.Monitoring.Health;
 
 /// <summary>Projects one bus instance's aggregate transport health into the .NET health-check model.</summary>
 internal sealed class BusHealthCheck :

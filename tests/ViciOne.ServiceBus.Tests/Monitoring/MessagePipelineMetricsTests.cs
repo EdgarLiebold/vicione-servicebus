@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Testing;

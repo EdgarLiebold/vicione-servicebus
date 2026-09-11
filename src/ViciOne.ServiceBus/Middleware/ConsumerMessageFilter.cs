@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
 
 namespace ViciOne.ServiceBus.Middleware;
 

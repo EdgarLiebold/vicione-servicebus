@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;

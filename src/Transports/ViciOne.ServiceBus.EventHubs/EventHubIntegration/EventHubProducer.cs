@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 

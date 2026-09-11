@@ -1,6 +1,7 @@
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
@@ -37,22 +38,16 @@ public sealed class ServiceBusTelemetryTests
         Assert.Null(product.GetType("ViciOne.ServiceBus.MetricsContextExtensions"));
         Assert.Null(product.GetType("ViciOne.ServiceBus.DependencyInjection.IHandlerConsumerAdapter"));
         Assert.Null(product.GetType("ViciOne.ServiceBus.Logging.StartedInstrument"));
-        Assert.Empty(typeof(MetricOperation).GetConstructors(BindingFlags.Public | BindingFlags.Instance));
+        Assert.False(typeof(MetricOperation).IsPublic);
+        Assert.False(typeof(LogContextInstrumentationExtensions).IsPublic);
+        Assert.DoesNotContain(product.GetExportedTypes(), type => type.Namespace is
+            "ViciOne.ServiceBus.Logging.Diagnostics" or
+            "ViciOne.ServiceBus.Logging.Internal" or
+            "ViciOne.ServiceBus.Logging.Monitoring");
         Assert.DoesNotContain(product.GetExportedTypes(), type =>
             type.Namespace?.StartsWith("ViciOne.ServiceBus.Monitoring.Performance", StringComparison.Ordinal) == true
             || type.Name.Contains("StatsD", StringComparison.OrdinalIgnoreCase));
 
-        MethodInfo[] outboxOperations = typeof(LogContextInstrumentationExtensions)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Where(method => method.Name is nameof(LogContextInstrumentationExtensions.StartOutboxEnqueueInstrument)
-                or nameof(LogContextInstrumentationExtensions.StartOutboxDeliveryInstrument))
-            .ToArray();
-        Assert.Equal(2, outboxOperations.Length);
-        Assert.All(outboxOperations, method =>
-            Assert.Equal([typeof(ILogContext)], method.GetParameters().Select(parameter => parameter.ParameterType)));
-        Assert.DoesNotContain(
-            typeof(LogContextInstrumentationExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static),
-            method => method.GetParameters().Any(parameter => parameter.ParameterType == typeof(System.Diagnostics.Stopwatch)));
     }
 
     [Fact]
@@ -127,6 +122,9 @@ public sealed class ServiceBusTelemetryTests
             ServiceBusTelemetry.Attributes.MessagingSystem,
             ServiceBusTelemetry.Attributes.OperationName,
             ServiceBusTelemetry.Attributes.OperationType,
+            ServiceBusTelemetry.Attributes.DestinationName,
+            ServiceBusTelemetry.Attributes.MessageBodySize,
+            ServiceBusTelemetry.Attributes.ConversationId,
             ServiceBusTelemetry.Attributes.ErrorType,
             ServiceBusTelemetry.Attributes.ProcessorKind,
             ServiceBusTelemetry.Attributes.OutboxOperation,
@@ -139,12 +137,31 @@ public sealed class ServiceBusTelemetryTests
             ServiceBusTelemetry.Attributes.PayloadWarningThresholdExceeded,
             ServiceBusTelemetry.Attributes.ReliabilitySide,
             ServiceBusTelemetry.Attributes.MessageId,
+            ServiceBusTelemetry.Attributes.CorrelationId,
+            ServiceBusTelemetry.Attributes.InitiatorId,
+            ServiceBusTelemetry.Attributes.RequestId,
+            ServiceBusTelemetry.Attributes.SourceAddress,
+            ServiceBusTelemetry.Attributes.DestinationAddress,
+            ServiceBusTelemetry.Attributes.InputAddress,
+            ServiceBusTelemetry.Attributes.MessageContracts,
+            ServiceBusTelemetry.Attributes.ProcessorName,
+            ServiceBusTelemetry.Attributes.CourierTrackingNumber,
+            ServiceBusTelemetry.Attributes.SagaId,
+            ServiceBusTelemetry.Attributes.SagaStateBefore,
+            ServiceBusTelemetry.Attributes.SagaStateAfter,
+            ServiceBusTelemetry.Attributes.RabbitMqRoutingKey,
+            ServiceBusTelemetry.Attributes.ExceptionType,
+            ServiceBusTelemetry.Attributes.ExceptionMessage,
+            ServiceBusTelemetry.Attributes.ExceptionStackTrace,
         ];
         Assert.Equal(
         [
             "messaging.system",
             "messaging.operation.name",
             "messaging.operation.type",
+            "messaging.destination.name",
+            "messaging.message.body.size",
+            "messaging.message.conversation_id",
             "error.type",
             "vicione.servicebus.processor.kind",
             "vicione.servicebus.outbox.operation",
@@ -157,13 +174,34 @@ public sealed class ServiceBusTelemetryTests
             "vicione.servicebus.payload.warning_threshold_exceeded",
             "vicione.servicebus.reliability.side",
             "messaging.message.id",
+            "vicione.servicebus.correlation.id",
+            "vicione.servicebus.initiator.id",
+            "vicione.servicebus.request.id",
+            "vicione.servicebus.source.address",
+            "vicione.servicebus.destination.address",
+            "vicione.servicebus.input.address",
+            "vicione.servicebus.contracts",
+            "vicione.servicebus.processor.name",
+            "vicione.servicebus.courier.tracking_number",
+            "vicione.servicebus.saga.id",
+            "vicione.servicebus.saga.state.before",
+            "vicione.servicebus.saga.state.after",
+            "messaging.rabbitmq.destination.routing_key",
+            "exception.type",
+            "exception.message",
+            "exception.stacktrace",
         ], attributes);
         Assert.Equal(attributes.Length, attributes.Distinct(StringComparer.Ordinal).Count());
         Assert.All(attributes, name => Assert.True(
             name.StartsWith("messaging.", StringComparison.Ordinal)
             || name.StartsWith("error.", StringComparison.Ordinal)
+            || name.StartsWith("exception.", StringComparison.Ordinal)
             || name.StartsWith("vicione.servicebus.", StringComparison.Ordinal),
             $"Unexpected attribute namespace: {name}"));
+        Assert.DoesNotContain(attributes, name => name == "messaging.operation"
+            || name == "exception.escaped"
+            || name.StartsWith("messaging.vicione-servicebus.", StringComparison.Ordinal));
+        Assert.Equal("exception", ServiceBusTelemetry.Events.Exception);
     }
 
     [Fact]
@@ -192,7 +230,10 @@ public sealed class ServiceBusTelemetryTests
         };
 
         Assert.All(expected, item =>
-            Assert.Equal(item.Value, MessagingSystemNormalizerTestDriver.Normalize(item.Key)));
+        {
+            Assert.Equal(item.Value, MessagingSystemNormalizerTestDriver.Normalize(item.Key));
+            Assert.Equal(item.Value, MessagingSystemNormalizerTestDriver.Normalize(item.Key.ToUpperInvariant()));
+        });
         Assert.Equal(ServiceBusTelemetry.MessagingSystems.Unknown,
             MessagingSystemNormalizerTestDriver.Normalize(null));
     }

@@ -4,11 +4,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Testing;
 using ViciOneServiceBusBenchmark.Latency;
 
 namespace ViciOneServiceBusBenchmark.BusOutbox;
@@ -188,15 +186,15 @@ public static class BenchmarkServiceCollectionExtensions
 {
     public static IServiceCollection AddTextLogger(this IServiceCollection services, TextWriter textWriter)
     {
-        services.AddOptions<TextWriterLoggerOptions>();
-        services.TryAddSingleton<ILoggerFactory>(provider =>
-            new TextWriterLoggerFactory(textWriter, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>()));
-        services.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(textWriter);
+
+        services.AddViciOneServiceBusTextWriterLogger(textWriter);
 
         services.AddOptions<TextWriterLoggerOptions>().Configure(options =>
         {
-            options.Disable("Microsoft");
-            options.LogLevel = LogLevel.Information;
+            options.SuppressCategory("Microsoft");
+            options.MinimumLevel = LogLevel.Information;
         });
 
         return services;

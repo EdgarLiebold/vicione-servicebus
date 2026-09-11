@@ -253,6 +253,8 @@ public sealed class ServiceBusInstrumentationTests
         Assert.Equal(ActivityStatusCode.Error, admissionActivity.Status);
         Assert.Equal("tests.expected", admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.ErrorType));
         Assert.Equal("durable-admit", admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.OperationName));
+        Assert.Equal("create", admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.OperationType));
+        Assert.Equal(message.DestinationAddress.ToString(), admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.DestinationName));
         Assert.Equal(message.Id.ToString(), admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.DurableSendId));
         Assert.Equal(message.MessageId?.ToString("D"), admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.MessageId));
         Assert.Equal(message.ContractIdentity.ToString(), admissionActivity.GetTagItem(ServiceBusTelemetry.Attributes.MessageContract));
@@ -261,6 +263,8 @@ public sealed class ServiceBusInstrumentationTests
 
         Activity deliveredActivity = activities[1];
         Assert.Equal("durable-deliver", deliveredActivity.GetTagItem(ServiceBusTelemetry.Attributes.OperationName));
+        Assert.Equal("send", deliveredActivity.GetTagItem(ServiceBusTelemetry.Attributes.OperationType));
+        Assert.Equal(message.DestinationAddress.ToString(), deliveredActivity.GetTagItem(ServiceBusTelemetry.Attributes.DestinationName));
         Assert.Equal(3, deliveredActivity.GetTagItem(ServiceBusTelemetry.Attributes.DeliveryAttempt));
         Assert.Equal("observed", deliveredActivity.GetTagItem("tests.result"));
     }
@@ -314,6 +318,7 @@ public sealed class ServiceBusInstrumentationTests
             ActivitySource.AddActivityListener(stoppingListener);
             using var stoppingBoundary = new ServiceBusInstrumentation<IBus>(throwingMeterFactory);
             SafeActivityScope scope = stoppingBoundary.StartDurableAdmission(CreateMessage());
+            scope.Dispose();
             scope.Dispose();
         }
         Assert.Equal(1, stopCallCount);

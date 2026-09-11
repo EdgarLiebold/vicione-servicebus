@@ -51,7 +51,7 @@ public sealed class ConfigurationValidationTests
         ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(async () =>
         {
             IHostedService hostedService = provider.GetServices<IHostedService>()
-                .Single(service => service.GetType().FullName == "ViciOne.ServiceBus.ServiceBusHostedService");
+                .Single(service => service.GetType().FullName == "ViciOne.ServiceBus.Hosting.ServiceBusHostedService");
             await hostedService.StartAsync(TestContext.Current.CancellationToken);
         });
 

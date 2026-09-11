@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-namespace ViciOne.ServiceBus.Operations;
+namespace ViciOne.ServiceBus.Operations.ReliableMessaging;
 
 internal sealed class ReliableMessagingOperations<TBus> : IReliableMessagingOperations<TBus>
     where TBus : class, IBus

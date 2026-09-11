@@ -61,16 +61,18 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
     {
         ArgumentNullException.ThrowIfNull(message);
         if (Volatile.Read(ref _disposed) != 0)
-            return default;
+            return SafeActivityScope.None;
 
         try
         {
             Activity? activity = _activitySource.StartActivity("durable send admit", ActivityKind.Internal);
             if (activity is null)
-                return default;
+                return SafeActivityScope.None;
 
             activity.SetTag(ServiceBusTelemetry.Attributes.Bus, typeof(TBus).FullName ?? typeof(TBus).Name);
             activity.SetTag(ServiceBusTelemetry.Attributes.OperationName, "durable-admit");
+            activity.SetTag(ServiceBusTelemetry.Attributes.OperationType, "create");
+            activity.SetTag(ServiceBusTelemetry.Attributes.DestinationName, message.DestinationAddress.ToString());
             activity.SetTag(ServiceBusTelemetry.Attributes.DurableSendId, message.Id.ToString());
             if (message.MessageId is { } messageId)
                 activity.SetTag(ServiceBusTelemetry.Attributes.MessageId, messageId.ToString("D"));
@@ -80,7 +82,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
         }
         catch
         {
-            return default;
+            return SafeActivityScope.None;
         }
     }
 
@@ -88,16 +90,18 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
     {
         ArgumentNullException.ThrowIfNull(delivery);
         if (Volatile.Read(ref _disposed) != 0)
-            return default;
+            return SafeActivityScope.None;
 
         try
         {
             Activity? activity = _activitySource.StartActivity("durable send deliver", ActivityKind.Internal);
             if (activity is null)
-                return default;
+                return SafeActivityScope.None;
 
             activity.SetTag(ServiceBusTelemetry.Attributes.Bus, typeof(TBus).FullName ?? typeof(TBus).Name);
             activity.SetTag(ServiceBusTelemetry.Attributes.OperationName, "durable-deliver");
+            activity.SetTag(ServiceBusTelemetry.Attributes.OperationType, "send");
+            activity.SetTag(ServiceBusTelemetry.Attributes.DestinationName, delivery.Message.DestinationAddress.ToString());
             activity.SetTag(ServiceBusTelemetry.Attributes.DurableSendId, delivery.Message.Id.ToString());
             if (delivery.Message.MessageId is { } messageId)
                 activity.SetTag(ServiceBusTelemetry.Attributes.MessageId, messageId.ToString("D"));
@@ -107,7 +111,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
         }
         catch
         {
-            return default;
+            return SafeActivityScope.None;
         }
     }
 

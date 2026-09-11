@@ -1,5 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Monitoring;
 
 namespace ViciOne.ServiceBus.Configuration;
 

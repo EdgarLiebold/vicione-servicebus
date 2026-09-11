@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Internal;
+using ViciOne.ServiceBus.Logging.Monitoring;
 
 namespace ViciOne.ServiceBus.Advanced;
 

@@ -3,6 +3,8 @@ using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -33,7 +35,7 @@ public sealed class MessagePipelineActivityTests
         using var listener = new ActivityListener
         {
             ShouldListenTo = source =>
-                source.Name == DiagnosticHeaders.DefaultListenerName || source.Name == CallerSource,
+                source.Name == ServiceBusTelemetry.ActivitySourceName || source.Name == CallerSource,
             Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
             SampleUsingParentId = (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStopped = recorded.Enqueue,
@@ -75,8 +77,8 @@ public sealed class MessagePipelineActivityTests
 
         Activity callerActivity = Assert.Single(recorded, activity => activity.Source.Name == CallerSource);
         Activity[] productActivities = recorded
-            .Where(activity => activity.Source.Name == DiagnosticHeaders.DefaultListenerName)
-            .Where(activity => Tag(activity, DiagnosticHeaders.Messaging.Operation) is "send" or "receive" or "process")
+            .Where(activity => activity.Source.Name == ServiceBusTelemetry.ActivitySourceName)
+            .Where(activity => Tag(activity, ServiceBusTelemetry.Attributes.OperationType) is "send" or "receive" or "process")
             .ToArray();
         Assert.Equal(3, productActivities.Length);
         Activity send = Assert.Single(productActivities, activity => Operation(activity) == "send");
@@ -100,10 +102,13 @@ public sealed class MessagePipelineActivityTests
         Assert.Equal(BaggageValue, observation.Baggage);
         Assert.Equal(BaggageValue, observation.BaggageHeader);
         Assert.Equal(BaggageValue, process.GetBaggageItem(BaggageKey));
-        Assert.Equal("in-memory", Tag(send, DiagnosticHeaders.Messaging.System));
-        Assert.False(string.IsNullOrWhiteSpace(Tag(send, DiagnosticHeaders.Messaging.DestinationName)));
-        Assert.False(string.IsNullOrWhiteSpace(Tag(receive, DiagnosticHeaders.Messaging.DestinationName)));
-        Assert.Contains(nameof(MessagePipelineActivityConsumer), Tag(process, DiagnosticHeaders.ConsumerType), StringComparison.Ordinal);
+        Assert.Equal("send", Tag(send, ServiceBusTelemetry.Attributes.OperationName));
+        Assert.Equal("receive", Tag(receive, ServiceBusTelemetry.Attributes.OperationName));
+        Assert.Equal("process", Tag(process, ServiceBusTelemetry.Attributes.OperationName));
+        Assert.Equal("in-memory", Tag(send, ServiceBusTelemetry.Attributes.MessagingSystem));
+        Assert.False(string.IsNullOrWhiteSpace(Tag(send, ServiceBusTelemetry.Attributes.DestinationName)));
+        Assert.False(string.IsNullOrWhiteSpace(Tag(receive, ServiceBusTelemetry.Attributes.DestinationName)));
+        Assert.Contains(nameof(MessagePipelineActivityConsumer), Tag(process, ServiceBusTelemetry.Attributes.ProcessorName), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -117,8 +122,8 @@ public sealed class MessagePipelineActivityTests
         Assert.Equal(result.CallerId, result.Observation.ActivityIdHeader);
         Assert.Equal(TraceState, result.Observation.TraceStateHeader);
         Assert.Equal(BaggageValue, result.Observation.BaggageHeader);
-        Assert.DoesNotContain(DiagnosticHeaders.CorrelationId, result.Observation.BaggageHeaderKeys);
-        Assert.DoesNotContain(DiagnosticHeaders.Messaging.ConversationId, result.Observation.BaggageHeaderKeys);
+        Assert.DoesNotContain(ServiceBusTelemetry.Attributes.CorrelationId, result.Observation.BaggageHeaderKeys);
+        Assert.DoesNotContain(ServiceBusTelemetry.Attributes.ConversationId, result.Observation.BaggageHeaderKeys);
         Assert.DoesNotContain("empty-baggage", result.Observation.BaggageHeaderKeys);
     }
 
@@ -179,7 +184,7 @@ public sealed class MessagePipelineActivityTests
         ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(timeout, cancellationToken);
         var listener = new ActivityListener
         {
-            ShouldListenTo = source => source.Name == DiagnosticHeaders.DefaultListenerName,
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
             Sample = sample,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStarted = _ => ThrowIfSelected(callbackFault, CallbackFault.ActivityStarted),
@@ -197,8 +202,8 @@ public sealed class MessagePipelineActivityTests
             caller.SetIdFormat(ActivityIdFormat.W3C);
             caller.TraceStateString = TraceState;
             caller.AddBaggage(BaggageKey, BaggageValue);
-            caller.AddBaggage(DiagnosticHeaders.CorrelationId, Guid.NewGuid().ToString("D"));
-            caller.AddBaggage(DiagnosticHeaders.Messaging.ConversationId, Guid.NewGuid().ToString("D"));
+            caller.AddBaggage(ServiceBusTelemetry.Attributes.CorrelationId, Guid.NewGuid().ToString("D"));
+            caller.AddBaggage(ServiceBusTelemetry.Attributes.ConversationId, Guid.NewGuid().ToString("D"));
             caller.AddBaggage("empty-baggage", "   ");
             caller.Start();
             string callerId = Assert.IsType<string>(caller.Id);
@@ -224,7 +229,7 @@ public sealed class MessagePipelineActivityTests
     }
 
     private static string? Operation(Activity activity) =>
-        Tag(activity, DiagnosticHeaders.Messaging.Operation);
+        Tag(activity, ServiceBusTelemetry.Attributes.OperationType);
 
     private static string? Tag(Activity activity, string name) =>
         activity.TagObjects.FirstOrDefault(tag => tag.Key == name).Value?.ToString();
@@ -251,11 +256,11 @@ public sealed class MessagePipelineActivityTests
         public Task ConsumeAsync(ConsumeContext<ActivityMessage> context)
         {
             observation.DeliveryCount++;
-            observation.ActivityIdHeader = context.Headers.Get<string>(DiagnosticHeaders.ActivityId);
-            observation.TraceStateHeader = context.Headers.Get<string>(DiagnosticHeaders.ActivityTraceState);
+            observation.ActivityIdHeader = context.Headers.Get<string>(DiagnosticPropagationHeaders.ActivityId);
+            observation.TraceStateHeader = context.Headers.Get<string>(DiagnosticPropagationHeaders.TraceState);
             observation.Baggage = Activity.Current?.GetBaggageItem(BaggageKey);
             if (context.Advanced().TryGetHeader(
-                    DiagnosticHeaders.ActivityCorrelationContext,
+                    DiagnosticPropagationHeaders.Baggage,
                     out IEnumerable<KeyValuePair<string, object>>? baggage))
             {
                 KeyValuePair<string, object>[] baggageEntries = baggage.ToArray();

@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;

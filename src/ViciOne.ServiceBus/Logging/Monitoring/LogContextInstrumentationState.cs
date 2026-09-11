@@ -1,8 +1,9 @@
 using System;
 using System.Diagnostics.Metrics;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Monitoring;
 
-namespace ViciOne.ServiceBus.Logging;
+namespace ViciOne.ServiceBus.Logging.Monitoring;
 
 internal sealed class LogContextInstrumentationState
 {

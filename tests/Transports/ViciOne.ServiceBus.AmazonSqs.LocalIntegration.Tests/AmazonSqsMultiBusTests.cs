@@ -66,7 +66,7 @@ public sealed class AmazonSqsMultiBusTests
         IBus firstBus = provider.GetRequiredService<IBus>();
         ISecondBus secondBus = provider.GetRequiredService<ISecondBus>();
         IHostedService[] hostedServices =
-            [.. provider.GetServices<IHostedService>().Where(service => service.GetType().FullName == "ViciOne.ServiceBus.ServiceBusHostedService")];
+            [.. provider.GetServices<IHostedService>().Where(service => service.GetType().FullName == "ViciOne.ServiceBus.Hosting.ServiceBusHostedService")];
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         int startedServiceCount = 0;
 

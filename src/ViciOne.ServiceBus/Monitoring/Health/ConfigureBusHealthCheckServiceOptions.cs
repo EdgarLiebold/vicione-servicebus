@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus.Monitoring;
+namespace ViciOne.ServiceBus.Monitoring.Health;
 
 /// <summary>Adds one .NET health-check registration for every configured bus instance.</summary>
 internal sealed class ConfigureBusHealthCheckServiceOptions :

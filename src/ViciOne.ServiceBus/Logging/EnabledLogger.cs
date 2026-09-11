@@ -3,35 +3,35 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>Represents an enabled logger.</summary>
-public readonly struct EnabledLogger
+/// <summary>Writes messages at one level that the current logger has enabled.</summary>
+public sealed class EnabledLogger
 {
     readonly ILogger _logger;
     readonly LogLevel _level;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="level">The level.</param>
-    public EnabledLogger(ILogger logger, LogLevel level)
+    internal EnabledLogger(ILogger logger, LogLevel level)
     {
-        _logger = logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _level = level;
     }
 
-    /// <summary>Writes the current diagnostic event.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="args">The args.</param>
+    /// <summary>Writes a structured message at the enabled level.</summary>
+    /// <param name="message">The structured logging template.</param>
+    /// <param name="args">The values bound to template placeholders.</param>
     public void Log(string message, params object?[] args)
     {
+        ArgumentNullException.ThrowIfNull(message);
         _logger.Log(_level, message, args);
     }
 
-    /// <summary>Writes the current diagnostic event.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="args">The args.</param>
+    /// <summary>Writes a structured message and its associated exception at the enabled level.</summary>
+    /// <param name="exception">The exception associated with the message.</param>
+    /// <param name="message">The structured logging template.</param>
+    /// <param name="args">The values bound to template placeholders.</param>
     public void Log(Exception exception, string message, params object?[] args)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+        ArgumentNullException.ThrowIfNull(message);
         _logger.Log(_level, exception, message, args);
     }
 }

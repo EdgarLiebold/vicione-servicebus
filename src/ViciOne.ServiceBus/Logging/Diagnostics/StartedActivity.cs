@@ -1,75 +1,72 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus.Logging;
+namespace ViciOne.ServiceBus.Logging.Diagnostics;
 
-/// <summary>Represents a started activity.</summary>
-public readonly struct StartedActivity
+/// <summary>Owns one started activity and completes it without exposing telemetry plumbing.</summary>
+internal sealed class StartedActivity : IDisposable
 {
-    /// <summary>Exposes the activity used by the containing type.</summary>
-    public readonly Activity Activity;
     readonly TimeProvider _timeProvider;
+    int _stopped;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activity">The activity.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
     public StartedActivity(Activity activity, TimeProvider? timeProvider = null)
     {
-        Activity = activity;
+        Activity = activity ?? throw new ArgumentNullException(nameof(activity));
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Sets tag.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
-    public void SetTag(string key, string value)
+    internal Activity Activity { get; }
+
+    public void SetTag(string key, object? value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+        if (value is null || value is string text && string.IsNullOrWhiteSpace(text))
             return;
 
         ActivityObservation.TrySetTag(Activity, key, value);
     }
 
-    /// <summary>Updates the current value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
     public void Update<T>(SendContext<T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         if (context.BodyLength.HasValue)
-            SetTag(DiagnosticHeaders.Messaging.BodyLength, context.BodyLength.Value.ToString());
+            SetTag(ServiceBusTelemetry.Attributes.MessageBodySize, context.BodyLength.Value);
     }
 
-    /// <summary>Adds exception event to the configuration.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="escaped">The escaped.</param>
-    public void AddExceptionEvent(Exception exception, bool escaped = true)
+    public void AddExceptionEvent(Exception exception)
     {
-        exception = exception.GetBaseException() ?? exception;
+        ArgumentNullException.ThrowIfNull(exception);
+        exception = exception.GetBaseException();
 
         var exceptionMessage = ExceptionUtil.GetMessage(exception);
 
         var tags = new ActivityTagsCollection
         {
-            { DiagnosticHeaders.Exceptions.Escaped, escaped },
-            { DiagnosticHeaders.Exceptions.Message, exceptionMessage },
-            { DiagnosticHeaders.Exceptions.Type, TypeCache.GetShortName(exception.GetType()) },
-            { DiagnosticHeaders.Exceptions.Stacktrace, ExceptionUtil.GetStackTrace(exception) }
+            { ServiceBusTelemetry.Attributes.ExceptionMessage, exceptionMessage },
+            { ServiceBusTelemetry.Attributes.ExceptionType, TypeCache.GetShortName(exception.GetType()) },
+            { ServiceBusTelemetry.Attributes.ExceptionStackTrace, ExceptionUtil.GetStackTrace(exception) }
         };
 
-        var activityEvent = new ActivityEvent(DiagnosticHeaders.Exceptions.EventName, _timeProvider.GetUtcNow(), tags);
+        var activityEvent = new ActivityEvent(ServiceBusTelemetry.Events.Exception, _timeProvider.GetUtcNow(), tags);
 
         ActivityObservation.TryAddEvent(Activity, activityEvent);
         ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);
     }
 
-    /// <summary>Stops the configured component.</summary>
     public void Stop()
     {
+        if (Interlocked.Exchange(ref _stopped, 1) != 0)
+            return;
+
         if (Activity.Status == ActivityStatusCode.Unset)
             ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Ok);
 
         ActivityObservation.TryDispose(Activity);
     }
+
+    public void Dispose() => Stop();
 }

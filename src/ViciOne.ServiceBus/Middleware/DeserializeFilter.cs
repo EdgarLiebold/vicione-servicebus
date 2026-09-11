@@ -1,12 +1,12 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
-/// Performs the deserialization of a message ReceiveContext and passes the resulting
-/// ConsumeContext to the output pipe.
+/// Deserializes a received message, enriches its active trace, and dispatches the resulting consume context.
 /// </summary>
 public class DeserializeFilter :
     IFilter<ReceiveContext>
@@ -14,13 +14,13 @@ public class DeserializeFilter :
     readonly IPipe<ConsumeContext> _output;
     readonly ISerialization _serializers;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="serializers">The serializers.</param>
-    /// <param name="output">The output.</param>
+    /// <summary>Initializes the filter with its serializer registry and consume pipeline.</summary>
+    /// <param name="serializers">The serializer registry selected by content type.</param>
+    /// <param name="output">The consume pipeline that receives the deserialized context.</param>
     public DeserializeFilter(ISerialization serializers, IPipe<ConsumeContext> output)
     {
-        _serializers = serializers;
-        _output = output;
+        _serializers = serializers ?? throw new ArgumentNullException(nameof(serializers));
+        _output = output ?? throw new ArgumentNullException(nameof(output));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
@@ -33,13 +33,16 @@ public class DeserializeFilter :
         _output.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Validates, deserializes, and dispatches one received message before continuing the receive pipeline.</summary>
+    /// <param name="context">The transport receive context.</param>
+    /// <param name="next">The remaining receive pipeline.</param>
+    /// <returns>A task that completes after consume and receive processing finish.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         if (context.TryGetPayload(out MessageLimits? limits)
             && context.Body.Length is { } actualBytes
             && actualBytes > limits.MaxEnvelopeBytes)

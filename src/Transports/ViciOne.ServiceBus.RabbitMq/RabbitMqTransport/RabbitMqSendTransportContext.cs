@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.RabbitMq.Middleware;
 using ViciOne.ServiceBus.Transports;
@@ -215,7 +216,7 @@ public class RabbitMqSendTransportContext :
         if (Activity.Current?.IsAllDataRequested ?? false)
         {
             if (!string.IsNullOrEmpty(routingKey))
-                Activity.Current.SetTag(DiagnosticHeaders.Messaging.RabbitMq.RoutingKey, routingKey);
+                Activity.Current.SetTag(ServiceBusTelemetry.Attributes.RabbitMqRoutingKey, routingKey);
         }
 
         var publishTask = transportContext.BasicPublishAsync(exchange, routingKey, context.Mandatory, context.BasicProperties, body,

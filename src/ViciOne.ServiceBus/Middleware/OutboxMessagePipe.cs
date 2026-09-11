@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Middleware;

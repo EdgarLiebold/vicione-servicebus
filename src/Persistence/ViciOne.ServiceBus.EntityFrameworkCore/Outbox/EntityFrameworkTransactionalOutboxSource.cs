@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Providers.Persistence;

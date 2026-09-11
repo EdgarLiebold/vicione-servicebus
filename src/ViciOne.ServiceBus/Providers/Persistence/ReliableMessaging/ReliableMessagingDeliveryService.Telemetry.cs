@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Monitoring.Telemetry;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
@@ -14,7 +15,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
         DurableSendFailureKind? failureKind,
         long started)
     {
-        activity.SetTag("vicione.servicebus.delivery.outcome", OutcomeTag(outcome));
+        activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, OutcomeTag(outcome));
         if (failureKind is not null)
             activity.SetFailure(ServiceBusInstrumentation<TBus>.ErrorType(failureKind.Value));
         _instrumentation.RecordDurableDelivery(
@@ -33,7 +34,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
         SafeActivityScope activity,
         long started)
     {
-        activity.SetTag("vicione.servicebus.delivery.outcome", "state-persistence-failed");
+        activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, "state-persistence-failed");
         activity.SetFailure("durable-state-persistence-failure");
         _instrumentation.RecordDurableDelivery(
             DurableSendDeliveryOutcome.StatePersistenceFailed,

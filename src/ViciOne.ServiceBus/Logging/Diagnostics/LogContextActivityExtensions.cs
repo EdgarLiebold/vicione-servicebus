@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus.Logging;
+namespace ViciOne.ServiceBus.Logging.Diagnostics;
 
 /// <summary>Provides extension methods for log context activity.</summary>
-public static class LogContextActivityExtensions
+internal static class LogContextActivityExtensions
 {
     /// <summary>Starts send activity.</summary>
     /// <typeparam name="T">The value type.</typeparam>
@@ -33,11 +36,11 @@ public static class LogContextActivityExtensions
             return null;
         }
 
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "send");
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.System, transportContext.ActivitySystem);
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.DestinationName, transportContext.ActivityDestination);
+        SetOperation(activity, "send");
+        ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessagingSystem, transportContext.ActivitySystem);
+        ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationName, transportContext.ActivityDestination);
 
-        return PopulateSendActivity<T>(context, activity, currentActivity, tags);
+        return PopulateSendActivity(context, activity, currentActivity, tags);
     }
 
     /// <summary>Starts outbox send activity.</summary>
@@ -60,9 +63,9 @@ public static class LogContextActivityExtensions
             return null;
         }
 
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "send");
+        SetOperation(activity, "send");
 
-        return PopulateSendActivity<T>(context, activity, currentActivity);
+        return PopulateSendActivity(context, activity, currentActivity);
     }
 
     /// <summary>Starts outbox deliver activity.</summary>
@@ -77,6 +80,7 @@ public static class LogContextActivityExtensions
         if (activity == null)
             return null;
 
+        SetOperation(activity, "process");
         if (!ActivityObservation.TryStart(activity))
             return null;
 
@@ -95,7 +99,7 @@ public static class LogContextActivityExtensions
     {
         var parentActivityContext = GetParentActivityContext(context.TransportHeaders, true);
 
-        var activity = context.TransportHeaders.TryGetHeader(DiagnosticHeaders.ActivityPropagation, out var linkTypeValue) switch
+        var activity = context.TransportHeaders.TryGetHeader(DiagnosticPropagationHeaders.ParentMode, out var linkTypeValue) switch
         {
             true => linkTypeValue switch
             {
@@ -110,21 +114,21 @@ public static class LogContextActivityExtensions
         if (activity == null)
             return null;
 
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "receive");
+        SetOperation(activity, "receive");
         ActivityObservation.TrySetTag(
             activity,
-            DiagnosticHeaders.Messaging.System,
+            ServiceBusTelemetry.Attributes.MessagingSystem,
             LogContextInstrumentationExtensions.SystemName(context));
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.DestinationName, endpointName);
+        ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationName, endpointName);
 
         if (activity.IsAllDataRequested)
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.InputAddress, inputAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InputAddress, inputAddress);
 
             if ((context.TransportHeaders.TryGetHeader(MessageHeaders.TransportMessageId, out var messageIdHeader)
                     || context.TransportHeaders.TryGetHeader(MessageHeaders.MessageId, out messageIdHeader))
                 && messageIdHeader is string text)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.TransportMessageId, text);
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, text);
         }
 
         if (!ActivityObservation.TryStart(activity))
@@ -144,8 +148,8 @@ public static class LogContextActivityExtensions
     {
         return StartActivity((ConsumeContext)context, activity =>
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TConsumer>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TConsumer>.ShortName);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<T>.DiagnosticAddress);
         });
     }
 
@@ -159,8 +163,8 @@ public static class LogContextActivityExtensions
     {
         return StartActivity((ConsumeContext)context, activity =>
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, "Handler");
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, "Handler");
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<T>.DiagnosticAddress);
         });
     }
 
@@ -180,46 +184,52 @@ public static class LogContextActivityExtensions
         return new StartedActivity(activity);
     }
 
-    static StartedActivity? PopulateSendActivity<T>(SendContext context, System.Diagnostics.Activity activity,
-        System.Diagnostics.Activity? parentActivity, params (string Key, object? Value)[] tags)
-        where T : class
+    internal static void AddConsumeContextTags(this System.Diagnostics.Activity activity, ConsumeContext context)
     {
-        if (!string.IsNullOrWhiteSpace(parentActivity?.TraceStateString)
-            && string.IsNullOrWhiteSpace(activity.TraceStateString))
-            ActivityObservation.TrySetTraceState(activity, parentActivity.TraceStateString);
-
-        var conversationId = context.ConversationId?.ToString("D");
-
-        if (context.CorrelationId.HasValue)
-            ActivityObservation.TrySetBaggage(activity, DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
-        if (conversationId != null)
-            ActivityObservation.TrySetBaggage(activity, DiagnosticHeaders.Messaging.ConversationId, conversationId);
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(context);
 
         if (activity.IsAllDataRequested)
         {
             if (context.MessageId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageId, context.MessageId.Value.ToString("D"));
-            if (conversationId != null)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.ConversationId, conversationId);
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, context.MessageId.Value.ToString("D"));
+            if (context.ConversationId.HasValue)
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ConversationId, context.ConversationId.Value.ToString("D"));
             if (context.CorrelationId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
-            if (context.RequestId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.RequestId, context.RequestId.Value.ToString("D"));
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CorrelationId, context.CorrelationId.Value.ToString("D"));
             if (context.InitiatorId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.InitiatorId, context.InitiatorId.Value.ToString("D"));
-            if (context.SourceAddress != null)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SourceAddress, context.SourceAddress.ToString());
-            if (context.DestinationAddress != null)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.DestinationAddress, context.DestinationAddress.ToString());
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InitiatorId, context.InitiatorId.Value.ToString("D"));
+            if (context.RequestId.HasValue)
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.RequestId, context.RequestId.Value.ToString("D"));
+            if (context.SourceAddress is not null)
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, context.SourceAddress.ToString());
+            if (context.DestinationAddress is not null)
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, context.DestinationAddress.ToString());
 
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageTypes, string.Join(",", context.SupportedMessageTypes));
-
-            for (var i = 0; i < tags.Length; i++)
-            {
-                if (tags[i].Value != null)
-                    ActivityObservation.TrySetTag(activity, tags[i].Key, tags[i].Value?.ToString());
-            }
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(",", context.SupportedMessageTypes));
         }
+
+        if (context.CorrelationId.HasValue)
+            ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.CorrelationId, context.CorrelationId.Value.ToString("D"));
+        if (context.ConversationId.HasValue)
+            ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.ConversationId, context.ConversationId.Value.ToString("D"));
+
+        if (!context.TryGetHeader(DiagnosticPropagationHeaders.Baggage, out IEnumerable<KeyValuePair<string, object>>? baggage))
+            return;
+
+        foreach (KeyValuePair<string, object> value in baggage)
+        {
+            if (value.Value is string text && !string.IsNullOrWhiteSpace(text))
+                ActivityObservation.TrySetBaggage(activity, value.Key, text);
+        }
+    }
+
+    static StartedActivity? PopulateSendActivity(SendContext context, System.Diagnostics.Activity activity,
+        System.Diagnostics.Activity? parentActivity, params (string Key, object? Value)[] tags)
+    {
+        CopyParentTraceState(parentActivity, activity);
+        AddSendBaggage(context, activity);
+        AddSendTags(context, activity, tags);
 
         if (!ActivityObservation.TryStart(activity))
         {
@@ -227,30 +237,65 @@ public static class LogContextActivityExtensions
             return null;
         }
 
-        List<KeyValuePair<string, string?>>? baggage = null;
-        foreach (KeyValuePair<string, string?> pair in activity.Baggage)
-        {
-            if (pair.Key.Equals(DiagnosticHeaders.Messaging.ConversationId, StringComparison.Ordinal)
-                || pair.Key.Equals(DiagnosticHeaders.CorrelationId, StringComparison.Ordinal))
-                continue;
-
-            if (string.IsNullOrWhiteSpace(pair.Value))
-                continue;
-
-            baggage ??= new List<KeyValuePair<string, string?>>(1);
-            baggage.Add(pair);
-        }
-
-        if (activity.Id != null)
-            context.Headers.Set(DiagnosticHeaders.ActivityId, activity.Id);
-
-        if (!string.IsNullOrWhiteSpace(activity.TraceStateString))
-            context.Headers.Set(DiagnosticHeaders.ActivityTraceState, activity.TraceStateString);
-
-        if (baggage != null)
-            context.Headers.Set(DiagnosticHeaders.ActivityCorrelationContext, baggage);
-
+        PropagateActivity(context, activity);
         return new StartedActivity(activity, context.GetTimeProvider());
+    }
+
+    static void CopyParentTraceState(System.Diagnostics.Activity? parentActivity, System.Diagnostics.Activity activity)
+    {
+        if (!string.IsNullOrWhiteSpace(parentActivity?.TraceStateString)
+            && string.IsNullOrWhiteSpace(activity.TraceStateString))
+            ActivityObservation.TrySetTraceState(activity, parentActivity.TraceStateString);
+    }
+
+    static void AddSendBaggage(SendContext context, System.Diagnostics.Activity activity)
+    {
+        if (context.CorrelationId is { } correlationId)
+            ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.CorrelationId, correlationId.ToString("D"));
+        if (context.ConversationId is { } conversationId)
+            ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.ConversationId, conversationId.ToString("D"));
+    }
+
+    static void AddSendTags(SendContext context, System.Diagnostics.Activity activity, (string Key, object? Value)[] tags)
+    {
+        if (!activity.IsAllDataRequested)
+            return;
+
+        AddSendIdentifierTags(context, activity);
+        AddSendAddressTags(context, activity);
+        ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(",", context.SupportedMessageTypes));
+        AddCustomTags(activity, tags);
+    }
+
+    static void AddSendIdentifierTags(SendContext context, System.Diagnostics.Activity activity)
+    {
+        if (context.MessageId is { } messageId)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, messageId.ToString("D"));
+        if (context.ConversationId is { } conversationId)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ConversationId, conversationId.ToString("D"));
+        if (context.CorrelationId is { } correlationId)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CorrelationId, correlationId.ToString("D"));
+        if (context.RequestId is { } requestId)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.RequestId, requestId.ToString("D"));
+        if (context.InitiatorId is { } initiatorId)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InitiatorId, initiatorId.ToString("D"));
+    }
+
+    static void AddSendAddressTags(SendContext context, System.Diagnostics.Activity activity)
+    {
+        if (context.SourceAddress is { } sourceAddress)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, sourceAddress.ToString());
+        if (context.DestinationAddress is { } destinationAddress)
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, destinationAddress.ToString());
+    }
+
+    static void AddCustomTags(System.Diagnostics.Activity activity, (string Key, object? Value)[] tags)
+    {
+        foreach ((string key, object? value) in tags)
+        {
+            if (value is not null)
+                ActivityObservation.TrySetTag(activity, key, value.ToString());
+        }
     }
 
     static void PropagateActivity(SendContext context, System.Diagnostics.Activity? activity)
@@ -259,16 +304,16 @@ public static class LogContextActivityExtensions
             return;
 
         if (activity.Id is { } activityId)
-            context.Headers.Set(DiagnosticHeaders.ActivityId, activityId);
+            context.Headers.Set(DiagnosticPropagationHeaders.ActivityId, activityId);
 
         if (!string.IsNullOrWhiteSpace(activity.TraceStateString))
-            context.Headers.Set(DiagnosticHeaders.ActivityTraceState, activity.TraceStateString);
+            context.Headers.Set(DiagnosticPropagationHeaders.TraceState, activity.TraceStateString);
 
         List<KeyValuePair<string, string?>>? baggage = null;
         foreach (KeyValuePair<string, string?> pair in activity.Baggage)
         {
-            if (pair.Key.Equals(DiagnosticHeaders.Messaging.ConversationId, StringComparison.Ordinal)
-                || pair.Key.Equals(DiagnosticHeaders.CorrelationId, StringComparison.Ordinal)
+            if (pair.Key.Equals(ServiceBusTelemetry.Attributes.ConversationId, StringComparison.Ordinal)
+                || pair.Key.Equals(ServiceBusTelemetry.Attributes.CorrelationId, StringComparison.Ordinal)
                 || string.IsNullOrWhiteSpace(pair.Value))
                 continue;
 
@@ -277,17 +322,17 @@ public static class LogContextActivityExtensions
         }
 
         if (baggage is not null)
-            context.Headers.Set(DiagnosticHeaders.ActivityCorrelationContext, baggage);
+            context.Headers.Set(DiagnosticPropagationHeaders.Baggage, baggage);
     }
 
     static string? GetTraceState(Headers headers)
     {
-        return headers.TryGetHeader(DiagnosticHeaders.ActivityTraceState, out var value) ? value as string : null;
+        return headers.TryGetHeader(DiagnosticPropagationHeaders.TraceState, out var value) ? value as string : null;
     }
 
     static System.Diagnostics.ActivityContext GetParentActivityContext(Headers headers, bool isRemote = false)
     {
-        if (headers.TryGetHeader(DiagnosticHeaders.ActivityId, out var headerValue)
+        if (headers.TryGetHeader(DiagnosticPropagationHeaders.ActivityId, out var headerValue)
             && headerValue is string activityId
             && System.Diagnostics.ActivityContext.TryParse(activityId, GetTraceState(headers), out var activityContext))
         {
@@ -313,30 +358,30 @@ public static class LogContextActivityExtensions
         if (activity == null)
             return null;
 
-        ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "process");
+        SetOperation(activity, "process");
         ActivityObservation.TrySetTag(
             activity,
-            DiagnosticHeaders.Messaging.System,
+            ServiceBusTelemetry.Attributes.MessagingSystem,
             LogContextInstrumentationExtensions.SystemName(context.ReceiveContext));
 
         if (activity.IsAllDataRequested)
         {
             if (context.MessageId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageId, context.MessageId.Value.ToString("D"));
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, context.MessageId.Value.ToString("D"));
             if (context.ConversationId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.ConversationId, context.ConversationId.Value.ToString("D"));
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ConversationId, context.ConversationId.Value.ToString("D"));
             if (context.CorrelationId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CorrelationId, context.CorrelationId.Value.ToString("D"));
             if (context.RequestId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.RequestId, context.RequestId.Value.ToString("D"));
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.RequestId, context.RequestId.Value.ToString("D"));
             if (context.InitiatorId.HasValue)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.InitiatorId, context.InitiatorId.Value.ToString("D"));
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InitiatorId, context.InitiatorId.Value.ToString("D"));
             if (context.SourceAddress != null)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SourceAddress, context.SourceAddress.ToString());
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, context.SourceAddress.ToString());
             if (context.DestinationAddress != null)
-                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.DestinationAddress, context.DestinationAddress.ToString());
+                ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, context.DestinationAddress.ToString());
 
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageTypes, string.Join(",", context.SupportedMessageTypes));
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(",", context.SupportedMessageTypes));
 
             started(activity);
         }
@@ -357,11 +402,17 @@ public static class LogContextActivityExtensions
         return operationName;
     }
 
+    static void SetOperation(System.Diagnostics.Activity activity, string operation)
+    {
+        ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.OperationName, operation);
+        ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.OperationType, operation);
+    }
+
 
     static class Cached
     {
         internal static readonly Lazy<ActivitySource> Source = new Lazy<ActivitySource>(() =>
-            new ActivitySource(DiagnosticHeaders.DefaultListenerName, HostMetadataCache.Host.ViciOneServiceBusVersion));
+            new ActivitySource(ServiceBusTelemetry.ActivitySourceName, HostMetadataCache.Host.ViciOneServiceBusVersion));
 
     }
 }

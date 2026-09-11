@@ -215,6 +215,88 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "logging-api-internals-diagnostics-and-test-support-have-explicit-owners")]
+    public void LoggingFiles_AreGroupedByApiLayerAndOwningPackage()
+    {
+        string coreLogging = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Logging");
+        Assert.Equal(
+            ["EnabledLogger.cs", "ILogContext.cs", "LogMessage.cs"],
+            Directory.EnumerateFiles(coreLogging, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .Order(StringComparer.Ordinal));
+
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            ("Diagnostics", "ViciOne.ServiceBus.Logging.Diagnostics",
+                ["ActivityObservation.cs", "DiagnosticPropagationHeaders.cs", "LogContextActivityExtensions.cs", "StartedActivity.cs"]),
+            ("Internal", "ViciOne.ServiceBus.Logging.Internal",
+                ["BusLogContext.cs", "ServiceBusLogCategories.cs", "SingleLoggerFactory.cs"]),
+            ("Monitoring", "ViciOne.ServiceBus.Logging.Monitoring",
+                ["LogContextInstrumentationExtensions.cs", "LogContextInstrumentationState.cs", "MetricOperation.cs"]),
+        ];
+
+        foreach ((string directoryName, string expectedNamespace, string[] files) in groups)
+        {
+            string directory = Path.Combine(coreLogging, directoryName);
+            Assert.Equal(
+                files.Order(StringComparer.Ordinal),
+                Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                    .Select(Path.GetFileName)
+                    .Order(StringComparer.Ordinal));
+            Assert.All(files, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
+
+        string testingLogging = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Testing", "Logging");
+        string[] testingFiles = ["TextWriterLogger.cs", "TextWriterLoggerFactory.cs", "TextWriterLoggerOptions.cs"];
+        Assert.Equal(
+            testingFiles.Order(StringComparer.Ordinal),
+            Directory.EnumerateFiles(testingLogging, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .Order(StringComparer.Ordinal));
+        Assert.All(testingFiles, file => Assert.Equal(
+            ["ViciOne.ServiceBus.Testing"],
+            ReadNamespaces(Path.Combine(testingLogging, file), TestContext.Current.CancellationToken)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "runtime-hosting-health-and-reliable-messaging-internals-have-explicit-owners")]
+    public void RuntimeAndOperationalInternals_AreGroupedByCapability()
+    {
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            ("src/ViciOne.ServiceBus/Runtime", "ViciOne.ServiceBus.Runtime",
+                ["ServiceBusRuntime.cs", "ServiceBusRuntime.Lifecycle.cs"]),
+            ("src/ViciOne.ServiceBus/Hosting", "ViciOne.ServiceBus.Hosting",
+                ["ServiceBusHostedService.cs"]),
+            ("src/ViciOne.ServiceBus/Monitoring/Health", "ViciOne.ServiceBus.Monitoring.Health",
+                ["BusHealthCheck.cs", "ConfigureBusHealthCheckServiceOptions.cs"]),
+            ("src/ViciOne.ServiceBus/Operations/ReliableMessaging", "ViciOne.ServiceBus.Operations.ReliableMessaging",
+                ["DurableSenderHealthCheck.cs", "ReliableMessagingOperations.cs"]),
+        ];
+
+        foreach ((string relativeDirectory, string expectedNamespace, string[] files) in groups)
+        {
+            string directory = Path.Combine(RepositoryLayout.Root, relativeDirectory);
+            Assert.Equal(
+                files.Order(StringComparer.Ordinal),
+                Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                    .Select(Path.GetFileName)
+                    .Order(StringComparer.Ordinal));
+            Assert.All(files, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
+
+        string monitoringRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Monitoring");
+        Assert.Equal(
+            ["ServiceBusTelemetry.cs"],
+            Directory.EnumerateFiles(monitoringRoot, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "core-project-root-contains-only-project-infrastructure")]
     public void CoreProjectRoot_ContainsOnlyProjectInfrastructure()
     {

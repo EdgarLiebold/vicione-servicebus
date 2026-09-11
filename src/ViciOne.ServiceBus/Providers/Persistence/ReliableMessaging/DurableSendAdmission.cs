@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 
@@ -55,18 +56,18 @@ internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
                 .AdmitAsync(message, _policy.Limits, _timeProvider.GetUtcNow(), cancellationToken)
                 .ConfigureAwait(false);
             result = ReliableMessagingProviderGuard.ValidateAdmission(message, result);
-            activity.SetTag("vicione.servicebus.admission.outcome", result.Disposition.ToString());
+            activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, result.Disposition.ToString());
             _instrumentation.RecordDurableAdmission(result.Disposition, message.StorageSize);
             return result;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            activity.SetTag("vicione.servicebus.admission.outcome", "canceled");
+            activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, "canceled");
             throw;
         }
         catch (MessageContractException)
         {
-            activity.SetTag("vicione.servicebus.admission.outcome", "rejected");
+            activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, "rejected");
             activity.SetFailure("contract-not-registered");
             _instrumentation.RecordDurableAdmissionRejected(
                 DurableSendAdmissionFailure.ContractNotRegistered, message.StorageSize);
@@ -74,21 +75,21 @@ internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
         }
         catch (DurableSendCapacityExceededException)
         {
-            activity.SetTag("vicione.servicebus.admission.outcome", "rejected");
+            activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, "rejected");
             activity.SetFailure("capacity-exceeded");
             _instrumentation.RecordDurableAdmissionRejected(DurableSendAdmissionFailure.CapacityExceeded, message.StorageSize);
             throw;
         }
         catch (DurableSendIdentityConflictException)
         {
-            activity.SetTag("vicione.servicebus.admission.outcome", "rejected");
+            activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, "rejected");
             activity.SetFailure("identity-conflict");
             _instrumentation.RecordDurableAdmissionRejected(DurableSendAdmissionFailure.IdentityConflict, message.StorageSize);
             throw;
         }
         catch
         {
-            activity.SetTag("vicione.servicebus.admission.outcome", "failed");
+            activity.SetTag(ServiceBusTelemetry.Attributes.Outcome, "failed");
             activity.SetFailure("durable-store-failure");
             _instrumentation.RecordDurableAdmissionRejected(DurableSendAdmissionFailure.StoreFailure, message.StorageSize);
             throw;

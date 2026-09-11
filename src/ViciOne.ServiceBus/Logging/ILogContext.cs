@@ -2,30 +2,30 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>Used to provide access to logging and diagnostic services.</summary>
+/// <summary>Provides category-specific Microsoft logging for the active service-bus operation.</summary>
 public interface ILogContext
 {
-    /// <summary>Gets the logger.</summary>
+    /// <summary>Gets the logger for this context's category.</summary>
     ILogger Logger { get; }
 
-    /// <summary>The log context for all message movement, sent, received, etc.</summary>
+    /// <summary>Gets the dedicated context for message-movement logs.</summary>
     ILogContext Messages { get; }
 
-    /// <summary>Gets the critical.</summary>
+    /// <summary>Gets a critical-level writer when that level is enabled.</summary>
     EnabledLogger? Critical { get; }
-    /// <summary>Gets the debug.</summary>
+    /// <summary>Gets a debug-level writer when that level is enabled.</summary>
     EnabledLogger? Debug { get; }
-    /// <summary>Gets the error.</summary>
+    /// <summary>Gets an error-level writer when that level is enabled.</summary>
     EnabledLogger? Error { get; }
-    /// <summary>Gets the info.</summary>
+    /// <summary>Gets an information-level writer when that level is enabled.</summary>
     EnabledLogger? Info { get; }
-    /// <summary>Gets the trace.</summary>
+    /// <summary>Gets a trace-level writer when that level is enabled.</summary>
     EnabledLogger? Trace { get; }
-    /// <summary>Gets the warning.</summary>
+    /// <summary>Gets a warning-level writer when that level is enabled.</summary>
     EnabledLogger? Warning { get; }
 
-    /// <summary>Creates a new <see cref="T:Microsoft.Extensions.Logging.ILogger" /> instance.</summary>
-    /// <param name="categoryName">The category name for messages produced by the logger.</param>
-    /// <returns>The <see cref="T:Microsoft.Extensions.Logging.ILogger" />.</returns>
+    /// <summary>Creates a context for another logging category.</summary>
+    /// <param name="categoryName">The non-empty category name.</param>
+    /// <returns>A context that writes to the requested category.</returns>
     ILogContext CreateLogContext(string categoryName);
 }

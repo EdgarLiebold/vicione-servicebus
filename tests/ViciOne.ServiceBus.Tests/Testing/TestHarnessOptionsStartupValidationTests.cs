@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -13,7 +12,7 @@ public sealed class TestHarnessOptionsStartupValidationTests
     [Theory]
     [InlineData(InvalidOption.SaveMode, "ContextSaveMode")]
     [InlineData(InvalidOption.MaximumSavedContexts, "MaximumSavedContexts")]
-    [InlineData(InvalidOption.LogLevel, "LogLevel")]
+    [InlineData(InvalidOption.MinimumLogLevel, "MinimumLevel")]
     [RequirementCoverage("REQ-VSB-TEST-OPTIONS-STARTUP", "each-static-invariant-is-causal")]
     public void InvalidHarnessOrLoggerOption_FailsBeforeTheHarnessStarts(InvalidOption invalid, string property)
     {
@@ -64,8 +63,8 @@ public sealed class TestHarnessOptionsStartupValidationTests
         });
         services.Configure<TextWriterLoggerOptions>(options =>
         {
-            if (invalid == InvalidOption.LogLevel)
-                options.LogLevel = (LogLevel)42;
+            if (invalid == InvalidOption.MinimumLogLevel)
+                options.MinimumLevel = (LogLevel)42;
         });
         return services.BuildServiceProvider();
     }
@@ -76,6 +75,6 @@ public sealed class TestHarnessOptionsStartupValidationTests
         InactivityTimeout,
         SaveMode,
         MaximumSavedContexts,
-        LogLevel,
+        MinimumLogLevel,
     }
 }

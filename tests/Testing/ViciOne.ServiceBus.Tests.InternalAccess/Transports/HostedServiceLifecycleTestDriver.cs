@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Hosting;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.Transports;
@@ -7,6 +9,8 @@ namespace ViciOne.ServiceBus.Tests.InternalAccess.Transports;
 public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
 {
     private readonly TestBusDepot _depot;
+    private readonly RecordingLogger _logger = new();
+    private readonly RecordingLoggerFactory _loggerFactory;
     private readonly ServiceBusHostedService _hostedService;
 
     public HostedServiceLifecycleTestDriver(
@@ -17,6 +21,7 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
         TimeProvider? timeProvider = null)
     {
         _depot = new TestBusDepot(blockFirstStop);
+        _loggerFactory = new RecordingLoggerFactory(_logger);
         _hostedService = new ServiceBusHostedService(
             new TestServiceProvider(_depot),
             Options.Create(new ViciOneServiceBusHostOptions
@@ -25,12 +30,15 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
                 StartTimeout = startTimeout,
                 StopTimeout = stopTimeout,
             }),
+            _loggerFactory,
             timeProvider);
     }
 
     public Task StartEntered => _depot.StartEntered;
 
     public Task StopEntered => _depot.StopEntered;
+
+    public Task<Exception> BackgroundStartFailureObserved => _logger.BackgroundStartFailureObserved;
 
     public int StartCount => _depot.StartCount;
 
@@ -41,6 +49,8 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
     public Task StopAsync(CancellationToken cancellationToken) => _hostedService.StopAsync(cancellationToken);
 
     public void CompleteStart() => _depot.CompleteStart();
+
+    public void FailStart(Exception exception) => _depot.FailStart(exception);
 
     public void ReleaseStop() => _depot.ReleaseStop();
 
@@ -92,6 +102,47 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
 
         public void CompleteStart() => _start.TrySetResult();
 
+        public void FailStart(Exception exception) => _start.TrySetException(exception);
+
         public void ReleaseStop() => _stopRelease.TrySetResult();
+    }
+
+    private sealed class RecordingLogger : ILogger
+    {
+        private readonly TaskCompletionSource<Exception> _backgroundStartFailureObserved =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task<Exception> BackgroundStartFailureObserved => _backgroundStartFailureObserved.Task;
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            if (logLevel == LogLevel.Error && exception is not null
+                && string.Equals(formatter(state, exception), "Background bus startup did not complete successfully", StringComparison.Ordinal))
+            {
+                _backgroundStartFailureObserved.TrySetResult(exception);
+            }
+        }
+    }
+
+    private sealed class RecordingLoggerFactory(ILogger logger) : ILoggerFactory
+    {
+        public void AddProvider(ILoggerProvider provider)
+        {
+        }
+
+        public ILogger CreateLogger(string categoryName) => logger;
+
+        public void Dispose()
+        {
+        }
     }
 }

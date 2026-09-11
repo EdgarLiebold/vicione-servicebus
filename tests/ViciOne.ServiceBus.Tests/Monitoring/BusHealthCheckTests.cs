@@ -4,6 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Monitoring;
+using ViciOne.ServiceBus.Monitoring.Health;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;

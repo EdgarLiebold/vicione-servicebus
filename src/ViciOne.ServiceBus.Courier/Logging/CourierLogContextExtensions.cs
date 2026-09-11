@@ -1,5 +1,8 @@
 using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Monitoring;
 
 namespace ViciOne.ServiceBus.Logging;
 
@@ -19,9 +22,9 @@ internal static class CourierLogContextExtensions
     {
         return LogContextActivityExtensions.StartActivity(context.Advanced(), activity =>
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TArguments>.DiagnosticAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CourierTrackingNumber, context.Message.TrackingNumber.ToString("D"));
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TActivity>.ShortName);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TArguments>.DiagnosticAddress);
         });
     }
 
@@ -38,9 +41,9 @@ internal static class CourierLogContextExtensions
     {
         return LogContextActivityExtensions.StartActivity(context.Advanced(), activity =>
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TLog>.DiagnosticAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CourierTrackingNumber, context.Message.TrackingNumber.ToString("D"));
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TActivity>.ShortName);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TLog>.DiagnosticAddress);
         });
     }
 

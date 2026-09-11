@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Serialization;
@@ -107,10 +108,10 @@ internal sealed class RawMessageContext :
         };
         static readonly HashSet<string> DiagnosticPropagationHeaderNames = new(StringComparer.OrdinalIgnoreCase)
         {
-            DiagnosticHeaders.ActivityId,
-            DiagnosticHeaders.ActivityTraceState,
-            DiagnosticHeaders.ActivityCorrelationContext,
-            DiagnosticHeaders.ActivityPropagation,
+            DiagnosticPropagationHeaders.ActivityId,
+            DiagnosticPropagationHeaders.TraceState,
+            DiagnosticPropagationHeaders.Baggage,
+            DiagnosticPropagationHeaders.ParentMode,
         };
 
         readonly Headers _headers;

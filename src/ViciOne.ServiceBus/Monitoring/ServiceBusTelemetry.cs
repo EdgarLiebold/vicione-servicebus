@@ -77,6 +77,12 @@ public static class ServiceBusTelemetry
         public const string OperationName = "messaging.operation.name";
         /// <summary>Classifies the operation as send, receive, or process.</summary>
         public const string OperationType = "messaging.operation.type";
+        /// <summary>Identifies the destination presented to the messaging client.</summary>
+        public const string DestinationName = "messaging.destination.name";
+        /// <summary>Records the uncompressed application-body size in bytes.</summary>
+        public const string MessageBodySize = "messaging.message.body.size";
+        /// <summary>Identifies a conversation spanning multiple related messages.</summary>
+        public const string ConversationId = "messaging.message.conversation_id";
         /// <summary>Identifies the exception type for a failed operation.</summary>
         public const string ErrorType = "error.type";
         /// <summary>Distinguishes consumer and handler processors.</summary>
@@ -101,6 +107,45 @@ public static class ServiceBusTelemetry
         public const string ReliabilitySide = "vicione.servicebus.reliability.side";
         /// <summary>Identifies an individual message using the OpenTelemetry semantic convention.</summary>
         public const string MessageId = "messaging.message.id";
+        /// <summary>Identifies the application correlation chain associated with a message.</summary>
+        public const string CorrelationId = "vicione.servicebus.correlation.id";
+        /// <summary>Identifies the message that initiated the current conversation.</summary>
+        public const string InitiatorId = "vicione.servicebus.initiator.id";
+        /// <summary>Identifies a request/response interaction.</summary>
+        public const string RequestId = "vicione.servicebus.request.id";
+        /// <summary>Records the logical source address carried by the message envelope.</summary>
+        public const string SourceAddress = "vicione.servicebus.source.address";
+        /// <summary>Records the logical destination address carried by the message envelope.</summary>
+        public const string DestinationAddress = "vicione.servicebus.destination.address";
+        /// <summary>Records the receive endpoint address that accepted a message.</summary>
+        public const string InputAddress = "vicione.servicebus.input.address";
+        /// <summary>Lists the contracts supported by a serialized message.</summary>
+        public const string MessageContracts = "vicione.servicebus.contracts";
+        /// <summary>Identifies the consumer, handler, saga, or activity processing a message.</summary>
+        public const string ProcessorName = "vicione.servicebus.processor.name";
+        /// <summary>Identifies a Courier routing slip.</summary>
+        public const string CourierTrackingNumber = "vicione.servicebus.courier.tracking_number";
+        /// <summary>Identifies the saga instance processing a message.</summary>
+        public const string SagaId = "vicione.servicebus.saga.id";
+        /// <summary>Records the saga state before message processing.</summary>
+        public const string SagaStateBefore = "vicione.servicebus.saga.state.before";
+        /// <summary>Records the saga state after message processing.</summary>
+        public const string SagaStateAfter = "vicione.servicebus.saga.state.after";
+        /// <summary>Records the RabbitMQ routing key selected for a send.</summary>
+        public const string RabbitMqRoutingKey = "messaging.rabbitmq.destination.routing_key";
+        /// <summary>Identifies the exception type recorded by an exception event.</summary>
+        public const string ExceptionType = "exception.type";
+        /// <summary>Records the exception message attached to an exception event.</summary>
+        public const string ExceptionMessage = "exception.message";
+        /// <summary>Records the exception stack trace attached to an exception event.</summary>
+        public const string ExceptionStackTrace = "exception.stacktrace";
+    }
+
+    /// <summary>Defines the names of events emitted on service-bus activities.</summary>
+    public static class Events
+    {
+        /// <summary>Identifies an exception event.</summary>
+        public const string Exception = "exception";
     }
 
     /// <summary>Defines the OpenTelemetry messaging-system identifiers used by supported transports.</summary>

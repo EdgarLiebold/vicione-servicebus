@@ -1,6 +1,7 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Runtime;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.Runtime;
@@ -9,12 +10,14 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
 {
     private static readonly Uri Address = new("loopback://runtime-lifecycle/bus");
     private readonly RecordingBusObserver _observer = new();
-    private readonly CompletingStopHostHandle _hostHandle = new(Address);
+    private readonly CompletingStopHostHandle _hostHandle;
     private readonly TaskCompletionSource _hostStarted =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    public ServiceBusRuntimeLifecycleTestDriver()
+    public ServiceBusRuntimeLifecycleTestDriver(bool completeReadyOnStop = true)
     {
+        _hostHandle = new CompletingStopHostHandle(Address, completeReadyOnStop);
+
         if (LogContext.Current == null)
             LogContext.ConfigureCurrentLogContext();
 
@@ -101,7 +104,7 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
             throw new InvalidOperationException($"Unexpected passive dependency member: {targetMethod?.Name}.");
     }
 
-    private sealed class CompletingStopHostHandle(Uri address) : IHostHandle
+    private sealed class CompletingStopHostHandle(Uri address, bool completeReadyOnStop) : IHostHandle
     {
         private readonly TaskCompletionSource<HostReady> _ready =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -115,7 +118,8 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
         {
             cancellationToken.ThrowIfCancellationRequested();
             Interlocked.Increment(ref _stopCount);
-            _ready.TrySetResult(new HostReadyEvent(address, [], []));
+            if (completeReadyOnStop)
+                _ready.TrySetResult(new HostReadyEvent(address, [], []));
             return Task.CompletedTask;
         }
     }

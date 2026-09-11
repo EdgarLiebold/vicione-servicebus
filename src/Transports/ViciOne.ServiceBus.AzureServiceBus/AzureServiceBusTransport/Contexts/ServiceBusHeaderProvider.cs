@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
@@ -49,8 +50,8 @@ public class ServiceBusHeaderProvider :
             if (_message.ApplicationProperties.TryGetValue(key, out value) && value != null)
                 return true;
 
-            if (DiagnosticHeaders.ActivityId.Equals(key, StringComparison.OrdinalIgnoreCase)
-                && _message.ApplicationProperties.TryGetValue(DiagnosticHeaders.DiagnosticId, out value)
+            if (DiagnosticPropagationHeaders.ActivityId.Equals(key, StringComparison.OrdinalIgnoreCase)
+                && _message.ApplicationProperties.TryGetValue(DiagnosticPropagationHeaders.LegacyAzureDiagnosticId, out value)
                 && value != null)
                 return true;
         }

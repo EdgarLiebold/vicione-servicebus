@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.Infrastructure;
-using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Providers.Transports;
@@ -81,14 +80,14 @@ public sealed class TransactionalOutboxRequestSagaTests
             request,
             fixture.CancellationToken);
         ActivitySnapshot sagaActivity = Assert.Single(activities, activity =>
-            Equals(activity.Tag(DiagnosticHeaders.SagaId), request.CorrelationId.ToString("D")));
+            Equals(activity.Tag(ServiceBusTelemetry.Attributes.SagaId), request.CorrelationId.ToString("D")));
 
         Assert.Equal(request.CorrelationId, response.Message.CorrelationId);
         Assert.Equal(ServiceBusTelemetry.ActivitySourceName, sagaActivity.SourceName);
         Assert.Equal(ActivityKind.Consumer, sagaActivity.Kind);
-        Assert.Equal("process", sagaActivity.Tag(DiagnosticHeaders.Messaging.Operation));
-        Assert.Equal(request.CorrelationId.ToString("D"), sagaActivity.Tag(DiagnosticHeaders.CorrelationId));
-        Assert.False(string.IsNullOrWhiteSpace(Assert.IsType<string>(sagaActivity.Tag(DiagnosticHeaders.RequestId))));
+        Assert.Equal("process", sagaActivity.Tag(ServiceBusTelemetry.Attributes.OperationType));
+        Assert.Equal(request.CorrelationId.ToString("D"), sagaActivity.Tag(ServiceBusTelemetry.Attributes.CorrelationId));
+        Assert.False(string.IsNullOrWhiteSpace(Assert.IsType<string>(sagaActivity.Tag(ServiceBusTelemetry.Attributes.RequestId))));
     }
 
     [Fact]

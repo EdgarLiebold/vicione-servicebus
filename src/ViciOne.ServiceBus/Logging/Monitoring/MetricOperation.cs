@@ -1,12 +1,12 @@
 using System;
 using System.Threading;
 
-namespace ViciOne.ServiceBus.Logging;
+namespace ViciOne.ServiceBus.Logging.Monitoring;
 /// <summary>
 /// Completes the metric observations associated with one message-flow operation. Telemetry
 /// observers are outside the product trust boundary and cannot change message-flow semantics.
 /// </summary>
-public sealed class MetricOperation
+internal sealed class MetricOperation
 {
     private Action<Exception?>? _complete;
     private Exception? _exception;

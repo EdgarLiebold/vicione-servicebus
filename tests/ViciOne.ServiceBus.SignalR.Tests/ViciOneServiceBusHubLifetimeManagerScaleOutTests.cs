@@ -188,6 +188,10 @@ public sealed class ViciOneServiceBusHubLifetimeManagerScaleOutTests : IAsyncLif
             "Hello",
             ["World"],
             TestContext.Current.CancellationToken);
+        Assert.True(await _first.Group.Consumed.AnyAsync<Group<TestHub>>(TestContext.Current.CancellationToken));
+        Guid? firstBackplaneMessageId = Assert.Single(
+            _first.Group.Consumed.Snapshot<Group<TestHub>>()).Context.MessageId;
+        Assert.NotNull(firstBackplaneMessageId);
         await AssertInvocationAsync(client);
 
         await _second.Manager.RemoveFromGroupAsync(
@@ -200,11 +204,9 @@ public sealed class ViciOneServiceBusHubLifetimeManagerScaleOutTests : IAsyncLif
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.NotNull(
-            _first.Group.Consumed
-                .Snapshot<Group<TestHub>>()
-                .Skip(1)
-                .FirstOrDefault());
+        Assert.True(await _first.Group.Consumed.AnyAsync<Group<TestHub>>(
+            consumed => consumed.Context.MessageId != firstBackplaneMessageId,
+            TestContext.Current.CancellationToken));
         await AssertNoInvocationAsync(client);
     }
 

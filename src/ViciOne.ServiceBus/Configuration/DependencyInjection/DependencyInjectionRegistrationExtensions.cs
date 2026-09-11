@@ -8,7 +8,8 @@ using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.Monitoring;
+using ViciOne.ServiceBus.Hosting;
+using ViciOne.ServiceBus.Monitoring.Health;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Transports;
 

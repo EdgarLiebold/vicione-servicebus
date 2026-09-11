@@ -12077,11 +12077,6 @@ TYPE class public ViciOne.ServiceBus.Sagas.InMemorySagaRepository<TSaga>
   PROPERTY ViciOne.ServiceBus.Saga.SagaInstance<TSaga> Item[System.Guid id] { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Sagas.InitiatedBy<TMessage>
 TYPE interface public ViciOne.ServiceBus.Sagas.InitiatedByOrOrchestrates<TMessage>
-TYPE class public ViciOne.ServiceBus.Sagas.Logging.SagaLogContextExtensions [static]
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartSagaActivity<TSaga,TMessage>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage> context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartSagaStateMachineActivity<TInstance,TMessage>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Sagas.BehaviorContext<TInstance,TMessage> context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartSagaInstrument<TSaga,TMessage>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage> context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartSagaStateMachineInstrument<TInstance,TMessage>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Sagas.BehaviorContext<TInstance,TMessage> context)
 TYPE class public ViciOne.ServiceBus.Sagas.MissingInstanceRedeliveryExtensions [static]
   METHOD public static ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TData>> Redeliver<TInstance,TData>(ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator<TInstance,TData> configurator, System.Action<ViciOne.ServiceBus.Sagas.IMissingInstanceRedeliveryConfigurator<TInstance,TData>> configure)
 TYPE interface public ViciOne.ServiceBus.Sagas.Observes<TMessage,TSaga>
@@ -14390,6 +14385,10 @@ TYPE class public ViciOne.ServiceBus.Testing.TestingServiceProviderExtensions [s
   METHOD public static System.Void AddSagaInstance<TSaga>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Nullable<System.Guid> correlationId = null, System.Action<TSaga> configureSaga = null)
   METHOD public static System.Void AddTaskCompletionSource<TResult>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator)
   METHOD public static ViciOne.ServiceBus.Testing.ITestHarness GetTestHarness(System.IServiceProvider provider)
+TYPE class public ViciOne.ServiceBus.Testing.TextWriterLoggerOptions [sealed]
+  CTOR public ViciOne.ServiceBus.Testing.TextWriterLoggerOptions()
+  METHOD public ViciOne.ServiceBus.Testing.TextWriterLoggerOptions SuppressCategory(System.String categoryName)
+  PROPERTY Microsoft.Extensions.Logging.LogLevel MinimumLevel { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Testing.TimelineExtensions [static]
   METHOD public static System.Threading.Tasks.Task OutputTimelineAsync(ViciOne.ServiceBus.Testing.IBaseTestHarness harness, System.IO.TextWriter textWriter, System.Action<ViciOne.ServiceBus.Testing.TimelineOutputOptions> configure = null, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Testing.TimelineOutputOptions [sealed]
@@ -14510,12 +14509,12 @@ TYPE class public ViciOne.ServiceBus.Advanced.LogContext [static]
   METHOD public static ViciOne.ServiceBus.Logging.LogMessage<T1,T2> Define<T1,T2>(Microsoft.Extensions.Logging.LogLevel logLevel, System.String messageTemplate)
   METHOD public static ViciOne.ServiceBus.Logging.LogMessage<T1,T2> DefineMessage<T1,T2>(Microsoft.Extensions.Logging.LogLevel logLevel, System.String messageTemplate)
   METHOD public static ViciOne.ServiceBus.Logging.LogMessage<T1> Define<T1>(Microsoft.Extensions.Logging.LogLevel logLevel, System.String messageTemplate)
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Critical { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Debug { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Error { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Info { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Trace { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Warning { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Critical { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Debug { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Error { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Info { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Trace { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Warning { public-get;  }
   PROPERTY ViciOne.ServiceBus.Logging.ILogContext Current { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder [sealed]
   CTOR public ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder()
@@ -17779,89 +17778,19 @@ TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.VersionTypeConv
   METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Version result)
   METHOD public virtual System.Boolean TryConvert(System.String input, out System.Version result)
   METHOD public virtual System.Boolean TryConvert(System.Version input, out System.String result)
-TYPE class public ViciOne.ServiceBus.Logging.BusLogContext
-  CTOR public ViciOne.ServiceBus.Logging.BusLogContext(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory)
-  METHOD public virtual ViciOne.ServiceBus.Logging.ILogContext CreateLogContext(System.String categoryName)
-  PROPERTY Microsoft.Extensions.Logging.ILogger Logger { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Critical { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Debug { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Error { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Info { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Trace { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Warning { public-get;  }
-TYPE class public ViciOne.ServiceBus.Logging.DiagnosticActivityExtensions [static]
-  METHOD public static System.Void AddConsumeContextTags(System.Diagnostics.Activity activity, ViciOne.ServiceBus.ConsumeContext context)
-TYPE class public ViciOne.ServiceBus.Logging.DiagnosticHeaders [static]
-  FIELD public const System.String ActivityCorrelationContext = "VSB-Activity-Correlation-Context"
-  FIELD public const System.String ActivityId = "VSB-Activity-Id"
-  FIELD public const System.String ActivityPropagation = "VSB-Activity-Propagation"
-  FIELD public const System.String ActivityTraceState = "VSB-Activity-Trace-State"
-  FIELD public const System.String BeginState = "messaging.vicione-servicebus.begin_state"
-  FIELD public const System.String ConsumerType = "messaging.vicione-servicebus.consumer_type"
-  FIELD public const System.String CorrelationId = "messaging.vicione-servicebus.correlation_id"
-  FIELD public const System.String DefaultListenerName = "ViciOne.ServiceBus"
-  FIELD public const System.String DestinationAddress = "messaging.vicione-servicebus.destination_address"
-  FIELD public const System.String DiagnosticId = "Diagnostic-Id"
-  FIELD public const System.String EndState = "messaging.vicione-servicebus.end_state"
-  FIELD public const System.String InitiatorId = "messaging.vicione-servicebus.initiator_id"
-  FIELD public const System.String InputAddress = "messaging.vicione-servicebus.input_address"
-  FIELD public const System.String MessageId = "messaging.vicione-servicebus.message_id"
-  FIELD public const System.String MessageTypes = "messaging.vicione-servicebus.message_types"
-  FIELD public const System.String PeerAddress = "peer.address"
-  FIELD public const System.String RequestId = "messaging.vicione-servicebus.request_id"
-  FIELD public const System.String SagaId = "messaging.vicione-servicebus.saga_id"
-  FIELD public const System.String SourceAddress = "messaging.vicione-servicebus.source_address"
-  FIELD public const System.String TrackingNumber = "messaging.vicione-servicebus.tracking_number"
-TYPE class public ViciOne.ServiceBus.Logging.DiagnosticHeaders.Exceptions
-  CTOR public ViciOne.ServiceBus.Logging.DiagnosticHeaders.Exceptions()
-  FIELD public const System.String Escaped = "exception.escaped"
-  FIELD public const System.String EventName = "exception"
-  FIELD public const System.String Message = "exception.message"
-  FIELD public const System.String Stacktrace = "exception.stacktrace"
-  FIELD public const System.String Type = "exception.type"
-TYPE class public ViciOne.ServiceBus.Logging.DiagnosticHeaders.Messaging [static]
-  FIELD public const System.String BodyLength = "messaging.message.body.size"
-  FIELD public const System.String ConversationId = "messaging.message.conversation_id"
-  FIELD public const System.String DestinationName = "messaging.destination.name"
-  FIELD public const System.String Operation = "messaging.operation"
-  FIELD public const System.String System = "messaging.system"
-  FIELD public const System.String TransportMessageId = "messaging.message.id"
-TYPE class public ViciOne.ServiceBus.Logging.DiagnosticHeaders.Messaging.RabbitMq [static]
-  FIELD public const System.String RoutingKey = "messaging.rabbitmq.destination.routing_key"
-TYPE struct public ViciOne.ServiceBus.Logging.EnabledLogger
-  CTOR public ViciOne.ServiceBus.Logging.EnabledLogger(Microsoft.Extensions.Logging.ILogger logger, Microsoft.Extensions.Logging.LogLevel level)
+TYPE class public ViciOne.ServiceBus.Logging.EnabledLogger [sealed]
   METHOD public System.Void Log(System.Exception exception, System.String message, System.Object[] args)
   METHOD public System.Void Log(System.String message, System.Object[] args)
 TYPE interface public ViciOne.ServiceBus.Logging.ILogContext
   METHOD public abstract ViciOne.ServiceBus.Logging.ILogContext CreateLogContext(System.String categoryName)
   PROPERTY Microsoft.Extensions.Logging.ILogger Logger { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Critical { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Debug { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Error { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Info { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Trace { public-get;  }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Logging.EnabledLogger> Warning { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Critical { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Debug { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Error { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Info { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Trace { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Logging.EnabledLogger Warning { public-get;  }
   PROPERTY ViciOne.ServiceBus.Logging.ILogContext Messages { public-get;  }
-TYPE class public ViciOne.ServiceBus.Logging.LogCategoryName [static]
-  FIELD public const System.String ViciOneServiceBus = "ViciOne.ServiceBus"
-TYPE class public ViciOne.ServiceBus.Logging.LogCategoryName.Transport [static]
-  FIELD public const System.String Receive = "ViciOne.ServiceBus.ReceiveTransport"
-  FIELD public const System.String Send = "ViciOne.ServiceBus.SendTransport"
-TYPE class public ViciOne.ServiceBus.Logging.LogContextActivityExtensions [static]
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartConsumerActivity<TConsumer,T>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartGenericActivity(ViciOne.ServiceBus.Logging.ILogContext logContext, System.String operationName)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartHandlerActivity<T>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartOutboxDeliverActivity(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Middleware.OutboxMessageContext context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartOutboxSendActivity<T>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartReceiveActivity(ViciOne.ServiceBus.Logging.ILogContext logContext, System.String name, System.String inputAddress, System.String endpointName, ViciOne.ServiceBus.Advanced.ReceiveContext context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartSendActivity<T>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Transports.SendTransportContext transportContext, ViciOne.ServiceBus.Advanced.SendContext<T> context, System.ValueTuple<System.String,System.Object>[] tags)
-TYPE class public ViciOne.ServiceBus.Logging.LogContextInstrumentationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartConsumeInstrument<TConsumer,T>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartHandlerInstrument<TMessage>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<TMessage> context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartOutboxDeliveryInstrument(ViciOne.ServiceBus.Logging.ILogContext logContext)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartOutboxEnqueueInstrument(ViciOne.ServiceBus.Logging.ILogContext logContext)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartReceiveInstrument(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Advanced.ReceiveContext context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartSendInstrument<T>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.Transports.SendTransportContext transportContext, ViciOne.ServiceBus.Advanced.SendContext<T> context)
 TYPE delegate public ViciOne.ServiceBus.Logging.LogMessage<T1,T2,T3,T4,T5> [sealed]
   CTOR public ViciOne.ServiceBus.Logging.LogMessage<T1,T2,T3,T4,T5>(System.Object object, System.IntPtr method)
   METHOD public virtual System.IAsyncResult BeginInvoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, System.Exception exception, System.AsyncCallback callback, System.Object object)
@@ -17887,52 +17816,6 @@ TYPE delegate public ViciOne.ServiceBus.Logging.LogMessage<T1> [sealed]
   METHOD public virtual System.IAsyncResult BeginInvoke(T1 arg1, System.Exception exception, System.AsyncCallback callback, System.Object object)
   METHOD public virtual System.Void EndInvoke(System.IAsyncResult result)
   METHOD public virtual System.Void Invoke(T1 arg1, System.Exception exception = null)
-TYPE class public ViciOne.ServiceBus.Logging.MetricOperation [sealed]
-  METHOD public System.Void Complete()
-  METHOD public System.Void RecordException(System.Exception exception)
-TYPE class public ViciOne.ServiceBus.Logging.OperationName [static]
-TYPE class public ViciOne.ServiceBus.Logging.OperationName.Consumer [static]
-  FIELD public const System.String Consume = "ViciOne.ServiceBus.Consumer.Consume"
-  FIELD public const System.String Handle = "ViciOne.ServiceBus.Consumer.Handle"
-TYPE class public ViciOne.ServiceBus.Logging.OperationName.Courier [static]
-  FIELD public const System.String Compensate = "ViciOne.ServiceBus.Activity.Compensate"
-  FIELD public const System.String Execute = "ViciOne.ServiceBus.Activity.Execute"
-TYPE class public ViciOne.ServiceBus.Logging.OperationName.Saga [static]
-  FIELD public const System.String Initiate = "ViciOne.ServiceBus.Saga.Initiate"
-  FIELD public const System.String InitiateOrOrchestrate = "ViciOne.ServiceBus.Saga.InitiateOrOrchestrate"
-  FIELD public const System.String Observe = "ViciOne.ServiceBus.Saga.Observe"
-  FIELD public const System.String Orchestrate = "ViciOne.ServiceBus.Saga.Orchestrate"
-  FIELD public const System.String RaiseEvent = "ViciOne.ServiceBus.Saga.RaiseEvent"
-  FIELD public const System.String Send = "ViciOne.ServiceBus.Saga.Send"
-  FIELD public const System.String SendQuery = "ViciOne.ServiceBus.Saga.SendQuery"
-TYPE class public ViciOne.ServiceBus.Logging.SingleLoggerFactory
-  CTOR public ViciOne.ServiceBus.Logging.SingleLoggerFactory(Microsoft.Extensions.Logging.ILogger logger)
-  METHOD public virtual Microsoft.Extensions.Logging.ILogger CreateLogger(System.String name)
-  METHOD public virtual System.Void AddProvider(Microsoft.Extensions.Logging.ILoggerProvider provider)
-  METHOD public virtual System.Void Dispose()
-TYPE struct public ViciOne.ServiceBus.Logging.StartedActivity
-  CTOR public ViciOne.ServiceBus.Logging.StartedActivity(System.Diagnostics.Activity activity, System.TimeProvider timeProvider = null)
-  FIELD public readonly System.Diagnostics.Activity Activity
-  METHOD public System.Void AddExceptionEvent(System.Exception exception, System.Boolean escaped = true)
-  METHOD public System.Void SetTag(System.String key, System.String value)
-  METHOD public System.Void Stop()
-  METHOD public System.Void Update<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-TYPE class public ViciOne.ServiceBus.Logging.TextWriterLogger
-  CTOR public ViciOne.ServiceBus.Logging.TextWriterLogger(ViciOne.ServiceBus.Logging.TextWriterLoggerFactory factory, Microsoft.Extensions.Logging.LogLevel logLevel, System.TimeProvider timeProvider = null)
-  METHOD public virtual System.Boolean IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
-  METHOD public virtual System.IDisposable BeginScope<TState>(TState state)
-  METHOD public virtual System.Void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, Microsoft.Extensions.Logging.EventId eventId, TState state, System.Exception exception, System.Func<TState,System.Exception,System.String> formatter)
-TYPE class public ViciOne.ServiceBus.Logging.TextWriterLoggerFactory
-  CTOR public ViciOne.ServiceBus.Logging.TextWriterLoggerFactory(System.IO.TextWriter textWriter, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Logging.TextWriterLoggerOptions> options, System.TimeProvider timeProvider = null)
-  METHOD public virtual Microsoft.Extensions.Logging.ILogger CreateLogger(System.String name)
-  METHOD public virtual System.Void AddProvider(Microsoft.Extensions.Logging.ILoggerProvider provider)
-  METHOD public virtual System.Void Dispose()
-  PROPERTY System.IO.TextWriter Writer { public-get;  }
-TYPE class public ViciOne.ServiceBus.Logging.TextWriterLoggerOptions [sealed]
-  CTOR public ViciOne.ServiceBus.Logging.TextWriterLoggerOptions()
-  METHOD public System.Boolean IsEnabled(System.String name)
-  METHOD public ViciOne.ServiceBus.Logging.TextWriterLoggerOptions Disable(System.String name)
-  PROPERTY Microsoft.Extensions.Logging.LogLevel LogLevel { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.MessageData.Configuration.ActivityMessageDataConfigurationObserver [sealed,base=ViciOne.ServiceBus.Configuration.ConfigurationObserver]
   CTOR public ViciOne.ServiceBus.MessageData.Configuration.ActivityMessageDataConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Boolean includeMessages)
   METHOD public System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
@@ -18648,11 +18531,23 @@ TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry [static]
   FIELD public const System.String Name = "ViciOne.ServiceBus"
 TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Attributes [static]
   FIELD public const System.String Bus = "vicione.servicebus.bus"
+  FIELD public const System.String ConversationId = "messaging.message.conversation_id"
+  FIELD public const System.String CorrelationId = "vicione.servicebus.correlation.id"
+  FIELD public const System.String CourierTrackingNumber = "vicione.servicebus.courier.tracking_number"
   FIELD public const System.String DeliveryAttempt = "vicione.servicebus.delivery.attempt"
+  FIELD public const System.String DestinationAddress = "vicione.servicebus.destination.address"
+  FIELD public const System.String DestinationName = "messaging.destination.name"
   FIELD public const System.String DurableSendId = "vicione.servicebus.durable_send.id"
   FIELD public const System.String DurableSenderRetainedContentSize = "vicione.servicebus.durable_sender.retained_content.size"
   FIELD public const System.String ErrorType = "error.type"
+  FIELD public const System.String ExceptionMessage = "exception.message"
+  FIELD public const System.String ExceptionStackTrace = "exception.stacktrace"
+  FIELD public const System.String ExceptionType = "exception.type"
+  FIELD public const System.String InitiatorId = "vicione.servicebus.initiator.id"
+  FIELD public const System.String InputAddress = "vicione.servicebus.input.address"
+  FIELD public const System.String MessageBodySize = "messaging.message.body.size"
   FIELD public const System.String MessageContract = "vicione.servicebus.contract"
+  FIELD public const System.String MessageContracts = "vicione.servicebus.contracts"
   FIELD public const System.String MessageId = "messaging.message.id"
   FIELD public const System.String MessagingSystem = "messaging.system"
   FIELD public const System.String OperationName = "messaging.operation.name"
@@ -18661,7 +18556,16 @@ TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Attributes [
   FIELD public const System.String Outcome = "vicione.servicebus.outcome"
   FIELD public const System.String PayloadWarningThresholdExceeded = "vicione.servicebus.payload.warning_threshold_exceeded"
   FIELD public const System.String ProcessorKind = "vicione.servicebus.processor.kind"
+  FIELD public const System.String ProcessorName = "vicione.servicebus.processor.name"
+  FIELD public const System.String RabbitMqRoutingKey = "messaging.rabbitmq.destination.routing_key"
   FIELD public const System.String ReliabilitySide = "vicione.servicebus.reliability.side"
+  FIELD public const System.String RequestId = "vicione.servicebus.request.id"
+  FIELD public const System.String SagaId = "vicione.servicebus.saga.id"
+  FIELD public const System.String SagaStateAfter = "vicione.servicebus.saga.state.after"
+  FIELD public const System.String SagaStateBefore = "vicione.servicebus.saga.state.before"
+  FIELD public const System.String SourceAddress = "vicione.servicebus.source.address"
+TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Events [static]
+  FIELD public const System.String Exception = "exception"
 TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.MessagingSystems [static]
   FIELD public const System.String ActiveMq = "activemq"
   FIELD public const System.String AmazonSns = "aws.sns"

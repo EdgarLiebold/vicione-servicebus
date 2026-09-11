@@ -9,16 +9,15 @@ using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Transports;
-using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Runtime;
 
 internal sealed partial class ServiceBusRuntime :
     IBusControl,
     Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
 {
-    /// <summary>Bounds startup and synchronous connections waiting for the on-demand bus endpoint.</summary>
+    /// <summary>Bounds startup when the caller supplies no cancellation token.</summary>
     static readonly TimeSpan DefaultReadinessTimeout = TimeSpan.FromSeconds(60);
 
     /// <summary>Bounds host cleanup after bus startup fails or is canceled.</summary>
@@ -33,10 +32,6 @@ internal sealed partial class ServiceBusRuntime :
     readonly IReceiveEndpoint _receiveEndpoint;
     readonly TimeProvider _timeProvider;
     BusLifecycleHandle? _busHandle;
-
-    /// <summary>The terminal bus-endpoint failure that no subsequent retry can resolve.</summary>
-    TerminalFaultObserver? _terminalFault;
-    ConnectHandle? _terminalFaultHandle;
 
     BusState _busState;
     string _healthMessage = "not started";
@@ -69,21 +64,21 @@ internal sealed partial class ServiceBusRuntime :
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return WaitForBusEndpoint(_consumePipe.ConnectConsumePipe(pipe));
+        return _consumePipe.ConnectConsumePipe(pipe);
     }
 
     ConnectHandle IConsumePipeConnector.ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe, ConnectPipeOptions options)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return WaitForBusEndpoint(_consumePipe.ConnectConsumePipe(pipe, options));
+        return _consumePipe.ConnectConsumePipe(pipe, options);
     }
 
     ConnectHandle IRequestPipeConnector.ConnectRequestPipe<TMessage>(Guid requestId, IPipe<ConsumeContext<TMessage>> pipe)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return WaitForBusEndpoint(_consumePipe.ConnectRequestPipe(requestId, pipe));
+        return _consumePipe.ConnectRequestPipe(requestId, pipe);
     }
 
     Task IPublishEndpoint.PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken)

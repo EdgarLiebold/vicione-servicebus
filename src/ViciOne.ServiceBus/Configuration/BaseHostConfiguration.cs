@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Internal;
+using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
@@ -71,8 +73,8 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         {
             _logContext = value;
 
-            SendLogContext = value?.CreateLogContext(LogCategoryName.Transport.Send);
-            ReceiveLogContext = value?.CreateLogContext(LogCategoryName.Transport.Receive);
+            SendLogContext = value?.CreateLogContext(ServiceBusLogCategories.SendTransport);
+            ReceiveLogContext = value?.CreateLogContext(ServiceBusLogCategories.ReceiveTransport);
 
             LogContextInstrumentationExtensions.CopyInstrumentation(value, SendLogContext);
             LogContextInstrumentationExtensions.CopyInstrumentation(value, ReceiveLogContext);

@@ -3,21 +3,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Hosting;
 
 internal sealed class ServiceBusHostedService :
     IHostedService,
     IAsyncDisposable
 {
     readonly SemaphoreSlim _lifecycleGate = new(1, 1);
+    readonly ILogger _logger;
     readonly object _stateLock = new();
     readonly IOptions<ViciOneServiceBusHostOptions> _options;
     readonly IServiceProvider _provider;
     readonly TimeProvider _timeProvider;
     IBusDepot? _depot;
+    Task? _backgroundStartObservation;
     Task? _startTask;
     bool _stopping;
     bool _stopped;
@@ -25,10 +29,12 @@ internal sealed class ServiceBusHostedService :
     public ServiceBusHostedService(
         IServiceProvider provider,
         IOptions<ViciOneServiceBusHostOptions> options,
+        ILoggerFactory? loggerFactory = null,
         TimeProvider? timeProvider = null)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _logger = (loggerFactory ?? NullLoggerFactory.Instance).CreateLogger(typeof(ServiceBusHostedService).FullName!);
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
@@ -53,9 +59,11 @@ internal sealed class ServiceBusHostedService :
                     cancellationToken);
             }
 
-            return _startTask.IsCompleted || _options.Value.WaitUntilStarted
-                ? _startTask
-                : Task.CompletedTask;
+            if (_startTask.IsCompleted || _options.Value.WaitUntilStarted)
+                return _startTask;
+
+            _backgroundStartObservation ??= ObserveBackgroundStartAsync(_startTask);
+            return Task.CompletedTask;
         }
     }
 
@@ -90,6 +98,12 @@ internal sealed class ServiceBusHostedService :
         }
 
         await ExecuteWithTimeoutAsync(StopDepotAsync, _options.Value.StopTimeout, cancellationToken).ConfigureAwait(false);
+
+        Task? backgroundStartObservation;
+        lock (_stateLock)
+            backgroundStartObservation = _backgroundStartObservation;
+        if (backgroundStartObservation is not null)
+            await backgroundStartObservation.ConfigureAwait(false);
     }
 
     async Task StopDepotAsync(CancellationToken cancellationToken)
@@ -142,5 +156,33 @@ internal sealed class ServiceBusHostedService :
 
         using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token);
         await operation(linkedTokenSource.Token).ConfigureAwait(false);
+    }
+
+    async Task ObserveBackgroundStartAsync(Task startTask)
+    {
+        try
+        {
+            await startTask.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception)
+        {
+            TryLogBackgroundStartFailure(LogLevel.Warning, exception);
+        }
+        catch (Exception exception)
+        {
+            TryLogBackgroundStartFailure(LogLevel.Error, exception);
+        }
+    }
+
+    void TryLogBackgroundStartFailure(LogLevel level, Exception exception)
+    {
+        try
+        {
+            _logger.Log(level, exception, "Background bus startup did not complete successfully");
+        }
+        catch
+        {
+            // Logging cannot replace or leave the background startup failure unobserved.
+        }
     }
 }

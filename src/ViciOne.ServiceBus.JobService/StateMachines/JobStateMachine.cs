@@ -7,6 +7,7 @@ using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.JobService.Scheduling;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 
 namespace ViciOne.ServiceBus.JobService;
 
@@ -800,7 +801,7 @@ static class JobStateMachineBehaviorExtensions
             .Schedule(machine.JobSlotWaitElapsed, context => new JobSlotWaitElapsedEvent { JobId = context.Saga.CorrelationId },
                 context => (context.Saga.NextStartDate
                     ?? throw new InvalidOperationException("The next start date is required to schedule the job.")),
-                context => context.Headers.Set(DiagnosticHeaders.ActivityPropagation, "Link"))
+                context => context.Headers.Set(DiagnosticPropagationHeaders.ParentMode, "Link"))
             .TransitionTo(machine.WaitingForSlot);
     }
 

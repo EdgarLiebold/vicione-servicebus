@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
@@ -163,18 +164,18 @@ sealed class TestActivityListener :
 
     static string FormatDetailsColumn(SpanInfo span)
     {
-        if (span.Activity?.GetTagItem(DiagnosticHeaders.SagaId) is string sagaId)
+        if (span.Activity?.GetTagItem(ServiceBusTelemetry.Attributes.SagaId) is string sagaId)
         {
-            if (span.Activity?.GetTagItem(DiagnosticHeaders.BeginState) is string beginState
-                && span.Activity?.GetTagItem(DiagnosticHeaders.EndState) is string endState)
+            if (span.Activity?.GetTagItem(ServiceBusTelemetry.Attributes.SagaStateBefore) is string beginState
+                && span.Activity?.GetTagItem(ServiceBusTelemetry.Attributes.SagaStateAfter) is string endState)
                 return $"{sagaId}: {beginState} -> {endState}";
 
             return sagaId;
         }
 
-        if (span.Activity?.GetTagItem(DiagnosticHeaders.ConsumerType) is string consumerType)
+        if (span.Activity?.GetTagItem(ServiceBusTelemetry.Attributes.ProcessorName) is string consumerType)
         {
-            if (span.Activity?.GetTagItem(DiagnosticHeaders.RequestId) is string requestId)
+            if (span.Activity?.GetTagItem(ServiceBusTelemetry.Attributes.RequestId) is string requestId)
                 return $"{requestId}: {consumerType}";
 
             return consumerType;

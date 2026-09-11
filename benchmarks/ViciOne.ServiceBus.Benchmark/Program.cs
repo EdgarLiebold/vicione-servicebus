@@ -8,7 +8,6 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOneServiceBusBenchmark.BusOutbox;
 using ViciOneServiceBusBenchmark.Latency;
@@ -55,7 +54,7 @@ class Program
             if (optionSet.EnableTraces)
             {
                 disposables.Add(Sdk.CreateTracerProviderBuilder()
-                    .AddSource(DiagnosticHeaders.DefaultListenerName)
+                    .AddSource(ServiceBusTelemetry.ActivitySourceName)
                     .ConfigureResource(r => r.AddService("ViciOne.ServiceBus.Benchmark"))
                     .AddOtlpExporter()
                     .Build());

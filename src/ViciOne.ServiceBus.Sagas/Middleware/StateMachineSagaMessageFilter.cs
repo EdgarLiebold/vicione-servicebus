@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
+using ViciOne.ServiceBus.Monitoring;
 
 namespace ViciOne.ServiceBus.Middleware;
 
@@ -64,7 +67,7 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
             {
                 State<TInstance>? beginState = await behaviorContext.StateMachine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
                 if (beginState != null)
-                    activity?.SetTag(DiagnosticHeaders.BeginState, beginState.Name);
+                    activity?.SetTag(ServiceBusTelemetry.Attributes.SagaStateBefore, beginState.Name);
             }
 
             await _machine.RaiseEventAsync(behaviorContext).ConfigureAwait(false);
@@ -99,7 +102,7 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
                 {
                     State<TInstance>? endState = await behaviorContext.StateMachine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
                     if (endState != null)
-                        startedActivity.SetTag(DiagnosticHeaders.EndState, endState.Name);
+                        startedActivity.SetTag(ServiceBusTelemetry.Attributes.SagaStateAfter, endState.Name);
                 }
 
                 startedActivity.Stop();

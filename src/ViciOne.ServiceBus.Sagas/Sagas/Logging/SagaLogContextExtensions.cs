@@ -1,9 +1,12 @@
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Logging.Monitoring;
+using ViciOne.ServiceBus.Monitoring;
 
 namespace ViciOne.ServiceBus.Sagas.Logging;
 
 /// <summary>Adds tracing and metrics for saga and state-machine execution.</summary>
-public static class SagaLogContextExtensions
+internal static class SagaLogContextExtensions
 {
     /// <summary>Starts a tracing activity for a saga message.</summary>
     /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
@@ -18,9 +21,9 @@ public static class SagaLogContextExtensions
     {
         return LogContextActivityExtensions.StartActivity(context, activity =>
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TSaga>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TMessage>.DiagnosticAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SagaId, context.Saga.CorrelationId.ToString("D"));
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TSaga>.ShortName);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TMessage>.DiagnosticAddress);
         });
     }
 
@@ -37,9 +40,9 @@ public static class SagaLogContextExtensions
     {
         return LogContextActivityExtensions.StartActivity(context, activity =>
         {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, context.StateMachine.Name);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TMessage>.DiagnosticAddress);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SagaId, context.Saga.CorrelationId.ToString("D"));
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, context.StateMachine.Name);
+            ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TMessage>.DiagnosticAddress);
         });
     }
 
