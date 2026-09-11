@@ -672,3 +672,72 @@ identified eight generic Task return comments in this iteration's fully read fil
 now operation-specific. Another 698 remain in source owners not yet manually read. They form
 an explicit cross-iteration worklist and will be rewritten only after each owning method has been
 read and understood; no comment generator or bulk substitution may be used.
+
+## Iteration 82 outcome
+
+Make the Abstractions serialization owner internally minimal, culture-invariant, symmetric, and
+directly tested. Remove the internal camel-case lookup mechanic from the public API, align metadata
+key validation and duplicate handling in both dictionary directions, relocate the complete
+extension boundary contract to its actual test owner, and manually correct every stale comment in
+the owner and any fully read dependency. Resolve the cross-project message-body capability only
+after independent Red-Team analysis of every implementation and caller.
+
+## Iteration 82 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-CAMEL-CASE-METADATA` | exact JSON camel-case normalization | Abstractions serialization tests | Turkish culture, ordinary PascalCase, acronym prefix, mutable and read-only dictionaries |
+| `REQ-VSB-CAMEL-CASE-METADATA` | required key and API visibility | Abstractions serialization tests | null/empty/blank rejection and non-public compile-bound type |
+| `REQ-VSB-SERIALIZER-CONTEXT-EXTENSIONS` | dictionary/header-provider reads | Abstractions serialization tests | exact and camel-case lookup, reference/value conversion, fallback, and zero conversion on absence |
+| `REQ-VSB-SERIALIZER-CONTEXT-EXTENSIONS` | try-get semantics | Abstractions serialization tests | present, absent, and rejected conversion for reference and value types |
+| `REQ-VSB-SERIALIZER-CONTEXT-EXTENSIONS` | dictionary serialization/deserialization | Abstractions serialization tests | null filtering, valid keys, case-insensitive last value, empty normalization, and exact delegation |
+| `REQ-VSB-SERIALIZER-CONTEXT-EXTENSIONS` | consume/send header reads | Abstractions serialization tests | consume conversion, direct text, defaults, send runtime-type requirement, and missing values |
+| `REQ-VSB-SERIALIZER-CONTEXT-EXTENSIONS` | consume object projection | Abstractions serialization tests | exact source identity and returned dictionary identity |
+| `REQ-VSB-SERIALIZER-CONTEXT-EXTENSIONS` | every required public boundary | Abstractions serialization boundary tests | every reference/value overload, exact parameter, and zero dependency calls |
+| `REQ-VSB-SOURCE-NAVIGATION` | serialization test ownership | requirement gates and manual ledger | boundary test and immutable requirement entry belong to Abstractions, not Core |
+| `REQ-VSB-SOURCE-COMMENTS` | all owner comments and followed header contract | manual review plus hygiene gates | only current function, representation, ownership, and failure semantics |
+
+## Iteration 82 mutation obligations
+
+- Restore current-culture or one-character lowercasing: the Turkish or acronym contract must fail.
+- Export the camel-case helper again: the visibility contract must fail.
+- Remove key validation or perform dictionary/header work first: boundary tests must fail on exact
+  parameter identity or unexpected dependency invocation.
+- Use `Dictionary.Add` during deserialization or preserve the first case-insensitive duplicate: the
+  symmetric last-value assertion must fail.
+- Deserialize an absent key, serialize an all-null dictionary, convert direct send headers, or
+  deserialize an already textual consume header: call counts and exact values must fail.
+- Return a different object projection or pass a replacement source: identity assertions must fail.
+- Move the boundary test back to Core or restore its Core requirement entry: owner and requirement
+  completeness gates must reject the mismatch.
+- Restore generic header-provider or serializer filler documentation: the manual comment ledger must
+  reject the fully read source.
+
+## Iteration 82 completion
+
+All 22 Abstractions Serialization files were read manually in full and adjudicated together with
+their tests, public callers, and concrete body dependencies. The internal metadata lookup is no
+longer exported; ordinary and acronym-prefixed keys use the same invariant JSON camel-case rule;
+invalid retained metadata keys fail at their owning boundary; both dictionary directions use
+case-insensitive last-value semantics; and every one of the sixteen public extension overloads now
+has direct reference/value behavior and boundary evidence. The former Core boundary test and its
+requirement entry moved to the owning Abstractions test project. `EmptyHeaders` remains under
+Serialization because its namespace and test owner already match that path.
+
+Seven valid test-first failures and four isolated counterchanges prove the corrected semantics and
+API visibility. The final Release Unit-solution build has zero warnings and errors. The complete
+sequential Unit solution passes 5,405 tests with no failures or skips, including all 292 architecture
+tests; the Abstractions assembly contributes 588 direct tests. Repository-wide whitespace and
+warn-level style verification pass. Fresh-package validation passes 18 developer journeys, 31
+packages, three isolated provider-testing consumers, and 30 runtime API assemblies. The reviewed
+19,698-line packed API contract has SHA-256
+`29152df6b6532748a802e66de982ab65db03479397c235cb855c4764e8665ece` and matches the independently
+regenerated artifact byte-for-byte.
+
+Global source hygiene remains at zero C# preprocessor directives, zero empty source directories,
+and zero dummy/stub/TODO/FIXME/compatibility-shim markers. The fully read Serialization owner and
+followed `IHeaderProvider` contain none of the known generic task/header/operation filler. The
+independent body Red Team reports FAIL for the existing cross-project `MessageBody` contract and
+defines the next atomic owner: immutable byte ownership, explicit text encoding, readable Mediator
+content, all implementations/callers, adversarial mutation tests, and an Embedded-target allocation
+gate. This is retained as an explicit next iteration rather than hidden by a partial local fix.

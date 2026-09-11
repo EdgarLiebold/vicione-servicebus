@@ -3,16 +3,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Used to read a header from a transport message.</summary>
+/// <summary>Provides read-only access to the raw headers carried by a native transport message.</summary>
 public interface IHeaderProvider
 {
-    /// <summary>Gets all.</summary>
-    /// <returns>The all.</returns>
+    /// <summary>Enumerates every header name and its unconverted transport value.</summary>
+    /// <returns>The raw transport headers.</returns>
     IEnumerable<KeyValuePair<string, object>> GetAll();
 
-    /// <summary>Attempts to get header.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to obtain the raw transport value associated with a header name.</summary>
+    /// <param name="key">The header name.</param>
+    /// <param name="value">The raw value when the header exists.</param>
+    /// <returns><see langword="true" /> when the header exists; otherwise, <see langword="false" />.</returns>
     bool TryGetHeader(string key, [NotNullWhen(true)] out object? value);
 }

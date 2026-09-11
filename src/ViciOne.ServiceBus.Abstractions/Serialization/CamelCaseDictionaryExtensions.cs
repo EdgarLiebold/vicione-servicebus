@@ -1,23 +1,23 @@
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>Provides extension methods for camel case dictionary.</summary>
-public static class CamelCaseDictionaryExtensions
+/// <summary>Provides PascalCase-to-camelCase fallback lookup for metadata dictionaries.</summary>
+internal static class CamelCaseDictionaryExtensions
 {
-    /// <summary>Converts a PascalCase key to camelCase and attempts to get the value from the dictionary.</summary>
-    /// <param name="dictionary">The dictionary.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool TryGetValueCamelCase(this IDictionary<string, object>? dictionary, string key, out object? value)
+    /// <summary>Tries to find a mutable dictionary entry under the JSON camel-case form of a PascalCase key.</summary>
+    /// <param name="dictionary">The dictionary to search, or <see langword="null" /> to report absence.</param>
+    /// <param name="key">The PascalCase metadata key to normalize.</param>
+    /// <param name="value">The value stored under the normalized key when found; otherwise, <see langword="null" />.</param>
+    /// <returns><see langword="true" /> when the key begins with an uppercase character and its camel-case form exists; otherwise, <see langword="false" />.</returns>
+    internal static bool TryGetValueCamelCase(this IDictionary<string, object>? dictionary, string key, out object? value)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (dictionary != null && char.IsUpper(key[0]))
         {
-            var chars = key.ToCharArray();
-            chars[0] = char.ToLower(chars[0]);
-
-            key = new string(chars);
+            key = JsonNamingPolicy.CamelCase.ConvertName(key);
             return dictionary.TryGetValue(key, out value);
         }
 
@@ -25,19 +25,18 @@ public static class CamelCaseDictionaryExtensions
         return false;
     }
 
-    /// <summary>Converts a PascalCase key to camelCase and attempts to get the value from the dictionary.</summary>
-    /// <param name="dictionary">The dictionary.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool TryGetValueCamelCase(this IReadOnlyDictionary<string, object>? dictionary, string key, out object? value)
+    /// <summary>Tries to find a read-only dictionary entry under the JSON camel-case form of a PascalCase key.</summary>
+    /// <param name="dictionary">The dictionary to search, or <see langword="null" /> to report absence.</param>
+    /// <param name="key">The PascalCase metadata key to normalize.</param>
+    /// <param name="value">The value stored under the normalized key when found; otherwise, <see langword="null" />.</param>
+    /// <returns><see langword="true" /> when the key begins with an uppercase character and its camel-case form exists; otherwise, <see langword="false" />.</returns>
+    internal static bool TryGetValueCamelCase(this IReadOnlyDictionary<string, object>? dictionary, string key, out object? value)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (dictionary != null && char.IsUpper(key[0]))
         {
-            var chars = key.ToCharArray();
-            chars[0] = char.ToLower(chars[0]);
-
-            key = new string(chars);
+            key = JsonNamingPolicy.CamelCase.ConvertName(key);
             return dictionary.TryGetValue(key, out value);
         }
 

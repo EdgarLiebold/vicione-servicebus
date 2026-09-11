@@ -3,27 +3,27 @@ using System.Net.Mime;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Defines the operations required by message deserializer.</summary>
+/// <summary>Converts transport bodies into consume and serializer contexts for one media content type.</summary>
 public interface IMessageDeserializer :
     IProbeSite
 {
-    /// <summary>Gets the content type.</summary>
+    /// <summary>Gets the media content type accepted by this deserializer.</summary>
     ContentType ContentType { get; }
 
-    /// <summary>Deserializes the supplied payload.</summary>
-    /// <param name="receiveContext">The receive context.</param>
-    /// <returns>The deserialized value.</returns>
+    /// <summary>Deserializes a received transport envelope into a consume context.</summary>
+    /// <param name="receiveContext">The receive context containing the transport body and metadata.</param>
+    /// <returns>The consume context created from the envelope.</returns>
     ConsumeContext Deserialize(ReceiveContext receiveContext);
 
-    /// <summary>Deserializes the supplied payload.</summary>
-    /// <param name="body">The body.</param>
-    /// <param name="headers">The headers.</param>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <returns>The deserialized value.</returns>
+    /// <summary>Deserializes a message body and transport headers into a serializer context.</summary>
+    /// <param name="body">The serialized message body.</param>
+    /// <param name="headers">The transport headers associated with the body.</param>
+    /// <param name="destinationAddress">The destination address associated with the serialized message.</param>
+    /// <returns>The serializer context created from the supplied body and metadata.</returns>
     SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null);
 
-    /// <summary>Returns the appropriate message body for the message deserializer, using the input type.</summary>
-    /// <param name="text">The text.</param>
-    /// <returns>The message body.</returns>
+    /// <summary>Creates this deserializer's message-body representation from serialized text.</summary>
+    /// <param name="text">The serialized message text.</param>
+    /// <returns>A message body containing the supplied serialized representation.</returns>
     MessageBody GetMessageBody(string text);
 }

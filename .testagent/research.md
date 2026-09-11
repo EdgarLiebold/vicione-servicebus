@@ -576,3 +576,66 @@ operation" descriptions remain across later, not-yet-read owners. They are not p
 semantically false, but they do not explain the operation-specific completion contract and
 therefore are not A+ documentation. They must be removed only during the mandated manual owner-file
 reads; automated rewriting is forbidden.
+
+## Confirmed iteration-82 Abstractions serialization findings
+
+All 22 non-generated source files and 1,256 physical lines under
+`src/ViciOne.ServiceBus.Abstractions/Serialization` have been read manually in full. The direct
+tests, the complete `SerializerContextExtensions` call surface, all concrete `MessageBody`
+implementations, and every production `GetBytes` consumer were traced. The Roslyn pairing analyzer
+inspected 4,262 source files and 1,106 test files; its nominally unpaired Serialization entries are
+not accepted as absence evidence because direct tests exist under contract-oriented names and
+internal types are exercised from their owning implementation tests.
+
+1. `CamelCaseDictionaryExtensions` is referenced only by `SerializerContextExtensions` inside the
+   Abstractions assembly. Exporting this low-level lookup mechanic enlarges the public ServiceBus API
+   without providing an application or Advanced extension point. It must be internal and its
+   visibility must be held by a compile-bound test.
+2. The helper indexes `key[0]` before validating the public key boundary, producing a null-reference
+   or index failure for absent keys and silently accepting whitespace. It also used current-culture
+   lowercasing and lowercased only one character. That fails under Turkish culture and does not match
+   the JSON camel-case representation of acronym-prefixed property names such as `URLValue`.
+3. The sixteen public `SerializerContextExtensions` overloads had boundary-only direct evidence in
+   the Core test project. Exact/camel-case lookup, reference/value conversion, conversion failure,
+   default preservation, send-versus-consume header semantics, dictionary roundtrip, and object
+   projection were not owned by direct behavior tests.
+4. `SerializeDictionary` accepts blank metadata keys that its own readers reject, making serialized
+   entries unreachable through the public lookup API. `DeserializeDictionary` uses case-insensitive
+   `Add`, so duplicate casing throws even though serialization deterministically retains the later
+   value. Both directions need one valid-key and last-value rule.
+5. The SerializerContext boundary test depends only on Abstractions contracts but lived in
+   `ViciOne.ServiceBus.Tests`. Its path and requirement projection therefore named the wrong assembly
+   owner. It belongs beside the implementation in `ViciOne.ServiceBus.Abstractions.Tests/Serialization`.
+6. `EmptyHeaders` is not a path mismatch: both its declared namespace and its test namespace are
+   Serialization. Its placement is retained after inspection rather than changed from a superficial
+   semantic guess.
+7. `IHeaderProvider`, followed and read in full because it participates in the public overloads,
+   still contained generated filler descriptions. The contract is raw, read-only native transport
+   header access; its comments must say that precisely.
+8. The public `MessageBody.GetBytes()` ownership remains explicitly implementation-defined and the
+   concrete types differ between caller-owned copies and retained mutable arrays. This affects
+   immutability, repeated reads, allocation, transport integration, and the mediator's length-only
+   implementation. A separate read-only Red Team is reviewing the full cross-owner design before a
+   public capability decision is made.
+
+The independent read-only `MessageBody` Red Team inspected the public interface, all fourteen
+product implementations, direct body readers and producers, and their contract tests. Runtime
+probes confirmed that caller mutation can make bytes, streams, and text disagree in
+`BytesMessageBody`, `ArrayMessageBody`, `StringMessageBody`, and `MemoryMessageBody`; a
+`BinaryData` body can likewise retain caller-owned memory. It also confirmed mixed permissive and
+strict UTF-8 behavior, Base64-versus-text ambiguity, mutable first-access sources, and the
+Mediator's non-readable length-only implementation. Its A+ disposition is a dedicated atomic
+cross-owner iteration: one owned immutable snapshot exposed as `ReadOnlyMemory<byte>`, a newly
+opened read-only stream, an explicit transport-text representation, and a bounded materialized
+Mediator body unless an allocation/load measurement proves that a capability split is necessary.
+Changing only the Abstractions bodies now would preserve the unsafe contract in Core, MessagePack,
+Mediator, providers, persistence, scheduling, journal, durable-send, and forwarding paths.
+
+The current remediation internalizes the camel-case helper, matches `JsonNamingPolicy.CamelCase`
+under invariant culture and acronym prefixes, rejects missing lookup keys, ignores null-valued
+serialization entries, rejects retained entries with missing keys, and uses case-insensitive
+last-value semantics in both dictionary directions. Seven valid pre-fix RED cases captured the
+old culture, key, acronym, and duplicate behavior. Four additional isolated counterchanges were
+killed and restored for API visibility, direct textual consume headers, value-type `TryGetValue`,
+and exactly-once object projection; a contradictory `NotNullWhen(true)` mutation was rejected by
+the compiler before execution.

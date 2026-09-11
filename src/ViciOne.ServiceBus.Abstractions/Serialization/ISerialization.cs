@@ -3,32 +3,32 @@ using System.Net.Mime;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Defines the operations required by serialization.</summary>
+/// <summary>Resolves registered message serializers and deserializers by media content type.</summary>
 public interface ISerialization :
     IProbeSite
 {
-    /// <summary>Gets the default content type.</summary>
+    /// <summary>Gets the media content type used when an operation does not select one.</summary>
     ContentType DefaultContentType { get; }
 
-    /// <summary>Gets message serializer.</summary>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
-    /// <returns>The message serializer.</returns>
+    /// <summary>Gets the serializer registered for a content type.</summary>
+    /// <param name="contentType">The requested content type, or <see langword="null" /> to use <see cref="DefaultContentType" />.</param>
+    /// <returns>The serializer selected for the requested or default content type.</returns>
     IMessageSerializer GetMessageSerializer(ContentType? contentType = null);
 
-    /// <summary>Attempts to get message serializer.</summary>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
-    /// <param name="serializer">Receives the serializer produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to get the serializer registered for a content type.</summary>
+    /// <param name="contentType">The requested content type.</param>
+    /// <param name="serializer">The registered serializer when found; otherwise, <see langword="null" />.</param>
+    /// <returns><see langword="true" /> when a matching serializer is registered; otherwise, <see langword="false" />.</returns>
     bool TryGetMessageSerializer(ContentType contentType, [NotNullWhen(true)] out IMessageSerializer? serializer);
 
-    /// <summary>Gets message deserializer.</summary>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
-    /// <returns>The message deserializer.</returns>
+    /// <summary>Gets the deserializer registered for a content type.</summary>
+    /// <param name="contentType">The requested content type, or <see langword="null" /> to use <see cref="DefaultContentType" />.</param>
+    /// <returns>The deserializer selected for the requested or default content type.</returns>
     IMessageDeserializer GetMessageDeserializer(ContentType? contentType = null);
 
-    /// <summary>Attempts to get message deserializer.</summary>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
-    /// <param name="deserializer">Receives the deserializer produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to get the deserializer registered for a content type.</summary>
+    /// <param name="contentType">The requested content type.</param>
+    /// <param name="deserializer">The registered deserializer when found; otherwise, <see langword="null" />.</param>
+    /// <returns><see langword="true" /> when a matching deserializer is registered; otherwise, <see langword="false" />.</returns>
     bool TryGetMessageDeserializer(ContentType contentType, [NotNullWhen(true)] out IMessageDeserializer? deserializer);
 }

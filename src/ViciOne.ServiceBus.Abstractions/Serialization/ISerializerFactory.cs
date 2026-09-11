@@ -2,17 +2,17 @@ using System.Net.Mime;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Creates serializer instances.</summary>
+/// <summary>Creates paired message serializers and deserializers for one media content type.</summary>
 public interface ISerializerFactory
 {
-    /// <summary>Gets the content type.</summary>
+    /// <summary>Gets the media content type supported by the created instances.</summary>
     ContentType ContentType { get; }
 
-    /// <summary>Creates serializer.</summary>
-    /// <returns>The created serializer.</returns>
+    /// <summary>Creates a message serializer.</summary>
+    /// <returns>A serializer for <see cref="ContentType" />.</returns>
     IMessageSerializer CreateSerializer();
 
-    /// <summary>Creates deserializer.</summary>
-    /// <returns>The created deserializer.</returns>
+    /// <summary>Creates a message deserializer.</summary>
+    /// <returns>A deserializer for <see cref="ContentType" />.</returns>
     IMessageDeserializer CreateDeserializer();
 }

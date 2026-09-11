@@ -149,7 +149,7 @@ public static class SerializerContextExtensions
         return value != null;
     }
 
-    /// <summary>Serializes the non-null entries in a metadata sequence.</summary>
+    /// <summary>Serializes the non-null entries with valid keys in a metadata sequence.</summary>
     /// <param name="deserializer">The serializer used to encode the metadata dictionary.</param>
     /// <param name="values">The metadata entries to serialize.</param>
     /// <returns>The serialized case-insensitive dictionary, or <see langword="null" /> when no non-null entries remain.</returns>
@@ -162,8 +162,11 @@ public static class SerializerContextExtensions
 
         foreach (KeyValuePair<string, object> pair in values)
         {
-            if (pair.Value != null)
-                dictionary[pair.Key] = pair.Value;
+            if (pair.Value == null)
+                continue;
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(pair.Key, nameof(values));
+            dictionary[pair.Key] = pair.Value;
         }
 
         return dictionary.Count == 0
@@ -186,8 +189,11 @@ public static class SerializerContextExtensions
             if (headers != null && headers.Count > 0)
             {
                 var dictionary = new Dictionary<string, TValue>(StringComparer.OrdinalIgnoreCase);
-                foreach (KeyValuePair<string, TValue> x in headers)
-                    dictionary.Add(x.Key, x.Value);
+                foreach (KeyValuePair<string, TValue> pair in headers)
+                {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(pair.Key, nameof(text));
+                    dictionary[pair.Key] = pair.Value;
+                }
 
                 return dictionary;
             }

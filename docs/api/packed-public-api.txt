@@ -3568,9 +3568,6 @@ TYPE class public ViciOne.ServiceBus.SensitiveMemberAttribute [sealed,base=Syste
   CTOR public ViciOne.ServiceBus.SensitiveMemberAttribute()
 TYPE class public ViciOne.ServiceBus.SensitivePayloadAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.SensitivePayloadAttribute()
-TYPE class public ViciOne.ServiceBus.Serialization.CamelCaseDictionaryExtensions [static]
-  METHOD public static System.Boolean TryGetValueCamelCase(System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, out System.Object value)
-  METHOD public static System.Boolean TryGetValueCamelCase(System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> dictionary, System.String key, out System.Object value)
 TYPE class public ViciOne.ServiceBus.Serialization.EmptyHeaders [sealed,interfaces=ViciOne.ServiceBus.Advanced.Headers]
   METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
   METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
