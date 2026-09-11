@@ -157,7 +157,7 @@ public class ServiceCollectionBusConfigurator :
         collection.TryAddScoped(provider => provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider);
         collection.TryAddScoped(provider => provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint);
 
-        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? MissingConsumeContext.Instance);
+        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? UnavailableConsumeContext.Instance);
 
         collection.TryAddScoped(typeof(IRequestClient<>), typeof(GenericRequestClient<>));
     }

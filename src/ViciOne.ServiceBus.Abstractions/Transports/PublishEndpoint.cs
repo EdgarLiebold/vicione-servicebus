@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Internals.Dispatching;
 
 namespace ViciOne.ServiceBus.Transports;
 
@@ -79,7 +79,7 @@ public class PublishEndpoint :
 
         var messageType = message.GetType();
 
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -94,7 +94,7 @@ public class PublishEndpoint :
 
         var messageType = message.GetType();
 
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -106,7 +106,7 @@ public class PublishEndpoint :
     {
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -120,7 +120,7 @@ public class PublishEndpoint :
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(publishPipe);
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>

@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.Internals.Dispatching;
 
-/// <summary>Dispatches runtime-typed send operations through cached generic converters.</summary>
-public static class SendEndpointConverterCache
+/// <summary>Maps runtime send contracts to the endpoint's generic operations.</summary>
+internal static class SendEndpointDispatcher
 {
     static readonly ConcurrentDictionary<Type, Lazy<ISendEndpointConverter>> Converters = new();
 

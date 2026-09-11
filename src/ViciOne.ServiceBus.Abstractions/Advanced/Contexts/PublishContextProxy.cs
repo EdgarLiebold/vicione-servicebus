@@ -2,7 +2,7 @@ using System;
 using System.Net.Mime;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Exposes a message-specific view over an existing publish context.</summary>
 /// <typeparam name="TMessage">The published message type.</typeparam>
@@ -28,7 +28,7 @@ public sealed class PublishContextProxy<TMessage> :
 }
 
 
-/// <summary>Forwards publish operations and metadata to an underlying context.</summary>
+/// <summary>Forwards publish metadata and pipe-context behavior to an underlying context.</summary>
 public abstract class PublishContextProxy :
     ProxyPipeContext,
     PublishContext

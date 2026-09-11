@@ -372,6 +372,67 @@ public sealed class ApiSurfaceArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-API-LAYERING", "context-proxies-are-advanced-spi-and-runtime-mechanics-are-internal")]
+    public void ContextApi_ExposesAdvancedProxiesWithoutRuntimeMechanics()
+    {
+        Assembly abstractions = ProductAssemblyFacts.Abstractions;
+        Assembly core = ProductAssemblyFacts.Core;
+        string[] advancedProxyTypes =
+        [
+            "ViciOne.ServiceBus.Advanced.PublishContextProxy",
+            "ViciOne.ServiceBus.Advanced.PublishContextProxy`1",
+            "ViciOne.ServiceBus.Advanced.SendContextProxy",
+            "ViciOne.ServiceBus.Advanced.SendContextProxy`1",
+            "ViciOne.ServiceBus.Advanced.SendContextScope",
+            "ViciOne.ServiceBus.Advanced.SendContextScope`1",
+        ];
+        Assert.All(advancedProxyTypes, typeName => Assert.True(
+            abstractions.GetType(typeName, throwOnError: true)!.IsPublic,
+            typeName));
+
+        string[] abstractionsRuntimeTypes =
+        [
+            "ViciOne.ServiceBus.Internals.Dispatching.PublishEndpointDispatcher",
+            "ViciOne.ServiceBus.Internals.Dispatching.ResponseEndpointDispatcher",
+            "ViciOne.ServiceBus.Internals.Dispatching.SendEndpointDispatcher",
+            "ViciOne.ServiceBus.Internals.Outgoing.OutgoingOptionsPipe",
+            "ViciOne.ServiceBus.Internals.Outgoing.OutgoingOptionsSnapshot",
+            "ViciOne.ServiceBus.Internals.Outgoing.PublishOptionsPipe`1",
+            "ViciOne.ServiceBus.Internals.Outgoing.ScheduleOptionsPipe`1",
+            "ViciOne.ServiceBus.Internals.Outgoing.SendOptionsPipe`1",
+        ];
+        Assert.All(abstractionsRuntimeTypes, typeName => Assert.False(
+            abstractions.GetType(typeName, throwOnError: true)!.IsPublic,
+            typeName));
+
+        string[] coreRuntimeTypes =
+        [
+            "ViciOne.ServiceBus.Context.ConsumeContextOutgoingMessages",
+            "ViciOne.ServiceBus.Context.UnavailableConsumeContext",
+            "ViciOne.ServiceBus.RetryPolicies.PendingFaultCollection",
+        ];
+        Assert.All(coreRuntimeTypes, typeName => Assert.False(
+            core.GetType(typeName, throwOnError: true)!.IsPublic,
+            typeName));
+
+        string[] removedPublicMechanics =
+        [
+            "ViciOne.ServiceBus.Context.MissingConsumeContext",
+            "ViciOne.ServiceBus.Context.PendingFaultCollection",
+            "ViciOne.ServiceBus.Context.PublishContextProxy",
+            "ViciOne.ServiceBus.Context.PublishContextProxy`1",
+            "ViciOne.ServiceBus.Context.PublishEndpointConverterCache",
+            "ViciOne.ServiceBus.Context.ResponseEndpointConverterCache",
+            "ViciOne.ServiceBus.Context.SendContextProxy",
+            "ViciOne.ServiceBus.Context.SendContextProxy`1",
+            "ViciOne.ServiceBus.Context.SendContextScope",
+            "ViciOne.ServiceBus.Context.SendContextScope`1",
+            "ViciOne.ServiceBus.Context.SendEndpointConverterCache",
+        ];
+        Assert.All(removedPublicMechanics, typeName => Assert.Null(abstractions.GetType(typeName, throwOnError: false)));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-API-BASELINE", "application-root-is-exactly-the-versioned-baseline")]
     public void ApplicationApi_IsExactlyTheVersionedRootNamespaceBaseline()
     {

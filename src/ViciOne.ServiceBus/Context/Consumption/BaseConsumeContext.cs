@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals.Dispatching;
+using ViciOne.ServiceBus.Internals.Outgoing;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Context;
@@ -170,7 +172,7 @@ public abstract class BaseConsumeContext :
 
         var messageType = message.GetType();
 
-        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType);
+        return ResponseEndpointDispatcher.RespondAsync(this, message, messageType);
     }
 
     /// <summary>Sends a response using an explicit runtime contract type.</summary>
@@ -182,7 +184,7 @@ public abstract class BaseConsumeContext :
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
 
-        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType);
+        return ResponseEndpointDispatcher.RespondAsync(this, message, messageType);
     }
 
     /// <summary>Sends a runtime-typed response after applying a send-context pipe.</summary>
@@ -196,7 +198,7 @@ public abstract class BaseConsumeContext :
 
         var messageType = message.GetType();
 
-        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType, sendPipe);
+        return ResponseEndpointDispatcher.RespondAsync(this, message, messageType, sendPipe);
     }
 
     /// <summary>Sends a response using an explicit runtime contract type and send-context pipe.</summary>
@@ -210,7 +212,7 @@ public abstract class BaseConsumeContext :
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(sendPipe);
 
-        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType, sendPipe);
+        return ResponseEndpointDispatcher.RespondAsync(this, message, messageType, sendPipe);
     }
 
     /// <summary>Initializes and sends a response contract from an anonymous values object.</summary>

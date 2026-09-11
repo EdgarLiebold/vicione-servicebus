@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Internals.Dispatching;
 
 namespace ViciOne.ServiceBus.Transports;
 
@@ -91,7 +92,7 @@ public abstract class SendEndpointProxy :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -101,7 +102,7 @@ public abstract class SendEndpointProxy :
         ArgumentNullException.ThrowIfNull(messageType);
         cancellationToken.ThrowIfCancellationRequested();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -113,7 +114,7 @@ public abstract class SendEndpointProxy :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -124,7 +125,7 @@ public abstract class SendEndpointProxy :
         ArgumentNullException.ThrowIfNull(pipe);
         cancellationToken.ThrowIfCancellationRequested();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <inheritdoc />

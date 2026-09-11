@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Internals.Dispatching;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
@@ -177,7 +178,7 @@ internal sealed class MediatorSendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
@@ -192,7 +193,7 @@ internal sealed class MediatorSendEndpoint :
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
@@ -226,7 +227,7 @@ internal sealed class MediatorSendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
@@ -244,7 +245,7 @@ internal sealed class MediatorSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>Sends a message to the configured destination.</summary>

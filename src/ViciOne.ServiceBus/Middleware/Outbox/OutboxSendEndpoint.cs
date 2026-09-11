@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Internals.Dispatching;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Logging.Monitoring;
@@ -103,7 +104,7 @@ internal sealed class OutboxSendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Captures a runtime-typed message for delivery after the outbox commits.</summary>
@@ -118,7 +119,7 @@ internal sealed class OutboxSendEndpoint :
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Captures a typed message with untyped send-context configuration for delivery after the outbox commits.</summary>
@@ -155,7 +156,7 @@ internal sealed class OutboxSendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>Captures a runtime-typed message with send-context configuration for delivery after the outbox commits.</summary>
@@ -173,7 +174,7 @@ internal sealed class OutboxSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>Initializes and captures a typed message for delivery after the outbox commits.</summary>

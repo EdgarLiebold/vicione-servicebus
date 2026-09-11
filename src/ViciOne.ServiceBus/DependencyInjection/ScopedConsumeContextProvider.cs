@@ -14,7 +14,7 @@ public class ScopedConsumeContextProvider :
     ConsumeContext _context = null!;
 
     /// <summary>Gets a value indicating whether this instance has context.</summary>
-    public bool HasContext => _context != null && !(_context is MissingConsumeContext);
+    public bool HasContext => _context != null && _context is not UnavailableConsumeContext;
 
     /// <summary>Pushes context.</summary>
     /// <param name="context">The context associated with the operation.</param>

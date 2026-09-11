@@ -1,9 +1,9 @@
 using System.Reflection;
-using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Internals.Outgoing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Abstractions.Tests.Contexts;
+namespace ViciOne.ServiceBus.Abstractions.Tests.Internals.Outgoing;
 
 public sealed class OutgoingOptionsPipeTests
 {
@@ -123,13 +123,17 @@ public sealed class OutgoingOptionsPipeTests
             () => new PublishOptionsPipe<TestMessage>(new PublishOptions { TimeToLive = timeToLive }));
         ArgumentOutOfRangeException schedule = Assert.Throws<ArgumentOutOfRangeException>(
             () => new ScheduleOptionsPipe<TestMessage>(new ScheduleOptions { TimeToLive = timeToLive }));
+        ArgumentOutOfRangeException request = Assert.Throws<ArgumentOutOfRangeException>(
+            () => OutgoingOptionsSnapshot.Create(new RequestOptions { TimeToLive = timeToLive }));
 
         Assert.Equal("options", send.ParamName);
         Assert.Equal("options", publish.ParamName);
         Assert.Equal("options", schedule.ParamName);
+        Assert.Equal("options", request.ParamName);
         Assert.Equal(timeToLive, send.ActualValue);
         Assert.Equal(timeToLive, publish.ActualValue);
         Assert.Equal(timeToLive, schedule.ActualValue);
+        Assert.Equal(timeToLive, request.ActualValue);
     }
 
     [Fact]
@@ -191,6 +195,91 @@ public sealed class OutgoingOptionsPipeTests
         Assert.Equal("options", exception.ParamName);
         Assert.Empty(recording.Headers.Values);
         Assert.Null(recording.Get<Guid?>(nameof(SendContext.CorrelationId)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-REQUEST-OPTIONS", "snapshot-preserves-every-field-and-caller-ownership")]
+    public void RequestOptionsSnapshot_CopiesEveryFieldAndCallerOwnedHeaders()
+    {
+        Dictionary<string, object?> headers = Headers();
+        var options = new RequestOptions
+        {
+            Headers = headers,
+            TimeToLive = Lifetime,
+            CorrelationId = CorrelationId,
+            ConversationId = ConversationId,
+            MessageId = MessageId,
+            RequestId = RequestId,
+            PartitionKey = "tenant-42",
+        };
+
+        OutgoingOptionsSnapshot snapshot = OutgoingOptionsSnapshot.Create(options);
+        MutateHeadersAfterEntry(headers);
+
+        Assert.Equal(Lifetime, snapshot.TimeToLive);
+        Assert.Equal(CorrelationId, snapshot.CorrelationId);
+        Assert.Equal(ConversationId, snapshot.ConversationId);
+        Assert.Equal(MessageId, snapshot.MessageId);
+        Assert.Equal(RequestId, snapshot.RequestId);
+        Assert.Equal("tenant-42", snapshot.PartitionKey);
+        Assert.Equal("north", snapshot.Headers["tenant"]);
+        Assert.Equal(3, snapshot.Headers["attempt"]);
+        Assert.Null(snapshot.Headers["optional"]);
+        Assert.False(snapshot.Headers.ContainsKey("late"));
+        Assert.Equal(3, snapshot.Headers.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-CAPABILITY", "every-options-and-apply-input-is-required")]
+    public void OptionsInfrastructure_RejectsEveryMissingInputAtEntry()
+    {
+        SendContext<TestMessage> context = CreateContext<SendContext<TestMessage>>(supportsPartitionKey: true, out _);
+        OutgoingOptionsSnapshot snapshot = OutgoingOptionsSnapshot.Create(new SendOptions());
+
+        Assert.Equal(
+            "options",
+            Assert.Throws<ArgumentNullException>(() => OutgoingOptionsSnapshot.Create((SendOptions)null!)).ParamName);
+        Assert.Equal(
+            "options",
+            Assert.Throws<ArgumentNullException>(() => OutgoingOptionsSnapshot.Create((PublishOptions)null!)).ParamName);
+        Assert.Equal(
+            "options",
+            Assert.Throws<ArgumentNullException>(() => OutgoingOptionsSnapshot.Create((ScheduleOptions)null!)).ParamName);
+        Assert.Equal(
+            "options",
+            Assert.Throws<ArgumentNullException>(() => OutgoingOptionsSnapshot.Create((RequestOptions)null!)).ParamName);
+        Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() => OutgoingOptionsPipe.Apply(null!, snapshot)).ParamName);
+        Assert.Equal(
+            "options",
+            Assert.Throws<ArgumentNullException>(() => OutgoingOptionsPipe.Apply(context, null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-CAPABILITY", "each-pipe-reports-its-exact-diagnostic-scope")]
+    public void OptionsPipes_ProbeTheirExactOperationScope()
+    {
+        var sendProbe = new RecordingProbeContext();
+        var publishProbe = new RecordingProbeContext();
+        var scheduleProbe = new RecordingProbeContext();
+
+        new SendOptionsPipe<TestMessage>(new SendOptions()).Probe(sendProbe);
+        new PublishOptionsPipe<TestMessage>(new PublishOptions()).Probe(publishProbe);
+        new ScheduleOptionsPipe<TestMessage>(new ScheduleOptions()).Probe(scheduleProbe);
+
+        Assert.Equal(("filters", "filterType", "sendOptions"), sendProbe.RecordedScope);
+        Assert.Equal(("filters", "filterType", "publishOptions"), publishProbe.RecordedScope);
+        Assert.Equal(("filters", "filterType", "scheduleOptions"), scheduleProbe.RecordedScope);
+        Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() => new SendOptionsPipe<TestMessage>(new SendOptions()).Probe(null!)).ParamName);
+        Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() => new PublishOptionsPipe<TestMessage>(new PublishOptions()).Probe(null!)).ParamName);
+        Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() => new ScheduleOptionsPipe<TestMessage>(new ScheduleOptions()).Probe(null!)).ParamName);
     }
 
     private static SendOptions CreateSendOptions() => new()
@@ -353,6 +442,35 @@ public sealed class OutgoingOptionsPipeTests
             }
 
             throw new NotSupportedException(targetMethod.Name);
+        }
+    }
+
+    private sealed class RecordingProbeContext : ProbeContext
+    {
+        private string? _scope;
+
+        public CancellationToken CancellationToken => TestContext.Current.CancellationToken;
+
+        public (string Scope, string Key, string Value) RecordedScope { get; private set; }
+
+        public void Add(string key, string? value)
+        {
+            RecordedScope = (_scope!, key, value!);
+        }
+
+        public void Add(string key, object? value)
+        {
+            RecordedScope = (_scope!, key, Assert.IsType<string>(value));
+        }
+
+        public void Set(object values) => throw new NotSupportedException();
+
+        public void Set(IEnumerable<KeyValuePair<string, object?>> values) => throw new NotSupportedException();
+
+        public ProbeContext CreateScope(string key)
+        {
+            _scope = key;
+            return this;
         }
     }
 }

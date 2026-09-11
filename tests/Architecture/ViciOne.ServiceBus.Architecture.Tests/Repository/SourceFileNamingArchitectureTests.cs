@@ -153,8 +153,8 @@ public sealed class SourceFileNamingArchitectureTests
                 ["ActivityContextProxy.cs", "ActivityContextScope.cs", "CompensateContextProxy.cs", "CompensateContextScope.cs",
                     "ExecuteContextProxy.cs", "ExecuteContextScope.cs", "HostCompensateActivityContext.cs", "HostExecuteActivityContext.cs"]),
             ("src/ViciOne.ServiceBus/Context/Consumption", "ViciOne.ServiceBus.Context",
-                ["BaseConsumeContext.cs", "ConsumeContextProxy.cs", "ConsumeContextScope.cs", "DeserializerConsumeContext.cs",
-                    "MessageConsumeContext.cs"]),
+                ["BaseConsumeContext.cs", "ConsumeContextOutgoingMessages.cs", "ConsumeContextProxy.cs", "ConsumeContextScope.cs",
+                    "DeserializerConsumeContext.cs", "MessageConsumeContext.cs", "UnavailableConsumeContext.cs"]),
             ("src/ViciOne.ServiceBus.Mediator/Contexts", "ViciOne.ServiceBus.Mediator.Contexts",
                 ["MediatorConsumeContext.cs", "MediatorSendMessageContext.cs"]),
             ("src/ViciOne.ServiceBus/Middleware/Contexts", "ViciOne.ServiceBus.Middleware",
@@ -448,10 +448,79 @@ public sealed class SourceFileNamingArchitectureTests
         SourceFileInspection outgoingContract = Inspect(Path.Combine(abstractionsRoot, "IOutgoingMessages.cs"));
         Assert.Equal(["public interface IOutgoingMessages`0"], outgoingContract.TypeIdentities);
 
-        string implementationPath = Path.Combine(abstractionsRoot, "Context", "ConsumeContextOutgoingMessages.cs");
+        string implementationPath = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Context",
+            "Consumption",
+            "ConsumeContextOutgoingMessages.cs");
         Assert.True(File.Exists(implementationPath), RepositoryLayout.RelativeToRoot(implementationPath));
         Assert.Equal(["ViciOne.ServiceBus.Context"], ReadNamespaces(implementationPath, TestContext.Current.CancellationToken));
         Assert.Equal(["internal class ConsumeContextOutgoingMessages`0"], Inspect(implementationPath).TypeIdentities);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "context-infrastructure-has-explicit-api-and-runtime-owners")]
+    public void ContextInfrastructure_HasExplicitApiAndRuntimeOwners()
+    {
+        string advancedContexts = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus.Abstractions",
+            "Advanced",
+            "Contexts");
+        string[] advancedProxyFiles = ["PublishContextProxy.cs", "SendContextProxy.cs", "SendContextScope.cs"];
+        Assert.All(advancedProxyFiles, file =>
+        {
+            string path = Path.Combine(advancedContexts, file);
+            Assert.True(File.Exists(path), RepositoryLayout.RelativeToRoot(path));
+            Assert.Equal(["ViciOne.ServiceBus.Advanced"], ReadNamespaces(path, TestContext.Current.CancellationToken));
+        });
+
+        (string Directory, string Namespace, string[] Files)[] internalGroups =
+        [
+            (
+                "src/ViciOne.ServiceBus.Abstractions/Internals/Dispatching",
+                "ViciOne.ServiceBus.Internals.Dispatching",
+                ["PublishEndpointDispatcher.cs", "ResponseEndpointDispatcher.cs", "SendEndpointDispatcher.cs"]),
+            (
+                "src/ViciOne.ServiceBus.Abstractions/Internals/Outgoing",
+                "ViciOne.ServiceBus.Internals.Outgoing",
+                ["OutgoingOptionsPipe.cs", "OutgoingOptionsSnapshot.cs", "PublishOptionsPipe.cs", "ScheduleOptionsPipe.cs",
+                    "SendOptionsPipe.cs"]),
+        ];
+
+        foreach ((string relativeDirectory, string expectedNamespace, string[] expectedFiles) in internalGroups)
+        {
+            string directory = Path.Combine(RepositoryLayout.Root, relativeDirectory);
+            Assert.True(Directory.Exists(directory), relativeDirectory);
+            Assert.Equal(
+                expectedFiles,
+                Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                    .Select(Path.GetFileName)
+                    .OfType<string>()
+                    .Order(StringComparer.Ordinal));
+            Assert.All(expectedFiles, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
+
+        string pendingFaultPath = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "RetryPolicies",
+            "PendingFaultCollection.cs");
+        Assert.True(File.Exists(pendingFaultPath), RepositoryLayout.RelativeToRoot(pendingFaultPath));
+        Assert.Equal(["ViciOne.ServiceBus.RetryPolicies"], ReadNamespaces(pendingFaultPath, TestContext.Current.CancellationToken));
+        Assert.Equal(["internal class PendingFaultCollection`0"], Inspect(pendingFaultPath).TypeIdentities);
+
+        Assert.False(Directory.Exists(Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus.Abstractions",
+            "Context")));
     }
 
     [Fact]

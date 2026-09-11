@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Internals.Dispatching;
 
 namespace ViciOne.ServiceBus.Advanced.Initializers;
 
@@ -16,7 +17,7 @@ public static class SendEndpointExtensions
     /// <returns>A task that completes when the initialized message has been sent to the transport.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
-        return SendEndpointConverterCache.SendInitializerAsync(endpoint, messageType, values, cancellationToken);
+        return SendEndpointDispatcher.SendInitializerAsync(endpoint, messageType, values, cancellationToken);
     }
 
     /// <summary>Initializes and sends a runtime-selected message contract through a send pipeline.</summary>
@@ -29,6 +30,6 @@ public static class SendEndpointExtensions
     public static Task SendAsync(this ISendEndpoint endpoint, Type messageType, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return SendEndpointConverterCache.SendInitializerAsync(endpoint, messageType, values, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendInitializerAsync(endpoint, messageType, values, pipe, cancellationToken);
     }
 }

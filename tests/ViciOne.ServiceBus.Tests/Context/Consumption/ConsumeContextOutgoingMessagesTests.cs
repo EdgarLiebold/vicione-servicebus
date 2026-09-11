@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Abstractions.Tests.Contexts;
+namespace ViciOne.ServiceBus.Tests.Context.Consumption;
 
 public sealed class ConsumeContextOutgoingMessagesTests
 {

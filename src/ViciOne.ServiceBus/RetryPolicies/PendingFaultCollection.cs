@@ -1,7 +1,7 @@
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Collects consumer faults until the owning consume attempt is ready to notify observers.</summary>
-public sealed class PendingFaultCollection
+internal sealed class PendingFaultCollection
 {
     private readonly List<IPendingFault> _pendingFaults = [];
     private bool _notificationStarted;
@@ -59,8 +59,21 @@ public sealed class PendingFaultCollection
             _pendingFaults.Clear();
         }
 
-        await Task.WhenAll(pendingFaults.Select(fault => fault.NotifyAsync(consumeContext, cancellationToken)))
+        await Task.WhenAll(pendingFaults.Select(fault => NotifySafelyAsync(fault, consumeContext, cancellationToken)))
             .ConfigureAwait(false);
+    }
+
+    private static Task NotifySafelyAsync(IPendingFault fault, ConsumeContext context, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return fault.NotifyAsync(context, cancellationToken)
+                ?? Task.FromException(new InvalidOperationException("A consumer fault notification returned no task."));
+        }
+        catch (Exception exception)
+        {
+            return Task.FromException(exception);
+        }
     }
 
 

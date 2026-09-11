@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Internals.Dispatching;
 using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Transports;
 
@@ -101,7 +102,7 @@ internal sealed class ScopedMediator :
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -115,7 +116,7 @@ internal sealed class ScopedMediator :
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -128,7 +129,7 @@ internal sealed class ScopedMediator :
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -142,7 +143,7 @@ internal sealed class ScopedMediator :
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>

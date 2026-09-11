@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.Internals.Dispatching;
 
-/// <summary>Dispatches runtime-typed response operations through cached generic converters.</summary>
-public static class ResponseEndpointConverterCache
+/// <summary>Maps runtime response contracts to the consume context's generic operations.</summary>
+internal static class ResponseEndpointDispatcher
 {
     static readonly ConcurrentDictionary<Type, Lazy<IResponseEndpointConverter>> Converters = new();
 

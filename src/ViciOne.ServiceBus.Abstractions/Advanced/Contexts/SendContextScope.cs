@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using ViciOne.ServiceBus.Payloads;
 
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Adds an isolated payload scope to a send context while forwarding its send metadata.</summary>
 public class SendContextScope :

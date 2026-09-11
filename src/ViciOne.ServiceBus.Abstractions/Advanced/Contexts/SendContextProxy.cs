@@ -2,7 +2,7 @@ using System;
 using System.Net.Mime;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Exposes a message-specific view over an existing send context.</summary>
 /// <typeparam name="TMessage">The sent message type.</typeparam>
@@ -28,9 +28,10 @@ public sealed class SendContextProxy<TMessage> :
 }
 
 
-/// <summary>Forwards send operations and metadata to an underlying context.</summary>
+/// <summary>Forwards outgoing metadata and pipe-context behavior to an underlying send context.</summary>
 public abstract class SendContextProxy :
-    ProxyPipeContext
+    ProxyPipeContext,
+    SendContext
 {
     readonly SendContext _context;
 
@@ -177,6 +178,6 @@ public abstract class SendContextProxy :
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        return _context.CreateProxy(message);
+        return new SendContextProxy<TMessageContract>(this, message);
     }
 }

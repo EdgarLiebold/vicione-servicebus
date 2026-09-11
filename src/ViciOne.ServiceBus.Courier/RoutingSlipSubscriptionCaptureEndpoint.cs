@@ -5,6 +5,7 @@ using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Messages;
 using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Internals.Dispatching;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
@@ -118,7 +119,7 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Captures a subscription message using an explicit runtime contract type.</summary>
@@ -131,7 +132,7 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Runs an untyped send pipeline and captures a message using its runtime contract type.</summary>
@@ -146,7 +147,7 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>Runs an untyped send pipeline and captures a message using an explicit runtime contract type.</summary>
@@ -161,7 +162,7 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(pipe);
 
-        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>Initializes and captures a typed subscription message from object values.</summary>

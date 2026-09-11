@@ -529,3 +529,63 @@ killed and restored. The final Release build has no warnings or errors; the comp
 Unit solution passes 5,332 tests, the Async guard passes 30 tests, and fresh package/API validation
 preserves the 19,773-line public contract. The overall goal remains open; iteration 80 continues
 with the Abstractions `Context` owner.
+
+## Iteration 80 outcome
+
+Replace the mixed Abstractions `Context` bucket with explicit API-layer and runtime owners. Preserve
+public send/publish proxy and scope functionality as Advanced SPI, internalize and functionally
+name runtime dispatch, split each options implementation into its matching source file, relocate
+Core-only consume/retry/sentinel implementations, and correct typed-proxy scope preservation. Prove
+every moved behavior and boundary directly before deleting the old catch-all tests and directory.
+
+## Iteration 80 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-SOURCE-NAVIGATION` | exact Advanced context SPI, internal dispatch/options, and Core owner layouts | architecture tests | exact paths, namespaces, type identities, visibility, and absent former `Context` directory |
+| `REQ-VSB-API-LAYERING` | public proxies/scopes versus internal runtime mechanics | architecture tests | Advanced SPI remains exported; dispatchers, sentinel, outgoing facade, and pending faults are not exported |
+| `REQ-VSB-RUNTIME-DISPATCH` | send, publish, response, pipe, initializer, and task forwarding | Abstractions dispatcher tests | exact generic contract, object, pipe, token, result task, and one downstream invocation |
+| `REQ-VSB-RUNTIME-DISPATCH` | null, incompatible, open, value, by-ref, and pointer contracts | Abstractions dispatcher tests | exact parameter and zero downstream invocations |
+| `REQ-VSB-CONTEXT-PROXY` | all send/publish getters, setters, typed messages, payload behavior, and replacement views | Abstractions proxy tests | exact state forwarding and replacement view retains the current proxy |
+| `REQ-VSB-CONTEXT-SCOPE` | self/local/parent precedence, isolated add/update, cancellation, typed message, and replacement view | Abstractions scope tests | exact factory counts, identity, owner mutation, and retained local payload |
+| `REQ-VSB-MISSING-CONSUME-CONTEXT` | every property and operation family | Core context tests | every member fails with the domain exception; token-bearing operations preserve pre-cancellation |
+| `REQ-VSB-PENDING-FAULTS` | validation, sealing, concurrency, cancellation, complete notification, and sync/async failures | Core retry tests | exact data/token forwarding and all collected notifications are attempted |
+| `REQ-VSB-APPLICATION-OPTIONS-*` | every options type, snapshot, apply, partition capability, and probe | Abstractions options tests | exact immutable snapshot, fields, failure order, and scope name |
+| `REQ-VSB-SOURCE-COMMENTS` | all comments in the original and final bounded scope | manual review plus hygiene gates | only current functional, state, ownership, and failure semantics remain |
+
+## Iteration 80 mutation obligations
+
+- Return a replacement send view over the wrapped parent instead of the current proxy: the local
+  payload-retention assertion must fail.
+- Omit or redirect any send/publish proxy getter or setter: the complete property matrix must fail
+  on exact value or recorded mutation.
+- Drop a pipe, token, explicit runtime type, values object, or returned task from any dispatcher
+  overload: the exact invocation and task-identity tests must fail.
+- Re-export one dispatcher, sentinel, outgoing implementation, or pending-fault collection, or
+  restore the former mixed directory: the API-layer/source-owner architecture test must fail.
+- Stop notification enumeration after one synchronous observer failure: the every-fault attempt
+  test must observe the missing later call.
+- Let a late fault enter after sealing, seal on pre-cancellation, or permit a second notification:
+  the collection state tests must fail.
+- Change payload lookup precedence, invoke an unnecessary factory, update a parent payload in
+  place, or lose the typed message: the scope identity and factory-count tests must fail.
+- Apply an unset option, share caller-owned headers, mutate context before rejecting an unsupported
+  partition key, or use the wrong probe scope: the options tests must fail.
+- Restore a stale path, cache-centric public description, or operation-forwarding claim that the
+  proxy does not implement: the exact source inventory and manual comment ledger must reject it.
+
+## Iteration 80 completion
+
+All original `Abstractions/Context` files, their contracts, callers, final owners, and comments were
+read and adjudicated manually. The public proxy/scope SPI moved to `Advanced/Contexts`; runtime
+dispatch and option snapshots became internal implementation owners; Core-only consume and retry
+types moved into Core; and the former mixed directory was removed. The send proxy now retains its
+current payload scope across typed replacement, and pending fault notification attempts every
+collected fault even when an observer throws synchronously or returns no task.
+
+Eight isolated mutations were killed and restored. The final Release Unit-solution build has zero
+warnings and errors, the complete Unit solution passes 5,356 tests, and the fresh package/API gate
+passes all 18 journeys, 31 packages, three provider consumers, and 30 API assemblies. The three
+executable Core files reach 136/136 covered lines and 20/20 covered branches. The old directory,
+empty source directories, preprocessor directives, stale public cache/sentinel exports, and bounded
+dummy/legacy markers are absent. The repository-wide A+ source goal remains active.

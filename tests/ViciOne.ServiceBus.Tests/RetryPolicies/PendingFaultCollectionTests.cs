@@ -1,9 +1,10 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.RetryPolicies;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Abstractions.Tests.Contexts;
+namespace ViciOne.ServiceBus.Tests.RetryPolicies;
 
 public sealed class PendingFaultCollectionTests
 {
@@ -23,10 +24,33 @@ public sealed class PendingFaultCollectionTests
             Assert.Throws<ArgumentOutOfRangeException>(() => faults.Add(messageContext, TimeSpan.FromTicks(-1), "Consumer", exception)).ParamName);
         Assert.Equal(
             "consumerType",
+            Assert.Throws<ArgumentNullException>(() => faults.Add(messageContext, TimeSpan.Zero, null!, exception)).ParamName);
+        Assert.Equal(
+            "consumerType",
+            Assert.Throws<ArgumentException>(() => faults.Add(messageContext, TimeSpan.Zero, string.Empty, exception)).ParamName);
+        Assert.Equal(
+            "consumerType",
             Assert.Throws<ArgumentException>(() => faults.Add(messageContext, TimeSpan.Zero, " ", exception)).ParamName);
         Assert.Equal(
             "exception",
             Assert.Throws<ArgumentNullException>(() => faults.Add(messageContext, TimeSpan.Zero, "Consumer", null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PENDING-FAULTS", "missing-owner-fails-before-collection-is-sealed")]
+    public async Task MissingNotificationOwner_IsRejectedWithoutSealingTheCollectionAsync()
+    {
+        var faults = new PendingFaultCollection();
+        ConsumeContext<TestMessage> messageContext = CreateMessageContext<TestMessage>();
+        faults.Add(messageContext, TimeSpan.Zero, "Consumer", new InvalidOperationException("failed"));
+
+        ArgumentNullException missing = await Assert.ThrowsAsync<ArgumentNullException>(
+            () => faults.NotifyAsync(null!, TestContext.Current.CancellationToken));
+
+        Assert.Equal("consumeContext", missing.ParamName);
+        var (ownerContext, observer) = CreateOwnerContext();
+        await faults.NotifyAsync(ownerContext, TestContext.Current.CancellationToken);
+        Assert.Single(observer.Notifications);
     }
 
     [Fact]
@@ -108,6 +132,44 @@ public sealed class PendingFaultCollectionTests
         Assert.Single(observer.Notifications);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PENDING-FAULTS", "synchronous-failure-does-not-skip-later-notifications")]
+    public async Task SynchronousObserverFailure_DoesNotPreventLaterFaultNotificationAsync()
+    {
+        var faults = new PendingFaultCollection();
+        ConsumeContext<TestMessage> firstContext = CreateMessageContext<TestMessage>();
+        ConsumeContext<OtherMessage> secondContext = CreateMessageContext<OtherMessage>();
+        faults.Add(firstContext, TimeSpan.FromMilliseconds(1), "FirstConsumer", new InvalidOperationException("first"));
+        faults.Add(secondContext, TimeSpan.FromMilliseconds(2), "SecondConsumer", new InvalidOperationException("second"));
+        var (ownerContext, observer) = CreateOwnerContext();
+        observer.SynchronouslyFaultingConsumer = "FirstConsumer";
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => faults.NotifyAsync(ownerContext, TestContext.Current.CancellationToken));
+
+        Assert.Equal("synchronous observer failure", failure.Message);
+        Assert.Equal(["FirstConsumer", "SecondConsumer"], observer.Notifications.Select(notification => notification.ConsumerType));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PENDING-FAULTS", "missing-notification-task-does-not-skip-later-notifications")]
+    public async Task MissingObserverTask_IsDiagnosedAfterEveryFaultIsAttemptedAsync()
+    {
+        var faults = new PendingFaultCollection();
+        ConsumeContext<TestMessage> firstContext = CreateMessageContext<TestMessage>();
+        ConsumeContext<OtherMessage> secondContext = CreateMessageContext<OtherMessage>();
+        faults.Add(firstContext, TimeSpan.FromMilliseconds(1), "FirstConsumer", new InvalidOperationException("first"));
+        faults.Add(secondContext, TimeSpan.FromMilliseconds(2), "SecondConsumer", new InvalidOperationException("second"));
+        var (ownerContext, observer) = CreateOwnerContext();
+        observer.NullTaskConsumer = "FirstConsumer";
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => faults.NotifyAsync(ownerContext, TestContext.Current.CancellationToken));
+
+        Assert.Equal("A consumer fault notification returned no task.", failure.Message);
+        Assert.Equal(["FirstConsumer", "SecondConsumer"], observer.Notifications.Select(notification => notification.ConsumerType));
+    }
+
     private static ConsumeContext<TMessage> CreateMessageContext<TMessage>()
         where TMessage : class => DispatchProxy.Create<ConsumeContext<TMessage>, UnusedContextProxy>();
 
@@ -130,6 +192,10 @@ public sealed class PendingFaultCollectionTests
 
         public Task NotificationTask { get; set; } = Task.CompletedTask;
 
+        public string? NullTaskConsumer { get; set; }
+
+        public string? SynchronouslyFaultingConsumer { get; set; }
+
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
@@ -145,6 +211,12 @@ public sealed class PendingFaultCollectionTests
                     (string)args[2]!,
                     (Exception)args[3]!,
                     (CancellationToken)args[4]!));
+
+            string consumerType = (string)args[2]!;
+            if (consumerType == SynchronouslyFaultingConsumer)
+                throw new InvalidOperationException("synchronous observer failure");
+            if (consumerType == NullTaskConsumer)
+                return null;
 
             return NotificationTask;
         }

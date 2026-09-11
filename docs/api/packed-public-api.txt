@@ -990,6 +990,33 @@ TYPE class public ViciOne.ServiceBus.Advanced.PipeContextTimeProviderExtensions 
 TYPE interface public ViciOne.ServiceBus.Advanced.PublishContext [interfaces=ViciOne.ServiceBus.Advanced.SendContext]
   PROPERTY System.Boolean Mandatory { public-get; public-set; }
 TYPE interface public ViciOne.ServiceBus.Advanced.PublishContext<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.PublishContext&ViciOne.ServiceBus.Advanced.SendContext<TMessage>]
+TYPE class public ViciOne.ServiceBus.Advanced.PublishContextProxy [abstract,base=ViciOne.ServiceBus.Middleware.ProxyPipeContext,interfaces=ViciOne.ServiceBus.Advanced.PublishContext]
+  CTOR protected ViciOne.ServiceBus.Advanced.PublishContextProxy(ViciOne.ServiceBus.Advanced.PublishContext context)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.SendContext<TMessageContract> CreateProxy<TMessageContract>(TMessageContract message)
+  PROPERTY System.Boolean Durable { public-get; public-set; }
+  PROPERTY System.Boolean Mandatory { public-get; public-set; }
+  PROPERTY System.Net.Mime.ContentType ContentType { public-get; public-set; }
+  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
+  PROPERTY System.Nullable<System.Guid> ConversationId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> MessageId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> RequestId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> ScheduledMessageId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Int64> BodyLength { public-get;  }
+  PROPERTY System.Nullable<System.TimeSpan> Delay { public-get; public-set; }
+  PROPERTY System.Nullable<System.TimeSpan> TimeToLive { public-get; public-set; }
+  PROPERTY System.String[] SupportedMessageTypes { public-get; public-set; }
+  PROPERTY System.Uri DestinationAddress { public-get; public-set; }
+  PROPERTY System.Uri FaultAddress { public-get; public-set; }
+  PROPERTY System.Uri ResponseAddress { public-get; public-set; }
+  PROPERTY System.Uri SourceAddress { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Advanced.SendHeaders Headers { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer Serializer { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.ISerialization Serialization { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.Advanced.PublishContextProxy<TMessage> [sealed,base=ViciOne.ServiceBus.Advanced.PublishContextProxy,interfaces=ViciOne.ServiceBus.Advanced.PublishContext<TMessage>]
+  CTOR public ViciOne.ServiceBus.Advanced.PublishContextProxy<TMessage>(ViciOne.ServiceBus.Advanced.PublishContext context, TMessage message)
+  PROPERTY TMessage Message { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.PublishExecuteExtensions [static]
   METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Object message, System.Action<ViciOne.ServiceBus.Advanced.PublishContext> callback, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Object message, System.Func<ViciOne.ServiceBus.Advanced.PublishContext,System.Threading.Tasks.Task> callback, System.Threading.CancellationToken cancellationToken = null)
@@ -1273,6 +1300,44 @@ TYPE class public ViciOne.ServiceBus.Advanced.SendContextExtensions [static]
   METHOD public static ViciOne.ServiceBus.Advanced.SendContext ReplaceMessageId(ViciOne.ServiceBus.Advanced.SendContext sendContext, ViciOne.ServiceBus.ConsumeContext consumeContext)
   METHOD public static ViciOne.ServiceBus.Advanced.SendContext StartNewConversation(ViciOne.ServiceBus.Advanced.SendContext context)
   METHOD public static ViciOne.ServiceBus.Advanced.SendContext StartNewConversation(ViciOne.ServiceBus.Advanced.SendContext context, System.Guid conversationId)
+TYPE class public ViciOne.ServiceBus.Advanced.SendContextProxy [abstract,base=ViciOne.ServiceBus.Middleware.ProxyPipeContext,interfaces=ViciOne.ServiceBus.Advanced.SendContext]
+  CTOR protected ViciOne.ServiceBus.Advanced.SendContextProxy(ViciOne.ServiceBus.Advanced.SendContext context)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.SendContext<TMessageContract> CreateProxy<TMessageContract>(TMessageContract message)
+  PROPERTY System.Boolean Durable { public-get; public-set; }
+  PROPERTY System.Net.Mime.ContentType ContentType { public-get; public-set; }
+  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
+  PROPERTY System.Nullable<System.Guid> ConversationId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> MessageId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> RequestId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> ScheduledMessageId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Int64> BodyLength { public-get;  }
+  PROPERTY System.Nullable<System.TimeSpan> Delay { public-get; public-set; }
+  PROPERTY System.Nullable<System.TimeSpan> TimeToLive { public-get; public-set; }
+  PROPERTY System.String[] SupportedMessageTypes { public-get; public-set; }
+  PROPERTY System.Uri DestinationAddress { public-get; public-set; }
+  PROPERTY System.Uri FaultAddress { public-get; public-set; }
+  PROPERTY System.Uri ResponseAddress { public-get; public-set; }
+  PROPERTY System.Uri SourceAddress { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Advanced.SendHeaders Headers { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer Serializer { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.ISerialization Serialization { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.Advanced.SendContextProxy<TMessage> [sealed,base=ViciOne.ServiceBus.Advanced.SendContextProxy,interfaces=ViciOne.ServiceBus.Advanced.SendContext<TMessage>]
+  CTOR public ViciOne.ServiceBus.Advanced.SendContextProxy<TMessage>(ViciOne.ServiceBus.Advanced.SendContext context, TMessage message)
+  PROPERTY TMessage Message { public-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.SendContextScope [base=ViciOne.ServiceBus.Advanced.SendContextProxy]
+  CTOR public ViciOne.ServiceBus.Advanced.SendContextScope(ViciOne.ServiceBus.Advanced.SendContext context)
+  CTOR public ViciOne.ServiceBus.Advanced.SendContextScope(ViciOne.ServiceBus.Advanced.SendContext context, System.Object[] payloads)
+  METHOD public System.Boolean HasPayloadType(System.Type payloadType)
+  METHOD public System.Boolean TryGetPayload<TPayload>(out TPayload payload)
+  METHOD public TPayload AddOrUpdatePayload<TPayload>(ViciOne.ServiceBus.Advanced.PayloadFactory<TPayload> addFactory, ViciOne.ServiceBus.Advanced.UpdatePayloadFactory<TPayload> updateFactory)
+  METHOD public TPayload GetOrAddPayload<TPayload>(ViciOne.ServiceBus.Advanced.PayloadFactory<TPayload> payloadFactory)
+  PROPERTY System.Threading.CancellationToken CancellationToken { public-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.SendContextScope<TMessage> [sealed,base=ViciOne.ServiceBus.Advanced.SendContextScope,interfaces=ViciOne.ServiceBus.Advanced.SendContext<TMessage>]
+  CTOR public ViciOne.ServiceBus.Advanced.SendContextScope<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
+  CTOR public ViciOne.ServiceBus.Advanced.SendContextScope<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Object[] payloads)
+  PROPERTY TMessage Message { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.SendExecuteExtensions [static]
   METHOD public static System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Object message, System.Action<ViciOne.ServiceBus.Advanced.SendContext> callback, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Object message, System.Func<ViciOne.ServiceBus.Advanced.SendContext,System.Threading.Tasks.Task> callback, System.Threading.CancellationToken cancellationToken = null)
@@ -2277,143 +2342,6 @@ TYPE class public ViciOne.ServiceBus.ConsumerMessageException [sealed,base=ViciO
   CTOR public ViciOne.ServiceBus.ConsumerMessageException()
   CTOR public ViciOne.ServiceBus.ConsumerMessageException(System.String message)
   CTOR public ViciOne.ServiceBus.ConsumerMessageException(System.String message, System.Exception innerException)
-TYPE class public ViciOne.ServiceBus.Context.MissingConsumeContext [sealed,interfaces=ViciOne.ServiceBus.ConsumeContext]
-  METHOD public virtual System.Boolean HasMessageType(System.Type messageType)
-  METHOD public virtual System.Boolean HasPayloadType(System.Type payloadType)
-  METHOD public virtual System.Boolean TryGetMessage<TMessage>(out ViciOne.ServiceBus.ConsumeContext<TMessage> consumeContext)
-  METHOD public virtual System.Boolean TryGetPayload<TPayload>(out TPayload payload)
-  METHOD public virtual System.Threading.Tasks.Task NotifyConsumedAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.TimeSpan duration, System.String consumerType, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task NotifyFaultedAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.TimeSpan duration, System.String consumerType, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync(System.Object message, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync(System.Object message, System.Type messageType, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync(System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> publishPipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync(System.Object message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> publishPipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync<TMessage>(System.Object values, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync<TMessage>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext<TMessage>> publishPipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync<TMessage>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> publishPipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync<TMessage>(TMessage message, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync<TMessage>(TMessage message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext<TMessage>> publishPipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishAsync<TMessage>(TMessage message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> publishPipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync(System.Object message)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync(System.Object message, System.Type messageType)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync(System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync(System.Object message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(System.Object values)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TResponse>> sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(TResponse message)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(TResponse message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TResponse>> sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(TResponse message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> sendPipe)
-  METHOD public virtual System.Threading.Tasks.Task RespondAsync<TResponse>(TResponse message, ViciOne.ServiceBus.SendOptions options)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync(System.Uri address, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void AddConsumeTask(System.Threading.Tasks.Task task)
-  METHOD public virtual System.Void DeferResponse<TResponse>(TResponse message)
-  METHOD public virtual TPayload AddOrUpdatePayload<TPayload>(ViciOne.ServiceBus.Advanced.PayloadFactory<TPayload> addFactory, ViciOne.ServiceBus.Advanced.UpdatePayloadFactory<TPayload> updateFactory)
-  METHOD public virtual TPayload GetOrAddPayload<TPayload>(ViciOne.ServiceBus.Advanced.PayloadFactory<TPayload> payloadFactory)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  PROPERTY System.Collections.Generic.IEnumerable<System.String> SupportedMessageTypes { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Threading.CancellationToken CancellationToken { public-get;  }
-  PROPERTY System.Threading.Tasks.Task ConsumeCompleted { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.ReceiveContext ReceiveContext { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.SerializerContext SerializerContext { public-get;  }
-  PROPERTY ViciOne.ServiceBus.ConsumeContext Instance { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-  PROPERTY ViciOne.ServiceBus.IOutgoingMessages Outgoing { public-get;  }
-TYPE class public ViciOne.ServiceBus.Context.PendingFaultCollection [sealed]
-  CTOR public ViciOne.ServiceBus.Context.PendingFaultCollection()
-  METHOD public System.Threading.Tasks.Task NotifyAsync(ViciOne.ServiceBus.ConsumeContext consumeContext, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Void Add<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.TimeSpan elapsed, System.String consumerType, System.Exception exception)
-TYPE class public ViciOne.ServiceBus.Context.PublishContextProxy [abstract,base=ViciOne.ServiceBus.Middleware.ProxyPipeContext,interfaces=ViciOne.ServiceBus.Advanced.PublishContext]
-  CTOR protected ViciOne.ServiceBus.Context.PublishContextProxy(ViciOne.ServiceBus.Advanced.PublishContext context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.SendContext<TMessageContract> CreateProxy<TMessageContract>(TMessageContract message)
-  PROPERTY System.Boolean Durable { public-get; public-set; }
-  PROPERTY System.Boolean Mandatory { public-get; public-set; }
-  PROPERTY System.Net.Mime.ContentType ContentType { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> ScheduledMessageId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Int64> BodyLength { public-get;  }
-  PROPERTY System.Nullable<System.TimeSpan> Delay { public-get; public-set; }
-  PROPERTY System.Nullable<System.TimeSpan> TimeToLive { public-get; public-set; }
-  PROPERTY System.String[] SupportedMessageTypes { public-get; public-set; }
-  PROPERTY System.Uri DestinationAddress { public-get; public-set; }
-  PROPERTY System.Uri FaultAddress { public-get; public-set; }
-  PROPERTY System.Uri ResponseAddress { public-get; public-set; }
-  PROPERTY System.Uri SourceAddress { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.SendHeaders Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer Serializer { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.ISerialization Serialization { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Context.PublishContextProxy<TMessage> [sealed,base=ViciOne.ServiceBus.Context.PublishContextProxy,interfaces=ViciOne.ServiceBus.Advanced.PublishContext<TMessage>]
-  CTOR public ViciOne.ServiceBus.Context.PublishContextProxy<TMessage>(ViciOne.ServiceBus.Advanced.PublishContext context, TMessage message)
-  PROPERTY TMessage Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.Context.PublishEndpointConverterCache [static]
-  METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Object message, System.Type messageType, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task PublishInitializerAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Type messageType, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task PublishInitializerAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Type messageType, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Context.ResponseEndpointConverterCache [static]
-  METHOD public static System.Threading.Tasks.Task RespondAsync(ViciOne.ServiceBus.ConsumeContext consumeContext, System.Object message, System.Type messageType)
-  METHOD public static System.Threading.Tasks.Task RespondAsync(ViciOne.ServiceBus.ConsumeContext consumeContext, System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe)
-TYPE class public ViciOne.ServiceBus.Context.SendContextProxy [abstract,base=ViciOne.ServiceBus.Middleware.ProxyPipeContext]
-  CTOR protected ViciOne.ServiceBus.Context.SendContextProxy(ViciOne.ServiceBus.Advanced.SendContext context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.SendContext<TMessageContract> CreateProxy<TMessageContract>(TMessageContract message)
-  PROPERTY System.Boolean Durable { public-get; public-set; }
-  PROPERTY System.Net.Mime.ContentType ContentType { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> ScheduledMessageId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Int64> BodyLength { public-get;  }
-  PROPERTY System.Nullable<System.TimeSpan> Delay { public-get; public-set; }
-  PROPERTY System.Nullable<System.TimeSpan> TimeToLive { public-get; public-set; }
-  PROPERTY System.String[] SupportedMessageTypes { public-get; public-set; }
-  PROPERTY System.Uri DestinationAddress { public-get; public-set; }
-  PROPERTY System.Uri FaultAddress { public-get; public-set; }
-  PROPERTY System.Uri ResponseAddress { public-get; public-set; }
-  PROPERTY System.Uri SourceAddress { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.SendHeaders Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer Serializer { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.ISerialization Serialization { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Context.SendContextProxy<TMessage> [sealed,base=ViciOne.ServiceBus.Context.SendContextProxy,interfaces=ViciOne.ServiceBus.Advanced.SendContext<TMessage>]
-  CTOR public ViciOne.ServiceBus.Context.SendContextProxy<TMessage>(ViciOne.ServiceBus.Advanced.SendContext context, TMessage message)
-  PROPERTY TMessage Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.Context.SendContextScope [base=ViciOne.ServiceBus.Context.SendContextProxy]
-  CTOR public ViciOne.ServiceBus.Context.SendContextScope(ViciOne.ServiceBus.Advanced.SendContext context)
-  CTOR public ViciOne.ServiceBus.Context.SendContextScope(ViciOne.ServiceBus.Advanced.SendContext context, System.Object[] payloads)
-  METHOD public System.Boolean HasPayloadType(System.Type payloadType)
-  METHOD public System.Boolean TryGetPayload<TPayload>(out TPayload payload)
-  METHOD public TPayload AddOrUpdatePayload<TPayload>(ViciOne.ServiceBus.Advanced.PayloadFactory<TPayload> addFactory, ViciOne.ServiceBus.Advanced.UpdatePayloadFactory<TPayload> updateFactory)
-  METHOD public TPayload GetOrAddPayload<TPayload>(ViciOne.ServiceBus.Advanced.PayloadFactory<TPayload> payloadFactory)
-  PROPERTY System.Threading.CancellationToken CancellationToken { public-get;  }
-TYPE class public ViciOne.ServiceBus.Context.SendContextScope<TMessage> [sealed,base=ViciOne.ServiceBus.Context.SendContextScope,interfaces=ViciOne.ServiceBus.Advanced.SendContext<TMessage>]
-  CTOR public ViciOne.ServiceBus.Context.SendContextScope<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-  CTOR public ViciOne.ServiceBus.Context.SendContextScope<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Object[] payloads)
-  PROPERTY TMessage Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.Context.SendEndpointConverterCache [static]
-  METHOD public static System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Object message, System.Type messageType, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task SendInitializerAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Type messageType, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task SendInitializerAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Type messageType, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Contracts.CommandContext [interfaces=ViciOne.ServiceBus.Advanced.PipeContext]
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Contracts.CommandContext<TCommand> [interfaces=ViciOne.ServiceBus.Contracts.CommandContext]

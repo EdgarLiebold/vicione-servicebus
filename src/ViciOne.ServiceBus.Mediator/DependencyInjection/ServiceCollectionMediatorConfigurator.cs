@@ -65,7 +65,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
         }
 
         collection.TryAddScoped(CreateScopeProvider);
-        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? MissingConsumeContext.Instance);
+        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? UnavailableConsumeContext.Instance);
 
         collection.TryAddScoped(typeof(IRequestClient<>), typeof(GenericRequestClient<>));
         collection.TryAddScoped<IScopedClientFactory>(provider =>

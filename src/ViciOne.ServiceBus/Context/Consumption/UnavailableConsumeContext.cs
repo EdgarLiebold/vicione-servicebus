@@ -3,15 +3,15 @@ using System.Diagnostics.CodeAnalysis;
 namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Represents the absence of an active consume scope with a consistent diagnostic failure.</summary>
-public sealed class MissingConsumeContext :
+internal sealed class UnavailableConsumeContext :
     ConsumeContext
 {
-    private MissingConsumeContext()
+    private UnavailableConsumeContext()
     {
     }
 
     /// <summary>Gets the shared unavailable consume context.</summary>
-    public static ConsumeContext Instance { get; } = new MissingConsumeContext();
+    public static ConsumeContext Instance { get; } = new UnavailableConsumeContext();
 
     /// <inheritdoc />
     public CancellationToken CancellationToken => throw Unavailable();

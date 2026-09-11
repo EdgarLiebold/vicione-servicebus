@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Context;
+namespace ViciOne.ServiceBus.Internals.Dispatching;
 
-/// <summary>Dispatches runtime-typed publish operations through cached generic converters.</summary>
-public static class PublishEndpointConverterCache
+/// <summary>Maps runtime publish contracts to the endpoint's generic operations.</summary>
+internal static class PublishEndpointDispatcher
 {
     static readonly ConcurrentDictionary<Type, Lazy<IPublishEndpointConverter>> Converters = new();
 

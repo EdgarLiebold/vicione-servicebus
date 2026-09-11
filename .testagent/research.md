@@ -382,3 +382,71 @@ two executable iteration files. The separate Abstractions project passes 537 tes
 numeric coverage with its current MTP dependencies, so no percentage is inferred. A related read
 identified generic/stale wording in `Middleware/BasePipeContext.cs`; it remains explicitly queued
 for the future manual Middleware/Context owner pass rather than being changed outside this scope.
+
+## Confirmed iteration-80 abstractions-context findings
+
+All ten files and 1,485 physical lines in `src/ViciOne.ServiceBus.Abstractions/Context` were read
+manually in full, followed through their interfaces, production callers, project references,
+friend-assembly boundaries, and three owning test files before any production edit.
+
+1. The directory combines unrelated layers. `SendContextProxy`, `PublishContextProxy`, and
+   `SendContextScope` are public extension infrastructure over contracts already owned by
+   `Advanced/Contexts`. The endpoint converter caches and option adapters are internal mechanics.
+   `ConsumeContextOutgoingMessages`, `MissingConsumeContext`, and `PendingFaultCollection` are used
+   only by the Core runtime (plus the Mediator sentinel registration). Keeping them together under
+   an undocumented public-looking `Context` owner obscures the five-layer API.
+2. `SendEndpointConverterCache`, `PublishEndpointConverterCache`, and
+   `ResponseEndpointConverterCache` are exported even though callers already use endpoint APIs and
+   the types expose caching as an implementation detail. All first-party cross-assembly consumers
+   are named friends of Abstractions, so the dispatchers can be internal without a compatibility
+   wrapper or feature loss. Their functional names should describe runtime dispatch rather than
+   the cache used to implement it.
+3. `MissingConsumeContext` and `PendingFaultCollection` are exported runtime implementation types,
+   not application or Advanced SPI. Both can move to their Core owners and become internal.
+   `ConsumeContextOutgoingMessages` likewise belongs beside `BaseConsumeContext`, its sole
+   production owner, rather than in the contract assembly.
+4. `SendContextProxy.CreateProxy` delegates directly to the wrapped context. A derived proxy such
+   as `SendContextScope` consequently loses its local payload layer when creating a typed view.
+   `PublishContextProxy` correctly creates the replacement view over `this`; send must preserve the
+   same current-view semantics.
+5. `OutgoingOptionsPipe.cs` declares five independent top-level implementation types. Splitting
+   the send, publish, schedule, application, and snapshot responsibilities into matching files
+   restores deterministic type-to-file navigation without changing option behavior.
+6. Existing runtime-dispatch tests cover only the three simplest overloads. Pipe forwarding,
+   initializer dispatch, returned-task identity, null pipes/values, and all invalid runtime type
+   classes are not directly protected. Proxy tests cover constructors and one publish conversion,
+   not their complete forwarded state. Scope tests cover only one local payload and four null
+   boundaries, not precedence, update ownership, cancellation, typed message, or proxy retention.
+   The unavailable sentinel test exercises one property and one publish overload, leaving most of
+   its contract unverified.
+7. `PendingFaultCollection.NotifyAsync` enumerates notification calls directly into `Task.WhenAll`.
+   If one context throws synchronously while producing its task, enumeration stops and later
+   collected faults are never notified despite the method's every-fault contract. Synchronous
+   throws must be captured as faulted tasks so all entries are attempted before aggregate
+   completion.
+8. The comments in the ten files were reviewed against current behavior. Most are accurate. The
+   proxy base summaries overstate that they forward operations when they actually forward context
+   state and payload behavior; sentinel and dispatcher comments must follow their new ownership and
+   functional names. No scripted comment rewrite is permitted or needed.
+
+The completed remediation replaces the mixed directory with three explicit ownership layers.
+Public context proxy and payload-scope SPI now lives in `Advanced/Contexts`; reflection-backed
+runtime dispatch and immutable outgoing-option adapters live below `Internals`; and the consume
+outgoing facade, unavailable sentinel, and pending-fault collector live beside their Core owners.
+The old Abstractions `Context` directory is absent. No behavior was replaced by a compatibility
+wrapper.
+
+Eight isolated mutations were killed and restored. A final manual reread then found that the
+temporary proxy-property mutation had initially been restored against the wrong matching getter;
+the swapped correlation/conversation getters were corrected before final compilation. The final
+Unit solution passes 5,356 tests with no failures or skips, the complete architecture profile
+passes 292 tests, and the 30-test bidirectional Async profile passes against its unchanged semantic
+guard hash. Fresh-package validation passes 18 journeys, 31 packages, three isolated provider
+consumers, and 30 runtime API assemblies. The deliberate Greenfield API contract contains 19,701
+lines with SHA-256 `eeef563f54d8dc551467fa19bda58c69caa2991e4c9e0e6ca0688dcb1f489866`.
+
+Core coverage after direct concrete-sentinel binding is 100% line (136/136) and 100% branch
+(20/20) for the three executable Core files in this iteration. The complete product code loaded by
+that module measures 70.11% line and 62.69% branch coverage. Abstractions has no coverage-provider
+reference, so its 541 passing tests and six isolated behavior/API mutation kills are reported
+without inventing a numeric percentage.

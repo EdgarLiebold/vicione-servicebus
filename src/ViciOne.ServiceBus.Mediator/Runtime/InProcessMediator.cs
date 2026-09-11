@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Internals.Dispatching;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Mediator.Contexts;
 using ViciOne.ServiceBus.Observables;
@@ -258,7 +259,7 @@ internal sealed class InProcessMediator :
 
         var messageType = message.GetType();
 
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -273,7 +274,7 @@ internal sealed class InProcessMediator :
 
         var messageType = message.GetType();
 
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -283,7 +284,7 @@ internal sealed class InProcessMediator :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -294,7 +295,7 @@ internal sealed class InProcessMediator :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointDispatcher.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
