@@ -33,7 +33,7 @@ public sealed class EnvelopeMetadataProjectionTests
         Assert.Equal(context.DestinationAddress?.ToString(), envelope.DestinationAddress);
         Assert.Equal(context.ResponseAddress?.ToString(), envelope.ResponseAddress);
         Assert.Equal(context.FaultAddress?.ToString(), envelope.FaultAddress);
-        Assert.Equal(context.SupportedMessageTypes, envelope.MessageType);
+        Assert.Equal(context.SupportedMessageTypes, envelope.MessageTypes);
         Assert.Same(context.Message, envelope.Message);
         Assert.Equal(ProjectionTime + context.TimeToLive, envelope.ExpirationTime);
         Assert.Equal(context.SentTime, envelope.SentTime);
@@ -67,7 +67,7 @@ public sealed class EnvelopeMetadataProjectionTests
         context.SetTimeProvider(timeProvider);
         var envelope = new JsonMessageEnvelope
         {
-            MessageType = ["urn:message:original"],
+            MessageTypes = ["urn:message:original"],
             Message = new TestMessage("payload"),
             ExpirationTime = ProjectionTime + TimeSpan.FromHours(1),
             Headers = new Dictionary<string, object?>
@@ -81,7 +81,7 @@ public sealed class EnvelopeMetadataProjectionTests
         Assert.Equal(ProjectionTime - TimeSpan.FromSeconds(30), envelope.ExpirationTime);
         Assert.Equal("existing", envelope.Headers["Preserved"]);
         Assert.Equal("metadata", envelope.Headers["ViciOne-Test"]);
-        Assert.Equal(envelope.MessageType, context.SupportedMessageTypes);
+        Assert.Equal(envelope.MessageTypes, context.SupportedMessageTypes);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public sealed class EnvelopeMetadataProjectionTests
         context.SetTimeProvider(timeProvider);
         var envelope = new JsonMessageEnvelope
         {
-            MessageType = ["urn:message:original"],
+            MessageTypes = ["urn:message:original"],
             Message = new TestMessage("original"),
         };
 
@@ -120,7 +120,7 @@ public sealed class EnvelopeMetadataProjectionTests
         context.SetTimeProvider(timeProvider);
         var envelope = new JsonMessageEnvelope
         {
-            MessageType = ["urn:message:original"],
+            MessageTypes = ["urn:message:original"],
             Message = new TestMessage("original"),
         };
 
@@ -149,7 +149,7 @@ public sealed class EnvelopeMetadataProjectionTests
             FaultAddress = "loopback://existing-fault",
             ExpirationTime = ProjectionTime + TimeSpan.FromMinutes(2),
             SentTime = ProjectionTime - TimeSpan.FromMinutes(1),
-            MessageType = ["urn:message:original"],
+            MessageTypes = ["urn:message:original"],
             Message = new TestMessage("original"),
         };
 
@@ -162,6 +162,81 @@ public sealed class EnvelopeMetadataProjectionTests
         Assert.Equal("loopback://existing-fault", envelope.FaultAddress);
         Assert.Equal(ProjectionTime + TimeSpan.FromMinutes(2), envelope.ExpirationTime);
         Assert.Equal(ProjectionTime - TimeSpan.FromMinutes(1), envelope.SentTime);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ENVELOPE-METADATA-PROJECTION", "case-insensitive-header-snapshot")]
+    public void AssignedHeaders_BecomeAnIndependentCaseInsensitiveSnapshot()
+    {
+        var source = new Dictionary<string, object?>
+        {
+            ["Trace-Id"] = "original",
+        };
+        var envelope = new JsonMessageEnvelope { Headers = source };
+        source["Trace-Id"] = "source-change";
+
+        Assert.Equal("original", envelope.Headers["TRACE-ID"]);
+        envelope.Headers["trace-id"] = "envelope-change";
+        Assert.Equal("source-change", source["Trace-Id"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ENVELOPE-METADATA-PROJECTION", "read-only-contract-collections-and-copy-isolation")]
+    public void MessageEnvelope_ExposesReadOnlyCollectionsAndCopiesDoNotShareTheirBackingStorage()
+    {
+        string[] sourceTypes = ["urn:message:original"];
+        var source = new JsonMessageEnvelope
+        {
+            MessageTypes = sourceTypes,
+            Headers = new Dictionary<string, object?>
+            {
+                ["Trace-Id"] = "original",
+            },
+        };
+        MessageEnvelope contract = source;
+        var copy = new JsonMessageEnvelope(contract);
+
+        Assert.IsAssignableFrom<IReadOnlyList<string>>(contract.MessageTypes);
+        Assert.IsNotType<string[]>(contract.MessageTypes);
+        Assert.Throws<NotSupportedException>(() =>
+            ((IList<string>)contract.MessageTypes!).Add("urn:message:forbidden"));
+        Assert.Throws<NotSupportedException>(() =>
+            ((IDictionary<string, object?>)contract.Headers!).Add("Forbidden", true));
+
+        sourceTypes[0] = "urn:message:changed";
+        source.Headers["Trace-Id"] = "changed";
+
+        Assert.NotNull(copy.MessageTypes);
+        Assert.Equal(["urn:message:original"], copy.MessageTypes);
+        Assert.Equal("original", copy.Headers["Trace-Id"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ENVELOPE-METADATA-PROJECTION", "invalid-identifier-diagnostic")]
+    public void InvalidIdentifier_NamesTheRejectedEnvelopeProperty()
+    {
+        var context = new EnvelopeMessageContext(
+            new JsonMessageEnvelope { MessageId = "not-a-guid" },
+            ServiceBusMetadataJson.ObjectDeserializer);
+
+        FormatException exception = Assert.Throws<FormatException>(() => context.MessageId);
+
+        Assert.Contains(nameof(MessageEnvelope.MessageId), exception.Message, StringComparison.Ordinal);
+        Assert.Contains("not-a-guid", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ENVELOPE-METADATA-PROJECTION", "absolute-endpoint-address")]
+    public void RelativeEndpointAddress_IsRejectedWithItsPropertyName()
+    {
+        var context = new EnvelopeMessageContext(
+            new JsonMessageEnvelope { SourceAddress = "relative/source" },
+            ServiceBusMetadataJson.ObjectDeserializer);
+
+        FormatException exception = Assert.Throws<FormatException>(() => context.SourceAddress);
+
+        Assert.Contains(nameof(MessageEnvelope.SourceAddress), exception.Message, StringComparison.Ordinal);
+        Assert.Contains("relative/source", exception.Message, StringComparison.Ordinal);
     }
 
     private static MessageSendContext<TestMessage> CreateSendContext()

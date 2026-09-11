@@ -87,7 +87,7 @@ internal sealed class QuartzScheduledMessageJob<TBus> : IJob
         try
         {
             var endpoint = await bus.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
-            await endpoint.SendAsync(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
+            await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, cancellationToken).ConfigureAwait(false);
             LogContext.Debug?.Log("Schedule Executed: {Key} {Schedule}", context.Trigger.Key, context.Trigger.NextFireTimeUtc);
         }
         catch (InvalidScheduledMessageDataException exception)

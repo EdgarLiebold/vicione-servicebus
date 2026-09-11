@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Serialization;
-using ViciOne.ServiceBus.Serialization.JsonConverters;
+using ViciOne.ServiceBus.Serialization.Json.Converters;
 
 namespace ViciOne.ServiceBus.Configuration;
 

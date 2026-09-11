@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Text.Json;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
@@ -168,6 +169,27 @@ public sealed class SystemTextJsonIsolationTests
         Assert.Equal("serializerOptions", raw.ParamName);
         Assert.Contains("immutable", envelope.Message, StringComparison.Ordinal);
         Assert.Contains("immutable", raw.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ISOLATION", "content-types-are-defensive-values")]
+    public void PublicContentTypes_CannotMutateSerializerOrGlobalMediaTypes()
+    {
+        ContentType envelopeGlobal = SystemTextJsonMessageSerializer.JsonContentType;
+        ContentType rawGlobal = SystemTextJsonRawMessageSerializer.JsonContentType;
+        var custom = new ContentType("application/vnd.example+json");
+        var envelope = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options, custom);
+        var raw = new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options);
+        envelopeGlobal.MediaType = "application/mutated-envelope";
+        rawGlobal.MediaType = "application/mutated-raw";
+        custom.MediaType = "application/mutated-custom";
+        envelope.ContentType.MediaType = "application/mutated-return-value";
+        raw.ContentType.MediaType = "application/mutated-return-value";
+
+        Assert.Equal(SystemTextJsonMessageSerializer.JsonMediaType, SystemTextJsonMessageSerializer.JsonContentType.MediaType);
+        Assert.Equal(SystemTextJsonRawMessageSerializer.JsonMediaType, SystemTextJsonRawMessageSerializer.JsonContentType.MediaType);
+        Assert.Equal("application/vnd.example+json", envelope.ContentType.MediaType);
+        Assert.Equal(SystemTextJsonRawMessageSerializer.JsonMediaType, raw.ContentType.MediaType);
     }
 
     [Fact]

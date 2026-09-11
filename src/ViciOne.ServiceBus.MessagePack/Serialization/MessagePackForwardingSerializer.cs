@@ -39,8 +39,8 @@ internal sealed class MessagePackForwardingSerializer :
         var envelope = new MessagePackEnvelope(_envelope);
         envelope.Update(context);
 
-        if (envelope.MessageType != null)
-            context.SupportedMessageTypes = envelope.MessageType;
+        if (envelope.MessageTypes != null)
+            context.SupportedMessageTypes = envelope.MessageTypes;
 
         return new MessagePackMessageBody<T>(context, envelope);
     }

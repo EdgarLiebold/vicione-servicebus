@@ -79,7 +79,11 @@ internal sealed class InMemoryOutboxMessage :
     {
         Dictionary<string, object?>? headers = deserializer.DeserializeDictionary<object?>(Headers);
         if (headers != null)
-            return new DictionarySendHeaders(headers);
+        {
+            return new DictionarySendHeaders(headers
+                .Where(static pair => pair.Value is not null)
+                .Select(static pair => new KeyValuePair<string, object>(pair.Key, pair.Value!)));
+        }
 
         return EmptyHeaders.Instance;
     }

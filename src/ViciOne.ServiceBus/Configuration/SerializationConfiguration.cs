@@ -188,7 +188,7 @@ public class SerializationConfiguration :
             ?? (messageDeserializers.Length == 1 ? messageDeserializers[0].ContentType : null)
             ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "No default content type specified and more than one deserializer was configured", "Correct the named configuration before starting the host"));
 
-        return new ViciOne.ServiceBus.Serialization.Serialization(messageSerializers, serializerContentType, messageDeserializers, defaultContentType);
+        return new SerializerCollection(messageSerializers, serializerContentType, messageDeserializers, defaultContentType);
     }
 
     JsonSerializerOptions CreateJsonSerializerOptions()

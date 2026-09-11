@@ -260,7 +260,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
 
                 try
                 {
-                    await endpoint.SendAsync(new SerializedMessageBody(), pipe, sendToken.Token).ConfigureAwait(false);
+                    await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, sendToken.Token).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

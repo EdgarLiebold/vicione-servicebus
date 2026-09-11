@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MessagePack;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Metadata;
@@ -30,7 +31,9 @@ internal sealed class MessagePackEnvelope :
     /// <summary>Gets or sets the endpoint address to which a fault should be sent.</summary>
     public string? FaultAddress { get; set; }
     /// <summary>Gets or sets the URNs of the message contracts represented by the payload.</summary>
-    public string[]? MessageType { get; set; }
+    public string[]? MessageTypes { get; set; }
+    IReadOnlyList<string>? MessageEnvelope.MessageTypes =>
+        MessageTypes is null ? null : Array.AsReadOnly(MessageTypes);
     /// <summary>
     /// Gets or sets whether <see cref="Message" /> contains a natively serialized MessagePack payload
     /// rather than a MessagePack-encoded object dictionary that requires metadata projection.
@@ -44,6 +47,8 @@ internal sealed class MessagePackEnvelope :
     public DateTimeOffset? SentTime { get; set; }
     /// <summary>Gets or sets application and transport-independent message headers.</summary>
     public Dictionary<string, object?>? Headers { get; set; }
+    IReadOnlyDictionary<string, object?>? MessageEnvelope.Headers =>
+        Headers is null ? null : new ReadOnlyDictionary<string, object?>(Headers);
     /// <summary>Gets or sets information about the producing host.</summary>
     public HostInfo? Host { get; set; }
 
@@ -103,7 +108,7 @@ internal sealed class MessagePackEnvelope :
     /// <param name="context">The message context that supplies envelope metadata.</param>
     /// <param name="message">The message to serialize.</param>
     /// <param name="messageTypes">The supported message contract URNs.</param>
-    public MessagePackEnvelope(MessageContext context, object message, string[] messageTypes)
+    public MessagePackEnvelope(MessageContext context, object message, IReadOnlyList<string> messageTypes)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(message);
@@ -123,8 +128,8 @@ internal sealed class MessagePackEnvelope :
         ArgumentNullException.ThrowIfNull(context);
         ApplyMetadata(EnvelopeMetadataProjection.Overlay(this, context));
 
-        if (MessageType != null)
-            context.SupportedMessageTypes = MessageType;
+        if (MessageTypes != null)
+            context.SupportedMessageTypes = MessageTypes;
     }
 
     void ApplyMetadata(EnvelopeMetadataProjection metadata)
@@ -138,7 +143,7 @@ internal sealed class MessagePackEnvelope :
         DestinationAddress = metadata.DestinationAddress;
         ResponseAddress = metadata.ResponseAddress;
         FaultAddress = metadata.FaultAddress;
-        MessageType = metadata.MessageType;
+        MessageTypes = metadata.MessageTypes;
         ExpirationTime = metadata.ExpirationTime;
         SentTime = metadata.SentTime;
         Headers = metadata.Headers;

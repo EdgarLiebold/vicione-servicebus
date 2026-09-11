@@ -3651,7 +3651,8 @@ TYPE class public ViciOne.ServiceBus.Serialization.EmptyHeaders
   METHOD public virtual System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue = null)
   METHOD public virtual T Get<T>(System.String key, T defaultValue)
 TYPE interface public ViciOne.ServiceBus.Serialization.MessageEnvelope
-  PROPERTY System.Collections.Generic.Dictionary<System.String,System.Object> Headers { public-get;  }
+  PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Headers { public-get;  }
+  PROPERTY System.Collections.Generic.IReadOnlyList<System.String> MessageTypes { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
   PROPERTY System.Object Message { public-get;  }
@@ -3664,7 +3665,6 @@ TYPE interface public ViciOne.ServiceBus.Serialization.MessageEnvelope
   PROPERTY System.String RequestId { public-get;  }
   PROPERTY System.String ResponseAddress { public-get;  }
   PROPERTY System.String SourceAddress { public-get;  }
-  PROPERTY System.String[] MessageType { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
 TYPE class public ViciOne.ServiceBus.StaleConcurrencyLimitCommandException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
   CTOR public ViciOne.ServiceBus.StaleConcurrencyLimitCommandException(System.DateTimeOffset commandTimestamp, System.DateTimeOffset lastAppliedTimestamp)
@@ -19308,7 +19308,7 @@ TYPE class public ViciOne.ServiceBus.Serialization.BaseSerializerContext [abstra
   PROPERTY System.Uri SourceAddress { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.BodyConsumeContext [base=ViciOne.ServiceBus.Context.DeserializerConsumeContext]
+TYPE class public ViciOne.ServiceBus.Serialization.BodyConsumeContext [sealed,base=ViciOne.ServiceBus.Context.DeserializerConsumeContext]
   CTOR public ViciOne.ServiceBus.Serialization.BodyConsumeContext(ViciOne.ServiceBus.Advanced.ReceiveContext receiveContext, ViciOne.ServiceBus.Advanced.SerializerContext serializerContext)
   METHOD public System.Boolean HasMessageType(System.Type messageType)
   METHOD public System.Boolean TryGetMessage<T>(out ViciOne.ServiceBus.ConsumeContext<T> message)
@@ -19326,17 +19326,17 @@ TYPE class public ViciOne.ServiceBus.Serialization.BodyConsumeContext [base=Vici
   PROPERTY System.Uri SourceAddress { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.CopyBodySerializer
+TYPE class public ViciOne.ServiceBus.Serialization.CopyBodySerializer [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.CopyBodySerializer(System.Net.Mime.ContentType contentType, ViciOne.ServiceBus.Advanced.MessageBody body)
   METHOD public virtual ViciOne.ServiceBus.Advanced.MessageBody GetMessageBody<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
   PROPERTY System.Net.Mime.ContentType ContentType { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.DeserializeVariableExtensions [static]
   METHOD public static System.Boolean TryGetValue<T>(System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, out System.Nullable<T> value)
   METHOD public static System.Boolean TryGetValue<T>(System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, out T value)
-TYPE class public ViciOne.ServiceBus.Serialization.DictionarySendHeaders
+TYPE class public ViciOne.ServiceBus.Serialization.DictionarySendHeaders [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.DictionarySendHeaders()
-  CTOR public ViciOne.ServiceBus.Serialization.DictionarySendHeaders(System.Collections.Generic.IDictionary<System.String,System.Object> headers)
-  CTOR public ViciOne.ServiceBus.Serialization.DictionarySendHeaders(System.Collections.Generic.IDictionary<System.String,System.Object> headers, System.Boolean useExistingDictionary)
+  CTOR public ViciOne.ServiceBus.Serialization.DictionarySendHeaders(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> headers)
+  METHOD public static ViciOne.ServiceBus.Serialization.DictionarySendHeaders Wrap(System.Collections.Generic.IDictionary<System.String,System.Object> headers)
   METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
   METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
   METHOD public virtual System.Collections.Generic.IEnumerator<ViciOne.ServiceBus.Advanced.HeaderValue> GetEnumerator()
@@ -19346,9 +19346,8 @@ TYPE class public ViciOne.ServiceBus.Serialization.DictionarySendHeaders
   METHOD public virtual T Get<T>(System.String key, T defaultValue)
 TYPE class public ViciOne.ServiceBus.Serialization.EncryptionKey [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.EncryptionKey(System.String keyId, System.ReadOnlySpan<System.Byte> keyMaterial)
-  METHOD public System.Byte[] ExportKeyMaterial()
   PROPERTY System.String KeyId { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.EnvelopeMessageContext
+TYPE class public ViciOne.ServiceBus.Serialization.EnvelopeMessageContext [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.EnvelopeMessageContext(ViciOne.ServiceBus.Serialization.MessageEnvelope envelope, ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer objectDeserializer)
   PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
@@ -19363,59 +19362,16 @@ TYPE class public ViciOne.ServiceBus.Serialization.EnvelopeMessageContext
   PROPERTY System.Uri SourceAddress { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.ForwardMessagePipe<TMessage>
+TYPE class public ViciOne.ServiceBus.Serialization.ForwardMessagePipe<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.ForwardMessagePipe<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe = null)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Serialization.IEncryptionKeyProvider
   METHOD public abstract System.Boolean TryGetKey(System.String keyId, out ViciOne.ServiceBus.Serialization.EncryptionKey key)
   METHOD public abstract ViciOne.ServiceBus.Serialization.EncryptionKey GetCurrentKey()
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.CaseInsensitiveDictionaryJsonConverter<T,TValue> [base=System.Text.Json.Serialization.JsonConverter<T>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.CaseInsensitiveDictionaryJsonConverter<T,TValue>()
-  METHOD protected T ReadInternal(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, T value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public T Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.CaseInsensitiveDictionaryStringObjectJsonConverter<T> [base=System.Text.Json.Serialization.JsonConverter<T>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.CaseInsensitiveDictionaryStringObjectJsonConverter<T>()
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, T value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public T Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.CustomMessageTypeJsonConverter<T> [base=System.Text.Json.Serialization.JsonConverter<T>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.CustomMessageTypeJsonConverter<T>(System.Text.Json.JsonSerializerOptions options)
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, T value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public T Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.InterfaceJsonConverter<TType,TImplementation> [base=System.Text.Json.Serialization.JsonConverter<TType>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.InterfaceJsonConverter<TType,TImplementation>()
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, TType value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public TType Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.StringDecimalJsonConverter [base=System.Text.Json.Serialization.JsonConverter<System.Decimal>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.StringDecimalJsonConverter()
-  METHOD public System.Decimal Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, System.Decimal value, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonConverterFactory [sealed,base=System.Text.Json.Serialization.JsonConverterFactory]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonConverterFactory()
-  METHOD public System.Boolean CanConvert(System.Type typeToConvert)
-  METHOD public System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonMessageDataConverter [base=System.Text.Json.Serialization.JsonConverterFactory]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonMessageDataConverter()
-  METHOD public System.Boolean CanConvert(System.Type typeToConvert)
-  METHOD public System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextMessageDataReference
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextMessageDataReference()
-  PROPERTY System.Byte[] Data { public-get; public-set; }
-  PROPERTY System.String Text { public-get; public-set; }
-  PROPERTY System.Uri Reference { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.TypeMappingJsonConverter<TContract,TImplementation> [sealed,base=System.Text.Json.Serialization.JsonConverter<TContract>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.TypeMappingJsonConverter<TContract,TImplementation>()
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, TContract value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public TContract Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.UriDictionarySystemTextJsonConverter<T,TValue> [base=System.Text.Json.Serialization.JsonConverter<T>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.UriDictionarySystemTextJsonConverter<T,TValue>()
-  METHOD protected T ReadInternal(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, T value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public T Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope
+TYPE class public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope()
-  CTOR public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope(ViciOne.ServiceBus.Advanced.MessageContext context, System.Object message, System.String[] messageTypeNames)
+  CTOR public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope(ViciOne.ServiceBus.Advanced.MessageContext context, System.Object message, System.Collections.Generic.IReadOnlyList<System.String> messageTypeNames)
   CTOR public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope(ViciOne.ServiceBus.Advanced.SendContext context, System.Object message)
   CTOR public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope(ViciOne.ServiceBus.Serialization.MessageEnvelope envelope)
   METHOD public System.Void Update(ViciOne.ServiceBus.Advanced.SendContext context)
@@ -19432,102 +19388,41 @@ TYPE class public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope
   PROPERTY System.String RequestId { public-get; public-set; }
   PROPERTY System.String ResponseAddress { public-get; public-set; }
   PROPERTY System.String SourceAddress { public-get; public-set; }
-  PROPERTY System.String[] MessageType { public-get; public-set; }
+  PROPERTY System.String[] MessageTypes { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Serialization.MemoryMessageBody
+TYPE class public ViciOne.ServiceBus.Serialization.MemoryMessageBody [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.MemoryMessageBody(System.ReadOnlyMemory<System.Byte> memory)
   METHOD public virtual System.Byte[] GetBytes()
   METHOD public virtual System.IO.Stream GetStream()
   METHOD public virtual System.String GetString()
   PROPERTY System.Nullable<System.Int64> Length { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.MessageIdMessageHeader
-  CTOR public ViciOne.ServiceBus.Serialization.MessageIdMessageHeader(System.Guid messageId)
+TYPE class public ViciOne.ServiceBus.Serialization.MessageIdHeaders [sealed]
+  CTOR public ViciOne.ServiceBus.Serialization.MessageIdHeaders(System.Guid messageId)
   METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
   METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
   METHOD public virtual System.Collections.Generic.IEnumerator<ViciOne.ServiceBus.Advanced.HeaderValue> GetEnumerator()
   METHOD public virtual System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue = null)
-TYPE class public ViciOne.ServiceBus.Serialization.NotSupportedMessageBody
-  CTOR public ViciOne.ServiceBus.Serialization.NotSupportedMessageBody()
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.ObjectDeserializer [static]
-  METHOD public static System.Nullable<T> Deserialize<T>(System.Object value, System.Nullable<T> defaultValue = null)
-  METHOD public static System.String Serialize(System.Object value)
-  METHOD public static T Deserialize<T>(System.Object value, T defaultValue = null)
-TYPE class public ViciOne.ServiceBus.Serialization.RawMessageContext
-  CTOR public ViciOne.ServiceBus.Serialization.RawMessageContext(ViciOne.ServiceBus.Advanced.Headers headers, System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RawSerializerOptions options)
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.RawMessageSerializer [abstract]
   CTOR protected ViciOne.ServiceBus.Serialization.RawMessageSerializer()
   METHOD protected virtual System.Void SetRawMessageHeaders(ViciOne.ServiceBus.Advanced.SendContext context)
-TYPE class public ViciOne.ServiceBus.Serialization.ReadOnlyDictionaryHeaders
-  CTOR public ViciOne.ServiceBus.Serialization.ReadOnlyDictionaryHeaders(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer deserializer, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> headers)
-  METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
-  METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
-  METHOD public virtual System.Collections.Generic.IEnumerator<ViciOne.ServiceBus.Advanced.HeaderValue> GetEnumerator()
-  METHOD public virtual System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue = null)
-  METHOD public virtual T Get<T>(System.String key, T defaultValue)
-TYPE class public ViciOne.ServiceBus.Serialization.Serialization
-  CTOR public ViciOne.ServiceBus.Serialization.Serialization(System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer> serializers, System.Net.Mime.ContentType serializerContentType, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.Serialization.IMessageDeserializer> deserializers, System.Net.Mime.ContentType defaultContentType)
-  METHOD public virtual System.Boolean TryGetMessageDeserializer(System.Net.Mime.ContentType contentType, out ViciOne.ServiceBus.Advanced.Serialization.IMessageDeserializer deserializer)
-  METHOD public virtual System.Boolean TryGetMessageSerializer(System.Net.Mime.ContentType contentType, out ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer serializer)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.IMessageDeserializer GetMessageDeserializer(System.Net.Mime.ContentType contentType = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer(System.Net.Mime.ContentType contentType = null)
-  PROPERTY System.Net.Mime.ContentType DefaultContentType { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Serialization.SerializedMessage
-  PROPERTY System.String Body { public-get;  }
-  PROPERTY System.String ContentType { public-get;  }
-  PROPERTY System.String ConversationId { public-get;  }
-  PROPERTY System.String CorrelationId { public-get;  }
-  PROPERTY System.String ExpirationTime { public-get;  }
-  PROPERTY System.String FaultAddress { public-get;  }
-  PROPERTY System.String HeadersAsJson { public-get;  }
-  PROPERTY System.String InitiatorId { public-get;  }
-  PROPERTY System.String MessageId { public-get;  }
-  PROPERTY System.String PayloadMessageHeadersAsJson { public-get;  }
-  PROPERTY System.String RequestId { public-get;  }
-  PROPERTY System.String ResponseAddress { public-get;  }
-  PROPERTY System.Uri Destination { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.SerializedMessageBody
-  CTOR public ViciOne.ServiceBus.Serialization.SerializedMessageBody()
+TYPE class public ViciOne.ServiceBus.Serialization.SerializedTransportMessage [sealed]
+  PROPERTY ViciOne.ServiceBus.Serialization.SerializedTransportMessage Instance { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson [static]
   PROPERTY System.Text.Json.JsonSerializerOptions Options { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer MessageSerializer { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer ObjectDeserializer { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonBodyMessageSerializer [base=ViciOne.ServiceBus.Serialization.RawMessageSerializer]
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonBodyMessageSerializer(System.Object message, System.Net.Mime.ContentType contentType, System.Text.Json.JsonSerializerOptions options, ViciOne.ServiceBus.Advanced.RawSerializerOptions rawOptions, System.String[] messageTypes = null)
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonBodyMessageSerializer(ViciOne.ServiceBus.Serialization.MessageEnvelope envelope, System.Net.Mime.ContentType contentType, System.Text.Json.JsonSerializerOptions options, System.String[] messageTypes = null)
-  METHOD public System.Void Overlay(System.Object message)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.MessageBody GetMessageBody<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
-  PROPERTY System.Net.Mime.ContentType ContentType { public-get;  }
+TYPE class public ViciOne.ServiceBus.Serialization.ServiceBusMetadataSerializer [static]
+  METHOD public static System.Nullable<T> DeserializeValue<T>(System.Object value)
+  METHOD public static System.String Serialize(System.Object value)
+  METHOD public static T DeserializeReference<T>(System.Object value, T defaultValue = null)
+  METHOD public static T DeserializeValue<T>(System.Object value, T defaultValue)
 TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonExtensions [static]
   METHOD public static System.Object Transform(System.Object objectToTransform, System.Type targetType, System.Text.Json.JsonSerializerOptions options)
   METHOD public static T GetObject<T>(System.Text.Json.JsonElement jsonElement, System.Text.Json.JsonSerializerOptions options)
   METHOD public static T Transform<T>(System.Object objectToTransform, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonMessageBody<TMessage>
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonMessageBody<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Text.Json.JsonSerializerOptions options, ViciOne.ServiceBus.Serialization.MessageEnvelope envelope = null)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer [sealed]
   CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer(System.Text.Json.JsonSerializerOptions options, System.Net.Mime.ContentType contentType = null)
-  FIELD public static readonly System.Net.Mime.ContentType JsonContentType
+  FIELD public const System.String JsonMediaType = "application/vnd.vicione.servicebus+json"
   METHOD public virtual System.Nullable<T> DeserializeObject<T>(System.Object value, System.Nullable<T> defaultValue = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD public virtual T DeserializeObject<T>(System.Object value, T defaultValue = null)
@@ -19537,45 +19432,17 @@ TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializ
   METHOD public virtual ViciOne.ServiceBus.Advanced.SerializerContext Deserialize(ViciOne.ServiceBus.Advanced.MessageBody body, ViciOne.ServiceBus.Advanced.Headers headers, System.Uri destinationAddress = null)
   METHOD public virtual ViciOne.ServiceBus.ConsumeContext Deserialize(ViciOne.ServiceBus.Advanced.ReceiveContext receiveContext)
   PROPERTY System.Net.Mime.ContentType ContentType { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonObjectMessageBody
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonObjectMessageBody(System.Object value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageBody<TMessage>
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageBody<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context, System.Text.Json.JsonSerializerOptions options, System.Object message = null)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
+  PROPERTY System.Net.Mime.ContentType JsonContentType { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer [sealed,base=ViciOne.ServiceBus.Serialization.RawMessageSerializer]
   CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer(System.Text.Json.JsonSerializerOptions serializerOptions, ViciOne.ServiceBus.Advanced.RawSerializerOptions rawOptions = Default)
-  FIELD public static readonly System.Net.Mime.ContentType JsonContentType
+  FIELD public const System.String JsonMediaType = "application/json"
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD public virtual ViciOne.ServiceBus.Advanced.MessageBody GetMessageBody(System.String text)
   METHOD public virtual ViciOne.ServiceBus.Advanced.MessageBody GetMessageBody<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
   METHOD public virtual ViciOne.ServiceBus.Advanced.SerializerContext Deserialize(ViciOne.ServiceBus.Advanced.MessageBody body, ViciOne.ServiceBus.Advanced.Headers headers, System.Uri destinationAddress = null)
   METHOD public virtual ViciOne.ServiceBus.ConsumeContext Deserialize(ViciOne.ServiceBus.Advanced.ReceiveContext receiveContext)
   PROPERTY System.Net.Mime.ContentType ContentType { public-get;  }
-TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonRawSerializerContext [base=ViciOne.ServiceBus.Serialization.SystemTextJsonSerializerContext]
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonRawSerializerContext(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer objectDeserializer, System.Text.Json.JsonSerializerOptions options, System.Net.Mime.ContentType contentType, ViciOne.ServiceBus.Advanced.MessageContext messageContext, System.String[] messageTypes, ViciOne.ServiceBus.Advanced.RawSerializerOptions rawOptions, System.Text.Json.JsonElement message)
-  METHOD public System.Boolean IsSupportedMessageType(System.Type messageType)
-  METHOD public System.Boolean IsSupportedMessageType<T>()
-  METHOD public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer()
-  METHOD public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer(System.Object message, System.String[] messageTypes)
-  METHOD public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer<T>(ViciOne.ServiceBus.Serialization.MessageEnvelope envelope, T message)
-TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonSerializerContext [base=ViciOne.ServiceBus.Serialization.BaseSerializerContext]
-  CTOR public ViciOne.ServiceBus.Serialization.SystemTextJsonSerializerContext(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer objectDeserializer, System.Text.Json.JsonSerializerOptions options, System.Net.Mime.ContentType contentType, ViciOne.ServiceBus.Advanced.MessageContext messageContext, System.String[] messageTypes, ViciOne.ServiceBus.Serialization.MessageEnvelope envelope = null, System.Object message = null)
-  METHOD public System.Boolean TryGetMessage(System.Type messageType, out System.Object message)
-  METHOD public System.Boolean TryGetMessage<T>(out T message)
-  METHOD public System.Collections.Generic.Dictionary<System.String,System.Object> ToDictionary<T>(T message)
-  METHOD public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer()
-  METHOD public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer(System.Object message, System.String[] messageTypes)
-  METHOD public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer GetMessageSerializer<T>(ViciOne.ServiceBus.Serialization.MessageEnvelope envelope, T message)
-  PROPERTY System.Net.Mime.ContentType ContentType { protected-get;  }
-  PROPERTY System.Object Message { protected-get;  }
-  PROPERTY System.Text.Json.JsonSerializerOptions Options { protected-get;  }
+  PROPERTY System.Net.Mime.ContentType JsonContentType { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonSerializerOptions [static]
   METHOD public static System.Text.Json.JsonSerializerOptions CreateDefault()
 TYPE class public ViciOne.ServiceBus.Topology.DelegateMessageCorrelationId<T>

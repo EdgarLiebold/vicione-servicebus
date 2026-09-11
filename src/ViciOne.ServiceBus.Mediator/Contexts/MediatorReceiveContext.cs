@@ -25,7 +25,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
     where TMessage : class
 {
     readonly MediatorConsumeContext<TMessage> _consumeContext;
-    readonly MessageIdMessageHeader _headers;
+    readonly MessageIdHeaders _headers;
     readonly Uri _inputAddress;
     readonly MessageBody _messageBody;
     readonly IReceiveObserver _observers;
@@ -59,7 +59,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
 
         var messageId = sendContext.MessageId ?? throw new ArgumentNullException(nameof(MessageContext.MessageId));
 
-        _headers = new MessageIdMessageHeader(messageId);
+        _headers = new MessageIdHeaders(messageId);
 
         _receiveTasks = new PendingTaskCollection(4);
         _messageBody = new MeasuredMediatorMessageBody(serializedBodyBytes);

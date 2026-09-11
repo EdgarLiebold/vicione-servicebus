@@ -12,8 +12,8 @@ public sealed class SystemTextJsonMessageBodyTests
     private static readonly DateTime SentTime = new(2026, 8, 23, 12, 34, 56, DateTimeKind.Utc);
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "wire-header-semantics-survive-nullability")]
-    public void WireHeaders_PreserveComparerNullEntriesAndLiveUpdates()
+    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "wire-header-contract-filters-null-values")]
+    public void WireHeaders_PreserveComparerAndLiveUpdatesWithoutExposingNullValues()
     {
         var envelope = new JsonMessageEnvelope
         {
@@ -27,14 +27,15 @@ public sealed class SystemTextJsonMessageBodyTests
 
         Assert.True(context.Headers.TryGetHeader("mixed-case", out object? before));
         Assert.Equal("before", before);
-        Assert.True(context.Headers.TryGetHeader("null-value", out object? nullValue));
+        Assert.False(context.Headers.TryGetHeader("null-value", out object? nullValue));
         Assert.Null(nullValue);
 
         envelope.Headers["Mixed-Case"] = "after";
 
         Assert.True(context.Headers.TryGetHeader("MIXED-CASE", out object? after));
         Assert.Equal("after", after);
-        Assert.Equal(2, context.Headers.GetAll().Count());
+        Assert.Single(context.Headers.GetAll());
+        Assert.Single(context.Headers);
     }
 
     [Theory]
@@ -51,7 +52,7 @@ public sealed class SystemTextJsonMessageBodyTests
         var envelope = new JsonMessageEnvelope
         {
             MessageId = MessageId.ToString("D"),
-            MessageType = [MessageUrn.ForTypeString<BodyMessage>()],
+            MessageTypes = [MessageUrn.ForTypeString<BodyMessage>()],
             Message = message,
             SentTime = SentTime,
             Headers = new Dictionary<string, object?>

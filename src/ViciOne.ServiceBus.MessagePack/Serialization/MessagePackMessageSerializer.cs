@@ -50,7 +50,7 @@ internal sealed class MessagePackMessageSerializer :
 
         var messageContext = new EnvelopeMessageContext(envelope, this);
 
-        var messageTypes = envelope.MessageType ?? [];
+        string[] messageTypes = envelope.MessageTypes is { } declaredTypes ? [.. declaredTypes] : [];
 
         return new MessagePackSerializerContext(this, messageContext, messageTypes, envelope);
     }

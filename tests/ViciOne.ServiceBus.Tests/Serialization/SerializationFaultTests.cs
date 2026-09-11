@@ -229,7 +229,7 @@ public sealed class SerializationFaultTests
     private static string CreateMalformedOrderEnvelope(Guid messageId) => $$"""
         {
           "messageId": "{{messageId:D}}",
-          "messageType": [
+          "messageTypes": [
             "{{MessageUrn.ForTypeString<MalformedOrder>()}}"
           ],
           "message": {

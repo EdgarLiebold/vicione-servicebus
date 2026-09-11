@@ -162,7 +162,7 @@ public sealed class QuartzTransactionalOutboxTests
 
         public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
-            if (context.Message is ScheduleMessage or SerializedMessageBody)
+            if (context.Message is ScheduleMessage or SerializedTransportMessage)
                 Interlocked.Increment(ref _observedCount);
 
             return Task.CompletedTask;
@@ -170,7 +170,7 @@ public sealed class QuartzTransactionalOutboxTests
 
         public Task PostSendAsync<T>(SendContext<T> context) where T : class
         {
-            if (context.Message is ScheduleMessage or SerializedMessageBody)
+            if (context.Message is ScheduleMessage or SerializedTransportMessage)
                 _completed.TrySetResult(context.CorrelationId);
 
             return Task.CompletedTask;
@@ -178,7 +178,7 @@ public sealed class QuartzTransactionalOutboxTests
 
         public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class
         {
-            if (context.Message is ScheduleMessage or SerializedMessageBody)
+            if (context.Message is ScheduleMessage or SerializedTransportMessage)
                 _completed.TrySetException(exception);
 
             return Task.CompletedTask;

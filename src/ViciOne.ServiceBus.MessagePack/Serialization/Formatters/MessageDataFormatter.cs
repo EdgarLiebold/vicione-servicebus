@@ -3,7 +3,7 @@ using MessagePack.Formatters;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
-using ViciOne.ServiceBus.Serialization.JsonConverters;
+using ViciOne.ServiceBus.Serialization.Json.Converters;
 
 namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 
@@ -18,7 +18,7 @@ internal sealed class MessageDataFormatter<T> :
     /// <param name="options">The serializer options whose resolver supplies the envelope formatter.</param>
     public void Serialize(ref MessagePackWriter writer, MessageData<T>? value, MessagePackSerializerOptions options)
     {
-        var reference = new SystemTextMessageDataReference();
+        var reference = new JsonMessageDataReference();
 
         if (value is IMessageData { HasValue: true } messageData)
         {
@@ -28,7 +28,7 @@ internal sealed class MessageDataFormatter<T> :
                 inlineMessageData.Set(reference);
         }
 
-        IMessagePackFormatter<SystemTextMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<SystemTextMessageDataReference>();
+        IMessagePackFormatter<JsonMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<JsonMessageDataReference>();
 
         innerFormatter.Serialize(ref writer, reference, options);
     }
@@ -39,7 +39,7 @@ internal sealed class MessageDataFormatter<T> :
     /// <returns>A handle for the inline value or external address, or the shared empty handle when neither is present.</returns>
     public MessageData<T>? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
-        IMessagePackFormatter<SystemTextMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<SystemTextMessageDataReference>();
+        IMessagePackFormatter<JsonMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<JsonMessageDataReference>();
 
         var reference = innerFormatter.Deserialize(ref reader, options);
 

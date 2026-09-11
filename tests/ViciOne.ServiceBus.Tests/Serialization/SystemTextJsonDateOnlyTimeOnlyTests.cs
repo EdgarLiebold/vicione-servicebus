@@ -174,7 +174,7 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
     private static string CreateEnvelope(Guid messageId, string date, string time) => $$"""
         {
           "messageId": "{{messageId:D}}",
-          "messageType": [
+          "messageTypes": [
             "{{MessageUrn.ForTypeString<TemporalTransportMessage>()}}"
           ],
           "message": {

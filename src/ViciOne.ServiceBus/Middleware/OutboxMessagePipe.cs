@@ -120,7 +120,7 @@ public class OutboxMessagePipe<TMessage> :
                 MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
                 try
                 {
-                    await endpoint.SendAsync(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
+                    await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, token.Token).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {

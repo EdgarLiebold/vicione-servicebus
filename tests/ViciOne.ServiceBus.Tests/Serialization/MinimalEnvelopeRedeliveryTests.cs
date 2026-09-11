@@ -66,7 +66,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
                   "message": {
                     "correlationId": "{{ExpectedCorrelationId:D}}"
                   },
-                  "messageType": [
+                  "messageTypes": [
                     "{{messageUrn}}"
                   ]
                 }

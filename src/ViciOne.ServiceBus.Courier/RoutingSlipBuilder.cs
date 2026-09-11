@@ -135,14 +135,16 @@ public sealed class RoutingSlipBuilder :
     /// <summary>Adds an activity to the routing slip specifying activity arguments as an anonymous object.</summary>
     /// <param name="name">The activity name.</param>
     /// <param name="executeAddress">The execution address of the activity.</param>
-    /// <param name="arguments">An anonymous object of properties matching the argument names of the activity.</param>
+    /// <param name="arguments">
+    /// An object whose non-null, non-default property values override routing-slip variables with matching names.
+    /// </param>
     public void AddActivity(string name, Uri executeAddress, object arguments)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(executeAddress);
         ArgumentNullException.ThrowIfNull(arguments);
 
-        IDictionary<string, object> argumentsDictionary = GetObjectAsDictionary(arguments);
+        IDictionary<string, object> argumentsDictionary = GetActivityArgumentsAsDictionary(arguments);
 
         Activity activity = new RoutingSlipActivity(name, executeAddress, argumentsDictionary);
         _itinerary.Add(activity);
@@ -464,5 +466,28 @@ public sealed class RoutingSlipBuilder :
         ArgumentNullException.ThrowIfNull(values);
 
         return ConvertObject.ToDictionary(values);
+    }
+
+    static IDictionary<string, object> GetActivityArgumentsAsDictionary(object arguments)
+    {
+        IDictionary<string, object> values = GetObjectAsDictionary(arguments);
+        var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+        foreach ((string key, object value) in values)
+        {
+            if (!IsDefaultValue(value))
+                result.Add(key, value);
+        }
+
+        return result;
+    }
+
+    static bool IsDefaultValue(object? value)
+    {
+        if (value is null)
+            return true;
+
+        Type runtimeType = value.GetType();
+        return runtimeType.IsValueType && value.Equals(Activator.CreateInstance(runtimeType));
     }
 }

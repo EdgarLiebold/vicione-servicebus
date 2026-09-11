@@ -203,7 +203,7 @@ public sealed class MessageJournalIntegrationTests
             Assert.Contains(entry.MessageTypes,
                 type => type.Contains(nameof(DeferredMessage), StringComparison.Ordinal));
             Assert.DoesNotContain(entry.MessageTypes,
-                type => type.Contains(nameof(SerializedMessageBody), StringComparison.Ordinal));
+                type => type.Contains(nameof(SerializedTransportMessage), StringComparison.Ordinal));
             AssertEnvelope(entry, new DeferredMessage(request.CorrelationId, "deferred"));
         }
         finally

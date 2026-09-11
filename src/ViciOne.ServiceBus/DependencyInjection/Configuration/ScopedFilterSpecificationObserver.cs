@@ -27,7 +27,7 @@ public class ScopedFilterSpecificationObserver :
         _messageTypeFilter.Excludes.Add(type => type.ImplementsInterface<Fault>());
         _messageTypeFilter.Excludes.Add(type => type.ImplementsInterface<ReceiveFault>());
         // Serialized scheduler and outbox envelopes bypass application message filters.
-        _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedMessageBody));
+        _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedTransportMessage));
     }
 
     /// <summary>Reports that message specification has been created.</summary>

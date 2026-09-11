@@ -210,7 +210,7 @@ public sealed class InMemoryDurableSendIntegrationTests
               "message": {
                 "value": "accepted"
               },
-              "messageType": [
+              "messageTypes": [
                 "{{urn}}"
               ]
             }

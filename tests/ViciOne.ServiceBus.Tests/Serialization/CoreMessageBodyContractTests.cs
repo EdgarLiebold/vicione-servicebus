@@ -14,7 +14,6 @@ public sealed class CoreMessageBodyContractTests
         string[] expected =
         [
             IdentityOf(typeof(MemoryMessageBody)),
-            IdentityOf(typeof(NotSupportedMessageBody)),
             IdentityOf(typeof(SystemTextJsonMessageBody<>)),
             IdentityOf(typeof(SystemTextJsonObjectMessageBody)),
             IdentityOf(typeof(SystemTextJsonRawMessageBody<>)),

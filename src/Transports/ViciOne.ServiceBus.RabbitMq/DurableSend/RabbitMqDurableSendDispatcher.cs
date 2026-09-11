@@ -47,7 +47,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
 
         ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
         await endpoint.SendAsync(
-                new SerializedMessageBody(),
+                SerializedTransportMessage.Instance,
                 new RabbitMqDurableSendPipe(message, messageType!),
                 cancellationToken)
             .ConfigureAwait(false);
@@ -63,7 +63,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
         || scheme.Equals("amqp", StringComparison.OrdinalIgnoreCase)
         || scheme.Equals("amqps", StringComparison.OrdinalIgnoreCase);
 
-    private sealed class RabbitMqDurableSendPipe : IPipe<SendContext<SerializedMessageBody>>
+    private sealed class RabbitMqDurableSendPipe : IPipe<SendContext<SerializedTransportMessage>>
     {
         private readonly SerializedDurableSend _message;
         private readonly Type _messageType;
@@ -74,7 +74,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
             _messageType = messageType;
         }
 
-        public Task SendAsync(SendContext<SerializedMessageBody> context)
+        public Task SendAsync(SendContext<SerializedTransportMessage> context)
         {
             var contentType = new ContentType(_message.ContentType);
             context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));

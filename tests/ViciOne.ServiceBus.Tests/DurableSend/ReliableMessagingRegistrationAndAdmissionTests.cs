@@ -249,7 +249,7 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         Assert.Equal(messageId, delivery.Message.MessageId);
         Assert.Equal(correlationId, delivery.Message.CorrelationId);
         Assert.False(delivery.Message.Metadata.IsEmpty);
-        var replay = new InMemorySendContext<SerializedMessageBody>(new SerializedMessageBody());
+        var replay = new InMemorySendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance);
         ReliableEnvelopeMetadataCodec.Apply(replay, delivery.Message.Metadata, dueAt);
         Assert.Equal("north", replay.Headers.Get<string>("tenant"));
         Assert.Equal(lifetime, replay.TimeToLive);

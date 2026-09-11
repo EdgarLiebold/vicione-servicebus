@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -76,6 +77,24 @@ public sealed class SystemTextJsonMessageTypeAdmissionTests
         Assert.Equal(42, Assert.IsType<ExpectedMessage>(expected).Value);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JSON-TYPE-ADMISSION", "body-consume-runtime-type-admission")]
+    public void BodyConsumeContext_ReportsDeclaredAndRejectedRuntimeContracts()
+    {
+        SystemTextJsonRoundTripResult<ExpectedMessage> roundTrip =
+            SystemTextJsonRoundTrip.ExecuteWithContext(new ExpectedMessage { Value = 42 });
+        ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, UnexpectedInvocationProxy>();
+        var context = new BodyConsumeContext(receiveContext, roundTrip.Context);
+
+        Assert.True(context.HasMessageType(typeof(ExpectedMessage)));
+        Assert.False(context.HasMessageType(typeof(ShapeCompatibleButUnadvertisedMessage)));
+        Assert.Equal("messageType", Assert.Throws<ArgumentNullException>(() => context.HasMessageType(null!)).ParamName);
+        Assert.True(context.TryGetMessage<ExpectedMessage>(out ConsumeContext<ExpectedMessage>? message));
+        Assert.Equal(42, message.Message.Value);
+        Assert.False(context.TryGetMessage<ShapeCompatibleButUnadvertisedMessage>(out _));
+        Assert.False(context.HasMessageType(typeof(ShapeCompatibleButUnadvertisedMessage)));
+    }
+
     public sealed class ExpectedMessage
     {
         public int Value { get; init; }
@@ -84,5 +103,16 @@ public sealed class SystemTextJsonMessageTypeAdmissionTests
     public sealed class ShapeCompatibleButUnadvertisedMessage
     {
         public int Value { get; init; }
+    }
+
+    private class UnexpectedInvocationProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == "get_PublishEndpointProvider")
+                return DispatchProxy.Create<IPublishEndpointProvider, UnexpectedInvocationProxy>();
+
+            throw new InvalidOperationException($"The body-consume contract invoked {targetMethod?.Name} unexpectedly.");
+        }
     }
 }

@@ -229,6 +229,19 @@ public sealed class AesGcmMessageDataEncryptionTests
         Assert.NotSame(firstExport, secondExport);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-AES-GCM", "key-identifier-envelope-bound")]
+    public void EncryptionKey_RejectsAnIdentifierThatCannotFitTheEnvelope()
+    {
+        string oversizedKeyId = new('€', 21_846);
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new EncryptionKey(oversizedKeyId, new byte[32]));
+
+        Assert.Equal("keyId", exception.ParamName);
+        Assert.StartsWith("The key identifier cannot exceed 65535 UTF-8 bytes.", exception.Message, StringComparison.Ordinal);
+    }
+
     private static async Task<byte[]> GetAsync(
         EncryptedMessageDataRepository repository,
         Uri address,

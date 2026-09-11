@@ -666,7 +666,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             ConversationId = "ab92e2f0-2b8a-4ca7-9480-d83814329edb",
             SourceAddress = "loopback://payload-json-boundary/source",
             DestinationAddress = "loopback://payload-json-boundary/input",
-            MessageType = [MessageUrn.ForTypeString<BoundaryPayload>()],
+            MessageTypes = [MessageUrn.ForTypeString<BoundaryPayload>()],
             Message = message,
             SentTime = new DateTime(2026, 9, 3, 12, 34, 56, DateTimeKind.Utc),
             Headers = new Dictionary<string, object?>

@@ -20,7 +20,7 @@ internal readonly struct EnvelopeMetadataProjection
         string? destinationAddress,
         string? responseAddress,
         string? faultAddress,
-        string[]? messageType,
+        IReadOnlyList<string>? messageTypes,
         DateTimeOffset? expirationTime,
         DateTimeOffset? sentTime,
         Dictionary<string, object?> headers,
@@ -35,7 +35,7 @@ internal readonly struct EnvelopeMetadataProjection
         DestinationAddress = destinationAddress;
         ResponseAddress = responseAddress;
         FaultAddress = faultAddress;
-        MessageType = messageType;
+        MessageTypes = messageTypes is null ? null : [.. messageTypes];
         ExpirationTime = expirationTime;
         SentTime = sentTime;
         Headers = headers;
@@ -51,7 +51,7 @@ internal readonly struct EnvelopeMetadataProjection
     public string? DestinationAddress { get; }
     public string? ResponseAddress { get; }
     public string? FaultAddress { get; }
-    public string[]? MessageType { get; }
+    public string[]? MessageTypes { get; }
     public DateTimeOffset? ExpirationTime { get; }
     public DateTimeOffset? SentTime { get; }
     public Dictionary<string, object?> Headers { get; }
@@ -66,15 +66,15 @@ internal readonly struct EnvelopeMetadataProjection
         DateTimeOffset utcNow = needsUtcNow ? GetUtcNow(context) : default;
 
         return new EnvelopeMetadataProjection(
-            context.MessageId?.ToString(),
-            context.RequestId?.ToString(),
-            context.CorrelationId?.ToString(),
-            context.ConversationId?.ToString(),
-            context.InitiatorId?.ToString(),
-            context.SourceAddress?.ToString(),
-            context.DestinationAddress?.ToString(),
-            context.ResponseAddress?.ToString(),
-            context.FaultAddress?.ToString(),
+            ToText(context.MessageId),
+            ToText(context.RequestId),
+            ToText(context.CorrelationId),
+            ToText(context.ConversationId),
+            ToText(context.InitiatorId),
+            ToText(context.SourceAddress),
+            ToText(context.DestinationAddress),
+            ToText(context.ResponseAddress),
+            ToText(context.FaultAddress),
             context.SupportedMessageTypes,
             context.TimeToLive.HasValue ? utcNow + context.TimeToLive.Value : null,
             context.SentTime ?? (durableAdmission ? null : utcNow),
@@ -84,7 +84,7 @@ internal readonly struct EnvelopeMetadataProjection
 
     public static EnvelopeMetadataProjection From(
         MessageContext context,
-        string[] messageTypes)
+        IReadOnlyList<string> messageTypes)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(messageTypes);
@@ -92,15 +92,15 @@ internal readonly struct EnvelopeMetadataProjection
         DateTimeOffset sentTime = context.SentTime ?? GetUtcNow(context as PipeContext);
 
         return new EnvelopeMetadataProjection(
-            context.MessageId?.ToString(),
-            context.RequestId?.ToString(),
-            context.CorrelationId?.ToString(),
-            context.ConversationId?.ToString(),
-            context.InitiatorId?.ToString(),
-            context.SourceAddress?.ToString(),
-            context.DestinationAddress?.ToString(),
-            context.ResponseAddress?.ToString(),
-            context.FaultAddress?.ToString(),
+            ToText(context.MessageId),
+            ToText(context.RequestId),
+            ToText(context.CorrelationId),
+            ToText(context.ConversationId),
+            ToText(context.InitiatorId),
+            ToText(context.SourceAddress),
+            ToText(context.DestinationAddress),
+            ToText(context.ResponseAddress),
+            ToText(context.FaultAddress),
             messageTypes,
             context.ExpirationTime,
             sentTime,
@@ -122,7 +122,7 @@ internal readonly struct EnvelopeMetadataProjection
             envelope.DestinationAddress,
             envelope.ResponseAddress,
             envelope.FaultAddress,
-            envelope.MessageType,
+            envelope.MessageTypes,
             envelope.ExpirationTime,
             envelope.SentTime,
             CopyHeaders(envelope.Headers),
@@ -142,21 +142,43 @@ internal readonly struct EnvelopeMetadataProjection
         DateTimeOffset utcNow = needsUtcNow ? GetUtcNow(context) : default;
 
         return new EnvelopeMetadataProjection(
-            context.MessageId?.ToString() ?? envelope.MessageId,
-            context.RequestId?.ToString() ?? envelope.RequestId,
-            context.CorrelationId?.ToString() ?? envelope.CorrelationId,
-            context.ConversationId?.ToString() ?? envelope.ConversationId,
-            context.InitiatorId?.ToString() ?? envelope.InitiatorId,
-            context.SourceAddress?.ToString() ?? envelope.SourceAddress,
-            context.DestinationAddress?.ToString(),
-            context.ResponseAddress?.ToString() ?? envelope.ResponseAddress,
-            context.FaultAddress?.ToString() ?? envelope.FaultAddress,
-            envelope.MessageType,
-            context.TimeToLive.HasValue ? utcNow + context.TimeToLive.Value : envelope.ExpirationTime,
-            durableAdmission ? context.SentTime : envelope.SentTime ?? context.SentTime ?? utcNow,
+            PreferContext(context.MessageId, envelope.MessageId),
+            PreferContext(context.RequestId, envelope.RequestId),
+            PreferContext(context.CorrelationId, envelope.CorrelationId),
+            PreferContext(context.ConversationId, envelope.ConversationId),
+            PreferContext(context.InitiatorId, envelope.InitiatorId),
+            PreferContext(context.SourceAddress, envelope.SourceAddress),
+            ToText(context.DestinationAddress),
+            PreferContext(context.ResponseAddress, envelope.ResponseAddress),
+            PreferContext(context.FaultAddress, envelope.FaultAddress),
+            envelope.MessageTypes,
+            ResolveExpiration(context.TimeToLive, envelope.ExpirationTime, utcNow),
+            ResolveSentTime(durableAdmission, envelope.SentTime, context.SentTime, utcNow),
             MergeHeaders(envelope.Headers, context.Headers),
             envelope.Host ?? HostMetadataCache.Host);
     }
+
+    private static string? ToText<T>(T? value)
+        where T : struct => value?.ToString();
+
+    private static string? ToText(Uri? value) => value?.ToString();
+
+    private static string? PreferContext<T>(T? contextValue, string? envelopeValue)
+        where T : struct => ToText(contextValue) ?? envelopeValue;
+
+    private static string? PreferContext(Uri? contextValue, string? envelopeValue) =>
+        ToText(contextValue) ?? envelopeValue;
+
+    private static DateTimeOffset? ResolveExpiration(
+        TimeSpan? timeToLive,
+        DateTimeOffset? envelopeExpirationTime,
+        DateTimeOffset utcNow) => timeToLive.HasValue ? utcNow + timeToLive.Value : envelopeExpirationTime;
+
+    private static DateTimeOffset? ResolveSentTime(
+        bool durableAdmission,
+        DateTimeOffset? envelopeSentTime,
+        DateTimeOffset? contextSentTime,
+        DateTimeOffset utcNow) => durableAdmission ? contextSentTime : envelopeSentTime ?? contextSentTime ?? utcNow;
 
     private static DateTimeOffset GetUtcNow(PipeContext? context)
     {

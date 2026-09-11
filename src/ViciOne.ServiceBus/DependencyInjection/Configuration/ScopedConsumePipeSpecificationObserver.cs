@@ -25,7 +25,7 @@ public class ScopedConsumePipeSpecificationObserver :
         _context = context;
         _messageTypeFilter = messageTypeFilter;
         // Serialized scheduler and outbox envelopes bypass application message filters.
-        _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedMessageBody));
+        _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedTransportMessage));
     }
 
     /// <summary>Consumes r configured.</summary>

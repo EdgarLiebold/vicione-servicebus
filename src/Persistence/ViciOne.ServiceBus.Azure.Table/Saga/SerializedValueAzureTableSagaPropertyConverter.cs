@@ -56,7 +56,7 @@ internal sealed class SerializedValueAzureTableSagaPropertyConverter<TEntity, TP
                     $"Azure Table property '{_storageName}' contains no value for saga property '{_propertyName}' of type '{typeof(TProperty)}'.");
             }
 
-            TProperty? propertyValue = ObjectDeserializer.Deserialize<TProperty>(serializedValue);
+            TProperty? propertyValue = ServiceBusMetadataSerializer.DeserializeValue<TProperty>(serializedValue);
 
             if (!propertyValue.HasValue)
             {
@@ -78,7 +78,7 @@ internal sealed class SerializedValueAzureTableSagaPropertyConverter<TEntity, TP
 
         var propertyValue = _read.Get(entity);
 
-        var text = ObjectDeserializer.Serialize(propertyValue);
+        var text = ServiceBusMetadataSerializer.Serialize(propertyValue);
         if (!string.IsNullOrWhiteSpace(text))
             entityProperties.Add(
                 _storageName,

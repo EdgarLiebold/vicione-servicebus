@@ -131,7 +131,7 @@ public sealed class MessagePackEnvelopeTests
 
         public string? FaultAddress => null;
 
-        public string[] MessageType { get; } = ["urn:message:Order"];
+        public IReadOnlyList<string> MessageTypes { get; } = ["urn:message:Order"];
 
         public object Message { get; } = message;
 
@@ -139,7 +139,8 @@ public sealed class MessagePackEnvelopeTests
 
         public DateTimeOffset? SentTime { get; } = TimeProvider.System.GetUtcNow();
 
-        public Dictionary<string, object?> Headers { get; } = [];
+        public IReadOnlyDictionary<string, object?> Headers { get; } =
+            new Dictionary<string, object?>();
 
         public HostInfo? Host => null;
     }

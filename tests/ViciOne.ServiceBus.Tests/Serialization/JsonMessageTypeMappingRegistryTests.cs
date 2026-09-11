@@ -1,6 +1,6 @@
 using System.Text.Json;
 using ViciOne.ServiceBus.Advanced.Serialization;
-using ViciOne.ServiceBus.Serialization.JsonConverters;
+using ViciOne.ServiceBus.Serialization.Json.Converters;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 

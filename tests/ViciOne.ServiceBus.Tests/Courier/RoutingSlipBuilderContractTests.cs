@@ -104,6 +104,42 @@ public sealed class RoutingSlipBuilderContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-ARGUMENTS", "object-defaults-filtered-explicit-dictionary-defaults-preserved")]
+    public void ActivityArguments_FilterObjectDefaultsButPreserveExplicitDictionaryDefaults()
+    {
+        var address = new Uri("loopback://localhost/default-arguments");
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        builder.AddActivity("Projected", address, new
+        {
+            Null = (string?)null,
+            EmptyId = Guid.Empty,
+            Count = 0,
+            Enabled = false,
+            Timestamp = default(DateTime),
+            Present = 27,
+        });
+        builder.AddActivity("Explicit", address, new Dictionary<string, object>
+        {
+            ["EmptyId"] = Guid.Empty,
+            ["Count"] = 0,
+            ["Enabled"] = false,
+            ["Timestamp"] = default(DateTime),
+        });
+
+        RoutingSlip routingSlip = builder.Build();
+
+        Activity projected = routingSlip.Itinerary[0];
+        Assert.Equal(27, Assert.Single(projected.Arguments).Value);
+        Assert.Equal("present", Assert.Single(projected.Arguments).Key, ignoreCase: true);
+
+        Activity explicitArguments = routingSlip.Itinerary[1];
+        Assert.Equal(Guid.Empty, explicitArguments.Arguments["EmptyId"]);
+        Assert.Equal(0, explicitArguments.Arguments["Count"]);
+        Assert.Equal(false, explicitArguments.Arguments["Enabled"]);
+        Assert.Equal(default(DateTime), explicitArguments.Arguments["Timestamp"]);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "variable-sequences-validate-atomically")]
     public void VariableSequences_RejectInvalidKeysWithoutApplyingEarlierEntries()
     {

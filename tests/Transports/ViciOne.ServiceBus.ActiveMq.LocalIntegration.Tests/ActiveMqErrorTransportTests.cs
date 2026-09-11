@@ -359,7 +359,7 @@ public sealed class ActiveMqErrorTransportTests
     private static string CreateMalformedEnvelope(Guid messageId) => $$"""
         {
           "messageId": "{{messageId:D}}",
-          "messageType": [
+          "messageTypes": [
             "{{MessageUrn.ForTypeString<MalformedMessage>()}}"
           ],
           "message": {

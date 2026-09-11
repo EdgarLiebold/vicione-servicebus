@@ -50,7 +50,7 @@ internal sealed class SerializedReferenceAzureTableSagaPropertyConverter<TEntity
                     $"Azure Table property '{_storageName}' must contain serialized text for saga property '{_propertyName}' of type '{typeof(TProperty)}'.");
             }
 
-            var propertyValue = ObjectDeserializer.Deserialize<TProperty>(serializedValue);
+            var propertyValue = ServiceBusMetadataSerializer.DeserializeReference<TProperty>(serializedValue);
 
             _write.Set(entity, propertyValue);
         }
@@ -66,7 +66,7 @@ internal sealed class SerializedReferenceAzureTableSagaPropertyConverter<TEntity
 
         var propertyValue = _read.Get(entity);
 
-        var text = ObjectDeserializer.Serialize(propertyValue);
+        var text = ServiceBusMetadataSerializer.Serialize(propertyValue);
         if (!string.IsNullOrWhiteSpace(text))
             entityProperties.Add(
                 _storageName,

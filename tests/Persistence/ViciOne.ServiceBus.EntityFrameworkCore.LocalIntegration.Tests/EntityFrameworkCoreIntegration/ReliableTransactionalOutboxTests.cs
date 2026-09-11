@@ -315,7 +315,7 @@ public sealed class ReliableTransactionalOutboxTests
 
         public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
-            if (enabled && context.Message is SerializedMessageBody
+            if (enabled && context.Message is SerializedTransportMessage
                 && Interlocked.Increment(ref _attemptCount) == 1)
             {
                 throw new ExpectedTransportSendFailure();

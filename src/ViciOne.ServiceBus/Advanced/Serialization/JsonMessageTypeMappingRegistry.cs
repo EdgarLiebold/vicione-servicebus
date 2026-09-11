@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
-using ViciOne.ServiceBus.Serialization.JsonConverters;
+using ViciOne.ServiceBus.Serialization.Json.Converters;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 

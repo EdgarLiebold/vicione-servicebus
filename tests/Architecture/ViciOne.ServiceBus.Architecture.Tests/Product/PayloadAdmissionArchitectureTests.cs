@@ -56,8 +56,8 @@ public sealed class PayloadAdmissionArchitectureTests
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ARCHITECTURE", "real-serializer-owner-order")]
     public void EveryEnvelopeOwner_UsesIndependentBoundedBodyAndEnvelopeBuffersInOrder()
     {
-        AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/SystemTextJsonMessageBody.cs");
-        AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/SystemTextJsonRawMessageBody.cs");
+        AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/Bodies/SystemTextJsonMessageBody.cs");
+        AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/Bodies/SystemTextJsonRawMessageBody.cs");
         AssertOwnerOrder("src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackMessageBody.cs");
     }
 

@@ -44,11 +44,11 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
 
         ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
         var pipe = new InMemoryDurableSendPipe(message, messageType, context);
-        await endpoint.SendAsync(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, cancellationToken).ConfigureAwait(false);
         return DurableSendDispatchResult.AwaitConsumerCompletion;
     }
 
-    sealed class InMemoryDurableSendPipe : IPipe<SendContext<SerializedMessageBody>>
+    sealed class InMemoryDurableSendPipe : IPipe<SendContext<SerializedTransportMessage>>
     {
         readonly DurableSendDispatchContext _dispatchContext;
         readonly SerializedDurableSend _message;
@@ -64,7 +64,7 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
             _dispatchContext = dispatchContext;
         }
 
-        public Task SendAsync(SendContext<SerializedMessageBody> context)
+        public Task SendAsync(SendContext<SerializedTransportMessage> context)
         {
             ArgumentNullException.ThrowIfNull(context);
             var contentType = new ContentType(_message.ContentType);

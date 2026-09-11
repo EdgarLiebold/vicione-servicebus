@@ -80,7 +80,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
             supportedMessageTypes,
             timeProvider);
         supportedMessageTypes[0] = "urn:message:mutated";
-        var sendContext = new RoutingSendContext<SerializedMessageBody>(new SerializedMessageBody())
+        var sendContext = new RoutingSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
         {
             Serialization = serialization,
         };
@@ -164,7 +164,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
             DestinationAddress,
             [],
             TimeProvider.System);
-        var sendContext = new RoutingSendContext<SerializedMessageBody>(new SerializedMessageBody())
+        var sendContext = new RoutingSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
         {
             Serialization = new SerializationConfiguration().CreateSerializerCollection(),
         };

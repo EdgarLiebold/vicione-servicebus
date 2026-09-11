@@ -47,7 +47,7 @@ public sealed class MessagePackEnvelopeMetadataProjectionTests
         Assert.Equal(json.DestinationAddress, messagePack.DestinationAddress);
         Assert.Equal(json.ResponseAddress, messagePack.ResponseAddress);
         Assert.Equal(json.FaultAddress, messagePack.FaultAddress);
-        Assert.Equal(json.MessageType, messagePack.MessageType);
+        Assert.Equal(json.MessageTypes, messagePack.MessageTypes);
         Assert.Equal(json.ExpirationTime, messagePack.ExpirationTime);
         Assert.Equal(json.SentTime, messagePack.SentTime);
         Assert.Equal(json.Headers["ViciOne-Test"], messagePack.Headers!["ViciOne-Test"]);

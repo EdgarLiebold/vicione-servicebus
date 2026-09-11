@@ -13,7 +13,7 @@ public sealed class AmazonSqsEnvelopeTests
         {
           "messageId": "00ab0000-6ab3-f8b4-f78c-08db7c8365ff",
           "destinationAddress": "amazonsqs://us-east-1/orders",
-          "messageType": ["urn:message:Orders:SubmitOrder"],
+          "messageTypes": ["urn:message:Orders:SubmitOrder"],
           "message": { "orderNumber": "A-1042", "quantity": 7 },
           "sentTime": "2026-08-27T05:06:07Z",
           "headers": { "tenant": "north" }
@@ -41,7 +41,7 @@ public sealed class AmazonSqsEnvelopeTests
 
         Assert.Equal(MessageId, decoded.GetProperty("messageId").GetString());
         Assert.Equal(Destination, decoded.GetProperty("destinationAddress").GetString());
-        Assert.Equal("urn:message:Orders:SubmitOrder", decoded.GetProperty("messageType")[0].GetString());
+        Assert.Equal("urn:message:Orders:SubmitOrder", decoded.GetProperty("messageTypes")[0].GetString());
         JsonElement payload = decoded.GetProperty("message");
         Assert.Equal("A-1042", payload.GetProperty("orderNumber").GetString());
         Assert.Equal(7, payload.GetProperty("quantity").GetInt32());
