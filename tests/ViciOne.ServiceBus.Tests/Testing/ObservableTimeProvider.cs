@@ -2,7 +2,10 @@ using Microsoft.Extensions.Time.Testing;
 
 namespace ViciOne.ServiceBus.Tests.Testing;
 
-internal sealed class ObservableTimeProvider(DateTimeOffset startTime, Exception? timerDisposeException = null) : TimeProvider
+internal sealed class ObservableTimeProvider(
+    DateTimeOffset startTime,
+    Exception? timerDisposeException = null,
+    Exception? timerChangeException = null) : TimeProvider
 {
     private readonly FakeTimeProvider _inner = new(startTime);
     private readonly object _lock = new();
@@ -76,7 +79,7 @@ internal sealed class ObservableTimeProvider(DateTimeOffset startTime, Exception
         foreach (TaskCompletionSource<bool> waiter in completedWaiters)
             waiter.TrySetResult(true);
 
-        return new ObservableTimer(this, timer, timerDisposeException);
+        return new ObservableTimer(this, timer, timerDisposeException, timerChangeException);
     }
 
     public void Advance(TimeSpan elapsed) => _inner.Advance(elapsed);
@@ -141,12 +144,19 @@ internal sealed class ObservableTimeProvider(DateTimeOffset startTime, Exception
             waiter.TrySetResult(true);
     }
 
-    private sealed class ObservableTimer(ObservableTimeProvider owner, ITimer inner, Exception? disposeException) : ITimer
+    private sealed class ObservableTimer(
+        ObservableTimeProvider owner,
+        ITimer inner,
+        Exception? disposeException,
+        Exception? changeException) : ITimer
     {
         private int _disposed;
 
         public bool Change(TimeSpan dueTime, TimeSpan period)
         {
+            if (changeException != null)
+                throw changeException;
+
             bool changed = inner.Change(dueTime, period);
             if (changed)
                 owner.TimerChanged(dueTime);

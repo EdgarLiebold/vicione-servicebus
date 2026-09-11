@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Contexts;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
@@ -14,11 +14,13 @@ public sealed class BatchConsumeContextTests
         ConsumeContext<BatchItem> first = CreateContext("first");
         ConsumeContext<BatchItem> second = CreateContext("second");
         var receivedAt = new DateTimeOffset(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
+        ConsumeContext<BatchItem>[] source = [first, second];
         var batch = new MessageBatch<BatchItem>(
             receivedAt,
             receivedAt.AddSeconds(1),
             BatchCompletionMode.Size,
-            [first, second]);
+            source);
+        source[0] = second;
 
         var context = new BatchConsumeContext<BatchItem>((ConsumeContext)(object)first, batch);
 
@@ -27,6 +29,14 @@ public sealed class BatchConsumeContextTests
         Assert.Equal(receivedAt, context.Message.FirstMessageReceived);
         Assert.Equal(receivedAt.AddSeconds(1), context.Message.LastMessageReceived);
         Assert.Equal(new[] { "first", "second" }, context.Message.Select(item => item.Message.Value));
+        Assert.Equal(
+            "messages",
+            Assert.Throws<ArgumentNullException>(() => new MessageBatch<BatchItem>(receivedAt, receivedAt, BatchCompletionMode.Size, null!))
+                .ParamName);
+        Assert.Equal(
+            "mode",
+            Assert.Throws<ArgumentOutOfRangeException>(() => new MessageBatch<BatchItem>(receivedAt, receivedAt, (BatchCompletionMode)42, []))
+                .ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new BatchConsumeContext<BatchItem>(null!, batch)).ParamName);
         Assert.Equal(
             "batch",

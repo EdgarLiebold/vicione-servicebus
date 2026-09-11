@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Runtime;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using ViciOne.ServiceBus.Util;
@@ -25,7 +25,7 @@ public sealed class BatchTimeProviderTests
         await using var collector = new TaskExecutor();
         await using var dispatcher = new TaskExecutor();
         var consumer = new BatchConsumer<BatchItem>(
-            new BatchOptions { MessageLimit = 10, TimeLimit = limit },
+            new BatchRuntimeSettings(new BatchOptions { MessageLimit = 10, TimeLimit = limit }),
             collector,
             dispatcher,
             new CaptureBatchPipe(delivered),
@@ -58,12 +58,12 @@ public sealed class BatchTimeProviderTests
         await using var collector = new TaskExecutor();
         await using var dispatcher = new TaskExecutor();
         var consumer = new BatchConsumer<BatchItem>(
-            new BatchOptions
+            new BatchRuntimeSettings(new BatchOptions
             {
                 MessageLimit = 10,
                 TimeLimit = limit,
                 TimeLimitStart = BatchTimeLimitStart.FromLast,
-            },
+            }),
             collector,
             dispatcher,
             new CaptureBatchPipe(delivered),

@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Contexts;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Testing;

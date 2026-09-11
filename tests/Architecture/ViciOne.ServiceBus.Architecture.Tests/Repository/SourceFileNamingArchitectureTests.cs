@@ -145,7 +145,8 @@ public sealed class SourceFileNamingArchitectureTests
     {
         (string Directory, string Namespace, string[] Files)[] groups =
         [
-            ("src/ViciOne.ServiceBus/Batching/Contexts", "ViciOne.ServiceBus.Batching", ["BatchConsumeContext.cs"]),
+            ("src/ViciOne.ServiceBus/Batching/Contexts", "ViciOne.ServiceBus.Batching.Contexts",
+                ["BatchConsumeContext.cs", "MessageBatch.cs"]),
             ("src/ViciOne.ServiceBus/Consumer/Contexts", "ViciOne.ServiceBus.Consumer",
                 ["ConsumerConsumeContextProxy.cs", "ConsumerConsumeContextScope.cs"]),
             ("src/ViciOne.ServiceBus/Context/Activities", "ViciOne.ServiceBus.Context",
@@ -184,6 +185,33 @@ public sealed class SourceFileNamingArchitectureTests
 
         string formerFlatDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Context");
         Assert.Empty(Directory.EnumerateFiles(formerFlatDirectory, "*.cs", SearchOption.TopDirectoryOnly));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "batch-runtime-files-have-dedicated-namespace")]
+    public void BatchRuntimeFiles_HaveOneDedicatedDirectoryAndNamespace()
+    {
+        string batchingRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Batching");
+        string runtimeDirectory = Path.Combine(batchingRoot, "Runtime");
+        string[] expectedFiles =
+        [
+            "BatchCollector.cs",
+            "BatchCollectorLifetime.cs",
+            "BatchConsumer.cs",
+            "BatchConsumerFactory.cs",
+            "BatchRuntimeSettings.cs",
+            "IBatchCollector.cs",
+        ];
+
+        Assert.Empty(Directory.EnumerateFiles(batchingRoot, "*.cs", SearchOption.TopDirectoryOnly));
+        Assert.Equal(
+            expectedFiles,
+            Directory.EnumerateFiles(runtimeDirectory, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .Order(StringComparer.Ordinal));
+        Assert.All(expectedFiles, file => Assert.Equal(
+            ["ViciOne.ServiceBus.Batching.Runtime"],
+            ReadNamespaces(Path.Combine(runtimeDirectory, file), TestContext.Current.CancellationToken)));
     }
 
     [Fact]

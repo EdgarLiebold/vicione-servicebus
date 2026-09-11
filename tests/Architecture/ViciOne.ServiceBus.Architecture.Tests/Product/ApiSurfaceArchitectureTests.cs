@@ -339,17 +339,20 @@ public sealed class ApiSurfaceArchitectureTests
         Assert.True(typeof(IBatchConfigurator<>).IsPublic);
         Assert.True(typeof(BatchOptions).IsPublic);
         Assert.DoesNotContain(ProductAssemblyFacts.Core.GetExportedTypes(), static type =>
-            type.Namespace == "ViciOne.ServiceBus.Batching");
+            type.Namespace?.StartsWith("ViciOne.ServiceBus.Batching", StringComparison.Ordinal) == true);
 
         string[] runtimeTypeNames =
         [
-            "ViciOne.ServiceBus.Batching.BatchCollector`1",
-            "ViciOne.ServiceBus.Batching.BatchCollector`2",
-            "ViciOne.ServiceBus.Batching.BatchConsumer`1",
-            "ViciOne.ServiceBus.Batching.BatchConsumerFactory`1",
-            "ViciOne.ServiceBus.Batching.BatchCollectorLifetime",
-            "ViciOne.ServiceBus.Batching.IBatchCollector`1",
-            "ViciOne.ServiceBus.Batching.MessageBatch`1",
+            "ViciOne.ServiceBus.Batching.Contexts.BatchConsumeContext`1",
+            "ViciOne.ServiceBus.Batching.Contexts.MessageBatch`1",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchCollectorBase`1",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchCollector`1",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchCollector`2",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchConsumer`1",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchConsumerFactory`1",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchCollectorLifetime",
+            "ViciOne.ServiceBus.Batching.Runtime.BatchRuntimeSettings",
+            "ViciOne.ServiceBus.Batching.Runtime.IBatchCollector`1",
             "ViciOne.ServiceBus.Configuration.BatchConsumerMessageConnector`2",
             "ViciOne.ServiceBus.Configuration.BatchConsumerMessageSpecification`2",
             "ViciOne.ServiceBus.Configuration.BatchMessageConnectorFactory`2",
@@ -358,7 +361,9 @@ public sealed class ApiSurfaceArchitectureTests
             .Select(typeName => ProductAssemblyFacts.Core.GetType(typeName, throwOnError: true)!)
             .ToArray();
         Assert.All(runtimeTypes, static type => Assert.False(type.IsPublic));
-        Assert.All(runtimeTypes.Where(static type => type.IsClass), static type => Assert.True(type.IsSealed));
+        Type collectorBase = runtimeTypes.Single(static type => type.Name == "BatchCollectorBase`1");
+        Assert.True(collectorBase.IsAbstract);
+        Assert.All(runtimeTypes.Where(type => type.IsClass && type != collectorBase), static type => Assert.True(type.IsSealed));
 
         Type messageBatch = runtimeTypes.Single(static type => type.Name == "MessageBatch`1");
         Assert.All(

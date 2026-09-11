@@ -14,7 +14,11 @@ public static class InMemoryOutboxTestContextFactory
         T message,
         CancellationToken cancellationToken = default,
         IMessageScheduler? scheduler = null,
-        OutgoingMessageRecorder? outgoingMessages = null)
+        OutgoingMessageRecorder? outgoingMessages = null,
+        DateTimeOffset? sentTime = null,
+        ulong? transportSequenceNumber = null,
+        Guid? messageId = null,
+        bool isDelivered = false)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -23,7 +27,9 @@ public static class InMemoryOutboxTestContextFactory
         ((ReceiveContextProxy)(object)receiveContext).Configure(
             new Uri("loopback://localhost/in-memory-outbox-test"),
             cancellationToken,
-            outgoingMessages);
+            outgoingMessages,
+            transportSequenceNumber,
+            isDelivered);
         SerializerContext serializerContext = DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
         TestConsumeContext<T> consumeContext = DispatchProxy.Create<TestConsumeContext<T>, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)consumeContext).Configure(
@@ -31,7 +37,9 @@ public static class InMemoryOutboxTestContextFactory
             receiveContext,
             serializerContext,
             cancellationToken,
-            scheduler);
+            scheduler,
+            sentTime ?? DateTimeOffset.UnixEpoch,
+            messageId);
         return consumeContext;
     }
 
@@ -49,20 +57,24 @@ public static class InMemoryOutboxTestContextFactory
         private Guid _messageId;
         private ReceiveContext _receiveContext = null!;
         private SerializerContext _serializerContext = null!;
+        private DateTimeOffset _sentTime;
 
         public void Configure<T>(
             T message,
             ReceiveContext receiveContext,
             SerializerContext serializerContext,
             CancellationToken cancellationToken,
-            IMessageScheduler? scheduler)
+            IMessageScheduler? scheduler,
+            DateTimeOffset sentTime,
+            Guid? messageId)
             where T : class
         {
             _message = message;
-            _messageId = NewId.NextGuid();
+            _messageId = messageId ?? NewId.NextGuid();
             _receiveContext = receiveContext;
             _serializerContext = serializerContext;
             _cancellationToken = cancellationToken;
+            _sentTime = sentTime;
             if (scheduler is not null)
             {
                 MessageSchedulerContext schedulerContext = DispatchProxy.Create<MessageSchedulerContext, MessageSchedulerContextProxy>();
@@ -82,7 +94,7 @@ public static class InMemoryOutboxTestContextFactory
                 case "get_MessageId":
                     return _messageId;
                 case "get_SentTime":
-                    return DateTimeOffset.UnixEpoch;
+                    return _sentTime;
                 case "get_ReceiveContext":
                     return _receiveContext;
                 case "get_SerializerContext":
@@ -102,6 +114,17 @@ public static class InMemoryOutboxTestContextFactory
                         bool found = _payloads.TryGetValue(payloadType, out object? payload);
                         args![0] = payload;
                         return found;
+                    }
+                case "GetOrAddPayload":
+                    {
+                        Type payloadType = targetMethod.GetGenericArguments()[0];
+                        if (_payloads.TryGetValue(payloadType, out object? payload))
+                            return payload;
+
+                        var add = (Delegate)args![0]!;
+                        payload = add.DynamicInvoke()!;
+                        _payloads.Add(payloadType, payload);
+                        return payload;
                     }
                 case "AddOrUpdatePayload":
                     {
@@ -126,14 +149,22 @@ public static class InMemoryOutboxTestContextFactory
         private ISendEndpointProvider _sendEndpointProvider = null!;
         private CancellationToken _cancellationToken;
         private Uri _inputAddress = null!;
+        private bool _isDelivered;
+        private ITransportSequenceNumber? _transportSequenceNumber;
 
         public void Configure(
             Uri inputAddress,
             CancellationToken cancellationToken,
-            OutgoingMessageRecorder? outgoingMessages)
+            OutgoingMessageRecorder? outgoingMessages,
+            ulong? transportSequenceNumber,
+            bool isDelivered)
         {
             _inputAddress = inputAddress;
             _cancellationToken = cancellationToken;
+            _isDelivered = isDelivered;
+            _transportSequenceNumber = transportSequenceNumber.HasValue
+                ? new TransportSequenceNumber(transportSequenceNumber.Value)
+                : null;
 
             if (outgoingMessages is null)
             {
@@ -148,24 +179,34 @@ public static class InMemoryOutboxTestContextFactory
             }
         }
 
-        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            "get_InputAddress" => _inputAddress,
-            "get_CancellationToken" => _cancellationToken,
-            "get_IsDelivered" => false,
-            "get_PublishEndpointProvider" => _publishEndpointProvider,
-            "get_SendEndpointProvider" => _sendEndpointProvider,
-            "HasPayloadType" => false,
-            "TryGetPayload" => SetMissingPayload(args),
-            _ => throw new NotSupportedException(targetMethod?.Name),
-        };
+            ArgumentNullException.ThrowIfNull(targetMethod);
 
-        private static bool SetMissingPayload(object?[]? args)
+            return targetMethod.Name switch
+            {
+                "get_InputAddress" => _inputAddress,
+                "get_CancellationToken" => _cancellationToken,
+                "get_IsDelivered" => _isDelivered,
+                "get_PublishEndpointProvider" => _publishEndpointProvider,
+                "get_SendEndpointProvider" => _sendEndpointProvider,
+                "HasPayloadType" => _transportSequenceNumber != null
+                    && (Type)args![0]! == typeof(ITransportSequenceNumber),
+                "TryGetPayload" => TryGetPayload(targetMethod, args),
+                _ => throw new NotSupportedException(targetMethod.Name),
+            };
+        }
+
+        private bool TryGetPayload(MethodInfo targetMethod, object?[]? args)
         {
-            args![0] = null;
-            return false;
+            bool found = _transportSequenceNumber != null
+                && targetMethod.GetGenericArguments()[0] == typeof(ITransportSequenceNumber);
+            args![0] = found ? _transportSequenceNumber : null;
+            return found;
         }
     }
+
+    private sealed record TransportSequenceNumber(ulong? SequenceNumber) : ITransportSequenceNumber;
 
     private class MessageSchedulerContextProxy : DispatchProxy
     {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Consumer;
 using ViciOne.ServiceBus.Context;
 
-namespace ViciOne.ServiceBus.Batching;
+namespace ViciOne.ServiceBus.Batching.Runtime;
 
 /// <summary>Connects individual message pipelines to the batch consumer that owns their completion.</summary>
 /// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
@@ -13,14 +13,14 @@ internal sealed class BatchConsumerFactory<TMessage> :
     where TMessage : class
 {
     readonly IBatchCollector<TMessage> _collector;
-    readonly BatchOptions _options;
+    readonly BatchRuntimeSettings _settings;
 
     /// <summary>Creates a factory over the collector owned by one batch registration.</summary>
     /// <param name="options">The effective batch options exposed through probing.</param>
     /// <param name="collector">The collector that owns active batches and terminal cleanup.</param>
     public BatchConsumerFactory(BatchOptions options, IBatchCollector<TMessage> collector)
     {
-        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _settings = new BatchRuntimeSettings(options);
         _collector = collector ?? throw new ArgumentNullException(nameof(collector));
     }
 
@@ -43,8 +43,7 @@ internal sealed class BatchConsumerFactory<TMessage> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
 
-        var messageContext = context as ConsumeContext<TMessage>;
-        if (messageContext == null)
+        if (context is not ConsumeContext<TMessage> messageContext)
             throw new MessageException(typeof(TInputMessage), $"Expected batch message type: {TypeCache<TMessage>.ShortName}");
 
         BatchConsumer<TMessage> consumer = await _collector.CollectAsync(messageContext).ConfigureAwait(false);
@@ -56,7 +55,7 @@ internal sealed class BatchConsumerFactory<TMessage> :
         finally
         {
             if (consumer.IsCompleted)
-                await _collector.CompleteAsync(messageContext, consumer).ConfigureAwait(false);
+                await _collector.CompleteAsync(consumer).ConfigureAwait(false);
         }
     }
 
@@ -68,10 +67,10 @@ internal sealed class BatchConsumerFactory<TMessage> :
 
         var scope = context.CreateConsumerFactoryScope<IConsumer<TMessage>>("batch");
 
-        scope.Add("timeLimit", _options.TimeLimit);
-        scope.Add("timeLimitStart", _options.TimeLimitStart);
-        scope.Add("messageLimit", _options.MessageLimit);
-        scope.Add("concurrencyLimit", _options.ConcurrencyLimit);
+        scope.Add("timeLimit", _settings.TimeLimit);
+        scope.Add("timeLimitStart", _settings.TimeLimitStart);
+        scope.Add("messageLimit", _settings.MessageLimit);
+        scope.Add("concurrencyLimit", _settings.ConcurrencyLimit);
 
         _collector.Probe(scope);
     }

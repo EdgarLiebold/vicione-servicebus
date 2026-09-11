@@ -4,7 +4,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus.Batching;
+namespace ViciOne.ServiceBus.Batching.Runtime;
 
 /// <summary>Coordinates collector admissions, terminal batch flushing, and executor shutdown.</summary>
 internal sealed class BatchCollectorLifetime

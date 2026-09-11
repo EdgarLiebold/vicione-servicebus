@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Contexts;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Util;
 

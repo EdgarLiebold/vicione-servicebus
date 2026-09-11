@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ViciOne.ServiceBus.Advanced.Serialization;
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Contexts;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;

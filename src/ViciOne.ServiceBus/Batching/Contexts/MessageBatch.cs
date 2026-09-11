@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus.Batching;
+namespace ViciOne.ServiceBus.Batching.Contexts;
 
 /// <summary>Provides the immutable ordered snapshot delivered through the public batch contract.</summary>
 /// <typeparam name="TMessage">The message contract contained in the snapshot.</typeparam>
@@ -10,7 +10,7 @@ internal sealed class MessageBatch<TMessage> :
     Batch<TMessage>
     where TMessage : class
 {
-    readonly IReadOnlyList<ConsumeContext<TMessage>> _messages;
+    readonly ConsumeContext<TMessage>[] _messages;
 
     /// <summary>Creates a detached snapshot with its completion metadata.</summary>
     /// <param name="firstMessageReceived">When collection for the batch began.</param>
@@ -21,6 +21,8 @@ internal sealed class MessageBatch<TMessage> :
         IReadOnlyList<ConsumeContext<TMessage>> messages)
     {
         ArgumentNullException.ThrowIfNull(messages);
+        if (!Enum.IsDefined(mode))
+            throw new ArgumentOutOfRangeException(nameof(mode), mode, "The batch completion mode must be defined.");
 
         FirstMessageReceived = firstMessageReceived;
         LastMessageReceived = lastMessageReceived;
@@ -40,13 +42,13 @@ internal sealed class MessageBatch<TMessage> :
     public ConsumeContext<TMessage> this[int index] => _messages[index];
 
     /// <summary>Gets the number of message contexts in the snapshot.</summary>
-    public int Length => _messages.Count;
+    public int Length => _messages.Length;
 
     /// <summary>Returns an enumerator over the ordered message contexts.</summary>
     /// <returns>An enumerator over the snapshot.</returns>
     public IEnumerator<ConsumeContext<TMessage>> GetEnumerator()
     {
-        return _messages.GetEnumerator();
+        return ((IEnumerable<ConsumeContext<TMessage>>)_messages).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 
-namespace ViciOne.ServiceBus.Batching;
+namespace ViciOne.ServiceBus.Batching.Contexts;
 
 /// <summary>Represents an assembled message batch while preserving the collector's consume context.</summary>
 /// <typeparam name="TMessage">The batched message contract.</typeparam>

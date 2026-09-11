@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Runtime;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Middleware;
 

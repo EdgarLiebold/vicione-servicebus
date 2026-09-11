@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Batching;
+namespace ViciOne.ServiceBus.Batching.Runtime;
 
 /// <summary>Coordinates message admission, completed-batch removal, and terminal draining.</summary>
 /// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
@@ -17,9 +17,8 @@ internal interface IBatchCollector<TMessage> :
     Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default);
 
     /// <summary>Removes a completed consumer from the active-batch lookup when it still matches.</summary>
-    /// <param name="context">The message context used to resolve the active batch.</param>
     /// <param name="consumer">The completed batch consumer.</param>
     /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
     /// <returns>A task that completes after the active-batch lookup has been updated.</returns>
-    Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default);
+    Task CompleteAsync(BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default);
 }

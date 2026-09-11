@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.Advanced;
-using ViciOne.ServiceBus.Batching;
+using ViciOne.ServiceBus.Batching.Runtime;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
@@ -28,6 +28,12 @@ public sealed class BatchCollectorLifecycleTests
         Assert.False(consume.IsCompleted);
         Assert.Equal(1, timeProvider.ActiveTimerCount);
 
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        OperationCanceledException removalCancellation = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            collector.CompleteAsync(consumer, cancellation.Token));
+        Assert.Equal(cancellation.Token, removalCancellation.CancellationToken);
+
         Task firstDisposal = collector.DisposeAsync().AsTask();
         Task secondDisposal = collector.DisposeAsync().AsTask();
         await Task.WhenAll(firstDisposal, secondDisposal)
@@ -43,6 +49,7 @@ public sealed class BatchCollectorLifecycleTests
         ConsumeContext<LifecycleItem> rejected = CreateContext(new LifecycleItem("alpha", 2), timeProvider);
         await Assert.ThrowsAsync<ObjectDisposedException>(() =>
             collector.CollectAsync(rejected, TestContext.Current.CancellationToken));
+        await collector.CompleteAsync(consumer, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -134,6 +141,33 @@ public sealed class BatchCollectorLifecycleTests
 
         Assert.Same(cleanupFailure, disposalException);
         Assert.Same(cleanupFailure, consumeException);
+        Assert.Empty(delivered);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-LIFETIME", "terminal-cleanup-aggregates-independent-timer-failures")]
+    public async Task Disposal_AggregatesIndependentTimerCleanupFailuresAsync()
+    {
+        var disposeFailure = new InvalidOperationException("timer disposal failed");
+        var changeFailure = new InvalidOperationException("timer stop failed");
+        var timeProvider = new ObservableTimeProvider(StartTime, disposeFailure, changeFailure);
+        var delivered = new ConcurrentQueue<Batch<LifecycleItem>>();
+        var collector = new BatchCollector<LifecycleItem>(CreateOptions(), new CaptureBatchPipe(delivered));
+        ConsumeContext<LifecycleItem> context = CreateContext(new LifecycleItem("alpha", 1), timeProvider);
+        BatchConsumer<LifecycleItem> consumer = await collector.CollectAsync(context, TestContext.Current.CancellationToken);
+        Task consume = consumer.ConsumeAsync(context);
+
+        AggregateException ownerException = await Assert.ThrowsAsync<AggregateException>(async () =>
+            await collector.DisposeAsync());
+        AggregateException messageException = await Assert.ThrowsAsync<AggregateException>(async () =>
+            await consume.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+
+        Assert.Same(ownerException, messageException);
+        Assert.Collection(
+            ownerException.InnerExceptions,
+            exception => Assert.Same(changeFailure, exception),
+            exception => Assert.Same(disposeFailure, exception));
         Assert.Empty(delivered);
         Assert.Equal(0, timeProvider.ActiveTimerCount);
     }

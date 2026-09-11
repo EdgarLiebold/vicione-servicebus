@@ -4,11 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Batching.Contexts;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus.Batching;
+namespace ViciOne.ServiceBus.Batching.Runtime;
 
 /// <summary>Tracks one batch until size, time, cancellation, or terminal flushing selects its outcome.</summary>
 /// <typeparam name="TMessage">The message contract collected into the batch.</typeparam>
@@ -22,24 +23,24 @@ internal sealed class BatchConsumer<TMessage> :
     readonly TaskExecutor _executor;
     readonly DateTime _firstMessage;
     readonly Dictionary<Guid, BatchEntry> _messages;
-    readonly BatchOptions _options;
+    readonly BatchRuntimeSettings _settings;
     readonly ITimer _timer;
     readonly TimeProvider _timeProvider;
     int _completionState;
-    Activity _currentActivity = null!;
+    Activity? _currentActivity;
     DateTime _lastMessage;
-    ILogContext? _logContext = null!;
+    ILogContext? _logContext;
 
     /// <summary>Creates an empty batch and starts its configured completion timer.</summary>
-    /// <param name="options">The batch size and timing limits.</param>
+    /// <param name="settings">The immutable batch size and timing limits.</param>
     /// <param name="executor">The executor that serializes changes to this batch.</param>
     /// <param name="dispatcher">The executor that bounds completed-batch delivery.</param>
     /// <param name="consumerPipe">The pipeline that receives this batch after completion.</param>
     /// <param name="timeProvider">The clock and timer source for batch metadata and expiration.</param>
-    public BatchConsumer(BatchOptions options, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
+    public BatchConsumer(BatchRuntimeSettings settings, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
         TimeProvider timeProvider)
     {
-        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(settings);
         ArgumentNullException.ThrowIfNull(executor);
         ArgumentNullException.ThrowIfNull(dispatcher);
         ArgumentNullException.ThrowIfNull(consumerPipe);
@@ -51,9 +52,9 @@ internal sealed class BatchConsumer<TMessage> :
         _messages = new Dictionary<Guid, BatchEntry>();
         _completed = TaskCompletionSources.Create<DateTime>();
         _firstMessage = _timeProvider.GetUtcNow().UtcDateTime;
-        _options = options;
+        _settings = settings;
 
-        _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, _options.TimeLimit, Timeout.InfiniteTimeSpan);
+        _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, _settings.TimeLimit, Timeout.InfiniteTimeSpan);
     }
 
     /// <summary>Gets whether this collector has stopped accepting messages and chosen its terminal outcome.</summary>
@@ -68,7 +69,7 @@ internal sealed class BatchConsumer<TMessage> :
 
         try
         {
-            await _completed.Task.ConfigureAwait(false);
+            await _completed.Task.WaitAsync(context.CancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
         {
@@ -117,12 +118,12 @@ internal sealed class BatchConsumer<TMessage> :
         ulong? sequenceNumber = context.Advanced().ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
             ? payload.SequenceNumber
             : null;
-        ulong sentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.Advanced().ReceiveContext.GetSentTime()
+        ulong GetSentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.Advanced().ReceiveContext.GetSentTime()
             ?? _timeProvider.GetUtcNow().UtcDateTime).Ticks;
 
         var batchEntry = new BatchEntry(
             context,
-            sequenceNumber ?? sentTimeAsSequenceFallback(),
+            sequenceNumber ?? GetSentTimeAsSequenceFallback(),
             () => RemoveCanceledMessage(messageId));
 
         if (!_messages.ContainsKey(messageId))
@@ -130,8 +131,8 @@ internal sealed class BatchConsumer<TMessage> :
         else
             batchEntry.Unregister();
 
-        if (_options.TimeLimitStart == BatchTimeLimitStart.FromLast)
-            _timer.Change(_options.TimeLimit, TimeSpan.FromMilliseconds(-1));
+        if (_settings.TimeLimitStart == BatchTimeLimitStart.FromLast)
+            _timer.Change(_settings.TimeLimit, Timeout.InfiniteTimeSpan);
 
         _lastMessage = _timeProvider.GetUtcNow().UtcDateTime;
 
@@ -184,7 +185,7 @@ internal sealed class BatchConsumer<TMessage> :
         if (context.GetRetryAttempt() > 0)
             return true;
 
-        return _messages.Count == _options.MessageLimit;
+        return _messages.Count >= _settings.MessageLimit;
     }
 
     /// <summary>Closes the current partial batch and schedules it for immediate delivery.</summary>
@@ -205,6 +206,7 @@ internal sealed class BatchConsumer<TMessage> :
 
         List<ConsumeContext<TMessage>> messages = GetMessageBatchInOrder();
         Exception? cleanupFailure = StopTimerAndRegistrations();
+        _messages.Clear();
         if (cleanupFailure != null)
         {
             _completed.TrySetException(cleanupFailure);
