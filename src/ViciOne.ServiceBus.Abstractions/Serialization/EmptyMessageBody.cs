@@ -2,35 +2,32 @@ using System.IO;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Carries empty message content.</summary>
+/// <summary>Represents a message body with no content.</summary>
 public class EmptyMessageBody :
     MessageBody
 {
-    /// <summary>Gets the instance.</summary>
+    /// <summary>Gets the shared empty message body.</summary>
     public static MessageBody Instance { get; } = new EmptyMessageBody();
 
-    /// <summary>Gets the length.</summary>
+    /// <summary>Gets the zero-byte body length.</summary>
     public long? Length => 0;
 
-    /// <summary>
-    /// Read-only and not expandable. The default constructor hands out a growable buffer, so a
-    /// caller could have written a body into what is by definition empty.
-    /// </summary>
-    /// <returns>The stream.</returns>
+    /// <summary>Opens a non-writable, non-expandable empty stream.</summary>
+    /// <returns>A readable empty stream.</returns>
     public Stream GetStream()
     {
         return new MemoryStream([], false);
     }
 
-    /// <summary>Gets bytes.</summary>
-    /// <returns>The bytes.</returns>
+    /// <summary>Creates an empty byte array.</summary>
+    /// <returns>An empty array.</returns>
     public byte[] GetBytes()
     {
         return [];
     }
 
-    /// <summary>Gets string.</summary>
-    /// <returns>The string.</returns>
+    /// <summary>Gets the empty text representation.</summary>
+    /// <returns>An empty string.</returns>
     public string GetString()
     {
         return string.Empty;

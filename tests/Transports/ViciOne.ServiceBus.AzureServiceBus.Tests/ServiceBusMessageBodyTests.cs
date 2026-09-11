@@ -34,4 +34,11 @@ public sealed class ServiceBusMessageBodyTests
         Assert.False(stream.CanWrite);
         Assert.Equal(0, new ServiceBusMessageBody(BinaryData.FromBytes([])).Length);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-MESSAGE-BODY", "required-binary-data-boundary")]
+    public void Constructor_RejectsMissingBinaryDataImmediately()
+    {
+        Assert.Equal("data", Assert.Throws<ArgumentNullException>(() => new ServiceBusMessageBody(null!)).ParamName);
+    }
 }

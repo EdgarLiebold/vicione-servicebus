@@ -967,8 +967,8 @@ TYPE interface public ViciOne.ServiceBus.Advanced.PartitionKeyConsumeContext
   PROPERTY System.String PartitionKey { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.PartitionKeyExtensions [static]
   METHOD public static System.Boolean TrySetPartitionKey(ViciOne.ServiceBus.Advanced.SendContext context, System.String partitionKey)
-  METHOD public static System.String PartitionKey(ViciOne.ServiceBus.Advanced.SendContext context)
-  METHOD public static System.String PartitionKey(ViciOne.ServiceBus.ConsumeContext context)
+  METHOD public static System.String GetPartitionKey(ViciOne.ServiceBus.Advanced.SendContext context)
+  METHOD public static System.String GetPartitionKey(ViciOne.ServiceBus.ConsumeContext context)
   METHOD public static System.Void SetPartitionKey(ViciOne.ServiceBus.Advanced.SendContext context, System.String partitionKey)
 TYPE interface public ViciOne.ServiceBus.Advanced.PartitionKeySendContext
   PROPERTY System.String PartitionKey { public-get; public-set; }
@@ -1179,8 +1179,8 @@ TYPE interface public ViciOne.ServiceBus.Advanced.RoutingKeyConsumeContext
   PROPERTY System.String RoutingKey { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.RoutingKeyExtensions [static]
   METHOD public static System.Boolean TrySetRoutingKey(ViciOne.ServiceBus.Advanced.SendContext context, System.String routingKey)
-  METHOD public static System.String RoutingKey(ViciOne.ServiceBus.Advanced.SendContext context)
-  METHOD public static System.String RoutingKey(ViciOne.ServiceBus.ConsumeContext context)
+  METHOD public static System.String GetRoutingKey(ViciOne.ServiceBus.Advanced.SendContext context)
+  METHOD public static System.String GetRoutingKey(ViciOne.ServiceBus.ConsumeContext context)
   METHOD public static System.Void SetRoutingKey(ViciOne.ServiceBus.Advanced.SendContext context, System.String routingKey)
 TYPE interface public ViciOne.ServiceBus.Advanced.RoutingKeySendContext
   PROPERTY System.String RoutingKey { public-get; public-set; }
@@ -1406,8 +1406,8 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializ
   METHOD public abstract ViciOne.ServiceBus.Advanced.MessageBody GetMessageBody<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
   PROPERTY System.Net.Mime.ContentType ContentType { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer
-  METHOD public abstract System.Nullable<T> DeserializeObject<T>(System.Object value, System.Nullable<T> defaultValue = null)
-  METHOD public abstract T DeserializeObject<T>(System.Object value, T defaultValue = null)
+  METHOD public abstract System.Nullable<TValue> DeserializeObject<TValue>(System.Object value, System.Nullable<TValue> defaultValue = null)
+  METHOD public abstract TValue DeserializeObject<TValue>(System.Object value, TValue defaultValue = null)
   METHOD public abstract ViciOne.ServiceBus.Advanced.MessageBody SerializeObject(System.Object value)
 TYPE interface public ViciOne.ServiceBus.Advanced.Serialization.IPayloadAdmissionEvaluator<TBus>
   METHOD public abstract System.Void ValidateTransportEnvelope(System.ReadOnlyMemory<System.Byte> serializedEnvelope)
@@ -1490,13 +1490,13 @@ TYPE class public ViciOne.ServiceBus.Advanced.Serialization.SerializerContextExt
   METHOD public static System.Nullable<T> GetHeader<T>(ViciOne.ServiceBus.ConsumeContext context, System.String key, System.Nullable<T> defaultValue = null)
   METHOD public static System.Nullable<T> GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, System.Nullable<T> defaultValue = null)
   METHOD public static System.Nullable<T> GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> dictionary, System.String key, System.Nullable<T> defaultValue = null)
-  METHOD public static System.Nullable<T> GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, ViciOne.ServiceBus.Transports.IHeaderProvider dictionary, System.String key, System.Nullable<T> defaultValue = null)
+  METHOD public static System.Nullable<T> GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, ViciOne.ServiceBus.Transports.IHeaderProvider headers, System.String key, System.Nullable<T> defaultValue = null)
   METHOD public static System.String GetHeader(ViciOne.ServiceBus.ConsumeContext context, System.String key, System.String defaultValue = null)
   METHOD public static System.String SerializeDictionary(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer deserializer, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
   METHOD public static T GetHeader<T>(ViciOne.ServiceBus.ConsumeContext context, System.String key, T defaultValue = null)
   METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, T defaultValue = null)
   METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> dictionary, System.String key, T defaultValue = null)
-  METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, ViciOne.ServiceBus.Transports.IHeaderProvider dictionary, System.String key, T defaultValue = null)
+  METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, ViciOne.ServiceBus.Transports.IHeaderProvider headers, System.String key, T defaultValue = null)
 TYPE class public ViciOne.ServiceBus.Advanced.Serialization.StringMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
   CTOR public ViciOne.ServiceBus.Advanced.Serialization.StringMessageBody(System.String body)
   METHOD public virtual System.Byte[] GetBytes()
@@ -3571,13 +3571,13 @@ TYPE class public ViciOne.ServiceBus.SensitivePayloadAttribute [sealed,base=Syst
 TYPE class public ViciOne.ServiceBus.Serialization.CamelCaseDictionaryExtensions [static]
   METHOD public static System.Boolean TryGetValueCamelCase(System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, out System.Object value)
   METHOD public static System.Boolean TryGetValueCamelCase(System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> dictionary, System.String key, out System.Object value)
-TYPE class public ViciOne.ServiceBus.Serialization.EmptyHeaders [interfaces=ViciOne.ServiceBus.Advanced.Headers]
-  FIELD public static readonly ViciOne.ServiceBus.Serialization.EmptyHeaders Instance
+TYPE class public ViciOne.ServiceBus.Serialization.EmptyHeaders [sealed,interfaces=ViciOne.ServiceBus.Advanced.Headers]
   METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
   METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
   METHOD public virtual System.Collections.Generic.IEnumerator<ViciOne.ServiceBus.Advanced.HeaderValue> GetEnumerator()
-  METHOD public virtual System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue = null)
-  METHOD public virtual T Get<T>(System.String key, T defaultValue)
+  METHOD public virtual System.Nullable<TValue> Get<TValue>(System.String key, System.Nullable<TValue> defaultValue = null)
+  METHOD public virtual TValue Get<TValue>(System.String key, TValue defaultValue)
+  PROPERTY ViciOne.ServiceBus.Serialization.EmptyHeaders Instance { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Serialization.MessageEnvelope
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Headers { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<System.String> MessageTypes { public-get;  }
@@ -3731,9 +3731,9 @@ TYPE interface public ViciOne.ServiceBus.Transports.ISendTransport [interfaces=V
 TYPE interface public ViciOne.ServiceBus.Transports.ISendTransportProvider
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> GetSendTransportAsync(System.Uri address, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Uri NormalizeAddress(System.Uri address)
-TYPE interface public ViciOne.ServiceBus.Transports.ITransportSetHeaderAdapter<TValueType>
-  METHOD public abstract System.Void Set(System.Collections.Generic.IDictionary<System.String,TValueType> dictionary, in ViciOne.ServiceBus.Advanced.HeaderValue headerValue)
-  METHOD public abstract System.Void Set<T>(System.Collections.Generic.IDictionary<System.String,TValueType> dictionary, in ViciOne.ServiceBus.Advanced.HeaderValue<T> headerValue)
+TYPE interface public ViciOne.ServiceBus.Transports.ITransportSetHeaderAdapter<THeaderValue>
+  METHOD public abstract System.Void Set(System.Collections.Generic.IDictionary<System.String,THeaderValue> dictionary, in ViciOne.ServiceBus.Advanced.HeaderValue headerValue)
+  METHOD public abstract System.Void Set<TValue>(System.Collections.Generic.IDictionary<System.String,THeaderValue> dictionary, in ViciOne.ServiceBus.Advanced.HeaderValue<TValue> headerValue)
 TYPE interface public ViciOne.ServiceBus.Transports.ITransportSupervisor<T> [interfaces=ViciOne.ServiceBus.Advanced.Middleware.ISupervisor<T>]
   METHOD public abstract System.Void AddConsumeAgent<TAgent>(TAgent agent)
   METHOD public abstract System.Void AddSendAgent<TAgent>(TAgent agent)
@@ -18538,15 +18538,15 @@ TYPE class public ViciOne.ServiceBus.RetryPolicies.RedeliveryRetryConsumeContext
   METHOD public TContext CreateNext<TContext>(ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
 TYPE class public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext [base=ViciOne.ServiceBus.Context.ConsumeContextScope,interfaces=ViciOne.ServiceBus.Advanced.ConsumeRetryContext]
   CTOR public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext(ViciOne.ServiceBus.ConsumeContext context, ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
-  METHOD public System.Threading.Tasks.Task NotifyFaultedAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, System.TimeSpan duration, System.String consumerType, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public System.Threading.Tasks.Task NotifyFaultedAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, System.TimeSpan duration, System.String consumerType, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   METHOD public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext CreateNext(ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
   METHOD public virtual System.Threading.Tasks.Task NotifyPendingFaultsAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual TContext CreateNext<TContext>(ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
   PROPERTY System.Int32 RetryAttempt { public-get;  }
   PROPERTY System.Int32 RetryCount { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy RetryPolicy { protected-get;  }
-TYPE class public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext<T> [base=ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext,interfaces=ViciOne.ServiceBus.ConsumeContext<T>]
-  CTOR public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext<T>(ViciOne.ServiceBus.ConsumeContext<T> context, ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
+TYPE class public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext<TMessage> [base=ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext,interfaces=ViciOne.ServiceBus.ConsumeContext<TMessage>]
+  CTOR public ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
   METHOD public System.Threading.Tasks.Task NotifyConsumedAsync(System.TimeSpan duration, System.String consumerType, System.Threading.CancellationToken cancellationToken = null)
   METHOD public System.Threading.Tasks.Task NotifyFaultedAsync(System.TimeSpan duration, System.String consumerType, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   METHOD public TContext CreateNext<TContext>(ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)

@@ -17,25 +17,25 @@ public class Base64MessageBody :
     readonly string _text;
     byte[]? _bytes;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="text">The text.</param>
+    /// <summary>Creates a body from Base64 carrier text.</summary>
+    /// <param name="text">The Base64 text retained as the text representation.</param>
     public Base64MessageBody(string text)
     {
-        _text = text;
+        _text = text ?? throw new ArgumentNullException(nameof(text));
     }
 
     /// <summary>Gets the decoded binary length in bytes rather than the length of the Base64 carrier text.</summary>
     public long? Length => GetBytes().LongLength;
 
-    /// <summary>Gets stream.</summary>
-    /// <returns>The stream.</returns>
+    /// <summary>Opens a non-writable stream over the decoded bytes.</summary>
+    /// <returns>A readable stream positioned at the start of the decoded body.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
     }
 
-    /// <summary>Gets bytes.</summary>
-    /// <returns>The bytes.</returns>
+    /// <summary>Gets the decoded binary content.</summary>
+    /// <returns>The decoded body bytes retained by this instance.</returns>
     public byte[] GetBytes()
     {
         if (_bytes != null)
@@ -46,8 +46,8 @@ public class Base64MessageBody :
         return _bytes;
     }
 
-    /// <summary>Gets string.</summary>
-    /// <returns>The string.</returns>
+    /// <summary>Gets the original Base64 carrier text.</summary>
+    /// <returns>The text supplied to the constructor.</returns>
     public string GetString()
     {
         return _text;

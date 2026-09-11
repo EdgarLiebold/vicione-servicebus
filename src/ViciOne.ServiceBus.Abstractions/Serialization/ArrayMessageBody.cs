@@ -5,40 +5,44 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Carries array message content.</summary>
+/// <summary>Exposes a selected byte-array segment as a UTF-8 message body.</summary>
 public class ArrayMessageBody :
     MessageBody
 {
     readonly ArraySegment<byte> _bytes;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="bytes">The bytes.</param>
+    /// <summary>Creates a body over the selected array segment.</summary>
+    /// <param name="bytes">The segment containing the body bytes; the default segment represents an empty body.</param>
     public ArrayMessageBody(ArraySegment<byte> bytes)
     {
         _bytes = bytes;
     }
 
-    /// <summary>Gets the length.</summary>
+    /// <summary>Gets the selected segment length in bytes.</summary>
     public long? Length => _bytes.Count;
 
-    /// <summary>Gets stream.</summary>
-    /// <returns>The stream.</returns>
+    /// <summary>Opens a non-writable stream over the selected segment.</summary>
+    /// <returns>A readable stream positioned at the start of the body.</returns>
     public Stream GetStream()
     {
-        return new MemoryStream(_bytes.Array ?? throw new InvalidOperationException("Array not accessible"), _bytes.Offset, _bytes.Count, false);
+        return _bytes.Array is { } array
+            ? new MemoryStream(array, _bytes.Offset, _bytes.Count, false)
+            : new MemoryStream([], false);
     }
 
-    /// <summary>Gets bytes.</summary>
-    /// <returns>The bytes.</returns>
+    /// <summary>Copies the selected segment into a new byte array.</summary>
+    /// <returns>The selected body bytes.</returns>
     public byte[] GetBytes()
     {
-        return _bytes.ToArray();
+        return _bytes.Array is null ? [] : _bytes.ToArray();
     }
 
-    /// <summary>Gets string.</summary>
-    /// <returns>The string.</returns>
+    /// <summary>Decodes the selected segment as UTF-8 text.</summary>
+    /// <returns>The decoded body text.</returns>
     public string GetString()
     {
-        return Encoding.UTF8.GetString(_bytes.Array ?? throw new InvalidOperationException("Array not accessible"), _bytes.Offset, _bytes.Count);
+        return _bytes.Array is { } array
+            ? Encoding.UTF8.GetString(array, _bytes.Offset, _bytes.Count)
+            : string.Empty;
     }
 }

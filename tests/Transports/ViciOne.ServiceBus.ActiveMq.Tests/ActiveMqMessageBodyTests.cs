@@ -57,6 +57,13 @@ public sealed class ActiveMqMessageBodyTests
         Assert.Throws<ActiveMqTransportException>(() => unsupported.GetStream());
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-MESSAGE-BODY", "required-native-message-boundary")]
+    public void Constructor_RejectsMissingNativeMessageImmediately()
+    {
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() => new ActiveMqMessageBody(null!)).ParamName);
+    }
+
     private static ActiveMqMessageBody CreateTextBody() => new(new ActiveMQTextMessage { Text = NonAsciiText });
 
     private static ActiveMqMessageBody CreateBytesBody()

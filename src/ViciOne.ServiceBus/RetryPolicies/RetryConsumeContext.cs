@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for retry consume operations.</summary>
+/// <summary>Scopes a consume context with retry counters and deferred fault notifications.</summary>
 public class RetryConsumeContext :
     ConsumeContextScope,
     ConsumeRetryContext
@@ -12,10 +12,10 @@ public class RetryConsumeContext :
     readonly ConsumeContext _context;
     readonly PendingFaultCollection _pendingFaults;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="retryContext">The retry context.</param>
+    /// <summary>Initializes a retry scope over a consume context.</summary>
+    /// <param name="context">The consumed message context.</param>
+    /// <param name="retryPolicy">The policy that classifies retryable failures.</param>
+    /// <param name="retryContext">The active retry state, or <see langword="null" /> before the first retry.</param>
     public RetryConsumeContext(ConsumeContext context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context)
     {
@@ -36,19 +36,19 @@ public class RetryConsumeContext :
         _pendingFaults = new PendingFaultCollection();
     }
 
-    /// <summary>Gets the retry policy.</summary>
+    /// <summary>Gets the policy that classifies retryable failures.</summary>
     protected IRetryPolicy RetryPolicy { get; }
 
-    /// <summary>Gets the retry attempt.</summary>
+    /// <summary>Gets the one-based active retry attempt, or zero before the first retry.</summary>
     public int RetryAttempt { get; }
 
-    /// <summary>Gets the retry count.</summary>
+    /// <summary>Gets the number of retry attempts completed before the active attempt.</summary>
     public int RetryCount { get; }
 
-    /// <summary>Creates next.</summary>
-    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-    /// <param name="retryContext">The retry context.</param>
-    /// <returns>The created next.</returns>
+    /// <summary>Creates the next typed consume-retry scope.</summary>
+    /// <typeparam name="TContext">The requested consume-retry context contract.</typeparam>
+    /// <param name="retryContext">The policy state for the next attempt.</param>
+    /// <returns>The next typed consume-retry context.</returns>
     public virtual TContext CreateNext<TContext>(RetryContext retryContext)
         where TContext : class, ConsumeRetryContext
     {
@@ -56,22 +56,24 @@ public class RetryConsumeContext :
     }
 
     /// <summary>Notifies registered observers about pending faults.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">The token that cancels observer notification.</param>
+    /// <returns>A task that completes after all pending fault observers are notified.</returns>
     public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
         return _pendingFaults.NotifyAsync(_context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="duration">The duration.</param>
+    /// <summary>Defers handled consumer faults until the retry sequence reaches a terminal state.</summary>
+    /// <typeparam name="TMessage">The consumed message type.</typeparam>
+    /// <param name="context">The typed consume context that faulted.</param>
+    /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
+    /// <param name="exception">The consumer exception.</param>
+    /// <param name="cancellationToken">The token that cancels immediate notification for an unhandled failure.</param>
+    /// <returns>A task that completes after the fault is deferred or forwarded.</returns>
+    public override Task NotifyFaultedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType, Exception exception,
+        CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         if (RetryPolicy.IsHandled(exception))
         {
@@ -83,9 +85,9 @@ public class RetryConsumeContext :
         return _context.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates next.</summary>
-    /// <param name="retryContext">The retry context.</param>
-    /// <returns>The created next.</returns>
+    /// <summary>Creates the next consume-retry scope.</summary>
+    /// <param name="retryContext">The policy state for the next attempt.</param>
+    /// <returns>A scope that shares the original consume context and retry policy.</returns>
     public RetryConsumeContext CreateNext(RetryContext retryContext)
     {
         return new RetryConsumeContext(_context, RetryPolicy, retryContext);
@@ -93,55 +95,55 @@ public class RetryConsumeContext :
 }
 
 
-/// <summary>Carries state for retry consume operations.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class RetryConsumeContext<T> :
+/// <summary>Scopes a typed consume context with retry counters and deferred fault notifications.</summary>
+/// <typeparam name="TMessage">The consumed message type.</typeparam>
+public class RetryConsumeContext<TMessage> :
     RetryConsumeContext,
-    ConsumeContext<T>
-    where T : class
+    ConsumeContext<TMessage>
+    where TMessage : class
 {
-    readonly ConsumeContext<T> _context;
+    readonly ConsumeContext<TMessage> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="retryContext">The retry context.</param>
-    public RetryConsumeContext(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
+    /// <summary>Initializes a retry scope over a typed consume context.</summary>
+    /// <param name="context">The typed consumed message context.</param>
+    /// <param name="retryPolicy">The policy that classifies retryable failures.</param>
+    /// <param name="retryContext">The active retry state, or <see langword="null" /> before the first retry.</param>
+    public RetryConsumeContext(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context.Advanced(), retryPolicy, retryContext)
     {
         _context = context;
     }
 
-    T ConsumeContext<T>.Message => _context.Message;
+    TMessage ConsumeContext<TMessage>.Message => _context.Message;
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <param name="duration">The duration.</param>
+    /// <summary>Forwards successful consumer completion to the scoped consume context.</summary>
+    /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <returns>A task that completes after successful-consumption notification.</returns>
     public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return NotifyConsumedAsync(_context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="duration">The duration.</param>
+    /// <summary>Forwards a consumer fault through the retry scope.</summary>
+    /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="exception">The consumer exception.</param>
+    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <returns>A task that completes after the fault is deferred or forwarded.</returns>
     public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return NotifyFaultedAsync(_context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates next.</summary>
-    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-    /// <param name="retryContext">The retry context.</param>
-    /// <returns>The created next.</returns>
+    /// <summary>Creates the next typed consume-retry scope.</summary>
+    /// <typeparam name="TContext">The requested consume-retry context contract.</typeparam>
+    /// <param name="retryContext">The policy state for the next attempt.</param>
+    /// <returns>The next typed consume-retry context.</returns>
     public override TContext CreateNext<TContext>(RetryContext retryContext)
     {
-        return new RetryConsumeContext<T>(_context, RetryPolicy, retryContext) as TContext
-            ?? throw new ArgumentException($"The context type is not valid: {TypeCache<T>.ShortName}");
+        return new RetryConsumeContext<TMessage>(_context, RetryPolicy, retryContext) as TContext
+            ?? throw new ArgumentException($"The context type is not valid: {TypeCache<TMessage>.ShortName}");
     }
 }

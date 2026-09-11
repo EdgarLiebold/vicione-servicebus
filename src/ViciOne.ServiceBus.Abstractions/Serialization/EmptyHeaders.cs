@@ -5,58 +5,61 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>Defines headers for empty.</summary>
-public class EmptyHeaders :
+/// <summary>Provides the canonical empty header set for operations that received no transport metadata.</summary>
+public sealed class EmptyHeaders :
     Headers
 {
-    /// <summary>Exposes the instance used by the containing type.</summary>
-    public static readonly EmptyHeaders Instance = new EmptyHeaders();
+    /// <summary>Gets the shared empty header collection.</summary>
+    public static EmptyHeaders Instance { get; } = new();
 
     EmptyHeaders()
     {
     }
 
-    /// <summary>Gets all.</summary>
-    /// <returns>The all.</returns>
+    /// <summary>Returns an empty header sequence.</summary>
+    /// <returns>An empty sequence.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         return Enumerable.Empty<KeyValuePair<string, object>>();
     }
 
-    /// <summary>Attempts to get header.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Reports that no value exists for a valid header name.</summary>
+    /// <param name="key">The non-empty header name.</param>
+    /// <param name="value">Always <see langword="null" />.</param>
+    /// <returns>Always <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
         value = default;
         return false;
     }
 
-    /// <summary>Retrieves the requested value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The requested value.</returns>
-    public T? Get<T>(string key, T? defaultValue)
-        where T : class
+    /// <summary>Returns the supplied reference-type fallback for a valid header name.</summary>
+    /// <typeparam name="TValue">The requested header value type.</typeparam>
+    /// <param name="key">The non-empty header name.</param>
+    /// <param name="defaultValue">The fallback value.</param>
+    /// <returns><paramref name="defaultValue" />.</returns>
+    public TValue? Get<TValue>(string key, TValue? defaultValue)
+        where TValue : class
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
         return defaultValue;
     }
 
-    /// <summary>Retrieves the requested value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The requested value.</returns>
-    public T? Get<T>(string key, T? defaultValue = null)
-        where T : struct
+    /// <summary>Returns the supplied value-type fallback for a valid header name.</summary>
+    /// <typeparam name="TValue">The requested header value type.</typeparam>
+    /// <param name="key">The non-empty header name.</param>
+    /// <param name="defaultValue">The fallback value.</param>
+    /// <returns><paramref name="defaultValue" />.</returns>
+    public TValue? Get<TValue>(string key, TValue? defaultValue = null)
+        where TValue : struct
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
         return defaultValue;
     }
 
-    /// <summary>Gets enumerator.</summary>
-    /// <returns>The enumerator.</returns>
+    /// <summary>Returns an enumerator that contains no header values.</summary>
+    /// <returns>An empty enumerator.</returns>
     public IEnumerator<HeaderValue> GetEnumerator()
     {
         yield break;

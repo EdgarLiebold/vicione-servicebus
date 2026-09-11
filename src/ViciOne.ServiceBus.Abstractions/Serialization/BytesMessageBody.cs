@@ -3,44 +3,39 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Carries bytes message content.</summary>
+/// <summary>Exposes a byte array as a UTF-8 message body, treating a missing array as empty.</summary>
 public class BytesMessageBody :
     MessageBody
 {
     readonly byte[] _bytes;
     string? _string;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="bytes">The bytes.</param>
+    /// <summary>Creates a body over the supplied byte array.</summary>
+    /// <param name="bytes">The body bytes, or <see langword="null" /> for an empty body.</param>
     public BytesMessageBody(byte[]? bytes)
     {
         _bytes = bytes ?? [];
     }
 
-    /// <summary>Gets the length.</summary>
+    /// <summary>Gets the current byte-array length.</summary>
     public long? Length => _bytes.Length;
 
-    /// <summary>
-    /// Read-only, like every other message body: writing back through the stream a caller is handed
-    /// cannot change what everybody else reads. That closes one route, not all of them — the
-    /// constructor takes a caller's array and <see cref="GetBytes" /> hands it straight back, so
-    /// this body is not immutable and is not claimed to be.
-    /// </summary>
-    /// <returns>The stream.</returns>
+    /// <summary>Opens a non-writable stream over the retained byte array.</summary>
+    /// <returns>A readable stream positioned at the start of the body.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(_bytes, false);
     }
 
-    /// <summary>Gets bytes.</summary>
-    /// <returns>The bytes.</returns>
+    /// <summary>Gets the retained byte array.</summary>
+    /// <returns>The same array used by this body.</returns>
     public byte[] GetBytes()
     {
         return _bytes;
     }
 
-    /// <summary>Gets string.</summary>
-    /// <returns>The string.</returns>
+    /// <summary>Decodes the retained bytes as UTF-8 text.</summary>
+    /// <returns>The decoded body text.</returns>
     public string GetString()
     {
         return _string ??= Encoding.UTF8.GetString(_bytes);

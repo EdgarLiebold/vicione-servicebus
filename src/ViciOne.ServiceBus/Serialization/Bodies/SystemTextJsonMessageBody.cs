@@ -7,7 +7,7 @@ using System.Text.Json;
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>Serializes an outgoing message and its ServiceBus envelope as UTF-8 JSON.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract contained by the envelope.</typeparam>
 internal sealed class SystemTextJsonMessageBody<TMessage> :
     MessageBody
     where TMessage : class

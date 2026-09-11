@@ -51,6 +51,66 @@ public sealed class ContextMetadataExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-METADATA", "all-supported-timestamp-representations-normalize-to-utc")]
+    public void SentTime_NormalizesEverySupportedTimestampRepresentationToUtc()
+    {
+        var offset = new DateTimeOffset(2031, 2, 3, 4, 5, 6, TimeSpan.FromHours(2));
+        var utc = new DateTime(2031, 2, 3, 2, 5, 6, DateTimeKind.Utc);
+        var unspecified = new DateTime(2031, 2, 3, 2, 5, 6, DateTimeKind.Unspecified);
+        var expected = new DateTimeOffset(2031, 2, 3, 2, 5, 6, TimeSpan.Zero);
+
+        DateTimeOffset?[] actual =
+        [
+            CreateReceiveContext(new TestHeaders((MessageHeaders.TransportSentTime, offset))).GetSentTime(),
+            CreateReceiveContext(new TestHeaders((MessageHeaders.TransportSentTime, utc))).GetSentTime(),
+            CreateReceiveContext(new TestHeaders((MessageHeaders.TransportSentTime, unspecified))).GetSentTime(),
+            CreateReceiveContext(new TestHeaders((MessageHeaders.TransportSentTime, "2031-02-03T04:05:06+02:00"))).GetSentTime(),
+        ];
+
+        Assert.All(actual, timestamp =>
+        {
+            Assert.Equal(expected, timestamp);
+            Assert.Equal(TimeSpan.Zero, timestamp?.Offset);
+        });
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-METADATA", "named-context-readers-forward-exact-standard-headers")]
+    public void NamedContextReaders_ExposeEveryStandardHeaderWithoutChangingItsMeaning()
+    {
+        Guid messageId = Guid.Parse("10000000-0000-0000-0000-000000000001");
+        Guid correlationId = Guid.Parse("20000000-0000-0000-0000-000000000002");
+        Guid conversationId = Guid.Parse("30000000-0000-0000-0000-000000000003");
+        Guid requestId = Guid.Parse("40000000-0000-0000-0000-000000000004");
+        Guid initiatorId = Guid.Parse("50000000-0000-0000-0000-000000000005");
+        var source = new Uri("loopback://localhost/source");
+        var response = new Uri("loopback://localhost/response");
+        var fault = new Uri("loopback://localhost/fault");
+        var headers = new TestHeaders(
+            (MessageHeaders.MessageId, messageId),
+            (MessageHeaders.CorrelationId, correlationId.ToString("D")),
+            (MessageHeaders.ConversationId, conversationId),
+            (MessageHeaders.RequestId, requestId.ToString("D")),
+            (MessageHeaders.InitiatorId, initiatorId),
+            (MessageHeaders.SourceAddress, source),
+            (MessageHeaders.ResponseAddress, response.ToString()),
+            (MessageHeaders.FaultAddress, fault),
+            (MessageHeaders.MessageType, "urn:message:first;urn:message:second"));
+        ReceiveContext context = CreateReceiveContext(headers);
+
+        Assert.Equal(messageId, context.GetMessageId());
+        Assert.Equal(messageId, context.GetMessageId(Guid.Empty));
+        Assert.Equal(correlationId, context.GetCorrelationId());
+        Assert.Equal(conversationId, context.GetConversationId());
+        Assert.Equal(requestId, context.GetRequestId());
+        Assert.Equal(initiatorId, context.GetInitiatorId());
+        Assert.Equal(source, context.GetSourceAddress());
+        Assert.Equal(response, context.GetResponseAddress());
+        Assert.Equal(fault, context.GetFaultAddress());
+        Assert.Equal(["urn:message:first", "urn:message:second"], context.GetMessageTypes());
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-METADATA", "content-encoding")]
     public void ContentEncoding_UsesTheDefaultOrTheDeclaredEncoding()
     {
@@ -59,6 +119,15 @@ public sealed class ContextMetadataExtensionsTests
 
         Assert.Same(MessageDefaults.Encoding, noEncoding.GetMessageEncoding());
         Assert.Equal(Encoding.Unicode.WebName, declared.GetMessageEncoding().WebName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-METADATA", "invalid-content-encoding-is-rejected")]
+    public void ContentEncoding_RejectsAnUnknownDeclaredEncoding()
+    {
+        var headers = new TestHeaders(("Content-Encoding", "not-a-real-character-encoding"));
+
+        Assert.Throws<ArgumentException>(() => headers.GetMessageEncoding());
     }
 
     [Fact]
@@ -119,6 +188,35 @@ public sealed class ContextMetadataExtensionsTests
         Assert.Equal(
             "headers",
             Assert.Throws<ArgumentNullException>(() => adapter.CopyFrom(destination, null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-HEADER-COPY", "all-values-forwarded-to-both-destination-kinds")]
+    public void HeaderCopy_ForwardsEveryNamedValueToBothDestinationKinds()
+    {
+        var source = new TestHeaders(("text", "value"), ("count", 42));
+        var sendHeaders = new RecordingSendHeaders();
+        var dictionary = new Dictionary<string, string>();
+        var adapter = new StringHeaderAdapter();
+
+        sendHeaders.CopyFrom(source);
+        adapter.CopyFrom(dictionary, source);
+
+        Assert.Equal("value", sendHeaders.Values["text"]);
+        Assert.Equal(42, sendHeaders.Values["count"]);
+        Assert.Equal("value", dictionary["text"]);
+        Assert.Equal("42", dictionary["count"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-HEADER-COPY", "adapter-public-generic-metadata")]
+    public void HeaderAdapter_UsesDescriptiveGenericMetadata()
+    {
+        Type adapterType = typeof(ITransportSetHeaderAdapter<>);
+        MethodInfo genericSet = adapterType.GetMethods().Single(method => method.IsGenericMethod);
+
+        Assert.Equal("THeaderValue", Assert.Single(adapterType.GetGenericArguments()).Name);
+        Assert.Equal("TValue", Assert.Single(genericSet.GetGenericArguments()).Name);
     }
 
     private static ReceiveContext CreateReceiveContext(Headers headers, MessageBody? body = null)
@@ -197,6 +295,38 @@ public sealed class ContextMetadataExtensionsTests
 
         public void Set<TValue>(IDictionary<string, string> dictionary, in HeaderValue<TValue> headerValue) =>
             dictionary[headerValue.Key] = headerValue.Value is null ? string.Empty : headerValue.Value.ToString()!;
+    }
+
+    private sealed class RecordingSendHeaders : SendHeaders
+    {
+        public Dictionary<string, object> Values { get; } = [];
+
+        public IEnumerable<KeyValuePair<string, object>> GetAll() => Values;
+
+        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value) => Values.TryGetValue(key, out value);
+
+        public TValue? Get<TValue>(string key, TValue? defaultValue = default)
+            where TValue : class => TryGetHeader(key, out object? value) && value is TValue typed ? typed : defaultValue;
+
+        public TValue? Get<TValue>(string key, TValue? defaultValue = default)
+            where TValue : struct => TryGetHeader(key, out object? value) && value is TValue typed ? typed : defaultValue;
+
+        public void Set(string key, string? value) => Set(key, value, true);
+
+        public void Set(string key, object? value, bool overwrite = true)
+        {
+            if (!overwrite && Values.ContainsKey(key))
+                return;
+            if (value is null)
+                Values.Remove(key);
+            else
+                Values[key] = value;
+        }
+
+        public IEnumerator<HeaderValue> GetEnumerator() =>
+            Values.Select(pair => new HeaderValue(pair)).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     private class UnusedProxy : DispatchProxy

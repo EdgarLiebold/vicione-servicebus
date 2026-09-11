@@ -4,55 +4,55 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for consume context retry operations.</summary>
+/// <summary>Combines retry-policy state with consume-specific pending-fault handling.</summary>
 public class ConsumeContextRetryContext :
     RetryContext<ConsumeContext>
 {
     readonly RetryConsumeContext _context;
     readonly RetryContext<ConsumeContext> _retryContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="retryContext">The retry context.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Initializes an adapter over retry-policy and consume-retry state.</summary>
+    /// <param name="retryContext">The retry-policy state.</param>
+    /// <param name="context">The consume-retry context that owns pending faults.</param>
     public ConsumeContextRetryContext(RetryContext<ConsumeContext> retryContext, RetryConsumeContext context)
     {
         _retryContext = retryContext;
         _context = context;
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <summary>Gets the token that cancels retry processing.</summary>
     public CancellationToken CancellationToken => _retryContext.CancellationToken;
 
-    /// <summary>Gets the context.</summary>
+    /// <summary>Gets the consume context exposed to the retry filter.</summary>
     public ConsumeContext Context => _context;
 
-    /// <summary>Gets the exception.</summary>
+    /// <summary>Gets the exception that triggered retry evaluation.</summary>
     public Exception Exception => _retryContext.Exception;
 
-    /// <summary>Gets the retry count.</summary>
+    /// <summary>Gets the number of retry attempts completed before this decision.</summary>
     public int RetryCount => _retryContext.RetryCount;
 
-    /// <summary>Gets the retry attempt.</summary>
+    /// <summary>Gets the one-based retry attempt that follows the failed operation.</summary>
     public int RetryAttempt => _retryContext.RetryAttempt;
 
-    /// <summary>Gets the context type.</summary>
+    /// <summary>Gets the pipeline context type governed by the policy.</summary>
     public Type ContextType => _retryContext.ContextType;
 
-    /// <summary>Gets the delay.</summary>
+    /// <summary>Gets the delay before retry, or <see langword="null" /> for an immediate retry.</summary>
     public TimeSpan? Delay => _retryContext.Delay;
 
-    /// <summary>Runs before retry.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Runs the policy's pre-retry work.</summary>
+    /// <param name="cancellationToken">The token that cancels pre-retry work.</param>
+    /// <returns>A task that completes when the retry may begin.</returns>
     public async Task PreRetryAsync(CancellationToken cancellationToken = default)
     {
         await _retryContext.PreRetryAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Reports that retry has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Reports a failed retry and then flushes pending consume faults.</summary>
+    /// <param name="exception">The exception raised by the retry attempt.</param>
+    /// <param name="cancellationToken">The token that cancels fault notification.</param>
+    /// <returns>A task that completes after policy and pending-fault notification.</returns>
     public async Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         await _retryContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -60,10 +60,10 @@ public class ConsumeContextRetryContext :
         await _context.NotifyPendingFaultsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Determines whether the current value can retry.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether another attempt is permitted and creates its consume-aware state.</summary>
+    /// <param name="exception">The exception raised by the failed attempt.</param>
+    /// <param name="retryContext">The consume-aware state for the resulting decision.</param>
+    /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
     {
         var canRetry = _retryContext.CanRetry(exception, out RetryContext<ConsumeContext> policyRetryContext);
@@ -75,9 +75,9 @@ public class ConsumeContextRetryContext :
 }
 
 
-/// <summary>Carries state for consume context retry operations.</summary>
-/// <typeparam name="TFilter">The filter type.</typeparam>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <summary>Combines retry-policy state with a consume-retry context exposed as a filter contract.</summary>
+/// <typeparam name="TFilter">The pipeline contract presented to the retry filter.</typeparam>
+/// <typeparam name="TContext">The consume-retry context implementation.</typeparam>
 public class ConsumeContextRetryContext<TFilter, TContext> :
     RetryContext<TFilter>
     where TFilter : class, PipeContext
@@ -86,48 +86,48 @@ public class ConsumeContextRetryContext<TFilter, TContext> :
     readonly TContext _context;
     readonly RetryContext<TFilter> _retryContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="retryContext">The retry context.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Initializes an adapter over retry-policy and consume-retry state.</summary>
+    /// <param name="retryContext">The retry-policy state.</param>
+    /// <param name="context">The consume-retry context that owns pending faults.</param>
     public ConsumeContextRetryContext(RetryContext<TFilter> retryContext, TContext context)
     {
         _retryContext = retryContext;
         _context = context;
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <summary>Gets the token that cancels retry processing.</summary>
     public CancellationToken CancellationToken => _retryContext.CancellationToken;
 
-    /// <summary>Gets the context.</summary>
+    /// <summary>Gets the context exposed to the retry filter.</summary>
     public TFilter Context => _context;
 
-    /// <summary>Gets the exception.</summary>
+    /// <summary>Gets the exception that triggered retry evaluation.</summary>
     public Exception Exception => _retryContext.Exception;
 
-    /// <summary>Gets the retry count.</summary>
+    /// <summary>Gets the number of retry attempts completed before this decision.</summary>
     public int RetryCount => _retryContext.RetryCount;
 
-    /// <summary>Gets the retry attempt.</summary>
+    /// <summary>Gets the one-based retry attempt that follows the failed operation.</summary>
     public int RetryAttempt => _retryContext.RetryAttempt;
 
-    /// <summary>Gets the context type.</summary>
+    /// <summary>Gets the pipeline context type governed by the policy.</summary>
     public Type ContextType => _retryContext.ContextType;
 
-    /// <summary>Gets the delay.</summary>
+    /// <summary>Gets the delay before retry, or <see langword="null" /> for an immediate retry.</summary>
     public TimeSpan? Delay => _retryContext.Delay;
 
-    /// <summary>Runs before retry.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Runs the policy's pre-retry work.</summary>
+    /// <param name="cancellationToken">The token that cancels pre-retry work.</param>
+    /// <returns>A task that completes when the retry may begin.</returns>
     public async Task PreRetryAsync(CancellationToken cancellationToken = default)
     {
         await _retryContext.PreRetryAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Reports that retry has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Reports a failed retry and then flushes pending consume faults.</summary>
+    /// <param name="exception">The exception raised by the retry attempt.</param>
+    /// <param name="cancellationToken">The token that cancels fault notification.</param>
+    /// <returns>A task that completes after policy and pending-fault notification.</returns>
     public async Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         await _retryContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -135,10 +135,10 @@ public class ConsumeContextRetryContext<TFilter, TContext> :
         await _context.NotifyPendingFaultsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Determines whether the current value can retry.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether another attempt is permitted and creates its consume-aware state.</summary>
+    /// <param name="exception">The exception raised by the failed attempt.</param>
+    /// <param name="retryContext">The consume-aware state for the resulting decision.</param>
+    /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)
     {
         var canRetry = _retryContext.CanRetry(exception, out RetryContext<TFilter> policyRetryContext);

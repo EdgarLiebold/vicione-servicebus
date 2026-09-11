@@ -4,56 +4,52 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>The base context of a retry.</summary>
+/// <summary>Describes one retry-policy decision and its execution state.</summary>
 public interface RetryContext
 {
-    /// <summary>
-    /// Canceled when the retry should be canceled (not the same as if the underlying context
-    /// is canceled, which is different). This can be used to cancel retry, but not the operation
-    /// itself.
-    /// </summary>
+    /// <summary>Gets the token that cancels retry processing without canceling the underlying operation.</summary>
     CancellationToken CancellationToken { get; }
 
-    /// <summary>The exception that originally caused the retry to be initiated.</summary>
+    /// <summary>Gets the exception that triggered retry evaluation.</summary>
     Exception Exception { get; }
 
-    /// <summary>The retry attempt currently being attempted (should be 1 > than RetryCount).</summary>
+    /// <summary>Gets the one-based retry attempt that follows the failed operation.</summary>
     int RetryAttempt { get; }
 
-    /// <summary>The number of retries which were attempted beyond the initial attempt.</summary>
+    /// <summary>Gets the number of retry attempts completed before this decision.</summary>
     int RetryCount { get; }
 
-    /// <summary>The time to wait before the next retry attempt.</summary>
+    /// <summary>Gets the delay before the retry, or <see langword="null" /> for an immediate retry.</summary>
     TimeSpan? Delay { get; }
 
-    /// <summary>The context type of the retry context.</summary>
+    /// <summary>Gets the pipeline context type governed by the retry policy.</summary>
     Type ContextType { get; }
 
-    /// <summary>Called after the retry attempt has failed.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies the policy that a retry attempt failed.</summary>
+    /// <param name="exception">The exception raised by the retry attempt.</param>
+    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <returns>A task that completes after fault notification.</returns>
     Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
-    /// <summary>Called before the retry attempt is performed.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Performs policy work required immediately before the retry attempt.</summary>
+    /// <param name="cancellationToken">The token that cancels the pre-retry work.</param>
+    /// <returns>A task that completes when the retry may begin.</returns>
     Task PreRetryAsync(CancellationToken cancellationToken = default);
 }
 
 
-/// <summary>The retry context, with the specified context type.</summary>
-/// <typeparam name="TContext">The context type.</typeparam>
+/// <summary>Describes retry-policy state for a strongly typed pipeline context.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
 public interface RetryContext<TContext> :
     RetryContext
     where TContext : class
 {
-    /// <summary>The context being managed by the retry policy.</summary>
+    /// <summary>Gets the pipeline context governed by the retry policy.</summary>
     TContext Context { get; }
 
-    /// <summary>Determines if the exception can be retried.</summary>
-    /// <param name="exception">The exception that occurred.</param>
-    /// <param name="retryContext">The retry context for the retry.</param>
-    /// <returns>True if the task should be retried.</returns>
+    /// <summary>Determines whether an exception permits another retry attempt.</summary>
+    /// <param name="exception">The exception raised by the failed attempt.</param>
+    /// <param name="retryContext">The state for the next retry attempt.</param>
+    /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     bool CanRetry(Exception exception, out RetryContext<TContext> retryContext);
 }

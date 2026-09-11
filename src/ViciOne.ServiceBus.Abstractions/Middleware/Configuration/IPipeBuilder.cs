@@ -1,14 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// A pipe builder constructs a pipe by adding filter to the end of the chain, after
-/// while the builder completes the pipe/filter combination.
-/// </summary>
-/// <typeparam name="TContext">The pipe context type.</typeparam>
+/// <summary>Constructs a pipeline by appending filters in execution order.</summary>
+/// <typeparam name="TContext">The context type processed by the pipeline.</typeparam>
 public interface IPipeBuilder<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Add a filter to the pipe after any existing filters.</summary>
+    /// <summary>Appends a filter after the pipeline's existing filters.</summary>
     /// <param name="filter">The filter to add.</param>
     void AddFilter(IFilter<TContext> filter);
 }

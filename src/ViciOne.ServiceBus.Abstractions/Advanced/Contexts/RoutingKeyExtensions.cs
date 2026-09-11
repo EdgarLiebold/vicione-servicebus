@@ -6,7 +6,7 @@ public static class RoutingKeyExtensions
     /// <summary>Gets the routing key associated with a received message.</summary>
     /// <param name="context">The consume context.</param>
     /// <returns>The routing key, or <see langword="null" /> when none is available.</returns>
-    public static string? RoutingKey(this ConsumeContext context)
+    public static string? GetRoutingKey(this ConsumeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         return context.TryGetPayload(out RoutingKeyConsumeContext? consumeContext) ? consumeContext.RoutingKey : null;
@@ -15,7 +15,7 @@ public static class RoutingKeyExtensions
     /// <summary>Gets the routing key assigned to an outgoing message.</summary>
     /// <param name="context">The send context.</param>
     /// <returns>The routing key, or <see langword="null" /> when none is available.</returns>
-    public static string? RoutingKey(this SendContext context)
+    public static string? GetRoutingKey(this SendContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         return context.TryGetPayload(out RoutingKeySendContext? sendContext) ? sendContext.RoutingKey : null;

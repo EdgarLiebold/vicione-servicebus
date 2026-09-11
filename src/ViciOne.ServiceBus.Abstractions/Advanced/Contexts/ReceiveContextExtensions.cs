@@ -245,7 +245,7 @@ public static class ReceiveContextExtensions
         {
             return value switch
             {
-                DateTimeOffset timestamp => timestamp,
+                DateTimeOffset timestamp => timestamp.ToUniversalTime(),
                 DateTime timestamp => new DateTimeOffset(
                     timestamp.Kind == DateTimeKind.Unspecified
                         ? DateTime.SpecifyKind(timestamp, DateTimeKind.Utc)

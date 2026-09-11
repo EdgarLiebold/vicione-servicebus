@@ -2,17 +2,18 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Defines the operations required by transport set header adapter.</summary>
-/// <typeparam name="TValueType">The value type type.</typeparam>
-public interface ITransportSetHeaderAdapter<TValueType>
+/// <summary>Writes service-bus header values into a transport-specific header dictionary.</summary>
+/// <typeparam name="THeaderValue">The value representation accepted by the transport dictionary.</typeparam>
+public interface ITransportSetHeaderAdapter<THeaderValue>
 {
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="dictionary">The dictionary.</param>
-    /// <param name="headerValue">The header value to convert or store.</param>
-    void Set(IDictionary<string, TValueType> dictionary, in HeaderValue headerValue);
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dictionary">The dictionary.</param>
-    /// <param name="headerValue">The header value to convert or store.</param>
-    void Set<T>(IDictionary<string, TValueType> dictionary, in HeaderValue<T> headerValue);
+    /// <summary>Converts and writes a dynamically typed header value.</summary>
+    /// <param name="dictionary">The destination transport dictionary.</param>
+    /// <param name="headerValue">The named header value to write.</param>
+    void Set(IDictionary<string, THeaderValue> dictionary, in HeaderValue headerValue);
+
+    /// <summary>Converts and writes a statically typed header value.</summary>
+    /// <typeparam name="TValue">The service-bus header value type.</typeparam>
+    /// <param name="dictionary">The destination transport dictionary.</param>
+    /// <param name="headerValue">The named header value to write.</param>
+    void Set<TValue>(IDictionary<string, THeaderValue> dictionary, in HeaderValue<TValue> headerValue);
 }

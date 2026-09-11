@@ -6,7 +6,7 @@ public static class PartitionKeyExtensions
     /// <summary>Gets the partition key associated with a received message.</summary>
     /// <param name="context">The consume context.</param>
     /// <returns>The partition key, or <see langword="null" /> when none is available.</returns>
-    public static string? PartitionKey(this ConsumeContext context)
+    public static string? GetPartitionKey(this ConsumeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         return context.TryGetPayload(out PartitionKeyConsumeContext? consumeContext) ? consumeContext.PartitionKey : null;
@@ -15,7 +15,7 @@ public static class PartitionKeyExtensions
     /// <summary>Gets the partition key assigned to an outgoing message.</summary>
     /// <param name="context">The send context.</param>
     /// <returns>The partition key, or <see langword="null" /> when none is available.</returns>
-    public static string? PartitionKey(this SendContext context)
+    public static string? GetPartitionKey(this SendContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         return context.TryGetPayload(out PartitionKeySendContext? sendContext) ? sendContext.PartitionKey : null;

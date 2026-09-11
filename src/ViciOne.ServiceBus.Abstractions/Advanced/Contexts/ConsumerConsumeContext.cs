@@ -15,7 +15,7 @@ public interface ConsumerConsumeContext<out TConsumer, out TMessage> :
 
 
 /// <summary>Provides a consumer instance together with its untyped consume context.</summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TConsumer">The consumer implementation exposed by the context.</typeparam>
 public interface ConsumerConsumeContext<out TConsumer> :
     ConsumeContext
     where TConsumer : class

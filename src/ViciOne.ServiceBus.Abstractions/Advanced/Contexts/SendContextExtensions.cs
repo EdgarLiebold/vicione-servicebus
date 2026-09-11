@@ -104,14 +104,14 @@ public static class SendContextExtensions
             adapter.Set(headers, MessageHeaders.FaultRetryCount, retryContext.RetryCount);
     }
 
-    /// <summary>Transfers message causality and application headers from a consume context to an outgoing context.</summary>
+    /// <summary>Transfers the active consume scope, message causality, and application headers to an outgoing context.</summary>
     /// <param name="sendContext">The destination send context.</param>
     /// <param name="consumeContext">The source consume context.</param>
     public static void TransferConsumeContextHeaders(this SendContext sendContext, ConsumeContext consumeContext)
     {
         ArgumentNullException.ThrowIfNull(sendContext);
         ArgumentNullException.ThrowIfNull(consumeContext);
-        sendContext.GetOrAddPayload(() => consumeContext);
+        sendContext.AddOrUpdatePayload(() => consumeContext, _ => consumeContext);
 
         sendContext.SourceAddress = consumeContext.ReceiveContext.InputAddress;
 

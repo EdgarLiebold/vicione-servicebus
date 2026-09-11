@@ -79,6 +79,15 @@ public sealed class ArrayMessageBodyTests
         AssertExposes(body, SelectedBytes, SelectedText);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ARRAY-MESSAGE-BODY", "default-segment-is-consistently-empty")]
+    public void DefaultSegment_ExposesOneConsistentEmptyBody()
+    {
+        var body = new ArrayMessageBody(default);
+
+        AssertExposes(body, [], string.Empty);
+    }
+
     /// <summary>A fresh body over a fresh backing array, selected at a nonzero offset.</summary>
     private static ArrayMessageBody CreateSubject() =>
         new(new ArraySegment<byte>(BackingArray(), Prefix.Length, SelectedBytes.Length));

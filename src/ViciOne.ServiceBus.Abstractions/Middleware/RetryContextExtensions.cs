@@ -1,35 +1,34 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Provides extension methods for retry context.</summary>
+/// <summary>Reads retry and redelivery counters from a consume context.</summary>
 public static class RetryContextExtensions
 {
-    /// <summary>
-    /// If within a retry attempt, the return value is greater than zero and indicates the number of the retry attempt
-    /// in progress.
-    /// </summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The retry attempt number, 0 = first time, >= 1 = retry.</returns>
+    /// <summary>Gets the one-based retry attempt currently in progress.</summary>
+    /// <param name="context">The consumed message context.</param>
+    /// <returns>The current retry attempt, or zero during the initial delivery.</returns>
     public static int GetRetryAttempt(this ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return context.TryGetPayload(out ConsumeRetryContext? retryContext) ? retryContext!.RetryAttempt : 0;
     }
 
-    /// <summary>If within a retry attempt, the return value indicates the number of retry attempts that have already occurred.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The number of retries that have already been attempted, 0 = first time or first retry, >= 1 = subsequent retry.</returns>
+    /// <summary>Gets the number of retry attempts completed before the current attempt.</summary>
+    /// <param name="context">The consumed message context.</param>
+    /// <returns>The number of completed retries, or zero during the initial delivery or first retry.</returns>
     public static int GetRetryCount(this ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return context.TryGetPayload(out ConsumeRetryContext? retryContext) ? retryContext!.RetryCount : 0;
     }
 
-    /// <summary>If the message is being redelivered, returns the redelivery attempt.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The retry attempt number, 0 = first time, >= 1 = retry.</returns>
+    /// <summary>Gets the broker-independent redelivery count from envelope or transport metadata.</summary>
+    /// <param name="context">The consumed message context.</param>
+    /// <returns>The redelivery count, or zero when the message has not been redelivered.</returns>
     public static int GetRedeliveryCount(this ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return context.Headers.Get(MessageHeaders.RedeliveryCount, default(int?))
             ?? context.ReceiveContext.TransportHeaders.Get(MessageHeaders.RedeliveryCount, default(int?))
             ?? 0;
     }
-
 }

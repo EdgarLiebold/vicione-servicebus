@@ -13,7 +13,7 @@ public class ServiceBusMessageBody :
     /// <param name="data">The received message body.</param>
     public ServiceBusMessageBody(BinaryData data)
     {
-        _data = data;
+        _data = data ?? throw new ArgumentNullException(nameof(data));
     }
 
     /// <summary>Gets the body length in bytes.</summary>

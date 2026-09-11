@@ -134,6 +134,13 @@ public sealed class StringMessageBodyTests
         AssertExposes(empty, EmptyBytes, EmptyText);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STRING-MESSAGE-BODY", "required-text-boundary")]
+    public void Constructor_RejectsMissingTextImmediately()
+    {
+        Assert.Equal("body", Assert.Throws<ArgumentNullException>(() => new StringMessageBody(null!)).ParamName);
+    }
+
     private static void AssertStreamRejectsWrites(MessageBody body)
     {
         using var stream = body.GetStream();

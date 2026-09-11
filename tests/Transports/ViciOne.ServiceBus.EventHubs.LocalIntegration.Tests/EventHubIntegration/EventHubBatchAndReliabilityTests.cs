@@ -36,7 +36,7 @@ public sealed class EventHubBatchAndReliabilityTests
                     rider.AddConsumer<OrderedBatchConsumer>(consumer => consumer.Options<BatchOptions>(options => options
                         .SetMessageLimit(100)
                         .SetTimeLimit(TimeSpan.FromMinutes(1))
-                        .GroupBy<IBatchMessage, string>(context => context.Advanced().PartitionKey() ?? string.Empty)));
+                        .GroupBy<IBatchMessage, string>(context => context.Advanced().GetPartitionKey() ?? string.Empty)));
                     rider.UsingEventHub((context, eventHubs) =>
                     {
                         fixture.Configure(eventHubs);
@@ -82,7 +82,7 @@ public sealed class EventHubBatchAndReliabilityTests
             Assert.All(actual.Message, item =>
             {
                 Assert.Equal(state.RunId, item.Message.RunId);
-                Assert.Equal(partitionKey, item.Advanced().PartitionKey());
+                Assert.Equal(partitionKey, item.Advanced().GetPartitionKey());
             });
         }
         finally

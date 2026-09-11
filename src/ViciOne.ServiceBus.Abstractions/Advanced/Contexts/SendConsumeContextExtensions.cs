@@ -8,12 +8,13 @@ public static class SendConsumeContextExtensions
     /// <param name="context">The consume context.</param>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="message">The message to send.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">The cancellation token, combined with the consume-context token.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<TMessage>(this ConsumeContext context, Uri destinationAddress, TMessage message,
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         return SendCoreAsync(context, destinationAddress, (endpoint, token) => endpoint.SendAsync(message, token), cancellationToken);
     }
@@ -30,6 +31,7 @@ public static class SendConsumeContextExtensions
         IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(pipe);
         return SendCoreAsync(context, destinationAddress, (endpoint, token) => endpoint.SendAsync(message, pipe, token), cancellationToken);
@@ -47,6 +49,7 @@ public static class SendConsumeContextExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(pipe);
         return SendCoreAsync(context, destinationAddress, (endpoint, token) => endpoint.SendAsync(message, pipe, token), cancellationToken);
@@ -61,8 +64,13 @@ public static class SendConsumeContextExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message,
         CancellationToken cancellationToken = default)
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
-        return SendCoreAsync(context, destinationAddress, (endpoint, token) => endpoint.SendAsync(message, token), cancellationToken);
+        return SendCoreAsync(
+            context,
+            destinationAddress,
+            (endpoint, token) => endpoint.Advanced().SendAsync(message, token),
+            cancellationToken);
     }
 
     /// <summary>Sends a message as an explicit runtime contract.</summary>
@@ -75,6 +83,7 @@ public static class SendConsumeContextExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, Type messageType,
         CancellationToken cancellationToken = default)
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
         return SendCoreAsync(
@@ -95,6 +104,7 @@ public static class SendConsumeContextExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(pipe);
@@ -115,6 +125,7 @@ public static class SendConsumeContextExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(pipe);
         return SendCoreAsync(
@@ -135,6 +146,7 @@ public static class SendConsumeContextExtensions
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(values);
         return SendCoreAsync(
             context,
@@ -155,6 +167,7 @@ public static class SendConsumeContextExtensions
         IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(pipe);
         return SendCoreAsync(
@@ -176,6 +189,7 @@ public static class SendConsumeContextExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(pipe);
         return SendCoreAsync(
@@ -193,6 +207,12 @@ public static class SendConsumeContextExtensions
         ArgumentNullException.ThrowIfNull(send);
 
         return SendWithLinkedCancellationAsync(context, destinationAddress, send, cancellationToken);
+    }
+
+    internal static void ValidateContextAndDestination(ConsumeContext context, Uri destinationAddress)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
     }
 
     private static async Task SendWithLinkedCancellationAsync(ConsumeContext context, Uri destinationAddress,

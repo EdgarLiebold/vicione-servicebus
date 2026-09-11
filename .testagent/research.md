@@ -450,3 +450,129 @@ Core coverage after direct concrete-sentinel binding is 100% line (136/136) and 
 that module measures 70.11% line and 62.69% branch coverage. Abstractions has no coverage-provider
 reference, so its 541 passing tests and six isolated behavior/API mutation kills are reported
 without inventing a numeric percentage.
+
+## Confirmed iteration-81 Advanced context and source-topology findings
+
+The 31 non-generated files and 2,111 physical lines in
+`src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts` were read manually in full. Their owning
+tests, direct production callers, all concrete `MessageBody` implementations, and the repository's
+project-root layout were then traced before production edits. The Roslyn pairing analyzer inspected
+4,262 source files and 1,101 test files; it reports 1,617 name-paired and 2,645 unpaired files. Its
+22 nominally unpaired files in this directory include extension methods invoked through instance
+syntax, so the classification is a worklist rather than coverage evidence.
+
+1. The apparently duplicated `src/ViciOne.ServiceBus` name is not a second source tree. It is the
+   directory of the Core assembly and contains that project's capability folders. Likewise,
+   `src/ViciOne.ServiceBus.Abstractions` owns the application and Advanced contract assembly.
+   `Persistence`, `Scheduling`, and `Transports` are repository-level implementation-provider
+   groups; direct project roots contain first-party product capabilities or tooling. Moving these
+   paths solely to remove visual asymmetry would erase a useful architectural distinction and force
+   unrelated project-reference churn. The final topology decision remains evidence-led as every
+   project is read.
+2. `Advanced/Contexts` is cohesive at namespace level but contains four roles: context contracts,
+   transport capability payloads, context metadata values, and context extension operations. Its
+   flat physical layout currently preserves one public `ViciOne.ServiceBus.Advanced` namespace and
+   deterministic type-to-file navigation. Introducing physical subfolders without corresponding
+   public namespaces would create a misleading path/namespace mismatch; fragmenting the namespace
+   would make the API harder to discover. No cosmetic folder split is justified.
+3. The getter extensions named `PartitionKey()` and `RoutingKey()` use noun-shaped method names.
+   Greenfield .NET method naming requires verb phrases; `GetPartitionKey()` and `GetRoutingKey()`
+   communicate that these are method calls and align with the surrounding `Get*` context API.
+4. `SendConsumeContextExtensions` validates message/values/pipe before the extension receiver and
+   destination. When several caller inputs are invalid, the exception therefore identifies a later
+   parameter rather than the first owned boundary. All ten overloads must validate in declaration
+   order and must preserve the exact effective cancellation token through endpoint resolution and
+   send.
+5. Direct tests do not currently prove all ten consume-scoped send overloads, linked-token
+   cancellation from either source, first-invalid-parameter ownership, or zero dependency calls on
+   rejected input. Partition/routing capability lookup, set/try-set behavior, and absence behavior
+   likewise have no focused contract owner.
+6. `ArrayMessageBody(default)` returns empty bytes but throws from its stream and text views because
+   the default segment has no backing array. One logical empty body consequently changes meaning by
+   accessor. `Base64MessageBody`, `StringMessageBody`, `ActiveMqMessageBody`, and
+   `ServiceBusMessageBody` defer or misidentify required-input failures instead of owning their
+   constructor parameters. `SqsMessageBody` dereferences a missing native message before it can
+   report the public parameter.
+7. The public `MessageBody` summary promises repeatable serialized reads, but the mediator's
+   length-only implementation deliberately throws from every read operation. This is a real
+   contract/capability mismatch, not a documentation problem to conceal. Its final disposition is
+   held for the owning Mediator/source-boundary pass because choosing between lazy materialization
+   and an explicit readable-body capability affects memory, mutation snapshots, message limits,
+   journaling, and public nullability across multiple projects.
+8. Several comments are filler, historical repair narratives, or stronger than current behavior:
+   the body extensions say they copy data that many bodies return from a retained array; the body
+   contract overstates readability; generic context summaries say only "used by the member"; and
+   the first consume-send token omits its linkage rule. Every comment in the bounded files must be
+   rewritten manually from the code, with the unresolved mediator capability mismatch documented
+   honestly rather than papered over.
+9. The repository-wide convention of public context interfaces without the .NET `I` prefix is a
+   cross-cutting API decision spanning `PipeContext`, send/publish/consume/receive contexts,
+   transport handles, provider packages, tests, and documentation. Renaming only this directory
+   would make the API less consistent. The full bidirectional type-and-caller inventory remains a
+   later dedicated Greenfield migration after all participating owners have been read.
+10. `SendContextExtensions.TransferConsumeContextHeaders` uses `GetOrAddPayload` for the originating
+    consume context. Reusing a send context can therefore copy current identifiers and headers while
+    retaining an older consume-context payload. Replacement is required so metadata and supplemental
+    scope always identify the same operation.
+11. `ReceiveContextExtensions.GetTimestamp` returns a directly stored `DateTimeOffset` without UTC
+    normalization while its string and `DateTime` paths return UTC values. Equal instants therefore
+    have accessor-dependent offsets. Every accepted representation must produce a UTC timestamp.
+12. Retry metadata readers dereference a null receiver, and the active attempt documentation calls
+    a one-based value zero-based. `EmptyHeaders` is a public stateless implementation with a mutable
+    field-shaped singleton, permits derivation despite having no extensibility contract, and accepts
+    invalid keys unlike every concrete header collection. These are small but observable API
+    consistency defects.
+13. Following `IObjectDeserializer` into its fully read extension surface found that
+    `SerializerContextExtensions` contains generic placeholder documentation and names an
+    `IHeaderProvider` parameter `dictionary`. The comments must state the exact lookup, conversion,
+    default, and typed-header behavior; the public parameter must be named `headers` in both generic
+    overloads and protected by direct boundary evidence.
+
+The completed remediation keeps Core, sibling feature packages, and provider category roots as
+distinct ownership boundaries. It renames the two transport-key readers to verb phrases; validates
+all consume-send arguments in declaration order; preserves exact single/shared/linked cancellation;
+routes runtime messages through the Advanced endpoint; replaces stale consume payloads; normalizes
+all receive timestamps to UTC; and makes retry and empty-header semantics explicit. Default and
+required-input behavior is now consistent across the reviewed message bodies. All comments in the
+31-file owner plus every fully read dependent file were manually checked against the implementation;
+no generated comment rewrite was used.
+
+Ten isolated counterchanges were killed and restored: stale consume payload retention, bypass of
+the Advanced runtime send, missing UTC normalization, divergent default-array access, missing
+empty-header key validation, consume-send validation reordering, swapped partition capability,
+missing string-body null validation, missing retry receiver validation, and reversal of the renamed
+header-provider parameter. The last counterchange was rejected at compile time by the XML contract
+gate before the boundary test could run.
+
+The final Release Unit-solution build has zero warnings and errors, and the complete sequential Unit
+solution passes 5,392 tests with no failures or skips, including all 292 architecture tests.
+Whitespace and warn-level style verification both return success. Fresh-package validation passes
+18 developer journeys, 31 packages, three isolated provider-testing consumers, and 30 runtime API
+assemblies. The reviewed 19,701-line packed API contract has SHA-256
+`982dc572231657c53b09f70a396f7cdec26ac93fe07401f06eb681da1931a6a1` and reproduces exactly on a
+second unchanged package run.
+
+Core-module instrumentation reports 43,449 of 61,986 lines (70.09%) and 14,990 of 23,907 branches
+(62.70%) across all product assemblies loaded by that module. This is not mislabeled as whole-suite
+coverage: the direct Abstractions project does not currently reference the MTP coverage provider, so
+its 574 direct tests are behavior and mutation evidence without a numeric percentage. Whole-suite
+merged instrumentation remains a separate repository-wide coverage owner.
+
+The global `src` scan finds no C# preprocessor directives, no empty source directories, and no
+dummy, stub, TODO, FIXME, or compatibility-shim markers. Lexical matches for `temporary` describe
+real endpoint/entity lifetime semantics, and the sole `NotImplementedException` match is an input
+case handled by the technical-failure classifier. The mediator's non-readable measured body and
+mutable-array ownership differences remain explicit owning-pass decisions rather than hidden
+documentation changes.
+
+The separate internal bidirectional Async Red Team inspected all 4,112 physical production C#
+files on a frozen iteration source hash. The 30-test semantic guard and two independent
+MSBuildWorkspace scanners report no naming mismatch in either direction, no `async void`, no
+conditional-compilation blind spot, and only the deliberately bound `Quartz.IJob.Execute`
+third-party interface exception. Its comment axis found a different global debt: after the eight
+occurrences in this iteration's fully read files were corrected manually, 696 generic "task that
+represents the asynchronous operation" return descriptions and two equivalent "notification
+operation" descriptions remain across later, not-yet-read owners. They are not proven
+semantically false, but they do not explain the operation-specific completion contract and
+therefore are not A+ documentation. They must be removed only during the mandated manual owner-file
+reads; automated rewriting is forbidden.

@@ -1,55 +1,42 @@
+using System;
 using System.IO;
 using System.Text;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Carries string message content.</summary>
+/// <summary>Exposes text and its UTF-8 encoding as a message body.</summary>
 public class StringMessageBody :
     MessageBody
 {
     readonly string _body;
     byte[]? _bytes;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="body">The body.</param>
+    /// <summary>Creates a body from text.</summary>
+    /// <param name="body">The complete body text.</param>
     public StringMessageBody(string body)
     {
-        _body = body;
+        _body = body ?? throw new ArgumentNullException(nameof(body));
     }
 
-    /// <summary>
-    /// The number of bytes this body transmits, which is by definition the length of what
-    /// <see cref="GetBytes" /> returns, whichever accessor ran first. Counting characters instead
-    /// understated every body carrying a character outside ASCII.
-    /// </summary>
+    /// <summary>Gets the UTF-8 encoded body length in bytes.</summary>
     public long? Length => GetBytes().LongLength;
 
-    /// <summary>
-    /// Read-only: writing back through this stream cannot change what everybody else reads. The
-    /// array from <see cref="GetBytes" /> is still a caller's to write into, so this is one closed
-    /// route rather than immutability.
-    /// </summary>
-    /// <returns>The stream.</returns>
+    /// <summary>Opens a non-writable stream over the cached UTF-8 bytes.</summary>
+    /// <returns>A readable stream positioned at the start of the body.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
     }
 
-    /// <summary>
-    /// A body made only of whitespace is a body. Discarding it here returned an empty array while
-    /// <see cref="GetString" /> still returned the whitespace, so the two accessors disagreed about
-    /// the same body and the reported length belonged to neither.
-    /// </summary>
-    /// <returns>The bytes.</returns>
+    /// <summary>Gets the cached UTF-8 representation without normalizing whitespace.</summary>
+    /// <returns>The encoded body bytes retained by this instance.</returns>
     public byte[] GetBytes()
     {
-        return _bytes ??= _body != null
-            ? Encoding.UTF8.GetBytes(_body)
-            : [];
+        return _bytes ??= Encoding.UTF8.GetBytes(_body);
     }
 
-    /// <summary>Gets string.</summary>
-    /// <returns>The string.</returns>
+    /// <summary>Gets the original body text.</summary>
+    /// <returns>The text supplied to the constructor.</returns>
     public string GetString()
     {
         return _body;

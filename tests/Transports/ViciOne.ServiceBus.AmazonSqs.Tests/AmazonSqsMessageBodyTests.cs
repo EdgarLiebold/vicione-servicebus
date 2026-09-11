@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using Amazon.SQS.Model;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -100,6 +101,20 @@ public sealed class AmazonSqsMessageBodyTests
         Assert.Empty(typeof(SqsMessageBody).GetMember(nameof(MessageBody.GetBytes), OwnMembers));
         Assert.Empty(typeof(SqsMessageBody).GetMember(nameof(MessageBody.GetString), OwnMembers));
         Assert.Empty(typeof(SqsMessageBody).GetMember(nameof(MessageBody.GetStream), OwnMembers));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-MESSAGE-BODY", "required-message-and-absent-native-body")]
+    public void Constructor_OwnsTheNativeMessageBoundaryAndNormalizesAnAbsentBody()
+    {
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() => new SqsMessageBody(null!)).ParamName);
+
+        var body = new SqsMessageBody(new Message { Body = null });
+
+        Assert.Equal<long?>(0, body.Length);
+        Assert.Empty(body.GetBytes());
+        Assert.Equal(string.Empty, body.GetString());
+        Assert.Null(body.GetJsonElement(JsonSerializerOptions.Default));
     }
 
     private static SqsMessageBody Create(string text) => new(new Message { Body = text });

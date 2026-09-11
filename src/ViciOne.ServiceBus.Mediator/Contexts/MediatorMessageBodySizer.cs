@@ -19,11 +19,8 @@ static class MediatorMessageBodySizer
         ArgumentNullException.ThrowIfNull(inputAddress);
 
         await using var stream = new CountingMessageBodyStream(limits.MaxBodyBytes, inputAddress);
-        // Mediator messages can be runtime-generated implementations of non-public contract
-        // interfaces. Serializing the declared interface would ask the converter factory to
-        // generate a second implementation and fails for an inaccessible interface. The object
-        // that is actually dispatched is already materialized, so its concrete runtime type is
-        // the canonical and complete shape to measure.
+        // The materialized runtime type defines the complete dispatched object shape, including
+        // generated implementations of non-public contract interfaces.
         await JsonSerializer.SerializeAsync(
                 stream,
                 message,

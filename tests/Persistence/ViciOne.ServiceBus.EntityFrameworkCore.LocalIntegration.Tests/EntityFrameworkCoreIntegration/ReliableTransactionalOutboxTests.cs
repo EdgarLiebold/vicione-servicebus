@@ -170,7 +170,7 @@ public sealed class ReliableTransactionalOutboxTests
     {
         public Task ConsumeAsync(ConsumeContext<ReliableEvent> context)
         {
-            deliveries.Record(new ReliableEventSnapshot(context.Message, context.Advanced().RoutingKey()));
+            deliveries.Record(new ReliableEventSnapshot(context.Message, context.Advanced().GetRoutingKey()));
             return Task.CompletedTask;
         }
     }

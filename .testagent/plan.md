@@ -589,3 +589,86 @@ passes all 18 journeys, 31 packages, three provider consumers, and 30 API assemb
 executable Core files reach 136/136 covered lines and 20/20 covered branches. The old directory,
 empty source directories, preprocessor directives, stale public cache/sentinel exports, and bounded
 dummy/legacy markers are absent. The repository-wide A+ source goal remains active.
+
+## Iteration 81 outcome
+
+Make Advanced context metadata and consume-scoped send operations precise, idiomatic, directly
+tested, and navigable while preserving the coherent project boundary. Correct inconsistent message
+body boundaries discovered while validating the context contract, and explicitly retain the
+cross-project mediator-body and context-interface naming decisions for their complete owning passes.
+
+## Iteration 81 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-ADVANCED-CONTEXT-KEYS` | consume/send partition and routing lookup | Abstractions Advanced-context tests | exact payload value, absence result, and null receiver |
+| `REQ-VSB-ADVANCED-CONTEXT-KEYS` | set, clear, try-set, unsupported capability | Abstractions Advanced-context tests | exact payload mutation, boolean result, exception, and no unrelated mutation |
+| `REQ-VSB-CONSUME-SEND` | all ten typed/runtime/initialized overloads | Abstractions Advanced-context tests | exact endpoint, message/type/values/pipe/token forwarding and one dependency call |
+| `REQ-VSB-CONSUME-SEND` | receiver, destination, value/type/pipe boundaries | Abstractions Advanced-context tests | declaration-order parameter ownership and zero endpoint resolution/send calls |
+| `REQ-VSB-CONSUME-SEND` | context token, caller token, shared token, and linked tokens | Abstractions Advanced-context tests | exact token identity where possible and cancellation from either linked source |
+| `REQ-VSB-CONTEXT-TRANSFER` | reused send context receives a new consume scope | Abstractions Advanced-context tests | current metadata and payload identify the same consume context |
+| `REQ-VSB-CONTEXT-TRANSFER` | host, fault, causality, identifier, and redelivery metadata | Abstractions Advanced-context tests | exact copied headers, lineage, source, and payload behavior |
+| `REQ-VSB-RECEIVE-METADATA` | direct, textual, and `DateTime` timestamp representations | Abstractions context tests | equal UTC result for every accepted representation |
+| `REQ-VSB-RETRY-METADATA` | attempt/count/redelivery reads and null receivers | Abstractions Advanced-context tests | exact one-based semantics, zero pre-retry state, and parameter ownership |
+| `REQ-VSB-EMPTY-HEADERS` | singleton shape, empty reads, enumeration, and invalid keys | Abstractions serialization tests | sealed type, stable property identity, empty values, and exact key failures |
+| `REQ-VSB-SERIALIZER-CONTEXT` | header-provider parameter identity | Core serialization boundary tests | both generic overloads reject a null `headers` parameter by its public name |
+| `REQ-VSB-MESSAGE-BODY-CONTRACT` | default segment and required constructor inputs | owning body tests | consistent empty views and fail-fast exact parameter names |
+| `REQ-VSB-SOURCE-NAVIGATION` | project roots and Advanced context types | architecture tests and manual ledger | one assembly per project root, provider grouping retained, exact file/type/namespace owner |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in the bounded files | manual review plus hygiene gates | current behavior only; no history, procedural narrative, filler, or unsupported promise |
+
+## Iteration 81 mutation obligations
+
+- Restore noun-shaped `PartitionKey()` or `RoutingKey()`, use the wrong capability payload, or
+  report success without assignment: the exact API and behavior tests must fail.
+- Validate a later consume-send parameter before the receiver/destination, resolve an endpoint for
+  rejected input, or route through the wrong overload: the parameter-order and recording-endpoint
+  assertions must fail.
+- Drop either cancellation source, create an unnecessary linked token for one source, or use a
+  different token for resolution and send: the four token partitions must fail.
+- Reintroduce divergent default-array body views or defer a required native/text constructor
+  failure: the direct body-boundary tests must fail on value, accessor, timing, or parameter name.
+- Retain an earlier consume-context payload while copying later metadata, or skip UTC normalization
+  for a direct `DateTimeOffset`: the exact identity/offset assertions must fail.
+- Remove retry receiver validation, permit an invalid empty-header key, or restore the misleading
+  `dictionary` name for a header provider: direct boundary checks or the XML documentation contract
+  must fail on the exact public parameter.
+- Split the public Advanced namespace cosmetically, move a provider project into an unrelated root,
+  or add a second type to a context file: the source-navigation inventory must fail.
+- Restore historical repair prose, generic "member" wording, an inaccurate copy/ownership claim,
+  or an incomplete linked-cancellation description: manual review and comment hygiene must reject
+  the exact location.
+
+## Iteration 81 completion
+
+The 31 Advanced context files and every followed source dependency changed by this iteration were
+read manually in full, including their comments, types, namespaces, filenames, and physical owners.
+The repository retains Core and sibling feature packages as independent project roots, while
+Persistence, Scheduling, and Transports remain category roots for provider projects. This is an
+ownership distinction, not an accidental duplicate source tree, and no cosmetic relocation is
+introduced.
+
+All planned context-key, consume-send, cancellation, context-transfer, receive-metadata, retry,
+empty-header, serializer-parameter, and message-body boundaries are implemented and directly
+protected. Ten isolated counterchanges were killed and restored. The final Release build has zero
+warnings and errors; the complete sequential Unit solution passes 5,392 tests, including 292
+architecture tests; and whitespace plus warn-level style gates pass. Fresh-package validation
+passes 18 journeys, 31 packages, three isolated provider consumers, and all 30 runtime API
+assemblies. The deliberate 19,701-line package API has SHA-256
+`982dc572231657c53b09f70a396f7cdec26ac93fe07401f06eb681da1931a6a1` and reproduces on a second
+unchanged run.
+
+Core-module coverage is 70.09% line (43,449/61,986) and 62.70% branch
+(14,990/23,907). It is explicitly module instrumentation rather than a fabricated whole-suite
+percentage because the direct Abstractions test project has no MTP coverage provider. Global source
+hygiene finds no C# preprocessor directives, dummy/stub/TODO/FIXME markers, or empty directories.
+The non-readable mediator body, mutable body-array ownership, and repository-wide context-interface
+naming remain queued for complete owning passes so no cross-cutting API decision is made from a
+partial inventory.
+
+The separate internal Async Red Team passes the bidirectional semantic naming audit over all 4,112
+physical production C# files: the 30-test guard and two independent compilation-based scanners find
+no mismatch, no `async void`, and no hidden conditional-compilation case. Its documentation axis
+identified eight generic Task return comments in this iteration's fully read files; all eight are
+now operation-specific. Another 698 remain in source owners not yet manually read. They form
+an explicit cross-iteration worklist and will be rewritten only after each owning method has been
+read and understood; no comment generator or bulk substitution may be used.

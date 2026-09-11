@@ -18,7 +18,7 @@ static class MediatorReceiveContext
 
 
 /// <summary>Represents an in-process delivery as a receive context without creating a transport envelope.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The in-process message contract being received.</typeparam>
 internal sealed class MediatorReceiveContext<TMessage> :
     ProxyPipeContext,
     ReceiveContext
@@ -102,9 +102,9 @@ internal sealed class MediatorReceiveContext<TMessage> :
     /// <summary>Gets the publish endpoint provider.</summary>
     public IPublishEndpointProvider PublishEndpointProvider { get; }
 
-    /// <summary>Gets the redelivered.</summary>
+    /// <summary>Gets whether this in-process delivery is a redelivery.</summary>
     public bool Redelivered => false;
-    /// <summary>Gets the transport headers.</summary>
+    /// <summary>Gets the mediator headers containing the message identity.</summary>
     public Headers TransportHeaders => _headers;
 
     /// <summary>Marks the delivery successful and notifies consume observers.</summary>
@@ -113,7 +113,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
     /// <param name="duration">The duration.</param>
     /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when consume observers finish processing the success notification.</returns>
     public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -134,7 +134,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
     /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when consume observers finish processing the fault notification.</returns>
     public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -153,7 +153,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
     /// <summary>Marks receive processing faulted and notifies receive observers.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when receive observers finish processing the fault notification.</returns>
     public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -168,9 +168,9 @@ internal sealed class MediatorReceiveContext<TMessage> :
 
     /// <summary>Gets the elapsed receive time measured by the configured time provider.</summary>
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the mediator endpoint address that received the message.</summary>
     public Uri InputAddress => _inputAddress;
-    /// <summary>Gets the content type.</summary>
+    /// <summary>Gets the content type used for materialized in-process messages.</summary>
     public ContentType ContentType => MediatorReceiveContext.ObjectContentType;
 
 

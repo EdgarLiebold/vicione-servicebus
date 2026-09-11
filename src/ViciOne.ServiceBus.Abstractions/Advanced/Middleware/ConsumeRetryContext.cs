@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// <summary>Provides retry counters, nested retry contexts, and deferred fault notification for a consumed message.</summary>
 public interface ConsumeRetryContext
 {
-    /// <summary>Gets the current zero-based retry attempt.</summary>
+    /// <summary>Gets the one-based retry attempt currently in progress, or zero before the first retry.</summary>
     int RetryAttempt { get; }
 
     /// <summary>

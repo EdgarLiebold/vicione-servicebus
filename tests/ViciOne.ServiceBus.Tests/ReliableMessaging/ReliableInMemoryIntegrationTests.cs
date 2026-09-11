@@ -367,7 +367,7 @@ public sealed class ReliableInMemoryIntegrationTests
     {
         public Task ConsumeAsync(ConsumeContext<ReliableEvent> context)
         {
-            observation.EventReceived(context.Message.Text, context.Advanced().RoutingKey() ?? string.Empty);
+            observation.EventReceived(context.Message.Text, context.Advanced().GetRoutingKey() ?? string.Empty);
             return Task.CompletedTask;
         }
     }

@@ -14,9 +14,9 @@ public sealed class SqsMessageBody :
     /// <summary>Initializes a body reader for an Amazon SQS message.</summary>
     /// <param name="message">The received Amazon SQS message.</param>
     public SqsMessageBody(Message message)
-        : base(message.Body)
+        : base(message?.Body ?? string.Empty)
     {
-        _message = message;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
     /// <summary>Gets the Amazon SNS topic ARN discovered while parsing an enveloped message.</summary>

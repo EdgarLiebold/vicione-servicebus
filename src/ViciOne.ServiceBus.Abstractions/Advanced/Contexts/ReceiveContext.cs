@@ -39,7 +39,7 @@ public interface ReceiveContext :
     /// <summary>Gets whether faults are published when neither a response nor fault address is available.</summary>
     bool PublishFaults { get; }
 
-    /// <summary>Gets the serialized message body.</summary>
+    /// <summary>Gets the body descriptor supplied by the receive source.</summary>
     MessageBody Body { get; }
 
     /// <summary>Records a successful consumer delivery.</summary>
@@ -48,7 +48,7 @@ public interface ReceiveContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the notification operation.</returns>
+    /// <returns>A task that completes after the successful delivery has been recorded and consume observers have been notified.</returns>
     Task NotifyConsumedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         CancellationToken cancellationToken = default)
         where TMessage : class;
@@ -60,7 +60,7 @@ public interface ReceiveContext :
     /// <param name="consumerType">The consumer type name.</param>
     /// <param name="exception">The consumer exception.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the notification operation.</returns>
+    /// <returns>A task that completes after the consumer fault has been recorded and consume observers have been notified.</returns>
     Task NotifyFaultedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         Exception exception, CancellationToken cancellationToken = default)
         where TMessage : class;
@@ -68,7 +68,7 @@ public interface ReceiveContext :
     /// <summary>Records a receive-pipeline fault that occurred outside a consumer.</summary>
     /// <param name="exception">The receive exception.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the notification operation.</returns>
+    /// <returns>A task that completes after the receive fault has been recorded and receive observers have been notified.</returns>
     Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
     /// <summary>Registers work that must finish before receive processing is complete.</summary>

@@ -33,7 +33,7 @@ public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedelivery
     /// <returns>A task that completes after the redelivery publish completes.</returns>
     public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
-        var routingKey = _plan.GetRoutingKey(delay);
+        string delayRoutingKey = _plan.GetRoutingKey(delay);
         var channel = _context.GetPayload<ChannelContext>();
 
         await _plan.ConfigureAsync(channel, _context.CancellationToken).ConfigureAwait(false);
@@ -50,9 +50,10 @@ public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedelivery
         IPipe<SendContext<TMessage>> pipe = Pipe.Execute<SendContext<TMessage>>(sendContext =>
         {
             sendContext.ApplyRedeliveryOptions(_context.Advanced(), _options);
-            sendContext.SetRoutingKey(routingKey);
-            if (!string.IsNullOrEmpty(_context.Advanced().RoutingKey()))
-                sendContext.Headers.Set(RabbitMqHeaders.RedeliveryRoutingKey, _context.Advanced().RoutingKey());
+            sendContext.SetRoutingKey(delayRoutingKey);
+            string? originalRoutingKey = _context.Advanced().GetRoutingKey();
+            if (!string.IsNullOrEmpty(originalRoutingKey))
+                sendContext.Headers.Set(RabbitMqHeaders.RedeliveryRoutingKey, originalRoutingKey);
 
             callback?.Invoke(_context.Advanced(), sendContext);
         });

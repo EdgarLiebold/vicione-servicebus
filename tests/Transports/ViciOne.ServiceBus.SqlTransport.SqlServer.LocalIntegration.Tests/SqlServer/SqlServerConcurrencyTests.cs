@@ -31,7 +31,7 @@ public sealed class SqlServerConcurrencyTests
                 endpoint.SetReceiveMode(SqlReceiveMode.PartitionedOrdered);
                 endpoint.Handler<PartitionedMessage>(context =>
                 {
-                    string key = context.Advanced().PartitionKey()
+                    string key = context.Advanced().GetPartitionKey()
                         ?? throw new InvalidOperationException("The SQL Server delivery lost its partition key.");
                     received.Enqueue((key, context.Message.Index));
                     if (Interlocked.Decrement(ref remaining) == 0)

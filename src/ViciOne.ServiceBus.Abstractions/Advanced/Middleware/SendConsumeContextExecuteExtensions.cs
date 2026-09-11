@@ -15,6 +15,7 @@ public static class SendConsumeContextExecuteExtensions
         Action<SendContext<TMessage>> callback, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(callback);
         IPipe<SendContext<TMessage>> pipe = callback.ToPipe();
@@ -37,6 +38,7 @@ public static class SendConsumeContextExecuteExtensions
         Func<SendContext<TMessage>, Task> callback, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(callback);
         IPipe<SendContext<TMessage>> pipe = callback.ToPipe();
@@ -57,6 +59,7 @@ public static class SendConsumeContextExecuteExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(callback);
         IPipe<SendContext> pipe = callback.ToPipe();
@@ -77,6 +80,7 @@ public static class SendConsumeContextExecuteExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(callback);
         IPipe<SendContext> pipe = callback.ToPipe();
@@ -98,6 +102,7 @@ public static class SendConsumeContextExecuteExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, Type messageType,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(callback);
@@ -120,6 +125,7 @@ public static class SendConsumeContextExecuteExtensions
     public static Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, Type messageType,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(callback);
@@ -143,6 +149,7 @@ public static class SendConsumeContextExecuteExtensions
         Action<SendContext<TMessage>> callback, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(callback);
         IPipe<SendContext<TMessage>> pipe = callback.ToPipe();
@@ -165,6 +172,7 @@ public static class SendConsumeContextExecuteExtensions
         Func<SendContext<TMessage>, Task> callback, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        SendConsumeContextExtensions.ValidateContextAndDestination(context, destinationAddress);
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(callback);
         IPipe<SendContext<TMessage>> pipe = callback.ToPipe();

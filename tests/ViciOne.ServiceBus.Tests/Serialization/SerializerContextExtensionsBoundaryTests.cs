@@ -24,8 +24,10 @@ public sealed class SerializerContextExtensionsBoundaryTests
         AssertMissingKey(() => deserializer.GetValue<string>(readOnlyDictionary, " "));
         AssertParameter("dictionary", () => deserializer.GetValue<string>((IDictionary<string, object>)null!, "key"));
         AssertMissingKey(() => deserializer.GetValue<string>((IDictionary<string, object>)dictionary, " "));
-        AssertParameter("dictionary", () => deserializer.GetValue<string>((IHeaderProvider)null!, "key"));
+        AssertParameter("headers", () => deserializer.GetValue<string>((IHeaderProvider)null!, "key"));
+        AssertParameter("headers", () => deserializer.GetValue<int>((IHeaderProvider)null!, "key"));
         AssertMissingKey(() => deserializer.GetValue<string>(headers, " "));
+        AssertMissingKey(() => deserializer.GetValue<int>(headers, " "));
         AssertParameter("dictionary", () => deserializer.TryGetValue<string>(null!, "key", out _));
         AssertMissingKey(() => deserializer.TryGetValue<string>(dictionary, " ", out _));
 

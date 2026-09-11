@@ -121,6 +121,13 @@ public sealed class Base64MessageBodyTests
         AssertExposes(body, ValidBytes, ValidText);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BASE64-MESSAGE-BODY", "required-text-boundary")]
+    public void Constructor_RejectsMissingTextImmediately()
+    {
+        Assert.Equal("text", Assert.Throws<ArgumentNullException>(() => new Base64MessageBody(null!)).ParamName);
+    }
+
     /// <summary>
     /// Holds all four accessors against the exact external values. The text oracle is the encoded
     /// text and the byte oracle is the decoded body, so neither accessor can stand in for the other.

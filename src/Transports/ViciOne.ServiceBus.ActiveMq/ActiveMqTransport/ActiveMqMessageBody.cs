@@ -19,7 +19,7 @@ public class ActiveMqMessageBody :
     /// <param name="message">The native message whose body is exposed.</param>
     public ActiveMqMessageBody(IMessage message)
     {
-        _message = message;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
     /// <summary>
