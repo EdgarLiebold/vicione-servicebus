@@ -2,19 +2,19 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Filters activities based on the async conditional statement.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <param name="context">The context associated with the operation.</param>
-/// <returns>The value produced by the operation.</returns>
+/// <summary>Evaluates a message-specific behavior condition asynchronously.</summary>
+/// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract available to the condition.</typeparam>
+/// <param name="context">The behavior context evaluated by the condition.</param>
+/// <returns>A task whose result indicates whether the behavior condition is satisfied.</returns>
 public delegate Task<bool> StateMachineAsyncCondition<TSaga, in TMessage>(BehaviorContext<TSaga, TMessage> context)
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class;
 
 
-/// <summary>Filters activities based on the async conditional statement.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <param name="context">The context associated with the operation.</param>
-/// <returns>The value produced by the operation.</returns>
+/// <summary>Evaluates a behavior condition asynchronously.</summary>
+/// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
+/// <param name="context">The behavior context evaluated by the condition.</param>
+/// <returns>A task whose result indicates whether the behavior condition is satisfied.</returns>
 public delegate Task<bool> StateMachineAsyncCondition<TSaga>(BehaviorContext<TSaga> context)
     where TSaga : class, SagaStateMachineInstance;

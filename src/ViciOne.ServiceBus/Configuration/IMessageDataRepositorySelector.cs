@@ -1,11 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Use one of the selector extension methods to create a <see cref="IMessageDataRepository" /> instance for the
-/// selected repository implementation.
-/// </summary>
+/// <summary>Provides the bus configuration context used to select one message-data repository.</summary>
 public interface IMessageDataRepositorySelector
 {
-    /// <summary>Gets the configurator.</summary>
+    /// <summary>Gets the bus configurator that owns the selected repository.</summary>
     IBusFactoryConfigurator Configurator { get; }
 }

@@ -1,5 +1,5 @@
 using System;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;

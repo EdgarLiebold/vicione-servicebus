@@ -1,14 +1,14 @@
 using System.IO;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.MessageData.Internals;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>Creates message data reader instances.</summary>
-public static class MessageDataReaderFactory
+/// <summary>Selects the repository reader for a supported message-data value type.</summary>
+internal static class MessageDataReaderFactory
 {
-    /// <summary>Creates reader.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The created reader.</returns>
+    /// <summary>Creates a reader for a built-in scalar, stream, binary, or object contract.</summary>
+    /// <typeparam name="T">The value type to read.</typeparam>
+    /// <returns>The reader for the requested value category.</returns>
     public static IMessageDataReader<T> CreateReader<T>()
     {
         if (typeof(T) == typeof(string))
@@ -20,7 +20,7 @@ public static class MessageDataReaderFactory
         if (typeof(T) == typeof(Stream))
             return new StreamMessageDataReader<T>();
 
-        if (TypeMetadataCache.IsValidMessageDataType(typeof(T)))
+        if (MessageDataTypeClassifier.IsSupported(typeof(T)))
             return new ObjectMessageDataReader<T>();
 
         throw new MessageDataException("Unsupported message data type: " + TypeCache<T>.ShortName);

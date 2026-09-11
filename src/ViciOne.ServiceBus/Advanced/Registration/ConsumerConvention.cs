@@ -1,5 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Consumers.Conventions;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 

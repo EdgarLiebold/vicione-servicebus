@@ -1,5 +1,5 @@
 using System.Text.Json.Nodes;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

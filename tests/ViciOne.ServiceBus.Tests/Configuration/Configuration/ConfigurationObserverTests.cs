@@ -1,5 +1,5 @@
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

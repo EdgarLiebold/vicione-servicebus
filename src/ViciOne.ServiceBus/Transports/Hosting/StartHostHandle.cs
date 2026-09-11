@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Readiness;
 
 namespace ViciOne.ServiceBus.Transports;
 

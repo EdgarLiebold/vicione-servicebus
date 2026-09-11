@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using ViciOne.ServiceBus.Consumers.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 

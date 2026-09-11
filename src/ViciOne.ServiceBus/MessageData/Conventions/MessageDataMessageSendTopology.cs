@@ -4,25 +4,27 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>Defines the topology for message data message send.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class MessageDataMessageSendTopology<T> :
+/// <summary>Adds a message-data storage transform to a send topology.</summary>
+/// <typeparam name="T">The outgoing message contract type.</typeparam>
+internal sealed class MessageDataMessageSendTopology<T> :
     IMessageSendTopology<T>
     where T : class
 {
     readonly TransformFilter<T> _transformFilter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Creates a topology around the discovered object-graph initializer.</summary>
+    /// <param name="initializer">The initializer that applies message-data storage policy.</param>
     public MessageDataMessageSendTopology(IMessageInitializer<T> initializer)
     {
-        _transformFilter = new TransformFilter<T>(initializer);
+        _transformFilter = new TransformFilter<T>(initializer ?? throw new ArgumentNullException(nameof(initializer)));
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Adds the storage transform unless another implementation already owns the send pipe.</summary>
+    /// <param name="builder">The send-topology pipe builder.</param>
     public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         if (builder.IsImplemented)
             return;
 

@@ -123,6 +123,110 @@ public sealed class MessageDataRepositoryTests
         Assert.Equal($"The message data was not found: {missing}", exception.Message);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORIES", "required-arguments-cancellation-and-retention-boundaries")]
+    public async Task RepositoryImplementations_ValidateBeforeAllocatingOrPerformingIoAsync()
+    {
+        var inMemory = (IMessageDataRepository)new InMemoryMessageDataRepository();
+        string root = Path.Combine(Path.GetTempPath(), "vsb-message-data-boundaries", NewId.NextGuid().ToString("N"));
+        var directory = new DirectoryInfo(root);
+        var fileSystem = (IMessageDataRepository)new FileSystemMessageDataRepository(directory);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        Assert.Equal("dataDirectory", Assert.Throws<ArgumentNullException>(() =>
+            new FileSystemMessageDataRepository(null!)).ParamName);
+        Assert.Equal("stream", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            inMemory.PutAsync(null!, cancellationToken: CancellationToken.None))).ParamName);
+        Assert.Equal("stream", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            fileSystem.PutAsync(null!, cancellationToken: CancellationToken.None))).ParamName);
+
+        OperationCanceledException inMemoryGet = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            inMemory.GetAsync(new Uri("urn:msgdata:missing"), cancellation.Token));
+        OperationCanceledException fileGet = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            fileSystem.GetAsync(new Uri("urn:file:none:missing"), cancellation.Token));
+        Assert.Equal(cancellation.Token, inMemoryGet.CancellationToken);
+        Assert.Equal(cancellation.Token, fileGet.CancellationToken);
+
+        await using var inMemorySource = new MemoryStream([1], writable: false);
+        await using var fileSource = new MemoryStream([2], writable: false);
+        Assert.Equal("timeToLive", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            inMemory.PutAsync(inMemorySource, TimeSpan.FromTicks(-1), CancellationToken.None))).ParamName);
+        Assert.Equal("timeToLive", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            fileSystem.PutAsync(fileSource, TimeSpan.FromTicks(-1), CancellationToken.None))).ParamName);
+
+        await using var canceledSource = new MemoryStream([3], writable: false);
+        OperationCanceledException filePut = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            fileSystem.PutAsync(canceledSource, cancellationToken: cancellation.Token));
+        Assert.Equal(cancellation.Token, filePut.CancellationToken);
+        Assert.False(directory.Exists);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORIES", "in-memory-exact-expiration-boundary")]
+    public async Task InMemoryRepository_ExpiresDataAtTheExactRetentionBoundaryAsync()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2042, 2, 3, 4, 5, 6, TimeSpan.Zero));
+        IMessageDataRepository repository = new InMemoryMessageDataRepository(clock);
+        await using var source = new MemoryStream([7, 8, 9], writable: false);
+        Uri address = await repository.PutAsync(source, TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+
+        clock.Advance(TimeSpan.FromSeconds(10) - TimeSpan.FromTicks(1));
+        await using (Stream value = await repository.GetAsync(address, TestContext.Current.CancellationToken))
+        {
+            using var copy = new MemoryStream();
+            await value.CopyToAsync(copy, TestContext.Current.CancellationToken);
+            Assert.Equal([7, 8, 9], copy.ToArray());
+        }
+
+        clock.Advance(TimeSpan.FromTicks(1));
+        MessageDataNotFoundException exception = await Assert.ThrowsAsync<MessageDataNotFoundException>(() =>
+            repository.GetAsync(address, TestContext.Current.CancellationToken));
+        Assert.Equal(address, exception.Address);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORIES", "filesystem-exact-expiration-and-path-containment")]
+    public async Task FileSystemRepository_ExpiresPreciselyAndRejectsPathsOutsideItsRootAsync()
+    {
+        string root = Path.Combine(Path.GetTempPath(), "vsb-message-data-containment", NewId.NextGuid().ToString("N"));
+        var directory = new DirectoryInfo(root);
+        var clock = new FakeTimeProvider(new DateTimeOffset(2043, 3, 4, 5, 6, 7, TimeSpan.Zero));
+        IMessageDataRepository repository = new FileSystemMessageDataRepository(directory, clock);
+
+        try
+        {
+            Assert.Equal("address", (await Assert.ThrowsAsync<ArgumentException>(() =>
+                repository.GetAsync(new Uri("urn:file:..:outside"), TestContext.Current.CancellationToken))).ParamName);
+            Assert.Equal("address", (await Assert.ThrowsAsync<ArgumentException>(() =>
+                repository.GetAsync(new Uri("urn:other:value"), TestContext.Current.CancellationToken))).ParamName);
+
+            await using var source = new MemoryStream([10, 11], writable: false);
+            Uri address = await repository.PutAsync(source, TimeSpan.FromMinutes(15), TestContext.Current.CancellationToken);
+            FileInfo file = Assert.Single(directory.EnumerateFiles("*", SearchOption.AllDirectories));
+
+            clock.Advance(TimeSpan.FromMinutes(15) - TimeSpan.FromTicks(1));
+            await using (Stream value = await repository.GetAsync(address, TestContext.Current.CancellationToken))
+            {
+                using var copy = new MemoryStream();
+                await value.CopyToAsync(copy, TestContext.Current.CancellationToken);
+                Assert.Equal([10, 11], copy.ToArray());
+            }
+
+            clock.Advance(TimeSpan.FromTicks(1));
+            MessageDataNotFoundException exception = await Assert.ThrowsAsync<MessageDataNotFoundException>(() =>
+                repository.GetAsync(address, TestContext.Current.CancellationToken));
+            Assert.Equal(address, exception.Address);
+            file.Refresh();
+            Assert.False(file.Exists);
+        }
+        finally
+        {
+            if (directory.Exists)
+                directory.Delete(recursive: true);
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -266,6 +370,15 @@ public sealed class MessageDataRepositoryTests
             encrypted.GetAsync(null!, cancellationToken))).ParamName);
         Assert.Equal("stream", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
             encrypted.PutAsync(null!, cancellationToken: cancellationToken))).ParamName);
+        Assert.Equal("timeToLive", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            encrypted.PutAsync(Stream.Null, TimeSpan.FromTicks(-1), cancellationToken))).ParamName);
+
+        using var canceled = new CancellationTokenSource();
+        await canceled.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            encrypted.GetAsync(new Uri("urn:encrypted:canceled"), canceled.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            encrypted.PutAsync(Stream.Null, cancellationToken: canceled.Token));
     }
 
     [Fact]

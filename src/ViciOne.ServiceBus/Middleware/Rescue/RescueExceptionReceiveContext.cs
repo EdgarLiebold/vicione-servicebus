@@ -1,6 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 

@@ -1,82 +1,59 @@
+using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.MessageData.Serialization;
 using ViciOne.ServiceBus.MessageData.Values;
-using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>Provides get message data property services.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TValue">The value stored by the member.</typeparam>
-public class GetMessageDataPropertyProvider<TInput, TValue> :
+/// <summary>Resolves inline and repository-backed message-data properties during consume transformation.</summary>
+/// <typeparam name="TInput">The incoming message type.</typeparam>
+/// <typeparam name="TValue">The message-data value type.</typeparam>
+internal sealed class GetMessageDataPropertyProvider<TInput, TValue> :
     IPropertyProvider<TInput, MessageData<TValue>>
     where TInput : class
 {
     readonly IPropertyProvider<TInput, MessageData<TValue>> _inputProvider;
     readonly IMessageDataReader<TValue> _reader;
-    readonly IMessageDataRepository? _repository;
+    readonly IMessageDataRepository _repository;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="inputProvider">The input provider.</param>
-    /// <param name="repository">The repository.</param>
-    public GetMessageDataPropertyProvider(IPropertyProvider<TInput, MessageData<TValue>> inputProvider, IMessageDataRepository? repository = default)
+    /// <summary>Creates a property resolver bound to one repository owner.</summary>
+    /// <param name="inputProvider">The provider that reads the serialized message-data property.</param>
+    /// <param name="repository">The repository that owns external references.</param>
+    public GetMessageDataPropertyProvider(
+        IPropertyProvider<TInput, MessageData<TValue>> inputProvider,
+        IMessageDataRepository repository)
     {
-        _repository = repository;
-        _inputProvider = inputProvider;
+        _inputProvider = inputProvider ?? throw new ArgumentNullException(nameof(inputProvider));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
         _reader = MessageDataReaderFactory.CreateReader<TValue>();
     }
 
-    /// <summary>Gets property.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
-    public Task<MessageData<TValue>?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
+    /// <summary>Returns inline data unchanged, normalizes empty data, or creates a lazy repository-backed value.</summary>
+    /// <typeparam name="T">The message type being initialized.</typeparam>
+    /// <param name="context">The initialization context containing the serialized input.</param>
+    /// <param name="cancellationToken">The token propagated to input reading and lazy repository loading.</param>
+    /// <returns>The transformed message-data value, or <see langword="null" /> when the input property is absent.</returns>
+    public async Task<MessageData<TValue>?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (!context.HasInput)
-            return TaskResults.DefaultAsync<MessageData<TValue>>(cancellationToken: cancellationToken);
-
-        Task<MessageData<TValue>?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
-        if (inputTask.IsCompleted)
         {
-            MessageData<TValue>? messageData = inputTask.Result;
-            if (messageData == null)
-                return TaskResults.DefaultAsync<MessageData<TValue>>(cancellationToken: cancellationToken);
-
-            if (messageData is IInlineMessageData)
-                return Task.FromResult<MessageData<TValue>?>(messageData);
-
-            if (messageData is { HasValue: true } && messageData.Address != null)
-            {
-                var repository = _repository;
-                if (repository != null || context.TryGetPayload(out repository))
-                    return Task.FromResult<MessageData<TValue>?>(_reader.GetMessageData(repository, messageData.Address, context.CancellationToken));
-            }
-
-            return Task.FromResult<MessageData<TValue>?>(EmptyMessageData<TValue>.Instance);
+            cancellationToken.ThrowIfCancellationRequested();
+            return null;
         }
 
-        async Task<MessageData<TValue>?> GetPropertyAsync()
-        {
-            MessageData<TValue>? messageData = await inputTask.ConfigureAwait(false);
-            if (messageData == null)
-                return null;
-
-            if (messageData is IInlineMessageData)
-                return messageData;
-
-            if (messageData?.Address != null)
-            {
-                var repository = _repository;
-                if (repository != null || context.TryGetPayload(out repository))
-                    return _reader.GetMessageData(repository, messageData.Address, context.CancellationToken);
-            }
-
+        MessageData<TValue>? messageData = await _inputProvider.GetPropertyAsync(context, cancellationToken).ConfigureAwait(false);
+        if (messageData is null)
+            return null;
+        if (messageData is IInlineMessageData)
+            return messageData;
+        if (!messageData.HasValue || messageData.Address is null)
             return EmptyMessageData<TValue>.Instance;
-        }
 
-        return GetPropertyAsync();
+        return _reader.GetMessageData(_repository, messageData.Address, cancellationToken);
     }
 }

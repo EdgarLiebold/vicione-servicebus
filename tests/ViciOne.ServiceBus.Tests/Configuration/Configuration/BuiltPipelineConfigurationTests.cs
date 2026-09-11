@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Sagas.Configuration;

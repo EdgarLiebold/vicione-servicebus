@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Consumers.Conventions;
+using ViciOne.ServiceBus.Consumers.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -9,6 +11,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Consumers;
 
+[Collection(ConsumerConventionStateCollection.Name)]
 public sealed class ConsumerConventionIntegrationTests
 {
     [Fact]

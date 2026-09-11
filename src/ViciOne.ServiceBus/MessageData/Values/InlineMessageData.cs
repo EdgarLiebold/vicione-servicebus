@@ -1,39 +1,41 @@
 using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.MessageData.Serialization;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>Carries inline message data.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class InlineMessageData<T> :
+/// <summary>Combines a typed value with its serialized inline representation.</summary>
+/// <typeparam name="T">The typed value exposed to the message consumer.</typeparam>
+internal sealed class InlineMessageData<T> :
     MessageData<T>,
     IInlineMessageData
 {
     readonly IInlineMessageData _messageData;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="address">The address.</param>
-    /// <param name="value">The value to process.</param>
-    /// <param name="messageData">The message data.</param>
+    /// <summary>Creates a typed wrapper over an inline serialization.</summary>
+    /// <param name="address">The repository address, when the inline representation was also stored.</param>
+    /// <param name="value">The non-null typed value.</param>
+    /// <param name="messageData">The inline representation written during serialization.</param>
     public InlineMessageData(Uri? address, T value, IInlineMessageData messageData)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Value = Task.FromResult<T?>(value);
         Address = address;
 
-        _messageData = messageData;
+        _messageData = messageData ?? throw new ArgumentNullException(nameof(messageData));
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="reference">The reference.</param>
+    /// <inheritdoc />
     public void Set(IMessageDataReference reference)
     {
+        ArgumentNullException.ThrowIfNull(reference);
         _messageData.Set(reference);
     }
 
-    /// <summary>Gets the address.</summary>
+    /// <inheritdoc />
     public Uri? Address { get; }
-    /// <summary>Gets whether this instance contains a value.</summary>
+    /// <inheritdoc />
     public bool HasValue => true;
-    /// <summary>Gets the value.</summary>
+    /// <inheritdoc />
     public Task<T?> Value { get; }
 }

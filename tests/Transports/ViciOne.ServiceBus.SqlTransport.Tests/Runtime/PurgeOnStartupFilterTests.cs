@@ -95,11 +95,13 @@ public sealed class PurgeOnStartupFilterTests
 
     private sealed class RecordingPipe : IPipe<ClientContext>
     {
-        public int CallCount { get; private set; }
+        private int _callCount;
+
+        public int CallCount => Volatile.Read(ref _callCount);
 
         public Task SendAsync(ClientContext context)
         {
-            CallCount++;
+            Interlocked.Increment(ref _callCount);
             return Task.CompletedTask;
         }
 

@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 
@@ -148,7 +147,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         var options = new OutboxConsumeOptions
         {
             ConsumerId = OutboxConsumerIdentity.Create<T, TMessage>(_busKey, _configurator.InputAddress),
-            ConsumerType = TypeMetadataCache<T>.ShortName,
+            ConsumerType = TypeCache<T>.ShortName,
             MessageDeliveryLimit = MessageDeliveryLimit,
             MessageDeliveryTimeout = MessageDeliveryTimeout
         };

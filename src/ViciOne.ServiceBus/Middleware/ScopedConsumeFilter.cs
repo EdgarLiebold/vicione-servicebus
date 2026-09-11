@@ -39,7 +39,7 @@ public class ScopedConsumeFilter<T, TFilter> :
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("scopedFilter");
-        scope.Add("filter", TypeMetadataCache<TFilter>.ShortName);
+        scope.Add("filter", TypeCache<TFilter>.ShortName);
 
         _scopeProvider.Probe(scope);
     }

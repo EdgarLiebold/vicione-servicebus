@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers.Contexts;
 using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.DependencyInjection;

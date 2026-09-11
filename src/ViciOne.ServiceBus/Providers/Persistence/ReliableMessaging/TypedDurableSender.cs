@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Admission;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;

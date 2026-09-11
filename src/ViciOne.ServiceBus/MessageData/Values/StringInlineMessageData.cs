@@ -1,40 +1,42 @@
 using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.MessageData.Serialization;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>Carries string inline message data.</summary>
-public class StringInlineMessageData :
+/// <summary>Provides inline text message data.</summary>
+internal sealed class StringInlineMessageData :
     MessageData<string>,
     IInlineMessageData
 {
     readonly string _value;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <param name="address">The address.</param>
+    /// <summary>Creates inline text with an optional repository address.</summary>
+    /// <param name="value">The non-null text value.</param>
+    /// <param name="address">The repository address, when the same text was also stored.</param>
     public StringInlineMessageData(string value, Uri? address = null)
     {
         Address = address;
-        _value = value;
+        _value = value ?? throw new ArgumentNullException(nameof(value));
 
-        Value = Task.FromResult<string?>(value);
+        Value = Task.FromResult<string?>(_value);
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="reference">The reference.</param>
+    /// <inheritdoc />
     public void Set(IMessageDataReference reference)
     {
+        ArgumentNullException.ThrowIfNull(reference);
+
         reference.Text = _value;
         reference.Data = default;
     }
 
-    /// <summary>Gets the address.</summary>
+    /// <inheritdoc />
     public Uri? Address { get; }
 
-    /// <summary>Gets whether this instance contains a value.</summary>
+    /// <inheritdoc />
     public bool HasValue => true;
 
-    /// <summary>Gets the value.</summary>
+    /// <inheritdoc />
     public Task<string?> Value { get; }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ViciOne.ServiceBus.Consumers.Metadata;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Util;
 
@@ -17,7 +18,7 @@ public sealed class InstanceConnector<TConsumer> :
     /// <summary>Discovers and materializes instance connectors for every convention-recognized consumer contract.</summary>
     public InstanceConnector()
     {
-        if (RegistrationMetadata.IsConsumerRegistrationExcluded(typeof(TConsumer)))
+        if (ConsumerRegistrationMetadata.IsConsumerRegistrationExcluded(typeof(TConsumer)))
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Instance Connector", "unknown", "A saga cannot be registered as a consumer", "Correct the named configuration before starting the host"));
 
         _connectors = Consumes()

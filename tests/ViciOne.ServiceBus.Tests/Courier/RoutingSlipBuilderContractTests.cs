@@ -4,7 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Messages;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

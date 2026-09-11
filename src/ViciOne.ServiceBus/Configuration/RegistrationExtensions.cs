@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ViciOne.ServiceBus.Consumers.Metadata;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
@@ -43,7 +44,7 @@ public static class RegistrationExtensions
         if (assemblies.Length == 0)
             assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsConsumerOrDefinition);
+        var types = AssemblyTypeCache.FindTypes(assemblies, ConsumerRegistrationMetadata.IsConsumerOrDefinition);
 
         AddConsumers(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
     }
@@ -69,7 +70,7 @@ public static class RegistrationExtensions
         if (type.Assembly == null || type.Namespace == null)
             throw new ArgumentException($"The type {TypeCache.GetShortName(type)} is not in an assembly with a valid namespace", nameof(type));
 
-        AddConsumers(configurator, filter, FindTypesInNamespace(type, RegistrationMetadata.IsConsumerOrDefinition));
+        AddConsumers(configurator, filter, FindTypesInNamespace(type, ConsumerRegistrationMetadata.IsConsumerOrDefinition));
     }
 
     /// <summary>Adds the specified consumer types.</summary>
@@ -89,7 +90,7 @@ public static class RegistrationExtensions
     {
         filter ??= t => true;
 
-        IEnumerable<Type> consumerTypes = types.Where(RegistrationMetadata.IsConsumer);
+        IEnumerable<Type> consumerTypes = types.Where(ConsumerRegistrationMetadata.IsConsumer);
         IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IConsumerDefinition<>)));
 
         var consumers = from c in consumerTypes

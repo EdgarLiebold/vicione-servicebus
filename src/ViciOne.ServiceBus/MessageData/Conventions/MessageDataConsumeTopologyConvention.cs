@@ -3,24 +3,25 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>Applies conventions for message data consume topology.</summary>
-public class MessageDataConsumeTopologyConvention :
+/// <summary>Creates per-message consume conventions bound to one message-data repository.</summary>
+internal sealed class MessageDataConsumeTopologyConvention :
     IConsumeTopologyConvention
 {
     readonly ITopologyConventionCache<IMessageConsumeTopologyConvention> _cache;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
+    /// <summary>Creates a convention for one repository owner.</summary>
+    /// <param name="repository">The repository that owns external references.</param>
     public MessageDataConsumeTopologyConvention(IMessageDataRepository repository)
     {
+        ArgumentNullException.ThrowIfNull(repository);
         _cache = new TopologyConventionCache<IMessageConsumeTopologyConvention>(typeof(MessageDataMessageConsumeTopologyConvention<>),
             new Factory(repository));
     }
 
-    /// <summary>Attempts to get message consume topology convention.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="convention">Receives the convention produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Gets the cached message-data convention for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="convention">Receives the contract-specific convention.</param>
+    /// <returns><see langword="true" /> when the contract-specific convention is available.</returns>
     public bool TryGetMessageConsumeTopologyConvention<T>([NotNullWhen(true)] out IMessageConsumeTopologyConvention<T>? convention)
         where T : class
     {
@@ -28,14 +29,14 @@ public class MessageDataConsumeTopologyConvention :
     }
 
 
-    class Factory :
+    sealed class Factory :
         IConventionTypeFactory<IMessageConsumeTopologyConvention>
     {
         readonly IMessageDataRepository _repository;
 
         public Factory(IMessageDataRepository repository)
         {
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         IMessageConsumeTopologyConvention IConventionTypeFactory<IMessageConsumeTopologyConvention>.Create<T>()

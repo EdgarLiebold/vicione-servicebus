@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 

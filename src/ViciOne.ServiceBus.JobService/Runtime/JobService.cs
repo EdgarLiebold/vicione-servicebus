@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Middleware;

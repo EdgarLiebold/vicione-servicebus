@@ -5,8 +5,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Batching.Contexts;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Scheduling;
 
@@ -73,7 +74,7 @@ internal sealed class SystemTextJsonConverterFactory :
         if (IsConvertibleInterfaceType(typeToConvert))
         {
             return (JsonConverter)(Activator.CreateInstance(
-                typeof(InterfaceJsonConverter<,>).MakeGenericType(typeToConvert, TypeMetadataCache.GetImplementationType(typeToConvert))) ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
+                typeof(InterfaceJsonConverter<,>).MakeGenericType(typeToConvert, MessageImplementationCache.GetImplementationType(typeToConvert))) ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
         }
 
         throw new ViciOneServiceBusException($"Unsupported type for json serialization {TypeCache.GetShortName(typeToConvert)}");

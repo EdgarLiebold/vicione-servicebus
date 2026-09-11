@@ -1,6 +1,6 @@
 using System;
 using System.Text.Json.Serialization;
-using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Serialization;
 
 namespace ViciOne.ServiceBus.Serialization.Json.Converters;
 

@@ -565,13 +565,13 @@ public sealed class SchedulerCommandIntegrationTests
         string? Tenant,
         DateTimeOffset? SentTime);
 
-    private sealed class ForeignQuartzJob : IJob
+    private sealed class ForeignQuartzJob : global::Quartz.IJob
     {
         public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken) =>
             ValueTask.CompletedTask;
     }
 
-    private sealed class RetryAttemptListener(int expectedAttemptCount) : IJobListener
+    private sealed class RetryAttemptListener(int expectedAttemptCount) : global::Quartz.IJobListener
     {
         private readonly List<RetryAttemptObservation> _attempts = [];
         private readonly TaskCompletionSource<RetryAttemptObservation[]> _completed =
@@ -579,7 +579,7 @@ public sealed class SchedulerCommandIntegrationTests
 
         public Task<RetryAttemptObservation[]> Completed => _completed.Task;
 
-        ValueTask IJobListener.JobToBeExecuted(
+        ValueTask global::Quartz.IJobListener.JobToBeExecuted(
             IJobExecutionContext context,
             CancellationToken cancellationToken)
         {

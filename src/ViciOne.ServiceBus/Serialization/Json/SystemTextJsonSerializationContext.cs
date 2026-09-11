@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Serialization.Json.Converters;

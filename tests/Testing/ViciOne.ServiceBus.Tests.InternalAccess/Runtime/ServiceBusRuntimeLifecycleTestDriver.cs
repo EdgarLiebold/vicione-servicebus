@@ -1,5 +1,5 @@
 using System.Reflection;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Readiness;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Runtime;
 using ViciOne.ServiceBus.Transports;

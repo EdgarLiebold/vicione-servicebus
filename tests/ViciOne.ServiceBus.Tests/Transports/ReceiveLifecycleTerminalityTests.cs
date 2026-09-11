@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Receiving;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Observables;

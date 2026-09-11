@@ -1,6 +1,6 @@
 using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -100,10 +100,14 @@ public sealed class FaultExceptionInfoTests
             new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, failure, null!)).ParamName);
         Assert.Equal("exceptions", Assert.Throws<ArgumentException>(() =>
             new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, new[] { exceptionInfo, null! }, [])).ParamName);
+        Assert.Equal("faultMessageTypes", Assert.Throws<ArgumentException>(() =>
+            new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, failure, ["valid", null!])).ParamName);
         Assert.Equal("host", Assert.Throws<ArgumentNullException>(() =>
             new ReceiveFaultEvent(null!, failure, null, null, null)).ParamName);
         Assert.Equal("exception", Assert.Throws<ArgumentNullException>(() =>
             new ReceiveFaultEvent(HostMetadataCache.Host, null!, null, null, null)).ParamName);
+        Assert.Equal("faultMessageTypes", Assert.Throws<ArgumentException>(() =>
+            new ReceiveFaultEvent(HostMetadataCache.Host, failure, null, null, ["valid", null!])).ParamName);
     }
 
     [Fact]
@@ -331,6 +335,47 @@ public sealed class FaultExceptionInfoTests
 
         Assert.Equal(0, value.ToStringCallCount);
         Assert.Equal(typeof(HostileDiagnosticValue).FullName, Assert.IsType<string>(snapshot.Data!["Value"]));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "wire-safe-scalar-normalization")]
+    public void Construction_PreservesWireSafeScalarsAndRendersEnumsAsText()
+    {
+        object[] scalarValues =
+        [
+            true,
+            byte.MaxValue,
+            sbyte.MinValue,
+            short.MinValue,
+            ushort.MaxValue,
+            int.MinValue,
+            uint.MaxValue,
+            long.MinValue,
+            ulong.MaxValue,
+            1.25F,
+            2.5D,
+            3.75M,
+            'x',
+            Guid.Parse("992821cc-51a7-40fc-8020-0d7cfd6ec891"),
+            new DateTime(2044, 5, 6, 7, 8, 9, DateTimeKind.Utc),
+            new DateTimeOffset(2045, 6, 7, 8, 9, 10, TimeSpan.Zero),
+            TimeSpan.FromMinutes(27),
+        ];
+        var source = new InvalidOperationException("source");
+        for (var index = 0; index < scalarValues.Length; index++)
+            source.Data[$"Scalar-{index}"] = scalarValues[index];
+        source.Data["Enum"] = FailureSource.ApplicationWrapper;
+
+        var snapshot = new FaultExceptionInfo(source);
+
+        for (var index = 0; index < scalarValues.Length; index++)
+        {
+            object actual = snapshot.Data![$"Scalar-{index}"];
+            Assert.NotNull(actual);
+            Assert.Equal(scalarValues[index].GetType(), actual.GetType());
+            Assert.Equal(scalarValues[index], actual);
+        }
+        Assert.Equal(nameof(FailureSource.ApplicationWrapper), Assert.IsType<string>(snapshot.Data!["Enum"]));
     }
 
     [Fact]

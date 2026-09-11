@@ -3,25 +3,25 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>Applies conventions for message data send topology.</summary>
-public class MessageDataSendTopologyConvention :
+/// <summary>Creates per-message send conventions bound to one repository and policy owner.</summary>
+internal sealed class MessageDataSendTopologyConvention :
     ISendTopologyConvention
 {
     readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="policy">The policy.</param>
+    /// <summary>Creates a convention for one repository and policy owner.</summary>
+    /// <param name="repository">The repository used for external storage.</param>
+    /// <param name="policy">The inline and retention policy.</param>
     public MessageDataSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
     {
         _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(MessageDataMessageSendTopologyConvention<>),
             new Factory(repository, policy));
     }
 
-    /// <summary>Attempts to get message send topology convention.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="convention">Receives the convention produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Gets the cached message-data convention for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="convention">Receives the contract-specific convention.</param>
+    /// <returns><see langword="true" /> when the contract-specific convention is available.</returns>
     public bool TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
         where T : class
     {
@@ -29,7 +29,7 @@ public class MessageDataSendTopologyConvention :
     }
 
 
-    class Factory :
+    sealed class Factory :
         IConventionTypeFactory<IMessageSendTopologyConvention>
     {
         readonly IMessageDataRepository _repository;

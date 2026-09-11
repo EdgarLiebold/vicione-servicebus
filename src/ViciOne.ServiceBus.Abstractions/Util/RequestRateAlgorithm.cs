@@ -7,45 +7,45 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>Calculates request rate values.</summary>
+/// <summary>Adjusts concurrent request volume in response to result counts and optional rate limits.</summary>
 public class RequestRateAlgorithm :
     IDisposable
 {
-    /// <summary>Represents the method that handles group callback.</summary>
+    /// <summary>Groups fetched results by a caller-defined key.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <typeparam name="TKey">The key used for lookup.</typeparam>
-    /// <param name="results">The results.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <param name="results">The fetched results to group.</param>
+    /// <returns>The grouped results.</returns>
     public delegate IEnumerable<IGrouping<TKey, T>> GroupCallback<T, out TKey>(IEnumerable<T> results);
 
 
-    /// <summary>Represents the method that handles order callback.</summary>
+    /// <summary>Orders a result group before its items are processed.</summary>
     /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="results">The results.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <param name="results">The results to order.</param>
+    /// <returns>The results in processing order.</returns>
     public delegate IEnumerable<T> OrderCallback<T>(IEnumerable<T> results);
 
 
-    /// <summary>Represents the method that handles request callback.</summary>
+    /// <summary>Retrieves up to a supplied number of results asynchronously.</summary>
     /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="resultLimit">The result limit.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <param name="resultLimit">The maximum number of results to retrieve.</param>
+    /// <param name="cancellationToken">The token used to cancel the request.</param>
+    /// <returns>A task whose result contains the items retrieved within the supplied result limit.</returns>
     public delegate Task<IEnumerable<T>> RequestCallback<T>(int resultLimit, CancellationToken cancellationToken);
 
 
-    /// <summary>Represents the method that handles request callback.</summary>
-    /// <param name="resultLimit">The result limit.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <summary>Produces up to a supplied number of results asynchronously.</summary>
+    /// <param name="resultLimit">The maximum number of results to produce.</param>
+    /// <param name="cancellationToken">The token used to cancel the request.</param>
+    /// <returns>A task whose result is the number of items produced by the request.</returns>
     public delegate Task<int> RequestCallback(int resultLimit, CancellationToken cancellationToken);
 
 
-    /// <summary>Represents the method that handles result callback.</summary>
+    /// <summary>Processes a fetched result asynchronously.</summary>
     /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="result">The result.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <param name="result">The result to process.</param>
+    /// <param name="cancellationToken">The token used to cancel result processing.</param>
+    /// <returns>A task that completes when the supplied result has been processed.</returns>
     public delegate Task ResultCallback<in T>(T result, CancellationToken cancellationToken);
 
 
@@ -153,10 +153,10 @@ public class RequestRateAlgorithm :
         _resultSemaphore.Dispose();
     }
 
-    /// <summary>Run a series of requests, up the limits, as a single pass.</summary>
+    /// <summary>Runs one adaptive pass of count-producing requests.</summary>
     /// <param name="requestCallback">The request callback.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the run outcome.</returns>
+    /// <returns>A task whose result is the total item count reported by the requests.</returns>
     public async Task<int> RunAsync(RequestCallback requestCallback, CancellationToken cancellationToken = default)
     {
         var requestCount = _requestCount;
@@ -190,12 +190,12 @@ public class RequestRateAlgorithm :
         return count;
     }
 
-    /// <summary>Run a series of requests, up the limits, as a single pass.</summary>
+    /// <summary>Runs one adaptive pass of requests and schedules each fetched result for processing.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="requestCallback">The request callback.</param>
     /// <param name="resultCallback">The result callback.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the run outcome.</returns>
+    /// <returns>A task whose result is the total number of results scheduled for processing.</returns>
     public async Task<int> RunAsync<T>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, CancellationToken cancellationToken = default)
     {
         var requestCount = _requestCount;
@@ -259,7 +259,7 @@ public class RequestRateAlgorithm :
         return count;
     }
 
-    /// <summary>Run a series of requests, up the limits, as a single pass.</summary>
+    /// <summary>Runs one adaptive pass of requests, groups the results, and processes each group in caller-defined order.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <typeparam name="TKey">The key used for lookup.</typeparam>
     /// <param name="requestCallback">The request callback.</param>
@@ -267,7 +267,7 @@ public class RequestRateAlgorithm :
     /// <param name="groupCallback">The group callback.</param>
     /// <param name="orderCallback">The order callback.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the run outcome.</returns>
+    /// <returns>A task whose result is the total number of processed results.</returns>
     public async Task<int> RunAsync<T, TKey>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, GroupCallback<T, TKey> groupCallback,
         OrderCallback<T> orderCallback, CancellationToken cancellationToken = default)
     {
@@ -349,9 +349,9 @@ public class RequestRateAlgorithm :
         return count;
     }
 
-    /// <summary>Begins tracking the request.</summary>
+    /// <summary>Waits for request and rate-limit capacity, then begins tracking a request.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the begin request outcome.</returns>
+    /// <returns>A task whose result owns the granted request slot and result capacity.</returns>
     public async Task<ActiveRequest> BeginRequestAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -449,8 +449,8 @@ public class RequestRateAlgorithm :
         _requestSemaphore.Release();
     }
 
-    /// <summary>Changes rate limit.</summary>
-    /// <param name="newRateLimit">The new rate limit.</param>
+    /// <summary>Changes the maximum number of requests admitted during each configured rate interval.</summary>
+    /// <param name="newRateLimit">The new positive request limit per interval.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ChangeRateLimitAsync(int newRateLimit, CancellationToken cancellationToken = default)

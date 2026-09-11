@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Receiving;
 
 namespace ViciOne.ServiceBus.Transports;
 

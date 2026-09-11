@@ -1,5 +1,5 @@
 using System;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Util;

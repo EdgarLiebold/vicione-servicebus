@@ -14526,6 +14526,9 @@ TYPE class public ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder [sea
 TYPE class public ViciOne.ServiceBus.Advanced.MessageCorrelation [static]
   METHOD public static System.Void UseCorrelationId<T>(System.Func<T,System.Guid> getCorrelationId)
   METHOD public static System.Void UseCorrelationId<T>(System.Func<T,System.Nullable<System.Guid>> getCorrelationId)
+TYPE class public ViciOne.ServiceBus.Advanced.MessageData [static]
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> Empty<T>()
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> FromValue<T>(T value)
 TYPE class public ViciOne.ServiceBus.Advanced.MessageDataExtensions [static]
   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.IMessageData> PutObjectAsync(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Object value, System.Type objectType, System.Nullable<System.TimeSpan> timeToLive, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.IMessageData> PutObjectAsync(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Object value, System.Type objectType, System.Nullable<System.TimeSpan> timeToLive, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy, System.Threading.CancellationToken cancellationToken = null)
@@ -15255,10 +15258,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ConsumerConsumeContextRescueP
   CTOR public ViciOne.ServiceBus.Configuration.ConsumerConsumeContextRescuePipeSpecification<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExceptionConsumerConsumeContext<T>> rescuePipe)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<T>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.ConsumerConventionCache [static]
-  METHOD public static System.Boolean Remove<TConvention>()
-  METHOD public static System.Boolean TryAdd<TConvention>(TConvention convention)
-  METHOD public static System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IConsumerMessageConvention> GetConventions<TConsumer>()
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumerFactoryConfiguratorExtensions [static]
   METHOD public static System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate<TConsumer>(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory)
   METHOD public static System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> ValidateConsumer<TConsumer>(ViciOne.ServiceBus.Configuration.ISpecification configurator)
@@ -15292,8 +15291,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ConsumerMessageSplitFilterSpe
   CTOR public ViciOne.ServiceBus.Configuration.ConsumerMessageSplitFilterSpecification<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.ConsumeContext<TMessage>> specification)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.ConsumerMetadataCache<TConsumer> [static]
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Configuration.IMessageInterfaceType> ConsumerTypes { public-get;  }
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumerPipeConfiguratorExtensions [static]
   METHOD public static System.Void UseFilter<TConsumer,T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,T>> configurator, ViciOne.ServiceBus.Advanced.Middleware.IFilter<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>> filter)
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumerPipeSpecificationProxy<TConsumer,TMessage> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>>]
@@ -16102,6 +16099,10 @@ TYPE class public ViciOne.ServiceBus.Configuration.MessageConsumePipeSpecificati
 TYPE class public ViciOne.ServiceBus.Configuration.MessageDataConfiguratorExtensions [static]
   METHOD public static System.Void UseMessageData(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy = null)
   METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository UseMessageData(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.Func<ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector,ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository> selector, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy = null)
+TYPE class public ViciOne.ServiceBus.Configuration.MessageDataRepositorySelectorExtensions [static]
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository UseEncryption(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, ViciOne.ServiceBus.Serialization.IEncryptionKeyProvider keyProvider, System.Int32 maximumObjectBytes, System.Func<ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector,ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository> innerSelector)
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository UseFileSystem(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, System.String path)
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository UseInMemory(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector)
 TYPE class public ViciOne.ServiceBus.Configuration.MessageJournalConfigurationExtensions [static]
   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeMessageJournal(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserverConnector connector, ViciOne.ServiceBus.MessageJournal.IMessageJournalStore store, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions options)
   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle ConnectMessageJournal<TConnector>(TConnector connector, ViciOne.ServiceBus.MessageJournal.IMessageJournalStore store, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions options)
@@ -16743,17 +16744,17 @@ TYPE class public ViciOne.ServiceBus.Configuration.ViciOneServiceBusHealthCheckO
 TYPE class public ViciOne.ServiceBus.Configuration.ViciOneServiceBusHealthCheckOptionsExtensions [static]
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator ConfigureHealthCheckOptions(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IHealthCheckOptionsConfigurator> configure)
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus> ConfigureHealthCheckOptions<TBus>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus> configurator, System.Action<ViciOne.ServiceBus.Configuration.IHealthCheckOptionsConfigurator> configure)
-TYPE class public ViciOne.ServiceBus.Consumer.DefaultConstructorConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
-  CTOR public ViciOne.ServiceBus.Consumer.DefaultConstructorConsumerFactory<TConsumer>()
+TYPE class public ViciOne.ServiceBus.Consumers.DefaultConstructorConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
+  CTOR public ViciOne.ServiceBus.Consumers.DefaultConstructorConsumerFactory<TConsumer>()
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Consumer.DelegateConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
-  CTOR public ViciOne.ServiceBus.Consumer.DelegateConsumerFactory<TConsumer>(System.Func<TConsumer> factoryMethod)
+TYPE class public ViciOne.ServiceBus.Consumers.DelegateConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
+  CTOR public ViciOne.ServiceBus.Consumers.DelegateConsumerFactory<TConsumer>(System.Func<TConsumer> factoryMethod)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Consumer.InstanceConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
-  CTOR public ViciOne.ServiceBus.Consumer.InstanceConsumerFactory<TConsumer>(TConsumer consumer)
+TYPE class public ViciOne.ServiceBus.Consumers.InstanceConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
+  CTOR public ViciOne.ServiceBus.Consumers.InstanceConsumerFactory<TConsumer>(TConsumer consumer)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Consumer.ObjectConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
-  CTOR public ViciOne.ServiceBus.Consumer.ObjectConsumerFactory<TConsumer>(System.Func<System.Type,System.Object> objectFactory)
+TYPE class public ViciOne.ServiceBus.Consumers.ObjectConsumerFactory<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer>]
+  CTOR public ViciOne.ServiceBus.Consumers.ObjectConsumerFactory<TConsumer>(System.Func<System.Type,System.Object> objectFactory)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
 TYPE class public ViciOne.ServiceBus.Context.ActivityContextProxy [abstract,base=ViciOne.ServiceBus.Context.ConsumeContextProxy,interfaces=ViciOne.ServiceBus.Advanced.ActivityContext]
   CTOR protected ViciOne.ServiceBus.Context.ActivityContextProxy(ViciOne.ServiceBus.Advanced.ActivityContext activityContext)
@@ -17524,16 +17525,6 @@ TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropert
 TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropertyConverter<TElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.ICollection<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IList<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyList<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.List<TElement>,System.Collections.Generic.IEnumerable<TElement>>]
   CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropertyConverter<TElement>()
   METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<TElement>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<TElement> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.MessageDataPropertyConverter [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>,System.Byte[]>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>,System.String>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>,ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>,ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.String>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.IO.Stream>,System.IO.Stream>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.IO.Stream>,ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.IO.Stream>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.String>,System.String>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.String>,ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.String>>]
-  FIELD public static readonly ViciOne.ServiceBus.Initializers.PropertyConverters.MessageDataPropertyConverter Instance
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, System.Byte[] input, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]> input, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.IO.Stream>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, System.IO.Stream input, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.IO.Stream>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.IO.Stream> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.MessageDataPropertyConverter<TValue> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>,TValue>&ViciOne.ServiceBus.Initializers.IPropertyConverter<ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>,ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.MessageDataPropertyConverter<TValue>()
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>> ConvertAsync<T1>(ViciOne.ServiceBus.Initializers.InitializeContext<T1> context, TValue input, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue> input, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.TaskPropertyConverter<TResult,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Threading.Tasks.Task<TResult>,TInput>&ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,System.Threading.Tasks.Task<TInput>>]
   CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.TaskPropertyConverter<TResult,TInput>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TInput> converter)
   METHOD public virtual System.Threading.Tasks.Task<System.Threading.Tasks.Task<TResult>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TInput input, System.Threading.CancellationToken cancellationToken = null)
@@ -17816,172 +17807,14 @@ TYPE delegate public ViciOne.ServiceBus.Logging.LogMessage<T1> [sealed]
   METHOD public virtual System.IAsyncResult BeginInvoke(T1 arg1, System.Exception exception, System.AsyncCallback callback, System.Object object)
   METHOD public virtual System.Void EndInvoke(System.IAsyncResult result)
   METHOD public virtual System.Void Invoke(T1 arg1, System.Exception exception = null)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.ActivityMessageDataConfigurationObserver [sealed,base=ViciOne.ServiceBus.Configuration.ConfigurationObserver,interfaces=ViciOne.ServiceBus.Configuration.IMessageConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.ActivityMessageDataConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Boolean includeMessages)
-  METHOD public System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
-  METHOD public System.Void CompensateActivityConfigured<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Observers.ICompensateActivityPipeConfigurator<TActivity,TLog> configurator)
-  METHOD public System.Void ExecuteActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator)
-  METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataObjectArrayTransformConfiguration<TInput,TProperty,TElement> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataObjectArrayTransformConfiguration<TInput,TProperty,TElement>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Collections.Generic.IEnumerable<System.Type> knownTypes, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataObjectDictionaryTransformConfiguration<TInput,TProperty,TKey,TValue> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataObjectDictionaryTransformConfiguration<TInput,TProperty,TKey,TValue>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Collections.Generic.IEnumerable<System.Type> knownTypes, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataObjectTransformConfiguration<TInput,TProperty> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataObjectTransformConfiguration<TInput,TProperty>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Collections.Generic.IEnumerable<System.Type> knownTypes, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataTransformConfiguration<TInput,TValue> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataTransformConfiguration<TInput,TValue>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataTransformSpecification<TMessage> [base=ViciOne.ServiceBus.Configuration.TransformSpecification<TMessage>,interfaces=ViciOne.ServiceBus.Configuration.ICompensateTransformSpecification<TMessage>&ViciOne.ServiceBus.Configuration.IConsumeTransformSpecification<TMessage>&ViciOne.ServiceBus.Configuration.IExecuteTransformSpecification<TMessage>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.GetMessageDataTransformSpecification<TMessage>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Collections.Generic.IEnumerable<System.Type> knownTypes = null)
-  METHOD public System.Boolean TryGetConsumeTopology(out ViciOne.ServiceBus.Advanced.Topology.IMessageConsumeTopology<TMessage> topology)
-  METHOD public System.Boolean TryGetConverter(out ViciOne.ServiceBus.Initializers.IPropertyConverter<TMessage,TMessage> converter)
-TYPE interface public ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.MessageDataRepositorySelectorExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository Encrypted(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, ViciOne.ServiceBus.Serialization.IEncryptionKeyProvider keyProvider, System.Int32 maximumObjectBytes, System.Func<ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector,ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository> innerSelector)
-  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository FileSystem(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, System.String path)
-  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository InMemory(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataObjectArrayTransformConfiguration<TInput,TProperty,TElement> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataObjectArrayTransformConfiguration<TInput,TProperty,TElement>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy, System.Collections.Generic.IEnumerable<System.Type> knownTypes, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataObjectDictionaryTransformConfiguration<TInput,TProperty,TKey,TValue> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataObjectDictionaryTransformConfiguration<TInput,TProperty,TKey,TValue>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy, System.Collections.Generic.IEnumerable<System.Type> knownTypes, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataObjectTransformConfiguration<TInput,TProperty> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataObjectTransformConfiguration<TInput,TProperty>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy, System.Collections.Generic.IEnumerable<System.Type> knownTypes, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataTransformConfiguration<TInput,TValue> [interfaces=ViciOne.ServiceBus.MessageData.Configuration.IMessageDataTransformConfiguration<TInput>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataTransformConfiguration<TInput,TValue>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy, System.Reflection.PropertyInfo property)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITransformConfigurator<TInput> configurator)
-TYPE class public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataTransformSpecification<TMessage> [base=ViciOne.ServiceBus.Configuration.TransformSpecification<TMessage>,interfaces=ViciOne.ServiceBus.Configuration.ISendTransformSpecification<TMessage>]
-  CTOR public ViciOne.ServiceBus.MessageData.Configuration.PutMessageDataTransformSpecification<TMessage>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy, System.Collections.Generic.IEnumerable<System.Type> knownTypes = null)
-  METHOD public System.Boolean TryGetConverter(out ViciOne.ServiceBus.Initializers.IPropertyConverter<TMessage,TMessage> converter)
-  METHOD public System.Boolean TryGetSendTopology(out ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<TMessage> topology)
-TYPE interface public ViciOne.ServiceBus.MessageData.Conventions.IMessageDataMessageConsumeTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IMessageConsumeTopologyConvention<TMessage>]
-TYPE interface public ViciOne.ServiceBus.MessageData.Conventions.IMessageDataMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IMessageSendTopologyConvention<TMessage>]
-TYPE class public ViciOne.ServiceBus.MessageData.Conventions.MessageDataConsumeTopologyConvention [interfaces=ViciOne.ServiceBus.Configuration.IConsumeTopologyConvention]
-  CTOR public ViciOne.ServiceBus.MessageData.Conventions.MessageDataConsumeTopologyConvention(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository)
-  METHOD public virtual System.Boolean TryGetMessageConsumeTopologyConvention<T>(out ViciOne.ServiceBus.Configuration.IMessageConsumeTopologyConvention<T> convention)
-TYPE class public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageConsumeTopology<T> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageConsumeTopology<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageConsumeTopology<T>(ViciOne.ServiceBus.Initializers.IMessageInitializer<T> initializer)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<ViciOne.ServiceBus.ConsumeContext<T>> builder)
-TYPE class public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageConsumeTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.MessageData.Conventions.IMessageDataMessageConsumeTopologyConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageConsumeTopologyConvention<TMessage>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository)
-  METHOD public virtual System.Boolean TryGetMessageConsumeTopology(out ViciOne.ServiceBus.Advanced.Topology.IMessageConsumeTopology<TMessage> messageConsumeTopology)
-TYPE class public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageSendTopology<T> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageSendTopology<T>(ViciOne.ServiceBus.Initializers.IMessageInitializer<T> initializer)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<T>> builder)
-TYPE class public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.MessageData.Conventions.IMessageDataMessageSendTopologyConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.MessageData.Conventions.MessageDataMessageSendTopologyConvention<TMessage>(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy)
-TYPE class public ViciOne.ServiceBus.MessageData.Conventions.MessageDataSendTopologyConvention [interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConvention]
-  CTOR public ViciOne.ServiceBus.MessageData.Conventions.MessageDataSendTopologyConvention(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy)
-  METHOD public virtual System.Boolean TryGetMessageSendTopologyConvention<T>(out ViciOne.ServiceBus.Configuration.IMessageSendTopologyConvention<T> convention)
-TYPE class public ViciOne.ServiceBus.MessageData.Converters.ByteArrayMessageDataConverter [interfaces=ViciOne.ServiceBus.Metadata.IMessageDataConverter<System.Byte[]>]
-  CTOR public ViciOne.ServiceBus.MessageData.Converters.ByteArrayMessageDataConverter()
-  METHOD public virtual System.Threading.Tasks.Task<System.Byte[]> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.Converters.MessageDataConverter [static]
-  FIELD public static readonly ViciOne.ServiceBus.Metadata.IMessageDataConverter<System.Byte[]> ByteArray
-  FIELD public static readonly ViciOne.ServiceBus.Metadata.IMessageDataConverter<System.IO.Stream> Stream
-  FIELD public static readonly ViciOne.ServiceBus.Metadata.IMessageDataConverter<System.String> String
-TYPE class public ViciOne.ServiceBus.MessageData.Converters.StreamMessageDataConverter [interfaces=ViciOne.ServiceBus.Metadata.IMessageDataConverter<System.IO.Stream>]
-  CTOR public ViciOne.ServiceBus.MessageData.Converters.StreamMessageDataConverter()
-  METHOD public virtual System.Threading.Tasks.Task<System.IO.Stream> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.Converters.StringMessageDataConverter [interfaces=ViciOne.ServiceBus.Metadata.IMessageDataConverter<System.String>]
-  CTOR public ViciOne.ServiceBus.MessageData.Converters.StringMessageDataConverter()
-  METHOD public virtual System.Threading.Tasks.Task<System.String> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.Converters.SystemTextJsonObjectMessageDataConverter<T> [interfaces=ViciOne.ServiceBus.Metadata.IMessageDataConverter<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Converters.SystemTextJsonObjectMessageDataConverter<T>(System.Text.Json.JsonSerializerOptions options)
-  METHOD public virtual System.Threading.Tasks.Task<T> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.EncryptedMessageDataRepository [interfaces=ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository]
+TYPE class public ViciOne.ServiceBus.MessageData.EncryptedMessageDataRepository [sealed,interfaces=ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository]
   CTOR public ViciOne.ServiceBus.MessageData.EncryptedMessageDataRepository(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Serialization.IEncryptionKeyProvider keyProvider, System.Int32 maximumObjectBytes)
   METHOD public virtual System.Threading.Tasks.Task<System.IO.Stream> GetAsync(System.Uri address, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task<System.Uri> PutAsync(System.IO.Stream stream, System.Nullable<System.TimeSpan> timeToLive = null, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.MessageData.FileSystemMessageDataRepository [interfaces=ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository]
+TYPE class public ViciOne.ServiceBus.MessageData.FileSystemMessageDataRepository [sealed,interfaces=ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository]
   CTOR public ViciOne.ServiceBus.MessageData.FileSystemMessageDataRepository(System.IO.DirectoryInfo dataDirectory, System.TimeProvider timeProvider = null)
-TYPE interface public ViciOne.ServiceBus.MessageData.IInlineMessageData
-  METHOD public abstract System.Void Set(ViciOne.ServiceBus.MessageData.IMessageDataReference reference)
-TYPE interface public ViciOne.ServiceBus.MessageData.IMessageDataReference
-  PROPERTY System.Byte[] Data {  public-set; }
-  PROPERTY System.String Text {  public-set; }
-TYPE class public ViciOne.ServiceBus.MessageData.InMemoryMessageDataId
-  CTOR public ViciOne.ServiceBus.MessageData.InMemoryMessageDataId()
-  PROPERTY System.Uri Uri { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.InMemoryMessageDataRepository [interfaces=ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository]
-  CTOR public ViciOne.ServiceBus.MessageData.InMemoryMessageDataRepository()
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.BytesMessageDataReader<T> [interfaces=ViciOne.ServiceBus.MessageData.PropertyProviders.IMessageDataReader<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.PropertyProviders.BytesMessageDataReader<T>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> GetMessageData(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Uri address, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.GetMessageDataPropertyProvider<TInput,TValue> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>>]
-  CTOR public ViciOne.ServiceBus.MessageData.PropertyProviders.GetMessageDataPropertyProvider<TInput,TValue>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>> inputProvider, ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.MessageData.PropertyProviders.IMessageDataReader<T>
-  METHOD public abstract ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> GetMessageData(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Uri address, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.MessageDataReaderFactory [static]
-  METHOD public static ViciOne.ServiceBus.MessageData.PropertyProviders.IMessageDataReader<T> CreateReader<T>()
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.ObjectMessageDataReader<T> [interfaces=ViciOne.ServiceBus.MessageData.PropertyProviders.IMessageDataReader<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.PropertyProviders.ObjectMessageDataReader<T>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> GetMessageData(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Uri address, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.PutMessageDataPropertyProvider<TInput,TValue> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>>]
-  CTOR public ViciOne.ServiceBus.MessageData.PropertyProviders.PutMessageDataPropertyProvider<TInput,TValue>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>> inputProvider, ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Advanced.Serialization.MessageDataPolicy policy)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Serialization.MessageData<TValue>> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.StreamMessageDataReader<T> [interfaces=ViciOne.ServiceBus.MessageData.PropertyProviders.IMessageDataReader<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.PropertyProviders.StreamMessageDataReader<T>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> GetMessageData(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Uri address, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.PropertyProviders.StringMessageDataReader<T> [interfaces=ViciOne.ServiceBus.MessageData.PropertyProviders.IMessageDataReader<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.PropertyProviders.StringMessageDataReader<T>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> GetMessageData(ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, System.Uri address, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.MessageData.Values.BytesInlineMessageData [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.Byte[]>&ViciOne.ServiceBus.MessageData.IInlineMessageData]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.BytesInlineMessageData(System.Byte[] value, System.Uri address = null)
-  METHOD public virtual System.Void Set(ViciOne.ServiceBus.MessageData.IMessageDataReference reference)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<System.Byte[]> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.BytesInlineMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>&ViciOne.ServiceBus.MessageData.IInlineMessageData]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.BytesInlineMessageData<T>(ViciOne.ServiceBus.Metadata.IMessageDataConverter<T> converter, System.Byte[] value, System.Uri address = null)
-  METHOD public virtual System.Void Set(ViciOne.ServiceBus.MessageData.IMessageDataReference reference)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.DeserializedMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.DeserializedMessageData<T>(System.Uri address)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.EmptyMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>]
-  FIELD public static readonly ViciOne.ServiceBus.Advanced.Serialization.MessageData<T> Instance
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.GetMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.GetMessageData<T>(System.Uri address, ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository repository, ViciOne.ServiceBus.Metadata.IMessageDataConverter<T> converter, System.Threading.CancellationToken cancellationToken)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.InlineMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>&ViciOne.ServiceBus.MessageData.IInlineMessageData]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.InlineMessageData<T>(System.Uri address, T value, ViciOne.ServiceBus.MessageData.IInlineMessageData messageData)
-  METHOD public virtual System.Void Set(ViciOne.ServiceBus.MessageData.IMessageDataReference reference)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.PutMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.PutMessageData<T>(T value, System.Boolean hasValue = true)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.StoredMessageData<T> [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<T>]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.StoredMessageData<T>(System.Uri address, T value)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<T> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageData.Values.StringInlineMessageData [interfaces=ViciOne.ServiceBus.Advanced.Serialization.MessageData<System.String>&ViciOne.ServiceBus.MessageData.IInlineMessageData]
-  CTOR public ViciOne.ServiceBus.MessageData.Values.StringInlineMessageData(System.String value, System.Uri address = null)
-  METHOD public virtual System.Void Set(ViciOne.ServiceBus.MessageData.IMessageDataReference reference)
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<System.String> Value { public-get;  }
-  PROPERTY System.Uri Address { public-get;  }
+TYPE class public ViciOne.ServiceBus.MessageData.InMemoryMessageDataRepository [sealed,interfaces=ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository]
+  CTOR public ViciOne.ServiceBus.MessageData.InMemoryMessageDataRepository(System.TimeProvider timeProvider = null)
 TYPE interface public ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy
   METHOD public abstract System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.MessageJournal.MessageJournalProjection> ProjectAsync(ViciOne.ServiceBus.MessageJournal.MessageJournalCapture capture, System.Threading.CancellationToken cancellationToken)
 TYPE interface public ViciOne.ServiceBus.MessageJournal.IMessageJournalStore
@@ -18055,27 +17888,6 @@ TYPE class public ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits [s
   PROPERTY System.Int32 MaximumEntries { public-get;  }
   PROPERTY System.Int32 MaximumEntryBytes { public-get;  }
   PROPERTY System.TimeSpan RetentionPeriod { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Metadata.IMessageDataConverter<TValue>
-  METHOD public abstract System.Threading.Tasks.Task<TValue> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache [static]
-  METHOD public static System.Boolean IsTemporaryMessageType(System.Type type)
-  METHOD public static System.Boolean IsValidMessageDataType(System.Type type)
-  METHOD public static System.Boolean IsValidMessageType(System.Type type)
-  METHOD public static System.Collections.Generic.IReadOnlyList<System.Reflection.PropertyInfo> GetProperties(System.Type type)
-  METHOD public static System.Collections.Generic.IReadOnlyList<System.String> GetMessageTypeNames(System.Type type)
-  METHOD public static System.Collections.Generic.IReadOnlyList<System.Type> GetMessageTypes(System.Type type)
-  METHOD public static System.String GetShortName(System.Type type)
-  METHOD public static System.Type GetImplementationType(System.Type type)
-TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache<TMessage> [static]
-  PROPERTY System.Boolean IsTemporaryMessageType { public-get;  }
-  PROPERTY System.Boolean IsValidMessageType { public-get;  }
-  PROPERTY System.Collections.Generic.IReadOnlyList<System.Reflection.PropertyInfo> Properties { public-get;  }
-  PROPERTY System.Collections.Generic.IReadOnlyList<System.String> MessageTypeNames { public-get;  }
-  PROPERTY System.Collections.Generic.IReadOnlyList<System.Type> MessageTypes { public-get;  }
-  PROPERTY System.String DiagnosticAddress { public-get;  }
-  PROPERTY System.String InvalidMessageTypeReason { public-get;  }
-  PROPERTY System.String ShortName { public-get;  }
-  PROPERTY System.Type ImplementationType { public-get;  }
 TYPE class public ViciOne.ServiceBus.Middleware.ActivityRedeliveryRetryFilter<TContext> [sealed,interfaces=ViciOne.ServiceBus.Advanced.Middleware.IFilter<TContext>]
   CTOR public ViciOne.ServiceBus.Middleware.ActivityRedeliveryRetryFilter<TContext>(ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Observables.RetryObservable observers)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next)

@@ -42,9 +42,133 @@ public sealed class PutMessageDataPropertyProviderTests
         Assert.Equal(1, repository.PutCalls);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PROPERTY-PROVIDERS", "put-input-fault-independent-of-task-timing")]
+    public async Task InputFailure_PreservesItsIdentityForCompletedAndPendingTasksAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var root = new BaseInitializeContext(cancellationToken);
+        InitializeContext<TestMessage> messageContext = root.CreateMessageContext(new TestMessage());
+        InitializeContext<TestMessage, TestInput> context = messageContext.CreateInputContext(
+            new TestInput(ViciOne.ServiceBus.Advanced.MessageData.FromValue("unused")));
+        var repository = new RecordingRepository();
+        var expectedCompleted = new ExpectedInputException("completed");
+        var expectedPending = new ExpectedInputException("pending");
+        var pending = new TaskCompletionSource<MessageData<string>?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var completedProvider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromException<MessageData<string>?>(expectedCompleted)),
+            repository,
+            MessageDataPolicy.Default);
+        var pendingProvider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(pending.Task),
+            repository,
+            MessageDataPolicy.Default);
+
+        Task<MessageData<string>?> pendingResultTask = pendingProvider.GetPropertyAsync(context, cancellationToken);
+        pending.SetException(expectedPending);
+
+        ExpectedInputException completed = await Assert.ThrowsAsync<ExpectedInputException>(() =>
+            completedProvider.GetPropertyAsync(context, cancellationToken));
+        ExpectedInputException asynchronouslyCompleted = await Assert.ThrowsAsync<ExpectedInputException>(() => pendingResultTask);
+        Assert.Same(expectedCompleted, completed);
+        Assert.Same(expectedPending, asynchronouslyCompleted);
+        Assert.Equal(0, repository.PutCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PROPERTY-PROVIDERS", "put-context-null-boundary")]
+    public async Task PutProvider_RejectsANullContextBeforeReadingItsInputAsync()
+    {
+        var repository = new RecordingRepository();
+        var provider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromResult<MessageData<string>?>(null)),
+            repository,
+            MessageDataPolicy.Default);
+
+        ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            provider.GetPropertyAsync<TestMessage>(null!, TestContext.Current.CancellationToken));
+
+        Assert.Equal("context", exception.ParamName);
+        Assert.Equal(0, repository.PutCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PROPERTY-PROVIDERS", "all-addressless-values-use-owned-repository")]
+    public async Task AddresslessCustomValue_IsStoredAndANullReportedValueFailsExplicitlyAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var root = new BaseInitializeContext(cancellationToken);
+        InitializeContext<TestMessage> messageContext = root.CreateMessageContext(new TestMessage());
+        InitializeContext<TestMessage, TestInput> context = messageContext.CreateInputContext(
+            new TestInput(ViciOne.ServiceBus.Advanced.MessageData.FromValue("unused")));
+        var repository = new RecordingRepository();
+        var provider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromResult<MessageData<string>?>(new CustomMessageData(Task.FromResult<string?>("custom")))),
+            repository,
+            new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1));
+
+        MessageData<string> result = Assert.IsAssignableFrom<MessageData<string>>(
+            await provider.GetPropertyAsync(context, cancellationToken));
+
+        Assert.Equal(repository.Address, result.Address);
+        Assert.Equal("custom", await result.Value);
+        Assert.Equal(1, repository.PutCalls);
+
+        var invalidProvider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromResult<MessageData<string>?>(new CustomMessageData(Task.FromResult<string?>(null)))),
+            new RecordingRepository(),
+            MessageDataPolicy.Default);
+        MessageDataException exception = await Assert.ThrowsAsync<MessageDataException>(() =>
+            invalidProvider.GetPropertyAsync(context, cancellationToken));
+        Assert.Contains("reported a value", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PROPERTY-PROVIDERS", "method-cancellation-token-owns-storage")]
+    public async Task MethodCancellationToken_IsForwardedToRepositoryStorageAsync()
+    {
+        using var contextCancellation = new CancellationTokenSource();
+        using var methodCancellation = new CancellationTokenSource();
+        var root = new BaseInitializeContext(contextCancellation.Token);
+        InitializeContext<TestMessage> messageContext = root.CreateMessageContext(new TestMessage());
+        InitializeContext<TestMessage, TestInput> context = messageContext.CreateInputContext(
+            new TestInput(ViciOne.ServiceBus.Advanced.MessageData.FromValue("value")));
+        var repository = new RecordingRepository();
+        var provider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromResult<MessageData<string>?>(
+                ViciOne.ServiceBus.Advanced.MessageData.FromValue("value"))),
+            repository,
+            new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1));
+
+        _ = await provider.GetPropertyAsync(context, methodCancellation.Token);
+
+        Assert.Equal(methodCancellation.Token, repository.CancellationToken);
+        Assert.NotEqual(contextCancellation.Token, repository.CancellationToken);
+    }
+
     private sealed record TestInput(MessageData<string> Value);
 
     private sealed class TestMessage;
+
+    private sealed class ScriptedInputProvider(Task<MessageData<string>?> result) :
+        IPropertyProvider<TestInput, MessageData<string>>
+    {
+        public Task<MessageData<string>?> GetPropertyAsync<T>(
+            InitializeContext<T, TestInput> context,
+            CancellationToken cancellationToken = default)
+            where T : class => result;
+    }
+
+    private sealed class ExpectedInputException(string message) : Exception(message);
+
+    private sealed class CustomMessageData(Task<string?> value) : MessageData<string>
+    {
+        public Uri? Address => null;
+
+        public bool HasValue => true;
+
+        public Task<string?> Value => value;
+    }
 
     private sealed class RecordingRepository : IMessageDataRepository
     {

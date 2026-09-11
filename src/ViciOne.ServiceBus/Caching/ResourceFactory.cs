@@ -8,6 +8,6 @@ namespace ViciOne.ServiceBus.Caching;
 /// <typeparam name="TValue">The cache-owned resource type.</typeparam>
 /// <param name="key">The key used to identify the requested entry.</param>
 /// <param name="cancellationToken">The token that signals the end of cache ownership.</param>
-/// <returns>The value produced by the operation.</returns>
+/// <returns>A value task whose result is the cache-owned resource created for the key.</returns>
 public delegate ValueTask<TValue> ResourceFactory<in TKey, TValue>(TKey key, CancellationToken cancellationToken)
     where TValue : class;

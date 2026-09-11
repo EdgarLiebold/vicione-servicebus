@@ -1,6 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;

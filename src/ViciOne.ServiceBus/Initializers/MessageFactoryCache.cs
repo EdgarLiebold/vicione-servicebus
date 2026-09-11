@@ -1,6 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Initializers.Factories;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Initializers;
 
@@ -24,7 +24,7 @@ public static class MessageFactoryCache<TMessage>
 
             var implementationType = typeof(TMessage);
             if (typeof(TMessage).IsInterface)
-                implementationType = TypeMetadataCache<TMessage>.ImplementationType;
+                implementationType = MessageImplementationCache<TMessage>.ImplementationType;
 
             Type[] parameterTypes = Type.EmptyTypes;
             if (implementationType.GetConstructor(parameterTypes) == null)

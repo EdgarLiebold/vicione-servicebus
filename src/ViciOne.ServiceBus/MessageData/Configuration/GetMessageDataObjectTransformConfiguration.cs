@@ -6,10 +6,10 @@ using ViciOne.ServiceBus.Initializers.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>Stores and validates get message data object transform configuration.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TProperty">The property type.</typeparam>
-public class GetMessageDataObjectTransformConfiguration<TInput, TProperty> :
+/// <summary>Configures recursive loading for one nested object property.</summary>
+/// <typeparam name="TInput">The containing message type.</typeparam>
+/// <typeparam name="TProperty">The nested object type.</typeparam>
+internal sealed class GetMessageDataObjectTransformConfiguration<TInput, TProperty> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
     where TProperty : class
@@ -17,21 +17,26 @@ public class GetMessageDataObjectTransformConfiguration<TInput, TProperty> :
     readonly PropertyInfo _property;
     readonly GetMessageDataTransformSpecification<TProperty> _transformConfigurator;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="knownTypes">The known types.</param>
-    /// <param name="property">The property.</param>
+    /// <summary>Creates a recursive object transformation.</summary>
+    /// <param name="repository">The repository that owns external references.</param>
+    /// <param name="knownTypes">The types already visited in the object graph.</param>
+    /// <param name="property">The nested object property to transform.</param>
     public GetMessageDataObjectTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
     {
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(knownTypes);
+        ArgumentNullException.ThrowIfNull(property);
+
         _property = property;
 
         _transformConfigurator = new GetMessageDataTransformSpecification<TProperty>(repository, knownTypes);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <inheritdoc />
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TProperty, TProperty>? converter))
         {
             var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);

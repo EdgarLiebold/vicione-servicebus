@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Internals;
 
@@ -18,7 +18,7 @@ internal sealed class WritePropertyCache<T> :
     {
         if (MessageTypeCache<T>.IsValidMessageType && typeof(T).IsInterface)
         {
-            _implementationType = TypeMetadataCache<T>.ImplementationType;
+            _implementationType = MessageImplementationCache<T>.ImplementationType;
             _propertyIndex = _implementationType.GetReadableInstanceProperties()
                 .GroupBy(x => x.Name)
                 .Select(x => x.Last())

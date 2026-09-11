@@ -1,5 +1,5 @@
 using ViciOne.ServiceBus.Courier.Contracts;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 

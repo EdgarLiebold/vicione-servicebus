@@ -4,18 +4,18 @@ using ViciOne.ServiceBus.MessageData.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>Applies conventions for message data message send topology.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class MessageDataMessageSendTopologyConvention<TMessage> :
+/// <summary>Creates a send transform only when a message contract contains message-data properties.</summary>
+/// <typeparam name="TMessage">The message contract inspected by the convention.</typeparam>
+internal sealed class MessageDataMessageSendTopologyConvention<TMessage> :
     IMessageDataMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
     readonly IMessageDataRepository _repository;
     readonly MessageDataPolicy _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="policy">The policy.</param>
+    /// <summary>Creates a contract-specific convention for one repository and policy owner.</summary>
+    /// <param name="repository">The repository used for external storage.</param>
+    /// <param name="policy">The inline and retention policy.</param>
     public MessageDataMessageSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));

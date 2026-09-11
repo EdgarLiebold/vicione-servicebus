@@ -6,7 +6,7 @@ using System.Threading;
 using MessagePack;
 using MessagePack.Formatters;
 using ViciOne.ServiceBus.Advanced.Serialization;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Scheduling;

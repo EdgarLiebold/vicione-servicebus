@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers.Contexts;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;

@@ -403,7 +403,7 @@ public sealed class QuartzScheduledMessageContextTests
         return new JobExecutionContextImpl(null!, bundle, new NoOpJob());
     }
 
-    private sealed class NoOpJob : IJob
+    private sealed class NoOpJob : global::Quartz.IJob
     {
         public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {

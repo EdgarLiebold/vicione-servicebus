@@ -279,9 +279,10 @@ public sealed class RemovalBoundaryTests
 
         Assert.Empty(exported.Intersect(InternalImplementationTypes, StringComparer.Ordinal));
         Assert.DoesNotContain("ViciOne.ServiceBus.Internals.DateTimeConstants", exported);
-        Assert.Null(typeof(ViciOne.ServiceBus.Metadata.TypeMetadataCache).GetProperty(
-            "ImplementationBuilder",
-            BindingFlags.Public | BindingFlags.Static));
+        Assert.DoesNotContain("ViciOne.ServiceBus.Metadata.TypeMetadataCache", exported);
+        Assert.DoesNotContain("ViciOne.ServiceBus.Metadata.TypeMetadataCache`1", exported);
+        Assert.DoesNotContain("ViciOne.ServiceBus.Internals.Reflection.MessageImplementationCache", exported);
+        Assert.DoesNotContain("ViciOne.ServiceBus.Internals.Reflection.MessageImplementationCache`1", exported);
     }
 
     internal static IEnumerable<Assembly> ProductAssemblies()

@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.MessageData.Values;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>Reads string message data values.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class StringMessageDataReader<T> :
+/// <summary>Creates lazy handles that decode repository content as UTF-8 text.</summary>
+/// <typeparam name="T">The factory-selected text type.</typeparam>
+internal sealed class StringMessageDataReader<T> :
     IMessageDataReader<T>
 {
-    /// <summary>Gets message data.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The message data.</returns>
+    /// <inheritdoc />
     public MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken)
     {
-        return (MessageData<T>)new GetMessageData<string>(address, repository, MessageDataConverter.String, cancellationToken);
+        return (MessageData<T>)(object)new GetMessageData<string>(address, repository, MessageDataConverter.String, cancellationToken);
     }
 }

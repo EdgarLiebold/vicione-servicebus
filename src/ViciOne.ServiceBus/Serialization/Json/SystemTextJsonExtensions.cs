@@ -1,6 +1,6 @@
 using System;
 using System.Text.Json;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Serialization;
 
@@ -18,7 +18,7 @@ public static class SystemTextJsonExtensions
         ArgumentNullException.ThrowIfNull(options);
         if (typeof(T).IsInterface && MessageTypeCache<T>.IsValidMessageType)
         {
-            var messageType = TypeMetadataCache<T>.ImplementationType;
+            var messageType = MessageImplementationCache<T>.ImplementationType;
 
             if (jsonElement.Deserialize(messageType, options) is T obj)
                 return obj;
@@ -55,7 +55,7 @@ public static class SystemTextJsonExtensions
         var jsonElement = JsonSerializer.SerializeToElement(objectToTransform, options);
 
         if (targetType.IsInterface && MessageTypeCache.IsValidMessageType(targetType))
-            targetType = TypeMetadataCache.GetImplementationType(targetType);
+            targetType = MessageImplementationCache.GetImplementationType(targetType);
 
         return jsonElement.Deserialize(targetType, options);
     }

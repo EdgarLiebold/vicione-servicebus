@@ -1,4 +1,5 @@
 using System;
+using ViciOne.ServiceBus.Consumers.Metadata;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 
@@ -42,7 +43,7 @@ public static class RegistrationConfiguratorExtensions
     public static IConsumerRegistrationConfigurator AddConsumer(this IRegistrationConfigurator configurator, Type consumerType,
         Type? consumerDefinitionType = null)
     {
-        if (RegistrationMetadata.IsConsumerRegistrationExcluded(consumerType))
+        if (ConsumerRegistrationMetadata.IsConsumerRegistrationExcluded(consumerType))
             throw new ArgumentException($"{TypeCache.GetShortName(consumerType)} is a saga, and cannot be registered as a consumer", nameof(consumerType));
 
         var register = (IRegisterConsumer)(Activator.CreateInstance(typeof(RegisterConsumer<>).MakeGenericType(consumerType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;

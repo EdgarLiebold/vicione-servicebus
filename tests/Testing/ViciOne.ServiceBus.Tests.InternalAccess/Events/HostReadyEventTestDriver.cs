@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Readiness;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.Events;
 

@@ -2,7 +2,7 @@ using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Metadata;

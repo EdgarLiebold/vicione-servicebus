@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts.JobService;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.JobService.Messages;
 
 namespace ViciOne.ServiceBus.JobService;

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers.PropertyConverters;
 using ViciOne.ServiceBus.Initializers.TypeConverters;
 using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
@@ -373,7 +374,7 @@ public class PropertyProviderFactory<TInput> :
                 if (converter != null)
                     return true;
 
-                if (TypeMetadataCache.IsValidMessageDataType(types[0]))
+                if (MessageDataTypeClassifier.IsSupported(types[0]))
                 {
                     if (typeof(TProperty) == types[0] || typeof(TProperty) == typeof(MessageData<>).MakeGenericType(types[0]))
                     {

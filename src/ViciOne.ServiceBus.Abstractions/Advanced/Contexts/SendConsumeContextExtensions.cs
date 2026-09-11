@@ -192,10 +192,10 @@ public static class SendConsumeContextExtensions
         ArgumentNullException.ThrowIfNull(destinationAddress);
         ArgumentNullException.ThrowIfNull(send);
 
-        return SendCoreAsyncCore(context, destinationAddress, send, cancellationToken);
+        return SendWithLinkedCancellationAsync(context, destinationAddress, send, cancellationToken);
     }
 
-    private static async Task SendCoreAsyncCore(ConsumeContext context, Uri destinationAddress,
+    private static async Task SendWithLinkedCancellationAsync(ConsumeContext context, Uri destinationAddress,
         Func<ISendEndpoint, CancellationToken, Task> send, CancellationToken cancellationToken)
     {
         using CancellationTokenSource? linkedSource = CreateLinkedSource(context.CancellationToken, cancellationToken);

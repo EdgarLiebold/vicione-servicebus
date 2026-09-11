@@ -3,36 +3,24 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>
-/// When a message data property is deserialized, this is used as a placeholder for the actual message
-/// data accessor which replaces this property value once the message is transformed on the pipeline.
-/// </summary>
-/// <typeparam name="T">The type used to access the message data, valid types include stream, string, and byte[].</typeparam>
-public class DeserializedMessageData<T> :
+/// <summary>Represents an external reference that must be replaced by the consume transform before its value is read.</summary>
+/// <typeparam name="T">The value type addressed by the reference.</typeparam>
+internal sealed class DeserializedMessageData<T> :
     MessageData<T>
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="address">The address.</param>
+    /// <summary>Creates an unresolved reference for a repository address.</summary>
+    /// <param name="address">The non-null repository address.</param>
     public DeserializedMessageData(Uri address)
     {
-        Address = address;
-        HasValue = true;
+        Address = address ?? throw new ArgumentNullException(nameof(address));
     }
 
-    /// <summary>Gets the address.</summary>
+    /// <inheritdoc />
     public Uri Address { get; }
-    /// <summary>Gets whether this instance contains a value.</summary>
-    public bool HasValue { get; }
 
-    /// <summary>Gets the value.</summary>
-    public Task<T?> Value
-    {
-        get
-        {
-            if (HasValue == false)
-                throw new MessageDataException("The message data has no value");
+    /// <inheritdoc />
+    public bool HasValue => true;
 
-            throw new MessageDataException("The message data was not loaded: " + Address);
-        }
-    }
+    /// <summary>Throws because repository-backed values are available only after consume transformation.</summary>
+    public Task<T?> Value => throw new MessageDataException("The message data was not loaded: " + Address);
 }

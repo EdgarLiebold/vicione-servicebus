@@ -1,5 +1,5 @@
 using System;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
 
 namespace ViciOne.ServiceBus.Testing;
 

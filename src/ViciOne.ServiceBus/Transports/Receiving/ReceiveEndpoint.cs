@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Receiving;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Util;
 

@@ -1,24 +1,20 @@
 using System;
-using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.MessageData.Configuration;
 using ViciOne.ServiceBus.MessageData.Conventions;
 
-
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for message data configurator.</summary>
+/// <summary>Configures the repository and transforms used by message-data properties.</summary>
 public static class MessageDataConfiguratorExtensions
 {
-    /// <summary>Enable the loading of message data for the any message type that includes a MessageData property.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="repository">The repository.</param>
+    /// <summary>Enables storage and loading for message contracts that contain message-data properties.</summary>
+    /// <param name="configurator">The bus configurator that owns the repository.</param>
+    /// <param name="repository">The repository used by both send and consume transforms.</param>
     /// <param name="policy">The immutable policy owned by this bus, or the default policy when omitted.</param>
     public static void UseMessageData(this IBusFactoryConfigurator configurator, IMessageDataRepository repository, MessageDataPolicy? policy = null)
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(repository);
 
         MessageDataPolicy runtimePolicy = policy ?? MessageDataPolicy.Default;
 
@@ -30,24 +26,23 @@ public static class MessageDataConfiguratorExtensions
         _ = new ActivityMessageDataConfigurationObserver(configurator, repository, false);
     }
 
-    /// <summary>Enable the loading of message data for the any message type that includes a MessageData property.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Selects and configures the single message-data repository owned by a bus.</summary>
+    /// <param name="configurator">The bus configurator that owns the repository.</param>
     /// <param name="selector">
     /// The repository selector.
-    /// See extension methods, e.g. <see cref="MessageDataRepositorySelectorExtensions.FileSystem" />.
+    /// The callback that selects a repository, for example by calling
+    /// <see cref="MessageDataRepositorySelectorExtensions.UseFileSystem" />.
     /// </param>
     /// <param name="policy">The immutable policy owned by this bus, or the default policy when omitted.</param>
     /// <returns>The configured message data.</returns>
     public static IMessageDataRepository UseMessageData(this IBusFactoryConfigurator configurator,
         Func<IMessageDataRepositorySelector, IMessageDataRepository> selector, MessageDataPolicy? policy = null)
     {
-        if (configurator is null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(selector);
 
-        if (selector is null)
-            throw new ArgumentNullException(nameof(selector));
-
-        var repository = selector(new MessageDataRepositorySelector(configurator));
+        var repository = selector(new MessageDataRepositorySelector(configurator))
+            ?? throw new InvalidOperationException("The message-data repository selector returned null.");
 
         UseMessageData(configurator, repository, policy);
 

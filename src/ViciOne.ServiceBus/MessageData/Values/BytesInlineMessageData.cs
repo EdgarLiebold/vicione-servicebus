@@ -2,50 +2,50 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.MessageData.Converters;
+using ViciOne.ServiceBus.MessageData.Serialization;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>Carries bytes inline message data.</summary>
-public class BytesInlineMessageData :
+/// <summary>Provides an immutable inline snapshot of binary message data.</summary>
+internal sealed class BytesInlineMessageData :
     MessageData<byte[]>,
     IInlineMessageData
 {
     readonly byte[] _value;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <param name="address">The address.</param>
+    /// <summary>Creates an inline snapshot with an optional repository address.</summary>
+    /// <param name="value">The bytes to copy.</param>
+    /// <param name="address">The repository address, when the same bytes were also stored.</param>
     public BytesInlineMessageData(byte[] value, Uri? address = null)
     {
         Address = address;
-        _value = value;
-
-        Value = Task.FromResult<byte[]?>(value);
+        _value = value is null ? throw new ArgumentNullException(nameof(value)) : [.. value];
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="reference">The reference.</param>
+    /// <inheritdoc />
     public void Set(IMessageDataReference reference)
     {
+        ArgumentNullException.ThrowIfNull(reference);
+
         reference.Text = default;
-        reference.Data = _value;
+        reference.Data = [.. _value];
     }
 
-    /// <summary>Gets the address.</summary>
+    /// <inheritdoc />
     public Uri? Address { get; }
 
-    /// <summary>Gets whether this instance contains a value.</summary>
+    /// <inheritdoc />
     public bool HasValue => true;
 
-    /// <summary>Gets the value.</summary>
-    public Task<byte[]?> Value { get; }
+    /// <summary>Gets a new copy of the inline bytes.</summary>
+    public Task<byte[]?> Value => Task.FromResult<byte[]?>([.. _value]);
 }
 
 
-/// <summary>Carries bytes inline message data.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class BytesInlineMessageData<T> :
+/// <summary>Lazily deserializes an object from an immutable inline binary snapshot.</summary>
+/// <typeparam name="T">The deserialized value type.</typeparam>
+internal sealed class BytesInlineMessageData<T> :
     MessageData<T>,
     IInlineMessageData
 {
@@ -53,35 +53,35 @@ public class BytesInlineMessageData<T> :
     readonly byte[] _value;
     readonly Lazy<Task<T?>> _valueTask;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="converter">The converter.</param>
-    /// <param name="value">The value to process.</param>
-    /// <param name="address">The address.</param>
+    /// <summary>Creates a lazily converted inline snapshot with an optional repository address.</summary>
+    /// <param name="converter">The converter used for the binary representation.</param>
+    /// <param name="value">The bytes to copy.</param>
+    /// <param name="address">The repository address, when the same bytes were also stored.</param>
     public BytesInlineMessageData(IMessageDataConverter<T> converter, byte[] value, Uri? address = null)
     {
         Address = address;
-        _value = value;
+        _converter = converter ?? throw new ArgumentNullException(nameof(converter));
+        _value = value is null ? throw new ArgumentNullException(nameof(value)) : [.. value];
 
-        _valueTask = new Lazy<Task<T?>>(() => GetValueAsync());
-
-        _converter = converter;
+        _valueTask = new Lazy<Task<T?>>(GetValueAsync);
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="reference">The reference.</param>
+    /// <inheritdoc />
     public void Set(IMessageDataReference reference)
     {
+        ArgumentNullException.ThrowIfNull(reference);
+
         reference.Text = default;
-        reference.Data = _value;
+        reference.Data = [.. _value];
     }
 
-    /// <summary>Gets the address.</summary>
+    /// <inheritdoc />
     public Uri? Address { get; }
 
-    /// <summary>Gets whether this instance contains a value.</summary>
+    /// <inheritdoc />
     public bool HasValue => true;
 
-    /// <summary>Gets the value.</summary>
+    /// <summary>Gets the value deserialized once from the inline bytes.</summary>
     public Task<T?> Value => _valueTask.Value;
 
     async Task<T?> GetValueAsync()

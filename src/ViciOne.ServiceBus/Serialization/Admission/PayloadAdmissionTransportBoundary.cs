@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Admission;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;

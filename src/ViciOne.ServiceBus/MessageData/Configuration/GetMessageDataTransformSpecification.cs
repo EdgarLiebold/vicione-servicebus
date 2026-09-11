@@ -1,41 +1,45 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.MessageData.Conventions;
+using ViciOne.ServiceBus.MessageData.Internals;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transformation;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>Describes requirements for get message data transform.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class GetMessageDataTransformSpecification<TMessage> :
+/// <summary>Builds consume transformations that resolve every message-data property in a contract graph.</summary>
+/// <typeparam name="TMessage">The root message contract type.</typeparam>
+internal sealed class GetMessageDataTransformSpecification<TMessage> :
     TransformSpecification<TMessage>,
     IConsumeTransformSpecification<TMessage>,
     IExecuteTransformSpecification<TMessage>,
     ICompensateTransformSpecification<TMessage>
     where TMessage : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="knownTypes">The known types.</param>
+    /// <summary>Discovers direct and nested message-data properties for one repository owner.</summary>
+    /// <param name="repository">The repository that owns external references.</param>
+    /// <param name="knownTypes">The optional set of object-graph types already visited.</param>
     public GetMessageDataTransformSpecification(IMessageDataRepository repository, IEnumerable<Type>? knownTypes = null)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
 
         Replace = true;
 
-        var types = new HashSet<Type>(knownTypes ?? Enumerable.Empty<Type>()) { typeof(TMessage) };
+        var types = new HashSet<Type>(knownTypes ?? []);
+        if (types.Remove(null!))
+            throw new ArgumentException("Known message-data types cannot contain null.", nameof(knownTypes));
+        types.Add(typeof(TMessage));
 
         AddMessageDataProperties(repository, types);
     }
 
     void IPipeSpecification<CompensateContext<TMessage>>.Apply(IPipeBuilder<CompensateContext<TMessage>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         if (Count > 0)
         {
             IMessageInitializer<TMessage> initializer = Build();
@@ -46,6 +50,8 @@ public class GetMessageDataTransformSpecification<TMessage> :
 
     void IPipeSpecification<ConsumeContext<TMessage>>.Apply(IPipeBuilder<ConsumeContext<TMessage>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         if (Count > 0)
         {
             IMessageInitializer<TMessage> initializer = Build();
@@ -56,6 +62,8 @@ public class GetMessageDataTransformSpecification<TMessage> :
 
     void IPipeSpecification<ExecuteContext<TMessage>>.Apply(IPipeBuilder<ExecuteContext<TMessage>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         if (Count > 0)
         {
             IMessageInitializer<TMessage> initializer = Build();
@@ -64,9 +72,9 @@ public class GetMessageDataTransformSpecification<TMessage> :
         }
     }
 
-    /// <summary>Attempts to get consume topology.</summary>
-    /// <param name="topology">Receives the topology produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates a consume topology when the contract graph contains message-data properties.</summary>
+    /// <param name="topology">Receives the configured topology when one is required.</param>
+    /// <returns><see langword="true" /> when a transformation is required; otherwise, <see langword="false" />.</returns>
     public bool TryGetConsumeTopology([NotNullWhen(true)] out IMessageConsumeTopology<TMessage>? topology)
     {
         if (Count > 0)
@@ -81,9 +89,9 @@ public class GetMessageDataTransformSpecification<TMessage> :
         return false;
     }
 
-    /// <summary>Attempts to get converter.</summary>
-    /// <param name="converter">Receives the converter produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates an object-graph converter when the contract contains message-data properties.</summary>
+    /// <param name="converter">Receives the configured converter when one is required.</param>
+    /// <returns><see langword="true" /> when a transformation is required; otherwise, <see langword="false" />.</returns>
     public bool TryGetConverter([NotNullWhen(true)] out IPropertyConverter<TMessage, TMessage>? converter)
     {
         if (Count > 0)
@@ -135,12 +143,8 @@ public class GetMessageDataTransformSpecification<TMessage> :
 
                 configuration.Apply(this);
             }
-            else if (propertyType.IsNullable(out _))
-            {
-            }
-            else if (propertyType.IsValueTypeOrObject())
-            {
-            }
+            else if (propertyType.IsNullable(out _) || propertyType.IsValueTypeOrObject())
+                continue;
             else if (propertyType.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out types) || propertyType.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out types))
                 ConfigureDictionary(types[0], types[1]);
             else if (propertyType.IsArray)
@@ -165,7 +169,6 @@ public class GetMessageDataTransformSpecification<TMessage> :
 
     static bool IsUnknownObjectType(ICollection<Type> knownTypes, Type propertyType)
     {
-        return propertyType.IsInterfaceOrConcreteClass() && MessageTypeCache.IsValidMessageType(propertyType) && !propertyType.IsValueTypeOrObject()
-            && !knownTypes.Contains(propertyType);
+        return MessageDataTypeClassifier.IsSupported(propertyType) && !knownTypes.Contains(propertyType);
     }
 }

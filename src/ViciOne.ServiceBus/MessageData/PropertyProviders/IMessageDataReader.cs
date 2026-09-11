@@ -3,14 +3,14 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>Defines the operations required by message data reader.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public interface IMessageDataReader<T>
+/// <summary>Creates lazy message-data handles for one supported value category.</summary>
+/// <typeparam name="T">The value type read from repository content.</typeparam>
+internal interface IMessageDataReader<T>
 {
-    /// <summary>Gets message data.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The message data.</returns>
+    /// <summary>Creates a lazy handle for one repository address.</summary>
+    /// <param name="repository">The repository that owns the address.</param>
+    /// <param name="address">The address to load.</param>
+    /// <param name="cancellationToken">The token captured for lazy loading.</param>
+    /// <returns>A populated repository-backed handle.</returns>
     MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken);
 }

@@ -266,3 +266,74 @@ The global lexical follow-up inventory contains two names outside the iteration 
 must still be adjudicated manually: `LegacyAzureDiagnosticId` in diagnostics and `legacyCanonical`
 in QoS validation. The single `placeholder` wording names the real lazy-deserialization sentinel;
 it is not a dummy implementation.
+
+## Confirmed iteration-78 consumer, event, metadata, and message-data findings
+
+The complete 70-file production scope in `Consumer`, `Events`, `Metadata`, and `MessageData` was
+read manually before implementation, together with the public contracts, configuration entry
+points, serializer consumers, dynamic implementation owner, direct call sites, and owning tests.
+No source-comment generator is permitted. The unchanged MessageData baseline passes all 53 tests.
+The unchanged Consumer/Event/Metadata profile exposes a non-deterministic 108-of-109 run: the
+consumer metadata identity test passes in isolation but can overlap tests that mutate the global
+consumer convention. That process-global mutation requires one explicit serialized test owner.
+
+1. The singular `Consumer` folder and flat namespace combine public consumer factories, internal
+   convention caches, and context implementations. Contexts already have a physical subfolder but
+   deliberately remain in the flat namespace. The public factories are useful extension points;
+   the caches are accidental exports. Their folders, namespaces, filenames, and visibility should
+   express those different responsibilities.
+2. Consumer-factory tests do not prove the exact ownership matrix. Owned consumers must be disposed
+   on successful and failed consumption, asynchronous disposal must take precedence, and an
+   externally supplied instance must never be disposed by the factory.
+3. `Events` combines fault snapshots, bus/host readiness, and receive endpoint/transport lifecycle
+   projections. Five lifecycle event implementations have no direct semantic test. Fault snapshots
+   copy their type arrays but currently admit null elements into a non-null contract.
+4. The top-level `Metadata` folder has no cohesive responsibility. Registration metadata belongs to
+   consumers; the message-data converter seam belongs to MessageData; and `TypeMetadataCache`
+   duplicates the public `MessageTypeCache` while also exposing internal dynamic-implementation
+   machinery. The retained implementation cache should own only implementation-type construction.
+5. MessageData exports configuration specifications, conventions, converters, property providers,
+   lazy value implementations, identifiers, and references that applications do not compose
+   directly. The intentional greenfield surface is the public data contract, repository contract
+   and implementations, policy, application extensions, and repository selection/composition API.
+6. The file-system repository defers null failures, ignores cancellation at some boundaries, and
+   derives a path from address segments without proving that the result remains below the configured
+   root. The in-memory repository similarly omits low-level cancellation/null ownership and ignores
+   the supplied retention period. Both repositories therefore implement a weaker contract than the
+   public `IMessageDataRepository` promises.
+7. The lazy reader infers stream ownership from one concrete converter type. That is not a stable
+   capability contract and fails for any semantically equivalent converter. Converter and value
+   constructors also defer several null and snapshot boundaries.
+8. Both get and put property providers use `Task.IsCompleted` followed by `.Result`. A task that is
+   already faulted consequently produces a different exception shape from an asynchronously
+   faulting task. The get provider also treats `HasValue == false` differently depending only on task
+   completion timing. Public behavior must be independent of scheduling.
+9. MessageData composition owns several missing null/result guards, and the repository selector can
+   defer a null repository or invalid path into unrelated infrastructure. All fail-fast boundaries
+   must identify the caller-owned parameter before registration or provider work.
+10. Many comments in the bounded scope describe construction history, use generic filler wording,
+    or no longer state the exact lifetime, ownership, conversion, or storage behavior. Every comment
+    must be rewritten manually from the implementation it documents, including internal code after
+    visibility reduction.
+
+The mandatory Roslyn source-to-test pairing scan inspected 4,256 source files and 1,087 test files.
+It classified 1,596 as name-paired and 2,660 as not name-paired. In the initial Consumer/Event/
+Metadata boundary it highlighted the five receive lifecycle projections plus
+`IMessageDataConverter`; semantic tests rather than filenames remain the acceptance evidence.
+
+The completed iteration preserves every supported behavior while assigning each implementation to
+an explicit owner. Consumer factories now have deterministic sync/async disposal rules; event
+projections snapshot mutable inputs; metadata is divided between consumer registration,
+message-data conversion, and internal message implementation; repositories enforce retention,
+cancellation, snapshot, and path-containment contracts; and property providers behave identically
+for synchronously and asynchronously completed tasks. The reviewed capability measures 88.62%
+line and 80.59% branch coverage with no method above CRAP 30.
+
+The bidirectional asynchronous naming guard was separately attacked until its final, unchanged
+SHA-256 `9014a87363875e58dc12937cd4b61e6692707c0edafc27a7c2b37ff7467fe318` resolved canonical
+metadata symbols, evaluated Release compile/using items and symbols, and accepted Quartz names only
+for an actual interface-member implementation. Its focused profile passes 30 tests. The complete
+architecture profile passes 289 tests, and the final sequential Unit solution passes 5,323 tests
+with no failures or skips. A transient SQL test failure was traced to a non-atomic counter in its
+concurrent recording spy, corrected with interlocked access, and then passed 20 repetitions, the
+126-test SQL module, and the complete solution.

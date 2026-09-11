@@ -1,7 +1,8 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers;
+using ViciOne.ServiceBus.Consumers.Conventions;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;

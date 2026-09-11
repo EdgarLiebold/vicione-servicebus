@@ -60,7 +60,7 @@ public sealed class AmazonSqsMessageDataTests
                 .WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             await bus.PublishAsync(
-                    new S3PayloadMessage(new PutMessageData<string>(expected)),
+                    new S3PayloadMessage(ViciOne.ServiceBus.Advanced.MessageData.FromValue(expected)),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             MessageDataObservation observation = await handled.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);

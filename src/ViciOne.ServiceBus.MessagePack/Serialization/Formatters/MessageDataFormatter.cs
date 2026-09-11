@@ -2,6 +2,7 @@ using MessagePack;
 using MessagePack.Formatters;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Serialization;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Serialization.Json.Converters;
 
@@ -44,9 +45,9 @@ internal sealed class MessageDataFormatter<T> :
         var reference = innerFormatter.Deserialize(ref reader, options);
 
         if (reference?.Text != null)
-            return (MessageData<T>?)new StringInlineMessageData(reference.Text, reference.Reference);
+            return (MessageData<T>)(object)new StringInlineMessageData(reference.Text, reference.Reference);
         if (reference?.Data != null)
-            return (MessageData<T>?)new BytesInlineMessageData(reference.Data, reference.Reference);
+            return (MessageData<T>)(object)new BytesInlineMessageData(reference.Data, reference.Reference);
 
         if (reference?.Reference == null)
             return EmptyMessageData<T>.Instance;

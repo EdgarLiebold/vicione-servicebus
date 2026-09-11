@@ -13,7 +13,7 @@ using ViciOne.ServiceBus.Serialization;
 namespace ViciOne.ServiceBus.Quartz.Runtime;
 
 /// <summary>Forwards a persisted scheduled message through its bus when the Quartz trigger fires.</summary>
-internal sealed class QuartzScheduledMessageJob<TBus> : IJob
+internal sealed class QuartzScheduledMessageJob<TBus> : global::Quartz.IJob
     where TBus : class, IBus
 {
     readonly IBus? _bus;
@@ -33,7 +33,7 @@ internal sealed class QuartzScheduledMessageJob<TBus> : IJob
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    ValueTask IJob.Execute(IJobExecutionContext context, CancellationToken cancellationToken)
+    ValueTask global::Quartz.IJob.Execute(IJobExecutionContext context, CancellationToken cancellationToken)
     {
         return ExecuteAsync(context, cancellationToken);
     }
@@ -41,7 +41,7 @@ internal sealed class QuartzScheduledMessageJob<TBus> : IJob
     /// <summary>Reconstructs and sends the persisted message for the fired trigger.</summary>
     /// <param name="context">The fired Quartz job context and merged job data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A value task that completes when the scheduled message has been accepted by the configured send transport.</returns>
     internal async ValueTask ExecuteAsync(IJobExecutionContext context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);

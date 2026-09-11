@@ -2,6 +2,6 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>Represents the method that handles one time setup callback.</summary>
-/// <returns>The value produced by the operation.</returns>
+/// <summary>Performs one-time middleware setup asynchronously.</summary>
+/// <returns>A task that completes when the one-time setup has finished.</returns>
 public delegate Task OneTimeSetupCallback();

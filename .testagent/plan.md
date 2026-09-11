@@ -417,3 +417,63 @@ passes 2,721 tests, and the architecture profile passes 260 tests. Bounded cover
 and 86.92% branch with no method above CRAP 30. The fresh-package/API gate passes all 18 journeys,
 31 packages, three isolated provider consumers, and 30 runtime API contracts with direct-interface
 metadata now enforced.
+
+## Iteration 78 outcome
+
+Turn consumer creation, infrastructure events, metadata, and message-data storage into coherent
+greenfield responsibilities. Preserve every supported feature while making lifetime ownership,
+event snapshots, storage retention, cancellation, path safety, stream ownership, and timing
+semantics explicit; expose only intentional application contracts; and align all source comments,
+types, namespaces, filenames, and directories with their final owners.
+
+## Iteration 78 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-CONSUMER-FACTORY-LIFETIME` | default, delegate, object, and external-instance factories on success/failure | core consumer tests | exact sync/async disposal counts, async precedence, exception propagation, and zero disposal for external instances |
+| `REQ-VSB-CONSUMER-CONVENTION-STATE` | stable cache snapshot while process-global conventions are mutated | core consumer tests | serialized mutation collection plus repeated and concurrent same-version identity |
+| `REQ-VSB-EVENT-SNAPSHOTS` | readiness, endpoint/transport lifecycle, and fault projections | core event tests | exact host/input identifiers, addresses, tags, metrics, time-provider values, immutable copies, and null-element rejection |
+| `REQ-VSB-METADATA-OWNERSHIP` | public message metadata versus internal implementation-type creation | core and architecture tests | no redundant public facade; exact dynamic implementation caching retained through all serializers/initializers |
+| `REQ-VSB-MESSAGEDATA-PUBLIC-API` | intentional application surface only | architecture and package API tests | exact exported type/member allowlist and updated deterministic packed baseline |
+| `REQ-VSB-MESSAGEDATA-REPOSITORIES` | in-memory and file-system null, cancellation, retention, missing data, and path containment | core MessageData tests | fail-before-I/O guards, exact token identity, injected-time expiry boundaries, round trips, and traversal rejection |
+| `REQ-VSB-MESSAGEDATA-CONVERSION` | byte/text/object/stream conversion and lazy resolution | core MessageData tests | input snapshots, null/type failures, single fetch, explicit stream-retention capability, and exact disposal ownership |
+| `REQ-VSB-MESSAGEDATA-PROPERTY-PROVIDERS` | synchronously/asynchronously completed, faulted, canceled, empty, and populated inputs | core MessageData tests | identical value and exception behavior independent of task completion timing |
+| `REQ-VSB-MESSAGEDATA-COMPOSITION` | selector, repository, path, policy, and convention boundaries | core MessageData tests | exact caller-parameter failures before registration, repository, or transport work |
+| `REQ-VSB-SOURCE-NAVIGATION` | consumer/event/metadata/message-data owners | architecture tests | exact matching namespaces, filenames, folders, visibility, and no stale former owner |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in the bounded production scope | manual review plus architecture hygiene tests | comments state only current code/function behavior; no historical, procedural, stale, filler, or generated narrative |
+
+## Iteration 78 mutation obligations
+
+- Skip owned-consumer disposal on success or failure, prefer synchronous disposal over
+  `IAsyncDisposable`, or dispose an external instance: the corresponding exact lifetime assertion
+  must fail.
+- Remove convention-test serialization or return a new same-version cache snapshot: the stability
+  test must fail without relying on arbitrary delays.
+- Drop one event field, reuse a caller-owned mutable collection, or admit a null message type: the
+  direct snapshot assertion must fail.
+- Re-expose one implementation cache, converter, value, property provider, or configuration
+  specification: the exact public-surface inventory must fail.
+- Ignore pre-cancellation, bypass in-memory expiry, permit either adjacent expiry boundary, or allow
+  a file path outside the configured root: the repository contract test must fail before unrelated
+  I/O.
+- Infer source-stream retention from a concrete converter type or omit a required disposal: the
+  custom-converter ownership test must fail.
+- Restore `.Result`, branch on task completion timing, or treat `HasValue == false` differently in
+  one timing partition: paired property-provider tests must observe the mismatch.
+- Let a null selector result, path, repository, converter, address, or payload reach a dependency:
+  the owning boundary spy must record the unintended call or the wrong parameter name.
+- Return one type to the former flat/singular namespace or top-level `Metadata` owner: the exact
+  source-navigation inventory must fail.
+- Restore a stale or procedural comment from the bounded inventory: the syntax-aware hygiene gate
+  and the manual file ledger must reject the exact source location.
+
+## Iteration 78 completion
+
+All planned consumer, event, metadata, and message-data boundaries were implemented and the nine
+isolated product mutations were killed and restored. The reviewed capability has 88.62% line and
+80.59% branch coverage across 246 instrumented methods with no CRAP score above 30. The internal
+Async Red Team converted every surviving suffix, alias, Release, same-FQN, and Quartz-interface
+attack into semantic protection; its final focused profile passes 30 tests on an unchanged hash.
+The final architecture assembly passes 289 tests and the complete sequential Unit solution passes
+5,323 tests with no failures or skips. The protected `review/` and untracked `TestResults/` trees
+remain outside the iteration commit.

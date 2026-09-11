@@ -2,20 +2,24 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.MessageData.Converters;
 
-/// <summary>Converts string message data values.</summary>
-public class StringMessageDataConverter :
+/// <summary>Decodes repository content as UTF-8 text.</summary>
+internal sealed class StringMessageDataConverter :
     IMessageDataConverter<string>
 {
-    /// <summary>Converts the supplied value.</summary>
-    /// <param name="stream">The stream.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the converted value.</returns>
+    /// <inheritdoc />
+    public bool TransfersSourceStreamOwnership => false;
+
+    /// <summary>Reads the remaining stream content as UTF-8 text.</summary>
+    /// <param name="stream">The readable UTF-8 source stream.</param>
+    /// <param name="cancellationToken">The token that cancels stream reading.</param>
+    /// <returns>A task containing the decoded text.</returns>
     public async Task<string?> ConvertAsync(Stream stream, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
         using var ms = new MemoryStream();
 
         await stream.CopyToAsync(ms, 4096, cancellationToken).ConfigureAwait(false);

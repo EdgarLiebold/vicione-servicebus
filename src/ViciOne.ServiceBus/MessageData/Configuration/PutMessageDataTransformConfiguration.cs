@@ -5,10 +5,10 @@ using ViciOne.ServiceBus.MessageData.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>Stores and validates put message data transform configuration.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TValue">The value stored by the member.</typeparam>
-public class PutMessageDataTransformConfiguration<TInput, TValue> :
+/// <summary>Configures storage-policy application for one direct message-data property.</summary>
+/// <typeparam name="TInput">The outgoing message type.</typeparam>
+/// <typeparam name="TValue">The message-data value type.</typeparam>
+internal sealed class PutMessageDataTransformConfiguration<TInput, TValue> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
 {
@@ -16,24 +16,26 @@ public class PutMessageDataTransformConfiguration<TInput, TValue> :
     readonly IMessageDataRepository _repository;
     readonly MessageDataPolicy _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="policy">The policy.</param>
-    /// <param name="property">The property.</param>
+    /// <summary>Creates a property transformation bound to one repository and policy owner.</summary>
+    /// <param name="repository">The repository used for external storage.</param>
+    /// <param name="policy">The inline and retention policy.</param>
+    /// <param name="property">The message-data property to transform.</param>
     public PutMessageDataTransformConfiguration(IMessageDataRepository repository, MessageDataPolicy policy, PropertyInfo property)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(policy);
+        ArgumentNullException.ThrowIfNull(property);
 
         _property = property;
         _repository = repository;
-        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        _policy = policy;
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <inheritdoc />
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         if (!MessageTypeCache<TInput>.IsValidMessageType)
             return;
 

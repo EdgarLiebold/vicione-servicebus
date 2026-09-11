@@ -1,42 +1,45 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.MessageData.Conventions;
+using ViciOne.ServiceBus.MessageData.Internals;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transformation;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>Describes requirements for put message data transform.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class PutMessageDataTransformSpecification<TMessage> :
+/// <summary>Builds send transformations that apply message-data storage policy across a contract graph.</summary>
+/// <typeparam name="TMessage">The root message contract type.</typeparam>
+internal sealed class PutMessageDataTransformSpecification<TMessage> :
     TransformSpecification<TMessage>,
     ISendTransformSpecification<TMessage>
     where TMessage : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="policy">The policy.</param>
-    /// <param name="knownTypes">The known types.</param>
+    /// <summary>Discovers direct and nested message-data properties for one repository and policy owner.</summary>
+    /// <param name="repository">The repository used for external storage.</param>
+    /// <param name="policy">The inline and retention policy.</param>
+    /// <param name="knownTypes">The optional set of object-graph types already visited.</param>
     public PutMessageDataTransformSpecification(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type>? knownTypes = null)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
-        if (policy == null)
-            throw new ArgumentNullException(nameof(policy));
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(policy);
 
         Replace = true;
 
-        var types = new HashSet<Type>(knownTypes ?? Enumerable.Empty<Type>()) { typeof(TMessage) };
+        var types = new HashSet<Type>(knownTypes ?? []);
+        if (types.Remove(null!))
+            throw new ArgumentException("Known message-data types cannot contain null.", nameof(knownTypes));
+        types.Add(typeof(TMessage));
 
         AddMessageDataProperties(repository, policy, types);
     }
 
     void IPipeSpecification<SendContext<TMessage>>.Apply(IPipeBuilder<SendContext<TMessage>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         if (Count > 0)
         {
             IMessageInitializer<TMessage> initializer = Build();
@@ -45,9 +48,9 @@ public class PutMessageDataTransformSpecification<TMessage> :
         }
     }
 
-    /// <summary>Attempts to get send topology.</summary>
-    /// <param name="topology">Receives the topology produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates a send topology when the contract graph contains message-data properties.</summary>
+    /// <param name="topology">Receives the configured topology when one is required.</param>
+    /// <returns><see langword="true" /> when a transformation is required; otherwise, <see langword="false" />.</returns>
     public bool TryGetSendTopology([NotNullWhen(true)] out IMessageSendTopology<TMessage>? topology)
     {
         if (Count > 0)
@@ -62,9 +65,9 @@ public class PutMessageDataTransformSpecification<TMessage> :
         return false;
     }
 
-    /// <summary>Attempts to get converter.</summary>
-    /// <param name="converter">Receives the converter produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates an object-graph converter when the contract contains message-data properties.</summary>
+    /// <param name="converter">Receives the configured converter when one is required.</param>
+    /// <returns><see langword="true" /> when a transformation is required; otherwise, <see langword="false" />.</returns>
     public bool TryGetConverter([NotNullWhen(true)] out IPropertyConverter<TMessage, TMessage>? converter)
     {
         if (Count > 0)
@@ -116,12 +119,8 @@ public class PutMessageDataTransformSpecification<TMessage> :
 
                 configuration.Apply(this);
             }
-            else if (propertyType.IsNullable(out _))
-            {
-            }
-            else if (propertyType.IsValueTypeOrObject())
-            {
-            }
+            else if (propertyType.IsNullable(out _) || propertyType.IsValueTypeOrObject())
+                continue;
             else if (propertyType.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out types) || propertyType.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out types))
                 ConfigureDictionary(types[0], types[1]);
             else if (propertyType.IsArray)
@@ -146,7 +145,6 @@ public class PutMessageDataTransformSpecification<TMessage> :
 
     static bool IsUnknownObjectType(ICollection<Type> knownTypes, Type propertyType)
     {
-        return propertyType.IsInterfaceOrConcreteClass() && MessageTypeCache.IsValidMessageType(propertyType) && !propertyType.IsValueTypeOrObject()
-            && !knownTypes.Contains(propertyType);
+        return MessageDataTypeClassifier.IsSupported(propertyType) && !knownTypes.Contains(propertyType);
     }
 }

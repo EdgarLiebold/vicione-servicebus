@@ -6,18 +6,14 @@ using ViciOne.ServiceBus.MessageData.Values;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>Reads stream message data values.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class StreamMessageDataReader<T> :
+/// <summary>Creates lazy handles that transfer repository stream ownership to the caller.</summary>
+/// <typeparam name="T">The factory-selected stream type.</typeparam>
+internal sealed class StreamMessageDataReader<T> :
     IMessageDataReader<T>
 {
-    /// <summary>Gets message data.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The message data.</returns>
+    /// <inheritdoc />
     public MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken)
     {
-        return (MessageData<T>)new GetMessageData<Stream>(address, repository, MessageDataConverter.Stream, cancellationToken);
+        return (MessageData<T>)(object)new GetMessageData<Stream>(address, repository, MessageDataConverter.Stream, cancellationToken);
     }
 }

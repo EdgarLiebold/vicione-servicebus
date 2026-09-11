@@ -1,7 +1,7 @@
 using System;
 using MessagePack;
 using MessagePack.Formatters;
-using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 
@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 internal sealed class InterfaceMessagePackFormatter<TInterface> :
     IMessagePackFormatter<TInterface>
 {
-    static readonly Type _declaredConcreteType = TypeMetadataCache.GetImplementationType(typeof(TInterface));
+    static readonly Type _declaredConcreteType = MessageImplementationCache.GetImplementationType(typeof(TInterface));
 
     // One cache per closed interface type rather than per formatter instance: a compiled invoker is
     // valid for the whole process, and the resolver is free to hand out more than one formatter. The

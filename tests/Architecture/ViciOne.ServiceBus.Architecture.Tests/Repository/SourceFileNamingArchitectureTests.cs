@@ -147,7 +147,7 @@ public sealed class SourceFileNamingArchitectureTests
         [
             ("src/ViciOne.ServiceBus/Batching/Contexts", "ViciOne.ServiceBus.Batching.Contexts",
                 ["BatchConsumeContext.cs", "MessageBatch.cs"]),
-            ("src/ViciOne.ServiceBus/Consumer/Contexts", "ViciOne.ServiceBus.Consumer",
+            ("src/ViciOne.ServiceBus/Consumers/Contexts", "ViciOne.ServiceBus.Consumers.Contexts",
                 ["ConsumerConsumeContextProxy.cs", "ConsumerConsumeContextScope.cs"]),
             ("src/ViciOne.ServiceBus/Context/Activities", "ViciOne.ServiceBus.Context",
                 ["ActivityContextProxy.cs", "ActivityContextScope.cs", "CompensateContextProxy.cs", "CompensateContextScope.cs",
@@ -185,6 +185,93 @@ public sealed class SourceFileNamingArchitectureTests
 
         string formerFlatDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Context");
         Assert.Empty(Directory.EnumerateFiles(formerFlatDirectory, "*.cs", SearchOption.TopDirectoryOnly));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "consumer-event-and-message-data-files-have-explicit-owners")]
+    public void ConsumerEventAndMessageDataFiles_AreGroupedByResponsibility()
+    {
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            ("src/ViciOne.ServiceBus/Consumers", "ViciOne.ServiceBus.Consumers",
+                ["DefaultConstructorConsumerFactory.cs", "DelegateConsumerFactory.cs", "InstanceConsumerFactory.cs", "ObjectConsumerFactory.cs"]),
+            ("src/ViciOne.ServiceBus/Consumers/Contexts", "ViciOne.ServiceBus.Consumers.Contexts",
+                ["ConsumerConsumeContextProxy.cs", "ConsumerConsumeContextScope.cs"]),
+            ("src/ViciOne.ServiceBus/Consumers/Conventions", "ViciOne.ServiceBus.Consumers.Conventions",
+                ["ConsumerConventionCache.cs"]),
+            ("src/ViciOne.ServiceBus/Consumers/Metadata", "ViciOne.ServiceBus.Consumers.Metadata",
+                ["ConsumerMetadataCache.cs", "ConsumerRegistrationMetadata.cs"]),
+            ("src/ViciOne.ServiceBus/Events/Faults", "ViciOne.ServiceBus.Events.Faults",
+                ["FaultEvent.cs", "FaultExceptionInfo.cs", "ReceiveFaultEvent.cs"]),
+            ("src/ViciOne.ServiceBus/Events/Readiness", "ViciOne.ServiceBus.Events.Readiness",
+                ["BusReadyEvent.cs", "HostReadyEvent.cs"]),
+            ("src/ViciOne.ServiceBus/Events/Receiving", "ViciOne.ServiceBus.Events.Receiving",
+                ["ReceiveEndpointCompletedEvent.cs", "ReceiveEndpointFaultedEvent.cs", "ReceiveEndpointReadyEvent.cs",
+                    "ReceiveEndpointStoppingEvent.cs", "ReceiveTransportCompletedEvent.cs", "ReceiveTransportFaultedEvent.cs",
+                    "ReceiveTransportReadyEvent.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData", "ViciOne.ServiceBus.MessageData",
+                ["EncryptedMessageDataRepository.cs", "FileSystemMessageDataRepository.cs", "InMemoryMessageDataRepository.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Admission", "ViciOne.ServiceBus.MessageData.Admission",
+                ["MessageDataAdmissionEvidence.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Configuration", "ViciOne.ServiceBus.MessageData.Configuration",
+                ["ActivityMessageDataConfigurationObserver.cs", "GetMessageDataObjectArrayTransformConfiguration.cs",
+                    "GetMessageDataObjectDictionaryTransformConfiguration.cs", "GetMessageDataObjectTransformConfiguration.cs",
+                    "GetMessageDataTransformConfiguration.cs", "GetMessageDataTransformSpecification.cs",
+                    "IMessageDataTransformConfiguration.cs", "PutMessageDataObjectArrayTransformConfiguration.cs",
+                    "PutMessageDataObjectDictionaryTransformConfiguration.cs", "PutMessageDataObjectTransformConfiguration.cs",
+                    "PutMessageDataTransformConfiguration.cs", "PutMessageDataTransformSpecification.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Conventions", "ViciOne.ServiceBus.MessageData.Conventions",
+                ["IMessageDataMessageConsumeTopologyConvention.cs", "IMessageDataMessageSendTopologyConvention.cs",
+                    "MessageDataConsumeTopologyConvention.cs", "MessageDataMessageConsumeTopology.cs",
+                    "MessageDataMessageConsumeTopologyConvention.cs", "MessageDataMessageSendTopology.cs",
+                    "MessageDataMessageSendTopologyConvention.cs", "MessageDataSendTopologyConvention.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Converters", "ViciOne.ServiceBus.MessageData.Converters",
+                ["ByteArrayMessageDataConverter.cs", "IMessageDataConverter.cs", "MessageDataConverter.cs",
+                    "StreamMessageDataConverter.cs", "StringMessageDataConverter.cs", "SystemTextJsonObjectMessageDataConverter.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Internals", "ViciOne.ServiceBus.MessageData.Internals",
+                ["MessageDataTypeClassifier.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/PropertyProviders", "ViciOne.ServiceBus.MessageData.PropertyProviders",
+                ["BytesMessageDataReader.cs", "GetMessageDataPropertyProvider.cs", "IMessageDataReader.cs",
+                    "MessageDataReaderFactory.cs", "ObjectMessageDataReader.cs", "PutMessageDataPropertyProvider.cs",
+                    "StreamMessageDataReader.cs", "StringMessageDataReader.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Serialization", "ViciOne.ServiceBus.MessageData.Serialization",
+                ["IInlineMessageData.cs", "IMessageDataReference.cs"]),
+            ("src/ViciOne.ServiceBus/MessageData/Values", "ViciOne.ServiceBus.MessageData.Values",
+                ["BytesInlineMessageData.cs", "DeserializedMessageData.cs", "EmptyMessageData.cs", "GetMessageData.cs",
+                    "InlineMessageData.cs", "PutMessageData.cs", "StoredMessageData.cs", "StringInlineMessageData.cs"]),
+        ];
+
+        foreach ((string relativeDirectory, string expectedNamespace, string[] expectedFiles) in groups)
+        {
+            string directory = Path.Combine(RepositoryLayout.Root, relativeDirectory);
+            string[] actualFiles = Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Order(StringComparer.Ordinal)
+                .ToArray();
+
+            Assert.Equal(expectedFiles.Order(StringComparer.Ordinal), actualFiles);
+            Assert.All(actualFiles, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
+
+        Assert.Empty(Directory.EnumerateFiles(
+            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Events"),
+            "*.cs",
+            SearchOption.TopDirectoryOnly));
+        Assert.False(Directory.Exists(Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Consumer")));
+        Assert.False(Directory.Exists(Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Metadata")));
+
+        string selectorPath = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Configuration",
+            "MessageDataRepositorySelectorExtensions.cs");
+        Assert.Equal(
+            ["ViciOne.ServiceBus.Configuration"],
+            ReadNamespaces(selectorPath, TestContext.Current.CancellationToken));
     }
 
     [Fact]

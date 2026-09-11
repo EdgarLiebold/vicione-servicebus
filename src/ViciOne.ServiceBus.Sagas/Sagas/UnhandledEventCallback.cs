@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Callback for an unhandled event in the state machine.</summary>
+/// <summary>Processes an unhandled state-machine event asynchronously.</summary>
 /// <typeparam name="TSaga">The state machine instance type.</typeparam>
 /// <param name="context">The event context.</param>
-/// <returns>The value produced by the operation.</returns>
+/// <returns>A task that completes when the unhandled event has been processed.</returns>
 public delegate Task UnhandledEventCallback<TSaga>(UnhandledEventContext<TSaga> context)
     where TSaga : class, SagaStateMachineInstance;

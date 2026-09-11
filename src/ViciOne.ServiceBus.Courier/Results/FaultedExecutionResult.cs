@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Messages;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Courier.Results;

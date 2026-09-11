@@ -5,32 +5,33 @@ using ViciOne.ServiceBus.MessageData.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>Stores and validates get message data transform configuration.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TValue">The value stored by the member.</typeparam>
-public class GetMessageDataTransformConfiguration<TInput, TValue> :
+/// <summary>Configures loading for one direct message-data property.</summary>
+/// <typeparam name="TInput">The incoming message type.</typeparam>
+/// <typeparam name="TValue">The message-data value type.</typeparam>
+internal sealed class GetMessageDataTransformConfiguration<TInput, TValue> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
 {
     readonly PropertyInfo _property;
     readonly IMessageDataRepository _repository;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="property">The property.</param>
+    /// <summary>Creates a property transformation bound to one repository.</summary>
+    /// <param name="repository">The repository that owns external references.</param>
+    /// <param name="property">The message-data property to transform.</param>
     public GetMessageDataTransformConfiguration(IMessageDataRepository repository, PropertyInfo property)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(property);
 
         _property = property;
         _repository = repository;
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <inheritdoc />
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         var inputPropertyProvider = new InputPropertyProvider<TInput, MessageData<TValue>>(_property);
 
         var provider = new GetMessageDataPropertyProvider<TInput, TValue>(inputPropertyProvider, _repository);

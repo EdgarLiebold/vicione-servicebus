@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Consumers.Contexts;
 using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Batching.Runtime;

@@ -3,24 +3,32 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>Message data that needs to be stored in the repository when the message is sent.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class PutMessageData<T> :
+/// <summary>Defers message-data storage until the outgoing message is transformed.</summary>
+/// <typeparam name="T">The value type to store.</typeparam>
+internal sealed class PutMessageData<T> :
     MessageData<T>
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <param name="hasValue">The has value.</param>
-    public PutMessageData(T value, bool hasValue = true)
+    readonly T _value;
+
+    /// <summary>Creates a populated value whose storage policy is applied during send processing.</summary>
+    /// <param name="value">The non-null value to store.</param>
+    public PutMessageData(T value)
     {
-        HasValue = hasValue;
-        Value = Task.FromResult<T?>(value);
+        ArgumentNullException.ThrowIfNull(value);
+        if (value is byte[] bytes)
+            value = (T)(object)bytes.AsSpan().ToArray();
+
+        _value = value;
     }
 
-    /// <summary>Gets the address.</summary>
+    /// <inheritdoc />
     public Uri? Address => null;
-    /// <summary>Gets whether this instance contains a value.</summary>
-    public bool HasValue { get; }
-    /// <summary>Gets the value.</summary>
-    public Task<T?> Value { get; }
+
+    /// <inheritdoc />
+    public bool HasValue => true;
+
+    /// <summary>Gets the deferred value, returning an independent copy for binary data.</summary>
+    public Task<T?> Value => Task.FromResult<T?>(_value is byte[] bytes
+        ? (T)(object)bytes.AsSpan().ToArray()
+        : _value);
 }

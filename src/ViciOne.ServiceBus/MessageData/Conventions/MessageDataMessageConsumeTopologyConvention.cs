@@ -4,19 +4,19 @@ using ViciOne.ServiceBus.MessageData.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>Applies conventions for message data message consume topology.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class MessageDataMessageConsumeTopologyConvention<TMessage> :
+/// <summary>Creates a consume transform only when a message contract contains message-data properties.</summary>
+/// <typeparam name="TMessage">The message contract inspected by the convention.</typeparam>
+internal sealed class MessageDataMessageConsumeTopologyConvention<TMessage> :
     IMessageDataMessageConsumeTopologyConvention<TMessage>
     where TMessage : class
 {
     readonly IMessageDataRepository _repository;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repository">The repository.</param>
+    /// <summary>Creates a contract-specific convention for one repository.</summary>
+    /// <param name="repository">The repository that owns external references.</param>
     public MessageDataMessageConsumeTopologyConvention(IMessageDataRepository repository)
     {
-        _repository = repository;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     bool IMessageConsumeTopologyConvention.TryGetMessageConsumeTopologyConvention<T>(
@@ -27,9 +27,9 @@ public class MessageDataMessageConsumeTopologyConvention<TMessage> :
         return convention != null;
     }
 
-    /// <summary>Attempts to get message consume topology.</summary>
-    /// <param name="messageConsumeTopology">Receives the message consume topology produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates the consume transformation required by this contract.</summary>
+    /// <param name="messageConsumeTopology">Receives the topology when message-data properties were discovered.</param>
+    /// <returns><see langword="true" /> when the contract requires a message-data transformation.</returns>
     public bool TryGetMessageConsumeTopology([NotNullWhen(true)] out IMessageConsumeTopology<TMessage>? messageConsumeTopology)
     {
         var specification = new GetMessageDataTransformSpecification<TMessage>(_repository);

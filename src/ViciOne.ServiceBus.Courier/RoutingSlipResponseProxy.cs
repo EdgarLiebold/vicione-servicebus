@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
-using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Events.Faults;
 
 namespace ViciOne.ServiceBus.Courier;
 
