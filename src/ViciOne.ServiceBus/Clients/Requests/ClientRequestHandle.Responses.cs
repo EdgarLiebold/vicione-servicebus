@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 internal sealed partial class ClientRequestHandle<TRequest>
     where TRequest : class
@@ -82,11 +82,11 @@ internal sealed partial class ClientRequestHandle<TRequest>
         }
     }
 
-    void HandleFault()
+    void ConnectFaultHandler()
     {
         Task MessageHandlerAsync(ConsumeContext<Fault<TRequest>> context)
         {
-            return FaultHandlerAsync(context);
+            return HandleFaultAsync(context);
         }
 
         lock (_handlerLock)
@@ -101,7 +101,7 @@ internal sealed partial class ClientRequestHandle<TRequest>
         }
     }
 
-    Task FaultHandlerAsync(ConsumeContext<Fault<TRequest>> context)
+    Task HandleFaultAsync(ConsumeContext<Fault<TRequest>> context)
     {
         Fail(context.Message);
 

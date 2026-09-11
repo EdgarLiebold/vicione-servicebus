@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 /// <summary>Coordinates sending one request and awaiting one of its registered response contracts.</summary>
 /// <typeparam name="TRequest">The request message contract.</typeparam>
@@ -29,6 +29,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     readonly CancellationTokenSource _cancellationTokenSource;
     readonly CancellationToken _requestSendCancellationToken;
     readonly ClientFactoryContext _context;
+    readonly DateTimeOffset? _deadline;
     readonly object _handlerLock;
     readonly TaskCompletionSource<TRequest> _message;
     readonly IBuildPipeConfigurator<SendContext<TRequest>> _pipeConfigurator;
@@ -38,9 +39,9 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     readonly Task _send;
     readonly TaskCompletionSource<SendContext<TRequest>> _sendContext;
     readonly SendRequestCallback _sendRequestCallback;
-    readonly TaskScheduler _taskScheduler;
     readonly TaskCompletionSource _terminalCleanupCompleted;
     readonly RequestTimeout _timeout;
+    readonly bool _useDeadlineAsTimeToLive;
     int _faultedOrCanceled;
     ConnectHandle? _faultHandler;
     ITimer? _timeoutTimer;
@@ -52,26 +53,25 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     /// <param name="cancellationToken">Cancels sending and response waiting.</param>
     /// <param name="timeout">The maximum response-wait duration.</param>
     /// <param name="requestId">An optional request identifier; a new identifier is generated when omitted.</param>
-    /// <param name="taskScheduler">The scheduler used for terminal cleanup callbacks.</param>
+    /// <param name="deadline">The optional absolute response deadline.</param>
+    /// <param name="useDeadlineAsTimeToLive">Whether the remaining deadline also limits transport lifetime.</param>
     public ClientRequestHandle(ClientFactoryContext context, SendRequestCallback sendRequestCallback, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default, Guid? requestId = null, TaskScheduler? taskScheduler = null)
+        RequestTimeout timeout = default, Guid? requestId = null, DateTimeOffset? deadline = null, bool useDeadlineAsTimeToLive = false)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(sendRequestCallback);
+        if (useDeadlineAsTimeToLive && deadline is null)
+            throw new ArgumentException("A transport lifetime derived from a deadline requires an absolute deadline.", nameof(useDeadlineAsTimeToLive));
 
         _context = context;
         _sendRequestCallback = sendRequestCallback;
         _cancellationToken = cancellationToken;
-
+        _deadline = deadline;
+        _useDeadlineAsTimeToLive = useDeadlineAsTimeToLive;
         _timeout = timeout.HasValue ? timeout : _context.DefaultTimeout.HasValue ? _context.DefaultTimeout : RequestTimeout.Default;
         _timeToLive = _timeout;
 
         RequestId = requestId ?? NewId.NextGuid();
-
-        _taskScheduler = taskScheduler ??
-            (SynchronizationContext.Current == null
-                ? TaskScheduler.Default
-                : TaskScheduler.FromCurrentSynchronizationContext());
 
         _message = TaskCompletionSources.Create<TRequest>();
         _pipeConfigurator = new PipeConfigurator<SendContext<TRequest>>();
@@ -103,7 +103,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
         _send.IgnoreUnobservedExceptions();
         DisposeCancellationTokenSourceAfterTerminalCleanupAsync().IgnoreUnobservedExceptions();
 
-        HandleFault();
+        ConnectFaultHandler();
     }
 
     /// <summary>Applies request metadata, the configured send pipeline, and the response timeout to an outgoing context.</summary>
@@ -120,7 +120,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
 
         context.Headers.Set(MessageHeaders.Request.Accept, _accept);
 
-        if (_timeToLive.HasValue)
+        if (!_useDeadlineAsTimeToLive && _timeToLive.HasValue)
             context.TimeToLive ??= _timeToLive.Value;
 
         IPipe<SendContext<TRequest>> pipe = _pipeConfigurator.Build();
@@ -128,10 +128,21 @@ internal sealed partial class ClientRequestHandle<TRequest> :
         if (pipe.IsNotEmpty())
             await pipe.SendAsync(context).ConfigureAwait(false);
 
+        TimeSpan responseTimeout = _timeout.Value;
+        if (_deadline is { } deadline)
+        {
+            responseTimeout = deadline - _context.TimeProvider.GetUtcNow();
+            if (responseTimeout <= TimeSpan.Zero)
+                throw new RequestTimeoutException(RequestId);
+
+            if (_useDeadlineAsTimeToLive)
+                context.TimeToLive = responseTimeout;
+        }
+
         ITimer timeoutTimer = _context.TimeProvider.CreateTimer(
             TimeoutExpired,
             this,
-            _timeout.Value,
+            responseTimeout,
             Timeout.InfiniteTimeSpan)
             ?? throw new InvalidOperationException("The request time provider returned no timeout timer.");
 
@@ -177,7 +188,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
         CancellationToken cancellationToken = CancellationTokenForCanceledRequest();
         CompleteCancellationSignals(cancellationToken);
 
-        Task.Factory.StartNew(CancelAndDispose, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+        Task.Factory.StartNew(CancelAndDispose, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
     }
 
     /// <summary>Adds a send-context specification applied before the request reaches the transport.</summary>

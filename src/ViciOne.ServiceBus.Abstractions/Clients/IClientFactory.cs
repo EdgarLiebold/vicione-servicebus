@@ -4,7 +4,7 @@ using System.Threading;
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Creates request handles and reusable request clients over a shared response endpoint.</summary>
-public interface IClientFactory
+public interface IClientFactory : IAsyncDisposable
 {
     /// <summary>Gets the routing and response context used by this factory.</summary>
     ClientFactoryContext Context { get; }
@@ -98,10 +98,10 @@ public interface IClientFactory
 
     /// <summary>Creates a routed request client that propagates metadata from a consumed message.</summary>
     /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="consumeContext">The consumed message whose outbound metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="consumeContext">The consumed message whose outbound metadata is propagated.</param>
     /// <param name="timeout">The default response timeout, or an unspecified value to use the factory default.</param>
     /// <returns>A request client for <typeparamref name="T" />.</returns>
-    IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout = default)
+    IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout = default)
         where T : class;
 
     /// <summary>Creates a request client for an explicit destination.</summary>
@@ -114,10 +114,10 @@ public interface IClientFactory
 
     /// <summary>Creates a request client for an explicit destination and propagates consumed-message metadata.</summary>
     /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="consumeContext">The consumed message whose outbound metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="consumeContext">The consumed message whose outbound metadata is propagated.</param>
     /// <param name="destinationAddress">The address to which requests are sent.</param>
     /// <param name="timeout">The default response timeout, or an unspecified value to use the factory default.</param>
     /// <returns>A request client for <typeparamref name="T" />.</returns>
-    IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
+    IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
         where T : class;
 }

@@ -76,7 +76,7 @@ public sealed class MediatorRequestTests
         using RequestHandle<PendingRequest> request = client.Create(
             message,
             cancellationToken: TestContext.Current.CancellationToken);
-        var concreteRequest = Assert.IsType<ViciOne.ServiceBus.Clients.ClientRequestHandle<PendingRequest>>(request);
+        var concreteRequest = Assert.IsType<ViciOne.ServiceBus.Clients.Requests.ClientRequestHandle<PendingRequest>>(request);
         Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
         await timeProvider.WaitForTimerCountAsync(1).WaitAsync(
@@ -133,7 +133,7 @@ public sealed class MediatorRequestTests
 
         timeProvider.Advance(TimeSpan.FromMinutes(1));
 
-        var concreteRequest = Assert.IsType<ViciOne.ServiceBus.Clients.ClientRequestHandle<PendingRequest>>(request);
+        var concreteRequest = Assert.IsType<ViciOne.ServiceBus.Clients.Requests.ClientRequestHandle<PendingRequest>>(request);
         RequestTimeoutException exception = await Assert.ThrowsAsync<RequestTimeoutException>(() => response.WaitAsync(
             VirtualTimeSafetyTimeout,
             TestContext.Current.CancellationToken));

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Caching;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 // Disposal cancellation and the no-token overloads are part of the cache contract exercised here;
@@ -28,6 +29,18 @@ public sealed class ResourceCacheLifecycleTests
 
         Assert.Equal(1, value.AsyncDisposeCount);
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-EXPIRATION", "absolute-mode-does-not-subscribe-to-sliding-usage")]
+    public async Task AbsoluteExpiration_DoesNotSubscribeToResourceUsageAsync()
+    {
+        await using var cache = CreateCache(expirationMode: ResourceCacheExpirationMode.Absolute);
+        var value = new TrackedResource("one");
+
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
+
+        Assert.Equal(0, value.SubscriberCount);
     }
 
     [Fact]
@@ -232,15 +245,30 @@ public sealed class ResourceCacheLifecycleTests
     private sealed class TrackedResource(string id, string group = "default") : IResourceUsageSource, IAsyncDisposable, IDisposable
     {
         private int _asyncDisposeCount;
+        private int _subscriberCount;
         private int _syncDisposeCount;
+        private Action? _used;
 
         public string Id { get; } = id;
         public string Group { get; } = group;
         public int AsyncDisposeCount => Volatile.Read(ref _asyncDisposeCount);
+        public int SubscriberCount => Volatile.Read(ref _subscriberCount);
         public int SyncDisposeCount => Volatile.Read(ref _syncDisposeCount);
-        public event Action? Used;
+        public event Action? Used
+        {
+            add
+            {
+                _used += value;
+                Interlocked.Increment(ref _subscriberCount);
+            }
+            remove
+            {
+                _used -= value;
+                Interlocked.Decrement(ref _subscriberCount);
+            }
+        }
 
-        public void Use() => Used?.Invoke();
+        public void Use() => _used?.Invoke();
 
         public ValueTask DisposeAsync()
         {

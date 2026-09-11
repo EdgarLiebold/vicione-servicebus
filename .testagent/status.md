@@ -441,3 +441,45 @@ resolver entries provide one formatter instance under concurrent first access.
 - Packed API: 21,659 lines and SHA-256
   `e74772a4a6f79f19054df5987fc24d685551688fc95c28ef4d019dd303860215`.
 - Product, test, and benchmark format verification plus Git whitespace validation: passed.
+
+## Iteration 77
+
+Iteration 77 completes the bounded manual review of all 34 core caching and request-client source
+files, their public contracts and consumers, and all directly owning tests. No generator authored
+production code or comments. Cache disposal and synchronous index projection now share one active
+lifetime, expiration observation is mode-specific, client-factory ownership is publicly
+asynchronous and idempotent, request deadlines remain absolute across endpoint work, and terminal
+cleanup is independent of an ambient synchronization context.
+
+Client internals now live in responsibility-matching `Contexts`, `Endpoints`, and `Requests`
+folders and namespaces. Exact architecture tests reject the former flat layout. Boundary tests
+cover required contexts, addresses, messages, initializers, wrapper calls, readiness, disposal,
+metadata, and forwarding before unintended dependency work.
+
+### Red/green and mutation evidence
+
+- The focused profile grew from 145 to 190 tests.
+- Seventeen isolated mutations were killed across cache races, expiration observation, request
+  boundaries, async lifetime, deadlines, TTL, synchronization scheduling, physical layout,
+  readiness, disposal, cache forwarding, response forwarding, consume-pipe options, host metadata,
+  and public API interface extraction.
+- Every mutation was restored before fresh final validation.
+- The API work exposed and fixed a baseline blind spot: direct interface relationships are now
+  emitted and exactly guarded. Two independent package runs produced the same API hash.
+
+### Full validation
+
+- Complete core profile: 2,721 passed, 0 failed, 0 skipped.
+- Complete architecture profile: 260 passed, 0 failed, 0 skipped.
+- Bounded coverage: 92.46% line, 86.92% branch, no method above CRAP 30.
+- Release solution build: 0 warnings and 0 errors.
+- Fresh-package gate: 18 journeys, 31 packages, three isolated provider consumers, and all 30
+  runtime API contracts passed.
+- Packed API: 19,961 lines and SHA-256
+  `7a63fd620a3dedc925a4a3409d419905171388458a0ca78ef482e2579466fb7a`.
+- Locked restore, vulnerability inventory, format, JSON, preprocessor, empty-directory, and Git
+  whitespace gates passed.
+
+The repository-wide source goal remains active. The two global compatibility-named findings outside
+this iteration are retained for their owning manual source reviews rather than being changed without
+complete context.

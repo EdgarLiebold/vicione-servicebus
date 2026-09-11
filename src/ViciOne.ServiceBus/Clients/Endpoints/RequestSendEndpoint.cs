@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Endpoints;
 
 /// <summary>Initializes and sends requests through a lazily resolved endpoint.</summary>
 /// <typeparam name="TRequest">The request message contract.</typeparam>

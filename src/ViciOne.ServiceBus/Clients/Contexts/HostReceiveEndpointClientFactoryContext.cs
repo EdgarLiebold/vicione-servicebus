@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Contexts;
 
 /// <summary>Connects request clients to a temporary receive endpoint and owns its lifetime.</summary>
 internal sealed class HostReceiveEndpointClientFactoryContext :

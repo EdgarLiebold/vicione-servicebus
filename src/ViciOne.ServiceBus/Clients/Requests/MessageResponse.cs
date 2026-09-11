@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 /// <summary>Provides a request response together with its transport metadata and serializer context.</summary>
 /// <typeparam name="TResult">The response contract type.</typeparam>

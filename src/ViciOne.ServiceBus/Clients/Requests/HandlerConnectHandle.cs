@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 /// <summary>Owns one typed response-handler registration and its response task.</summary>
 /// <typeparam name="T">The response message contract.</typeparam>

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Contexts;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection.Registration;

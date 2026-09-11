@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Requests;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -164,6 +165,91 @@ public sealed class RequestClientMetadataTests
 
         Assert.Equal("options", exception.ParamName);
         Assert.Equal(now, exception.ActualValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-REQUEST-OPTIONS", "absolute-deadline-includes-endpoint-delay")]
+    public async Task RequestDeadline_DoesNotRestartAfterDelayedEndpointAcquisitionAsync()
+    {
+        DateTimeOffset now = new(2041, 2, 3, 4, 5, 6, TimeSpan.Zero);
+        var clock = new FakeTimeProvider(now);
+        var endpoint = new GatedRequestSendEndpoint();
+        var client = new RequestClient<MetadataRequest>(
+            new SnapshotClientFactoryContext(clock),
+            endpoint,
+            new RequestTimeout(TimeSpan.FromMinutes(5)));
+        using var cancellation = new CancellationTokenSource();
+
+        Task<Response<MetadataResponse>> response = client.GetResponseAsync<MetadataResponse>(
+            new MetadataRequest(Guid.NewGuid(), false),
+            new RequestOptions { Deadline = now.AddMinutes(1) },
+            cancellation.Token);
+        await endpoint.Entered.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+
+        try
+        {
+            clock.Advance(TimeSpan.FromMinutes(1));
+            endpoint.Release();
+
+            Exception? pipelineFailure = await endpoint.PipeOutcome
+                .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+            Assert.IsType<RequestTimeoutException>(pipelineFailure);
+            await Assert.ThrowsAsync<RequestTimeoutException>(() => response);
+        }
+        finally
+        {
+            endpoint.Release();
+            cancellation.Cancel();
+
+            try
+            {
+                await response.WaitAsync(OperationTimeout(), CancellationToken.None);
+            }
+            catch (Exception)
+            {
+                // The asserted request outcome is intentionally terminal.
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false, 75)]
+    [InlineData(true, 300)]
+    [RequirementCoverage("REQ-VSB-APPLICATION-REQUEST-OPTIONS", "deadline-ttl-uses-remaining-time-unless-explicit")]
+    public async Task RequestDeadline_LimitsOnlyTheImplicitTransportLifetimeAfterEndpointDelayAsync(
+        bool explicitTimeToLive,
+        int expectedLifetimeSeconds)
+    {
+        DateTimeOffset now = new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
+        var clock = new FakeTimeProvider(now);
+        var endpoint = new GatedRequestSendEndpoint();
+        var client = new RequestClient<MetadataRequest>(
+            new SnapshotClientFactoryContext(clock),
+            endpoint,
+            new RequestTimeout(TimeSpan.FromMinutes(5)));
+        using var cancellation = new CancellationTokenSource();
+        RequestOptions options = explicitTimeToLive
+            ? new RequestOptions
+            {
+                Deadline = now.AddMinutes(2),
+                TimeToLive = TimeSpan.FromMinutes(5),
+            }
+            : new RequestOptions { Deadline = now.AddMinutes(2) };
+
+        Task<Response<MetadataResponse>> response = client.GetResponseAsync<MetadataResponse>(
+            new MetadataRequest(Guid.NewGuid(), false),
+            options,
+            cancellation.Token);
+        await endpoint.Entered.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+
+        clock.Advance(TimeSpan.FromSeconds(45));
+        endpoint.Release();
+        await endpoint.Applied.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(TimeSpan.FromSeconds(expectedLifetimeSeconds), endpoint.TimeToLive);
+
+        cancellation.Cancel();
+        await Assert.ThrowsAsync<TaskCanceledException>(() => response);
     }
 
     [Fact]
@@ -382,13 +468,19 @@ public sealed class RequestClientMetadataTests
     {
         private readonly TaskCompletionSource _applied = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _entered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource<Exception?> _pipeOutcome =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public Task Applied => _applied.Task;
 
         public Task Entered => _entered.Task;
 
+        public Task<Exception?> PipeOutcome => _pipeOutcome.Task;
+
         public SendHeaders Headers { get; private set; } = new DictionarySendHeaders();
+
+        public TimeSpan? TimeToLive { get; private set; }
 
         public bool WasEntered => _entered.Task.IsCompleted;
 
@@ -411,17 +503,27 @@ public sealed class RequestClientMetadataTests
             await _release.Task.WaitAsync(cancellationToken);
             SendContext<MetadataRequest> context = DispatchProxy.Create<SendContext<MetadataRequest>, RecordingRequestSendContextProxy>();
             var recording = (RecordingRequestSendContextProxy)(object)context;
-            await pipe.SendAsync(context);
-            Headers = recording.Headers;
-            _applied.TrySetResult();
+            try
+            {
+                await pipe.SendAsync(context);
+                Headers = recording.Headers;
+                TimeToLive = context.TimeToLive;
+                _applied.TrySetResult();
+                _pipeOutcome.TrySetResult(null);
+            }
+            catch (Exception exception)
+            {
+                _pipeOutcome.TrySetResult(exception);
+                throw;
+            }
         }
     }
 
-    private sealed class SnapshotClientFactoryContext : ClientFactoryContext
+    private sealed class SnapshotClientFactoryContext(TimeProvider? timeProvider = null) : ClientFactoryContext
     {
         public RequestTimeout DefaultTimeout => new(TimeSpan.FromMinutes(1));
 
-        public TimeProvider TimeProvider => TimeProvider.System;
+        public TimeProvider TimeProvider { get; } = timeProvider ?? TimeProvider.System;
 
         public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
 

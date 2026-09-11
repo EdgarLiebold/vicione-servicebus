@@ -1,14 +1,16 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Clients.Requests;
 
 namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Creates request clients over a configured client-factory context.</summary>
 public sealed class ClientFactory :
-    IClientFactory,
-    IAsyncDisposable
+    IClientFactory
 {
+    TaskCompletionSource? _disposeCompletion;
+
     /// <summary>Creates a request-client factory over the supplied provider context.</summary>
     /// <param name="context">The provider context used for routing, response connections, time, and endpoint resolution.</param>
     public ClientFactory(ClientFactoryContext context)
@@ -20,10 +22,32 @@ public sealed class ClientFactory :
     /// <returns>A task that completes when the owned context is released.</returns>
     public ValueTask DisposeAsync()
     {
-        if (Context is IAsyncDisposable asyncDisposable)
-            return asyncDisposable.DisposeAsync();
+        TaskCompletionSource? completion = Volatile.Read(ref _disposeCompletion);
+        if (completion is not null)
+            return new ValueTask(completion.Task);
 
-        return default;
+        var created = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        completion = Interlocked.CompareExchange(ref _disposeCompletion, created, null);
+        if (completion is not null)
+            return new ValueTask(completion.Task);
+
+        _ = CompleteDisposeAsync(created);
+        return new ValueTask(created.Task);
+    }
+
+    async Task CompleteDisposeAsync(TaskCompletionSource completion)
+    {
+        try
+        {
+            if (Context is IAsyncDisposable asyncDisposable)
+                await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+
+            completion.TrySetResult();
+        }
+        catch (Exception exception)
+        {
+            completion.TrySetException(exception);
+        }
     }
 
     /// <summary>Gets the provider context used by request clients created by this factory.</summary>
@@ -38,6 +62,8 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(timeout);
 
         return client.Create(message, cancellationToken: cancellationToken);
@@ -53,6 +79,9 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(destinationAddress, timeout);
 
         return client.Create(message, cancellationToken: cancellationToken);
@@ -68,6 +97,9 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(message);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(consumeContext, timeout);
 
         return client.Create(message, cancellationToken: cancellationToken);
@@ -84,6 +116,10 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(consumeContext, destinationAddress, timeout);
 
         return client.Create(message, cancellationToken: cancellationToken);
@@ -98,6 +134,8 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(timeout);
 
         return client.Create(values, cancellationToken: cancellationToken);
@@ -113,6 +151,9 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(values);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(destinationAddress, timeout);
 
         return client.Create(values, cancellationToken: cancellationToken);
@@ -128,6 +169,9 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(values);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(consumeContext, timeout);
 
         return client.Create(values, cancellationToken: cancellationToken);
@@ -144,6 +188,10 @@ public sealed class ClientFactory :
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(values);
+        ThrowIfDisposed();
         IRequestClient<T> client = CreateRequestClient<T>(consumeContext, destinationAddress, timeout);
 
         return client.Create(values, cancellationToken: cancellationToken);
@@ -156,20 +204,25 @@ public sealed class ClientFactory :
     public IRequestClient<T> CreateRequestClient<T>(RequestTimeout timeout)
         where T : class
     {
+        ThrowIfDisposed();
+
         if (Context.MessageRoutes.TryGetDestinationAddress<T>(out var destinationAddress))
             return CreateRequestClient<T>(destinationAddress, timeout);
 
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(), timeout.Or(Context.DefaultTimeout));
     }
 
-    /// <summary>Creates a request client that propagates an optional consume context.</summary>
+    /// <summary>Creates a request client that propagates a consumed message context.</summary>
     /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated.</param>
     /// <param name="timeout">The default response-wait duration.</param>
     /// <returns>The request client.</returns>
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ThrowIfDisposed();
+
         if (Context.MessageRoutes.TryGetDestinationAddress<T>(out var destinationAddress))
             return CreateRequestClient<T>(consumeContext, destinationAddress, timeout);
 
@@ -184,6 +237,8 @@ public sealed class ClientFactory :
     public IRequestClient<T> CreateRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ThrowIfDisposed();
         IRequestSendEndpoint<T> requestSendEndpoint = Context.GetRequestEndpoint<T>(destinationAddress);
 
         return new RequestClient<T>(Context, requestSendEndpoint, timeout.Or(Context.DefaultTimeout));
@@ -191,13 +246,22 @@ public sealed class ClientFactory :
 
     /// <summary>Creates a correlated request client for an explicit destination.</summary>
     /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated.</param>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="timeout">The default response-wait duration.</param>
     /// <returns>The request client.</returns>
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ThrowIfDisposed();
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(destinationAddress, consumeContext), timeout.Or(Context.DefaultTimeout));
+    }
+
+    void ThrowIfDisposed()
+    {
+        if (Volatile.Read(ref _disposeCompletion) is not null)
+            throw new ObjectDisposedException(nameof(ClientFactory));
     }
 }

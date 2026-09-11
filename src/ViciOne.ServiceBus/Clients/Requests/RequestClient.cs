@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 /// <summary>Implements request/response operations for one request contract.</summary>
 /// <typeparam name="TRequest">The request message contract.</typeparam>
@@ -45,13 +45,14 @@ internal sealed class RequestClient<TRequest> :
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(options);
         OutgoingOptionsSnapshot optionsSnapshot = OutgoingOptionsSnapshot.Create(options);
+        DateTimeOffset? deadline = options.Deadline;
 
         RequestTimeout timeout = default;
-        if (options.Deadline is { } deadline)
+        if (deadline is { } absoluteDeadline)
         {
-            TimeSpan remaining = deadline - _context.TimeProvider.GetUtcNow();
+            TimeSpan remaining = absoluteDeadline - _context.TimeProvider.GetUtcNow();
             if (remaining <= TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(options), options.Deadline, "The request deadline must be in the future.");
+                throw new ArgumentOutOfRangeException(nameof(options), deadline, "The request deadline must be in the future.");
 
             timeout = new RequestTimeout(remaining);
         }
@@ -73,7 +74,9 @@ internal sealed class RequestClient<TRequest> :
 
                 configurator.UseExecute(context => OutgoingOptionsPipe.Apply(context, optionsSnapshot));
             },
-            optionsSnapshot.RequestId);
+            optionsSnapshot.RequestId,
+            deadline,
+            deadline is not null && optionsSnapshot.TimeToLive is null);
     }
 
     /// <inheritdoc />
@@ -97,10 +100,8 @@ internal sealed class RequestClient<TRequest> :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        async Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
-        {
-            return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
-        }
+        Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token) =>
+            _requestSendEndpoint.SendAsync(requestId, values, pipe, token);
 
         return new ClientRequestHandle<TRequest>(_context, RequestAsync, cancellationToken, timeout.Or(_timeout));
     }
@@ -146,10 +147,8 @@ internal sealed class RequestClient<TRequest> :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        async Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
-        {
-            return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
-        }
+        Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token) =>
+            _requestSendEndpoint.SendAsync(requestId, values, pipe, token);
 
         return GetResponseInternalAsync<T>(RequestAsync, timeout, cancellationToken, callback);
     }
@@ -199,10 +198,8 @@ internal sealed class RequestClient<TRequest> :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        async Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
-        {
-            return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
-        }
+        Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token) =>
+            _requestSendEndpoint.SendAsync(requestId, values, pipe, token);
 
         return GetResponseInternalAsync<TResponse1, TResponse2>(RequestAsync, timeout, cancellationToken, callback);
     }
@@ -256,17 +253,15 @@ internal sealed class RequestClient<TRequest> :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        async Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
-        {
-            return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
-        }
+        Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token) =>
+            _requestSendEndpoint.SendAsync(requestId, values, pipe, token);
 
         return GetResponseInternalAsync<TResponse1, TResponse2, TResponse3>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     async Task<Response<T>> GetResponseInternalAsync<T>(ClientRequestHandle<TRequest>.SendRequestCallback request,
         RequestTimeout timeout, CancellationToken cancellationToken, RequestPipeConfiguratorCallback<TRequest>? callback = null,
-        Guid? requestId = null)
+        Guid? requestId = null, DateTimeOffset? deadline = null, bool useDeadlineAsTimeToLive = false)
         where T : class
     {
         using RequestHandle<TRequest> handle = new ClientRequestHandle<TRequest>(
@@ -274,7 +269,9 @@ internal sealed class RequestClient<TRequest> :
             request,
             cancellationToken,
             timeout.Or(_timeout),
-            requestId);
+            requestId,
+            deadline,
+            useDeadlineAsTimeToLive);
 
         callback?.Invoke(handle);
 

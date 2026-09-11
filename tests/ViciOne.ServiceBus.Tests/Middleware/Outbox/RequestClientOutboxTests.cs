@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Endpoints;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;

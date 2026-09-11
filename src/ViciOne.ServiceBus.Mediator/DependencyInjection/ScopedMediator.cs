@@ -304,9 +304,10 @@ internal sealed class ScopedMediator :
     /// <param name="consumeContext">The consume context.</param>
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <returns>The created request client.</returns>
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout = default)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
         return ClientFactory.CreateRequestClient<T>(consumeContext, timeout);
     }
 
@@ -327,9 +328,11 @@ internal sealed class ScopedMediator :
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <returns>The created request client.</returns>
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
         return ClientFactory.CreateRequestClient<T>(consumeContext, destinationAddress, timeout);
     }
 

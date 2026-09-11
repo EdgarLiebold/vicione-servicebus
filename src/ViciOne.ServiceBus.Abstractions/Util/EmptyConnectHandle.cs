@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>A do-nothing connect handle, simply to satisfy.</summary>
+/// <summary>Represents a connection that owns no resources and requires no disconnection work.</summary>
 public class EmptyConnectHandle :
     ConnectHandle
 {

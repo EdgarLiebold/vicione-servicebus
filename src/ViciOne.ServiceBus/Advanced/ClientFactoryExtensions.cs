@@ -1,5 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Contexts;
 
 namespace ViciOne.ServiceBus.Advanced;
 

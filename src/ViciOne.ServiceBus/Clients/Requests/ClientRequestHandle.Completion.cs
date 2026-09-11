@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 internal sealed partial class ClientRequestHandle<TRequest>
     where TRequest : class
@@ -45,7 +45,7 @@ internal sealed partial class ClientRequestHandle<TRequest>
             }
         }
 
-        Task.Factory.StartNew(HandleFail, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+        Task.Factory.StartNew(HandleFail, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
     }
 
     void CancelAndDispose()

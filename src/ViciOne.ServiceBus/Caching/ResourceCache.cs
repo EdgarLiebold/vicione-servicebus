@@ -89,7 +89,7 @@ public sealed partial class ResourceCache<TValue> :
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(keySelector);
-        ThrowIfObserverMutation();
+        using var operation = EnterOperation();
 
         var index = new ResourceCacheIndex<TKey, TValue>(this, name, keySelector, missingValueFactory, comparer);
 

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Endpoints;
 
 /// <summary>Publishes requests for one message contract.</summary>
 /// <typeparam name="TRequest">The request message contract.</typeparam>
@@ -24,8 +24,6 @@ internal sealed class PublishRequestSendEndpoint<TRequest> :
     /// <summary>Resolves the publish endpoint for the request contract.</summary>
     /// <param name="cancellationToken">Cancels endpoint resolution.</param>
     /// <returns>A task containing the publish send endpoint.</returns>
-    protected override async Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
-    {
-        return await _provider.GetPublishSendEndpointAsync<TRequest>(cancellationToken).ConfigureAwait(false);
-    }
+    protected override Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken) =>
+        _provider.GetPublishSendEndpointAsync<TRequest>(cancellationToken);
 }

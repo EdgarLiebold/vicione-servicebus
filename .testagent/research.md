@@ -209,3 +209,60 @@ and Job Service references are absent from the product assembly, while real nest
 job contracts round-trip through the generic interface path. Media-type descriptors are independent,
 lazy formatter creation returns one instance under concurrent cold access, and benchmarks exercise
 the same public factory contract as application consumers.
+
+## Confirmed iteration-77 cache and request-client findings
+
+All 34 production files in `ViciOne.ServiceBus/Caching` and `ViciOne.ServiceBus/Clients` were read
+manually before implementation, together with the public request contracts, scoped and mediator
+factory consumers, transport cache owners, and all 13 directly owning test files. No source-comment
+generator is permitted. The unchanged focused native-MTP baseline passed all 145 cache and client
+tests. A `dotnet test --project` invocation discovered zero tests in this repository's current MTP
+layout; direct execution of the built MTP test host is the reproducible runner, while compilation
+remains a separate serial `dotnet build` with build-server and shared-compilation isolation.
+
+1. Synchronous `ResourceCache.AddIndex` projects live resources without entering the cache's active
+   operation lifetime. Disposal can therefore dispose a resource while a new index selector is
+   still using it.
+2. Absolute-expiration caches subscribe to `IResourceUsageSource.Used` even though absolute mode
+   deliberately ignores usage. The subscription is an observable, failure-capable side effect that
+   contradicts the public sliding-expiration contract.
+3. The public correlated request-factory overloads accept nullable consume contexts even though
+   explicit no-context overloads exist. Several request boundaries resolve endpoints or reach a
+   wrapped factory before validating required context, address, message, or initializer values.
+4. `IClientFactory` can own a temporary response endpoint but does not expose the concrete
+   factory's asynchronous disposal contract. The concrete disposal path is not idempotent and does
+   not prevent new request creation after disposal begins.
+5. An absolute `RequestOptions.Deadline` is converted to a relative timeout before asynchronous
+   endpoint acquisition and pipeline work. Those delays incorrectly extend both response timeout
+   and the implicit transport time-to-live beyond the caller's absolute deadline.
+6. Request-handle cleanup captures the ambient `SynchronizationContext` through a task scheduler.
+   A non-pumping UI context can strand cancellation and fault completion inside infrastructure code.
+7. Two endpoint adapters and four request callbacks create async state machines only to await and
+   return one task. These are implementation inefficiencies, not user-visible asynchronous APIs.
+8. Cache folder ownership is already coherent. The client folder mixes public factories, factory
+   contexts, endpoint adapters, and request-handle mechanics in one flat namespace; these internals
+   have distinct owners and should move to matching `Contexts`, `Endpoints`, and `Requests`
+   directories and namespaces. The core project root itself already contains only project
+   infrastructure (`GlobalUsings.cs`, the project file, and the lock file).
+9. Existing focused assertions are behaviorally strong, but they do not cover the disposal/index
+   race, absolute-mode subscription side effect, fail-before-dependency boundaries, factory
+   lifetime ownership, delayed absolute deadline, or hostile synchronization context.
+
+The completed bounded implementation addresses all nine findings. The focused profile grew from
+145 to 190 passing tests, and seventeen isolated mutations were killed before final validation.
+Client internals now have explicit `Contexts`, `Endpoints`, and `Requests` owners; factory disposal
+is a public async contract; deadlines remain absolute across endpoint acquisition; cache index
+projection participates in the active lifetime; and absolute-expiration caches do not attach a
+sliding-usage observer.
+
+A related repository-level finding was discovered during API verification: the packed-public-API
+extractor did not encode direct interface relationships. `IClientFactory : IAsyncDisposable` could
+therefore have changed without changing the old baseline. The extractor and exact architecture
+guard now encode and mutation-protect direct externally visible interfaces. An update run and an
+independent comparison run both produced the same 19,961-line contract with SHA-256
+`7a63fd620a3dedc925a4a3409d419905171388458a0ca78ef482e2579466fb7a`.
+
+The global lexical follow-up inventory contains two names outside the iteration whose owning code
+must still be adjudicated manually: `LegacyAzureDiagnosticId` in diagnostics and `legacyCanonical`
+in QoS validation. The single `placeholder` wording names the real lazy-deserialization sentinel;
+it is not a dummy implementation.

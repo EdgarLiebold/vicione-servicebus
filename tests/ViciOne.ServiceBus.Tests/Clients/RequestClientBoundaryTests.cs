@@ -1,4 +1,9 @@
+using System.Reflection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Contexts;
+using ViciOne.ServiceBus.Clients.Endpoints;
+using ViciOne.ServiceBus.Clients.Requests;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Util;
@@ -15,6 +20,25 @@ public sealed class RequestClientBoundaryTests
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new ClientFactory(null!)).ParamName);
         Assert.Equal("clientFactory", Assert.Throws<ArgumentNullException>(() => new ScopedClientFactory(null!, null)).ParamName);
         Assert.Equal("bus", Assert.Throws<ArgumentNullException>(() => new BusClientFactoryContext(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RESPONSE-ENDPOINT", "bus-context-forwards-response-connections")]
+    public void BusContext_ForwardsBothResponseConnectionFormsWithoutRewritingTheirArguments()
+    {
+        IBus bus = DispatchProxy.Create<IBus, RecordingBusProxy>();
+        var recorder = (RecordingBusProxy)(object)bus;
+        var context = new BusClientFactoryContext(bus);
+        IPipe<ConsumeContext<BoundaryResponse>> pipe = Pipe.Empty<ConsumeContext<BoundaryResponse>>();
+
+        using ConnectHandle basicConnection = context.ConnectConsumePipe(pipe);
+        using ConnectHandle configuredConnection = context.ConnectConsumePipe(pipe, ConnectPipeOptions.All);
+
+        Assert.Equal(1, recorder.BasicConnectionCount);
+        Assert.Equal(1, recorder.ConfiguredConnectionCount);
+        Assert.Same(pipe, recorder.BasicPipe);
+        Assert.Same(pipe, recorder.ConfiguredPipe);
+        Assert.Equal(ConnectPipeOptions.All, recorder.Options);
     }
 
     [Fact]
@@ -108,6 +132,136 @@ public sealed class RequestClientBoundaryTests
             new ClientRequestHandle<BoundaryRequest>(null!, callback)).ParamName);
         Assert.Equal("sendRequestCallback", Assert.Throws<ArgumentNullException>(() =>
             new ClientRequestHandle<BoundaryRequest>(context, null!)).ParamName);
+
+        var responseHandle = new ResponseHandlerConnectHandle<BoundaryResponse>(
+            new EmptyConnectHandle(),
+            new TaskCompletionSource<ConsumeContext<BoundaryResponse>>(TaskCreationOptions.RunContinuationsAsynchronously),
+            Task.CompletedTask);
+        Assert.Equal("exception", Assert.Throws<ArgumentNullException>(() =>
+            responseHandle.TrySetException(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "response-handler-forwards-both-release-forms")]
+    public void ResponseHandler_ForwardsDisposalAndExplicitDisconnection()
+    {
+        var connection = new RecordingConnectHandle();
+        var handle = new ResponseHandlerConnectHandle<BoundaryResponse>(
+            connection,
+            new TaskCompletionSource<ConsumeContext<BoundaryResponse>>(TaskCreationOptions.RunContinuationsAsynchronously),
+            Task.CompletedTask);
+
+        handle.Disconnect();
+        handle.Dispose();
+
+        Assert.Equal(1, connection.DisconnectCount);
+        Assert.Equal(1, connection.DisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-CONTEXT", "response-forwards-exact-host-metadata")]
+    public void MessageResponse_ForwardsTheExactHostMetadataInstance()
+    {
+        ConsumeContext<BoundaryResponse> context = DispatchProxy.Create<ConsumeContext<BoundaryResponse>, ResponseContextProxy>();
+        var contextProxy = (ResponseContextProxy)(object)context;
+        var message = new BoundaryResponse("response");
+        var host = new global::ViciOne.ServiceBus.Metadata.BusHostInfo { MachineName = "response-host" };
+        contextProxy.Message = message;
+        contextProxy.Host = host;
+
+        var response = new MessageResponse<BoundaryResponse>(context);
+
+        Assert.Same(message, response.Message);
+        Assert.Same(host, ((MessageContext)response).Host);
+    }
+
+    [Theory]
+    [InlineData(ClientFactoryEntryPoint.Message, "message")]
+    [InlineData(ClientFactoryEntryPoint.DestinationMessageAddress, "destinationAddress")]
+    [InlineData(ClientFactoryEntryPoint.DestinationMessageMessage, "message")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedMessageContext, "consumeContext")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedMessageMessage, "message")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationMessageContext, "consumeContext")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationMessageAddress, "destinationAddress")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationMessageMessage, "message")]
+    [InlineData(ClientFactoryEntryPoint.Values, "values")]
+    [InlineData(ClientFactoryEntryPoint.DestinationValuesAddress, "destinationAddress")]
+    [InlineData(ClientFactoryEntryPoint.DestinationValuesValues, "values")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedValuesContext, "consumeContext")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedValuesValues, "values")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationValuesContext, "consumeContext")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationValuesAddress, "destinationAddress")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationValuesValues, "values")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedClientContext, "consumeContext")]
+    [InlineData(ClientFactoryEntryPoint.DestinationClientAddress, "destinationAddress")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationClientContext, "consumeContext")]
+    [InlineData(ClientFactoryEntryPoint.CorrelatedDestinationClientAddress, "destinationAddress")]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "factory-validates-before-endpoint-resolution")]
+    public void ClientFactory_RejectsEveryMissingRequiredInputBeforeEndpointResolution(
+        ClientFactoryEntryPoint entryPoint,
+        string expectedParameter)
+    {
+        var context = new BoundaryClientFactoryContext();
+        var factory = new ClientFactory(context);
+
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => Invoke(entryPoint, factory));
+
+        Assert.Equal(expectedParameter, exception.ParamName);
+        Assert.Equal(0, context.ResolutionCount);
+    }
+
+    [Theory]
+    [InlineData(ScopedFactoryEntryPoint.Message, "message")]
+    [InlineData(ScopedFactoryEntryPoint.DestinationMessageAddress, "destinationAddress")]
+    [InlineData(ScopedFactoryEntryPoint.DestinationMessageMessage, "message")]
+    [InlineData(ScopedFactoryEntryPoint.Values, "values")]
+    [InlineData(ScopedFactoryEntryPoint.DestinationValuesAddress, "destinationAddress")]
+    [InlineData(ScopedFactoryEntryPoint.DestinationValuesValues, "values")]
+    [InlineData(ScopedFactoryEntryPoint.DestinationClientAddress, "destinationAddress")]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "scoped-factory-validates-before-wrapped-factory")]
+    public void ScopedClientFactory_RejectsEveryMissingRequiredInputBeforeWrappedFactoryUse(
+        ScopedFactoryEntryPoint entryPoint,
+        string expectedParameter)
+    {
+        var context = new BoundaryClientFactoryContext();
+        var factory = new ScopedClientFactory(new ClientFactory(context), consumeContext: null);
+
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => Invoke(entryPoint, factory));
+
+        Assert.Equal(expectedParameter, exception.ParamName);
+        Assert.Equal(0, context.ResolutionCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "factory-contract-owns-one-asynchronous-disposal")]
+    public async Task ClientFactory_ExposesOneIdempotentAsynchronousLifetimeAsync()
+    {
+        var context = new DisposableBoundaryClientFactoryContext();
+        var factory = new ClientFactory(context);
+        Task firstDisposal = factory.DisposeAsync().AsTask();
+        await context.DisposalStarted.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        Task secondDisposal = factory.DisposeAsync().AsTask();
+
+        try
+        {
+            Assert.Same(firstDisposal, secondDisposal);
+            Assert.Equal(1, context.DisposeCount);
+            Assert.True(typeof(IAsyncDisposable).IsAssignableFrom(typeof(IClientFactory)));
+
+            ObjectDisposedException exception = Assert.Throws<ObjectDisposedException>(() =>
+                factory.CreateRequestClient<BoundaryRequest>(default));
+            Assert.Equal(nameof(ClientFactory), exception.ObjectName);
+            Assert.Equal(0, context.ResolutionCount);
+        }
+        finally
+        {
+            context.ReleaseDisposal();
+            await Task.WhenAll(firstDisposal, secondDisposal)
+                .WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        }
+
+        Assert.Same(firstDisposal, factory.DisposeAsync().AsTask());
+        Assert.Equal(1, context.DisposeCount);
     }
 
     [Fact]
@@ -178,6 +332,74 @@ public sealed class RequestClientBoundaryTests
         }
     }
 
+    private static void Invoke(ClientFactoryEntryPoint entryPoint, IClientFactory factory)
+    {
+        var message = new BoundaryRequest("valid");
+        var values = new { Value = "valid" };
+        Uri destination = new("loopback://localhost/request");
+        ConsumeContext consumeContext = DispatchProxy.Create<ConsumeContext, UnusedConsumeContextProxy>();
+
+        object result = entryPoint switch
+        {
+            ClientFactoryEntryPoint.Message => factory.CreateRequest((BoundaryRequest)null!),
+            ClientFactoryEntryPoint.DestinationMessageAddress => factory.CreateRequest((Uri)null!, message),
+            ClientFactoryEntryPoint.DestinationMessageMessage => factory.CreateRequest(destination, (BoundaryRequest)null!),
+            ClientFactoryEntryPoint.CorrelatedMessageContext => factory.CreateRequest((ConsumeContext)null!, message),
+            ClientFactoryEntryPoint.CorrelatedMessageMessage => factory.CreateRequest(consumeContext, (BoundaryRequest)null!),
+            ClientFactoryEntryPoint.CorrelatedDestinationMessageContext =>
+                factory.CreateRequest((ConsumeContext)null!, destination, message),
+            ClientFactoryEntryPoint.CorrelatedDestinationMessageAddress =>
+                factory.CreateRequest(consumeContext, (Uri)null!, message),
+            ClientFactoryEntryPoint.CorrelatedDestinationMessageMessage =>
+                factory.CreateRequest(consumeContext, destination, (BoundaryRequest)null!),
+            ClientFactoryEntryPoint.Values => factory.CreateRequest<BoundaryRequest>((object)null!),
+            ClientFactoryEntryPoint.DestinationValuesAddress => factory.CreateRequest<BoundaryRequest>((Uri)null!, values),
+            ClientFactoryEntryPoint.DestinationValuesValues => factory.CreateRequest<BoundaryRequest>(destination, (object)null!),
+            ClientFactoryEntryPoint.CorrelatedValuesContext =>
+                factory.CreateRequest<BoundaryRequest>((ConsumeContext)null!, values),
+            ClientFactoryEntryPoint.CorrelatedValuesValues =>
+                factory.CreateRequest<BoundaryRequest>(consumeContext, (object)null!),
+            ClientFactoryEntryPoint.CorrelatedDestinationValuesContext =>
+                factory.CreateRequest<BoundaryRequest>((ConsumeContext)null!, destination, values),
+            ClientFactoryEntryPoint.CorrelatedDestinationValuesAddress =>
+                factory.CreateRequest<BoundaryRequest>(consumeContext, (Uri)null!, values),
+            ClientFactoryEntryPoint.CorrelatedDestinationValuesValues =>
+                factory.CreateRequest<BoundaryRequest>(consumeContext, destination, (object)null!),
+            ClientFactoryEntryPoint.CorrelatedClientContext =>
+                factory.CreateRequestClient<BoundaryRequest>((ConsumeContext)null!),
+            ClientFactoryEntryPoint.DestinationClientAddress =>
+                factory.CreateRequestClient<BoundaryRequest>((Uri)null!),
+            ClientFactoryEntryPoint.CorrelatedDestinationClientContext =>
+                factory.CreateRequestClient<BoundaryRequest>((ConsumeContext)null!, destination),
+            ClientFactoryEntryPoint.CorrelatedDestinationClientAddress =>
+                factory.CreateRequestClient<BoundaryRequest>(consumeContext, (Uri)null!),
+            _ => throw new ArgumentOutOfRangeException(nameof(entryPoint), entryPoint, null),
+        };
+
+        Assert.NotNull(result);
+    }
+
+    private static void Invoke(ScopedFactoryEntryPoint entryPoint, IScopedClientFactory factory)
+    {
+        var message = new BoundaryRequest("valid");
+        var values = new { Value = "valid" };
+        Uri destination = new("loopback://localhost/request");
+
+        object result = entryPoint switch
+        {
+            ScopedFactoryEntryPoint.Message => factory.CreateRequest((BoundaryRequest)null!),
+            ScopedFactoryEntryPoint.DestinationMessageAddress => factory.CreateRequest((Uri)null!, message),
+            ScopedFactoryEntryPoint.DestinationMessageMessage => factory.CreateRequest(destination, (BoundaryRequest)null!),
+            ScopedFactoryEntryPoint.Values => factory.CreateRequest<BoundaryRequest>((object)null!),
+            ScopedFactoryEntryPoint.DestinationValuesAddress => factory.CreateRequest<BoundaryRequest>((Uri)null!, values),
+            ScopedFactoryEntryPoint.DestinationValuesValues => factory.CreateRequest<BoundaryRequest>(destination, (object)null!),
+            ScopedFactoryEntryPoint.DestinationClientAddress => factory.CreateRequestClient<BoundaryRequest>((Uri)null!),
+            _ => throw new ArgumentOutOfRangeException(nameof(entryPoint), entryPoint, null),
+        };
+
+        Assert.NotNull(result);
+    }
+
     public enum EntryPoint
     {
         CreateTyped,
@@ -188,6 +410,41 @@ public sealed class RequestClientBoundaryTests
         DoubleValues,
         TripleTyped,
         TripleValues,
+    }
+
+    public enum ClientFactoryEntryPoint
+    {
+        Message,
+        DestinationMessageAddress,
+        DestinationMessageMessage,
+        CorrelatedMessageContext,
+        CorrelatedMessageMessage,
+        CorrelatedDestinationMessageContext,
+        CorrelatedDestinationMessageAddress,
+        CorrelatedDestinationMessageMessage,
+        Values,
+        DestinationValuesAddress,
+        DestinationValuesValues,
+        CorrelatedValuesContext,
+        CorrelatedValuesValues,
+        CorrelatedDestinationValuesContext,
+        CorrelatedDestinationValuesAddress,
+        CorrelatedDestinationValuesValues,
+        CorrelatedClientContext,
+        DestinationClientAddress,
+        CorrelatedDestinationClientContext,
+        CorrelatedDestinationClientAddress,
+    }
+
+    public enum ScopedFactoryEntryPoint
+    {
+        Message,
+        DestinationMessageAddress,
+        DestinationMessageMessage,
+        Values,
+        DestinationValuesAddress,
+        DestinationValuesValues,
+        DestinationClientAddress,
     }
 
     private sealed record BoundaryRequest(string Value);
@@ -248,8 +505,12 @@ public sealed class RequestClientBoundaryTests
         }
     }
 
-    private sealed class BoundaryClientFactoryContext : ClientFactoryContext
+    private class BoundaryClientFactoryContext : ClientFactoryContext
     {
+        private int _resolutionCount;
+
+        public int ResolutionCount => Volatile.Read(ref _resolutionCount);
+
         public RequestTimeout DefaultTimeout => RequestTimeout.Default;
 
         public TimeProvider TimeProvider => TimeProvider.System;
@@ -268,10 +529,104 @@ public sealed class RequestClientBoundaryTests
             where T : class => new EmptyConnectHandle();
 
         public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
-            where T : class => throw new NotSupportedException();
+            where T : class
+        {
+            Interlocked.Increment(ref _resolutionCount);
+            throw new NotSupportedException();
+        }
 
         public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
-            where T : class => throw new NotSupportedException();
+            where T : class
+        {
+            Interlocked.Increment(ref _resolutionCount);
+            throw new NotSupportedException();
+        }
+    }
+
+    private sealed class DisposableBoundaryClientFactoryContext : BoundaryClientFactoryContext, IAsyncDisposable
+    {
+        private readonly TaskCompletionSource _disposalStarted =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _releaseDisposal =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _disposeCount;
+
+        public Task DisposalStarted => _disposalStarted.Task;
+
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+        public ValueTask DisposeAsync()
+        {
+            Interlocked.Increment(ref _disposeCount);
+            _disposalStarted.TrySetResult();
+            return new ValueTask(_releaseDisposal.Task);
+        }
+
+        public void ReleaseDisposal() => _releaseDisposal.TrySetResult();
+    }
+
+    private class UnusedConsumeContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new InvalidOperationException($"The consume context must not be read ({targetMethod?.Name}).");
+    }
+
+    private class RecordingBusProxy : DispatchProxy
+    {
+        public int BasicConnectionCount { get; private set; }
+
+        public object? BasicPipe { get; private set; }
+
+        public int ConfiguredConnectionCount { get; private set; }
+
+        public object? ConfiguredPipe { get; private set; }
+
+        public ConnectPipeOptions Options { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(IConsumePipeConnector.ConnectConsumePipe) || args is null)
+                throw new InvalidOperationException($"Unexpected bus invocation: {targetMethod?.Name}.");
+
+            if (args.Length == 1)
+            {
+                BasicConnectionCount++;
+                BasicPipe = args[0];
+            }
+            else
+            {
+                ConfiguredConnectionCount++;
+                ConfiguredPipe = args[0];
+                Options = Assert.IsType<ConnectPipeOptions>(args[1]);
+            }
+
+            return new EmptyConnectHandle();
+        }
+    }
+
+    private class ResponseContextProxy : DispatchProxy
+    {
+        public HostInfo Host { get; set; } = null!;
+
+        public BoundaryResponse Message { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        {
+            "get_Host" => Host,
+            "get_Message" => Message,
+            _ => throw new InvalidOperationException($"Unexpected response-context invocation: {targetMethod?.Name}."),
+        };
+    }
+
+    private sealed class RecordingConnectHandle : ConnectHandle
+    {
+        public int DisconnectCount { get; private set; }
+
+        public int DisposeCount { get; private set; }
+
+        public void Disconnect() => DisconnectCount++;
+
+        public void Dispose() => DisposeCount++;
     }
 
     private sealed class ResolutionProbeException : Exception;

@@ -27,6 +27,45 @@ public sealed class ResourceCacheGenerationAndLockingTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-IDENTITY", "keyed-facade-removes-only-the-selected-resource")]
+    public async Task KeyedFacade_RemoveReleasesOnlyTheSelectedResourceAsync()
+    {
+        await using var cache = new KeyedResourceCache<string, Resource>(
+            value => value.Id,
+            NewOptions());
+        var removed = new Resource("removed");
+        var cleared = new Resource("cleared");
+        await cache.GetOrAddAsync("removed", (_, _) => ValueTask.FromResult(removed), TestContext.Current.CancellationToken);
+        await cache.GetOrAddAsync("cleared", (_, _) => ValueTask.FromResult(cleared), TestContext.Current.CancellationToken);
+
+        Assert.True(await cache.RemoveAsync("removed", TestContext.Current.CancellationToken));
+        Assert.False(await cache.RemoveAsync("missing", TestContext.Current.CancellationToken));
+
+        Assert.Equal(1, removed.DisposeCount);
+        Assert.Equal(0, cleared.DisposeCount);
+        Assert.Equal(1, cache.Statistics.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-IDENTITY", "keyed-facade-clears-and-releases-all-resources")]
+    public async Task KeyedFacade_ClearReleasesEveryOwnedResourceAsync()
+    {
+        await using var cache = new KeyedResourceCache<string, Resource>(
+            value => value.Id,
+            NewOptions());
+        var first = new Resource("first");
+        var second = new Resource("second");
+        await cache.GetOrAddAsync("first", (_, _) => ValueTask.FromResult(first), TestContext.Current.CancellationToken);
+        await cache.GetOrAddAsync("second", (_, _) => ValueTask.FromResult(second), TestContext.Current.CancellationToken);
+
+        await cache.ClearAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, first.DisposeCount);
+        Assert.Equal(1, second.DisposeCount);
+        Assert.Equal(0, cache.Statistics.Count);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-NODE-PROMOTION", "completed-factory-to-bucket-node")]
     public async Task CompletedFactory_IsCommittedBeforeTheAddedObserverReceivesTheExactResourceAsync()
     {
@@ -252,6 +291,49 @@ public sealed class ResourceCacheGenerationAndLockingTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-INDEX-EVENT-ORDER", "invalidation-during-key-projection-releases-ownership")]
+    public async Task InvalidationDuringFactoryKeyProjection_DiscardsAndReleasesTheProducedResourceAsync()
+    {
+        await using var cache = CreateCache();
+        var projectionEntered = NewSignal();
+        var releaseProjection = NewSignal();
+        IResourceCacheIndex<string, Resource> index = cache.AddIndex(
+            "id",
+            value =>
+            {
+                projectionEntered.TrySetResult();
+                releaseProjection.Task.WaitAsync(OperationTimeout).GetAwaiter().GetResult();
+                return value.Id;
+            });
+        var releaseFactory = NewSignal<Resource>();
+        var produced = new Resource("one");
+        Task<Resource> creation = index.GetOrAddAsync(
+            "one",
+            async (_, _) => await releaseFactory.Task,
+            TestContext.Current.CancellationToken).AsTask();
+
+        releaseFactory.TrySetResult(produced);
+        await projectionEntered.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        Task clear = cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
+
+        try
+        {
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => creation);
+        }
+        finally
+        {
+            releaseProjection.TrySetResult();
+        }
+
+        await clear.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, produced.DisposeCount);
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
+        Assert.Equal(0, cache.Statistics.PendingCreations);
+        Assert.Equal(0, cache.Statistics.TotalCreated);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "lifetime-canceled-factory-result-is-not-committed")]
     public async Task FactoryIgnoringLifetimeCancellation_CannotCommitItsResultAsync()
     {
@@ -285,6 +367,45 @@ public sealed class ResourceCacheGenerationAndLockingTests
         Assert.Equal(1, produced.DisposeCount);
         Assert.Equal(0, cache.Statistics.PendingCreations);
         Assert.Equal(0, cache.Statistics.TotalCreated);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-MULTI-INDEX", "index-projection-holds-resource-lifetime")]
+    public async Task AddIndex_ProtectsProjectedResourcesUntilTheSelectorReturnsAsync()
+    {
+        var cache = CreateCache();
+        var value = new BlockingDisposalResource("one");
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
+        var selectorEntered = NewSignal();
+        var releaseSelector = NewSignal();
+
+        Task<IResourceCacheIndex<string, Resource>> addition = Task.Run(() => cache.AddIndex(
+            "id",
+            resource =>
+            {
+                selectorEntered.TrySetResult();
+                releaseSelector.Task.WaitAsync(OperationTimeout).GetAwaiter().GetResult();
+                return resource.Id;
+            }));
+        await selectorEntered.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Task disposal = cache.DisposeAsync().AsTask();
+        try
+        {
+            Assert.False(value.DisposalStarted.IsCompleted);
+
+            releaseSelector.TrySetResult();
+            await Assert.ThrowsAsync<ObjectDisposedException>(() => addition);
+            await value.DisposalStarted.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        }
+        finally
+        {
+            releaseSelector.TrySetResult();
+            value.ReleaseDisposal();
+            await disposal.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        }
+
+        Assert.Equal(1, value.DisposeCount);
     }
 
     private static void CompleteConcurrentRead<T>(ResourceCache<T> cache)
@@ -323,11 +444,28 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
         public void Use() => Used?.Invoke();
 
-        public ValueTask DisposeAsync()
+        public virtual ValueTask DisposeAsync()
         {
             Interlocked.Increment(ref _disposeCount);
             return default;
         }
+    }
+
+    private sealed class BlockingDisposalResource(string id) : Resource(id)
+    {
+        private readonly TaskCompletionSource _disposalStarted = NewSignal();
+        private readonly TaskCompletionSource _releaseDisposal = NewSignal();
+
+        public Task DisposalStarted => _disposalStarted.Task;
+
+        public override async ValueTask DisposeAsync()
+        {
+            await base.DisposeAsync();
+            _disposalStarted.TrySetResult();
+            await _releaseDisposal.Task;
+        }
+
+        public void ReleaseDisposal() => _releaseDisposal.TrySetResult();
     }
 
     private sealed class CoordinatingUsageResource(string id, Action onDetach) : Resource(id)
@@ -379,13 +517,23 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
         public ValueTask ResourceAddedAsync(Resource value, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); ObservedValue = value;
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken);
+
+            ObservedValue = value;
             WasCommittedWhenObserved = cache.Statistics is { Count: 1, PendingCreations: 0 };
             return default;
         }
 
-        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
-        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
+        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken)
+                : default;
+
+        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken)
+                : default;
     }
 
     private sealed class CoordinatingTimeProvider : TimeProvider

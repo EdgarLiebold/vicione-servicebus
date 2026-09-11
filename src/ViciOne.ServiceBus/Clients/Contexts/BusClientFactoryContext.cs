@@ -1,29 +1,23 @@
 using System;
+using ViciOne.ServiceBus.Clients.Endpoints;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Contexts;
 
-/// <summary>Creates request endpoints that receive responses through a connected receive endpoint.</summary>
-internal class ReceiveEndpointClientFactoryContext :
+/// <summary>Connects request clients directly to a bus instance.</summary>
+internal sealed class BusClientFactoryContext :
     ClientFactoryContext
 {
-    readonly IHostReceiveEndpointHandle _handle;
-    readonly IReceiveEndpoint _receiveEndpoint;
+    readonly IBus _bus;
 
-    /// <summary>Creates a client-factory context for a connected response endpoint.</summary>
-    /// <param name="handle">The connected endpoint used to receive responses and resolve destinations.</param>
+    /// <summary>Creates a request-client context backed by a started bus.</summary>
+    /// <param name="bus">The bus that sends requests and receives responses.</param>
     /// <param name="defaultTimeout">The default request timeout.</param>
     /// <param name="timeProvider">The time source used to measure request deadlines.</param>
-    public ReceiveEndpointClientFactoryContext(
-        IHostReceiveEndpointHandle handle,
-        RequestTimeout defaultTimeout = default,
-        TimeProvider? timeProvider = null)
+    public BusClientFactoryContext(IBus bus, RequestTimeout defaultTimeout = default, TimeProvider? timeProvider = null)
     {
-        _handle = handle ?? throw new ArgumentNullException(nameof(handle));
-        _receiveEndpoint = handle.ReceiveEndpoint;
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
 
-        ResponseAddress = _receiveEndpoint.InputAddress;
-
-        DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
+        DefaultTimeout = defaultTimeout.HasValue ? defaultTimeout : RequestTimeout.Default;
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
@@ -34,7 +28,7 @@ internal class ReceiveEndpointClientFactoryContext :
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
-        return _receiveEndpoint.ConnectConsumePipe(pipe);
+        return _bus.ConnectConsumePipe(pipe);
     }
 
     /// <summary>Connects a configurable response pipeline for a message contract.</summary>
@@ -45,7 +39,7 @@ internal class ReceiveEndpointClientFactoryContext :
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
         where T : class
     {
-        return _receiveEndpoint.ConnectConsumePipe(pipe, options);
+        return _bus.ConnectConsumePipe(pipe, options);
     }
 
     /// <summary>Connects a response pipeline for one request correlation identifier.</summary>
@@ -56,38 +50,38 @@ internal class ReceiveEndpointClientFactoryContext :
     public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
-        return _receiveEndpoint.ConnectRequestPipe(requestId, pipe);
+        return _bus.ConnectRequestPipe(requestId, pipe);
     }
 
-    /// <summary>Gets the input address of the connected endpoint that receives responses.</summary>
-    public Uri ResponseAddress { get; }
+    /// <summary>Gets the bus address used for responses.</summary>
+    public Uri ResponseAddress => _bus.Address;
 
-    /// <summary>Creates a request endpoint that publishes requests.</summary>
+    /// <summary>Creates a request endpoint that publishes requests through the bus.</summary>
     /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="consumeContext">The consume context whose request metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="consumeContext">The consume context whose correlation metadata is propagated, or <see langword="null" />.</param>
     /// <returns>The publish-backed request endpoint.</returns>
     public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
         where T : class
     {
-        return new ReceiveEndpointPublishRequestSendEndpoint<T>(_handle, consumeContext);
+        return new PublishRequestSendEndpoint<T>(_bus, consumeContext);
     }
 
-    /// <summary>Creates a request endpoint that sends to an explicit destination.</summary>
+    /// <summary>Creates a request endpoint for an explicit destination.</summary>
     /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="destinationAddress">The request service address.</param>
-    /// <param name="consumeContext">The consume context whose request metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="consumeContext">The consume context whose correlation metadata is propagated, or <see langword="null" />.</param>
     /// <returns>The send-backed request endpoint.</returns>
     public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
         where T : class
     {
-        return new ReceiveEndpointSendRequestSendEndpoint<T>(_handle, destinationAddress, consumeContext);
+        return new SendRequestSendEndpoint<T>(_bus, destinationAddress, consumeContext);
     }
 
-    /// <summary>Gets the default time limit applied when a request does not override it.</summary>
+    /// <summary>Gets the default time limit for requests.</summary>
     public RequestTimeout DefaultTimeout { get; }
 
-    /// <summary>Gets the message routes available through the connected receive endpoint.</summary>
-    public IMessageRouteTable MessageRoutes => EndpointConvention.GetMessageRoutes(_receiveEndpoint);
+    /// <summary>Gets the message routes owned by the bus.</summary>
+    public IMessageRouteTable MessageRoutes => EndpointConvention.GetMessageRoutes(_bus);
 
     /// <summary>Gets the time source used to measure request deadlines.</summary>
     public TimeProvider TimeProvider { get; }

@@ -36,6 +36,7 @@ public sealed class ResponseMatchingTests
 
             Assert.Equal(new AcceptedResponse(correlationId, "transport"), response.Message);
             Assert.Equal(request.RequestId, response.RequestId);
+            Assert.Equal(request.Host.MachineName, response.Host.MachineName);
             Assert.True(request.Advanced().IsResponseAccepted<AcceptedResponse>());
             Assert.False(request.Advanced().IsResponseAccepted<UnsupportedResponse>());
         }

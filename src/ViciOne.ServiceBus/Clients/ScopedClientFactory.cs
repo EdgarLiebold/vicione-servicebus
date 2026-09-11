@@ -28,6 +28,7 @@ public sealed class ScopedClientFactory :
     public RequestHandle<T> CreateRequest<T>(T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         IRequestClient<T> client = CreateRequestClient<T>(timeout);
 
         return client.Create(message, cancellationToken: cancellationToken);
@@ -43,6 +44,8 @@ public sealed class ScopedClientFactory :
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
         IRequestClient<T> client = CreateRequestClient<T>(destinationAddress, timeout);
 
         return client.Create(message, cancellationToken: cancellationToken);
@@ -57,6 +60,7 @@ public sealed class ScopedClientFactory :
     public RequestHandle<T> CreateRequest<T>(object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
         IRequestClient<T> client = CreateRequestClient<T>(timeout);
 
         return client.Create(values, cancellationToken: cancellationToken);
@@ -72,6 +76,8 @@ public sealed class ScopedClientFactory :
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(values);
         IRequestClient<T> client = CreateRequestClient<T>(destinationAddress, timeout);
 
         return client.Create(values, cancellationToken: cancellationToken);
@@ -87,7 +93,9 @@ public sealed class ScopedClientFactory :
         if (_clientFactory.Context.MessageRoutes.TryGetDestinationAddress<T>(out var destinationAddress))
             return CreateRequestClient<T>(destinationAddress, timeout);
 
-        return _clientFactory.CreateRequestClient<T>(_consumeContext, timeout);
+        return _consumeContext is null
+            ? _clientFactory.CreateRequestClient<T>(timeout)
+            : _clientFactory.CreateRequestClient<T>(_consumeContext, timeout);
     }
 
     /// <summary>Creates a request client for an explicit destination.</summary>
@@ -98,6 +106,10 @@ public sealed class ScopedClientFactory :
     public IRequestClient<T> CreateRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
-        return _clientFactory.CreateRequestClient<T>(_consumeContext, destinationAddress, timeout);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+
+        return _consumeContext is null
+            ? _clientFactory.CreateRequestClient<T>(destinationAddress, timeout)
+            : _clientFactory.CreateRequestClient<T>(_consumeContext, destinationAddress, timeout);
     }
 }

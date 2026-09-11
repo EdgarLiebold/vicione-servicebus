@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Requests;
 
 /// <summary>Owns a response-handler connection and combines its terminal outcome with request-send completion.</summary>
 /// <typeparam name="TResponse">The response message contract.</typeparam>
@@ -44,6 +44,7 @@ internal sealed class ResponseHandlerConnectHandle<TResponse> :
     /// <param name="exception">The request failure.</param>
     public void TrySetException(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         _completed.TrySetException(exception);
         _completed.Task.IgnoreUnobservedExceptions();
     }

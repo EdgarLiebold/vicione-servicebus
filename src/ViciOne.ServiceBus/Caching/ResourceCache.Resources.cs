@@ -202,7 +202,8 @@ public sealed partial class ResourceCache<TValue>
 
     void AttachUsage(ResourceCacheEntry<TValue> entry)
     {
-        if (entry.Value is not IResourceUsageSource source)
+        if (_options.ExpirationMode != ResourceCacheExpirationMode.Sliding
+            || entry.Value is not IResourceUsageSource source)
             return;
 
         void Used() => Touch(entry);

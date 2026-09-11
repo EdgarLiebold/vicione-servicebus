@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Requests;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.JobService.Messages;

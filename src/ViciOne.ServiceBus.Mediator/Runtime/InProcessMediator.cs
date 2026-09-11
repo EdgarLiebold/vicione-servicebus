@@ -461,9 +461,10 @@ internal sealed class InProcessMediator :
     /// <param name="consumeContext">The consume context.</param>
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <returns>The created request client.</returns>
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
         return _clientFactory.CreateRequestClient<T>(consumeContext, timeout);
     }
 
@@ -484,9 +485,11 @@ internal sealed class InProcessMediator :
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <returns>The created request client.</returns>
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
         return _clientFactory.CreateRequestClient<T>(consumeContext, destinationAddress, timeout);
     }
 

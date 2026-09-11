@@ -1,4 +1,6 @@
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Contexts;
+using ViciOne.ServiceBus.Clients.Requests;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

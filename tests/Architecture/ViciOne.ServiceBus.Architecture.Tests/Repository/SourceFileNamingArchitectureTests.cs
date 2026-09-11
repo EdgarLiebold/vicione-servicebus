@@ -318,6 +318,50 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "client-files-have-explicit-responsibility-owners")]
+    public void ClientFiles_AreGroupedByPublicFactoryContextsEndpointsAndRequestMechanics()
+    {
+        string clientsRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Clients");
+        Assert.Equal(
+            ["ClientFactory.cs", "ScopedClientFactory.cs"],
+            Directory.EnumerateFiles(clientsRoot, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .Order(StringComparer.Ordinal));
+        Assert.All(
+            Directory.EnumerateFiles(clientsRoot, "*.cs", SearchOption.TopDirectoryOnly),
+            file => Assert.Equal(
+                ["ViciOne.ServiceBus.Clients"],
+                ReadNamespaces(file, TestContext.Current.CancellationToken)));
+
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            ("Contexts", "ViciOne.ServiceBus.Clients.Contexts",
+                ["BusClientFactoryContext.cs", "HostReceiveEndpointClientFactoryContext.cs", "ReceiveEndpointClientFactoryContext.cs"]),
+            ("Endpoints", "ViciOne.ServiceBus.Clients.Endpoints",
+                ["PublishRequestSendEndpoint.cs", "ReceiveEndpointPublishRequestSendEndpoint.cs",
+                    "ReceiveEndpointSendRequestSendEndpoint.cs", "RequestSendEndpoint.cs", "SendRequestSendEndpoint.cs"]),
+            ("Requests", "ViciOne.ServiceBus.Clients.Requests",
+                ["ClientRequestHandle.Completion.cs", "ClientRequestHandle.Responses.cs", "ClientRequestHandle.cs",
+                    "HandlerConnectHandle.cs", "MessageResponse.cs", "RequestClient.cs", "ResponseHandlerConnectHandle.cs"]),
+        ];
+
+        foreach ((string directoryName, string expectedNamespace, string[] expectedFiles) in groups)
+        {
+            string directory = Path.Combine(clientsRoot, directoryName);
+            string[] actualFiles = Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Order(StringComparer.Ordinal)
+                .ToArray();
+
+            Assert.Equal(expectedFiles.Order(StringComparer.Ordinal), actualFiles);
+            Assert.All(actualFiles, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "lifecycle-spi-files-live-under-advanced-middleware")]
     public void LifecycleSpiFiles_LiveUnderTheirAdvancedMiddlewareNamespace()
     {

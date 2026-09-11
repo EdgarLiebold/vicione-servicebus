@@ -1,7 +1,9 @@
+using System.Collections.Concurrent;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Requests;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
@@ -304,6 +306,54 @@ public sealed class RequestClientLifecycleTests
         await AssertSourceIsDisposedAsync(source);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "terminal-cleanup-does-not-capture-synchronization-context")]
+    public async Task RequestFailure_CompletesWithoutPumpingTheAmbientSynchronizationContextAsync()
+    {
+        var synchronizationContext = new QueuedSynchronizationContext();
+        SynchronizationContext? previous = SynchronizationContext.Current;
+        ClientRequestHandle<LifecycleRequest> handle;
+        Task<Response<LifecycleResponse>> response;
+
+        SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+        try
+        {
+            handle = new ClientRequestHandle<LifecycleRequest>(
+                new RecordingClientFactoryContext(TimeProvider.System, new RequestTimeout(TimeSpan.FromMinutes(1))),
+                (_, _, _) => Task.FromException<LifecycleRequest>(new CleanupFailureException("Request send failed.")));
+            response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(previous);
+        }
+
+        try
+        {
+            Task timeout = Task.Delay(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            Task completed = await Task.WhenAny(response, synchronizationContext.Posted, timeout);
+
+            Assert.Same(response, completed);
+            Exception? exception = await Record.ExceptionAsync(() => response);
+            Assert.NotNull(exception);
+            Assert.False(synchronizationContext.HasPostedCallbacks);
+        }
+        finally
+        {
+            synchronizationContext.RunPostedCallbacks();
+            handle.Dispose();
+
+            try
+            {
+                await response;
+            }
+            catch (Exception)
+            {
+                // The send failure is the terminal outcome under test.
+            }
+        }
+    }
+
     private static async Task AssertSourceIsDisposedAsync(CancellationTokenSource source)
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -487,6 +537,29 @@ public sealed class RequestClientLifecycleTests
         {
             Interlocked.Increment(ref _callCount);
             throw new InvalidOperationException("Diagnostic logger failure.");
+        }
+    }
+
+    private sealed class QueuedSynchronizationContext : SynchronizationContext
+    {
+        private readonly ConcurrentQueue<(SendOrPostCallback Callback, object? State)> _callbacks = new();
+        private readonly TaskCompletionSource _posted =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public bool HasPostedCallbacks => !_callbacks.IsEmpty;
+
+        public Task Posted => _posted.Task;
+
+        public override void Post(SendOrPostCallback callback, object? state)
+        {
+            _callbacks.Enqueue((callback, state));
+            _posted.TrySetResult();
+        }
+
+        public void RunPostedCallbacks()
+        {
+            while (_callbacks.TryDequeue(out var callback))
+                callback.Callback(callback.State);
         }
     }
 

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus.Clients;
+namespace ViciOne.ServiceBus.Clients.Endpoints;
 
 /// <summary>Resolves an explicit request destination after a connected response endpoint becomes ready.</summary>
 /// <typeparam name="TRequest">The request message contract.</typeparam>

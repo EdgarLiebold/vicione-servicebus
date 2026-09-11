@@ -435,19 +435,28 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         public ValueTask ResourceAddedAsync(Resource value, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); _events.Add($"add:{value.Id}");
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken);
+
+            _events.Add($"add:{value.Id}");
             return default;
         }
 
         public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); _events.Add($"remove:{value.Id}");
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken);
+
+            _events.Add($"remove:{value.Id}");
             return default;
         }
 
         public ValueTask CacheClearedAsync(CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); _events.Add("clear");
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken);
+
+            _events.Add("clear");
             return default;
         }
     }
@@ -480,8 +489,16 @@ public sealed class ResourceCacheObserverAndDisposalTests
             await _releaseAdded.Task.WaitAsync(cancellationToken);
         }
 
-        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
-        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
+        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken)
+                : default;
+
+        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken)
+                : default;
+
         public void ReleaseAdded() => _releaseAdded.TrySetResult();
     }
 
@@ -498,7 +515,8 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         public async ValueTask ResourceAddedAsync(Resource value, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested(); int concurrent = Interlocked.Increment(ref _concurrency);
+            cancellationToken.ThrowIfCancellationRequested();
+            int concurrent = Interlocked.Increment(ref _concurrency);
             UpdateMaximum(concurrent);
             await Task.Yield();
             if (Interlocked.Increment(ref _callCount) == expectedCalls)
@@ -506,8 +524,16 @@ public sealed class ResourceCacheObserverAndDisposalTests
             Interlocked.Decrement(ref _concurrency);
         }
 
-        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
-        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
+        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken)
+                : default;
+
+        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken)
+                : default;
+
         private void UpdateMaximum(int candidate)
         {
             int observed;

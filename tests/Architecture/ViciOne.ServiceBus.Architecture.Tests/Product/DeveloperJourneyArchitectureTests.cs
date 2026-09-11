@@ -187,10 +187,20 @@ public sealed class DeveloperJourneyArchitectureTests
         string source = File.ReadAllText(generator);
         Assert.Contains("/lib/net10.0/", source, StringComparison.Ordinal);
         Assert.Contains("GetTypes().Where(IsExternallyVisible)", source, StringComparison.Ordinal);
+        Assert.Contains("Type[] interfaces = GetDirectInterfaces(type)", source, StringComparison.Ordinal);
+        Assert.Contains("modifiers.Add($\"interfaces={string.Join(\"&\", interfaces.Select(FormatType))}\");", source, StringComparison.Ordinal);
+        Assert.Contains("return interfaces.Where(candidate => !inherited.Contains(candidate));", source, StringComparison.Ordinal);
         Assert.Contains("SHA256.HashData", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Sha256(package)", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Sha256(assemblyFile)", source, StringComparison.Ordinal);
         Assert.DoesNotContain("ProjectReference", source, StringComparison.Ordinal);
+
+        string clientFactoryContract = File.ReadLines(baseline).Single(static line => line.StartsWith(
+            "TYPE interface public ViciOne.ServiceBus.Advanced.IClientFactory",
+            StringComparison.Ordinal));
+        Assert.Equal(
+            "TYPE interface public ViciOne.ServiceBus.Advanced.IClientFactory [interfaces=System.IAsyncDisposable]",
+            clientFactoryContract);
     }
 
     [Fact]

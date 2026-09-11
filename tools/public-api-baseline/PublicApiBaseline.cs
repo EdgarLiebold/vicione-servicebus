@@ -164,7 +164,28 @@ internal static class PublicApiBaseline
         if (type.BaseType is { } baseType && baseType != typeof(object) && baseType != typeof(ValueType)
             && baseType != typeof(Enum) && baseType != typeof(MulticastDelegate))
             modifiers.Add($"base={FormatType(baseType)}");
+
+        Type[] interfaces = GetDirectInterfaces(type)
+            .Where(IsExternallyVisible)
+            .OrderBy(FormatType, StringComparer.Ordinal)
+            .ToArray();
+        if (interfaces.Length > 0)
+            modifiers.Add($"interfaces={string.Join("&", interfaces.Select(FormatType))}");
+
         return modifiers.Count == 0 ? string.Empty : $" [{string.Join(",", modifiers)}]";
+    }
+
+    private static IEnumerable<Type> GetDirectInterfaces(Type type)
+    {
+        Type[] interfaces = type.GetInterfaces();
+        var inherited = new HashSet<Type>();
+        if (type.BaseType is { } baseType)
+            inherited.UnionWith(baseType.GetInterfaces());
+
+        foreach (Type interfaceType in interfaces)
+            inherited.UnionWith(interfaceType.GetInterfaces());
+
+        return interfaces.Where(candidate => !inherited.Contains(candidate));
     }
 
     private static string MethodModifiers(MethodInfo method)

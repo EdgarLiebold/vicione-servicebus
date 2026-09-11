@@ -365,3 +365,55 @@ mutable descriptors and concurrent resolver creation safe.
 - Replace untrusted-data security with trusted-data mode: the security contract must fail.
 - Restore a Courier product mapping and dependency: the assembly-reference contract must fail.
 - Remove the ServiceBus resolver from the composed options: the production-chain selection test must fail.
+
+## Iteration 77 outcome
+
+Make cache and request-client lifetimes deterministic at concurrency boundaries, make absolute
+deadlines truly absolute, expose factory ownership through the public contract, fail at each owning
+API boundary before dependency work, and give client internals explicit physical and namespace
+owners without changing request, publish, send, scoped, mediator, or cache features.
+
+## Iteration 77 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-CACHE-MULTI-INDEX` | synchronous index projection concurrent with disposal | cache generation/locking tests | disposal cannot reach a resource while its selector is active |
+| `REQ-VSB-CACHE-EXPIRATION` | absolute versus sliding usage observation | cache lifecycle tests | absolute mode never subscribes; sliding mode retains touch behavior |
+| `REQ-VSB-REQUEST-CLIENT-BOUNDARY` | context, address, message, initializer, and wrapper boundaries | client boundary tests | exact argument exception occurs before endpoint or wrapped-factory work |
+| `REQ-VSB-REQUEST-LIFECYCLE` | repeated/concurrent disposal and hostile synchronization context | client lifecycle tests | one owned disposal, no post-disposal creation, cancellation completes without ambient-context pumping |
+| `REQ-VSB-APPLICATION-REQUEST-OPTIONS` | endpoint acquisition spans an absolute deadline | request metadata tests | send aborts after the exact deadline and implicit TTL cannot extend it |
+| `REQ-VSB-SOURCE-NAVIGATION` | client internal responsibility layout | architecture tests | exact files and namespaces in `Contexts`, `Endpoints`, and `Requests`; no stale flat internals |
+
+## Iteration 77 mutation obligations
+
+- Remove the active-operation guard from synchronous index projection: the disposal race test must
+  observe resource disposal while the selector is blocked.
+- Re-enable usage subscription for absolute expiration: the exact subscriber-count test must fail.
+- Move one argument guard after endpoint or wrapped-factory lookup: the boundary spy must record an
+  unintended dependency call.
+- Invoke the owned factory context twice or permit creation after disposal begins: the lifetime
+  tests must fail on exact count or exception ownership.
+- Start the deadline timer before delayed endpoint acquisition: the deadline test must observe a
+  completed send after the absolute deadline.
+- Restore ambient scheduler capture: the hostile-context test must observe a queued callback instead
+  of prompt cancellation completion.
+- Return one client internal to the former flat namespace or folder: the exact layout inventory and
+  internal implementation manifest must fail.
+- Remove addressed response-endpoint readiness gating: the receive-endpoint context test must fail.
+- Make host response-endpoint disposal a no-op: exact owned-disposal evidence must fail.
+- Let stale pending cache creation survive invalidation: creation ownership evidence must fail.
+- Make response-handler disposal skip disconnection: exact handle forwarding must fail.
+- Make keyed-cache removal or clearing a no-op: their independent release assertions must fail.
+- Drop configured consume-pipe options: exact bus-context forwarding must fail.
+- Remove response host metadata: exact response projection must fail.
+- Disable direct-interface discovery in the public API extractor: the exact API architecture guard
+  must fail before a changed interface contract can be accepted.
+
+## Iteration 77 completion
+
+All planned boundaries were implemented and all seventeen isolated mutations were killed, restored,
+and followed by fresh validation. The bounded profile passes 190 tests, the complete core profile
+passes 2,721 tests, and the architecture profile passes 260 tests. Bounded coverage is 92.46% line
+and 86.92% branch with no method above CRAP 30. The fresh-package/API gate passes all 18 journeys,
+31 packages, three isolated provider consumers, and 30 runtime API contracts with direct-interface
+metadata now enforced.

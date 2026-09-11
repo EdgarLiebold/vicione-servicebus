@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Clients.Endpoints;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
