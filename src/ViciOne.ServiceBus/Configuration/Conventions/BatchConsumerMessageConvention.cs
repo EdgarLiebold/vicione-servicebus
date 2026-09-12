@@ -5,13 +5,13 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Discovers every closed <see cref="IConsumer{TMessage}" /> contract whose message is a <see cref="Batch{TMessage}" />.</summary>
+/// <summary>Discovers every closed <see cref="IConsumer{TMessage}" /> contract whose message is an <see cref="IMessageBatch{TMessage}" />.</summary>
 /// <typeparam name="TConsumer">The consumer type to inspect.</typeparam>
-public sealed class BatchConsumerMessageConvention<TConsumer> :
+internal sealed class BatchConsumerMessageConvention<TConsumer> :
     IConsumerMessageConvention
     where TConsumer : class
 {
-    /// <summary>Discovers each valid <see cref="Batch{TMessage}" /> contract declared by the consumer.</summary>
+    /// <summary>Discovers each valid <see cref="IMessageBatch{TMessage}" /> contract declared by the consumer.</summary>
     /// <returns>Batch connector descriptors for the discovered contracts.</returns>
     public IEnumerable<IMessageInterfaceType> GetMessageTypes()
     {
@@ -19,7 +19,7 @@ public sealed class BatchConsumerMessageConvention<TConsumer> :
         if (consumerType.IsGenericType && consumerType.GetGenericTypeDefinition() == typeof(IConsumer<>))
         {
             var messageType = consumerType.GetGenericArguments()[0];
-            if (messageType.TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] batchTypes))
+            if (messageType.TryGetSingleClosedGenericArguments(typeof(IMessageBatch<>), out Type[] batchTypes))
             {
                 var interfaceType = new BatchConsumerInterfaceType(messageType, batchTypes[0], consumerType);
                 if (MessageTypeCache.IsValidMessageType(interfaceType.MessageType))
@@ -35,12 +35,12 @@ public sealed class BatchConsumerMessageConvention<TConsumer> :
                 Type = x,
                 MessageType = x.GetGenericArguments()[0]
             })
-            .Where(x => x.MessageType.ClosesGenericType(typeof(Batch<>)))
+            .Where(x => x.MessageType.ClosesGenericType(typeof(IMessageBatch<>)))
             .Select(x => new
             {
                 x.Type,
                 BatchMessageType = x.MessageType,
-                MessageType = x.MessageType.GetSingleClosedGenericArgument(typeof(Batch<>))
+                MessageType = x.MessageType.GetSingleClosedGenericArgument(typeof(IMessageBatch<>))
             })
             .Select(x => new BatchConsumerInterfaceType(x.BatchMessageType, x.MessageType, consumerType))
             .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType));

@@ -1,3 +1,4 @@
+using System.Reflection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -34,8 +35,70 @@ public sealed class SpecificationOptionsValidationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "defaults-are-coherent")]
-    public void BatchOptions_DefaultsAreCoherent() =>
-        Assert.Empty(new BatchOptions().Validate());
+    public void BatchOptions_DefaultsAreCoherent()
+    {
+        var options = new BatchOptions();
+
+        Assert.Empty(options.Validate());
+        Assert.Equal(10, options.MessageLimit);
+        Assert.Equal(1, options.ConcurrencyLimit);
+        Assert.Equal(TimeSpan.FromSeconds(1), options.TimeLimit);
+        Assert.Equal(BatchTimeLimitStart.FromFirst, options.TimeLimitStart);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "capacity-callback-raises-but-never-lowers-limits")]
+    public void BatchOptions_DefaultCapacityCallbackRaisesButNeverLowersEndpointLimits()
+    {
+        var options = new BatchOptions
+        {
+            MessageLimit = 5,
+            ConcurrencyLimit = 3,
+        };
+        IReceiveEndpointConfigurator endpoint = DispatchProxy.Create<IReceiveEndpointConfigurator, EndpointConfiguratorProxy>();
+        var proxy = (EndpointConfiguratorProxy)(object)endpoint;
+
+        options.Configure("orders", endpoint);
+
+        Assert.Equal(15, proxy.PrefetchCount);
+        Assert.Equal(15, proxy.ConcurrentMessageLimit);
+
+        proxy.PrefetchCount = 20;
+        proxy.ConcurrentMessageLimit = 20;
+        options.Configure("orders", endpoint);
+
+        Assert.Equal(20, proxy.PrefetchCount);
+        Assert.Equal(20, proxy.ConcurrentMessageLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "fluent-values-and-custom-capacity-callback")]
+    public void BatchOptions_FluentConfigurationPreservesExactValuesAndCallbackInputs()
+    {
+        var options = new BatchOptions();
+        string? observedName = null;
+        IReceiveEndpointConfigurator? observedEndpoint = null;
+        IReceiveEndpointConfigurator endpoint = DispatchProxy.Create<IReceiveEndpointConfigurator, EndpointConfiguratorProxy>();
+
+        Assert.Same(options, options.SetMessageLimit(7));
+        Assert.Same(options, options.SetConcurrencyLimit(3));
+        Assert.Same(options, options.SetTimeLimit(TimeSpan.FromMinutes(2)));
+        Assert.Same(options, options.SetTimeLimitStart(BatchTimeLimitStart.FromLast));
+        Assert.Same(options, options.SetConfigurationCallback((name, configuredEndpoint) =>
+        {
+            observedName = name;
+            observedEndpoint = configuredEndpoint;
+        }));
+
+        options.Configure("priority", endpoint);
+
+        Assert.Equal(7, options.MessageLimit);
+        Assert.Equal(3, options.ConcurrencyLimit);
+        Assert.Equal(TimeSpan.FromMinutes(2), options.TimeLimit);
+        Assert.Equal(BatchTimeLimitStart.FromLast, options.TimeLimitStart);
+        Assert.Equal("priority", observedName);
+        Assert.Same(endpoint, observedEndpoint);
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "callbacks-selectors-and-providers-reject-null")]
@@ -48,17 +111,8 @@ public sealed class SpecificationOptionsValidationTests
         Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
             options.GroupBy<TestBatchMessage, int>((Func<ConsumeContext<TestBatchMessage>, int?>)null!)).ParamName);
         Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
-            options.GroupBy<TestBatchMessage, string>((Func<ConsumeContext<TestBatchMessage>, string>)null!)).ParamName);
+            options.GroupBy<TestBatchMessage, string>((Func<ConsumeContext<TestBatchMessage>, string?>)null!)).ParamName);
 
-        Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
-            new ValueTypeGroupKeyProvider<TestBatchMessage, int>(null!)).ParamName);
-        Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
-            new GroupKeyProvider<TestBatchMessage, string>(null!)).ParamName);
-
-        var valueProvider = new ValueTypeGroupKeyProvider<TestBatchMessage, int>(_ => 1);
-        var referenceProvider = new GroupKeyProvider<TestBatchMessage, string>(_ => "group");
-        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => valueProvider.TryGetKey(null!, out _)).ParamName);
-        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => referenceProvider.TryGetKey(null!, out _)).ParamName);
     }
 
     [Theory]
@@ -237,4 +291,26 @@ public sealed class SpecificationOptionsValidationTests
     }
 
     public enum InvalidJobSagaOption { SlotWait, StatusCheck, HeartbeatTimeout, Concurrency, RetryCount, RetryDelay }
+
+    private class EndpointConfiguratorProxy : DispatchProxy
+    {
+        public int PrefetchCount { get; set; }
+
+        public int? ConcurrentMessageLimit { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            ArgumentNullException.ThrowIfNull(args);
+
+            switch (targetMethod.Name)
+            {
+                case "get_PrefetchCount": return PrefetchCount;
+                case "set_PrefetchCount": PrefetchCount = Assert.IsType<int>(args[0]); return null;
+                case "get_ConcurrentMessageLimit": return ConcurrentMessageLimit;
+                case "set_ConcurrentMessageLimit": ConcurrentMessageLimit = (int?)args[0]; return null;
+                default: throw new NotSupportedException(targetMethod.Name);
+            }
+        }
+    }
 }

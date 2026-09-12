@@ -35,7 +35,7 @@ internal sealed class PartitionMessageConfigurationObserver :
     /// <typeparam name="TConsumer">The batch consumer implementation.</typeparam>
     /// <typeparam name="TMessage">The message type contained by the batch.</typeparam>
     /// <param name="configurator">The batch consumer pipeline left unchanged.</param>
-    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
         where TConsumer : class
         where TMessage : class
     {

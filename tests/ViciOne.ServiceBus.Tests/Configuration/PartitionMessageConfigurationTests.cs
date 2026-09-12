@@ -316,7 +316,7 @@ public sealed class PartitionMessageConfigurationTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var consumed = new TaskCompletionSource<Batch<PartitionedMessage>>(
+        var consumed = new TaskCompletionSource<IMessageBatch<PartitionedMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = new InMemoryTestHarness($"partitioned-batch-{NewId.NextGuid():N}")
         {
@@ -345,9 +345,9 @@ public sealed class PartitionMessageConfigurationTests
             await Task.WhenAll(messages.Select(message =>
                     harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken)))
                 .WaitAsync(timeout, cancellationToken);
-            Batch<PartitionedMessage> batch = await consumed.Task.WaitAsync(timeout, cancellationToken);
+            IMessageBatch<PartitionedMessage> batch = await consumed.Task.WaitAsync(timeout, cancellationToken);
 
-            Assert.Equal(2, batch.Length);
+            Assert.Equal(2, batch.Count);
             Assert.Equal(messages.Select(message => message.CorrelationId).Order(),
                 batch.Select(context => context.Message.CorrelationId).Order());
         }
@@ -408,10 +408,10 @@ public sealed class PartitionMessageConfigurationTests
         }
     }
 
-    private sealed class PartitionedBatchConsumer(TaskCompletionSource<Batch<PartitionedMessage>> consumed) :
-        IConsumer<Batch<PartitionedMessage>>
+    private sealed class PartitionedBatchConsumer(TaskCompletionSource<IMessageBatch<PartitionedMessage>> consumed) :
+        IConsumer<IMessageBatch<PartitionedMessage>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<PartitionedMessage>> context)
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<PartitionedMessage>> context)
         {
             consumed.TrySetResult(context.Message);
             return Task.CompletedTask;

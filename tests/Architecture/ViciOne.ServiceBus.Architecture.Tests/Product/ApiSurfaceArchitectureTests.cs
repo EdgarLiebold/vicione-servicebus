@@ -335,9 +335,26 @@ public sealed class ApiSurfaceArchitectureTests
     [RequirementCoverage("REQ-VSB-API-LAYERING", "batch-contracts-hide-collector-runtime")]
     public void BatchApi_ExposesContractsAndConfigurationWithoutRuntimeMechanics()
     {
-        Assert.True(typeof(Batch<>).IsPublic);
+        Type batchContract = typeof(IMessageBatch<>);
+        Assert.True(batchContract.IsPublic);
+        Assert.True(batchContract.IsInterface);
+        Assert.Contains(batchContract.GetInterfaces(), static contract =>
+            contract.IsGenericType && contract.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
+        Assert.DoesNotContain(
+            batchContract.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly),
+            static property => property.Name == "Length");
+        Assert.Null(ProductAssemblyFacts.Abstractions.GetType("ViciOne.ServiceBus.Advanced.Batch`1", throwOnError: false));
         Assert.True(typeof(IBatchConfigurator<>).IsPublic);
         Assert.True(typeof(BatchOptions).IsPublic);
+        string[] abstractionsRuntimeTypeNames =
+        [
+            "ViciOne.ServiceBus.Configuration.IGroupKeyProvider`2",
+            "ViciOne.ServiceBus.Configuration.GroupKeyProvider`2",
+            "ViciOne.ServiceBus.Configuration.ValueTypeGroupKeyProvider`2",
+        ];
+        Assert.All(abstractionsRuntimeTypeNames, typeName => Assert.False(
+            ProductAssemblyFacts.Abstractions.GetType(typeName, throwOnError: true)!.IsPublic,
+            typeName));
         Assert.DoesNotContain(ProductAssemblyFacts.Core.GetExportedTypes(), static type =>
             type.Namespace?.StartsWith("ViciOne.ServiceBus.Batching", StringComparison.Ordinal) == true);
 
@@ -353,6 +370,10 @@ public sealed class ApiSurfaceArchitectureTests
             "ViciOne.ServiceBus.Batching.Runtime.BatchCollectorLifetime",
             "ViciOne.ServiceBus.Batching.Runtime.BatchRuntimeSettings",
             "ViciOne.ServiceBus.Batching.Runtime.IBatchCollector`1",
+            "ViciOne.ServiceBus.Configuration.BatchConfigurator`1",
+            "ViciOne.ServiceBus.Configuration.BatchConsumerConvention",
+            "ViciOne.ServiceBus.Configuration.BatchConsumerInterfaceType",
+            "ViciOne.ServiceBus.Configuration.BatchConsumerMessageConvention`1",
             "ViciOne.ServiceBus.Configuration.BatchConsumerMessageConnector`2",
             "ViciOne.ServiceBus.Configuration.BatchConsumerMessageSpecification`2",
             "ViciOne.ServiceBus.Configuration.BatchMessageConnectorFactory`2",

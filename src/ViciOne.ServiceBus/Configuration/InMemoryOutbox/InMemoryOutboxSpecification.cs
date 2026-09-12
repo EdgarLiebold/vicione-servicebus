@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for in memory outbox.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Configures an in-memory outbox around a consumed-message pipeline.</summary>
+/// <typeparam name="T">The consumed message contract.</typeparam>
 public class InMemoryOutboxSpecification<T> :
     IPipeSpecification<ConsumeContext<T>>,
     IOutboxConfigurator
@@ -14,21 +14,21 @@ public class InMemoryOutboxSpecification<T> :
 {
     readonly ISetScopedConsumeContext? _setter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a specification using the registration context's scoped consume-context accessor.</summary>
+    /// <param name="context">The registration context that supplies the accessor.</param>
     public InMemoryOutboxSpecification(IRegistrationContext context)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="setter">The setter.</param>
+    /// <summary>Creates a specification with an optional scoped consume-context accessor.</summary>
+    /// <param name="setter">The accessor used to expose the active context inside a dependency-injection scope.</param>
     public InMemoryOutboxSpecification(ISetScopedConsumeContext? setter)
     {
         _setter = setter;
     }
 
-    /// <summary>Gets or sets the concurrent message delivery.</summary>
+    /// <summary>Gets or sets whether independent buffered operations may be delivered concurrently.</summary>
     public bool ConcurrentMessageDelivery { get; set; }
 
     /// <summary>Applies this specification to the target builder.</summary>
@@ -52,27 +52,27 @@ public class InMemoryOutboxSpecification<T> :
 
 
     /// <summary>Applies in-memory outbox configuration to consumed message batches.</summary>
-    public class Batch :
-        IPipeSpecification<ConsumeContext<Batch<T>>>,
+    internal sealed class BatchSpecification :
+        IPipeSpecification<ConsumeContext<IMessageBatch<T>>>,
         IOutboxConfigurator
     {
         readonly ISetScopedConsumeContext? _setter;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        public Batch(IRegistrationContext context)
+        /// <summary>Creates a batch specification using the registration context's scoped consume-context accessor.</summary>
+        /// <param name="context">The registration context that supplies the accessor.</param>
+        public BatchSpecification(IRegistrationContext context)
             : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
         {
         }
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="setter">The setter.</param>
-        public Batch(ISetScopedConsumeContext? setter)
+        /// <summary>Creates a batch specification with an optional scoped consume-context accessor.</summary>
+        /// <param name="setter">The accessor used to expose active contexts inside dependency-injection scopes.</param>
+        public BatchSpecification(ISetScopedConsumeContext? setter)
         {
             _setter = setter;
         }
 
-        /// <summary>Gets or sets the concurrent message delivery.</summary>
+        /// <summary>Gets or sets whether independent buffered operations may be delivered concurrently.</summary>
         public bool ConcurrentMessageDelivery { get; set; }
 
         /// <summary>Validates the current configuration.</summary>
@@ -84,15 +84,15 @@ public class InMemoryOutboxSpecification<T> :
 
         /// <summary>Applies this specification to the target builder.</summary>
         /// <param name="builder">The builder that receives the configuration.</param>
-        public void Apply(IPipeBuilder<ConsumeContext<Batch<T>>> builder)
+        public void Apply(IPipeBuilder<ConsumeContext<IMessageBatch<T>>> builder)
         {
-            builder.AddFilter(new InMemoryOutboxFilter<ConsumeContext<Batch<T>>, InMemoryOutboxConsumeContext<T>.Batch>(_setter, BatchFactory,
+            builder.AddFilter(new InMemoryOutboxFilter<ConsumeContext<IMessageBatch<T>>, InMemoryOutboxConsumeContext<T>.BatchContext>(_setter, BatchFactory,
                 ConcurrentMessageDelivery));
         }
 
-        static InMemoryOutboxConsumeContext<T>.Batch BatchFactory(ConsumeContext<Batch<T>> context)
+        static InMemoryOutboxConsumeContext<T>.BatchContext BatchFactory(ConsumeContext<IMessageBatch<T>> context)
         {
-            return new InMemoryOutboxConsumeContext<T>.Batch(context);
+            return new InMemoryOutboxConsumeContext<T>.BatchContext(context);
         }
     }
 }

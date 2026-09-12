@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Observes message retry configuration events.</summary>
+/// <summary>Adds retry specifications to configured message, batch, and activity pipelines.</summary>
 public class MessageRetryConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
@@ -12,10 +12,10 @@ public class MessageRetryConfigurationObserver :
     readonly CancellationToken _cancellationToken;
     readonly Action<IRetryConfigurator> _configure;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="receiveEndpointConfigurator">The receive endpoint configurator.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Creates an observer for a consume pipeline and a shared retry policy callback.</summary>
+    /// <param name="receiveEndpointConfigurator">The consume pipeline whose configurations are observed.</param>
+    /// <param name="cancellationToken">The token observed while retry delays are pending.</param>
+    /// <param name="configure">The callback applied to each retry policy.</param>
     public MessageRetryConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
         : base(receiveEndpointConfigurator ?? throw new ArgumentNullException(nameof(receiveEndpointConfigurator)))
@@ -28,9 +28,9 @@ public class MessageRetryConfigurationObserver :
         Connect(this);
     }
 
-    /// <summary>Reports that message has been configured.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Adds retry handling to a configured message pipeline.</summary>
+    /// <typeparam name="TMessage">The configured message contract.</typeparam>
+    /// <param name="configurator">The consume pipeline that owns the message pipeline.</param>
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {
@@ -41,17 +41,17 @@ public class MessageRetryConfigurationObserver :
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Reports that batch consumer has been configured.</summary>
-    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    /// <summary>Adds retry handling around a configured batch-consumer invocation.</summary>
+    /// <typeparam name="TConsumer">The batch consumer implementation.</typeparam>
+    /// <typeparam name="TMessage">The message contract contained by the batch.</typeparam>
+    /// <param name="configurator">The configured batch-consumer pipeline.</param>
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
     {
-        var consumerSpecification = configurator as IConsumerMessageSpecification<TConsumer, Batch<TMessage>>;
+        var consumerSpecification = configurator as IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>>;
         if (consumerSpecification == null)
             throw new ArgumentException("The configurator must be a consumer specification");
 
-        var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<Batch<TMessage>>, RetryConsumeContext<Batch<TMessage>>>(Factory,
+        var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>, RetryConsumeContext<IMessageBatch<TMessage>>>(Factory,
             _cancellationToken);
 
         _configure(specification);
@@ -59,7 +59,7 @@ public class MessageRetryConfigurationObserver :
         consumerSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>Reports that activity has been configured.</summary>
+    /// <summary>Adds retry handling to a configured activity execution pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
@@ -73,7 +73,7 @@ public class MessageRetryConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>Reports that execute activity has been configured.</summary>
+    /// <summary>Adds retry handling to a configured execute-activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
@@ -86,7 +86,7 @@ public class MessageRetryConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>Reports that compensate activity has been configured.</summary>
+    /// <summary>Adds retry handling to a configured compensate-activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>

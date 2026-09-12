@@ -72,12 +72,12 @@ public sealed class EventHubBatchAndReliabilityTests
                     Pipe.Execute<SendContext>(context => context.SetPartitionKey(partitionKey)),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            ConsumeContext<Batch<IBatchMessage>> actual = await state.Received.Task
+            ConsumeContext<IMessageBatch<IBatchMessage>> actual = await state.Received.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = false;
 
-            Assert.Equal(100, actual.Message.Length);
+            Assert.Equal(100, actual.Message.Count);
             Assert.Equal(Enumerable.Range(0, 100), actual.Message.Select(item => item.Message.Index));
             Assert.All(actual.Message, item =>
             {
@@ -455,14 +455,14 @@ public sealed class EventHubBatchAndReliabilityTests
     private sealed class BatchState(Guid runId)
     {
         public Guid RunId { get; } = runId;
-        public TaskCompletionSource<ConsumeContext<Batch<IBatchMessage>>> Received { get; } = NewSignal<ConsumeContext<Batch<IBatchMessage>>>();
+        public TaskCompletionSource<ConsumeContext<IMessageBatch<IBatchMessage>>> Received { get; } = NewSignal<ConsumeContext<IMessageBatch<IBatchMessage>>>();
     }
 
-    private sealed class OrderedBatchConsumer(BatchState state) : IConsumer<Batch<IBatchMessage>>
+    private sealed class OrderedBatchConsumer(BatchState state) : IConsumer<IMessageBatch<IBatchMessage>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<IBatchMessage>> context)
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<IBatchMessage>> context)
         {
-            if (context.Message.Length == 100 && context.Message.All(item => item.Message.RunId == state.RunId))
+            if (context.Message.Count == 100 && context.Message.All(item => item.Message.RunId == state.RunId))
                 state.Received.TrySetResult(context);
             return Task.CompletedTask;
         }

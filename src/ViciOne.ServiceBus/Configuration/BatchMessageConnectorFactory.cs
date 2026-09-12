@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
 internal sealed class BatchMessageConnectorFactory<TConsumer, TMessage> :
     IMessageConnectorFactory
-    where TConsumer : class, IConsumer<Batch<TMessage>>
+    where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
     where TMessage : class
 {
     readonly BatchConsumerMessageConnector<TConsumer, TMessage> _consumerConnector;
@@ -35,6 +35,6 @@ internal sealed class BatchMessageConnectorFactory<TConsumer, TMessage> :
     public IInstanceMessageConnector<TRequestedConsumer> CreateInstanceConnector<TRequestedConsumer>()
         where TRequestedConsumer : class
     {
-        throw new NotSupportedException($"Batch<{TypeCache<TMessage>.ShortName}> cannot be connected to a consumer instance.");
+        throw new NotSupportedException($"{TypeCache<IMessageBatch<TMessage>>.ShortName} cannot be connected to a consumer instance.");
     }
 }

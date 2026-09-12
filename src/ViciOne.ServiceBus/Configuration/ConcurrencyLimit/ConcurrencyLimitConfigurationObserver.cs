@@ -50,13 +50,13 @@ internal sealed class ConcurrencyLimitConfigurationObserver :
     /// <typeparam name="TConsumer">The batch consumer implementation.</typeparam>
     /// <typeparam name="TMessage">The message type contained by the batch.</typeparam>
     /// <param name="configurator">The configured batch-consumer pipeline.</param>
-    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
         where TConsumer : class
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
-        var specification = new ConcurrencyLimitConsumePipeSpecification<Batch<TMessage>>(Limiter);
+        var specification = new ConcurrencyLimitConsumePipeSpecification<IMessageBatch<TMessage>>(Limiter);
         configurator.Message(message => message.AddPipeSpecification(specification));
     }
 }

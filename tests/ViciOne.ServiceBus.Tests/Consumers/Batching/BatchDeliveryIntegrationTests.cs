@@ -205,8 +205,8 @@ public sealed class BatchDeliveryIntegrationTests
             await harness.Bus.PublishBatchAsync(
                 [new BatchItem(NewId.NextGuid(), 0), new BatchItem(NewId.NextGuid(), 1)],
                 cancellationToken);
-            IConsumedMessage<Batch<BatchItem>> failed = await consumer.Consumed
-                .SelectAsync<Batch<BatchItem>>(cancellationToken)
+            IConsumedMessage<IMessageBatch<BatchItem>> failed = await consumer.Consumed
+                .SelectAsync<IMessageBatch<BatchItem>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
@@ -278,7 +278,7 @@ public sealed class BatchDeliveryIntegrationTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var delivered = NewSignal<Batch<MediatorBatchItem>>();
+        var delivered = NewSignal<IMessageBatch<MediatorBatchItem>>();
         var consumer = new MediatorBatchConsumer(delivered);
         IMediator mediator = Bus.Factory.CreateMediator(configuration =>
         {
@@ -291,9 +291,9 @@ public sealed class BatchDeliveryIntegrationTests
             .ToArray();
 
         await Task.WhenAll(items.Select(item => mediator.SendAsync(item, cancellationToken)));
-        Batch<MediatorBatchItem> batch = await delivered.Task.WaitAsync(timeout, cancellationToken);
+        IMessageBatch<MediatorBatchItem> batch = await delivered.Task.WaitAsync(timeout, cancellationToken);
 
-        Assert.Equal(4, batch.Length);
+        Assert.Equal(4, batch.Count);
         Assert.Equal(items.Select(item => item.CorrelationId).Order(), batch.Select(context => context.Message.CorrelationId).Order());
         Assert.Equal(BatchCompletionMode.Time, batch.Mode);
     }
@@ -388,7 +388,7 @@ public sealed class BatchDeliveryIntegrationTests
                 break;
             case SuccessMode.MessageOutbox:
                 configuration.AddConsumer<OutboxBatchConsumer>(consumer =>
-                    consumer.Message<Batch<BatchItem>>(message => message.UseVolatileOutbox()));
+                    consumer.Message<IMessageBatch<BatchItem>>(message => message.UseVolatileOutbox()));
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown success mode.");
@@ -575,9 +575,9 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed record BatchResult(Guid[] ItemIds, int Count, BatchCompletionMode Mode, bool HasOutbox);
 
-    private sealed class BatchResultConsumer : IConsumer<Batch<BatchItem>>
+    private sealed class BatchResultConsumer : IConsumer<IMessageBatch<BatchItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context) => PublishResultAsync(context);
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<BatchItem>> context) => PublishResultAsync(context);
     }
 
     private sealed class BatchResultConsumerDefinition : ConsumerDefinition<BatchResultConsumer>
@@ -593,18 +593,18 @@ public sealed class BatchDeliveryIntegrationTests
         }
     }
 
-    private sealed class OutboxBatchConsumer : IConsumer<Batch<BatchItem>>
+    private sealed class OutboxBatchConsumer : IConsumer<IMessageBatch<BatchItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context)
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<BatchItem>> context)
         {
             Assert.True(context.TryGetPayload<InMemoryOutboxConsumeContext>(out _));
             return PublishResultAsync(context);
         }
     }
 
-    private sealed class RetryingOutboxBatchConsumer : IConsumer<Batch<BatchItem>>
+    private sealed class RetryingOutboxBatchConsumer : IConsumer<IMessageBatch<BatchItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context)
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<BatchItem>> context)
         {
             Assert.True(context.TryGetPayload<InMemoryOutboxConsumeContext>(out _));
             if (context.Advanced().GetRetryCount() == 0)
@@ -614,15 +614,15 @@ public sealed class BatchDeliveryIntegrationTests
         }
     }
 
-    private sealed class FailingBatchConsumer : IConsumer<Batch<BatchItem>>
+    private sealed class FailingBatchConsumer : IConsumer<IMessageBatch<BatchItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context) =>
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<BatchItem>> context) =>
             throw new BatchFailureException("The batch consumer failed.");
     }
 
-    private sealed class FailingOutboxBatchConsumer : IConsumer<Batch<BatchItem>>
+    private sealed class FailingOutboxBatchConsumer : IConsumer<IMessageBatch<BatchItem>>
     {
-        public async Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context)
+        public async Task ConsumeAsync(ConsumeContext<IMessageBatch<BatchItem>> context)
         {
             foreach (ConsumeContext<BatchItem> item in context.Message)
                 await item.Advanced().PublishAsync(CreateResult(context), item.CancellationToken);
@@ -631,21 +631,21 @@ public sealed class BatchDeliveryIntegrationTests
         }
     }
 
-    private static Task PublishResultAsync(ConsumeContext<Batch<BatchItem>> context) =>
+    private static Task PublishResultAsync(ConsumeContext<IMessageBatch<BatchItem>> context) =>
         context.Advanced().PublishAsync(CreateResult(context), context.CancellationToken);
 
-    private static BatchResult CreateResult(ConsumeContext<Batch<BatchItem>> context) =>
+    private static BatchResult CreateResult(ConsumeContext<IMessageBatch<BatchItem>> context) =>
         new(
             context.Message.Select(item => item.Message.CorrelationId).ToArray(),
-            context.Message.Length,
+            context.Message.Count,
             context.Message.Mode,
             context.TryGetPayload<InMemoryOutboxConsumeContext>(out _));
 
     private sealed record ErrorBatchItem(Guid CorrelationId) : CorrelatedBy<Guid>;
 
-    private sealed class ErrorBatchConsumer : IConsumer<Batch<ErrorBatchItem>>
+    private sealed class ErrorBatchConsumer : IConsumer<IMessageBatch<ErrorBatchItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<ErrorBatchItem>> context) =>
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<ErrorBatchItem>> context) =>
             throw new BatchFailureException("Move this batch to the error transport.");
     }
 
@@ -653,21 +653,21 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed record GroupBatchResult(Guid[] ItemIds, int Count, BatchCompletionMode Mode, Guid GuidKey, string? StringKey);
 
-    private sealed class GuidGroupConsumer : IConsumer<Batch<GroupedItem>>
+    private sealed class GuidGroupConsumer : IConsumer<IMessageBatch<GroupedItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<GroupedItem>> context) => context.Advanced().PublishAsync(new GroupBatchResult(
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<GroupedItem>> context) => context.Advanced().PublishAsync(new GroupBatchResult(
             context.Message.Select(item => item.Message.CorrelationId).ToArray(),
-            context.Message.Length,
+            context.Message.Count,
             context.Message.Mode,
             context.Message[0].Message.GuidGroup,
             null), context.CancellationToken);
     }
 
-    private sealed class StringGroupConsumer : IConsumer<Batch<GroupedItem>>
+    private sealed class StringGroupConsumer : IConsumer<IMessageBatch<GroupedItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<GroupedItem>> context) => context.Advanced().PublishAsync(new GroupBatchResult(
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<GroupedItem>> context) => context.Advanced().PublishAsync(new GroupBatchResult(
             context.Message.Select(item => item.Message.CorrelationId).ToArray(),
-            context.Message.Length,
+            context.Message.Count,
             context.Message.Mode,
             Guid.Empty,
             context.Message[0].Message.StringGroup), context.CancellationToken);
@@ -675,10 +675,10 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed record MediatorBatchItem(Guid CorrelationId, int Index) : CorrelatedBy<Guid>;
 
-    private sealed class MediatorBatchConsumer(TaskCompletionSource<Batch<MediatorBatchItem>> delivered) :
-        IConsumer<Batch<MediatorBatchItem>>
+    private sealed class MediatorBatchConsumer(TaskCompletionSource<IMessageBatch<MediatorBatchItem>> delivered) :
+        IConsumer<IMessageBatch<MediatorBatchItem>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<MediatorBatchItem>> context)
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<MediatorBatchItem>> context)
         {
             delivered.TrySetResult(context.Message);
             return Task.CompletedTask;
@@ -687,9 +687,9 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed record ExactlyOnceItem(Guid CorrelationId) : CorrelatedBy<Guid>;
 
-    private sealed class ExactlyOnceBatchConsumer(ExactlyOnceProbe probe) : IConsumer<Batch<ExactlyOnceItem>>
+    private sealed class ExactlyOnceBatchConsumer(ExactlyOnceProbe probe) : IConsumer<IMessageBatch<ExactlyOnceItem>>
     {
-        public async Task ConsumeAsync(ConsumeContext<Batch<ExactlyOnceItem>> context)
+        public async Task ConsumeAsync(ConsumeContext<IMessageBatch<ExactlyOnceItem>> context)
         {
             await probe.EnterAsync(context.CancellationToken);
             probe.Record(context.Message);
@@ -747,7 +747,7 @@ public sealed class BatchDeliveryIntegrationTests
             }
         }
 
-        public void Record(Batch<ExactlyOnceItem> batch)
+        public void Record(IMessageBatch<ExactlyOnceItem> batch)
         {
             lock (_sync)
             {

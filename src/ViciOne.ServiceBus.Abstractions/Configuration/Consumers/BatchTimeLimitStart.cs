@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public enum BatchTimeLimitStart
 {
     /// <summary>Starts the timeout when the first message enters an empty batch.</summary>
-    FromFirst,
+    FromFirst = 0,
     /// <summary>Restarts the timeout whenever a message is added to the batch.</summary>
-    FromLast
+    FromLast = 1
 }

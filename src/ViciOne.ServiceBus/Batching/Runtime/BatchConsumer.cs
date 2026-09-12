@@ -17,27 +17,27 @@ internal sealed class BatchConsumer<TMessage> :
     IConsumer<TMessage>
     where TMessage : class
 {
-    readonly TaskCompletionSource<DateTime> _completed;
-    readonly IPipe<ConsumeContext<Batch<TMessage>>> _consumerPipe;
+    readonly TaskCompletionSource _completed;
+    readonly IPipe<ConsumeContext<IMessageBatch<TMessage>>> _consumerPipe;
     readonly TaskExecutor _dispatcher;
     readonly TaskExecutor _executor;
-    readonly DateTime _firstMessage;
     readonly Dictionary<Guid, BatchEntry> _messages;
     readonly BatchRuntimeSettings _settings;
     readonly ITimer _timer;
     readonly TimeProvider _timeProvider;
     int _completionState;
     Activity? _currentActivity;
-    DateTime _lastMessage;
+    DateTimeOffset _firstMessage;
+    DateTimeOffset _lastMessage;
     ILogContext? _logContext;
 
-    /// <summary>Creates an empty batch and starts its configured completion timer.</summary>
+    /// <summary>Creates an empty batch whose completion timer starts with its first message.</summary>
     /// <param name="settings">The immutable batch size and timing limits.</param>
     /// <param name="executor">The executor that serializes changes to this batch.</param>
     /// <param name="dispatcher">The executor that bounds completed-batch delivery.</param>
     /// <param name="consumerPipe">The pipeline that receives this batch after completion.</param>
     /// <param name="timeProvider">The clock and timer source for batch metadata and expiration.</param>
-    public BatchConsumer(BatchRuntimeSettings settings, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
+    public BatchConsumer(BatchRuntimeSettings settings, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe,
         TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -50,11 +50,10 @@ internal sealed class BatchConsumer<TMessage> :
         _consumerPipe = consumerPipe;
         _dispatcher = dispatcher;
         _messages = new Dictionary<Guid, BatchEntry>();
-        _completed = TaskCompletionSources.Create<DateTime>();
-        _firstMessage = _timeProvider.GetUtcNow().UtcDateTime;
+        _completed = TaskCompletionSources.Create();
         _settings = settings;
 
-        _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, _settings.TimeLimit, Timeout.InfiniteTimeSpan);
+        _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 
     /// <summary>Gets whether this collector has stopped accepting messages and chosen its terminal outcome.</summary>
@@ -109,10 +108,6 @@ internal sealed class BatchConsumer<TMessage> :
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        _logContext ??= LogContext.Current;
-        if (currentActivity != null)
-            _currentActivity = currentActivity;
-
         var messageId = context.MessageId ?? NewId.NextGuid();
 
         ulong? sequenceNumber = context.Advanced().ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
@@ -126,15 +121,23 @@ internal sealed class BatchConsumer<TMessage> :
             sequenceNumber ?? GetSentTimeAsSequenceFallback(),
             () => RemoveCanceledMessage(messageId));
 
-        if (!_messages.ContainsKey(messageId))
-            _messages.Add(messageId, batchEntry);
-        else
+        if (!_messages.TryAdd(messageId, batchEntry))
+        {
             batchEntry.Unregister();
+            return Task.CompletedTask;
+        }
 
-        if (_settings.TimeLimitStart == BatchTimeLimitStart.FromLast)
+        _logContext ??= LogContext.Current;
+        _currentActivity = currentActivity;
+
+        DateTimeOffset receivedAt = _timeProvider.GetUtcNow();
+        if (_messages.Count == 1)
+            _firstMessage = receivedAt;
+
+        if (_messages.Count == 1 || _settings.TimeLimitStart == BatchTimeLimitStart.FromLast)
             _timer.Change(_settings.TimeLimit, Timeout.InfiniteTimeSpan);
 
-        _lastMessage = _timeProvider.GetUtcNow().UtcDateTime;
+        _lastMessage = receivedAt;
 
         if (IsReadyToDeliver(context.Advanced()))
             return CompleteBatchAsync(BatchCompletionMode.Size, context.Advanced(), cancellationToken);
@@ -215,7 +218,7 @@ internal sealed class BatchConsumer<TMessage> :
 
         if (messages.Count == 0)
         {
-            _completed.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
+            _completed.TrySetResult();
             return Task.CompletedTask;
         }
 
@@ -291,19 +294,19 @@ internal sealed class BatchConsumer<TMessage> :
 
     async Task DeliverAsync(ConsumeContext context, IReadOnlyList<ConsumeContext<TMessage>> messages, BatchCompletionMode batchCompletionMode)
     {
-        ConsumeContext<Batch<TMessage>>? batchConsumeContext = null;
+        ConsumeContext<IMessageBatch<TMessage>>? batchConsumeContext = null;
 
         try
         {
             LogContext.SetCurrentIfNull(_logContext);
             Activity.Current = _currentActivity;
 
-            Batch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);
+            IMessageBatch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);
             batchConsumeContext = new BatchConsumeContext<TMessage>(context, batch);
 
             await _consumerPipe.SendAsync(batchConsumeContext).ConfigureAwait(false);
 
-            _completed.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
+            _completed.TrySetResult();
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == context.CancellationToken)
         {
@@ -312,7 +315,7 @@ internal sealed class BatchConsumer<TMessage> :
         catch (Exception exception)
         {
             if (batchConsumeContext != null
-                && batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<Batch<TMessage>>>? retryContext))
+                && batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<IMessageBatch<TMessage>>>? retryContext))
             {
                 for (var i = 0; i < messages.Count; i++)
                     messages[i].GetOrAddPayload(() => retryContext);

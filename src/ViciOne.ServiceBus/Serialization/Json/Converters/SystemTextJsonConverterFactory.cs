@@ -20,7 +20,7 @@ internal sealed class SystemTextJsonConverterFactory :
     static SystemTextJsonConverterFactory()
     {
         JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(Fault<>), typeof(FaultEvent<>));
-        JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(Batch<>), typeof(MessageBatch<>));
+        JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(IMessageBatch<>), typeof(MessageBatch<>));
         JsonMessageTypeMappingRegistry.Register<Fault, FaultEvent>();
         JsonMessageTypeMappingRegistry.Register<ReceiveFault, ReceiveFaultEvent>();
         JsonMessageTypeMappingRegistry.Register<ExceptionInfo, FaultExceptionInfo>();

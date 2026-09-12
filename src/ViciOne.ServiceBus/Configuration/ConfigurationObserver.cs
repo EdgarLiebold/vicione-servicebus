@@ -76,7 +76,7 @@ public class ConfigurationObserver :
 
     void IConsumerConfigurationObserver.ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
     {
-        if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] types))
+        if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(IMessageBatch<>), out Type[] types))
         {
             var method = typeof(ConfigurationObserver)
                 .GetMethod(nameof(BatchConsumerConfigured))
@@ -118,8 +118,8 @@ public class ConfigurationObserver :
     /// <typeparam name="TConsumer">The batch consumer implementation.</typeparam>
     /// <typeparam name="TMessage">The message type contained by the batch.</typeparam>
     /// <param name="configurator">The configured batch-message pipeline.</param>
-    public virtual void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
-        where TConsumer : class, IConsumer<Batch<TMessage>>
+    public virtual void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
+        where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
         where TMessage : class
     {
         // The default observer has no batch-specific middleware; derived observers can override this hook.

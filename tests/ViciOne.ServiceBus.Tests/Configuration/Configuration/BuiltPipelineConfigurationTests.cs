@@ -489,16 +489,16 @@ public sealed class BuiltPipelineConfigurationTests
             ExecuteManagedAsync(context.Message.ProbeId, context.CancellationToken);
     }
 
-    private sealed class ManagedPipelineBatchConsumer : IConsumer<Batch<ManagedPipelineMessage>>
+    private sealed class ManagedPipelineBatchConsumer : IConsumer<IMessageBatch<ManagedPipelineMessage>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<ManagedPipelineMessage>> context)
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<ManagedPipelineMessage>> context)
         {
             ConsumeContext<ManagedPipelineMessage> message = Assert.Single(context.Message);
             return ExecuteManagedAsync(message.Message.ProbeId, context.CancellationToken);
         }
     }
 
-    private sealed class BatchAdmissionProbeFilter : IFilter<ConsumeContext<Batch<ManagedPipelineMessage>>>
+    private sealed class BatchAdmissionProbeFilter : IFilter<ConsumeContext<IMessageBatch<ManagedPipelineMessage>>>
     {
         private int _attempts;
 
@@ -506,8 +506,8 @@ public sealed class BuiltPipelineConfigurationTests
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public async Task SendAsync(
-            ConsumeContext<Batch<ManagedPipelineMessage>> context,
-            IPipe<ConsumeContext<Batch<ManagedPipelineMessage>>> next)
+            ConsumeContext<IMessageBatch<ManagedPipelineMessage>> context,
+            IPipe<ConsumeContext<IMessageBatch<ManagedPipelineMessage>>> next)
         {
             Task downstream = next.SendAsync(context);
             if (Interlocked.Increment(ref _attempts) == 2)

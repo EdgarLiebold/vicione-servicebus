@@ -11,13 +11,13 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TConsumer">The consumer that receives completed batches.</typeparam>
 /// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
 internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
-    IConsumerMessageSpecification<TConsumer, Batch<TMessage>>,
+    IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>>,
     IConsumerMessageConfigurator<TConsumer, TMessage>
     where TMessage : class
-    where TConsumer : class, IConsumer<Batch<TMessage>>
+    where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
 {
-    readonly IBuildPipeConfigurator<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> _batchConfigurator;
-    readonly IBuildPipeConfigurator<ConsumeContext<Batch<TMessage>>> _batchMessagePipeConfigurator;
+    readonly IBuildPipeConfigurator<ConsumerConsumeContext<TConsumer, IMessageBatch<TMessage>>> _batchConfigurator;
+    readonly IBuildPipeConfigurator<ConsumeContext<IMessageBatch<TMessage>>> _batchMessagePipeConfigurator;
     readonly ConsumerMessageSpecification<TConsumer, TMessage> _consumerSpecification;
     readonly ConsumerConfigurationObservable _observers;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
@@ -25,8 +25,8 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     /// <summary>Creates independent configurators for the individual-message and batch-message pipeline segments.</summary>
     public BatchConsumerMessageSpecification()
     {
-        _batchConfigurator = new PipeConfigurator<ConsumerConsumeContext<TConsumer, Batch<TMessage>>>();
-        _batchMessagePipeConfigurator = new PipeConfigurator<ConsumeContext<Batch<TMessage>>>();
+        _batchConfigurator = new PipeConfigurator<ConsumerConsumeContext<TConsumer, IMessageBatch<TMessage>>>();
+        _batchMessagePipeConfigurator = new PipeConfigurator<ConsumeContext<IMessageBatch<TMessage>>>();
 
         _consumerSpecification = new ConsumerMessageSpecification<TConsumer, TMessage>();
         _observers = new ConsumerConfigurationObservable();
@@ -56,7 +56,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     {
         _configurationNotification.EnsureNotified(() =>
         {
-            var batchSpecification = (IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>)this;
+            var batchSpecification = (IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>>)this;
             _observers.ForEach(observer => observer.ConsumerMessageConfigured(batchSpecification));
         });
 
@@ -86,7 +86,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
 
     /// <summary>Adds middleware to the completed-batch consumer segment.</summary>
     /// <param name="specification">The middleware specification to add.</param>
-    public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> specification)
+    public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer, IMessageBatch<TMessage>>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
 
@@ -95,7 +95,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
 
     /// <summary>Adds middleware to the completed-batch message segment.</summary>
     /// <param name="specification">The middleware specification to add.</param>
-    public void AddPipeSpecification(IPipeSpecification<ConsumeContext<Batch<TMessage>>> specification)
+    public void AddPipeSpecification(IPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
 
@@ -105,7 +105,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     /// <summary>Builds the completed-batch consumer segment with its terminal consume filter.</summary>
     /// <param name="consumeFilter">The terminal filter that invokes the application consumer.</param>
     /// <returns>The completed-batch consumer pipe.</returns>
-    public IPipe<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> Build(IFilter<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> consumeFilter)
+    public IPipe<ConsumerConsumeContext<TConsumer, IMessageBatch<TMessage>>> Build(IFilter<ConsumerConsumeContext<TConsumer, IMessageBatch<TMessage>>> consumeFilter)
     {
         ArgumentNullException.ThrowIfNull(consumeFilter);
 
@@ -117,7 +117,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     /// <summary>Builds the completed-batch message segment after applying final connector configuration.</summary>
     /// <param name="configure">The final message-pipe configuration callback.</param>
     /// <returns>The completed-batch message pipe.</returns>
-    public IPipe<ConsumeContext<Batch<TMessage>>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<Batch<TMessage>>>> configure)
+    public IPipe<ConsumeContext<IMessageBatch<TMessage>>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<IMessageBatch<TMessage>>>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         configure(_batchMessagePipeConfigurator);
@@ -131,7 +131,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     {
         ArgumentNullException.ThrowIfNull(specification);
 
-        _batchConfigurator.AddPipeSpecification(new ConsumerPipeSpecificationProxy<TConsumer, Batch<TMessage>>(specification));
+        _batchConfigurator.AddPipeSpecification(new ConsumerPipeSpecificationProxy<TConsumer, IMessageBatch<TMessage>>(specification));
     }
 
     /// <summary>Connects an observer to batch consumer configuration events.</summary>
@@ -146,7 +146,7 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
 
     /// <summary>Applies configuration to the completed-batch message segment.</summary>
     /// <param name="configure">The completed-batch configuration callback.</param>
-    public void Message(Action<IConsumerMessageConfigurator<Batch<TMessage>>> configure)
+    public void Message(Action<IConsumerMessageConfigurator<IMessageBatch<TMessage>>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         configure(new ConsumerMessageConfigurator(_batchMessagePipeConfigurator));
@@ -154,16 +154,16 @@ internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
 
 
     sealed class ConsumerMessageConfigurator :
-        IConsumerMessageConfigurator<Batch<TMessage>>
+        IConsumerMessageConfigurator<IMessageBatch<TMessage>>
     {
-        readonly IBuildPipeConfigurator<ConsumeContext<Batch<TMessage>>> _batchConfigurator;
+        readonly IBuildPipeConfigurator<ConsumeContext<IMessageBatch<TMessage>>> _batchConfigurator;
 
-        public ConsumerMessageConfigurator(IBuildPipeConfigurator<ConsumeContext<Batch<TMessage>>> batchConfigurator)
+        public ConsumerMessageConfigurator(IBuildPipeConfigurator<ConsumeContext<IMessageBatch<TMessage>>> batchConfigurator)
         {
             _batchConfigurator = batchConfigurator ?? throw new ArgumentNullException(nameof(batchConfigurator));
         }
 
-        public void AddPipeSpecification(IPipeSpecification<ConsumeContext<Batch<TMessage>>> specification)
+        public void AddPipeSpecification(IPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>> specification)
         {
             ArgumentNullException.ThrowIfNull(specification);
 

@@ -26,9 +26,9 @@ internal sealed class TimeoutConfigurationObserver :
         configurator.AddPipeSpecification(specification);
     }
 
-    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
     {
-        var specification = new TimeoutSpecification<Batch<TMessage>>();
+        var specification = new TimeoutSpecification<IMessageBatch<TMessage>>();
 
         _configure(specification);
 

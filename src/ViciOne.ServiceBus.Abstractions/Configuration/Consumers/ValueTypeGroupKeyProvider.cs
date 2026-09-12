@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Adapts a nullable value-type grouping selector to the batch grouping contract.</summary>
 /// <typeparam name="TMessage">The message contract supplied to the selector.</typeparam>
 /// <typeparam name="TKey">The value-type grouping key.</typeparam>
-public sealed class ValueTypeGroupKeyProvider<TMessage, TKey> :
+internal sealed class ValueTypeGroupKeyProvider<TMessage, TKey> :
     IGroupKeyProvider<TMessage, TKey>
     where TMessage : class
     where TKey : struct
@@ -19,16 +19,12 @@ public sealed class ValueTypeGroupKeyProvider<TMessage, TKey> :
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
-    /// <summary>Evaluates the selector and reports whether it returned a key.</summary>
-    /// <param name="context">The message context supplied to the selector.</param>
-    /// <param name="key">Receives the selected key when one exists.</param>
-    /// <returns><see langword="true" /> for a present key; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
     {
         ArgumentNullException.ThrowIfNull(context);
 
         TKey? selectedKey = _provider(context);
-
         if (selectedKey.HasValue)
         {
             key = selectedKey.Value;

@@ -21,7 +21,7 @@ public sealed class BatchTimeProviderTests
         LogContext.ConfigureCurrentLogContext(new CapturingLogger(executorFault));
         TimeSpan limit = TimeSpan.FromMinutes(1);
         var clock = new FakeTimeProvider(StartTime);
-        var delivered = new TaskCompletionSource<Batch<BatchItem>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var delivered = new TaskCompletionSource<IMessageBatch<BatchItem>>(TaskCreationOptions.RunContinuationsAsynchronously);
         await using var collector = new TaskExecutor();
         await using var dispatcher = new TaskExecutor();
         var consumer = new BatchConsumer<BatchItem>(
@@ -34,15 +34,15 @@ public sealed class BatchTimeProviderTests
         clock.Advance(TimeSpan.FromSeconds(5));
         await consumer.AddAsync(CreateContext(new BatchItem(1), StartTime.UtcDateTime.AddSeconds(5)), null!, TestContext.Current.CancellationToken);
 
-        clock.Advance(limit - TimeSpan.FromSeconds(5) - TimeSpan.FromTicks(1));
+        clock.Advance(limit - TimeSpan.FromTicks(1));
         Assert.False(delivered.Task.IsCompleted);
 
         clock.Advance(TimeSpan.FromTicks(1));
-        Batch<BatchItem> batch = await AwaitDeliveryAsync(delivered.Task, executorFault.Task);
+        IMessageBatch<BatchItem> batch = await AwaitDeliveryAsync(delivered.Task, executorFault.Task);
 
         Assert.Equal(BatchCompletionMode.Time, batch.Mode);
-        Assert.Equal(StartTime.UtcDateTime, batch.FirstMessageReceived);
-        Assert.Equal(StartTime.UtcDateTime.AddSeconds(5), batch.LastMessageReceived);
+        Assert.Equal(StartTime.AddSeconds(5), batch.FirstMessageReceived);
+        Assert.Equal(StartTime.AddSeconds(5), batch.LastMessageReceived);
         Assert.Equal(1, Assert.Single(batch).Message.Sequence);
     }
 
@@ -54,7 +54,7 @@ public sealed class BatchTimeProviderTests
         LogContext.ConfigureCurrentLogContext(new CapturingLogger(executorFault));
         TimeSpan limit = TimeSpan.FromMinutes(1);
         var clock = new ObservableTimeProvider(StartTime);
-        var delivered = new TaskCompletionSource<Batch<BatchItem>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var delivered = new TaskCompletionSource<IMessageBatch<BatchItem>>(TaskCreationOptions.RunContinuationsAsynchronously);
         await using var collector = new TaskExecutor();
         await using var dispatcher = new TaskExecutor();
         var consumer = new BatchConsumer<BatchItem>(
@@ -81,11 +81,54 @@ public sealed class BatchTimeProviderTests
         Assert.False(delivered.Task.IsCompleted);
 
         clock.Advance(TimeSpan.FromTicks(1));
-        Batch<BatchItem> batch = await AwaitDeliveryAsync(delivered.Task, executorFault.Task);
+        IMessageBatch<BatchItem> batch = await AwaitDeliveryAsync(delivered.Task, executorFault.Task);
 
         Assert.Equal(BatchCompletionMode.Time, batch.Mode);
         Assert.Equal(new[] { 1, 2 }, batch.Select(context => context.Message.Sequence));
-        Assert.Equal(StartTime.UtcDateTime.AddSeconds(50), batch.LastMessageReceived);
+        Assert.Equal(StartTime.AddSeconds(50), batch.LastMessageReceived);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-CLOCK", "timer-starts-on-first-unique-admission")]
+    public async Task Timer_StartsWithTheFirstUniqueAdmissionAndIgnoresDuplicatesAsync()
+    {
+        var executorFault = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
+        LogContext.ConfigureCurrentLogContext(new CapturingLogger(executorFault));
+        TimeSpan limit = TimeSpan.FromMinutes(1);
+        var clock = new ObservableTimeProvider(StartTime);
+        var delivered = new TaskCompletionSource<IMessageBatch<BatchItem>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var collector = new TaskExecutor();
+        await using var dispatcher = new TaskExecutor();
+        var consumer = new BatchConsumer<BatchItem>(
+            new BatchRuntimeSettings(new BatchOptions
+            {
+                MessageLimit = 10,
+                TimeLimit = limit,
+                TimeLimitStart = BatchTimeLimitStart.FromLast,
+            }),
+            collector,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            clock);
+        ConsumeContext<BatchItem> first = CreateContext(new BatchItem(1), StartTime.UtcDateTime);
+
+        clock.Advance(TimeSpan.FromHours(1));
+        Assert.False(delivered.Task.IsCompleted);
+        Assert.Equal(0, clock.ChangeCount);
+
+        await consumer.AddAsync(first, null, TestContext.Current.CancellationToken);
+        Assert.Equal(1, clock.ChangeCount);
+        Assert.Equal(limit, clock.LastDueTime);
+
+        clock.Advance(TimeSpan.FromSeconds(30));
+        await consumer.AddAsync(first, null, TestContext.Current.CancellationToken);
+        Assert.Equal(1, clock.ChangeCount);
+
+        clock.Advance(limit - TimeSpan.FromSeconds(30));
+        IMessageBatch<BatchItem> batch = await AwaitDeliveryAsync(delivered.Task, executorFault.Task);
+        Assert.Equal(StartTime.AddHours(1), batch.FirstMessageReceived);
+        Assert.Equal(StartTime.AddHours(1), batch.LastMessageReceived);
+        Assert.Equal(1, Assert.Single(batch).Message.Sequence);
     }
 
     private static ConsumeContext<BatchItem> CreateContext(BatchItem message, DateTime sentTime)
@@ -102,13 +145,13 @@ public sealed class BatchTimeProviderTests
 
     private sealed record BatchItem(int Sequence);
 
-    private sealed class CaptureBatchPipe(TaskCompletionSource<Batch<BatchItem>> delivered) : IPipe<ConsumeContext<Batch<BatchItem>>>
+    private sealed class CaptureBatchPipe(TaskCompletionSource<IMessageBatch<BatchItem>> delivered) : IPipe<ConsumeContext<IMessageBatch<BatchItem>>>
     {
         public void Probe(ProbeContext context)
         {
         }
 
-        public Task SendAsync(ConsumeContext<Batch<BatchItem>> context)
+        public Task SendAsync(ConsumeContext<IMessageBatch<BatchItem>> context)
         {
             delivered.TrySetResult(context.Message);
             return Task.CompletedTask;
@@ -190,7 +233,7 @@ public sealed class BatchTimeProviderTests
         return false;
     }
 
-    private static async Task<Batch<BatchItem>> AwaitDeliveryAsync(Task<Batch<BatchItem>> delivery, Task<Exception> executorFault)
+    private static async Task<IMessageBatch<BatchItem>> AwaitDeliveryAsync(Task<IMessageBatch<BatchItem>> delivery, Task<Exception> executorFault)
     {
         Task completed = await Task.WhenAny(delivery, executorFault)
             .WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);

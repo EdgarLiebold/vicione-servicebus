@@ -12,12 +12,7 @@ public class MessageScopeConfigurationObserver :
     readonly IServiceProvider _serviceProvider;
     readonly ISetScopedConsumeContext _setScopedConsumeContext;
 
-    /// <summary>
-    /// A registration context carries the setter that belongs to its own bus, so it is passed on
-    /// rather than replaced by the process default. Routing this overload through the default meant
-    /// the retained IRegistrationContext path pushed the consume context into whatever provider the
-    /// scope happened to resolve, which is the wrong one as soon as more than one bus is registered.
-    /// </summary>
+    /// <summary>Creates an observer that uses the registration context's scoped consume-context accessor.</summary>
     /// <param name="receiveEndpointConfigurator">The receive endpoint configurator.</param>
     /// <param name="context">The context associated with the operation.</param>
     public MessageScopeConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, IRegistrationContext context)
@@ -27,7 +22,7 @@ public class MessageScopeConfigurationObserver :
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an observer that establishes message scopes through the supplied services and context accessor.</summary>
     /// <param name="receiveEndpointConfigurator">The receive endpoint configurator.</param>
     /// <param name="serviceProvider">The service provider.</param>
     /// <param name="setScopedConsumeContext">The set scoped consume context.</param>
@@ -41,7 +36,7 @@ public class MessageScopeConfigurationObserver :
         Connect(this);
     }
 
-    /// <summary>Reports that message has been configured.</summary>
+    /// <summary>Adds a message scope filter to a configured consume pipeline.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
@@ -54,23 +49,23 @@ public class MessageScopeConfigurationObserver :
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Reports that batch consumer has been configured.</summary>
+    /// <summary>Adds a message scope filter to a configured batch-consumer pipeline.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
-    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
     {
-        if (!(configurator is IConsumerMessageSpecification<TConsumer, Batch<TMessage>> consumerSpecification))
+        if (!(configurator is IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>> consumerSpecification))
             throw new ArgumentException("The configurator must be a consumer specification");
 
         var scopeProvider = new ConsumeScopeProvider(_serviceProvider, _setScopedConsumeContext);
-        var scopeFilter = new ScopeMessageFilter<Batch<TMessage>>(scopeProvider);
-        var specification = new FilterPipeSpecification<ConsumeContext<Batch<TMessage>>>(scopeFilter);
+        var scopeFilter = new ScopeMessageFilter<IMessageBatch<TMessage>>(scopeProvider);
+        var specification = new FilterPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>>(scopeFilter);
 
         consumerSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>Reports that activity has been configured.</summary>
+    /// <summary>Adds an execution scope filter to a configured activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
@@ -85,7 +80,7 @@ public class MessageScopeConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>Reports that execute activity has been configured.</summary>
+    /// <summary>Adds an execution scope filter to a configured execute-activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
@@ -98,7 +93,7 @@ public class MessageScopeConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>Reports that compensate activity has been configured.</summary>
+    /// <summary>Adds a compensation scope filter to a configured compensate-activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>

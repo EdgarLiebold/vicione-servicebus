@@ -33,7 +33,7 @@ public static class BatchConsumerExtensions
     /// <param name="configurator">The batch configuration that owns the registration.</param>
     /// <param name="consumerFactoryMethod">The delegate that creates a batch consumer for each delivery.</param>
     public static void Consumer<TConsumer, TMessage>(this IBatchConfigurator<TMessage> configurator, Func<TConsumer> consumerFactoryMethod)
-        where TConsumer : class, IConsumer<Batch<TMessage>>
+        where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -52,7 +52,7 @@ public static class BatchConsumerExtensions
     /// <param name="configurator">The batch configuration that owns the registration.</param>
     /// <param name="consumerFactory">The factory that supplies a batch consumer for each delivery.</param>
     public static void Consumer<TConsumer, TMessage>(this IBatchConfigurator<TMessage> configurator, IConsumerFactory<TConsumer> consumerFactory)
-        where TConsumer : class, IConsumer<Batch<TMessage>>
+        where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(configurator);

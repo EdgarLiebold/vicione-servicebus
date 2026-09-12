@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Reflection;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Batching.Runtime;
 using ViciOne.ServiceBus.Configuration;
@@ -19,7 +20,7 @@ public sealed class BatchCollectorLifecycleTests
     public async Task Disposal_FlushesAPartialBatchOnceAndRejectsFurtherAdmissionsAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<LifecycleItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<LifecycleItem>>();
         var collector = new BatchCollector<LifecycleItem>(CreateOptions(), new CaptureBatchPipe(delivered));
         ConsumeContext<LifecycleItem> context = CreateContext(new LifecycleItem("alpha", 1), timeProvider);
 
@@ -39,10 +40,10 @@ public sealed class BatchCollectorLifecycleTests
         await Task.WhenAll(firstDisposal, secondDisposal)
             .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        Batch<LifecycleItem> batch = Assert.Single(delivered);
+        IMessageBatch<LifecycleItem> batch = Assert.Single(delivered);
         Assert.Equal(BatchCompletionMode.Forced, batch.Mode);
-        Assert.Equal(1, batch.Length);
-        Assert.Equal(("alpha", 1), (batch[0].Message.Group, batch[0].Message.Sequence));
+        ConsumeContext<LifecycleItem> message = Assert.Single(batch);
+        Assert.Equal(("alpha", 1), (message.Message.Group, message.Message.Sequence));
         Assert.Equal(0, timeProvider.ActiveTimerCount);
         await consume.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
@@ -57,11 +58,12 @@ public sealed class BatchCollectorLifecycleTests
     public async Task GroupedDisposal_FlushesEveryPartialGroupAndDrainsEveryMessageAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<LifecycleItem>>();
-        var collector = new BatchCollector<LifecycleItem, string>(
-            CreateOptions(concurrencyLimit: 2),
-            new CaptureBatchPipe(delivered),
-            new GroupKeyProvider<LifecycleItem, string>(context => context.Message.Group));
+        var delivered = new ConcurrentQueue<IMessageBatch<LifecycleItem>>();
+        BatchOptions options = CreateOptions(concurrencyLimit: 2)
+            .GroupBy<LifecycleItem, string>(context => context.Message.Group);
+        BatchCollector<LifecycleItem, string> collector = CreateGroupedCollector(
+            options,
+            new CaptureBatchPipe(delivered));
         ConsumeContext<LifecycleItem>[] contexts =
         [
             CreateContext(new LifecycleItem("alpha", 1), timeProvider),
@@ -81,7 +83,7 @@ public sealed class BatchCollectorLifecycleTests
 
         await collector.DisposeAsync().AsTask().WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        Batch<LifecycleItem>[] batches = delivered
+        IMessageBatch<LifecycleItem>[] batches = delivered
             .OrderBy(batch => batch[0].Message.Group, StringComparer.Ordinal)
             .ToArray();
         Assert.Equal(2, batches.Length);
@@ -97,7 +99,7 @@ public sealed class BatchCollectorLifecycleTests
     public async Task CollectionCancellation_PreservesTheTokenThatStoppedAdmissionAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<LifecycleItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<LifecycleItem>>();
         var collector = new BatchCollector<LifecycleItem>(CreateOptions(), new CaptureBatchPipe(delivered));
         using var explicitCancellation = new CancellationTokenSource();
         explicitCancellation.Cancel();
@@ -128,7 +130,7 @@ public sealed class BatchCollectorLifecycleTests
     {
         var cleanupFailure = new InvalidOperationException("timer cleanup failed");
         var timeProvider = new ObservableTimeProvider(StartTime, cleanupFailure);
-        var delivered = new ConcurrentQueue<Batch<LifecycleItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<LifecycleItem>>();
         var collector = new BatchCollector<LifecycleItem>(CreateOptions(), new CaptureBatchPipe(delivered));
         ConsumeContext<LifecycleItem> context = CreateContext(new LifecycleItem("alpha", 1), timeProvider);
         BatchConsumer<LifecycleItem> consumer = await collector.CollectAsync(context, TestContext.Current.CancellationToken);
@@ -151,8 +153,12 @@ public sealed class BatchCollectorLifecycleTests
     {
         var disposeFailure = new InvalidOperationException("timer disposal failed");
         var changeFailure = new InvalidOperationException("timer stop failed");
-        var timeProvider = new ObservableTimeProvider(StartTime, disposeFailure, changeFailure);
-        var delivered = new ConcurrentQueue<Batch<LifecycleItem>>();
+        var timeProvider = new ObservableTimeProvider(
+            StartTime,
+            disposeFailure,
+            changeFailure,
+            successfulChangesBeforeFailure: 1);
+        var delivered = new ConcurrentQueue<IMessageBatch<LifecycleItem>>();
         var collector = new BatchCollector<LifecycleItem>(CreateOptions(), new CaptureBatchPipe(delivered));
         ConsumeContext<LifecycleItem> context = CreateContext(new LifecycleItem("alpha", 1), timeProvider);
         BatchConsumer<LifecycleItem> consumer = await collector.CollectAsync(context, TestContext.Current.CancellationToken);
@@ -189,14 +195,32 @@ public sealed class BatchCollectorLifecycleTests
         return context;
     }
 
-    private sealed class CaptureBatchPipe(ConcurrentQueue<Batch<LifecycleItem>> delivered) :
-        IPipe<ConsumeContext<Batch<LifecycleItem>>>
+    private static BatchCollector<LifecycleItem, string> CreateGroupedCollector(
+        BatchOptions options,
+        IPipe<ConsumeContext<IMessageBatch<LifecycleItem>>> consumerPipe)
+    {
+        PropertyInfo? providerProperty = typeof(BatchOptions).GetProperty(
+            "GroupKeyProvider",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(providerProperty);
+        object? provider = providerProperty.GetValue(options);
+        Assert.NotNull(provider);
+        return Assert.IsType<BatchCollector<LifecycleItem, string>>(Activator.CreateInstance(
+            typeof(BatchCollector<LifecycleItem, string>),
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            binder: null,
+            args: [options, consumerPipe, provider],
+            culture: null));
+    }
+
+    private sealed class CaptureBatchPipe(ConcurrentQueue<IMessageBatch<LifecycleItem>> delivered) :
+        IPipe<ConsumeContext<IMessageBatch<LifecycleItem>>>
     {
         public void Probe(ProbeContext context)
         {
         }
 
-        public Task SendAsync(ConsumeContext<Batch<LifecycleItem>> context)
+        public Task SendAsync(ConsumeContext<IMessageBatch<LifecycleItem>> context)
         {
             delivered.Enqueue(context.Message);
             return Task.CompletedTask;

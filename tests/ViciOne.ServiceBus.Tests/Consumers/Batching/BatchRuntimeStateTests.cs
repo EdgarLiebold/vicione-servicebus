@@ -23,7 +23,7 @@ public sealed class BatchRuntimeStateTests
     public async Task CancelingOneMember_CancelsOnlyItsPipelineAndExcludesItFromTheBatchAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 10), new CaptureBatchPipe(delivered));
         using var cancellation = new CancellationTokenSource();
         ConsumeContext<StateItem> canceledContext = CreateCancelableContext(new StateItem("shared", 1), timeProvider, cancellation);
@@ -43,7 +43,7 @@ public sealed class BatchRuntimeStateTests
         await collector.DisposeAsync().AsTask().WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         await remainingConsume.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        Batch<StateItem> deliveredBatch = Assert.Single(delivered);
+        IMessageBatch<StateItem> deliveredBatch = Assert.Single(delivered);
         Assert.Equal(BatchCompletionMode.Forced, deliveredBatch.Mode);
         Assert.Equal(2, Assert.Single(deliveredBatch).Message.Sequence);
     }
@@ -53,7 +53,7 @@ public sealed class BatchRuntimeStateTests
     public async Task CancelingTheOnlyMember_ClosesTheEmptyBatchWithoutDeliveryAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 10), new CaptureBatchPipe(delivered));
         using var cancellation = new CancellationTokenSource();
         ConsumeContext<StateItem> context = CreateCancelableContext(new StateItem("shared", 1), timeProvider, cancellation);
@@ -76,11 +76,54 @@ public sealed class BatchRuntimeStateTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-CANCELLATION", "timer-cleanup-failure-faults-canceled-member")]
+    public async Task CancelingTheOnlyMember_PropagatesTimerCleanupFailureToItsPipelineAsync()
+    {
+        var cleanupFailure = new InvalidOperationException("timer cleanup failed");
+        var timeProvider = new ObservableTimeProvider(
+            StartTime,
+            timerChangeException: cleanupFailure,
+            successfulChangesBeforeFailure: 1);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 10), new CaptureBatchPipe(delivered));
+        using var cancellation = new CancellationTokenSource();
+        Guid messageId = NewId.NextGuid();
+        ConsumeContext<StateItem> context = CreateCancelableContext(
+            new StateItem("shared", 1),
+            timeProvider,
+            cancellation,
+            messageId);
+        ConsumeContext<StateItem> duplicate = CreateContext(
+            new StateItem("shared", 2),
+            timeProvider,
+            messageId: messageId);
+        BatchConsumer<StateItem> batch = await collector.CollectAsync(context, TestContext.Current.CancellationToken);
+        Task canceledConsume = batch.ConsumeAsync(context);
+        Assert.Same(batch, await collector.CollectAsync(duplicate, TestContext.Current.CancellationToken));
+        Task duplicateConsume = batch.ConsumeAsync(duplicate);
+
+        cancellation.Cancel();
+
+        OperationCanceledException canceledException = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            canceledConsume.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            duplicateConsume.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        Assert.Equal(cancellation.Token, canceledException.CancellationToken);
+        Assert.Same(cleanupFailure, exception);
+        Assert.True(batch.IsCompleted);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+        Assert.Empty(delivered);
+
+        await collector.CompleteAsync(batch, TestContext.Current.CancellationToken);
+        await collector.DisposeAsync();
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-DUPLICATE-SUPPRESSION", "collector-retains-first-context-for-duplicate-message-id")]
     public async Task DuplicateMessageIdentifier_IsRepresentedOnceWhileBothPipelinesCompleteAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 2), new CaptureBatchPipe(delivered));
         Guid messageId = NewId.NextGuid();
         ConsumeContext<StateItem> first = CreateContext(new StateItem("shared", 1), timeProvider, messageId: messageId);
@@ -95,9 +138,37 @@ public sealed class BatchRuntimeStateTests
         await collector.DisposeAsync().AsTask().WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         await Task.WhenAll(firstConsume, duplicateConsume).WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        Batch<StateItem> completed = Assert.Single(delivered);
+        IMessageBatch<StateItem> completed = Assert.Single(delivered);
         Assert.Equal(BatchCompletionMode.Forced, completed.Mode);
         Assert.Equal(1, Assert.Single(completed).Message.Sequence);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-DUPLICATE-SUPPRESSION", "duplicate-cannot-replace-admission-activity")]
+    public async Task DuplicateMessageIdentifier_DoesNotReplaceTheAcceptedMessageActivityAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var observedActivity = new TaskCompletionSource<Activity?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 2), new CaptureActivityPipe(observedActivity));
+        Guid messageId = NewId.NextGuid();
+        ConsumeContext<StateItem> first = CreateContext(new StateItem("shared", 1), timeProvider, messageId: messageId);
+        ConsumeContext<StateItem> duplicate = CreateContext(new StateItem("shared", 2), timeProvider, messageId: messageId);
+
+        using var acceptedActivity = new Activity("accepted-batch-message");
+        acceptedActivity.Start();
+        BatchConsumer<StateItem> batch = await collector.CollectAsync(first, TestContext.Current.CancellationToken);
+        Task firstConsume = batch.ConsumeAsync(first);
+
+        using var duplicateActivity = new Activity("duplicate-batch-message");
+        duplicateActivity.Start();
+        Assert.Same(batch, await collector.CollectAsync(duplicate, TestContext.Current.CancellationToken));
+        Task duplicateConsume = batch.ConsumeAsync(duplicate);
+
+        await collector.DisposeAsync().AsTask().WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        await Task.WhenAll(firstConsume, duplicateConsume).WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Assert.Same(acceptedActivity, await observedActivity.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        duplicateActivity.Stop();
     }
 
     [Theory]
@@ -132,7 +203,7 @@ public sealed class BatchRuntimeStateTests
     public async Task CanceledDispatchAdmission_CancelsTheOwnedPipelineWithTheAdmissionTokenAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var collectorExecutor = new TaskExecutor();
         var dispatcher = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
         var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -202,7 +273,7 @@ public sealed class BatchRuntimeStateTests
     public async Task UnavailableDispatcher_FaultsAdmissionAndTheOwnedPipelineAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var collectorExecutor = new TaskExecutor();
         var dispatcher = new TaskExecutor();
         await dispatcher.DisposeAsync();
@@ -257,7 +328,7 @@ public sealed class BatchRuntimeStateTests
     public async Task CompletedBatch_IsOrderedByTransportSequenceOrSentTimeFallbackAsync(bool useTransportSequence)
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 3), new CaptureBatchPipe(delivered));
         StateItem[] items = [new("shared", 30), new("shared", 10), new("shared", 20)];
         var consumeTasks = new List<Task>();
@@ -276,7 +347,7 @@ public sealed class BatchRuntimeStateTests
         await Task.WhenAll(consumeTasks).WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         await collector.DisposeAsync();
 
-        Batch<StateItem> completed = Assert.Single(delivered);
+        IMessageBatch<StateItem> completed = Assert.Single(delivered);
         Assert.Equal(BatchCompletionMode.Size, completed.Mode);
         Assert.Equal(new[] { 10, 20, 30 }, completed.Select(context => context.Message.Sequence));
     }
@@ -289,7 +360,7 @@ public sealed class BatchRuntimeStateTests
     public async Task RetryAdmission_ClosesTheActiveBatchBeforeDeliveringTheRetryAsync(CollectorMode mode)
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         IBatchCollector<StateItem> collector = CreateCollector(mode, CreateOptions(messageLimit: 10), delivered);
         ConsumeContext<StateItem> first = CreateContext(new StateItem("shared", 1), timeProvider);
         ConsumeContext<StateItem> retry = CreateContext(new StateItem("shared", 2), timeProvider);
@@ -306,13 +377,13 @@ public sealed class BatchRuntimeStateTests
         await collector.CompleteAsync(retryBatch, TestContext.Current.CancellationToken);
         await collector.DisposeAsync();
 
-        Batch<StateItem>[] batches = delivered.ToArray();
+        IMessageBatch<StateItem>[] batches = delivered.ToArray();
         Assert.Equal(2, batches.Length);
         Assert.Contains(batches, batch => batch.Mode == BatchCompletionMode.Forced
-            && batch.Length == 1
+            && batch.Count == 1
             && batch[0].Message.Sequence == 1);
         Assert.Contains(batches, batch => batch.Mode == BatchCompletionMode.Size
-            && batch.Length == 1
+            && batch.Count == 1
             && batch[0].Message.Sequence == 2);
     }
 
@@ -321,7 +392,7 @@ public sealed class BatchRuntimeStateTests
     public async Task Collector_CapturesOptionsAndReleasesBufferedContextsAfterCompletionAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         BatchOptions options = CreateOptions(messageLimit: 2);
         var collector = new BatchCollector<StateItem>(options, new CaptureBatchPipe(delivered));
         options.MessageLimit = 1;
@@ -339,7 +410,7 @@ public sealed class BatchRuntimeStateTests
 
         Assert.True(batch.IsCompleted);
         Assert.Equal(0, GetBufferedMessageCount(batch));
-        Assert.Equal(2, Assert.Single(delivered).Length);
+        Assert.Equal(2, Assert.Single(delivered).Count);
         await collector.DisposeAsync();
     }
 
@@ -348,16 +419,16 @@ public sealed class BatchRuntimeStateTests
     public async Task CompletedGroup_IsRemovedByIdentityWithoutReevaluatingItsSelectorAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var invocationCount = 0;
-        var collector = new BatchCollector<StateItem, string>(
+        BatchCollector<StateItem, string> collector = CreateGroupedCollector(
             CreateOptions(messageLimit: 10),
             new CaptureBatchPipe(delivered),
-            new GroupKeyProvider<StateItem, string>(context =>
+            context =>
             {
                 invocationCount++;
                 return context.Message.Group;
-            }));
+            });
         ConsumeContext<StateItem> context = CreateContext(new StateItem("alpha", 1), timeProvider);
 
         BatchConsumer<StateItem> batch = await collector.CollectAsync(context, TestContext.Current.CancellationToken);
@@ -372,30 +443,10 @@ public sealed class BatchRuntimeStateTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-BATCH-GROUP-LIFECYCLE", "present-group-key-must-be-non-null")]
-    public async Task GroupingProvider_CannotReportANullKeyAsPresentAsync()
-    {
-        var timeProvider = new ObservableTimeProvider(StartTime);
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
-        var collector = new BatchCollector<StateItem, string>(
-            CreateOptions(messageLimit: 10),
-            new CaptureBatchPipe(delivered),
-            new InvalidGroupKeyProvider());
-        ConsumeContext<StateItem> context = CreateContext(new StateItem("alpha", 1), timeProvider);
-
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            collector.CollectAsync(context, TestContext.Current.CancellationToken));
-
-        Assert.Contains("null key", exception.Message, StringComparison.Ordinal);
-        await collector.DisposeAsync();
-        Assert.Empty(delivered);
-    }
-
-    [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-RUNTIME-BOUNDARIES", "constructors-require-valid-settings-and-collaborators")]
     public async Task RuntimeConstruction_RequiresValidSettingsAndEveryCollaboratorAsync()
     {
-        var delivered = new ConcurrentQueue<Batch<StateItem>>();
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
         var pipe = new CaptureBatchPipe(delivered);
         BatchOptions options = CreateOptions(messageLimit: 2);
 
@@ -447,25 +498,75 @@ public sealed class BatchRuntimeStateTests
         Assert.Equal("collector", Assert.Throws<ArgumentNullException>(() => new BatchConsumerFactory<StateItem>(options, null!)).ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-RUNTIME-SNAPSHOT", "direct-configurator-shares-option-defaults")]
+    public void DirectBatchConfigurator_UsesTheCanonicalBatchOptionDefaults()
+    {
+        IReceiveEndpointConfigurator endpoint = DispatchProxy.Create<IReceiveEndpointConfigurator, UnsupportedEndpointProxy>();
+        var configurator = new BatchConfigurator<StateItem>(endpoint);
+        var defaults = new BatchOptions();
+
+        Assert.Equal(defaults.MessageLimit, ReadConfiguratorValue<int>(configurator, nameof(configurator.MessageLimit)));
+        Assert.Equal(defaults.ConcurrencyLimit, ReadConfiguratorValue<int>(configurator, nameof(configurator.ConcurrencyLimit)));
+        Assert.Equal(defaults.TimeLimit, ReadConfiguratorValue<TimeSpan>(configurator, nameof(configurator.TimeLimit)));
+        Assert.Equal(defaults.TimeLimitStart, ReadConfiguratorValue<BatchTimeLimitStart>(configurator, nameof(configurator.TimeLimitStart)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-RUNTIME-PROBE", "collector-scope-and-input-boundary")]
+    public async Task CollectorProbe_RequiresAContextAndDelegatesThroughItsNamedScopeAsync()
+    {
+        var collector = new BatchCollector<StateItem>(CreateOptions(messageLimit: 2), new ProbeBatchPipe());
+
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => collector.Probe(null!)).ParamName);
+        IProbeResult result = collector.GetProbeResult(TestContext.Current.CancellationToken);
+
+        IReadOnlyDictionary<string, object> scope = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
+            Assert.Contains("batchCollector", result.Results));
+        Assert.Equal(true, Assert.Contains("batchPipeVisited", scope));
+
+        await collector.DisposeAsync();
+    }
+
     private static IBatchCollector<StateItem> CreateCollector(
         CollectorMode mode,
         BatchOptions options,
-        ConcurrentQueue<Batch<StateItem>> delivered)
+        ConcurrentQueue<IMessageBatch<StateItem>> delivered)
     {
         var pipe = new CaptureBatchPipe(delivered);
         return mode switch
         {
             CollectorMode.Ungrouped => new BatchCollector<StateItem>(options, pipe),
-            CollectorMode.Keyed => new BatchCollector<StateItem, string>(
+            CollectorMode.Keyed => CreateGroupedCollector(
                 options,
                 pipe,
-                new GroupKeyProvider<StateItem, string>(context => context.Message.Group)),
-            CollectorMode.KeyedFallback => new BatchCollector<StateItem, string>(
+                context => context.Message.Group),
+            CollectorMode.KeyedFallback => CreateGroupedCollector(
                 options,
                 pipe,
-                new GroupKeyProvider<StateItem, string>(_ => null!)),
+                _ => null),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown collector mode."),
         };
+    }
+
+    private static BatchCollector<StateItem, string> CreateGroupedCollector(
+        BatchOptions options,
+        IPipe<ConsumeContext<IMessageBatch<StateItem>>> pipe,
+        Func<ConsumeContext<StateItem>, string?> keySelector)
+    {
+        options.GroupBy(keySelector);
+        PropertyInfo? providerProperty = typeof(BatchOptions).GetProperty(
+            "GroupKeyProvider",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(providerProperty);
+        object? provider = providerProperty.GetValue(options);
+        Assert.NotNull(provider);
+        return Assert.IsType<BatchCollector<StateItem, string>>(Activator.CreateInstance(
+            typeof(BatchCollector<StateItem, string>),
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            binder: null,
+            args: [options, pipe, provider],
+            culture: null));
     }
 
     private static BatchOptions CreateOptions(int messageLimit) => new()
@@ -498,9 +599,13 @@ public sealed class BatchRuntimeStateTests
     private static ConsumeContext<StateItem> CreateCancelableContext(
         StateItem message,
         TimeProvider timeProvider,
-        CancellationTokenSource cancellation)
+        CancellationTokenSource cancellation,
+        Guid? messageId = null)
     {
-        ConsumeContext<StateItem> context = InMemoryOutboxTestContextFactory.Create(message, cancellation.Token);
+        ConsumeContext<StateItem> context = InMemoryOutboxTestContextFactory.Create(
+            message,
+            cancellation.Token,
+            messageId: messageId);
         context.SetTimeProvider(timeProvider);
         return context;
     }
@@ -510,6 +615,15 @@ public sealed class BatchRuntimeStateTests
         FieldInfo messages = typeof(BatchConsumer<StateItem>).GetField("_messages", BindingFlags.Instance | BindingFlags.NonPublic)
             ?? throw new InvalidOperationException("The batch buffer field was not found.");
         return Assert.IsAssignableFrom<IDictionary>(messages.GetValue(batch)).Count;
+    }
+
+    private static T ReadConfiguratorValue<T>(BatchConfigurator<StateItem> configurator, string propertyName)
+    {
+        PropertyInfo property = typeof(BatchConfigurator<StateItem>).GetProperty(propertyName)
+            ?? throw new InvalidOperationException($"Batch configurator property '{propertyName}' was not found.");
+        MethodInfo getter = property.GetGetMethod(nonPublic: true)
+            ?? throw new InvalidOperationException($"Batch configurator property '{propertyName}' has no getter.");
+        return Assert.IsType<T>(getter.Invoke(configurator, null));
     }
 
     public enum CollectorMode
@@ -523,14 +637,14 @@ public sealed class BatchRuntimeStateTests
 
     public sealed record OtherItem(string Value);
 
-    private sealed class CaptureBatchPipe(ConcurrentQueue<Batch<StateItem>> delivered) :
-        IPipe<ConsumeContext<Batch<StateItem>>>
+    private sealed class CaptureBatchPipe(ConcurrentQueue<IMessageBatch<StateItem>> delivered) :
+        IPipe<ConsumeContext<IMessageBatch<StateItem>>>
     {
         public void Probe(ProbeContext context)
         {
         }
 
-        public Task SendAsync(ConsumeContext<Batch<StateItem>> context)
+        public Task SendAsync(ConsumeContext<IMessageBatch<StateItem>> context)
         {
             delivered.Enqueue(context.Message);
             return Task.CompletedTask;
@@ -538,27 +652,35 @@ public sealed class BatchRuntimeStateTests
     }
 
     private sealed class FaultingBatchPipe(Exception failure) :
-        IPipe<ConsumeContext<Batch<StateItem>>>
+        IPipe<ConsumeContext<IMessageBatch<StateItem>>>
     {
         public void Probe(ProbeContext context)
         {
         }
 
-        public Task SendAsync(ConsumeContext<Batch<StateItem>> context) => Task.FromException(failure);
+        public Task SendAsync(ConsumeContext<IMessageBatch<StateItem>> context) => Task.FromException(failure);
     }
 
     private sealed class CaptureActivityPipe(TaskCompletionSource<Activity?> observedActivity) :
-        IPipe<ConsumeContext<Batch<StateItem>>>
+        IPipe<ConsumeContext<IMessageBatch<StateItem>>>
     {
         public void Probe(ProbeContext context)
         {
         }
 
-        public Task SendAsync(ConsumeContext<Batch<StateItem>> context)
+        public Task SendAsync(ConsumeContext<IMessageBatch<StateItem>> context)
         {
             observedActivity.TrySetResult(Activity.Current);
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class ProbeBatchPipe : IPipe<ConsumeContext<IMessageBatch<StateItem>>>
+    {
+        public void Probe(ProbeContext context) => context.Add("batchPipeVisited", true);
+
+        public Task SendAsync(ConsumeContext<IMessageBatch<StateItem>> context) =>
+            throw new InvalidOperationException("The probe test must not deliver a batch.");
     }
 
     private sealed class RecordingCollector : IBatchCollector<StateItem>
@@ -600,12 +722,9 @@ public sealed class BatchRuntimeStateTests
                 : Task.CompletedTask;
     }
 
-    private sealed class InvalidGroupKeyProvider : IGroupKeyProvider<StateItem, string>
+    private class UnsupportedEndpointProxy : DispatchProxy
     {
-        public bool TryGetKey(ConsumeContext<StateItem> context, out string key)
-        {
-            key = null!;
-            return true;
-        }
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new NotSupportedException(targetMethod?.Name);
     }
 }

@@ -68,36 +68,196 @@ public sealed class BatchEndpointExtensionsTests
         AssertNull("callback", () => endpoint.PublishBatchAsync(runtime, typeof(BatchMessage), (Func<PublishContext, Task>)null!));
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(BatchDispatchMode.Typed)]
+    [InlineData(BatchDispatchMode.TypedPipe)]
+    [InlineData(BatchDispatchMode.TypedCallback)]
+    [InlineData(BatchDispatchMode.TypedAsyncCallback)]
+    [InlineData(BatchDispatchMode.Runtime)]
+    [InlineData(BatchDispatchMode.RuntimePipe)]
+    [InlineData(BatchDispatchMode.RuntimeCallback)]
+    [InlineData(BatchDispatchMode.RuntimeAsyncCallback)]
+    [InlineData(BatchDispatchMode.ExplicitType)]
+    [InlineData(BatchDispatchMode.ExplicitTypePipe)]
+    [InlineData(BatchDispatchMode.ExplicitTypeCallback)]
+    [InlineData(BatchDispatchMode.ExplicitTypeAsyncCallback)]
     [RequirementCoverage("REQ-VSB-BATCH-ENDPOINT", "send-atomic-admission")]
-    public void SendBatch_RejectsANullElementBeforeStartingAnySend()
+    public void SendBatch_RejectsANullElementBeforeStartingAnySend(BatchDispatchMode mode)
     {
-        ISendEndpoint endpoint = CreateProxy<ISendEndpoint>(out RecordingEndpointProxy proxy);
+        ISendEndpoint endpoint = CreateProxy<IAdvancedSendEndpoint>(out RecordingEndpointProxy proxy);
         BatchMessage[] messages = [new("accepted"), null!];
 
         ArgumentException exception = Assert.Throws<ArgumentException>(() =>
         {
-            _ = endpoint.SendBatchAsync(messages, TestContext.Current.CancellationToken);
+            _ = SendAsync(endpoint, messages, mode, TestContext.Current.CancellationToken);
         });
 
         Assert.Equal("messages", exception.ParamName);
         Assert.Equal(0, proxy.InvocationCount);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(BatchDispatchMode.Typed)]
+    [InlineData(BatchDispatchMode.TypedPipe)]
+    [InlineData(BatchDispatchMode.TypedCallback)]
+    [InlineData(BatchDispatchMode.TypedAsyncCallback)]
+    [InlineData(BatchDispatchMode.Runtime)]
+    [InlineData(BatchDispatchMode.RuntimePipe)]
+    [InlineData(BatchDispatchMode.RuntimeCallback)]
+    [InlineData(BatchDispatchMode.RuntimeAsyncCallback)]
+    [InlineData(BatchDispatchMode.ExplicitType)]
+    [InlineData(BatchDispatchMode.ExplicitTypePipe)]
+    [InlineData(BatchDispatchMode.ExplicitTypeCallback)]
+    [InlineData(BatchDispatchMode.ExplicitTypeAsyncCallback)]
     [RequirementCoverage("REQ-VSB-BATCH-ENDPOINT", "publish-atomic-admission")]
-    public void PublishBatch_RejectsANullElementBeforeStartingAnyPublication()
+    public void PublishBatch_RejectsANullElementBeforeStartingAnyPublication(BatchDispatchMode mode)
     {
-        IPublishEndpoint endpoint = CreateProxy<IPublishEndpoint>(out RecordingEndpointProxy proxy);
+        IPublishEndpoint endpoint = CreateProxy<IAdvancedPublishEndpoint>(out RecordingEndpointProxy proxy);
         BatchMessage[] messages = [new("accepted"), null!];
 
         ArgumentException exception = Assert.Throws<ArgumentException>(() =>
         {
-            _ = endpoint.PublishBatchAsync(messages, TestContext.Current.CancellationToken);
+            _ = PublishAsync(endpoint, messages, mode, TestContext.Current.CancellationToken);
         });
 
         Assert.Equal("messages", exception.ParamName);
         Assert.Equal(0, proxy.InvocationCount);
+    }
+
+    [Theory]
+    [InlineData(BatchDispatchMode.Typed)]
+    [InlineData(BatchDispatchMode.TypedPipe)]
+    [InlineData(BatchDispatchMode.TypedCallback)]
+    [InlineData(BatchDispatchMode.TypedAsyncCallback)]
+    [InlineData(BatchDispatchMode.Runtime)]
+    [InlineData(BatchDispatchMode.RuntimePipe)]
+    [InlineData(BatchDispatchMode.RuntimeCallback)]
+    [InlineData(BatchDispatchMode.RuntimeAsyncCallback)]
+    [InlineData(BatchDispatchMode.ExplicitType)]
+    [InlineData(BatchDispatchMode.ExplicitTypePipe)]
+    [InlineData(BatchDispatchMode.ExplicitTypeCallback)]
+    [InlineData(BatchDispatchMode.ExplicitTypeAsyncCallback)]
+    [RequirementCoverage("REQ-VSB-BATCH-ENDPOINT", "send-overload-forwarding-matrix")]
+    public async Task SendBatchOverloads_ForwardEveryMessageContractPipeAndTokenAsync(BatchDispatchMode mode)
+    {
+        ISendEndpoint endpoint = CreateProxy<IAdvancedSendEndpoint>(out RecordingEndpointProxy proxy);
+        BatchMessage[] messages = [new("first"), new("second")];
+        using var cancellation = new CancellationTokenSource();
+
+        await SendAsync(endpoint, messages, mode, cancellation.Token);
+
+        AssertDispatch(proxy, messages, mode, cancellation.Token, "SendAsync");
+    }
+
+    [Theory]
+    [InlineData(BatchDispatchMode.Typed)]
+    [InlineData(BatchDispatchMode.TypedPipe)]
+    [InlineData(BatchDispatchMode.TypedCallback)]
+    [InlineData(BatchDispatchMode.TypedAsyncCallback)]
+    [InlineData(BatchDispatchMode.Runtime)]
+    [InlineData(BatchDispatchMode.RuntimePipe)]
+    [InlineData(BatchDispatchMode.RuntimeCallback)]
+    [InlineData(BatchDispatchMode.RuntimeAsyncCallback)]
+    [InlineData(BatchDispatchMode.ExplicitType)]
+    [InlineData(BatchDispatchMode.ExplicitTypePipe)]
+    [InlineData(BatchDispatchMode.ExplicitTypeCallback)]
+    [InlineData(BatchDispatchMode.ExplicitTypeAsyncCallback)]
+    [RequirementCoverage("REQ-VSB-BATCH-ENDPOINT", "publish-overload-forwarding-matrix")]
+    public async Task PublishBatchOverloads_ForwardEveryMessageContractPipeAndTokenAsync(BatchDispatchMode mode)
+    {
+        IPublishEndpoint endpoint = CreateProxy<IAdvancedPublishEndpoint>(out RecordingEndpointProxy proxy);
+        BatchMessage[] messages = [new("first"), new("second")];
+        using var cancellation = new CancellationTokenSource();
+
+        await PublishAsync(endpoint, messages, mode, cancellation.Token);
+
+        AssertDispatch(proxy, messages, mode, cancellation.Token, "PublishAsync");
+    }
+
+    static Task SendAsync(
+        ISendEndpoint endpoint,
+        BatchMessage[] messages,
+        BatchDispatchMode mode,
+        CancellationToken cancellationToken)
+    {
+        IEnumerable<object> runtimeMessages = messages;
+        return mode switch
+        {
+            BatchDispatchMode.Typed => endpoint.SendBatchAsync(messages, cancellationToken),
+            BatchDispatchMode.TypedPipe => endpoint.SendBatchAsync(messages, Pipe.Empty<SendContext<BatchMessage>>(), cancellationToken),
+            BatchDispatchMode.TypedCallback => endpoint.SendBatchAsync(messages, static _ => { }, cancellationToken),
+            BatchDispatchMode.TypedAsyncCallback => endpoint.SendBatchAsync(messages, static _ => Task.CompletedTask, cancellationToken),
+            BatchDispatchMode.Runtime => endpoint.SendBatchAsync(runtimeMessages, cancellationToken),
+            BatchDispatchMode.RuntimePipe => endpoint.SendBatchAsync(runtimeMessages, Pipe.Empty<SendContext>(), cancellationToken),
+            BatchDispatchMode.RuntimeCallback => endpoint.SendBatchAsync(runtimeMessages, static _ => { }, cancellationToken),
+            BatchDispatchMode.RuntimeAsyncCallback => endpoint.SendBatchAsync(runtimeMessages, static _ => Task.CompletedTask, cancellationToken),
+            BatchDispatchMode.ExplicitType => endpoint.SendBatchAsync(runtimeMessages, typeof(BatchMessage), cancellationToken),
+            BatchDispatchMode.ExplicitTypePipe => endpoint.SendBatchAsync(
+                runtimeMessages, typeof(BatchMessage), Pipe.Empty<SendContext>(), cancellationToken),
+            BatchDispatchMode.ExplicitTypeCallback => endpoint.SendBatchAsync(
+                runtimeMessages, typeof(BatchMessage), static _ => { }, cancellationToken),
+            BatchDispatchMode.ExplicitTypeAsyncCallback => endpoint.SendBatchAsync(
+                runtimeMessages, typeof(BatchMessage), static _ => Task.CompletedTask, cancellationToken),
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown batch dispatch mode."),
+        };
+    }
+
+    static Task PublishAsync(
+        IPublishEndpoint endpoint,
+        BatchMessage[] messages,
+        BatchDispatchMode mode,
+        CancellationToken cancellationToken)
+    {
+        IEnumerable<object> runtimeMessages = messages;
+        return mode switch
+        {
+            BatchDispatchMode.Typed => endpoint.PublishBatchAsync(messages, cancellationToken),
+            BatchDispatchMode.TypedPipe => endpoint.PublishBatchAsync(messages, Pipe.Empty<PublishContext<BatchMessage>>(), cancellationToken),
+            BatchDispatchMode.TypedCallback => endpoint.PublishBatchAsync(messages, static _ => { }, cancellationToken),
+            BatchDispatchMode.TypedAsyncCallback => endpoint.PublishBatchAsync(messages, static _ => Task.CompletedTask, cancellationToken),
+            BatchDispatchMode.Runtime => endpoint.PublishBatchAsync(runtimeMessages, cancellationToken),
+            BatchDispatchMode.RuntimePipe => endpoint.PublishBatchAsync(runtimeMessages, Pipe.Empty<PublishContext>(), cancellationToken),
+            BatchDispatchMode.RuntimeCallback => endpoint.PublishBatchAsync(runtimeMessages, static _ => { }, cancellationToken),
+            BatchDispatchMode.RuntimeAsyncCallback => endpoint.PublishBatchAsync(runtimeMessages, static _ => Task.CompletedTask, cancellationToken),
+            BatchDispatchMode.ExplicitType => endpoint.PublishBatchAsync(runtimeMessages, typeof(BatchMessage), cancellationToken),
+            BatchDispatchMode.ExplicitTypePipe => endpoint.PublishBatchAsync(
+                runtimeMessages, typeof(BatchMessage), Pipe.Empty<PublishContext>(), cancellationToken),
+            BatchDispatchMode.ExplicitTypeCallback => endpoint.PublishBatchAsync(
+                runtimeMessages, typeof(BatchMessage), static _ => { }, cancellationToken),
+            BatchDispatchMode.ExplicitTypeAsyncCallback => endpoint.PublishBatchAsync(
+                runtimeMessages, typeof(BatchMessage), static _ => Task.CompletedTask, cancellationToken),
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown batch dispatch mode."),
+        };
+    }
+
+    static void AssertDispatch(
+        RecordingEndpointProxy proxy,
+        BatchMessage[] messages,
+        BatchDispatchMode mode,
+        CancellationToken cancellationToken,
+        string methodName)
+    {
+        Assert.Equal(messages.Length, proxy.Invocations.Count);
+        Assert.Equal(messages, proxy.Invocations.Select(invocation => Assert.IsType<BatchMessage>(invocation.Arguments[0])));
+        Assert.All(proxy.Invocations, invocation =>
+        {
+            Assert.Equal(methodName, invocation.Method.Name);
+            Assert.Contains(invocation.Arguments, argument => argument is CancellationToken token && token == cancellationToken);
+        });
+
+        bool usesExplicitType = mode >= BatchDispatchMode.ExplicitType;
+        Assert.All(proxy.Invocations, invocation =>
+            Assert.Equal(usesExplicitType, invocation.Arguments.Contains(typeof(BatchMessage))));
+
+        bool usesPipe = mode is not BatchDispatchMode.Typed
+            and not BatchDispatchMode.Runtime
+            and not BatchDispatchMode.ExplicitType;
+        Assert.All(proxy.Invocations, invocation => Assert.Equal(
+            usesPipe,
+            invocation.Arguments.Any(argument => argument is IPipe<SendContext>
+                or IPipe<SendContext<BatchMessage>>
+                or IPipe<PublishContext>
+                or IPipe<PublishContext<BatchMessage>>)));
     }
 
     static TEndpoint CreateProxy<TEndpoint>(out RecordingEndpointProxy proxy)
@@ -115,13 +275,33 @@ public sealed class BatchEndpointExtensionsTests
 
     sealed record BatchMessage(string Value);
 
+    public enum BatchDispatchMode
+    {
+        Typed,
+        TypedPipe,
+        TypedCallback,
+        TypedAsyncCallback,
+        Runtime,
+        RuntimePipe,
+        RuntimeCallback,
+        RuntimeAsyncCallback,
+        ExplicitType,
+        ExplicitTypePipe,
+        ExplicitTypeCallback,
+        ExplicitTypeAsyncCallback,
+    }
+
     class RecordingEndpointProxy : DispatchProxy
     {
-        public int InvocationCount { get; private set; }
+        public int InvocationCount => Invocations.Count;
+
+        public List<Invocation> Invocations { get; } = [];
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            InvocationCount++;
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            ArgumentNullException.ThrowIfNull(args);
+            Invocations.Add(new Invocation(targetMethod, [.. args]));
 
             if (args is { Length: > 0 } && args[0] is null)
                 throw new ArgumentNullException("message");
@@ -132,4 +312,6 @@ public sealed class BatchEndpointExtensionsTests
             throw new NotSupportedException($"Unexpected endpoint member: {targetMethod?.Name}");
         }
     }
+
+    sealed record Invocation(MethodInfo Method, object?[] Arguments);
 }

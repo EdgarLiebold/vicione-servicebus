@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures how messages of one contract type are collected and delivered as batches.</summary>
 /// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
-public sealed class BatchConfigurator<TMessage> :
+internal sealed class BatchConfigurator<TMessage> :
     IBatchConfigurator<TMessage>
     where TMessage : class
 {
@@ -16,10 +16,11 @@ public sealed class BatchConfigurator<TMessage> :
     {
         _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
 
-        ConcurrencyLimit = 1;
-        MessageLimit = 10;
-        TimeLimit = TimeSpan.FromSeconds(10);
-        TimeLimitStart = BatchTimeLimitStart.FromFirst;
+        var defaults = new BatchOptions();
+        ConcurrencyLimit = defaults.ConcurrencyLimit;
+        MessageLimit = defaults.MessageLimit;
+        TimeLimit = defaults.TimeLimit;
+        TimeLimitStart = defaults.TimeLimitStart;
     }
 
     /// <summary>Sets the maximum collection time before a partial batch is delivered.</summary>
@@ -36,8 +37,8 @@ public sealed class BatchConfigurator<TMessage> :
     /// <param name="consumerFactory">The factory that supplies consumer instances.</param>
     /// <param name="configure">An optional callback that configures the batch consume pipeline.</param>
     public void Consumer<TConsumer>(IConsumerFactory<TConsumer> consumerFactory,
-        Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure)
-        where TConsumer : class, IConsumer<Batch<TMessage>>
+        Action<IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>>>? configure)
+        where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
     {
         ArgumentNullException.ThrowIfNull(consumerFactory);
 

@@ -5,7 +5,8 @@ namespace ViciOne.ServiceBus.Tests.Testing;
 internal sealed class ObservableTimeProvider(
     DateTimeOffset startTime,
     Exception? timerDisposeException = null,
-    Exception? timerChangeException = null) : TimeProvider
+    Exception? timerChangeException = null,
+    int successfulChangesBeforeFailure = 0) : TimeProvider
 {
     private readonly FakeTimeProvider _inner = new(startTime);
     private readonly object _lock = new();
@@ -79,7 +80,7 @@ internal sealed class ObservableTimeProvider(
         foreach (TaskCompletionSource<bool> waiter in completedWaiters)
             waiter.TrySetResult(true);
 
-        return new ObservableTimer(this, timer, timerDisposeException, timerChangeException);
+        return new ObservableTimer(this, timer, timerDisposeException, timerChangeException, successfulChangesBeforeFailure);
     }
 
     public void Advance(TimeSpan elapsed) => _inner.Advance(elapsed);
@@ -148,13 +149,16 @@ internal sealed class ObservableTimeProvider(
         ObservableTimeProvider owner,
         ITimer inner,
         Exception? disposeException,
-        Exception? changeException) : ITimer
+        Exception? changeException,
+        int successfulChangesBeforeFailure) : ITimer
     {
+        private int _changeAttempts;
         private int _disposed;
 
         public bool Change(TimeSpan dueTime, TimeSpan period)
         {
-            if (changeException != null)
+            int attempt = Interlocked.Increment(ref _changeAttempts);
+            if (changeException != null && attempt > successfulChangesBeforeFailure)
                 throw changeException;
 
             bool changed = inner.Change(dueTime, period);

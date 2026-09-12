@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Batching.Contexts;
 /// <summary>Provides the immutable ordered snapshot delivered through the public batch contract.</summary>
 /// <typeparam name="TMessage">The message contract contained in the snapshot.</typeparam>
 internal sealed class MessageBatch<TMessage> :
-    Batch<TMessage>
+    IMessageBatch<TMessage>
     where TMessage : class
 {
     readonly ConsumeContext<TMessage>[] _messages;
@@ -23,6 +23,20 @@ internal sealed class MessageBatch<TMessage> :
         ArgumentNullException.ThrowIfNull(messages);
         if (!Enum.IsDefined(mode))
             throw new ArgumentOutOfRangeException(nameof(mode), mode, "The batch completion mode must be defined.");
+        if (messages.Count == 0)
+            throw new ArgumentException("A delivered batch must contain at least one message context.", nameof(messages));
+        if (lastMessageReceived < firstMessageReceived)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(lastMessageReceived),
+                lastMessageReceived,
+                "The last-message timestamp must not precede the first-message timestamp.");
+        }
+        for (var index = 0; index < messages.Count; index++)
+        {
+            if (messages[index] is null)
+                throw new ArgumentException("A delivered batch must not contain null message contexts.", nameof(messages));
+        }
 
         FirstMessageReceived = firstMessageReceived;
         LastMessageReceived = lastMessageReceived;
@@ -42,7 +56,7 @@ internal sealed class MessageBatch<TMessage> :
     public ConsumeContext<TMessage> this[int index] => _messages[index];
 
     /// <summary>Gets the number of message contexts in the snapshot.</summary>
-    public int Length => _messages.Length;
+    public int Count => _messages.Length;
 
     /// <summary>Returns an enumerator over the ordered message contexts.</summary>
     /// <returns>An enumerator over the snapshot.</returns>

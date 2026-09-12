@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Selects an optional grouping key for a message entering a batch collector.</summary>
 /// <typeparam name="TMessage">The message contract supplied to the selector.</typeparam>
 /// <typeparam name="TKey">The grouping-key type.</typeparam>
-public interface IGroupKeyProvider<in TMessage, TKey>
+internal interface IGroupKeyProvider<in TMessage, TKey>
     where TMessage : class
 {
     /// <summary>Attempts to select a non-null grouping key.</summary>

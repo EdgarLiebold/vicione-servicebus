@@ -25,6 +25,6 @@ public interface IBatchConfigurator<TMessage> :
     /// <param name="consumerFactory">The factory that supplies consumer instances.</param>
     /// <param name="configure">An optional callback that configures the batch consume pipeline.</param>
     void Consumer<TConsumer>(IConsumerFactory<TConsumer> consumerFactory,
-        Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure = null)
-        where TConsumer : class, IConsumer<Batch<TMessage>>;
+        Action<IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>>>? configure = null)
+        where TConsumer : class, IConsumer<IMessageBatch<TMessage>>;
 }

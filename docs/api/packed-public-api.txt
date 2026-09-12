@@ -124,12 +124,6 @@ TYPE class public ViciOne.ServiceBus.Advanced.AdvancedSendEndpointExtensions [st
   METHOD public static System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ISendEndpoint endpoint, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ISendEndpoint endpoint, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint Advanced(ViciOne.ServiceBus.ISendEndpoint endpoint)
-TYPE interface public ViciOne.ServiceBus.Advanced.Batch<T> [interfaces=System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.ConsumeContext<T>>]
-  PROPERTY System.DateTimeOffset FirstMessageReceived { public-get;  }
-  PROPERTY System.DateTimeOffset LastMessageReceived { public-get;  }
-  PROPERTY System.Int32 Length { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.BatchCompletionMode Mode { public-get;  }
-  PROPERTY ViciOne.ServiceBus.ConsumeContext<T> Item[System.Int32 index] { public-get;  }
 TYPE enum public ViciOne.ServiceBus.Advanced.BatchCompletionMode
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.Advanced.BatchCompletionMode Forced = 2
@@ -516,6 +510,10 @@ TYPE interface public ViciOne.ServiceBus.Advanced.IItineraryBuilder
   METHOD public abstract System.Void SetVariables(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
   METHOD public abstract System.Void SetVariables(System.Object values)
   PROPERTY System.Guid TrackingNumber { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage> [interfaces=System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.ConsumeContext<TMessage>>]
+  PROPERTY System.DateTimeOffset FirstMessageReceived { public-get;  }
+  PROPERTY System.DateTimeOffset LastMessageReceived { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Advanced.BatchCompletionMode Mode { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.IMessageRouteTable
   METHOD public abstract System.Boolean TryGetDestinationAddress(System.Type messageType, out System.Uri destinationAddress)
   METHOD public abstract System.Boolean TryGetDestinationAddress<T>(out System.Uri destinationAddress)
@@ -1624,7 +1622,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.BatchOptions [sealed,interfac
   METHOD public ViciOne.ServiceBus.Configuration.BatchOptions SetConcurrencyLimit(System.Int32 limit)
   METHOD public ViciOne.ServiceBus.Configuration.BatchOptions SetConfigurationCallback(ViciOne.ServiceBus.Configuration.BatchOptions.ConfigurationCallback callback)
   METHOD public ViciOne.ServiceBus.Configuration.BatchOptions SetMessageLimit(System.Int32 limit)
-  METHOD public ViciOne.ServiceBus.Configuration.BatchOptions SetTimeLimit(System.Nullable<System.Int32> milliseconds = null, System.Nullable<System.Int32> seconds = null, System.Nullable<System.Int32> minutes = null, System.Nullable<System.Int32> hours = null, System.Nullable<System.Int32> days = null)
   METHOD public ViciOne.ServiceBus.Configuration.BatchOptions SetTimeLimit(System.TimeSpan limit)
   METHOD public ViciOne.ServiceBus.Configuration.BatchOptions SetTimeLimitStart(ViciOne.ServiceBus.Configuration.BatchTimeLimitStart timeLimitStart)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
@@ -1737,9 +1734,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.FilterPipeSpecification<TCont
 TYPE class public ViciOne.ServiceBus.Configuration.FutureEndpointDefinition<TFuture> [base=ViciOne.ServiceBus.Configuration.SettingsEndpointDefinition<TFuture>]
   CTOR public ViciOne.ServiceBus.Configuration.FutureEndpointDefinition<TFuture>(ViciOne.ServiceBus.Configuration.IEndpointSettings<ViciOne.ServiceBus.Configuration.IEndpointDefinition<TFuture>> settings)
   METHOD protected System.String FormatEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.GroupKeyProvider<TMessage,TKey> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IGroupKeyProvider<TMessage,TKey>]
-  CTOR public ViciOne.ServiceBus.Configuration.GroupKeyProvider<TMessage,TKey>(System.Func<ViciOne.ServiceBus.ConsumeContext<TMessage>,TKey> provider)
-  METHOD public virtual System.Boolean TryGetKey(ViciOne.ServiceBus.ConsumeContext<TMessage> context, out TKey key)
 TYPE class public ViciOne.ServiceBus.Configuration.HandlerConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.HandlerConfigurationObservable()
   METHOD public virtual System.Void HandlerConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator)
@@ -1750,7 +1744,7 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IActivityConfigurationObs
 TYPE interface public ViciOne.ServiceBus.Configuration.IActivityConfigurationObserverConnector
   METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectActivityConfigurationObserver(ViciOne.ServiceBus.Configuration.IActivityConfigurationObserver observer)
 TYPE interface public ViciOne.ServiceBus.Configuration.IBatchConfigurator<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IConsumeConfigurator]
-  METHOD public abstract System.Void Consumer<TConsumer>(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>>> configure = null)
+  METHOD public abstract System.Void Consumer<TConsumer>(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>>> configure = null)
   PROPERTY System.Int32 ConcurrencyLimit {  public-set; }
   PROPERTY System.Int32 MessageLimit {  public-set; }
   PROPERTY System.TimeSpan TimeLimit {  public-set; }
@@ -1866,8 +1860,6 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IExceptionConfigurator
   METHOD public abstract System.Void Ignore<TException>()
   METHOD public abstract System.Void Ignore<TException>(System.Func<TException,System.Boolean> filter)
 TYPE interface public ViciOne.ServiceBus.Configuration.IExecuteArgumentsConfigurator<TArguments> [interfaces=ViciOne.ServiceBus.Configuration.IConsumeConfigurator&ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments>>]
-TYPE interface public ViciOne.ServiceBus.Configuration.IGroupKeyProvider<TMessage,TKey>
-  METHOD public abstract System.Boolean TryGetKey(ViciOne.ServiceBus.ConsumeContext<TMessage> context, out TKey key)
 TYPE interface public ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserver
   METHOD public abstract System.Void HandlerConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator)
 TYPE interface public ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserverConnector
@@ -2268,9 +2260,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ValidationResultExtensions [s
   METHOD public static ViciOne.ServiceBus.Configuration.ValidationResult Warning(ViciOne.ServiceBus.Configuration.ISpecification specification, System.String key, System.String value, System.String message)
   METHOD public static ViciOne.ServiceBus.Configuration.ValidationResult Warning(ViciOne.ServiceBus.Configuration.ISpecification specification, System.String message)
   METHOD public static ViciOne.ServiceBus.Configuration.ValidationResult WithParentKey(ViciOne.ServiceBus.Configuration.ValidationResult result, System.String parentKey)
-TYPE class public ViciOne.ServiceBus.Configuration.ValueTypeGroupKeyProvider<TMessage,TKey> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IGroupKeyProvider<TMessage,TKey>]
-  CTOR public ViciOne.ServiceBus.Configuration.ValueTypeGroupKeyProvider<TMessage,TKey>(System.Func<ViciOne.ServiceBus.ConsumeContext<TMessage>,System.Nullable<TKey>> provider)
-  METHOD public virtual System.Boolean TryGetKey(ViciOne.ServiceBus.ConsumeContext<TMessage> context, out TKey key)
 TYPE class public ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions [sealed]
   CTOR public ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions()
   PROPERTY System.Boolean WaitUntilStarted { public-get; public-set; }
@@ -14901,23 +14890,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.BaseHostConfiguration<TConfig
   PROPERTY ViciOne.ServiceBus.Logging.ILogContext LogContext { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.Logging.ILogContext ReceiveLogContext { public-get;  }
   PROPERTY ViciOne.ServiceBus.Logging.ILogContext SendLogContext { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.BatchConfigurator<TMessage> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IBatchConfigurator<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.BatchConfigurator<TMessage>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator)
-  METHOD public virtual System.Void Consumer<TConsumer>(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>>> configure)
-  PROPERTY System.Int32 ConcurrencyLimit {  public-set; }
-  PROPERTY System.Int32 MessageLimit {  public-set; }
-  PROPERTY System.TimeSpan TimeLimit {  public-set; }
-  PROPERTY ViciOne.ServiceBus.Configuration.BatchTimeLimitStart TimeLimitStart {  public-set; }
-TYPE class public ViciOne.ServiceBus.Configuration.BatchConsumerConvention [sealed,interfaces=ViciOne.ServiceBus.Configuration.IConsumerConvention]
-  CTOR public ViciOne.ServiceBus.Configuration.BatchConsumerConvention()
-TYPE class public ViciOne.ServiceBus.Configuration.BatchConsumerInterfaceType [sealed,interfaces=ViciOne.ServiceBus.Configuration.IMessageInterfaceType]
-  CTOR public ViciOne.ServiceBus.Configuration.BatchConsumerInterfaceType(System.Type batchMessageType, System.Type messageType, System.Type consumerType)
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IConsumerMessageConnector<TConsumer> GetConsumerConnector<TConsumer>()
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IInstanceMessageConnector<TConsumer> GetInstanceConnector<TConsumer>()
-  PROPERTY System.Type MessageType { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.BatchConsumerMessageConvention<TConsumer> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IConsumerMessageConvention]
-  CTOR public ViciOne.ServiceBus.Configuration.BatchConsumerMessageConvention<TConsumer>()
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IMessageInterfaceType> GetMessageTypes()
 TYPE class public ViciOne.ServiceBus.Configuration.BindConfigurationExtensions [static]
   METHOD public static System.Void UseBind<TLeft>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TLeft> configurator, System.Action<ViciOne.ServiceBus.Configuration.IBindConfigurator<TLeft>> configure)
 TYPE class public ViciOne.ServiceBus.Configuration.BindConfigurator<TLeft> [interfaces=ViciOne.ServiceBus.Configuration.IBindConfigurator<TLeft>]
@@ -15044,7 +15016,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfiguration
 TYPE class public ViciOne.ServiceBus.Configuration.ConfigurationObserver [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IMessageConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IActivityConfigurationObserver&ViciOne.ServiceBus.Configuration.IConsumerConfigurationObserver&ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserver&ViciOne.ServiceBus.Configuration.ISagaConfigurationObserver]
   CTOR protected ViciOne.ServiceBus.Configuration.ConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
   METHOD public virtual System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
-  METHOD public virtual System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
+  METHOD public virtual System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>> configurator)
   METHOD public virtual System.Void CompensateActivityConfigured<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Observers.ICompensateActivityPipeConfigurator<TActivity,TLog> configurator)
   METHOD public virtual System.Void ExecuteActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator)
   METHOD public virtual System.Void StateMachineSagaConfigured<TInstance>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TInstance> configurator, System.Object stateMachine)
@@ -15434,7 +15406,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.DependencyInjectionHostingExt
   METHOD public static Microsoft.Extensions.Hosting.IHostBuilder UseViciOneServiceBus<TBus>(Microsoft.Extensions.Hosting.IHostBuilder hostBuilder, System.Action<Microsoft.Extensions.Hosting.HostBuilderContext,ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus>> configure = null)
 TYPE class public ViciOne.ServiceBus.Configuration.DependencyInjectionReceiveEndpointExtensions [static]
   METHOD public static System.Void Consumer<T>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure = null)
-  METHOD public static System.Void Consumer<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IBatchConfigurator<TMessage> configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>>> configure = null)
+  METHOD public static System.Void Consumer<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IBatchConfigurator<TMessage> configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>>> configure = null)
   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumer<TConsumer>(ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector connector, ViciOne.ServiceBus.Configuration.IRegistrationContext context, ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>>[] pipeSpecifications)
 TYPE class public ViciOne.ServiceBus.Configuration.DependencyInjectionRiderContainerRegistrar<TBus> [base=ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar]
   CTOR public ViciOne.ServiceBus.Configuration.DependencyInjectionRiderContainerRegistrar<TBus>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection)
@@ -15869,7 +15841,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationOb
   CTOR public ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver(ViciOne.ServiceBus.Configuration.IRegistrationContext context, ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IOutboxConfigurator> configure)
   CTOR public ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver(ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext setter, ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IOutboxConfigurator> configure)
   METHOD public System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
-  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
+  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>> configurator)
   METHOD public System.Void CompensateActivityConfigured<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Observers.ICompensateActivityPipeConfigurator<TActivity,TLog> configurator)
   METHOD public System.Void ExecuteActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator)
   METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
@@ -15884,12 +15856,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.InMemoryOutboxSpecification<T
   CTOR public ViciOne.ServiceBus.Configuration.InMemoryOutboxSpecification<T>(ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext setter)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.ConsumeContext<T>> builder)
-  PROPERTY System.Boolean ConcurrentMessageDelivery { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Configuration.InMemoryOutboxSpecification<T> [interfaces=ViciOne.ServiceBus.Configuration.IOutboxConfigurator&ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Advanced.Batch<T>>>]
-  CTOR public ViciOne.ServiceBus.Configuration.InMemoryOutboxSpecification<T>(ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  CTOR public ViciOne.ServiceBus.Configuration.InMemoryOutboxSpecification<T>(ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext setter)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Advanced.Batch<T>>> builder)
   PROPERTY System.Boolean ConcurrentMessageDelivery { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Configuration.InboxCleanupServiceOptions [abstract]
   CTOR protected ViciOne.ServiceBus.Configuration.InboxCleanupServiceOptions()
@@ -16033,13 +15999,13 @@ TYPE class public ViciOne.ServiceBus.Configuration.MessageRetryConfigurationExte
 TYPE class public ViciOne.ServiceBus.Configuration.MessageRetryConfigurationObserver [base=ViciOne.ServiceBus.Configuration.ConfigurationObserver,interfaces=ViciOne.ServiceBus.Configuration.IMessageConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.MessageRetryConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator receiveEndpointConfigurator, System.Threading.CancellationToken cancellationToken, System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
   METHOD public System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
-  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
+  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>> configurator)
   METHOD public System.Void CompensateActivityConfigured<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Observers.ICompensateActivityPipeConfigurator<TActivity,TLog> configurator)
   METHOD public System.Void ExecuteActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator)
   METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
 TYPE class public ViciOne.ServiceBus.Configuration.MessageRetryConsumerConfigurationObserver<TConsumer> [interfaces=ViciOne.ServiceBus.Configuration.IConsumerConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.MessageRetryConsumerConfigurationObserver<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Threading.CancellationToken cancellationToken, System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
-  METHOD public System.Void BatchConsumerConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
+  METHOD public System.Void BatchConsumerConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>> configurator)
 TYPE class public ViciOne.ServiceBus.Configuration.MessageRetryHandlerConfigurationObserver [interfaces=ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.MessageRetryHandlerConfigurationObserver(System.Threading.CancellationToken cancellationToken, System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
 TYPE class public ViciOne.ServiceBus.Configuration.MessageSchedulerExtensions [static]
@@ -16058,7 +16024,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.MessageScopeConfigurationObse
   CTOR public ViciOne.ServiceBus.Configuration.MessageScopeConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator receiveEndpointConfigurator, System.IServiceProvider serviceProvider, ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext setScopedConsumeContext)
   CTOR public ViciOne.ServiceBus.Configuration.MessageScopeConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator receiveEndpointConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
   METHOD public System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
-  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
+  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>> configurator)
   METHOD public System.Void CompensateActivityConfigured<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Observers.ICompensateActivityPipeConfigurator<TActivity,TLog> configurator)
   METHOD public System.Void ExecuteActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator)
   METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
@@ -16437,7 +16403,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurat
   CTOR public ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator> configure)
   METHOD protected virtual ViciOne.ServiceBus.Configuration.IRedeliveryPipeSpecification AddRedeliveryPipeSpecification<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
   METHOD public System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
-  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
+  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.IMessageBatch<TMessage>> configurator)
   METHOD public System.Void CompensateActivityConfigured<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Observers.ICompensateActivityPipeConfigurator<TActivity,TLog> configurator)
   METHOD public System.Void ExecuteActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator)
   METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
@@ -17565,15 +17531,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxCon
   METHOD public virtual System.Threading.Tasks.Task NotifyConsumedAsync(System.TimeSpan duration, System.String consumerType, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task NotifyFaultedAsync(System.TimeSpan duration, System.String consumerType, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   PROPERTY T Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext<T> [base=ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext,interfaces=ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Advanced.Batch<T>>]
-  CTOR public ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Advanced.Batch<T>> context)
-  METHOD public System.Threading.Tasks.Task DiscardPendingActionsAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task DiscardPendingActionsAsync(ViciOne.ServiceBus.Middleware.InMemoryOutbox.OutboxCheckpoint checkpoint, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task ExecutePendingActionsAsync(System.Boolean concurrentMessageDelivery, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task NotifyConsumedAsync(System.TimeSpan duration, System.String consumerType, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task NotifyFaultedAsync(System.TimeSpan duration, System.String consumerType, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public ViciOne.ServiceBus.Middleware.InMemoryOutbox.OutboxCheckpoint CreateCheckpoint()
-  PROPERTY ViciOne.ServiceBus.Advanced.Batch<T> Message { public-get;  }
 TYPE class public ViciOne.ServiceBus.Middleware.InMemoryOutbox.OutboxCheckpoint [sealed]
 TYPE interface public ViciOne.ServiceBus.Middleware.InMemoryOutbox.OutboxContext
   METHOD public abstract System.Threading.Tasks.Task AddAsync(System.Func<System.Threading.Tasks.Task> method, System.Threading.CancellationToken cancellationToken = null)

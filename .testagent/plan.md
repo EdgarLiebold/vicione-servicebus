@@ -999,3 +999,118 @@ directories. The only textual placeholder and `NotImplementedException` matches 
 a real schedule-declaration placeholder in state-machine semantics and a real technical-failure
 classification; neither is dummy implementation. The complete A+ source goal remains active for
 the next unreviewed owner.
+
+## Iteration 86 outcome
+
+Review the complete Core batching owner as one coherent runtime capability: batch context and
+message projection, collection and release, lifetime ownership, consumer dispatch, factory
+construction, and runtime settings. Preserve batching features while making ordering, timing,
+capacity, cancellation, fault, disposal, concurrency, and boundary semantics explicit and
+deterministic. Align every type, namespace, filename, folder, and manually reviewed comment with
+its final responsibility.
+
+## Iteration 86 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-BATCH-CONTEXT` | batch projection over member consume contexts | context tests | identity, ordering, metadata, payload access, cancellation, and invalid boundaries |
+| `REQ-VSB-BATCH-COLLECTION` | collect, capacity release, timeout release, and shutdown release | collector tests | exact membership/order, trigger precedence, no loss/duplication, and terminal state |
+| `REQ-VSB-BATCH-CONCURRENCY` | simultaneous delivery and release signals | lifecycle and runtime tests | single release, race safety, stable counts, and no post-terminal mutation |
+| `REQ-VSB-BATCH-TIME` | time-provider-driven delivery limits | time-provider tests | deterministic boundaries, delayed completion, cancellation, and no wall-clock dependency |
+| `REQ-VSB-BATCH-DISPATCH` | consumer invocation and result propagation | integration tests | exact batch, dependency context, success, fault, and cancellation propagation |
+| `REQ-VSB-BATCH-FACTORY` | consumer/factory construction and lifetime | factory and lifecycle tests | parameter validation, exact dependencies, cleanup, and repeated creation isolation |
+| `REQ-VSB-BATCH-SETTINGS` | normalized runtime capacity, timeout, and concurrency | runtime-state tests | defaults, valid boundaries, invalid values, and immutable runtime snapshot |
+| `REQ-VSB-SOURCE-NAVIGATION` | all eight batching files | architecture tests and manual ledger | one primary type per file where practical and matching type/namespace/folder ownership |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in the complete owner | manual review plus hygiene gates | current behavior only; no history, filler, workaround, or generated prose |
+
+## Iteration 86 mutation obligations
+
+- Reorder, omit, or duplicate a collected message: exact identity and ordering assertions must
+  fail.
+- Move a capacity or timeout boundary by one item or one time tick: boundary tests must fail.
+- Allow two competing release paths to win: concurrency tests must observe duplicate dispatch or
+  an invalid terminal transition.
+- Replace the injected time source with wall-clock time: deterministic time-provider tests must
+  fail without sleeping.
+- Hide a consumer fault or cancellation, or release after shutdown incorrectly: propagation and
+  lifecycle assertions must fail.
+- Remove owned parameter validation or retain mutable settings: exact boundary and snapshot tests
+  must fail.
+- Retain a stale construction-history comment or a type/file/namespace mismatch: the manual source
+  ledger and architecture checks must reject the exact file.
+
+## Iteration 86 completion
+
+The complete final batching API/runtime inventory and every directly affected production consumer
+were read manually in full. No generator or scripted comment rewrite was used. Each comment was
+checked while its implementation was understood, including batching contexts and runtime,
+configuration and conventions, dependency-injection observers, in-memory outbox integration,
+Job Service convention selection, JSON conversion, and the public Abstractions contracts. The
+Core assembly remains `src/ViciOne.ServiceBus`; Persistence, Scheduling, Transports, Initializers,
+and the other dependency-bearing capabilities remain sibling projects under `src`. Within every
+reviewed project, the final namespaces, folders, filenames, and primary types express their actual
+ownership.
+
+The public collection contract is now the Greenfield `IMessageBatch<TMessage>` interface under
+`Advanced`. It inherits `IReadOnlyList<ConsumeContext<TMessage>>`, exposes the standard `Count`
+and indexer shape, and no longer carries the redundant legacy `Length` member. The former public
+`Batch<TMessage>` contract is absent from product assemblies and the packed API. Remaining
+`Batch<TMessage>(...)` source occurrences are only the intentional receive-endpoint configuration
+verb. Completion mode now shares the same public capability folder, while grouping adapters are
+internal implementation details under `Configuration/Consumers`.
+
+Collection timing now starts with the first successfully admitted unique message. `FromLast`
+restarts only after a later unique admission, while duplicate identifiers cannot replace the
+accepted context, timestamps, log context, or admission activity. `MessageBatch<TMessage>` rejects
+empty snapshots, null member contexts, undefined completion modes, and reversed timestamps before
+capturing an immutable ordered copy. Runtime settings snapshot validated options, default values
+are canonical across API and runtime, and the configuration callback accepts an optional endpoint
+name without nullable suppression.
+
+Connection teardown has one dedicated `BatchConsumerConnectHandle` owner. Synchronous disconnect,
+`Dispose`, and `DisposeAsync` share one idempotent operation; new admissions stop before the batch
+lifetime drains; synchronous and asynchronous cleanup failures remain observable; and independent
+disconnect and drain failures are aggregated in owner order. The architecture gate was updated to
+bind these lifecycle invariants to the extracted owner instead of the connector's former concrete
+source layout. In-memory-outbox nested batch mechanics are internal and descriptively named, so no
+legacy nested public runtime surface remains.
+
+Four isolated counterchanges were compiled and executed. Moving activity capture before duplicate
+admission made the duplicate-activity test fail; returning zero from `Count` made the exact batch
+projection test fail; disabling `FromLast` restart made the deterministic timer test fail; and
+accepting a null reference grouping key made the grouping-boundary test fail. An initial activity
+counterchange survived because it changed which successfully admitted unique message owns the
+delivery activity rather than allowing a duplicate to mutate state; that ambiguity was reviewed,
+the intended latest-unique-admission behavior was retained, and the precise duplicate mutation was
+then killed. Every mutation was restored manually. Final SHA-256 values are
+`9a46e174c4a7bd38c2294b31e615fd82d829fc10a60a0fe579e96e186a032650` for `MessageBatch.cs`,
+`27cfbf7b5eb3c489d9d2c66ef7fb4cd0ba96f997128bb1e105ae409bb9892777` for `BatchConsumer.cs`,
+and `5bcd12bcc51dd798dddcc5e7909a7e8d35cac73bfcf57708e9a0d029463722ee` for
+`GroupKeyProvider.cs`.
+
+The restored final Batching selection passes 70/70 tests, the direct Abstractions selection passes
+64/64, the direct `BatchOptions` selection passes 38/38, and the strengthened API architecture
+test passes. Unique executable coverage across the Core and Abstractions batching owner is
+757/772 lines (98.06%) and 239/266 branches (89.85%). `BatchOptions`, both grouping adapters,
+`BatchEndpointExtensions`, `MessageBatch`, runtime settings, the consumer factory, configurator,
+connect-handle primary logic, and the connector factory each have complete line coverage; the
+public option and grouping contracts also have complete branch coverage. Remaining misses are
+defensive activation, executor-race, and terminal cleanup paths and are not represented as
+executed evidence.
+
+The final Core host passes 2,903/2,903 tests and the complete architecture host passes 292/292,
+both without failures or skips. The official serial Unit solution passes 5,653/5,653 tests across
+22 hosts with no failures or skips. The Release Engineering solution builds with zero warnings and
+errors. Both repository format gates pass; the Engineering gate inspected 5,733 files and changed
+none. `git diff --check` passes, as do requirement projection, bidirectional async naming, source
+layout, source-comment, and public-API gates through the complete architecture host.
+
+Fresh-package verification covers 18 developer journeys, 31 packages, three isolated provider-
+testing consumers, and all 30 runtime API assemblies. The packed public API contains 19,222 lines
+with SHA-256 `05a971207d33b8476a17cf9217376969c9cccc37aa0e43449f5607ee36f7c615`.
+Repository-wide source hygiene reports zero C# preprocessor directives and zero empty source
+directories. The broad marker scan contains only real temporary-endpoint semantics, the real
+state-machine schedule declaration placeholder, and `NotImplementedException` as a technical
+failure classification; the architecture hygiene gates find no dummy or placeholder
+implementation. Protected `review/` and `TestResults/` contents were neither changed nor staged.
+The complete A+ source goal remains active for the next unreviewed owner.

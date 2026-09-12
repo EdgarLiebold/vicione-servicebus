@@ -4,14 +4,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Connects one discovered job contract to its consumer configuration.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Discovers the job-message contracts implemented by a consumer type.</summary>
+/// <typeparam name="T">The consumer type to inspect.</typeparam>
 internal sealed class JobConsumerMessageConvention<T> :
     IConsumerMessageConvention
     where T : class
 {
-    /// <summary>Gets message types.</summary>
-    /// <returns>The message types.</returns>
+    /// <summary>Returns each valid job-message contract implemented by the consumer.</summary>
+    /// <returns>Descriptors for the discovered job-message contracts.</returns>
     public IEnumerable<IMessageInterfaceType> GetMessageTypes()
     {
         var consumerType = typeof(T);
@@ -27,7 +27,7 @@ internal sealed class JobConsumerMessageConvention<T> :
             .Where(x => x.GetGenericTypeDefinition() == typeof(IJobConsumer<>))
             .Select(x => new JobInterfaceType(x.GetGenericArguments()[0], consumerType))
             .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType))
-            .Where(x => !x.MessageType.ClosesGenericType(typeof(Batch<>)));
+            .Where(x => !x.MessageType.ClosesGenericType(typeof(IMessageBatch<>)));
 
         foreach (var type in types)
             yield return type;

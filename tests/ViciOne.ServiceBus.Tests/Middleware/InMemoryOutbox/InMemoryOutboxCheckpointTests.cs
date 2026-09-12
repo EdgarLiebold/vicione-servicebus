@@ -296,10 +296,10 @@ public sealed class InMemoryOutboxCheckpointTests
             new DateTime(2030, 1, 2, 1, 1, 0, DateTimeKind.Utc),
             BatchCompletionMode.Size,
             [first, second]);
-        ConsumeContext<Batch<BatchCheckpointMessage>> consumeContext = InMemoryOutboxTestContextFactory.Create<Batch<BatchCheckpointMessage>>(
+        ConsumeContext<IMessageBatch<BatchCheckpointMessage>> consumeContext = InMemoryOutboxTestContextFactory.Create<IMessageBatch<BatchCheckpointMessage>>(
             messageBatch,
             cancellationToken);
-        var outbox = new InMemoryOutboxConsumeContext<BatchCheckpointMessage>.Batch(consumeContext);
+        var outbox = new InMemoryOutboxConsumeContext<BatchCheckpointMessage>.BatchContext(consumeContext);
         var parent = (OutboxContext)outbox;
         var firstChild = Assert.IsAssignableFrom<OutboxContext>(outbox.Message[0]);
         var secondChild = Assert.IsAssignableFrom<OutboxContext>(outbox.Message[1]);

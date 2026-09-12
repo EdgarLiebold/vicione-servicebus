@@ -22,6 +22,7 @@ public sealed class ConsumerConfigurationBoundaryTests
         var consumerFactory = new InstanceConsumerFactory<BoundaryConsumer>(consumer);
         var batchConsumer = new BoundaryBatchConsumer();
         var batchConfigurator = new BatchConfigurator<BoundaryMessage>(endpoint);
+        IRegistrationContext registrationContext = CreateProxy<IRegistrationContext>();
         MessageHandler<BoundaryMessage> handler = _ => Task.CompletedTask;
         var handlerPipeConfigurator = new PipeConfigurator<ConsumeContext<BoundaryMessage>>();
 
@@ -35,6 +36,22 @@ public sealed class ConsumerConfigurationBoundaryTests
             batchConfigurator.Consumer<BoundaryBatchConsumer, BoundaryMessage>((Func<BoundaryBatchConsumer>)null!)).ParamName);
         Assert.Equal("consumerFactory", Assert.Throws<ArgumentNullException>(() =>
             batchConfigurator.Consumer<BoundaryBatchConsumer, BoundaryMessage>((IConsumerFactory<BoundaryBatchConsumer>)null!)).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.Consumer<BoundaryConsumer>(null!, null!)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.Consumer<BoundaryConsumer>(endpoint, null!)).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.Consumer<BoundaryBatchConsumer, BoundaryMessage>(null!, null!)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.Consumer<BoundaryBatchConsumer, BoundaryMessage>(batchConfigurator, null!)).ParamName);
+        Assert.Equal("connector", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.ConnectConsumer<BoundaryConsumer>(null!, null!, [])).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.ConnectConsumer<BoundaryConsumer>(consumePipe, null!, [])).ParamName);
+        Assert.Equal("pipeSpecifications", Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.ConnectConsumer<BoundaryConsumer>(consumePipe, registrationContext, null!)).ParamName);
+        Assert.Equal("pipeSpecifications", Assert.Throws<ArgumentException>(() =>
+            DependencyInjectionReceiveEndpointExtensions.ConnectConsumer<BoundaryConsumer>(consumePipe, registrationContext, [null!])).ParamName);
 
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             ConsumerExtensions.Consumer<BoundaryConsumer>(null!, consumerFactory)).ParamName);
@@ -136,9 +153,9 @@ public sealed class ConsumerConfigurationBoundaryTests
         Assert.Equal("batchMessageType", Assert.Throws<ArgumentNullException>(() =>
             new BatchConsumerInterfaceType(null!, messageType, consumerType)).ParamName);
         Assert.Equal("messageType", Assert.Throws<ArgumentNullException>(() =>
-            new BatchConsumerInterfaceType(typeof(Batch<BoundaryMessage>), null!, consumerType)).ParamName);
+            new BatchConsumerInterfaceType(typeof(IMessageBatch<BoundaryMessage>), null!, consumerType)).ParamName);
         Assert.Equal("consumerType", Assert.Throws<ArgumentNullException>(() =>
-            new BatchConsumerInterfaceType(typeof(Batch<BoundaryMessage>), messageType, null!)).ParamName);
+            new BatchConsumerInterfaceType(typeof(IMessageBatch<BoundaryMessage>), messageType, null!)).ParamName);
 
         Assert.Equal("consumeFilter", Assert.Throws<ArgumentNullException>(() =>
             new ConsumerMessageConnector<BoundaryConsumer, BoundaryMessage>(null!)).ParamName);
@@ -320,9 +337,9 @@ public sealed class ConsumerConfigurationBoundaryTests
         public Task ConsumeAsync(ConsumeContext<BoundaryMessage> context) => Task.CompletedTask;
     }
 
-    private sealed class BoundaryBatchConsumer : IConsumer<Batch<BoundaryMessage>>
+    private sealed class BoundaryBatchConsumer : IConsumer<IMessageBatch<BoundaryMessage>>
     {
-        public Task ConsumeAsync(ConsumeContext<Batch<BoundaryMessage>> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<BoundaryMessage>> context) => Task.CompletedTask;
     }
 
     private sealed record BoundaryMessage;

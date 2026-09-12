@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Describes a completed-batch consumer contract and creates its typed batch connector.</summary>
-public sealed class BatchConsumerInterfaceType :
+internal sealed class BatchConsumerInterfaceType :
     IMessageInterfaceType
 {
     readonly Lazy<IMessageConnectorFactory> _consumeConnectorFactory;

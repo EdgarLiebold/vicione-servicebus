@@ -251,7 +251,7 @@ public sealed class ContainerConsumeContextTests
                 sendEndpointProvider,
                 consumeContext.TryGetPayload(out MessageConsumeContext<ContextCommand>? _),
                 consumeContext.TryGetPayload(out InMemoryOutboxConsumeContext<ContextCommand>? _),
-                consumeContext.TryGetPayload(out InMemoryOutboxConsumeContext<ContextCommand>.Batch? _),
+                consumeContext.TryGetPayload(out InMemoryOutboxConsumeContext<ContextCommand>.BatchContext? _),
                 batchLength));
         }
     }
@@ -321,12 +321,12 @@ public sealed class ContainerConsumeContextTests
     }
 
     public sealed class FaultingBatchContextConsumer(OutboxPublishingDependency dependency) :
-        IConsumer<Batch<ContextCommand>>
+        IConsumer<IMessageBatch<ContextCommand>>
     {
-        public async Task ConsumeAsync(ConsumeContext<Batch<ContextCommand>> context)
+        public async Task ConsumeAsync(ConsumeContext<IMessageBatch<ContextCommand>> context)
         {
             Guid correlationId = context.Message[0].Message.CorrelationId;
-            await dependency.ExecuteAsync(correlationId, context.Message.Length);
+            await dependency.ExecuteAsync(correlationId, context.Message.Count);
             throw new ExpectedContextFailure();
         }
     }

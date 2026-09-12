@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Batching.Contexts;
 /// <typeparam name="TMessage">The batched message contract.</typeparam>
 internal sealed class BatchConsumeContext<TMessage> :
     ConsumeContextScope,
-    ConsumeContext<Batch<TMessage>>
+    ConsumeContext<IMessageBatch<TMessage>>
     where TMessage : class
 {
     readonly ConsumeContext _context;
@@ -16,7 +16,7 @@ internal sealed class BatchConsumeContext<TMessage> :
     /// <summary>Creates a consume context for an assembled batch.</summary>
     /// <param name="context">The collector context that owns batch settlement.</param>
     /// <param name="batch">The ordered batch delivered to the consumer.</param>
-    public BatchConsumeContext(ConsumeContext context, Batch<TMessage> batch)
+    public BatchConsumeContext(ConsumeContext context, IMessageBatch<TMessage> batch)
         : base(context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -32,6 +32,8 @@ internal sealed class BatchConsumeContext<TMessage> :
     /// <returns>A task that represents the collector context's consumed-message notification.</returns>
     public override Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
         return _context.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
@@ -54,7 +56,7 @@ internal sealed class BatchConsumeContext<TMessage> :
     }
 
     /// <summary>Gets the assembled batch.</summary>
-    public Batch<TMessage> Message { get; }
+    public IMessageBatch<TMessage> Message { get; }
 
     /// <summary>Forwards successful batch consumption to the collector context.</summary>
     /// <param name="duration">The batch-consumer execution duration.</param>
@@ -63,6 +65,7 @@ internal sealed class BatchConsumeContext<TMessage> :
     /// <returns>A task that represents the collector context's consumed-batch notification.</returns>
     public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
         return _context.NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 

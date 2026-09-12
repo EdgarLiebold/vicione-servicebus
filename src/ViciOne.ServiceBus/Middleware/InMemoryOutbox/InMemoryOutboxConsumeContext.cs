@@ -173,25 +173,25 @@ public class InMemoryOutboxConsumeContext<T> :
 
 
     /// <summary>Adapts a consumed message batch to per-message in-memory outbox contexts.</summary>
-    public class Batch :
+    internal sealed class BatchContext :
         InMemoryOutboxConsumeContext,
-        ConsumeContext<Batch<T>>
+        ConsumeContext<IMessageBatch<T>>
     {
         readonly MessageBatch<T> _batch;
         readonly List<InMemoryOutboxConsumeContext<T>> _messages;
 
         /// <summary>Initializes per-message outboxes for every message in a consumed batch.</summary>
         /// <param name="context">The batch consume context to decorate.</param>
-        public Batch(ConsumeContext<Batch<T>> context)
+        public BatchContext(ConsumeContext<IMessageBatch<T>> context)
             : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced())
         {
-            Batch<T> batch = context.Message;
+            IMessageBatch<T> batch = context.Message;
             _messages = batch.Select(x => new InMemoryOutboxConsumeContext<T>(x)).ToList();
             _batch = new MessageBatch<T>(batch.FirstMessageReceived, batch.LastMessageReceived, batch.Mode, _messages);
         }
 
         /// <summary>Gets the batch whose message contexts are backed by child outboxes.</summary>
-        public Batch<T> Message => _batch;
+        public IMessageBatch<T> Message => _batch;
 
         /// <summary>Notifies observers that the batch was consumed successfully.</summary>
         /// <param name="duration">The elapsed batch-processing time.</param>

@@ -5,10 +5,7 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Configures a message retry for a consumer, on the consumer configurator, which is constrained to
-/// the message types for that consumer, and only applies to the consumer prior to the consumer factory.
-/// </summary>
+/// <summary>Adds retry specifications to the message pipelines of one consumer type.</summary>
 /// <typeparam name="TConsumer">The consumer type.</typeparam>
 public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     IConsumerConfigurationObserver
@@ -18,10 +15,10 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     readonly IConsumerConfigurator<TConsumer> _configurator;
     readonly Action<IRetryConfigurator> _configure;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Creates an observer for a consumer and a shared retry policy callback.</summary>
+    /// <param name="configurator">The consumer whose message pipelines receive retry handling.</param>
+    /// <param name="cancellationToken">The token observed while retry delays are pending.</param>
+    /// <param name="configure">The callback applied to each retry policy.</param>
     public MessageRetryConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
     {
@@ -36,7 +33,7 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
 
     void IConsumerConfigurationObserver.ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
     {
-        if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] types))
+        if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(IMessageBatch<>), out Type[] types))
         {
             var method = typeof(MessageRetryConsumerConfigurationObserver<TConsumer>)
                 .GetMethod(nameof(BatchConsumerConfigured))
@@ -57,17 +54,17 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
         }
     }
 
-    /// <summary>Reports that batch consumer has been configured.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    public void BatchConsumerConfigured<TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    /// <summary>Adds retry handling around a configured batch-consumer invocation.</summary>
+    /// <typeparam name="TMessage">The message contract contained by the batch.</typeparam>
+    /// <param name="configurator">The configured batch-consumer pipeline.</param>
+    public void BatchConsumerConfigured<TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
         where TMessage : class
     {
-        var consumerSpecification = configurator as IConsumerMessageSpecification<TConsumer, Batch<TMessage>>;
+        var consumerSpecification = configurator as IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>>;
         if (consumerSpecification == null)
             throw new ArgumentException("The configurator must be a consumer specification");
 
-        var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<Batch<TMessage>>, RetryConsumeContext<Batch<TMessage>>>(Factory,
+        var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>, RetryConsumeContext<IMessageBatch<TMessage>>>(Factory,
             _cancellationToken);
 
         _configure(specification);

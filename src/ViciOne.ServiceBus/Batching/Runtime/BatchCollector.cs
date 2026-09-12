@@ -13,14 +13,14 @@ internal abstract class BatchCollectorBase<TMessage> :
     IBatchCollector<TMessage>
     where TMessage : class
 {
-    readonly IPipe<ConsumeContext<Batch<TMessage>>> _consumerPipe;
+    readonly IPipe<ConsumeContext<IMessageBatch<TMessage>>> _consumerPipe;
     readonly BatchCollectorLifetime _lifetime;
     readonly BatchRuntimeSettings _settings;
 
     /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>
     /// <param name="options">The validated batch limits captured for this collector.</param>
     /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
-    protected BatchCollectorBase(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe)
+    protected BatchCollectorBase(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe)
     {
         _settings = new BatchRuntimeSettings(options);
         _consumerPipe = consumerPipe ?? throw new ArgumentNullException(nameof(consumerPipe));
@@ -192,7 +192,7 @@ internal sealed class BatchCollector<TMessage> :
     /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>
     /// <param name="options">The validated batch limits captured for this collector.</param>
     /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
-    public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe)
+    public BatchCollector(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe)
         : base(options, consumerPipe)
     {
     }
@@ -239,7 +239,7 @@ internal sealed class BatchCollector<TMessage, TKey> :
     /// <param name="keyProvider">The selector that assigns messages to groups.</param>
     public BatchCollector(
         BatchOptions options,
-        IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
+        IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe,
         IGroupKeyProvider<TMessage, TKey> keyProvider)
         : base(RequireKeyProvider(options, keyProvider), consumerPipe)
     {
@@ -252,9 +252,6 @@ internal sealed class BatchCollector<TMessage, TKey> :
     {
         if (_keyProvider.TryGetKey(context, out TKey key))
         {
-            if (key is null)
-                throw new InvalidOperationException("A grouping-key provider cannot report a null key as present.");
-
             _batchesByKey.TryGetValue(key, out BatchConsumer<TMessage>? batch);
             batch = await CollectIntoBatchAsync(context, batch, currentActivity).ConfigureAwait(false);
             _batchesByKey[key] = batch;

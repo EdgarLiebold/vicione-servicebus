@@ -66,10 +66,13 @@ public sealed class BackgroundWorkOwnershipTests
         Assert.Contains("_jobCompletions.Add(CompleteJobAsync(jobHandle));", jobService, StringComparison.Ordinal);
 
         string batchConnector = Source("src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs");
-        Assert.DoesNotContain("Task.Run(", batchConnector, StringComparison.Ordinal);
-        Assert.Contains("public ValueTask DisposeAsync() => new(BeginDisconnectAsync());", batchConnector, StringComparison.Ordinal);
-        Assert.Contains("_disposeTask = CompleteDisconnectAsync(disconnectFailure, factoryCleanup);", batchConnector, StringComparison.Ordinal);
-        Assert.Contains("_ = ObserveCleanupFailureAsync(cleanup);", batchConnector, StringComparison.Ordinal);
+        Assert.Contains("return new BatchConsumerConnectHandle(handle, factory);", batchConnector, StringComparison.Ordinal);
+
+        string batchConnectHandle = Source("src/ViciOne.ServiceBus/Configuration/BatchConsumerConnectHandle.cs");
+        Assert.DoesNotContain("Task.Run(", batchConnectHandle, StringComparison.Ordinal);
+        Assert.Contains("public ValueTask DisposeAsync() => new(BeginDisconnectAsync());", batchConnectHandle, StringComparison.Ordinal);
+        Assert.Contains("_disposeTask = CompleteDisconnectAsync(disconnectFailure, batchCleanup);", batchConnectHandle, StringComparison.Ordinal);
+        Assert.Contains("_ = ObserveCleanupFailureAsync(cleanup);", batchConnectHandle, StringComparison.Ordinal);
 
         string activeMqConsumer = Source(
             "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Middleware/ActiveMqConsumerFilter.cs");
