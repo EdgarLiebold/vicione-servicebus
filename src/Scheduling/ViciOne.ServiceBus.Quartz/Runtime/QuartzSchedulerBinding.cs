@@ -36,7 +36,7 @@ internal sealed class QuartzSchedulerBinding<TBus> : IAsyncDisposable
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _claims = claims ?? throw new ArgumentNullException(nameof(claims));
         _ownsFactory = ownsFactory;
-        BusKey = typeof(TBus).FullName ?? typeof(TBus).Name;
+        BusKey = QuartzSchedulerNamespace.GetStableBusIdentity(typeof(TBus));
         _claims.ClaimFactory(_schedulerFactory, BusKey);
     }
 

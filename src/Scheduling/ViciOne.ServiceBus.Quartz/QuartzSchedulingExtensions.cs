@@ -172,6 +172,7 @@ public static class QuartzSchedulingExtensions
         configure?.Invoke(options);
         QuartzSchedulerSettings settings = options.CreateSettings(schedulerFactory);
         var observer = new DirectQuartzSchedulerLifecycleObserver(settings);
+        ConnectHandle? lifecycleObserver = null;
         PipePartitioner? partitioner = null;
         Uri? inputAddress = null;
 
@@ -228,9 +229,10 @@ public static class QuartzSchedulingExtensions
                             context.Message.ScheduleId,
                             context.Message.ScheduleGroup))));
 
-                configurator.ConfigureMessageScheduler(endpoint.InputAddress);
-                configurator.ConnectBusObserver(observer);
-                inputAddress = endpoint.InputAddress;
+                Uri endpointAddress = endpoint.InputAddress;
+                configurator.ConfigureMessageScheduler(endpointAddress);
+                lifecycleObserver = configurator.ConnectBusObserver(observer);
+                inputAddress = endpointAddress;
             });
 
             return new QuartzSchedulerLease(
@@ -242,6 +244,11 @@ public static class QuartzSchedulingExtensions
                 schedulerFactory,
                 ownsSchedulerFactory,
                 settings.WaitForJobsToComplete,
+                lifecycleObserver ?? throw new ConfigurationException(ConfigurationMessages.Create(
+                    "Quartz scheduling",
+                    typeof(IBus).FullName ?? nameof(IBus),
+                    "The scheduler lifecycle observer was not connected",
+                    "Configure the endpoint through a bus factory that supports lifecycle observers")),
                 partitioner ?? throw new ConfigurationException(ConfigurationMessages.Create(
                     "Quartz scheduling",
                     typeof(IBus).FullName ?? nameof(IBus),
@@ -250,22 +257,35 @@ public static class QuartzSchedulingExtensions
         }
         catch (Exception configurationFailure)
         {
-            if (partitioner is not null)
-            {
-                try
-                {
-                    partitioner.DisposeAsync().AsTask().GetAwaiter().GetResult();
-                }
-                catch (Exception cleanupFailure)
-                {
-                    throw new AggregateException(
-                        "Quartz endpoint configuration and partitioner cleanup both failed.",
-                        configurationFailure,
-                        cleanupFailure);
-                }
-            }
+            List<Exception>? cleanupFailures = ReleaseDirectConfigurationResources(lifecycleObserver, partitioner);
+            if (cleanupFailures is { Count: > 0 })
+                throw new AggregateException("Quartz endpoint configuration and resource cleanup failed.", [configurationFailure, .. cleanupFailures]);
 
             throw;
+        }
+    }
+
+    private static List<Exception>? ReleaseDirectConfigurationResources(
+        ConnectHandle? lifecycleObserver,
+        PipePartitioner? partitioner)
+    {
+        List<Exception>? failures = null;
+        if (lifecycleObserver is not null)
+            CaptureSynchronousCleanupFailure((IAsyncDisposable)lifecycleObserver, ref failures);
+        if (partitioner is not null)
+            CaptureSynchronousCleanupFailure(partitioner, ref failures);
+        return failures;
+    }
+
+    private static void CaptureSynchronousCleanupFailure(IAsyncDisposable resource, ref List<Exception>? failures)
+    {
+        try
+        {
+            resource.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        }
+        catch (Exception cleanupFailure)
+        {
+            (failures ??= []).Add(cleanupFailure);
         }
     }
 

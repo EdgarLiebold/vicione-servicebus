@@ -67,13 +67,15 @@ internal sealed class ScheduleMessageConsumer<TBus> :
     public async Task ConsumeAsync(ConsumeContext<ScheduleMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
-        var jobKey = await EnsureJobExistsAsync(scheduler, _schedulerNamespace, context.CancellationToken).ConfigureAwait(false);
+        Validate(context.Message);
+        context.CancellationToken.ThrowIfCancellationRequested();
 
-        var messageBody = context.Advanced().SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
+        var serializer = context.Advanced().SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType);
+        var messageBody = serializer
             .GetMessageBody(new MessageSendContext<ScheduleMessage>(context.Message, context.CancellationToken));
 
         var triggerKey = QuartzTriggerKey.ForOneTime(context.Message.TokenId, _schedulerNamespace);
+        var jobKey = GetScheduledMessageJobKey(_schedulerNamespace);
 
         var builder = TriggerBuilder.Create()
             .ForJob(jobKey)
@@ -82,9 +84,12 @@ internal sealed class ScheduleMessageConsumer<TBus> :
             .WithRetryPolicy(_deliveryRetryPolicy)
             .WithIdentity(triggerKey);
 
-        var trigger = PopulateTrigger(context.Advanced(), builder, messageBody, context.Message.Destination, context.Message.PayloadType, messageId: context.MessageId,
+        var trigger = PopulateTrigger(context.Advanced(), builder, serializer.ContentType, messageBody, context.Message.Destination, context.Message.PayloadType,
+            messageId: context.MessageId,
             messageIdSeed: NewId.NextGuid(), tokenId: context.Message.TokenId);
 
+        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
+        await EnsureJobExistsAsync(scheduler, jobKey, context.CancellationToken).ConfigureAwait(false);
         await scheduler.ScheduleJob(trigger, ScheduleJobOptions.Replacing, context.CancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", trigger.Key, trigger.NextFireTimeUtc);
@@ -96,14 +101,16 @@ internal sealed class ScheduleMessageConsumer<TBus> :
     public async Task ConsumeAsync(ConsumeContext<ScheduleRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
-        var jobKey = await EnsureJobExistsAsync(scheduler, _schedulerNamespace, context.CancellationToken).ConfigureAwait(false);
+        Validate(context.Message);
+        context.CancellationToken.ThrowIfCancellationRequested();
 
-        var messageBody = context.Advanced().SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
+        var serializer = context.Advanced().SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType);
+        var messageBody = serializer
             .GetMessageBody(new MessageSendContext<ScheduleRecurringMessage>(context.Message, context.CancellationToken));
 
         var schedule = context.Message.Schedule;
         var triggerKey = QuartzTriggerKey.ForRecurring(schedule.ScheduleId, schedule.ScheduleGroup, _schedulerNamespace);
+        var jobKey = GetScheduledMessageJobKey(_schedulerNamespace);
 
         TimeZoneInfo timeZone = TimeZoneInfo.Local;
         if (!string.IsNullOrWhiteSpace(schedule.TimeZoneId) && schedule.TimeZoneId != timeZone.Id)
@@ -139,12 +146,15 @@ internal sealed class ScheduleMessageConsumer<TBus> :
         if (schedule.EndTime.HasValue)
             triggerBuilder.EndAt(schedule.EndTime);
 
-        var trigger = PopulateTrigger(context.Advanced(), triggerBuilder, messageBody, context.Message.Destination, context.Message.PayloadType,
+        var trigger = PopulateTrigger(context.Advanced(), triggerBuilder, serializer.ContentType, messageBody, context.Message.Destination,
+            context.Message.PayloadType,
             messageId: default,
             messageIdSeed: NewId.NextGuid(),
             scheduleId: schedule.ScheduleId,
             scheduleGroup: schedule.ScheduleGroup);
 
+        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
+        await EnsureJobExistsAsync(scheduler, jobKey, context.CancellationToken).ConfigureAwait(false);
         await scheduler.ScheduleJob(trigger, ScheduleJobOptions.Replacing, context.CancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", triggerKey, trigger.NextFireTimeUtc);
@@ -169,12 +179,13 @@ internal sealed class ScheduleMessageConsumer<TBus> :
             platformFailure);
     }
 
-    static ITrigger PopulateTrigger(ConsumeContext context, TriggerBuilder<IJob> builder, MessageBody messageBody, Uri destination,
-        string[] messageTypes, Guid? messageId = default, Guid? messageIdSeed = default, Guid? tokenId = default, string? scheduleId = default,
-        string? scheduleGroup = default)
+    static ITrigger PopulateTrigger(ConsumeContext context, TriggerBuilder<IJob> builder, System.Net.Mime.ContentType contentType,
+        MessageBody messageBody, Uri destination, string[] messageTypes, Guid? messageId = default, Guid? messageIdSeed = default,
+        Guid? tokenId = default, string? scheduleId = default, string? scheduleGroup = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(contentType);
         ArgumentNullException.ThrowIfNull(messageBody);
         ArgumentNullException.ThrowIfNull(destination);
         ArgumentNullException.ThrowIfNull(messageTypes);
@@ -182,8 +193,8 @@ internal sealed class ScheduleMessageConsumer<TBus> :
         builder = builder
             .UsingJobData(QuartzJobDataKeys.DestinationAddress, destination.ToString())
             .UsingJobData(QuartzJobDataKeys.Body, messageBody.GetRequiredTransportText())
-            .UsingJobData(QuartzJobDataKeys.ContentType, context.ReceiveContext.ContentType.ToString())
-            .UsingJobData(QuartzJobDataKeys.MessageTypes, string.Join(";", messageTypes));
+            .UsingJobData(QuartzJobDataKeys.ContentType, contentType.ToString())
+            .UsingJobData(QuartzJobDataKeys.MessageTypes, QuartzMessageTypeList.Serialize(messageTypes));
 
         builder = UseOptionalJobData(builder, QuartzJobDataKeys.MessageId, messageId?.ToString("D"));
         builder = UseOptionalJobData(builder, QuartzJobDataKeys.MessageIdSeed, messageIdSeed?.ToString("D"));
@@ -250,15 +261,18 @@ internal sealed class ScheduleMessageConsumer<TBus> :
             : _schedulerFactory!.GetScheduler(cancellationToken);
     }
 
-    static async Task<JobKey> EnsureJobExistsAsync(IScheduler scheduler, string schedulerNamespace, CancellationToken cancellationToken)
+    static JobKey GetScheduledMessageJobKey(string schedulerNamespace)
     {
-        var jobKey = new JobKey(ScheduledMessageJobIdentity, schedulerNamespace);
+        return new JobKey(ScheduledMessageJobIdentity, schedulerNamespace);
+    }
 
+    static async Task EnsureJobExistsAsync(IScheduler scheduler, JobKey jobKey, CancellationToken cancellationToken)
+    {
         IJobDetail? existing = await scheduler.GetJobDetail(jobKey, cancellationToken).ConfigureAwait(false);
         if (existing is not null)
         {
             ValidateJob(existing);
-            return jobKey;
+            return;
         }
 
         var jobDetail = JobBuilder.Create<QuartzScheduledMessageJob<TBus>>()
@@ -279,8 +293,41 @@ internal sealed class ScheduleMessageConsumer<TBus> :
                 throw;
             ValidateJob(existing);
         }
+    }
 
-        return jobKey;
+    static void Validate(ScheduleMessage message)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        if (message.TokenId == Guid.Empty)
+            throw new InvalidOperationException("A one-time scheduling command requires a non-empty token identifier.");
+
+        ValidatePayload(message.Destination, message.Payload, message.PayloadType);
+    }
+
+    static void Validate(ScheduleRecurringMessage message)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        RecurringSchedule schedule = message.Schedule
+            ?? throw new InvalidOperationException("A recurring scheduling command requires a schedule.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(schedule.ScheduleId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(schedule.ScheduleGroup);
+        ArgumentException.ThrowIfNullOrWhiteSpace(schedule.CronExpression);
+        ArgumentException.ThrowIfNullOrWhiteSpace(schedule.TimeZoneId);
+        if (schedule.EndTime < schedule.StartTime)
+            throw new InvalidOperationException("A recurring schedule cannot end before it starts.");
+        if (schedule.MisfirePolicy is not MissedEventPolicy.Skip and not MissedEventPolicy.Send)
+            throw new ArgumentOutOfRangeException(nameof(schedule.MisfirePolicy), schedule.MisfirePolicy, "The recurring schedule misfire policy is not supported.");
+
+        ValidatePayload(message.Destination, message.Payload, message.PayloadType);
+    }
+
+    static void ValidatePayload(Uri destination, object payload, string[] payloadTypes)
+    {
+        ArgumentNullException.ThrowIfNull(destination);
+        if (!destination.IsAbsoluteUri)
+            throw new ArgumentException("A scheduled destination must be an absolute URI.", nameof(destination));
+        ArgumentNullException.ThrowIfNull(payload);
+        QuartzMessageTypeList.Validate(payloadTypes);
     }
 
     private static void ValidateJob(IJobDetail job)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -16,8 +17,6 @@ namespace ViciOne.ServiceBus.Quartz.Runtime;
 internal sealed class QuartzScheduledMessageContext :
     Headers
 {
-    readonly IJobExecutionContext _executionContext;
-    readonly JobDataMap _jobDataMap;
     readonly IObjectDeserializer _objectDeserializer;
 
     readonly Guid? _conversationId;
@@ -31,31 +30,32 @@ internal sealed class QuartzScheduledMessageContext :
     readonly Uri? _responseAddress;
     readonly Uri? _sourceAddress;
 
-    Headers? _headers;
-    IReadOnlyDictionary<string, object>? _transportProperties;
-    bool _transportPropertiesLoaded;
+    readonly Headers _headers;
+    readonly IReadOnlyDictionary<string, object>? _transportProperties;
 
     /// <summary>Initializes message metadata from a fired Quartz job's merged data map.</summary>
     /// <param name="executionContext">The fired Quartz job context.</param>
     /// <param name="objectDeserializer">The deserializer for persisted headers and transport properties.</param>
     public QuartzScheduledMessageContext(IJobExecutionContext executionContext, IObjectDeserializer objectDeserializer)
     {
-        _executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
-        _jobDataMap = executionContext.MergedJobDataMap;
+        ArgumentNullException.ThrowIfNull(executionContext);
+        JobDataMap jobDataMap = executionContext.MergedJobDataMap;
         _objectDeserializer = objectDeserializer ?? throw new ArgumentNullException(nameof(objectDeserializer));
 
-        Guid? messageId = ReadOptionalGuid(_jobDataMap, QuartzJobDataKeys.MessageId);
-        _messageId = messageId ?? CreateGeneratedMessageId(executionContext, _jobDataMap);
+        Guid? messageId = ReadOptionalGuid(jobDataMap, QuartzJobDataKeys.MessageId);
+        _messageId = messageId ?? CreateGeneratedMessageId(executionContext, jobDataMap);
 
-        _requestId = ReadOptionalGuid(_jobDataMap, QuartzJobDataKeys.RequestId);
-        _correlationId = ReadOptionalGuid(_jobDataMap, QuartzJobDataKeys.CorrelationId);
-        _conversationId = ReadOptionalGuid(_jobDataMap, QuartzJobDataKeys.ConversationId);
-        _initiatorId = ReadOptionalGuid(_jobDataMap, QuartzJobDataKeys.InitiatorId);
-        _expirationTime = ReadOptionalTimestamp(_jobDataMap, QuartzJobDataKeys.ExpirationTime);
-        _sourceAddress = ReadOptionalAddress(_jobDataMap, QuartzJobDataKeys.SourceAddress);
-        _destinationAddress = ReadOptionalAddress(_jobDataMap, QuartzJobDataKeys.DestinationAddress);
-        _responseAddress = ReadOptionalAddress(_jobDataMap, QuartzJobDataKeys.ResponseAddress);
-        _faultAddress = ReadOptionalAddress(_jobDataMap, QuartzJobDataKeys.FaultAddress);
+        _requestId = ReadOptionalGuid(jobDataMap, QuartzJobDataKeys.RequestId);
+        _correlationId = ReadOptionalGuid(jobDataMap, QuartzJobDataKeys.CorrelationId);
+        _conversationId = ReadOptionalGuid(jobDataMap, QuartzJobDataKeys.ConversationId);
+        _initiatorId = ReadOptionalGuid(jobDataMap, QuartzJobDataKeys.InitiatorId);
+        _expirationTime = ReadOptionalTimestamp(jobDataMap, QuartzJobDataKeys.ExpirationTime);
+        _sourceAddress = ReadOptionalAddress(jobDataMap, QuartzJobDataKeys.SourceAddress);
+        _destinationAddress = ReadOptionalAddress(jobDataMap, QuartzJobDataKeys.DestinationAddress);
+        _responseAddress = ReadOptionalAddress(jobDataMap, QuartzJobDataKeys.ResponseAddress);
+        _faultAddress = ReadOptionalAddress(jobDataMap, QuartzJobDataKeys.FaultAddress);
+        _headers = GetHeaders(executionContext, jobDataMap);
+        _transportProperties = GetTransportProperties(jobDataMap);
     }
 
     /// <summary>Returns an enumerator over reconstructed message headers.</summary>
@@ -167,29 +167,16 @@ internal sealed class QuartzScheduledMessageContext :
     public Uri? FaultAddress => _faultAddress;
 
     /// <summary>Gets user headers enriched with Quartz fire-time and schedule metadata.</summary>
-    public Headers Headers => _headers ??= GetHeaders();
+    public Headers Headers => _headers;
 
     /// <summary>Gets the transport-specific properties captured when the message was scheduled.</summary>
-    public IReadOnlyDictionary<string, object>? TransportProperties
-    {
-        get
-        {
-            if (_transportPropertiesLoaded)
-                return _transportProperties;
+    public IReadOnlyDictionary<string, object>? TransportProperties => _transportProperties;
 
-            _transportPropertiesLoaded = true;
-            _transportProperties = _jobDataMap.TryGetValue(QuartzJobDataKeys.TransportProperties, out object? value)
-                ? _objectDeserializer.DeserializeObject<IReadOnlyDictionary<string, object>>(value)
-                : null;
-            return _transportProperties;
-        }
-    }
-
-    Headers GetHeaders()
+    Headers GetHeaders(IJobExecutionContext executionContext, JobDataMap jobDataMap)
     {
         var headers = new DictionarySendHeaders();
 
-        if (_jobDataMap.TryGetValue(QuartzJobDataKeys.Headers, out object? value))
+        if (jobDataMap.TryGetValue(QuartzJobDataKeys.Headers, out object? value))
         {
             IEnumerable<KeyValuePair<string, object>>? headerElements =
                 _objectDeserializer.DeserializeObject<IEnumerable<KeyValuePair<string, object>>>(value);
@@ -201,33 +188,45 @@ internal sealed class QuartzScheduledMessageContext :
             }
         }
 
-        headers.Set(MessageHeaders.Quartz.Sent, _executionContext.FireTimeUtc);
+        headers.Set(MessageHeaders.Quartz.Sent, executionContext.FireTimeUtc);
 
-        if (_executionContext.ScheduledFireTimeUtc.HasValue)
-            headers.Set(MessageHeaders.Quartz.Scheduled, _executionContext.ScheduledFireTimeUtc);
+        if (executionContext.ScheduledFireTimeUtc.HasValue)
+            headers.Set(MessageHeaders.Quartz.Scheduled, executionContext.ScheduledFireTimeUtc);
 
-        if (_executionContext.NextFireTimeUtc.HasValue)
-            headers.Set(MessageHeaders.Quartz.NextScheduled, _executionContext.NextFireTimeUtc);
+        if (executionContext.NextFireTimeUtc.HasValue)
+            headers.Set(MessageHeaders.Quartz.NextScheduled, executionContext.NextFireTimeUtc);
 
-        if (_executionContext.PreviousFireTimeUtc.HasValue)
-            headers.Set(MessageHeaders.Quartz.PreviousSent, _executionContext.PreviousFireTimeUtc);
+        if (executionContext.PreviousFireTimeUtc.HasValue)
+            headers.Set(MessageHeaders.Quartz.PreviousSent, executionContext.PreviousFireTimeUtc);
 
-        if (_jobDataMap.TryGetValue(QuartzJobDataKeys.SchedulingTokenId, out var tokenId))
+        if (jobDataMap.TryGetValue(QuartzJobDataKeys.SchedulingTokenId, out var tokenId))
             headers.Set(MessageHeaders.SchedulingTokenId, tokenId);
 
-        if (_jobDataMap.TryGetString(QuartzJobDataKeys.ScheduleId, out string? scheduleId)
+        if (jobDataMap.TryGetString(QuartzJobDataKeys.ScheduleId, out string? scheduleId)
             && !string.IsNullOrWhiteSpace(scheduleId))
         {
             headers.Set(MessageHeaders.Quartz.ScheduleId, scheduleId);
         }
 
-        if (_jobDataMap.TryGetString(QuartzJobDataKeys.ScheduleGroup, out string? scheduleGroup)
+        if (jobDataMap.TryGetString(QuartzJobDataKeys.ScheduleGroup, out string? scheduleGroup)
             && !string.IsNullOrWhiteSpace(scheduleGroup))
         {
             headers.Set(MessageHeaders.Quartz.ScheduleGroup, scheduleGroup);
         }
 
         return headers;
+    }
+
+    IReadOnlyDictionary<string, object>? GetTransportProperties(JobDataMap jobDataMap)
+    {
+        if (!jobDataMap.TryGetValue(QuartzJobDataKeys.TransportProperties, out object? value))
+            return null;
+
+        IReadOnlyDictionary<string, object>? properties =
+            _objectDeserializer.DeserializeObject<IReadOnlyDictionary<string, object>>(value);
+        return properties is null
+            ? null
+            : new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(properties, StringComparer.Ordinal));
     }
 
     static Guid? ReadOptionalGuid(JobDataMap jobData, string key)

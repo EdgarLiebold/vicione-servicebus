@@ -120,12 +120,14 @@ public sealed class QuartzSchedulerLifecycleObserverTests
         IScheduler scheduler = CreateScheduler();
         ISchedulerFactory factory = CreateSchedulerFactory(scheduler);
         var claims = new QuartzSchedulerClaimRegistry();
-        _ = new QuartzSchedulerBinding<IBus>(
+        var primary = new QuartzSchedulerBinding<IBus>(
             factory,
             ownsFactory: false,
             new QuartzEndpointOptions { QueueName = "primary-quartz" }.CreateSettings(typeof(IBus)),
             TimeProvider.System,
             claims);
+
+        Assert.Equal(QuartzSchedulerNamespace.GetStableBusIdentity(typeof(IBus)), primary.BusKey);
 
         ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
             new QuartzSchedulerBinding<ISecondaryBus>(

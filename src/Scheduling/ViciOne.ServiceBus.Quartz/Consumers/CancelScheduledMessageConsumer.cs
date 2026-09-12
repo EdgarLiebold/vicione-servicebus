@@ -35,12 +35,11 @@ internal sealed class CancelScheduledMessageConsumer<TBus> :
 
     /// <summary>Unschedules the one-time trigger identified by the command token.</summary>
     /// <param name="context">The one-time cancellation command context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after Quartz has processed the cancellation.</returns>
     public async Task ConsumeAsync(ConsumeContext<CancelScheduledMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        string triggerName = context.Message.TokenId.ToString("N");
-        var triggerKey = new TriggerKey(triggerName, _schedulerNamespace);
+        var triggerKey = QuartzTriggerKey.ForOneTime(context.Message.TokenId, _schedulerNamespace);
 
         var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
 
@@ -54,13 +53,12 @@ internal sealed class CancelScheduledMessageConsumer<TBus> :
 
     /// <summary>Unschedules the recurring trigger identified by schedule group and identifier.</summary>
     /// <param name="context">The recurring cancellation command context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after Quartz has processed the recurring cancellation.</returns>
     public async Task ConsumeAsync(ConsumeContext<CancelScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
-
         var triggerKey = QuartzTriggerKey.ForRecurring(context.Message.ScheduleId, context.Message.ScheduleGroup, _schedulerNamespace);
+        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
         bool wasUnscheduled = await scheduler.UnscheduleJob(triggerKey, context.CancellationToken)
             .ConfigureAwait(false);
 

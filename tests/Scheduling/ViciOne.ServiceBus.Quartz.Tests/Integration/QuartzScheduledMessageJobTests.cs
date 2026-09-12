@@ -68,6 +68,8 @@ public sealed class QuartzScheduledMessageJobTests
     [InlineData("DestinationAddress", null)]
     [InlineData("DestinationAddress", "   ")]
     [InlineData("Body", null)]
+    [InlineData("MessageTypes", null)]
+    [InlineData("MessageTypes", "   ")]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "required-delivery-values")]
     public async Task RequiredJobData_FailsClosedAsync(string key, string? invalidValue)
     {
@@ -111,6 +113,32 @@ public sealed class QuartzScheduledMessageJobTests
             job.ExecuteAsync(CreateContext(cancellationToken, refireCount: 0, jobData), cancellationToken).AsTask());
 
         Assert.Same(transportFailure, exception.InnerException);
+    }
+
+    [Theory]
+    [InlineData("not-json")]
+    [InlineData("null")]
+    [InlineData("[]")]
+    [InlineData("[null]")]
+    [InlineData("[\"\"]")]
+    [InlineData("[\"   \"]")]
+    [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "invalid-message-type-list-is-terminal")]
+    public async Task InvalidPersistedMessageTypeList_UnschedulesWithoutReachingTheTransportAsync(string persistedValue)
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var jobData = CreateValidJobData();
+        jobData[QuartzJobDataKeys.MessageTypes] = persistedValue;
+        var transportFailure = new InvalidOperationException("The transport must not be reached for invalid job data.");
+        var job = new QuartzScheduledMessageJob<IBus>(
+            CreateBus(cancellationToken, transportFailure),
+            TimeProvider.System);
+
+        JobExecutionException exception = await Assert.ThrowsAsync<JobExecutionException>(() =>
+            job.ExecuteAsync(CreateContext(cancellationToken, refireCount: 0, jobData), cancellationToken).AsTask());
+
+        Assert.NotSame(transportFailure, exception.InnerException);
+        Assert.True(exception.UnscheduleFiringTrigger);
+        Assert.False(exception.RefireImmediately);
     }
 
     [Fact]
@@ -189,7 +217,7 @@ public sealed class QuartzScheduledMessageJobTests
 
     private static IBus CreateBus(CancellationToken expectedSendToken, Exception sendException)
     {
-        TestSendEndpoint endpoint = DispatchProxy.Create<TestSendEndpoint, SendEndpointProxy>();
+        ITestSendEndpoint endpoint = DispatchProxy.Create<ITestSendEndpoint, SendEndpointProxy>();
         ((SendEndpointProxy)(object)endpoint).Configure(expectedSendToken, sendException);
 
         IBus bus = DispatchProxy.Create<IBus, BusProxy>();
@@ -197,7 +225,7 @@ public sealed class QuartzScheduledMessageJobTests
         return bus;
     }
 
-    private interface TestSendEndpoint : ISendEndpoint, Advanced.IAdvancedSendEndpoint;
+    private interface ITestSendEndpoint : ISendEndpoint, Advanced.IAdvancedSendEndpoint;
 
     private static IJobExecutionContext CreateContext(
         CancellationToken cancellationToken,
@@ -219,6 +247,7 @@ public sealed class QuartzScheduledMessageJobTests
         ["ContentType"] = "application/json",
         ["DestinationAddress"] = "loopback://localhost/quartz-cancellation",
         ["Body"] = "{}",
+        [QuartzJobDataKeys.MessageTypes] = "[\"urn:message:ViciOne.ServiceBus.Quartz.Tests:ScheduledPayload\"]",
         [QuartzJobDataKeys.MessageIdSeed] = "018f6738-7d4a-7b21-86e2-bdfbb3ed5f90",
     };
 
@@ -288,7 +317,10 @@ public sealed class QuartzScheduledMessageJobTests
                 "get_MergedJobDataMap" => _jobData ?? throw new InvalidOperationException("The job data was not configured."),
                 "get_CancellationToken" => _cancellationToken,
                 "get_RefireCount" => _refireCount,
+                "get_FireTimeUtc" => new DateTimeOffset(2035, 4, 5, 6, 7, 8, TimeSpan.Zero),
                 "get_ScheduledFireTimeUtc" => new DateTimeOffset(2035, 4, 5, 6, 7, 8, TimeSpan.Zero),
+                "get_NextFireTimeUtc" => null,
+                "get_PreviousFireTimeUtc" => null,
                 "get_Scheduler" => _scheduler ?? throw new InvalidOperationException("The scheduler was not configured."),
                 "get_Trigger" => TriggerBuilder.Create()
                     .WithIdentity("test-trigger", "test-group")

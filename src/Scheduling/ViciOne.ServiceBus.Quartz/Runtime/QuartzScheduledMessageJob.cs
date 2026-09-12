@@ -60,9 +60,8 @@ internal sealed class QuartzScheduledMessageJob<TBus> : global::Quartz.IJob
             destinationAddress = messageContext.DestinationAddress ?? throw new InvalidOperationException(
                 $"Quartz job data value '{QuartzJobDataKeys.DestinationAddress}' is required to deliver a scheduled message.");
             string body = GetRequiredString(jobData, QuartzJobDataKeys.Body, allowEmpty: true);
-            supportedMessageTypes = jobData.TryGetString(QuartzJobDataKeys.MessageTypes, out string? text)
-                ? text?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) ?? []
-                : [];
+            supportedMessageTypes = QuartzMessageTypeList.Deserialize(
+                GetRequiredString(jobData, QuartzJobDataKeys.MessageTypes));
 
             pipe = new QuartzScheduledMessageSendPipe(
                 contentType,

@@ -21,7 +21,7 @@ public sealed class QuartzSchedulerOptions
     /// <summary>Gets or sets the delay before the scheduler starts after its bus becomes ready.</summary>
     public TimeSpan? StartDelay { get; set; }
 
-    /// <summary>Gets or sets whether final scheduler disposal waits for executing jobs to complete.</summary>
+    /// <summary>Gets or sets whether final disposal waits for executing jobs when the adapter owns the scheduler factory.</summary>
     public bool WaitForJobsToComplete { get; set; } = true;
 
     /// <summary>Gets or sets the time source used to calculate remaining message lifetimes.</summary>

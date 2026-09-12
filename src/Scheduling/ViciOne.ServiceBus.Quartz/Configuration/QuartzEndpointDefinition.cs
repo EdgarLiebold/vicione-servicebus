@@ -65,7 +65,7 @@ internal sealed class QuartzEndpointDefinition<TBus> :
     }
 
     /// <summary>Releases the partitioner owned by the endpoint definition.</summary>
-    /// <returns>An awaitable disposal operation.</returns>
+    /// <returns>A value task that completes after the partitioner has released its resources.</returns>
     public ValueTask DisposeAsync()
     {
         return _partitioner.DisposeAsync();

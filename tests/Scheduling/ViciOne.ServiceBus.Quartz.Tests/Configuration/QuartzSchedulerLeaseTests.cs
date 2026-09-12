@@ -1,5 +1,6 @@
 using System.Reflection;
 using Quartz;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Quartz.Runtime;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -11,24 +12,52 @@ public sealed class QuartzSchedulerLeaseTests
     private static readonly Uri EndpointAddress = new("loopback://localhost/quartz-lease");
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "owned-lease-shuts-down-and-disposes-idempotently")]
-    public async Task AdapterOwnedLease_ShutsDownTheSchedulerAndDisposesThePartitionerExactlyOnceAsync()
+    [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "lease-constructor-null-guards")]
+    public async Task Constructor_RejectsEveryMissingOwnedResourceAsync()
+    {
+        ISchedulerFactory factory = QuartzSchedulingExtensions.CreateInMemorySchedulerFactory();
+        try
+        {
+            var lifecycleObserver = new TrackingConnectHandle();
+            var partitioner = new TrackingAsyncDisposable();
+
+            Assert.Equal("endpointAddress", Assert.Throws<ArgumentNullException>(() =>
+                new QuartzSchedulerLease(null!, factory, true, true, lifecycleObserver, partitioner)).ParamName);
+            Assert.Equal("schedulerFactory", Assert.Throws<ArgumentNullException>(() =>
+                new QuartzSchedulerLease(EndpointAddress, null!, true, true, lifecycleObserver, partitioner)).ParamName);
+            Assert.Equal("lifecycleObserver", Assert.Throws<ArgumentNullException>(() =>
+                new QuartzSchedulerLease(EndpointAddress, factory, true, true, null!, partitioner)).ParamName);
+            Assert.Equal("partitioner", Assert.Throws<ArgumentNullException>(() =>
+                new QuartzSchedulerLease(EndpointAddress, factory, true, true, lifecycleObserver, null!)).ParamName);
+        }
+        finally
+        {
+            await Assert.IsAssignableFrom<IAsyncDisposable>(factory).DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "owned-lease-releases-every-resource-idempotently")]
+    public async Task AdapterOwnedLease_ReleasesEveryOwnedResourceExactlyOnceAsync()
     {
         ISchedulerFactory factory = QuartzSchedulingExtensions.CreateInMemorySchedulerFactory();
         IScheduler scheduler = await factory.GetScheduler(TestContext.Current.CancellationToken);
         await scheduler.Start(TestContext.Current.CancellationToken);
+        var lifecycleObserver = new TrackingConnectHandle();
         var partitioner = new TrackingAsyncDisposable();
         var lease = new QuartzSchedulerLease(
             EndpointAddress,
             factory,
             ownsSchedulerFactory: true,
             waitForJobsToComplete: true,
+            lifecycleObserver,
             partitioner);
 
         await lease.DisposeAsync();
         await lease.DisposeAsync();
 
         Assert.Equal(SchedulerStatus.Shutdown, scheduler.Status);
+        Assert.Equal(1, lifecycleObserver.DisposeCalls);
         Assert.Equal(1, partitioner.DisposeCalls);
         Assert.Throws<ObjectDisposedException>(() => lease.SchedulerFactory);
     }
@@ -40,12 +69,14 @@ public sealed class QuartzSchedulerLeaseTests
         ISchedulerFactory factory = QuartzSchedulingExtensions.CreateInMemorySchedulerFactory();
         IScheduler scheduler = await factory.GetScheduler(TestContext.Current.CancellationToken);
         await scheduler.Start(TestContext.Current.CancellationToken);
+        var lifecycleObserver = new TrackingConnectHandle();
         var partitioner = new TrackingAsyncDisposable();
         var lease = new QuartzSchedulerLease(
             EndpointAddress,
             factory,
             ownsSchedulerFactory: false,
             waitForJobsToComplete: true,
+            lifecycleObserver,
             partitioner);
 
         try
@@ -53,6 +84,7 @@ public sealed class QuartzSchedulerLeaseTests
             await lease.DisposeAsync();
 
             Assert.Equal(SchedulerStatus.Running, scheduler.Status);
+            Assert.Equal(1, lifecycleObserver.DisposeCalls);
             Assert.Equal(1, partitioner.DisposeCalls);
             Assert.Throws<ObjectDisposedException>(() => lease.SchedulerFactory);
         }
@@ -71,12 +103,14 @@ public sealed class QuartzSchedulerLeaseTests
         IScheduler scheduler = await factory.GetScheduler(TestContext.Current.CancellationToken);
         await scheduler.Start(TestContext.Current.CancellationToken);
         var disposalFailure = new InvalidOperationException("partitioner-disposal-failure");
+        var lifecycleObserver = new TrackingConnectHandle();
         var partitioner = new TrackingAsyncDisposable(disposalFailure);
         var lease = new QuartzSchedulerLease(
             EndpointAddress,
             factory,
             ownsSchedulerFactory: true,
             waitForJobsToComplete: true,
+            lifecycleObserver,
             partitioner);
 
         InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -84,6 +118,7 @@ public sealed class QuartzSchedulerLeaseTests
 
         Assert.Same(disposalFailure, failure);
         Assert.Equal(SchedulerStatus.Shutdown, scheduler.Status);
+        Assert.Equal(1, lifecycleObserver.DisposeCalls);
         Assert.Equal(1, partitioner.DisposeCalls);
         await lease.DisposeAsync();
     }
@@ -92,6 +127,7 @@ public sealed class QuartzSchedulerLeaseTests
     [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "lease-reports-every-cleanup-failure")]
     public async Task IndependentCleanupFailures_AreReportedTogetherAsync()
     {
+        var lifecycleFailure = new InvalidOperationException("observer-disconnection-failure");
         var partitionerFailure = new InvalidOperationException("partitioner-disposal-failure");
         var factoryQueryFailure = new InvalidOperationException("factory-query-failure");
         var factoryDisposalFailure = new InvalidOperationException("factory-disposal-failure");
@@ -99,17 +135,20 @@ public sealed class QuartzSchedulerLeaseTests
         var factoryProxy = (FailingSchedulerFactoryProxy)(object)factory;
         factoryProxy.QueryFailure = factoryQueryFailure;
         factoryProxy.DisposalFailure = factoryDisposalFailure;
+        var lifecycleObserver = new TrackingConnectHandle(lifecycleFailure);
         var partitioner = new TrackingAsyncDisposable(partitionerFailure);
         var lease = new QuartzSchedulerLease(
             EndpointAddress,
             factory,
             ownsSchedulerFactory: true,
             waitForJobsToComplete: true,
+            lifecycleObserver,
             partitioner);
 
         AggregateException failure = await Assert.ThrowsAsync<AggregateException>(lease.DisposeAsync().AsTask);
 
-        Assert.Equal([partitionerFailure, factoryQueryFailure, factoryDisposalFailure], failure.InnerExceptions);
+        Assert.Equal([lifecycleFailure, partitionerFailure, factoryQueryFailure, factoryDisposalFailure], failure.InnerExceptions);
+        Assert.Equal(1, lifecycleObserver.DisposeCalls);
         Assert.Equal(1, partitioner.DisposeCalls);
         Assert.Equal(1, factoryProxy.DisposeCalls);
         await lease.DisposeAsync();
@@ -121,16 +160,36 @@ public sealed class QuartzSchedulerLeaseTests
     {
         ISyncSchedulerFactory factory = DispatchProxy.Create<ISyncSchedulerFactory, SyncSchedulerFactoryProxy>();
         var factoryProxy = (SyncSchedulerFactoryProxy)(object)factory;
+        var lifecycleObserver = new TrackingConnectHandle();
         var lease = new QuartzSchedulerLease(
             EndpointAddress,
             factory,
             ownsSchedulerFactory: true,
             waitForJobsToComplete: true,
+            lifecycleObserver,
             new TrackingAsyncDisposable());
 
         await lease.DisposeAsync();
 
+        Assert.Equal(1, lifecycleObserver.DisposeCalls);
         Assert.Equal(1, factoryProxy.DisposeCalls);
+    }
+
+    private sealed class TrackingConnectHandle(Exception? failure = null) : ConnectHandle
+    {
+        public int DisposeCalls { get; private set; }
+
+        public void Disconnect()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            DisposeCalls++;
+            if (failure is not null)
+                throw failure;
+        }
     }
 
     private sealed class TrackingAsyncDisposable(Exception? failure = null) : IAsyncDisposable

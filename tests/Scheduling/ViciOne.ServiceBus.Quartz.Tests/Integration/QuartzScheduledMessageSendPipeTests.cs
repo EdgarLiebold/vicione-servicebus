@@ -119,7 +119,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
             CreateExecutionContext(jobData),
             ServiceBusMetadataJson.ObjectDeserializer);
         var contentType = new ContentType("application/json");
-        string[] messageTypes = [];
+        string[] messageTypes = [MessageUrn.ForTypeString<ScheduledPayload>()];
 
         Assert.Equal("contentType", Assert.Throws<ArgumentNullException>(() =>
             new QuartzScheduledMessageSendPipe(null!, messageContext, "{}", DestinationAddress, messageTypes, TimeProvider.System)).ParamName);
@@ -131,6 +131,13 @@ public sealed class QuartzScheduledMessageSendPipeTests
             new QuartzScheduledMessageSendPipe(contentType, messageContext, "{}", null!, messageTypes, TimeProvider.System)).ParamName);
         Assert.Equal("supportedMessageTypes", Assert.Throws<ArgumentNullException>(() =>
             new QuartzScheduledMessageSendPipe(contentType, messageContext, "{}", DestinationAddress, null!, TimeProvider.System)).ParamName);
+        Assert.Equal("supportedMessageTypes", Assert.Throws<ArgumentException>(() =>
+            new QuartzScheduledMessageSendPipe(contentType, messageContext, "{}", DestinationAddress, [], TimeProvider.System)).ParamName);
+        Assert.Equal("supportedMessageTypes", Assert.Throws<ArgumentException>(() =>
+            new QuartzScheduledMessageSendPipe(contentType, messageContext, "{}", DestinationAddress, [" "], TimeProvider.System)).ParamName);
+        Assert.Equal("destinationAddress", Assert.Throws<ArgumentException>(() =>
+            new QuartzScheduledMessageSendPipe(contentType, messageContext, "{}", new Uri("relative", UriKind.Relative), messageTypes,
+                TimeProvider.System)).ParamName);
         Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() =>
             new QuartzScheduledMessageSendPipe(contentType, messageContext, "{}", DestinationAddress, messageTypes, null!)).ParamName);
 
@@ -163,7 +170,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
             messageContext,
             "{not-json",
             DestinationAddress,
-            [],
+            [MessageUrn.ForTypeString<ScheduledPayload>()],
             TimeProvider.System);
         var sendContext = new RoutingSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
         {

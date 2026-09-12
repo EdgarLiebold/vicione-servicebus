@@ -64,7 +64,7 @@ public sealed class QuartzSchedulingExtensionsTests
         QuartzSchedulerBinding<ISecondaryBus> binding =
             provider.GetRequiredService<QuartzSchedulerBinding<ISecondaryBus>>();
 
-        Assert.Equal(typeof(ISecondaryBus).FullName, binding.BusKey);
+        Assert.Equal(QuartzSchedulerNamespace.GetStableBusIdentity(typeof(ISecondaryBus)), binding.BusKey);
         Assert.Equal("secondary-quartz", binding.Settings.QueueName);
         Assert.Null(provider.GetService<QuartzSchedulerBinding<IBus>>());
     }

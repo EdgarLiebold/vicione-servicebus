@@ -1460,3 +1460,107 @@ contains 19,222 lines with SHA-256
 zero C# preprocessor directives and zero empty source directories. The protected `review/` and
 `TestResults/` trees were neither changed nor staged. The complete A+ source goal remains active
 for the next unreviewed owner.
+
+## Iteration 90 outcome
+
+Review the complete `ViciOne.ServiceBus.Quartz` capability as one coherent scheduling-adapter
+owner: direct and dependency-injection composition, scheduler identity and lifecycle, one-time and
+recurring commands, persisted trigger data, message reconstruction, delivery, cancellation,
+pausing, resuming, retry classification, and the durable Quartz acceptance profile. Preserve all
+scheduling features while rejecting malformed commands before scheduler access, making persisted
+data unambiguous, and closing every bus-owned resource lifetime.
+
+Keep the project at `src/Scheduling/ViciOne.ServiceBus.Quartz`. The `Scheduling` directory is the
+family boundary for interchangeable scheduling integrations, whereas `src/ViciOne.ServiceBus` is
+the Core project itself and is not a container for other assemblies. This physical layout therefore
+matches assembly ownership, dependency direction, namespace responsibility, and the corresponding
+test location.
+
+## Iteration 90 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-QUARTZ-PUBLIC-API` | greenfield scheduling composition and lease surface | configuration contract tests | exact four-type public API, seven composition methods, null boundaries, and no compatibility facade |
+| `REQ-VSB-QUARTZ-ONE-TIME` / `REQ-VSB-QUARTZ-RECURRING-CONTROL` | one-time, recurring, cancel, pause, and resume inputs | command validation tests | every invalid member fails with its exact category before scheduler-factory access |
+| `REQ-VSB-QUARTZ-JOB-DATA` | content type, body, message types, metadata, and transport properties | serialization, codec, context, and job tests | serializer-owned content type, lossless JSON types, fail-closed decoding, and immutable reconstruction snapshot |
+| `REQ-VSB-QUARTZ-TRIGGER-KEY` | one-time and recurring Quartz identities | trigger-key tests | non-empty token, identifiers, groups, namespaces, stable escaping, and collision resistance |
+| `REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP` | direct observer, partitioner, scheduler, and factory lifetime | lease, configuration, and lifecycle tests | complete idempotent cleanup, caller ownership, exact single failure, and aggregate independent failures |
+| `REQ-VSB-QUARTZ-MULTIBUS` | bus and scheduler namespace isolation | configuration and lifecycle tests | assembly-stable bus identity, same-FQN distinction, unique claims, and typed registration |
+| `REQ-VSB-QUARTZ-DELIVERY` | scheduled send reconstruction and terminal invalid data | job and send-pipe tests | required absolute address and type list, exact body/content type, cancellation, retry, and unscheduling |
+| `REQ-VSB-SOURCE-NAVIGATION` | all 29 original Quartz production files | architecture tests and manual ledger | final 30-file owner, matching type/namespace/file/folder responsibility, and no empty directory |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in all 2,654 original Quartz source lines | manual review plus documentation gates | current code and behavior only; exact completion and ownership semantics; no history or filler |
+
+## Iteration 90 mutation obligations
+
+- Persist the inbound receive content type instead of the selected serializer's content type: the
+  serialization-boundary test must fail with both exact media types.
+- Restore the inherited semicolon-delimited message-type representation: the scheduling-boundary
+  test must fail when a valid identifier itself contains a semicolon.
+- Resolve the scheduler before validating a one-time command: all seven invalid variants must fail
+  because the forbidden scheduler access replaces the intended diagnostic.
+- Omit disposal of the lifecycle observer from the direct lease: the lease ownership test must
+  observe zero disconnections instead of exactly one.
+- Reconstruct headers lazily from mutable Quartz job data: the complete metadata snapshot test must
+  observe the post-construction mutation.
+- Use only the bus type's full name as scheduler owner identity: the typed-registration test must
+  reject the assembly-ambiguous key.
+- Accept an empty one-time token when forming a trigger key: the empty-token contract test must fail.
+
+## Iteration 90 completion
+
+All 29 original Quartz production files and their 2,654 lines were read manually in full together
+with the project file, all comments, the complete public surface, the owning tests, and the
+requirements manifest. No generator or scripted comment rewrite was used. Each comment was checked
+while its implementation was understood. The final project contains 30 C# files and 2,786 lines;
+the added internal `QuartzMessageTypeList` owns the single persisted JSON representation. Every
+remaining filename, namespace, type, and directory matches its responsibility, and no empty source
+directory remains.
+
+Scheduling commands now validate tokens, absolute destinations, payloads, message-type identifiers,
+schedule identifiers, cron data, time zones, time ranges, and misfire policies before serialization
+or scheduler access. Persisted content type comes from the serializer that produced the body.
+Message-type identifiers are stored as JSON rather than an ambiguous delimiter string, so valid
+identifiers containing semicolons or quotes round-trip exactly and malformed stored data is terminal.
+Cancellation, pause, and resume likewise validate trigger identities before resolving a scheduler.
+
+Scheduled-message contexts snapshot standard metadata, user headers, Quartz fire metadata, and
+transport properties at construction. Destination and supported message types are revalidated at
+the delivery boundary. Direct leases now own the bus lifecycle-observer handle as well as the
+partitioner and any adapter-owned scheduler factory; cleanup attempts every resource, preserves one
+failure, aggregates independent failures, and remains idempotent. Configuration failure releases
+already-created resources through small dedicated helpers. Scheduler ownership uses an
+assembly-stable bus identity, preventing equal fully qualified type names from different assemblies
+from colliding.
+
+The focused profile grew from 216 to 267 tests and passes 267/267 with zero failures and zero skips.
+Fresh package coverage is 97.75% lines and 86.12% branches across 202 instrumented methods, with no
+CRAP score above 30. Extracting direct-configuration cleanup reduced that method's complexity from
+26 to 18 and its CRAP score from 34.67 to 18.01. Unexecuted lines remain defensive cleanup-failure
+paths and are not reported as executed evidence.
+
+Seven isolated counterchanges were compiled and executed. Wrong content-type ownership, delimiter
+storage, premature scheduler access, observer leakage, lazy header reconstruction, assembly-
+ambiguous bus identity, and an empty scheduling token each made its precise regression test fail.
+Every counterchange was restored manually before the final build. Final SHA-256 values are
+`788fd94a01b204b3ae86ee243c3b95c604b5e2d8a9be2c09636f3acd4c77232a` for
+`ScheduleMessageConsumer.cs`, `0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237`
+for `QuartzSchedulerLease.cs`, `2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107`
+for `QuartzSchedulingExtensions.cs`, `8ce1d85a9ed88963b87667967ef4a5d49bb688bb9215b5bc2b0385deea76b655`
+for `QuartzMessageTypeList.cs`, `840ff29f081c6d581637b99a62dc52aa006d0276b445fad366e5f6248e61cef9`
+for `QuartzScheduledMessageContext.cs`, `104afeeeeda54e52c7478ebc8c43085799a80ab27f1031a876e3e7b44e052a9c`
+for `QuartzSchedulerBinding.cs`, and
+`0407a5a570ba43ad8a5471c71165be924300dd9753d58e4f2d03d6c8542e80c6`
+for `QuartzTriggerKey.cs`.
+
+The final serial Release Unit/Architecture solution builds with zero warnings and errors and passes
+5,891/5,891 tests across 22 hosts with zero failures and zero skips. This includes the complete
+architecture, bidirectional async naming, source layout, comment hygiene, documentation, and
+requirement-projection gates. Whitespace formatting, warning-level style, requirements JSON, Git
+whitespace, C# preprocessor, and empty-directory checks pass.
+
+Fresh-package verification passes 18 developer journeys using 31 freshly packed ViciOne packages,
+three executed isolated provider-testing consumers, and all 30 runtime API assemblies. Quartz adds
+only an internal codec, so the packed public API remains unchanged at 19,222 lines with SHA-256
+`92338a749f24cbd843a1bb74359acd423948970efff88ab7e727e9317a2a3103`. The protected `review/` and
+`TestResults/` trees were neither changed nor staged. The complete A+ source goal remains active for
+the next unreviewed owner.

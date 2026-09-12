@@ -34,13 +34,12 @@ internal sealed class PauseScheduledMessageConsumer<TBus> :
 
     /// <summary>Pauses the recurring trigger identified by schedule group and identifier.</summary>
     /// <param name="context">The recurring pause command context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after Quartz has processed the pause request.</returns>
     public async Task ConsumeAsync(ConsumeContext<PauseScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
-
         var triggerKey = QuartzTriggerKey.ForRecurring(context.Message.ScheduleId, context.Message.ScheduleGroup, _schedulerNamespace);
+        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
         await scheduler.PauseTrigger(triggerKey, context.CancellationToken)
             .ConfigureAwait(false);
 

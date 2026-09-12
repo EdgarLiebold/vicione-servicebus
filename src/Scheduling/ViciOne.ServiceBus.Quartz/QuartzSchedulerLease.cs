@@ -4,6 +4,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Quartz;
+using ViciOne.ServiceBus.Advanced;
 
 namespace ViciOne.ServiceBus.Quartz;
 
@@ -11,6 +12,7 @@ namespace ViciOne.ServiceBus.Quartz;
 public sealed class QuartzSchedulerLease : IAsyncDisposable
 {
     readonly IAsyncDisposable _partitioner;
+    readonly ConnectHandle _lifecycleObserver;
     readonly bool _ownsSchedulerFactory;
     readonly bool _waitForJobsToComplete;
     ISchedulerFactory? _schedulerFactory;
@@ -20,10 +22,12 @@ public sealed class QuartzSchedulerLease : IAsyncDisposable
         ISchedulerFactory schedulerFactory,
         bool ownsSchedulerFactory,
         bool waitForJobsToComplete,
+        ConnectHandle lifecycleObserver,
         IAsyncDisposable partitioner)
     {
         EndpointAddress = endpointAddress ?? throw new ArgumentNullException(nameof(endpointAddress));
         _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
+        _lifecycleObserver = lifecycleObserver ?? throw new ArgumentNullException(nameof(lifecycleObserver));
         _partitioner = partitioner ?? throw new ArgumentNullException(nameof(partitioner));
         _ownsSchedulerFactory = ownsSchedulerFactory;
         _waitForJobsToComplete = waitForJobsToComplete;
@@ -45,6 +49,15 @@ public sealed class QuartzSchedulerLease : IAsyncDisposable
             return;
 
         List<Exception>? failures = null;
+        try
+        {
+            await ((IAsyncDisposable)_lifecycleObserver).DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            AddFailure(ref failures, exception);
+        }
+
         try
         {
             await _partitioner.DisposeAsync().ConfigureAwait(false);

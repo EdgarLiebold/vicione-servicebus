@@ -34,13 +34,12 @@ internal sealed class ResumeScheduledMessageConsumer<TBus> :
 
     /// <summary>Resumes the recurring trigger identified by schedule group and identifier.</summary>
     /// <param name="context">The recurring resume command context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after Quartz has processed the resume request.</returns>
     public async Task ConsumeAsync(ConsumeContext<ResumeScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
-
         var triggerKey = QuartzTriggerKey.ForRecurring(context.Message.ScheduleId, context.Message.ScheduleGroup, _schedulerNamespace);
+        var scheduler = await GetSchedulerAsync(context.CancellationToken).ConfigureAwait(false);
         await scheduler.ResumeTrigger(triggerKey, context.CancellationToken)
             .ConfigureAwait(false);
 

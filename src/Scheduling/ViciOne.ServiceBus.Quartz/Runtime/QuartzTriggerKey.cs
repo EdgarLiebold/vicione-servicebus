@@ -12,6 +12,8 @@ internal static class QuartzTriggerKey
 
     public static TriggerKey ForOneTime(Guid tokenId, string schedulerNamespace)
     {
+        if (tokenId == Guid.Empty)
+            throw new ArgumentException("The scheduling token must not be empty.", nameof(tokenId));
         ArgumentException.ThrowIfNullOrWhiteSpace(schedulerNamespace);
         return new TriggerKey(tokenId.ToString("N"), schedulerNamespace);
     }

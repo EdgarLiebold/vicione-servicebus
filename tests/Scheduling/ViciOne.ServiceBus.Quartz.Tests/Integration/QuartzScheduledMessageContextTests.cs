@@ -272,19 +272,23 @@ public sealed class QuartzScheduledMessageContextTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "standard-metadata-snapshot")]
-    public void StandardMetadata_IsSnapshottedWhenTheContextIsCreated()
+    [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "complete-metadata-snapshot")]
+    public void MetadataHeadersAndTransportProperties_AreSnapshottedWhenTheContextIsCreated()
     {
         Guid messageId = Guid.Parse("018f6738-7d4a-7b21-86e2-bdfbb3ed5f71");
         Guid requestId = Guid.Parse("018f6738-7d4a-7b21-86e2-bdfbb3ed5f72");
         var expiration = new DateTimeOffset(2034, 5, 6, 7, 8, 9, TimeSpan.Zero);
         var source = new Uri("loopback://localhost/original-source");
+        var headers = new[] { new KeyValuePair<string, object>("tenant", "original") };
+        var transportProperties = new Dictionary<string, object> { ["partition"] = "north" };
         var data = new JobDataMap
         {
             [QuartzJobDataKeys.MessageId] = messageId.ToString(),
             [QuartzJobDataKeys.RequestId] = requestId.ToString(),
             [QuartzJobDataKeys.ExpirationTime] = expiration.ToString("O"),
             [QuartzJobDataKeys.SourceAddress] = source.ToString(),
+            [QuartzJobDataKeys.Headers] = JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options),
+            [QuartzJobDataKeys.TransportProperties] = JsonSerializer.Serialize(transportProperties, ServiceBusMetadataJson.Options),
         };
         JobExecutionContextImpl execution = CreateExecutionContext("single", data);
         var context = new QuartzScheduledMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer);
@@ -292,11 +296,23 @@ public sealed class QuartzScheduledMessageContextTests
         execution.MergedJobDataMap[QuartzJobDataKeys.RequestId] = Guid.NewGuid().ToString();
         execution.MergedJobDataMap[QuartzJobDataKeys.ExpirationTime] = expiration.AddDays(1).ToString("O");
         execution.MergedJobDataMap[QuartzJobDataKeys.SourceAddress] = "loopback://localhost/changed-source";
+        execution.MergedJobDataMap[QuartzJobDataKeys.Headers] = JsonSerializer.Serialize(
+            new[] { new KeyValuePair<string, object>("tenant", "changed") },
+            ServiceBusMetadataJson.Options);
+        execution.MergedJobDataMap[QuartzJobDataKeys.TransportProperties] = JsonSerializer.Serialize(
+            new Dictionary<string, object> { ["partition"] = "south" },
+            ServiceBusMetadataJson.Options);
 
         Assert.Equal(messageId, context.MessageId);
         Assert.Equal(requestId, context.RequestId);
         Assert.Equal(expiration, context.ExpirationTime);
         Assert.Equal(source, context.SourceAddress);
+        Assert.Equal("original", context.Headers.Get<string>("tenant"));
+        IReadOnlyDictionary<string, object> capturedProperties = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
+            context.TransportProperties);
+        Assert.Equal(
+            "north",
+            ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject<string>(capturedProperties["partition"]));
     }
 
     [Theory]

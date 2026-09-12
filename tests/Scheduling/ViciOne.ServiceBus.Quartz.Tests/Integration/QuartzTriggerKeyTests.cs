@@ -35,6 +35,37 @@ public sealed class QuartzTriggerKeyTests
             QuartzTriggerKey.ForOneTime(tokenId, "scheduler-b"));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUARTZ-TRIGGER-KEY", "invalid-one-time-token")]
+    public void OneTimeKey_RejectsAnEmptySchedulingToken()
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            QuartzTriggerKey.ForOneTime(Guid.Empty, "scheduler"));
+
+        Assert.Equal("tokenId", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(false, null)]
+    [InlineData(false, "")]
+    [InlineData(false, "   ")]
+    [InlineData(true, null)]
+    [InlineData(true, "")]
+    [InlineData(true, "   ")]
+    [RequirementCoverage("REQ-VSB-QUARTZ-TRIGGER-KEY", "invalid-scheduler-namespace")]
+    public void TriggerKeys_RejectMissingSchedulerNamespaces(bool recurring, string? schedulerNamespace)
+    {
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() =>
+        {
+            if (recurring)
+                QuartzTriggerKey.ForRecurring("daily-orders", "operations", schedulerNamespace!);
+            else
+                QuartzTriggerKey.ForOneTime(Guid.Parse("018f6738-7d4a-7b21-86e2-bdfbb3ed5f61"), schedulerNamespace!);
+        });
+
+        Assert.Equal("schedulerNamespace", exception.ParamName);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]

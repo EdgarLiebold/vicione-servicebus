@@ -41,7 +41,9 @@ internal sealed class QuartzScheduledMessageSendPipe :
         _messageContext = messageContext ?? throw new ArgumentNullException(nameof(messageContext));
         _body = body ?? throw new ArgumentNullException(nameof(body));
         _destinationAddress = destinationAddress ?? throw new ArgumentNullException(nameof(destinationAddress));
-        ArgumentNullException.ThrowIfNull(supportedMessageTypes);
+        if (!destinationAddress.IsAbsoluteUri)
+            throw new ArgumentException("The scheduled destination must be an absolute URI.", nameof(destinationAddress));
+        QuartzMessageTypeList.Validate(supportedMessageTypes, nameof(supportedMessageTypes));
         _supportedMessageTypes = supportedMessageTypes.ToArray();
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
