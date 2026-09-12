@@ -17,9 +17,9 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
     readonly Uri? _compensateAddress;
     readonly IPipe<ExecuteContext<TArguments>> _executePipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="executePipe">The execute pipe.</param>
-    /// <param name="compensateAddress">The compensate address.</param>
+    /// <summary>Creates a host for the activity execution pipeline and its optional compensation destination.</summary>
+    /// <param name="executePipe">The pipeline that deserializes arguments, resolves the activity, and records its result.</param>
+    /// <param name="compensateAddress">The endpoint that compensates successful executions, when the activity supports compensation.</param>
     public ExecuteActivityHost(IPipe<ExecuteContext<TArguments>> executePipe, Uri? compensateAddress)
     {
         ArgumentNullException.ThrowIfNull(executePipe);
@@ -28,10 +28,10 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
         _compensateAddress = compensateAddress;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Executes the current itinerary entry, evaluates its result, and advances the receive pipeline.</summary>
+    /// <param name="context">The received routing slip whose first itinerary entry is executed.</param>
+    /// <param name="next">The receive pipeline invoked after the execution outcome is dispatched.</param>
+    /// <returns>A task that completes after result dispatch and receive-pipeline continuation.</returns>
     public async Task SendAsync(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -105,8 +105,8 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
         }
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the hosted execution pipeline and activity contract to the probe graph.</summary>
+    /// <param name="context">The probe context that receives the execution filter scope.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

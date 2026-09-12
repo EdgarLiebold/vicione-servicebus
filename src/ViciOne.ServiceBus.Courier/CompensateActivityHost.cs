@@ -16,8 +16,8 @@ internal sealed class CompensateActivityHost<TActivity, TLog> :
 {
     readonly IPipe<CompensateContext<TLog>> _compensatePipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="compensatePipe">The compensate pipe.</param>
+    /// <summary>Creates a host for the activity compensation pipeline.</summary>
+    /// <param name="compensatePipe">The pipeline that deserializes the log, resolves the activity, and records its result.</param>
     public CompensateActivityHost(IPipe<CompensateContext<TLog>> compensatePipe)
     {
         ArgumentNullException.ThrowIfNull(compensatePipe);
@@ -25,10 +25,10 @@ internal sealed class CompensateActivityHost<TActivity, TLog> :
         _compensatePipe = compensatePipe;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Compensates the newest compensation entry, evaluates its result, and advances the receive pipeline.</summary>
+    /// <param name="context">The received routing slip whose newest compensation entry is processed.</param>
+    /// <param name="next">The receive pipeline invoked after the compensation outcome is dispatched.</param>
+    /// <returns>A task that completes after result dispatch and receive-pipeline continuation.</returns>
     public async Task SendAsync(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -100,8 +100,8 @@ internal sealed class CompensateActivityHost<TActivity, TLog> :
         }
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the hosted compensation pipeline and activity contract to the probe graph.</summary>
+    /// <param name="context">The probe context that receives the compensation filter scope.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

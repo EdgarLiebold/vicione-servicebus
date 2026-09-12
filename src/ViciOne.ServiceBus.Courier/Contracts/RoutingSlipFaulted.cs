@@ -16,10 +16,10 @@ public interface RoutingSlipFaulted
     TimeSpan Duration { get; }
 
     /// <summary>The exception information from the faulting activities.</summary>
-    ActivityException[] ActivityExceptions { get; }
+    IReadOnlyList<ActivityException> ActivityExceptions { get; }
 
     /// <summary>
     /// The routing-slip variables after compensation completed.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 }

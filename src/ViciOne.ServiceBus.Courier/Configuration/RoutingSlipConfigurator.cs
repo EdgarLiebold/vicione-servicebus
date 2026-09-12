@@ -10,14 +10,14 @@ internal sealed class RoutingSlipConfigurator :
 {
     readonly IBuildPipeConfigurator<ConsumeContext<RoutingSlip>> _configurator;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty routing-slip receive-pipeline configurator.</summary>
     public RoutingSlipConfigurator()
     {
         _configurator = new PipeConfigurator<ConsumeContext<RoutingSlip>>();
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
+    /// <summary>Builds the routing-slip receive pipeline from its specifications.</summary>
+    /// <returns>The configured routing-slip receive pipeline.</returns>
     public IPipe<ConsumeContext<RoutingSlip>> Build()
     {
         return _configurator.Build();
@@ -30,8 +30,8 @@ internal sealed class RoutingSlipConfigurator :
         return _configurator.Validate();
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware to the routing-slip receive pipeline.</summary>
+    /// <param name="specification">The pipeline specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<RoutingSlip>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);

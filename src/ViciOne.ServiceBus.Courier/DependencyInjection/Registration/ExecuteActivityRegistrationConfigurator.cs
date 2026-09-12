@@ -14,9 +14,9 @@ internal sealed class ExecuteActivityRegistrationConfigurator<TActivity, TArgume
     readonly IRegistrationConfigurator _configurator;
     readonly IExecuteActivityRegistration _registration;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="registration">The registration.</param>
+    /// <summary>Creates the public configuration view for an execute-only activity registration.</summary>
+    /// <param name="configurator">The bus registration that receives an explicit endpoint.</param>
+    /// <param name="registration">The activity registration whose automatic-endpoint state is updated.</param>
     public ExecuteActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IExecuteActivityRegistration registration)
     {
         _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));

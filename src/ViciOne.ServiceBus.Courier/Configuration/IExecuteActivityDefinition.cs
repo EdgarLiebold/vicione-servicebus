@@ -16,7 +16,7 @@ public interface IExecuteActivityDefinition :
     IEndpointDefinition? ExecuteEndpointDefinition { get; }
 
     /// <summary>Returns the endpoint name for the execution activity.</summary>
-    /// <param name="formatter">The formatter.</param>
+    /// <param name="formatter">The formatter used to derive the activity's execution queue name.</param>
     /// <returns>The execute endpoint name.</returns>
     string GetExecuteEndpointName(IEndpointNameFormatter formatter);
 }
@@ -34,9 +34,9 @@ public interface IExecuteActivityDefinition<TActivity, TArguments> :
     new IEndpointDefinition<IExecuteActivity<TArguments>>? ExecuteEndpointDefinition { set; }
 
     /// <summary>Configures the execution activity.</summary>
-    /// <param name="endpointConfigurator">The endpoint configurator.</param>
-    /// <param name="executeActivityConfigurator">The execute activity configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="endpointConfigurator">The receive endpoint that hosts execution.</param>
+    /// <param name="executeActivityConfigurator">The activity-specific execution pipeline.</param>
+    /// <param name="context">The bus registration context used by definition callbacks.</param>
     void Configure(IReceiveEndpointConfigurator endpointConfigurator, IExecuteActivityConfigurator<TActivity, TArguments> executeActivityConfigurator,
         IRegistrationContext context);
 }

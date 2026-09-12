@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures compensate activity log.</summary>
+/// <summary>Adds middleware to the activity-bound compensation context after log deserialization.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TLog">The log type.</typeparam>
 internal sealed class CompensateActivityLogConfigurator<TActivity, TLog> :
@@ -10,8 +10,8 @@ internal sealed class CompensateActivityLogConfigurator<TActivity, TLog> :
 {
     readonly IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> _configurator;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Wraps the activity-bound compensation pipeline that receives added specifications.</summary>
+    /// <param name="configurator">The compensation-activity pipeline configurator to update.</param>
     public CompensateActivityLogConfigurator(IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -19,8 +19,8 @@ internal sealed class CompensateActivityLogConfigurator<TActivity, TLog> :
         _configurator = configurator;
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware expressed for the log-level compensation context.</summary>
+    /// <param name="specification">The pipeline specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<CompensateActivityContext<TLog>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);

@@ -51,8 +51,8 @@ internal sealed class RoutingSlipActivity :
     /// <summary>Gets or sets the activity execution address.</summary>
     public Uri Address { get; set; } = null!;
     /// <summary>Gets or sets the activity arguments.</summary>
-    public IDictionary<string, object> Arguments { get; set; } = null!;
+    public IReadOnlyDictionary<string, object> Arguments { get; set; } = null!;
 
-    static IDictionary<string, object> Snapshot(IDictionary<string, object> arguments) =>
+    static IReadOnlyDictionary<string, object> Snapshot(IEnumerable<KeyValuePair<string, object>> arguments) =>
         new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(arguments, StringComparer.OrdinalIgnoreCase));
 }

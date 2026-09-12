@@ -18,7 +18,7 @@ public static class CourierRegistrationExtensions
     /// <typeparam name="TDefinition">The activity definition type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The optional action that configures the execution pipeline.</param>
-    /// <returns>The execute activity registration configurator produced by the operation.</returns>
+    /// <returns>A configurator for the registered execution-only activity.</returns>
     public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments, TDefinition>(
         this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
@@ -37,7 +37,7 @@ public static class CourierRegistrationExtensions
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configureExecute">The execute configuration callback.</param>
     /// <param name="configureCompensate">The compensate configuration callback.</param>
-    /// <returns>The activity registration configurator produced by the operation.</returns>
+    /// <returns>A configurator for the registered compensatable activity.</returns>
     public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog, TDefinition>(
         this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,

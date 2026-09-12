@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Courier.Contracts;
 /// <summary>Records a successfully executed activity in the routing slip.</summary>
 public interface ActivityLog
 {
-    /// <summary>The tracking number for completion of the activity.</summary>
+    /// <summary>The identifier of the activity execution.</summary>
     Guid ExecutionId { get; }
 
     /// <summary>The name of the activity that was completed.</summary>

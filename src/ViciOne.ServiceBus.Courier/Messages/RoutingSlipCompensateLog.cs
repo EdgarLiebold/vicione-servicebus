@@ -52,8 +52,8 @@ internal sealed class RoutingSlipCompensateLog :
     /// <summary>Gets or sets the compensation endpoint address.</summary>
     public Uri Address { get; set; } = null!;
     /// <summary>Gets or sets the data required to compensate the activity.</summary>
-    public IDictionary<string, object> Data { get; set; } = null!;
+    public IReadOnlyDictionary<string, object> Data { get; set; } = null!;
 
-    static IDictionary<string, object> Snapshot(IDictionary<string, object> data) =>
+    static IReadOnlyDictionary<string, object> Snapshot(IEnumerable<KeyValuePair<string, object>> data) =>
         new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(data, StringComparer.OrdinalIgnoreCase));
 }

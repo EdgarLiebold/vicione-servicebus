@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Compensates an activity as part of an activity execute host pipe.</summary>
+/// <summary>Invokes a compensation activity and reports its lifecycle to connected observers.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TLog">The log type.</typeparam>
 internal sealed class CompensateActivityFilter<TActivity, TLog> :
@@ -15,8 +15,8 @@ internal sealed class CompensateActivityFilter<TActivity, TLog> :
 {
     readonly ActivityObservable _observers;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="observers">The observers.</param>
+    /// <summary>Creates an activity invocation filter backed by the shared observer collection.</summary>
+    /// <param name="observers">The observers notified before, after, or upon failure of compensation.</param>
     public CompensateActivityFilter(ActivityObservable observers)
     {
         _observers = observers ?? throw new ArgumentNullException(nameof(observers));
@@ -27,10 +27,10 @@ internal sealed class CompensateActivityFilter<TActivity, TLog> :
         context.CreateFilterScope("compensate");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Invokes compensation, rejects a failed result, and continues the activity-bound pipeline.</summary>
+    /// <param name="context">The resolved compensation activity and its deserialized log.</param>
+    /// <param name="next">The activity-bound pipeline invoked after successful compensation.</param>
+    /// <returns>A task that completes after observer notification and pipeline continuation.</returns>
     public async Task SendAsync(CompensateActivityContext<TActivity, TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
     {
         ArgumentNullException.ThrowIfNull(context);

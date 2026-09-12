@@ -13,5 +13,5 @@ public interface CompensateLog
     Uri Address { get; }
 
     /// <summary>The results of the activity saved for compensation.</summary>
-    IDictionary<string, object> Data { get; }
+    IReadOnlyDictionary<string, object> Data { get; }
 }

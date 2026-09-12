@@ -17,7 +17,7 @@ internal sealed class RoutingSlipActivityException :
     /// <param name="activityName">The non-empty activity name.</param>
     /// <param name="host">The host that executed the activity.</param>
     /// <param name="executionId">The non-empty activity execution identifier.</param>
-    /// <param name="timestamp">The failure timestamp.</param>
+    /// <param name="timestamp">The time when activity execution started.</param>
     /// <param name="elapsed">The non-negative duration before failure.</param>
     /// <param name="exceptionInfo">The captured activity failure.</param>
     public RoutingSlipActivityException(string activityName, HostInfo host, Guid executionId, DateTimeOffset timestamp, TimeSpan elapsed,
@@ -66,7 +66,7 @@ internal sealed class RoutingSlipActivityException :
 
     /// <summary>Gets or sets the activity execution identifier.</summary>
     public Guid ExecutionId { get; set; }
-    /// <summary>Gets or sets the failure timestamp.</summary>
+    /// <summary>Gets or sets the time when activity execution started.</summary>
     public DateTimeOffset Timestamp { get; set; }
     /// <summary>Gets or sets the duration before failure.</summary>
     public TimeSpan Elapsed { get; set; }

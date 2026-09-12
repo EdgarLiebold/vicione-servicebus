@@ -13,7 +13,7 @@ class CompletedExecutionResult<TArguments> :
     where TArguments : class
 {
     readonly Uri? _compensationAddress;
-    readonly IDictionary<string, object> _data = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    readonly Dictionary<string, object> _data = new(StringComparer.OrdinalIgnoreCase);
 
     public CompletedExecutionResult(ExecuteContext<TArguments> context, IRoutingSlipEventPublisher publisher, Activity activity, RoutingSlip routingSlip,
         Uri? compensationAddress)

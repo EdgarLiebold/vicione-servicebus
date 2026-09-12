@@ -9,7 +9,7 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures compensate activity host.</summary>
+/// <summary>Builds the routing-slip, log, activity-instance, concurrency, and observer pipelines for compensation.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TLog">The log type.</typeparam>
 internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
@@ -27,9 +27,9 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
     readonly RoutingSlipConfigurator _routingSlipConfigurator;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activityFactory">The activity factory.</param>
-    /// <param name="observer">The observer to connect.</param>
+    /// <summary>Creates a compensation host configurator.</summary>
+    /// <param name="activityFactory">The factory that owns compensation activity instances.</param>
+    /// <param name="observer">The observer notified when the host configuration is finalized.</param>
     public CompensateActivityHostConfigurator(ICompensateActivityFactory<TActivity, TLog> activityFactory, IActivityConfigurationObserver observer)
     {
         _activityFactory = activityFactory ?? throw new ArgumentNullException(nameof(activityFactory));
@@ -44,8 +44,8 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         _configurationObservers.Connect(observer);
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware to the resolved-activity compensation pipeline.</summary>
+    /// <param name="specification">The pipeline specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<CompensateActivityContext<TActivity, TLog>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
@@ -66,11 +66,11 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         }
     }
 
-    /// <summary>Gets the message type.</summary>
+    /// <summary>Gets the routing-slip transport contract consumed by this host.</summary>
     public Type MessageType => typeof(RoutingSlip);
 
-    /// <summary>Configures the deserialized compensation log pipeline.</summary>
-    /// <param name="configure">The action that configures the compensation log.</param>
+    /// <summary>Configures middleware after the compensation log is deserialized and before the activity instance is resolved.</summary>
+    /// <param name="configure">The callback that configures the log-level compensation context.</param>
     public void Log(Action<ICompensateLogConfigurator<TLog>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
@@ -80,8 +80,8 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         configure(configurator);
     }
 
-    /// <summary>Adds an activity log to the routing slip.</summary>
-    /// <param name="configure">The action that configures the activity-instance pipeline.</param>
+    /// <summary>Configures middleware after the compensation activity instance is resolved.</summary>
+    /// <param name="configure">The callback that configures the activity-bound compensation context.</param>
     public void ActivityLog(Action<ICompensateActivityLogConfigurator<TLog>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
@@ -91,7 +91,7 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         configure(configurator);
     }
 
-    /// <summary>Creates or configures the routing slip.</summary>
+    /// <summary>Configures middleware applied to the received routing slip before compensation begins.</summary>
     /// <param name="configure">The action that configures the routing-slip consume pipeline.</param>
     public void RoutingSlip(Action<IRoutingSlipConfigurator> configure)
     {
@@ -100,7 +100,7 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         configure(_routingSlipConfigurator);
     }
 
-    /// <summary>Configures the activity transport-message pipeline.</summary>
+    /// <summary>Configures the transport-message pipeline when its contract is the routing slip consumed by this host.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configure">The action that configures the routing-slip transport-message pipeline.</param>
     public void Message<TMessage>(Action<IActivityMessageConfigurator<TMessage>> configure)
@@ -109,14 +109,14 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         ArgumentNullException.ThrowIfNull(configure);
 
         if (typeof(TMessage) != typeof(RoutingSlip))
-            throw new ArgumentException($"The activity host message type is {TypeCache<RoutingSlip>.ShortName}.", nameof(configure));
+            throw new InvalidOperationException($"The activity host message type is {TypeCache<RoutingSlip>.ShortName}, not {TypeCache<TMessage>.ShortName}.");
 
         configure((IActivityMessageConfigurator<TMessage>)(object)_routingSlipConfigurator);
     }
 
-    /// <summary>Connects activity observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects an observer to execution and compensation activity lifecycles.</summary>
+    /// <param name="observer">The activity observer to connect.</param>
+    /// <returns>A handle that disconnects the observer.</returns>
     public ConnectHandle ConnectActivityObserver(IActivityObserver observer)
     {
         ArgumentNullException.ThrowIfNull(observer);

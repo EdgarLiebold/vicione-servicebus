@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Processes execute activity factory pipeline stages.</summary>
+/// <summary>Resolves an execution activity, invokes its activity-bound pipeline, and resumes the execution pipeline.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TArguments">The arguments type.</typeparam>
 internal sealed class ExecuteActivityFactoryFilter<TActivity, TArguments> :
@@ -13,9 +13,9 @@ internal sealed class ExecuteActivityFactoryFilter<TActivity, TArguments> :
     readonly IExecuteActivityFactory<TActivity, TArguments> _factory;
     readonly IPipe<ExecuteActivityContext<TActivity, TArguments>> _pipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Creates the bridge between execution and activity-bound pipelines.</summary>
+    /// <param name="factory">The factory that resolves and owns execution activity instances.</param>
+    /// <param name="pipe">The pipeline invoked with the resolved activity.</param>
     public ExecuteActivityFactoryFilter(IExecuteActivityFactory<TActivity, TArguments> factory, IPipe<ExecuteActivityContext<TActivity, TArguments>> pipe)
     {
         _factory = factory ?? throw new ArgumentNullException(nameof(factory));
@@ -23,9 +23,9 @@ internal sealed class ExecuteActivityFactoryFilter<TActivity, TArguments> :
     }
 
     /// <summary>Creates the activity, executes its pipeline, and then continues the execution-context pipeline.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The execution context used to resolve the activity.</param>
+    /// <param name="next">The execution pipeline invoked after the activity-bound pipeline.</param>
+    /// <returns>A task that completes after both pipelines finish.</returns>
     public async Task SendAsync(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -36,8 +36,8 @@ internal sealed class ExecuteActivityFactoryFilter<TActivity, TArguments> :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the configured execution factory to the pipeline probe graph.</summary>
+    /// <param name="context">The probe context forwarded to the factory.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

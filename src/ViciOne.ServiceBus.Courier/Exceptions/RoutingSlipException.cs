@@ -6,19 +6,19 @@ namespace ViciOne.ServiceBus;
 public class RoutingSlipException :
     CourierException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a routing-slip failure without additional diagnostic text.</summary>
     public RoutingSlipException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a routing-slip failure with diagnostic text.</summary>
     /// <param name="message">The error message that explains the failure.</param>
     public RoutingSlipException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a routing-slip failure with diagnostic text and its underlying cause.</summary>
     /// <param name="message">The error message that explains the failure.</param>
     /// <param name="innerException">The exception that caused the routing-slip failure.</param>
     public RoutingSlipException(string message, Exception innerException)

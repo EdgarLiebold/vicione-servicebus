@@ -1,6 +1,7 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 /// <summary>
@@ -18,7 +19,8 @@ public static class InMemoryOutboxTestContextFactory
         DateTimeOffset? sentTime = null,
         ulong? transportSequenceNumber = null,
         Guid? messageId = null,
-        bool isDelivered = false)
+        bool isDelivered = false,
+        SerializerContext? serializerContext = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -30,7 +32,7 @@ public static class InMemoryOutboxTestContextFactory
             outgoingMessages,
             transportSequenceNumber,
             isDelivered);
-        SerializerContext serializerContext = DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
+        serializerContext ??= DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
         TestConsumeContext<T> consumeContext = DispatchProxy.Create<TestConsumeContext<T>, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)consumeContext).Configure(
             message,
@@ -101,6 +103,8 @@ public static class InMemoryOutboxTestContextFactory
                     return _serializerContext;
                 case "get_CancellationToken":
                     return _cancellationToken;
+                case "get_Host":
+                    return HostMetadataCache.Host;
                 case "get_ConsumeCompleted":
                     return Task.WhenAll(_consumeTasks);
                 case "AddConsumeTask":

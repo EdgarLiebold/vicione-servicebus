@@ -1114,3 +1114,114 @@ state-machine schedule declaration placeholder, and `NotImplementedException` as
 failure classification; the architecture hygiene gates find no dummy or placeholder
 implementation. Protected `review/` and `TestResults/` contents were neither changed nor staged.
 The complete A+ source goal remains active for the next unreviewed owner.
+
+## Iteration 87 outcome
+
+Review the complete `ViciOne.ServiceBus.Courier` capability as one coherent owner: public routing-
+slip contracts and builder APIs, activity execution and compensation, lifecycle-event routing,
+request/response proxies, dependency-injection registration, middleware, serialization boundaries,
+and transport dispatch. Preserve every routing-slip feature while making the public model immutable,
+the received wire model validated, cancellation and disposal observable, configuration deterministic,
+and every runtime boundary explicit. Retain `src/ViciOne.ServiceBus.Courier` as a sibling project of
+the Core assembly; within it, align every type, namespace, filename, folder, and manually reviewed
+comment with its final responsibility.
+
+## Iteration 87 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-COURIER-CONTRACTS` | itinerary, logs, failures, variables, subscriptions, and lifecycle events | contract and serialization tests | immutable collection surface, exact values, transport round trip, malformed input rejection, and caller-mutation isolation |
+| `REQ-VSB-COURIER-BUILDER` | activities, variables, subscriptions, source itinerary, and snapshots | builder tests | every overload, null/empty/flag boundaries, atomic updates, injected clock, repeatable builds, and detached state |
+| `REQ-VSB-COURIER-EXECUTION` | empty, active, completed, revised, terminated, faulted, and compensated routing slips | executor and lifecycle tests | exact destination, event sequence, state evolution, cancellation, failure propagation, and no duplicate terminal event |
+| `REQ-VSB-COURIER-EVENTS` | topology publication, explicit subscriptions, supplemental delivery, activity filters, and selected contents | event publisher tests | every event/contents flag, ordering, custom envelope, invalid boundary, cancellation, and isolated message state |
+| `REQ-VSB-COURIER-ACTIVITIES` | constructor, delegate, and dependency-injection factories | factory and middleware tests | exact instance/context, null return, sync/async disposal, observer sequence, fault, cancellation, and continuation behavior |
+| `REQ-VSB-COURIER-REGISTRATION` | typed/runtime/scanned registration and endpoint ownership | registration and host tests | full signature matching, namespace filters, definitions, companion endpoints, duplicate registration, and invalid types |
+| `REQ-VSB-COURIER-REQUESTS` | request metadata, completion response, declared fault, standard fault, and retry | request tests | exact metadata, injected time, missing-state diagnostics, retry count/delay, cancellation, and null-response rejection |
+| `REQ-VSB-COURIER-ACCESSORS` | typed arguments, data, and variables across all lifecycle contexts | accessor tests | reference/value types, defaults, precedence, null context, invalid key, missing dictionaries, and conversion failures |
+| `REQ-VSB-COURIER-OBSERVABILITY` | tracing, metrics, probe, consumed/faulted notification | host and observability tests | exact tags, duration source, observer order, owned cancellation classification, and probe shape |
+| `REQ-VSB-SOURCE-NAVIGATION` | all 135 Courier production files | architecture tests and manual ledger | project boundary retained; one primary type per file where practical; exact type/namespace/folder ownership |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in the complete Courier owner | manual review plus hygiene gates | current code and behavior only; no history, filler, workaround, or generated prose |
+
+## Iteration 87 mutation obligations
+
+- Make a routing-slip or lifecycle-event collection mutable, retain a caller-owned collection, or
+  skip received-state validation: immutability, mutation-isolation, and malformed-wire tests must
+  fail.
+- Change activity/variable precedence, remove a selected lifecycle-event payload, or publish when a
+  non-supplemental subscription owns delivery: exact contract assertions must fail.
+- Route execution or compensation to the wrong endpoint, skip a state transition, or emit a terminal
+  event twice: lifecycle ordering and count assertions must fail.
+- Drop cancellation, replace the injected clock with wall time, hide an activity/disposal failure,
+  or continue the pipeline after a failed boundary: propagation and zero-side-effect assertions must
+  fail.
+- Accept a mismatched runtime activity/definition type, lose a companion endpoint, or scan outside
+  the requested namespace: registration-matrix assertions must fail.
+- Remove any typed event accessor's context/key validation or change variable-over-argument
+  precedence: complete accessor boundary tests must fail.
+- Retain a stale construction-history comment or a type/file/namespace mismatch: the manual source
+  ledger and architecture checks must reject the exact file.
+
+## Iteration 87 completion
+
+All 135 Courier production files and their 9,374 lines were read manually in full together with
+the existing direct tests. No generator or scripted comment rewrite was used. Every comment was
+reviewed while its implementation was understood and was retained or rewritten only when it
+described current code or behavior. The assembly boundary is the primary source-layout rule:
+`src/ViciOne.ServiceBus.Courier` remains an independent sibling of the Core project
+`src/ViciOne.ServiceBus`, while provider integrations remain grouped by capability under
+`Persistence`, `Scheduling`, and `Transports`. Within Courier, context types, advanced API types,
+root-namespace types, filenames, and folders now express their actual ownership. There are no C#
+files directly under the `src` root and no empty source directories.
+
+Routing-slip and lifecycle-event contracts now expose read-only collections backed by detached
+snapshots. Received routing-slip state is validated and isolated before execution. Typed revised-
+event variable access is complete for reference and value types. Event publication preserves
+subscription ownership and supplemental-delivery semantics without exposing mutable state.
+Builder, host, request-proxy, and executor boundaries reject invalid values before side effects.
+Request responses and routing-slip subscriptions retain their distinct endpoint addresses, and
+executor timestamps use the injected `TimeProvider`.
+
+Activity factories, scope providers, middleware, and dependency-injection registration now have
+explicit lifecycle ownership. Scope cleanup attempts both ambient-context restoration and scope
+disposal, keeps the original failure ordering, and aggregates independent failures instead of
+leaking a scope. Registration validates runtime activity and definition compatibility and retains
+companion endpoint ownership. The Core consume-scope provider no longer leaves an ambient context
+behind when scope creation or cleanup fails. Futures consumes the same read-only Courier variable
+contract without restoring a mutable compatibility surface.
+
+Four isolated counterchanges were compiled and executed. Returning a caller-owned routing-slip
+collection made the mutation-isolation test fail. Sending a subscription to the request-response
+address made the two-address request-proxy test fail. Restoring ambient context before protected
+scope disposal made the dual-failure cleanup test observe an undisposed scope. Replacing the
+injected clock with `TimeProvider.System` made the deterministic executor timestamp test fail.
+Every mutation was restored manually and byte-for-byte verification produced final SHA-256 values
+`994189b32c22cdd03732c4adbf8c07e28219c08e0470ccc1f0fc231c145434db` for
+`RoutingSlipMessageState.cs`, `09093dd430022a00e47721a885eb85b64d00b6d6b3cf149bd83ff6d9bddc683b`
+for `RoutingSlipRequestProxy.cs`, `661ecc35d7448e2eadda8173ee7cbbf79df9a466521467934bb9523d8088c1eb`
+for `ActivityScopeDisposal.cs`, and
+`aaeabbb04356e39f3b18cf648ec1adb7e4ee792f1aedf23ca3b7db8da894bd8d` for
+`RoutingSlipExecutor.cs`.
+
+The final direct Courier selection passes 150/150 tests. Courier coverage increased from 69.02%
+lines and 48.62% branches to 84.33% lines and 70.64% branches. These are measured values rather
+than a claim of complete execution; unexecuted paths remain visible for later risk-directed work.
+The final Core host passes 2,968/2,968 tests and the complete architecture host passes 292/292,
+both without failures or skips. The official serial Unit solution passes 5,718/5,718 tests across
+22 hosts with no failures or skips. The final Release Engineering solution builds with zero
+warnings and errors. Both repository format gates pass without changes, and requirement
+projection plus the complete bidirectional async naming gate pass on the final names and manifest.
+
+Fresh-package verification passes 18 developer journeys using 31 freshly packed ViciOne packages,
+three isolated provider-testing consumers, and all 30 runtime API assemblies. The intentional
+Greenfield API changes were reviewed before updating the contract: Courier collection contracts
+are read-only, revised-event typed accessors are complete, and the corresponding Futures helpers
+accept read-only variables. The packed public API contains 19,224 lines with SHA-256
+`47b29f2bdc942446f27c7f5e9597e062d6add4ad16d5af941273047e65b5343c`.
+
+`git diff --check`, JSON validation, both format gates, source-layout checks, comment hygiene, and
+the complete architecture suite pass. Repository-wide product source contains zero C#
+preprocessor directives. The broad marker scan contains only the real state-machine schedule
+declaration placeholder semantics and `NotImplementedException` as a retry failure
+classification; neither is a dummy implementation. Protected `review/` and `TestResults/`
+contents were neither changed nor staged. The complete A+ source goal remains active for the next
+unreviewed owner.

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>Carries state for existing execute activity scope operations.</summary>
+/// <summary>Uses a borrowed execution scope and owns only its scoped-context restoration handle.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TArguments">The arguments type.</typeparam>
 internal sealed class ExistingExecuteActivityScopeContext<TActivity, TArguments> :
@@ -15,10 +15,10 @@ internal sealed class ExistingExecuteActivityScopeContext<TActivity, TArguments>
     readonly IDisposable _disposable;
     readonly IServiceScope _scope;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="scope">The scope.</param>
-    /// <param name="disposable">The disposable.</param>
+    /// <summary>Creates a view over an already active activity scope.</summary>
+    /// <param name="context">The execution context containing the resolved activity.</param>
+    /// <param name="scope">The borrowed dependency-injection scope used for service resolution.</param>
+    /// <param name="disposable">The handle that restores the previously active scoped consume context.</param>
     public ExistingExecuteActivityScopeContext(ExecuteActivityContext<TActivity, TArguments> context, IServiceScope scope, IDisposable disposable)
     {
         Context = context ?? throw new ArgumentNullException(nameof(context));
@@ -26,11 +26,11 @@ internal sealed class ExistingExecuteActivityScopeContext<TActivity, TArguments>
         _disposable = disposable ?? throw new ArgumentNullException(nameof(disposable));
     }
 
-    /// <summary>Gets the context.</summary>
+    /// <summary>Gets the execution context containing the resolved activity.</summary>
     public ExecuteActivityContext<TActivity, TArguments> Context { get; }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Restores the prior consume context without disposing the borrowed scope.</summary>
+    /// <returns>A completed task.</returns>
     public ValueTask DisposeAsync()
     {
         _disposable.Dispose();

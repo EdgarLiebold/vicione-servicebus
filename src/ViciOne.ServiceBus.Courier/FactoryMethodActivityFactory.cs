@@ -30,27 +30,27 @@ public sealed class FactoryMethodActivityFactory<TActivity, TArguments, TLog> :
     }
 
     /// <summary>Creates an activity for the supplied arguments and invokes the execution pipeline.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The routing-slip execution context containing the deserialized arguments.</param>
+    /// <param name="next">The activity-bound execution pipeline.</param>
+    /// <param name="cancellationToken">The token that cancels activity creation before it starts.</param>
+    /// <returns>A task that completes after execution and disposal of the created activity.</returns>
     public Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
     {
         return _executeFactory.ExecuteAsync(context, next, cancellationToken: cancellationToken);
     }
 
     /// <summary>Creates an activity for the supplied log and invokes the compensation pipeline.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The routing-slip compensation context containing the deserialized log.</param>
+    /// <param name="next">The activity-bound compensation pipeline.</param>
+    /// <param name="cancellationToken">The token that cancels activity creation before it starts.</param>
+    /// <returns>A task that completes after compensation and disposal of the created activity.</returns>
     public Task CompensateAsync(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default)
     {
         return _compensateFactory.CompensateAsync(context, next, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the paired delegate factories to the pipeline probe graph.</summary>
+    /// <param name="context">The probe context that receives the factory scope.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

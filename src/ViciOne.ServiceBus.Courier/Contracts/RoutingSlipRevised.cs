@@ -12,10 +12,10 @@ public interface RoutingSlipRevised
     /// <summary>The execution that modified the routing slip.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>The time when the routing slip was revised.</summary>
+    /// <summary>The time when execution of the revising activity started.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>The elapsed time from routing-slip creation through the revision.</summary>
+    /// <summary>The duration of the revising activity execution.</summary>
     TimeSpan Duration { get; }
 
     /// <summary>The name of the activity that revised the routing slip.</summary>
@@ -27,11 +27,11 @@ public interface RoutingSlipRevised
     /// <summary>
     /// The routing-slip variables after the revision.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 
     /// <summary>The new itinerary for the routing slip.</summary>
-    Activity[] Itinerary { get; }
+    IReadOnlyList<Activity> Itinerary { get; }
 
     /// <summary>The previous itinerary of the routing slip that is no longer included.</summary>
-    Activity[] DiscardedItinerary { get; }
+    IReadOnlyList<Activity> DiscardedItinerary { get; }
 }

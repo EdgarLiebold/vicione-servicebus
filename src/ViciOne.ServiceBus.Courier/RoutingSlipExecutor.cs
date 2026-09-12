@@ -1,11 +1,13 @@
 using System;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Courier.Messages;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>Executes routing slip operations.</summary>
+/// <summary>Validates and submits routing slips to their next activity or publishes terminal completion.</summary>
 public sealed class RoutingSlipExecutor :
     IRoutingSlipExecutor
 {
@@ -13,10 +15,10 @@ public sealed class RoutingSlipExecutor :
     readonly ISendEndpointProvider _sendEndpointProvider;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
-    /// <param name="publishEndpoint">The publish endpoint.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates an executor from the transport capabilities used for activity submission and lifecycle publication.</summary>
+    /// <param name="sendEndpointProvider">The provider that resolves activity endpoints.</param>
+    /// <param name="publishEndpoint">The endpoint that publishes completion events.</param>
+    /// <param name="timeProvider">The clock used to timestamp terminal completion.</param>
     public RoutingSlipExecutor(ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint, TimeProvider? timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(sendEndpointProvider);
@@ -27,30 +29,72 @@ public sealed class RoutingSlipExecutor :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Runs the configured action.</summary>
-    /// <param name="routingSlip">The routing slip.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Submits an isolated routing-slip snapshot or publishes completion when its itinerary is empty.</summary>
+    /// <param name="routingSlip">The routing slip to validate and submit.</param>
+    /// <param name="cancellationToken">The token that cancels validation and transport submission.</param>
+    /// <returns>A task that completes after the transport accepts the submission or completion event.</returns>
     public async Task ExecuteAsync(RoutingSlip routingSlip, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(routingSlip);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        if (routingSlip.RanToCompletion())
+        DateTimeOffset timestamp = _timeProvider.GetUtcNow();
+        RoutingSlip snapshot = CreateSnapshot(routingSlip, timestamp);
+
+        if (snapshot.RanToCompletion())
         {
-            var timestamp = _timeProvider.GetUtcNow().UtcDateTime;
-            var duration = timestamp - routingSlip.CreateTimestamp;
+            var duration = timestamp - snapshot.CreateTimestamp;
 
-            IRoutingSlipEventPublisher publisher = new RoutingSlipEventPublisher(_sendEndpointProvider, _publishEndpoint, routingSlip);
+            IRoutingSlipEventPublisher publisher = new RoutingSlipEventPublisher(_sendEndpointProvider, _publishEndpoint, snapshot);
 
-            await publisher.PublishRoutingSlipCompletedAsync(timestamp, duration, routingSlip.Variables, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await publisher.PublishRoutingSlipCompletedAsync(timestamp, duration, snapshot.Variables, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            var address = routingSlip.GetNextExecuteAddress() ?? throw new RoutingSlipException("Activity execute address was not specified.");
+            var address = snapshot.GetNextExecuteAddress() ?? throw new RoutingSlipException("Activity execute address was not specified.");
 
             var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await endpoint.SendAsync(routingSlip, cancellationToken).ConfigureAwait(false);
+            await endpoint.SendAsync(snapshot, cancellationToken).ConfigureAwait(false);
         }
     }
+
+    static RoutingSlip CreateSnapshot(RoutingSlip routingSlip, DateTimeOffset now)
+    {
+        if (routingSlip.TrackingNumber == Guid.Empty)
+            throw InvalidRoutingSlip("The routing-slip tracking number cannot be empty.");
+        if (routingSlip.CreateTimestamp == default)
+            throw InvalidRoutingSlip("The routing-slip creation timestamp is required.");
+        if (routingSlip.CreateTimestamp > now)
+            throw InvalidRoutingSlip("The routing-slip creation timestamp cannot be later than the submission time.");
+        if (routingSlip.Itinerary is null
+            || routingSlip.ActivityLogs is null
+            || routingSlip.CompensateLogs is null
+            || routingSlip.Variables is null
+            || routingSlip.ActivityExceptions is null
+            || routingSlip.Subscriptions is null)
+        {
+            throw InvalidRoutingSlip("Routing-slip collections cannot be null.");
+        }
+
+        try
+        {
+            return new RoutingSlipRoutingSlip(
+                routingSlip.TrackingNumber,
+                routingSlip.CreateTimestamp,
+                routingSlip.Itinerary,
+                routingSlip.ActivityLogs,
+                routingSlip.CompensateLogs,
+                routingSlip.ActivityExceptions,
+                routingSlip.Variables,
+                routingSlip.Subscriptions);
+        }
+        catch (Exception exception) when (exception is ArgumentException or SerializationException)
+        {
+            throw InvalidRoutingSlip("The routing slip contains invalid activity, log, failure, or subscription data.", exception);
+        }
+    }
+
+    static ArgumentException InvalidRoutingSlip(string message, Exception? innerException = null) =>
+        new(message, "routingSlip", innerException);
 }

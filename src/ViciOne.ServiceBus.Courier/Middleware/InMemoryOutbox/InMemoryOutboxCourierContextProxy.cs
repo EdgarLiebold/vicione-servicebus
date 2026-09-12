@@ -6,19 +6,19 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>Forwards in memory outbox courier context operations to an underlying context.</summary>
+/// <summary>Adds in-memory-outbox behavior while preserving an underlying Courier activity context.</summary>
 internal abstract class InMemoryOutboxCourierContextProxy :
     InMemoryOutboxConsumeContext<RoutingSlip>,
     CourierContext
 {
     readonly CourierContext _courierContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="courierContext">The courier context.</param>
+    /// <summary>Creates an outbox-decorated Courier context.</summary>
+    /// <param name="courierContext">The Courier context whose activity state is preserved.</param>
     protected InMemoryOutboxCourierContextProxy(CourierContext courierContext)
-        : base(courierContext)
+        : base(courierContext ?? throw new ArgumentNullException(nameof(courierContext)))
     {
-        _courierContext = courierContext ?? throw new ArgumentNullException(nameof(courierContext));
+        _courierContext = courierContext;
     }
 
     DateTimeOffset ActivityContext.Timestamp => _courierContext.Timestamp;

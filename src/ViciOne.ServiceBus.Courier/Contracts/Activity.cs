@@ -13,5 +13,5 @@ public interface Activity
     Uri Address { get; }
 
     /// <summary>Gets the activity arguments carried by the routing slip.</summary>
-    IDictionary<string, object> Arguments { get; }
+    IReadOnlyDictionary<string, object> Arguments { get; }
 }

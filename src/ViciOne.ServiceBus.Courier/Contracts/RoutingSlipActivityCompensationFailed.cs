@@ -9,28 +9,28 @@ public interface RoutingSlipActivityCompensationFailed
     /// <summary>The tracking number of the routing slip being compensated.</summary>
     Guid TrackingNumber { get; }
 
-    /// <summary>The tracking number for completion of the activity.</summary>
+    /// <summary>The identifier of the activity execution whose compensation failed.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>The date/time when the routing slip compensation was finished.</summary>
+    /// <summary>The time when this compensation attempt started.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>The duration of the activity execution.</summary>
+    /// <summary>The duration before this compensation attempt failed.</summary>
     TimeSpan Duration { get; }
 
-    /// <summary>The host that executed the activity.</summary>
+    /// <summary>The host that attempted to compensate the activity.</summary>
     HostInfo Host { get; }
 
     /// <summary>The name of the activity that failed to compensate.</summary>
     string ActivityName { get; }
 
     /// <summary>The results of the activity saved for compensation.</summary>
-    IDictionary<string, object> Data { get; }
+    IReadOnlyDictionary<string, object> Data { get; }
 
     /// <summary>
     /// The routing-slip variables at the point compensation failed.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 
     /// <summary>The exception information from the faulting compensation.</summary>
     ExceptionInfo ExceptionInfo { get; }

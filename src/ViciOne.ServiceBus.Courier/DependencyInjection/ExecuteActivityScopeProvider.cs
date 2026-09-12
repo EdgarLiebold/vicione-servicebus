@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>Provides execute activity scope services.</summary>
+/// <summary>Creates execution scopes and resolves activity instances from their scoped service providers.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TArguments">The arguments type.</typeparam>
 internal sealed class ExecuteActivityScopeProvider<TActivity, TArguments> :
@@ -14,25 +14,25 @@ internal sealed class ExecuteActivityScopeProvider<TActivity, TArguments> :
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Uses a registration context to create execution scopes.</summary>
+    /// <param name="context">The registration context that supplies services and ambient consume-context handling.</param>
     public ExecuteActivityScopeProvider(IRegistrationContext context)
         : base(context)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="serviceProvider">The service provider.</param>
-    /// <param name="setScopedConsumeContext">The set scoped consume context.</param>
+    /// <summary>Uses explicit services and ambient-context handling to create execution scopes.</summary>
+    /// <param name="serviceProvider">The fallback service provider for newly created scopes.</param>
+    /// <param name="setScopedConsumeContext">The component that installs and restores the scoped consume context.</param>
     public ExecuteActivityScopeProvider(IServiceProvider serviceProvider, ISetScopedConsumeContext setScopedConsumeContext)
         : base(serviceProvider, setScopedConsumeContext)
     {
     }
 
-    /// <summary>Gets scope.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Creates or reuses a scope for an execution context without resolving the activity.</summary>
+    /// <param name="context">The execution context to bind to the scope.</param>
+    /// <param name="cancellationToken">The token that cancels scope acquisition before it starts.</param>
+    /// <returns>A value task containing the scoped execution context.</returns>
     public ValueTask<IExecuteScopeContext<TArguments>> GetScopeAsync(ExecuteContext<TArguments> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -43,10 +43,10 @@ internal sealed class ExecuteActivityScopeProvider<TActivity, TArguments> :
         return GetScopeContextAsync(context, ExistingScopeContextFactory, CreatedScopeContextFactory, PipeContextFactory);
     }
 
-    /// <summary>Gets activity scope.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Creates or reuses a scope, resolves the activity, and binds it to the execution context.</summary>
+    /// <param name="context">The execution context to bind to the resolved activity.</param>
+    /// <param name="cancellationToken">The token that cancels scope acquisition before it starts.</param>
+    /// <returns>A value task containing the resolved activity and its scoped execution context.</returns>
     public ValueTask<IExecuteActivityScopeContext<TActivity, TArguments>> GetActivityScopeAsync(ExecuteContext<TArguments> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -57,8 +57,8 @@ internal sealed class ExecuteActivityScopeProvider<TActivity, TArguments> :
         return GetScopeContextAsync(context, ExistingActivityScopeContextFactory, CreatedActivityScopeContextFactory, PipeContextFactory);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Identifies dependency injection as the activity-instance provider in the probe graph.</summary>
+    /// <param name="context">The probe context that receives the provider tag.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

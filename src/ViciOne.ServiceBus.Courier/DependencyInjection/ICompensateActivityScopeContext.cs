@@ -10,12 +10,12 @@ internal interface ICompensateActivityScopeContext<out TActivity, out TLog> :
     where TActivity : class, ICompensateActivity<TLog>
     where TLog : class
 {
-    /// <summary>Gets the context.</summary>
+    /// <summary>Gets the compensation context bound to the activity resolved from this scope.</summary>
     CompensateActivityContext<TActivity, TLog> Context { get; }
 
     /// <summary>Resolves a service from the activity scope, creating an instance when necessary.</summary>
     /// <typeparam name="T">The service type.</typeparam>
-    /// <returns>The service.</returns>
+    /// <returns>The resolved or newly activated service.</returns>
     T GetService<T>()
         where T : class;
 }

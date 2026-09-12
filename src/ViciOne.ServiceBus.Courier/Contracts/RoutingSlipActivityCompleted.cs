@@ -9,10 +9,10 @@ public interface RoutingSlipActivityCompleted
     /// <summary>The tracking number of the routing slip containing the activity.</summary>
     Guid TrackingNumber { get; }
 
-    /// <summary>The tracking number for completion of the activity.</summary>
+    /// <summary>The identifier of this activity execution.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>The time when activity execution completed.</summary>
+    /// <summary>The time when activity execution started.</summary>
     DateTimeOffset Timestamp { get; }
 
     /// <summary>The duration of the activity execution.</summary>
@@ -25,13 +25,13 @@ public interface RoutingSlipActivityCompleted
     HostInfo Host { get; }
 
     /// <summary>The arguments that were specified for the activity.</summary>
-    IDictionary<string, object> Arguments { get; }
+    IReadOnlyDictionary<string, object> Arguments { get; }
 
     /// <summary>The activity result saved for possible compensation.</summary>
-    IDictionary<string, object> Data { get; }
+    IReadOnlyDictionary<string, object> Data { get; }
 
     /// <summary>
     /// The routing-slip variables after the activity completed.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 }

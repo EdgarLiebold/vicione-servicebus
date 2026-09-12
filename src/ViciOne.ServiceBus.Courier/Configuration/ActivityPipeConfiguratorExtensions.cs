@@ -2,14 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for activity pipe configurator.</summary>
+/// <summary>Adds middleware to activity-bound execution and compensation pipelines.</summary>
 public static class ActivityPipeConfiguratorExtensions
 {
-    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <summary>Adds middleware to the resolved-activity execution pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="specification">The specification.</param>
+    /// <param name="configurator">The activity execution pipeline to update.</param>
+    /// <param name="specification">The pipeline specification to add.</param>
     public static void AddPipeSpecification<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
         IPipeSpecification<ExecuteActivityContext<TArguments>> specification)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -25,11 +25,11 @@ public static class ActivityPipeConfiguratorExtensions
         configurator.AddPipeSpecification(filterSpecification);
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <summary>Adds middleware to the resolved-activity compensation pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="specification">The specification.</param>
+    /// <param name="configurator">The activity compensation pipeline to update.</param>
+    /// <param name="specification">The pipeline specification to add.</param>
     public static void AddPipeSpecification<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
         IPipeSpecification<CompensateActivityContext<TLog>> specification)
         where TActivity : class, ICompensateActivity<TLog>

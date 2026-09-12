@@ -16,11 +16,11 @@ internal interface IExecuteActivityRegistration :
 
     /// <summary>Configures the activity execution endpoint.</summary>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The bus registration context used to resolve the activity and its definition.</param>
     void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context);
 
     /// <summary>Gets the resolved activity definition.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The definition.</returns>
+    /// <param name="context">The bus registration context used to resolve an explicitly registered definition.</param>
+    /// <returns>The configured definition or the contract's default definition.</returns>
     IExecuteActivityDefinition GetDefinition(IRegistrationContext context);
 }

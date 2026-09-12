@@ -18,5 +18,5 @@ public interface RoutingSlipCompleted
     /// <summary>
     /// The final routing-slip variables.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 }

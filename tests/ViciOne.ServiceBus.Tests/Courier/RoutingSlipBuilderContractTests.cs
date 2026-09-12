@@ -86,16 +86,19 @@ public sealed class RoutingSlipBuilderContractTests
         Assert.Equal("original", activity.Arguments["STATE"]);
         Assert.Equal("north", first.Variables["TENANT"]);
         Assert.Single(first.Subscriptions);
-        Assert.True(first.Itinerary.IsReadOnly);
-        Assert.True(first.ActivityLogs.IsReadOnly);
-        Assert.True(first.CompensateLogs.IsReadOnly);
-        Assert.True(first.ActivityExceptions.IsReadOnly);
-        Assert.True(first.Subscriptions.IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(first.Variables).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(activity.Arguments).IsReadOnly);
-        Assert.Throws<NotSupportedException>(() => first.Itinerary.Clear());
-        Assert.Throws<NotSupportedException>(() => first.Variables.Add("late", 1));
-        Assert.Throws<NotSupportedException>(() => activity.Arguments.Add("late", 1));
+        var itinerary = Assert.IsAssignableFrom<ICollection<Activity>>(first.Itinerary);
+        Assert.True(itinerary.IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<ActivityLog>>(first.ActivityLogs).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<CompensateLog>>(first.CompensateLogs).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<ActivityException>>(first.ActivityExceptions).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<Subscription>>(first.Subscriptions).IsReadOnly);
+        var variables = Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(first.Variables);
+        var activityArguments = Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(activity.Arguments);
+        Assert.True(variables.IsReadOnly);
+        Assert.True(activityArguments.IsReadOnly);
+        Assert.Throws<NotSupportedException>(() => itinerary.Clear());
+        Assert.Throws<NotSupportedException>(() => variables.Add(new KeyValuePair<string, object>("late", 1)));
+        Assert.Throws<NotSupportedException>(() => activityArguments.Add(new KeyValuePair<string, object>("late", 1)));
 
         RoutingSlip second = builder.Build();
         Assert.Equal(2, second.Itinerary.Count);
@@ -292,20 +295,21 @@ public sealed class RoutingSlipBuilderContractTests
     public void NoArgumentActivities_CannotContaminateAnotherBuilder()
     {
         string poisonKey = $"poison-{Guid.NewGuid():N}";
-        IDictionary<string, object> arguments = BuildNoArgumentActivity().Arguments;
+        IReadOnlyDictionary<string, object> arguments = BuildNoArgumentActivity().Arguments;
+        var mutableArguments = Assert.IsAssignableFrom<IDictionary<string, object>>(arguments);
         Exception? mutationFailure = null;
         bool secondBuilderWasContaminated = false;
 
         try
         {
-            mutationFailure = Record.Exception(() => arguments.Add(poisonKey, 27));
+            mutationFailure = Record.Exception(() => mutableArguments.Add(poisonKey, 27));
             if (mutationFailure is null)
                 secondBuilderWasContaminated = BuildNoArgumentActivity().Arguments.ContainsKey(poisonKey);
         }
         finally
         {
             if (mutationFailure is null)
-                arguments.Remove(poisonKey);
+                mutableArguments.Remove(poisonKey);
         }
 
         Assert.IsType<NotSupportedException>(mutationFailure);

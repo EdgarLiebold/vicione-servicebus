@@ -28,7 +28,7 @@ abstract class BaseExecutionResult<TArguments> :
 
     protected Activity Activity { get; }
 
-    protected IDictionary<string, object> Variables { get; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    protected Dictionary<string, object> Variables { get; } = new(StringComparer.OrdinalIgnoreCase);
     public TimeSpan? Delay
     {
         get => _delay;

@@ -8,15 +8,15 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for dependency injection activity registration.</summary>
+/// <summary>Registers compensatable Courier activity implementations and optional definitions in dependency injection.</summary>
 internal static class DependencyInjectionActivityRegistrationExtensions
 {
-    /// <summary>Registers activity.</summary>
+    /// <summary>Registers a scoped compensatable activity with generated endpoint definitions.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <param name="collection">The service collection that receives the activity and registration metadata.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -27,13 +27,13 @@ internal static class DependencyInjectionActivityRegistrationExtensions
         return RegisterActivity<TActivity, TArguments, TLog>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
-    /// <summary>Registers activity.</summary>
+    /// <summary>Registers a scoped compensatable activity through an explicit container registrar.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="registrar">The registrar.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <param name="collection">The service collection that receives the activity and consumer-kind services.</param>
+    /// <param name="registrar">The container integration that owns registration metadata.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, IContainerRegistrar registrar)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -45,13 +45,13 @@ internal static class DependencyInjectionActivityRegistrationExtensions
         return new ActivityRegistrar<TActivity, TArguments, TLog>().Register(collection, registrar);
     }
 
-    /// <summary>Registers activity.</summary>
+    /// <summary>Registers a scoped compensatable activity with a compile-time endpoint definition.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <typeparam name="TDefinition">The definition type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <param name="collection">The service collection that receives the activity, definition, and registration metadata.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog, TDefinition>(this IServiceCollection collection)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -63,14 +63,14 @@ internal static class DependencyInjectionActivityRegistrationExtensions
         return RegisterActivity<TActivity, TArguments, TLog, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
-    /// <summary>Registers activity.</summary>
+    /// <summary>Registers a scoped compensatable activity and compile-time definition through an explicit container registrar.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <typeparam name="TDefinition">The definition type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="registrar">The registrar.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <param name="collection">The service collection that receives the activity and consumer-kind services.</param>
+    /// <param name="registrar">The container integration that owns registration and definition metadata.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog, TDefinition>(this IServiceCollection collection,
         IContainerRegistrar registrar)
         where TActivity : class, IActivity<TArguments, TLog>
@@ -84,13 +84,13 @@ internal static class DependencyInjectionActivityRegistrationExtensions
         return new ActivityDefinitionRegistrar<TActivity, TArguments, TLog, TDefinition>().Register(collection, registrar);
     }
 
-    /// <summary>Registers activity.</summary>
+    /// <summary>Registers a scoped compensatable activity with an optional runtime endpoint definition.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="activityDefinitionType">The runtime activity definition type used by the operation.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <param name="collection">The service collection that receives the activity, definition, and registration metadata.</param>
+    /// <param name="activityDefinitionType">The endpoint-definition type whose complete activity signature must match.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, Type activityDefinitionType)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -102,14 +102,14 @@ internal static class DependencyInjectionActivityRegistrationExtensions
         return RegisterActivity<TActivity, TArguments, TLog>(collection, new DependencyInjectionContainerRegistrar(collection), activityDefinitionType);
     }
 
-    /// <summary>Registers activity.</summary>
+    /// <summary>Registers a scoped compensatable activity and optional runtime definition through an explicit container registrar.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="registrar">The registrar.</param>
-    /// <param name="activityDefinitionType">The runtime activity definition type used by the operation.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <param name="collection">The service collection that receives the activity and consumer-kind services.</param>
+    /// <param name="registrar">The container integration that owns registration and definition metadata.</param>
+    /// <param name="activityDefinitionType">The optional endpoint-definition type whose complete activity signature must match.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, IContainerRegistrar registrar,
         Type? activityDefinitionType)
         where TActivity : class, IActivity<TArguments, TLog>
@@ -138,12 +138,12 @@ internal static class DependencyInjectionActivityRegistrationExtensions
         return register.Register(collection, registrar);
     }
 
-    /// <summary>Registers activity.</summary>
-    /// <param name="collection">The collection.</param>
-    /// <param name="registrar">The registrar.</param>
-    /// <param name="activityType">The runtime activity type used by the operation.</param>
-    /// <param name="activityDefinitionType">The runtime activity definition type used by the operation.</param>
-    /// <returns>The activity registration produced by the operation.</returns>
+    /// <summary>Registers a compensatable activity and optional definition from runtime types.</summary>
+    /// <param name="collection">The service collection that receives the activity and consumer-kind services.</param>
+    /// <param name="registrar">The container integration that owns registration and definition metadata.</param>
+    /// <param name="activityType">The runtime type implementing exactly one closed compensatable activity contract.</param>
+    /// <param name="activityDefinitionType">The optional endpoint-definition type whose complete activity signature must match.</param>
+    /// <returns>The existing or newly added compensatable-activity registration.</returns>
     public static IActivityRegistration RegisterActivity(this IServiceCollection collection, IContainerRegistrar registrar, Type activityType,
         Type? activityDefinitionType = null)
     {

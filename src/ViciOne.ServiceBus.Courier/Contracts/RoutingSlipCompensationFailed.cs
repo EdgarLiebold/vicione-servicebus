@@ -12,10 +12,10 @@ public interface RoutingSlipCompensationFailed
     /// <summary>The date/time when the routing slip compensation was finished.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>The duration of the activity execution.</summary>
+    /// <summary>The elapsed time from routing-slip creation until compensation terminated.</summary>
     TimeSpan Duration { get; }
 
-    /// <summary>The host that executed the activity.</summary>
+    /// <summary>The host on which compensation terminated.</summary>
     HostInfo Host { get; }
 
     /// <summary>The exception information from the failed compensation.</summary>
@@ -24,5 +24,5 @@ public interface RoutingSlipCompensationFailed
     /// <summary>
     /// The routing-slip variables at the point compensation failed.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 }

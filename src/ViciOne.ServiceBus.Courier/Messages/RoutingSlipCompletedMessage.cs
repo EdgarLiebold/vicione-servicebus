@@ -4,35 +4,37 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>Carries routing slip completed message data.</summary>
+/// <summary>Materializes the terminal event emitted when a routing slip completes successfully.</summary>
 internal sealed class RoutingSlipCompletedMessage :
     RoutingSlipCompleted
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public RoutingSlipCompletedMessage()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="trackingNumber">The tracking number.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    public RoutingSlipCompletedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables)
+    /// <summary>Creates a routing-slip-completed event with a detached final variable snapshot.</summary>
+    /// <param name="trackingNumber">The routing-slip tracking number.</param>
+    /// <param name="timestamp">The time when the routing slip completed.</param>
+    /// <param name="duration">The elapsed time from routing-slip creation through completion.</param>
+    /// <param name="variables">The final routing-slip variables.</param>
+    public RoutingSlipCompletedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables)
     {
+        RoutingSlipMessageState.Validate(trackingNumber, duration);
+
         Duration = duration;
         Timestamp = timestamp;
 
         TrackingNumber = trackingNumber;
-        Variables = variables;
+        Variables = RoutingSlipMessageState.Snapshot(variables);
     }
 
-    /// <summary>Gets or sets the tracking number.</summary>
+    /// <summary>Gets or sets the routing-slip tracking number.</summary>
     public Guid TrackingNumber { get; set; }
-    /// <summary>Gets or sets the timestamp.</summary>
+    /// <summary>Gets or sets the time when the routing slip completed.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>Gets or sets the duration.</summary>
+    /// <summary>Gets or sets the elapsed time from routing-slip creation through completion.</summary>
     public TimeSpan Duration { get; set; }
-    /// <summary>Gets or sets the variables.</summary>
-    public IDictionary<string, object> Variables { get; set; } = null!;
+    /// <summary>Gets or sets the final routing-slip variables.</summary>
+    public IReadOnlyDictionary<string, object> Variables { get; set; } = null!;
 }

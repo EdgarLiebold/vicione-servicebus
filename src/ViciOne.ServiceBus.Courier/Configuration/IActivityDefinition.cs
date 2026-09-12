@@ -13,7 +13,7 @@ public interface IActivityDefinition :
     IEndpointDefinition? CompensateEndpointDefinition { get; }
 
     /// <summary>Returns the endpoint name for the compensation activity.</summary>
-    /// <param name="formatter">The formatter.</param>
+    /// <param name="formatter">The formatter used to derive the activity's compensation queue name.</param>
     /// <returns>The compensate endpoint name.</returns>
     string GetCompensateEndpointName(IEndpointNameFormatter formatter);
 }
@@ -34,9 +34,9 @@ public interface IActivityDefinition<TActivity, TArguments, TLog> :
     new IEndpointDefinition<ICompensateActivity<TLog>>? CompensateEndpointDefinition { set; }
 
     /// <summary>Configures the compensation activity.</summary>
-    /// <param name="endpointConfigurator">The endpoint configurator.</param>
-    /// <param name="compensateActivityConfigurator">The compensate activity configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="endpointConfigurator">The receive endpoint that hosts compensation.</param>
+    /// <param name="compensateActivityConfigurator">The activity-specific compensation pipeline.</param>
+    /// <param name="context">The bus registration context used by definition callbacks.</param>
     void Configure(IReceiveEndpointConfigurator endpointConfigurator, ICompensateActivityConfigurator<TActivity, TLog> compensateActivityConfigurator,
         IRegistrationContext context);
 }

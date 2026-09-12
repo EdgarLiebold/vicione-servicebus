@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Messages;
 using ViciOne.ServiceBus.Internals;
@@ -14,39 +15,45 @@ internal sealed class SanitizedRoutingSlip :
 {
     readonly SerializerContext _serializerContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Copies received routing-slip state into validated, case-insensitive, caller-independent collections.</summary>
+    /// <param name="context">The received routing-slip context and serializer boundary.</param>
     public SanitizedRoutingSlip(ConsumeContext<RoutingSlip> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         _serializerContext = context.Advanced().SerializerContext;
 
         var routingSlip = context.Message;
+        if (routingSlip.TrackingNumber == Guid.Empty)
+            throw new SerializationException("A routing slip requires a non-empty tracking number.");
+        if (routingSlip.CreateTimestamp == default)
+            throw new SerializationException("A routing slip requires a creation timestamp.");
 
         TrackingNumber = routingSlip.TrackingNumber;
         CreateTimestamp = routingSlip.CreateTimestamp;
 
         Itinerary = (routingSlip.Itinerary ?? [])
             .Select(Activity (x) => new RoutingSlipActivity(x))
-            .ToList();
+            .ToArray();
 
         ActivityLogs = (routingSlip.ActivityLogs ?? [])
             .Select(ActivityLog (x) => new RoutingSlipActivityLog(x))
-            .ToList();
+            .ToArray();
 
         CompensateLogs = (routingSlip.CompensateLogs ?? [])
             .Select(CompensateLog (x) => new RoutingSlipCompensateLog(x))
-            .ToList();
+            .ToArray();
 
-        Variables = new Dictionary<string, object>(routingSlip.Variables ?? new Dictionary<string, object>(),
-            StringComparer.OrdinalIgnoreCase);
+        Variables = new ReadOnlyDictionary<string, object>(
+            new Dictionary<string, object>(routingSlip.Variables ?? new Dictionary<string, object>(), StringComparer.OrdinalIgnoreCase));
 
         ActivityExceptions = (routingSlip.ActivityExceptions ?? [])
             .Select(ActivityException (x) => new RoutingSlipActivityException(x))
-            .ToList();
+            .ToArray();
 
         Subscriptions = (routingSlip.Subscriptions ?? [])
             .Select(Subscription (x) => new RoutingSlipSubscription(x))
-            .ToList();
+            .ToArray();
     }
 
     /// <summary>Gets the tracking number.</summary>
@@ -54,21 +61,21 @@ internal sealed class SanitizedRoutingSlip :
     /// <summary>Gets the creation timestamp.</summary>
     public DateTimeOffset CreateTimestamp { get; }
     /// <summary>Gets the remaining itinerary.</summary>
-    public IList<Activity> Itinerary { get; }
+    public IReadOnlyList<Activity> Itinerary { get; }
     /// <summary>Gets the completed activity logs.</summary>
-    public IList<ActivityLog> ActivityLogs { get; }
+    public IReadOnlyList<ActivityLog> ActivityLogs { get; }
     /// <summary>Gets the pending compensation logs.</summary>
-    public IList<CompensateLog> CompensateLogs { get; }
+    public IReadOnlyList<CompensateLog> CompensateLogs { get; }
     /// <summary>Gets the routing-slip variables.</summary>
-    public IDictionary<string, object> Variables { get; }
+    public IReadOnlyDictionary<string, object> Variables { get; }
     /// <summary>Gets the recorded activity exceptions.</summary>
-    public IList<ActivityException> ActivityExceptions { get; }
+    public IReadOnlyList<ActivityException> ActivityExceptions { get; }
     /// <summary>Gets the event subscriptions.</summary>
-    public IList<Subscription> Subscriptions { get; }
+    public IReadOnlyList<Subscription> Subscriptions { get; }
 
-    /// <summary>Gets activity arguments.</summary>
-    /// <typeparam name="T">The argument type.</typeparam>
-    /// <returns>The activity arguments.</returns>
+    /// <summary>Combines routing-slip variables with the next activity's values and deserializes its arguments.</summary>
+    /// <typeparam name="T">The activity-arguments contract.</typeparam>
+    /// <returns>The deserialized arguments for the next itinerary entry.</returns>
     public T GetActivityArguments<T>()
         where T : class
     {
@@ -79,12 +86,16 @@ internal sealed class SanitizedRoutingSlip :
 
             var activity = Itinerary[0];
 
-            IDictionary<string, object> argumentsDictionary = Variables.Count > 0
-                ? Variables.MergeLeft(activity.Arguments)
+            IReadOnlyDictionary<string, object> argumentsDictionary = Variables.Count > 0
+                ? Merge(Variables, activity.Arguments)
                 : activity.Arguments;
 
             return _serializerContext.DeserializeObject<T>(argumentsDictionary)
                 ?? throw new RoutingSlipArgumentException($"The activity arguments could not be deserialized as {TypeCache<T>.ShortName}.");
+        }
+        catch (RoutingSlipArgumentException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -92,9 +103,9 @@ internal sealed class SanitizedRoutingSlip :
         }
     }
 
-    /// <summary>Gets compensate log data.</summary>
-    /// <typeparam name="T">The compensation-log type.</typeparam>
-    /// <returns>The compensate log data.</returns>
+    /// <summary>Combines routing-slip variables with the newest compensation entry and deserializes its log.</summary>
+    /// <typeparam name="T">The compensation-log contract.</typeparam>
+    /// <returns>The deserialized log for the activity being compensated.</returns>
     public T GetCompensateLogData<T>()
         where T : class
     {
@@ -105,16 +116,34 @@ internal sealed class SanitizedRoutingSlip :
 
             var compensateLog = CompensateLogs[CompensateLogs.Count - 1];
 
-            IDictionary<string, object> argumentsDictionary = Variables.Count > 0
-                ? Variables.MergeLeft(compensateLog.Data)
+            IReadOnlyDictionary<string, object> argumentsDictionary = Variables.Count > 0
+                ? Merge(Variables, compensateLog.Data)
                 : compensateLog.Data;
 
             return _serializerContext.DeserializeObject<T>(argumentsDictionary)
                 ?? throw new RoutingSlipArgumentException($"The compensation log could not be deserialized as {TypeCache<T>.ShortName}.");
         }
+        catch (RoutingSlipArgumentException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             throw new RoutingSlipArgumentException("The compensation log could not be read.", ex);
         }
+    }
+
+    static IReadOnlyDictionary<string, object> Merge(
+        IReadOnlyDictionary<string, object> variables,
+        IReadOnlyDictionary<string, object> activityValues)
+    {
+        var merged = new Dictionary<string, object>(variables, StringComparer.OrdinalIgnoreCase);
+        foreach ((string key, object? value) in activityValues)
+        {
+            if (value is not null || !merged.ContainsKey(key))
+                merged[key] = value!;
+        }
+
+        return merged;
     }
 }

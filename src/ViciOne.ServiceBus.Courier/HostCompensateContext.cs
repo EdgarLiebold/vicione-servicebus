@@ -7,8 +7,8 @@ using ViciOne.ServiceBus.Courier.Results;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>Carries state for host compensate operations.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
+/// <summary>Binds the newest routing-slip compensation entry to its activity record, deserialized log, and result factories.</summary>
+/// <typeparam name="TLog">The compensation-log contract.</typeparam>
 internal sealed class HostCompensateContext<TLog> :
     BaseCourierContext,
     CompensateContext<TLog>
@@ -17,8 +17,8 @@ internal sealed class HostCompensateContext<TLog> :
     readonly ActivityLog _activityLog;
     readonly CompensateLog _compensateLog;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a compensation context for the newest compensation entry in the received routing slip.</summary>
+    /// <param name="context">The received routing slip and transport context.</param>
     public HostCompensateContext(ConsumeContext<RoutingSlip> context)
         : base(context)
     {
@@ -34,15 +34,15 @@ internal sealed class HostCompensateContext<TLog> :
         Log = RoutingSlip.GetCompensateLogData<TLog>();
     }
 
-    /// <summary>Gets the activity name.</summary>
+    /// <summary>Gets the logical name of the activity being compensated.</summary>
     public override string ActivityName => _activityLog.Name;
-    /// <summary>Gets the log.</summary>
+    /// <summary>Gets the deserialized log recorded by the successful activity execution.</summary>
     public TLog Log { get; }
 
-    /// <summary>Creates activity context.</summary>
+    /// <summary>Binds a resolved activity instance to this compensation context.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <param name="activity">The activity.</param>
-    /// <returns>The created activity context.</returns>
+    /// <param name="activity">The activity instance to expose to middleware.</param>
+    /// <returns>A compensation context containing the activity instance and current log.</returns>
     public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class
     {
@@ -85,9 +85,9 @@ internal sealed class HostCompensateContext<TLog> :
         return Failed(new RoutingSlipException("The routing slip compensation failed"));
     }
 
-    /// <summary>Reports a failed result.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The compensation result produced by the operation.</returns>
+    /// <summary>Reports that compensation failed for the current activity.</summary>
+    /// <param name="exception">The failure raised while compensating the activity.</param>
+    /// <returns>A compensation-failure result containing the supplied exception.</returns>
     public CompensationResult Failed(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);

@@ -28,6 +28,29 @@ public sealed class RoutingSlipHostConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-HOST-CONFIGURATION", "host-message-contract-boundaries")]
+    public void HostMessageConfiguration_RejectsContractsOtherThanRoutingSlip()
+    {
+        var observer = new NoopActivityConfigurationObserver();
+        var execute = new ExecuteActivityHostConfigurator<FirstCourierActivity, CourierArguments>(
+            new FactoryMethodExecuteActivityFactory<FirstCourierActivity, CourierArguments>(_ => new FirstCourierActivity()),
+            observer);
+        var compensate = new CompensateActivityHostConfigurator<FirstCourierActivity, CourierLog>(
+            new FactoryMethodCompensateActivityFactory<FirstCourierActivity, CourierLog>(_ => new FirstCourierActivity()),
+            observer);
+
+        InvalidOperationException executeFailure = Assert.Throws<InvalidOperationException>(() =>
+            execute.Message<CourierArguments>(_ => { }));
+        InvalidOperationException compensateFailure = Assert.Throws<InvalidOperationException>(() =>
+            compensate.Message<CourierLog>(_ => { }));
+
+        Assert.Contains(nameof(RoutingSlip), executeFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(CourierArguments), executeFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(RoutingSlip), compensateFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(CourierLog), compensateFailure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-HOST-CONFIGURATION", "all-execute-and-compensate-pipe-surfaces-run")]
     public async Task ActivityHostConfiguration_ExecutesEveryConfiguredContextSurfaceWithExactDataAsync()
     {

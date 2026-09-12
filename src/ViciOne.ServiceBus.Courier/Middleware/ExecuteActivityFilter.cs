@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Executes an activity as part of an activity execute host pipe.</summary>
+/// <summary>Invokes an execution activity and reports its lifecycle to connected observers.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TArguments">The arguments type.</typeparam>
 internal sealed class ExecuteActivityFilter<TActivity, TArguments> :
@@ -15,8 +15,8 @@ internal sealed class ExecuteActivityFilter<TActivity, TArguments> :
 {
     readonly ActivityObservable _observers;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="observers">The observers.</param>
+    /// <summary>Creates an activity invocation filter backed by the shared observer collection.</summary>
+    /// <param name="observers">The observers notified before, after, or upon failure of execution.</param>
     public ExecuteActivityFilter(ActivityObservable observers)
     {
         _observers = observers ?? throw new ArgumentNullException(nameof(observers));
@@ -27,10 +27,10 @@ internal sealed class ExecuteActivityFilter<TActivity, TArguments> :
         context.CreateFilterScope("execute");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Invokes execution, rejects a faulted result, and continues the activity-bound pipeline.</summary>
+    /// <param name="context">The resolved execution activity and its deserialized arguments.</param>
+    /// <param name="next">The activity-bound pipeline invoked after successful execution.</param>
+    /// <returns>A task that completes after observer notification and pipeline continuation.</returns>
     public async Task SendAsync(ExecuteActivityContext<TActivity, TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
     {
         ArgumentNullException.ThrowIfNull(context);

@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus;
 public sealed class RoutingSlipRequestFaultedException :
     RoutingSlipException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a request failure from the routing slip's terminal fault event.</summary>
     /// <param name="faulted">The terminal routing-slip fault event.</param>
     public RoutingSlipRequestFaultedException(RoutingSlipFaulted faulted)
         : base("The routing slip request faulted")

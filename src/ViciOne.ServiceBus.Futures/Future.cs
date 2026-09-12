@@ -418,11 +418,12 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <param name="context">The consume context that provides variable conversion.</param>
     /// <param name="variables">The routing-slip variables expected to contain the future identifier.</param>
     /// <returns>The required future identifier.</returns>
-    protected static Guid FutureIdOrFault(ConsumeContext context, IDictionary<string, object> variables)
+    protected static Guid FutureIdOrFault(ConsumeContext context, IReadOnlyDictionary<string, object> variables)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(variables);
-        if (context.SerializerContext.TryGetValue(variables, MessageHeaders.FutureId, out Guid? correlationId))
+        Guid? correlationId = context.SerializerContext.GetValue<Guid>(variables, MessageHeaders.FutureId);
+        if (correlationId.HasValue)
             return correlationId.Value;
 
         throw new RequestException("The routing slip does not contain the required future identifier.");
@@ -432,11 +433,11 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <param name="context">The consume context that provides variable conversion.</param>
     /// <param name="variables">The routing-slip variables that may contain the future identifier.</param>
     /// <returns>The future identifier, or <see cref="Guid.Empty" /> when absent.</returns>
-    protected static Guid FutureIdOrDefault(ConsumeContext context, IDictionary<string, object> variables)
+    protected static Guid FutureIdOrDefault(ConsumeContext context, IReadOnlyDictionary<string, object> variables)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(variables);
-        return context.SerializerContext.TryGetValue(variables, MessageHeaders.FutureId, out Guid? correlationId) ? correlationId.Value : default;
+        return context.SerializerContext.GetValue<Guid>(variables, MessageHeaders.FutureId) ?? default;
     }
 
     /// <summary>Configures the successful result produced after all tracked operations complete.</summary>

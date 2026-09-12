@@ -18,8 +18,8 @@ internal sealed class ExecuteActivityRegistration<TActivity, TArguments> :
     readonly IContainerSelector _selector;
     IExecuteActivityDefinition<TActivity, TArguments> _definition = null!;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="selector">The selector.</param>
+    /// <summary>Creates registration metadata for an execute-only activity.</summary>
+    /// <param name="selector">The container integration used to resolve definitions and endpoint settings.</param>
     public ExecuteActivityRegistration(IContainerSelector selector)
     {
         _selector = selector ?? throw new ArgumentNullException(nameof(selector));
@@ -40,8 +40,8 @@ internal sealed class ExecuteActivityRegistration<TActivity, TArguments> :
     }
 
     /// <summary>Configures the activity execution endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configurator">The endpoint that receives activity executions.</param>
+    /// <param name="context">The registration context used to resolve definitions and scoped services.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         ArgumentNullException.ThrowIfNull(configurator);

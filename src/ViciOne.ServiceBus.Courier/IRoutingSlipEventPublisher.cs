@@ -14,7 +14,7 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="variables">The final routing-slip variables.</param>
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
-    Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, CancellationToken cancellationToken = default);
+    Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables, CancellationToken cancellationToken = default);
 
     /// <summary>Routes the terminal routing-slip failure event.</summary>
     /// <param name="timestamp">The failure timestamp.</param>
@@ -23,7 +23,7 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="exceptions">The recorded activity failures.</param>
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
-    Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
+    Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables,
         IReadOnlyCollection<ActivityException> exceptions, CancellationToken cancellationToken = default);
 
     /// <summary>Routes an activity-completion event.</summary>
@@ -37,8 +37,8 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     Task PublishRoutingSlipActivityCompletedAsync(string activityName, Guid executionId,
-        DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
-        IDictionary<string, object> data, CancellationToken cancellationToken = default);
+        DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> arguments,
+        IReadOnlyDictionary<string, object> data, CancellationToken cancellationToken = default);
 
     /// <summary>Routes an activity-failure event.</summary>
     /// <param name="activityName">The failed activity name.</param>
@@ -51,7 +51,7 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     Task PublishRoutingSlipActivityFaultedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
-        IDictionary<string, object> variables, IDictionary<string, object> arguments, CancellationToken cancellationToken = default);
+        IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> arguments, CancellationToken cancellationToken = default);
 
     /// <summary>Routes both the activity-level and routing-slip-level compensation failure events.</summary>
     /// <param name="activityName">The activity whose compensation failed.</param>
@@ -67,7 +67,7 @@ internal interface IRoutingSlipEventPublisher
     /// <returns>A task that completes after both failure events have been routed.</returns>
     Task PublishRoutingSlipActivityCompensationFailedAsync(string activityName, Guid executionId,
         DateTimeOffset timestamp, TimeSpan duration, DateTimeOffset failureTimestamp, TimeSpan routingSlipDuration,
-        ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default);
+        ExceptionInfo exceptionInfo, IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> data, CancellationToken cancellationToken = default);
 
     /// <summary>Routes an activity-compensation event.</summary>
     /// <param name="activityName">The compensated activity name.</param>
@@ -79,7 +79,7 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     Task PublishRoutingSlipActivityCompensatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
-        IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default);
+        IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> data, CancellationToken cancellationToken = default);
 
     /// <summary>Routes an itinerary-revision event.</summary>
     /// <param name="activityName">The activity that revised the itinerary.</param>
@@ -91,9 +91,9 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="previousItinerary">The discarded itinerary.</param>
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
-    Task PublishRoutingSlipRevisedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
-        IList<Activity> itinerary,
-        IList<Activity> previousItinerary, CancellationToken cancellationToken = default);
+    Task PublishRoutingSlipRevisedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables,
+        IEnumerable<Activity> itinerary,
+        IEnumerable<Activity> previousItinerary, CancellationToken cancellationToken = default);
 
     /// <summary>Routes a routing-slip termination event.</summary>
     /// <param name="activityName">The activity that terminated the routing slip.</param>
@@ -104,6 +104,6 @@ internal interface IRoutingSlipEventPublisher
     /// <param name="previousItinerary">The itinerary discarded by termination.</param>
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
-    Task PublishRoutingSlipTerminatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
-        IList<Activity> previousItinerary, CancellationToken cancellationToken = default);
+    Task PublishRoutingSlipTerminatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables,
+        IEnumerable<Activity> previousItinerary, CancellationToken cancellationToken = default);
 }

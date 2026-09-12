@@ -10,11 +10,11 @@ namespace ViciOne.ServiceBus.Logging;
 internal static class CourierLogContextExtensions
 {
     /// <summary>Starts tracing for an activity execution.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
+    /// <typeparam name="TActivity">The executing activity type recorded as the processor.</typeparam>
+    /// <typeparam name="TArguments">The execution-arguments contract recorded as the message contract.</typeparam>
+    /// <param name="logContext">The active logging context that enables this extension.</param>
+    /// <param name="context">The routing-slip delivery that supplies trace identity and tracking metadata.</param>
+    /// <returns>The started trace activity, or <see langword="null"/> when tracing is disabled.</returns>
     public static StartedActivity? StartExecuteActivity<TActivity, TArguments>(this ILogContext logContext,
         ConsumeContext<RoutingSlip> context)
         where TActivity : IExecuteActivity<TArguments>
@@ -29,11 +29,11 @@ internal static class CourierLogContextExtensions
     }
 
     /// <summary>Starts tracing for an activity compensation.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
+    /// <typeparam name="TActivity">The compensating activity type recorded as the processor.</typeparam>
+    /// <typeparam name="TLog">The compensation-log contract recorded as the message contract.</typeparam>
+    /// <param name="logContext">The active logging context that enables this extension.</param>
+    /// <param name="context">The routing-slip delivery that supplies trace identity and tracking metadata.</param>
+    /// <returns>The started trace activity, or <see langword="null"/> when tracing is disabled.</returns>
     public static StartedActivity? StartCompensateActivity<TActivity, TLog>(this ILogContext logContext,
         ConsumeContext<RoutingSlip> context)
         where TActivity : ICompensateActivity<TLog>
@@ -48,11 +48,11 @@ internal static class CourierLogContextExtensions
     }
 
     /// <summary>Starts metrics collection for an activity execution.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The metric operation produced by the operation.</returns>
+    /// <typeparam name="TActivity">The executing activity type.</typeparam>
+    /// <typeparam name="TArguments">The execution-arguments contract.</typeparam>
+    /// <param name="logContext">The active logging context used to start instrumentation.</param>
+    /// <param name="context">The routing-slip delivery measured by the operation.</param>
+    /// <returns>The execution metric operation, or <see langword="null"/> when metrics are disabled.</returns>
     public static MetricOperation? StartActivityExecuteInstrument<TActivity, TArguments>(this ILogContext logContext,
         ConsumeContext<RoutingSlip> context)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -60,11 +60,11 @@ internal static class CourierLogContextExtensions
         LogContextInstrumentationExtensions.StartProcess(logContext, context, "execute", "courier_execute");
 
     /// <summary>Starts metrics collection for an activity compensation.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The metric operation produced by the operation.</returns>
+    /// <typeparam name="TActivity">The compensating activity type.</typeparam>
+    /// <typeparam name="TLog">The compensation-log contract.</typeparam>
+    /// <param name="logContext">The active logging context used to start instrumentation.</param>
+    /// <param name="context">The routing-slip delivery measured by the operation.</param>
+    /// <returns>The compensation metric operation, or <see langword="null"/> when metrics are disabled.</returns>
     public static MetricOperation? StartActivityCompensateInstrument<TActivity, TLog>(this ILogContext logContext,
         ConsumeContext<RoutingSlip> context)
         where TActivity : class, ICompensateActivity<TLog>

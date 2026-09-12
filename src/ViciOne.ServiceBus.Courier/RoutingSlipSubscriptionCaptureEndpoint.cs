@@ -70,6 +70,7 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
     {
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(pipe);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var context = new RoutingSlipSendContext<T>(message, cancellationToken, _destinationAddress);
 
@@ -222,6 +223,7 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _observers.Connect(observer);
     }
 

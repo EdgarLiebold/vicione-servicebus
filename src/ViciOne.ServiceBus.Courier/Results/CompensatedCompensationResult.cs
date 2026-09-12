@@ -26,7 +26,7 @@ class CompensatedCompensationResult<TLog> :
         _duration = _compensateContext.Elapsed;
     }
 
-    protected IDictionary<string, object> Variables { get; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    protected Dictionary<string, object> Variables { get; } = new(StringComparer.OrdinalIgnoreCase);
     public async Task EvaluateAsync(CancellationToken cancellationToken = default)
     {
         var builder = CreateRoutingSlipBuilder(_routingSlip);

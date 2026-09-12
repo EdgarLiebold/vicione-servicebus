@@ -28,7 +28,7 @@ public abstract class ActivityDefinition<TActivity, TArguments, TLog> :
         }
     }
 
-    /// <summary>Gets or sets the compensate endpoint definition.</summary>
+    /// <summary>Gets or sets the endpoint definition applied to compensation messages for this activity.</summary>
     public IEndpointDefinition<ICompensateActivity<TLog>>? CompensateEndpointDefinition { get; set; }
 
     IEndpointDefinition? IActivityDefinition.CompensateEndpointDefinition => CompensateEndpointDefinition;
@@ -57,7 +57,7 @@ public abstract class ActivityDefinition<TActivity, TArguments, TLog> :
     Type IActivityDefinition.LogType => typeof(TLog);
 
     /// <summary>Overrides the generated compensation endpoint settings.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="configure">The optional callback that overrides generated compensation-endpoint settings.</param>
     protected void CompensateEndpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<ICompensateActivity<TLog>> { ConfigureConsumeTopology = false };
@@ -68,9 +68,9 @@ public abstract class ActivityDefinition<TActivity, TArguments, TLog> :
     }
 
     /// <summary>Configures the compensation activity pipeline on its receive endpoint.</summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
-    /// <param name="compensateActivityConfigurator">The compensate activity configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="endpointConfigurator">The receive endpoint that hosts compensation.</param>
+    /// <param name="compensateActivityConfigurator">The compensation pipeline to customize.</param>
+    /// <param name="context">The registration context used to resolve configuration dependencies.</param>
     protected virtual void ConfigureCompensateActivity(IReceiveEndpointConfigurator endpointConfigurator,
         ICompensateActivityConfigurator<TActivity, TLog> compensateActivityConfigurator, IRegistrationContext context)
     {

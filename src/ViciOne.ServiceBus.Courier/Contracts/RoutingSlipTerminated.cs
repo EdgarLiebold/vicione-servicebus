@@ -12,10 +12,10 @@ public interface RoutingSlipTerminated
     /// <summary>The execution that terminated the routing slip.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>The time when the routing slip was terminated.</summary>
+    /// <summary>The time when execution of the terminating activity started.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>The elapsed time from routing-slip creation through termination.</summary>
+    /// <summary>The duration of the terminating activity execution.</summary>
     TimeSpan Duration { get; }
 
     /// <summary>The name of the activity that terminated the routing slip.</summary>
@@ -27,8 +27,8 @@ public interface RoutingSlipTerminated
     /// <summary>
     /// The routing-slip variables at termination.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 
     /// <summary>The remainder of the itinerary that will not be executed by the routing slip engine.</summary>
-    Activity[] DiscardedItinerary { get; }
+    IReadOnlyList<Activity> DiscardedItinerary { get; }
 }

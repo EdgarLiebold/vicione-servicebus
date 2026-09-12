@@ -21,10 +21,10 @@ public sealed class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
     }
 
     /// <summary>Creates an activity for the supplied arguments and invokes the execution pipeline.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The routing-slip execution context containing the deserialized arguments.</param>
+    /// <param name="next">The activity-bound execution pipeline.</param>
+    /// <param name="cancellationToken">The token that cancels creation before the delegate is invoked.</param>
+    /// <returns>A task that completes after pipeline execution and disposal of the created activity.</returns>
     public async Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -55,8 +55,8 @@ public sealed class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
         }
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds this delegate-based factory to the pipeline probe graph.</summary>
+    /// <param name="context">The probe context that receives the factory scope.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

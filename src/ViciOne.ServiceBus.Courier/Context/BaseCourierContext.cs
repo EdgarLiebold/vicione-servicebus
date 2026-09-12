@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier;
@@ -8,7 +7,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for base courier operations.</summary>
+/// <summary>Provides timing, identity, variables, and event publication shared by activity host contexts.</summary>
 internal abstract class BaseCourierContext :
     ConsumeContextScope<RoutingSlip>,
     CourierContext
@@ -19,8 +18,8 @@ internal abstract class BaseCourierContext :
     readonly TimeProvider _timeProvider;
     readonly IReadOnlyDictionary<string, object> _variables;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <summary>Creates activity state from a received routing slip and its context-scoped clock.</summary>
+    /// <param name="consumeContext">The routing-slip consume context to isolate for activity execution.</param>
     protected BaseCourierContext(ConsumeContext<RoutingSlip> consumeContext)
         : base(consumeContext)
     {
@@ -29,20 +28,18 @@ internal abstract class BaseCourierContext :
 
         _timeProvider = consumeContext.GetTimeProvider();
         _startedAt = _timeProvider.GetTimestamp();
-        var newId = NewId.Next();
-
-        _executionId = newId.ToGuid();
-        _timestamp = newId.Timestamp;
+        _executionId = NewId.NextGuid();
+        _timestamp = _timeProvider.GetUtcNow();
 
         RoutingSlip = new SanitizedRoutingSlip(consumeContext);
-        _variables = new ReadOnlyDictionary<string, object>(RoutingSlip.Variables);
+        _variables = RoutingSlip.Variables;
 
         Publisher = new RoutingSlipEventPublisher(this, RoutingSlip);
     }
 
-    /// <summary>Gets the publisher.</summary>
+    /// <summary>Gets the publisher bound to this routing slip and consume context.</summary>
     protected IRoutingSlipEventPublisher Publisher { get; }
-    /// <summary>Gets the routing slip.</summary>
+    /// <summary>Gets the detached, validated routing-slip state used by this activity.</summary>
     protected SanitizedRoutingSlip RoutingSlip { get; }
 
     DateTimeOffset ActivityContext.Timestamp => _timestamp;
@@ -53,7 +50,7 @@ internal abstract class BaseCourierContext :
 
     RoutingSlip ConsumeContext<RoutingSlip>.Message => RoutingSlip;
 
-    /// <summary>Gets the activity name.</summary>
+    /// <summary>Gets the logical name of the activity represented by this context.</summary>
     public abstract string ActivityName { get; }
 
     Task ActivityContext.NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken)

@@ -21,8 +21,8 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
     readonly IContainerSelector _selector;
     IActivityDefinition<TActivity, TArguments, TLog> _definition = null!;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="selector">The selector.</param>
+    /// <summary>Creates registration metadata for a compensatable activity.</summary>
+    /// <param name="selector">The container integration used to resolve definitions and endpoint settings.</param>
     public ActivityRegistration(IContainerSelector selector)
     {
         _selector = selector ?? throw new ArgumentNullException(nameof(selector));
@@ -62,9 +62,9 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
     }
 
     /// <summary>Configures the paired execution and compensation endpoints.</summary>
-    /// <param name="executeEndpointConfigurator">The execute endpoint configurator.</param>
-    /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="executeEndpointConfigurator">The endpoint that receives activity executions.</param>
+    /// <param name="compensateEndpointConfigurator">The endpoint that receives activity compensations.</param>
+    /// <param name="context">The registration context used to resolve definitions and scoped services.</param>
     public void Configure(IReceiveEndpointConfigurator executeEndpointConfigurator, IReceiveEndpointConfigurator compensateEndpointConfigurator,
         IRegistrationContext context)
     {
@@ -83,8 +83,8 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
     }
 
     /// <summary>Configures the compensation endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configurator">The endpoint that receives activity compensations.</param>
+    /// <param name="context">The registration context used to resolve definitions and scoped services.</param>
     public void ConfigureCompensate(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -111,9 +111,9 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
     }
 
     /// <summary>Configures the execution endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="compensateAddress">The compensate address.</param>
+    /// <param name="configurator">The endpoint that receives activity executions.</param>
+    /// <param name="context">The registration context used to resolve definitions and scoped services.</param>
+    /// <param name="compensateAddress">The endpoint that compensates successful executions.</param>
     public void ConfigureExecute(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Uri compensateAddress)
     {

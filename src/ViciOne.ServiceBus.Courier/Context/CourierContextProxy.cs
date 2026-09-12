@@ -5,20 +5,19 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Defines the lifetime scope for courier context.</summary>
-internal abstract class CourierContextScope :
-    ConsumeContextScope<RoutingSlip>,
+/// <summary>Forwards routing-slip activity state and consume operations to an underlying Courier context.</summary>
+internal abstract class CourierContextProxy :
+    ConsumeContextProxy<RoutingSlip>,
     CourierContext
 {
     readonly CourierContext _courierContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="courierContext">The courier context.</param>
-    /// <param name="payloads">The payloads.</param>
-    protected CourierContextScope(CourierContext courierContext, params object[] payloads)
-        : base(courierContext, payloads)
+    /// <summary>Creates a forwarding view over an existing Courier context.</summary>
+    /// <param name="courierContext">The Courier context whose consume operations and activity state are forwarded.</param>
+    protected CourierContextProxy(CourierContext courierContext)
+        : base(courierContext ?? throw new ArgumentNullException(nameof(courierContext)))
     {
-        _courierContext = courierContext ?? throw new ArgumentNullException(nameof(courierContext));
+        _courierContext = courierContext;
     }
 
     DateTimeOffset ActivityContext.Timestamp => _courierContext.Timestamp;

@@ -12,9 +12,9 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="compensateAddress">The compensate address.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="compensateAddress">The companion endpoint that compensates completed executions.</param>
+    /// <param name="context">The bus registration context used to resolve scoped activity instances.</param>
+    /// <param name="configure">The optional callback that configures the activity execution pipeline.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, Uri compensateAddress,
         IRegistrationContext context, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -36,8 +36,8 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="context">The bus registration context used to resolve scoped activity instances.</param>
+    /// <param name="configure">The optional callback that configures the activity execution pipeline.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -58,8 +58,8 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="context">The bus registration context used to resolve scoped activity instances.</param>
+    /// <param name="configure">The optional callback that configures the activity compensation pipeline.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>

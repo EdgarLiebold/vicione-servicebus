@@ -1,17 +1,17 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Dispatches execute activity receive endpoint operations.</summary>
-/// <typeparam name="TActivity">The activity type.</typeparam>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <summary>Creates the dedicated receive dispatcher for one Courier execution activity.</summary>
+/// <typeparam name="TActivity">The activity registered on the endpoint.</typeparam>
+/// <typeparam name="TArguments">The activity's execution-arguments contract.</typeparam>
 internal sealed class ExecuteActivityReceiveEndpointDispatcher<TActivity, TArguments> :
     ITypeReceiveEndpointDispatcherFactory
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    /// <summary>Creates the requested value.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="formatter">The formatter.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Creates a dispatcher whose queue name and endpoint configuration belong to the activity contract.</summary>
+    /// <param name="factory">The factory that owns and caches receive dispatchers.</param>
+    /// <param name="formatter">The formatter used to derive the execution endpoint name.</param>
+    /// <returns>The dispatcher for the activity's execution endpoint.</returns>
     public IReceiveEndpointDispatcher Create(IReceiveEndpointDispatcherFactory factory, IEndpointNameFormatter formatter)
     {
         ArgumentNullException.ThrowIfNull(factory);

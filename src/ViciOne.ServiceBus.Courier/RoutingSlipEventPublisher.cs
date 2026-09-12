@@ -51,7 +51,7 @@ internal sealed class RoutingSlipEventPublisher :
         _host = HostMetadataCache.Host;
     }
 
-    static IDictionary<string, object> CreateEmptyObject() => new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    static IReadOnlyDictionary<string, object> CreateEmptyObject() => new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>Routes the terminal completion event.</summary>
     /// <param name="timestamp">The completion timestamp.</param>
@@ -59,7 +59,7 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="variables">The final routing-slip variables.</param>
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
-    public Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, CancellationToken cancellationToken = default)
+    public Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
         ArgumentNullException.ThrowIfNull(variables);
@@ -81,7 +81,7 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="exceptions">The recorded activity failures.</param>
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
-    public Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
+    public Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables,
         IReadOnlyCollection<ActivityException> exceptions, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
@@ -110,8 +110,8 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipActivityCompletedAsync(string activityName, Guid executionId,
-        DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
-        IDictionary<string, object> data, CancellationToken cancellationToken = default)
+        DateTimeOffset timestamp, TimeSpan duration, IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> arguments,
+        IReadOnlyDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
         ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
@@ -145,7 +145,7 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipActivityFaultedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
-        IDictionary<string, object> variables, IDictionary<string, object> arguments, CancellationToken cancellationToken = default)
+        IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> arguments, CancellationToken cancellationToken = default)
     {
         ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(exceptionInfo);
@@ -178,7 +178,7 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipActivityCompensatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
-        IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default)
+        IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
         ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
@@ -210,8 +210,8 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipRevisedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
-        IDictionary<string, object> variables,
-        IList<Activity> itinerary, IList<Activity> previousItinerary, CancellationToken cancellationToken = default)
+        IReadOnlyDictionary<string, object> variables,
+        IEnumerable<Activity> itinerary, IEnumerable<Activity> previousItinerary, CancellationToken cancellationToken = default)
     {
         ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
@@ -244,8 +244,8 @@ internal sealed class RoutingSlipEventPublisher :
     /// <param name="cancellationToken">The token that cancels event delivery.</param>
     /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipTerminatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
-        IDictionary<string, object> variables,
-        IList<Activity> previousItinerary, CancellationToken cancellationToken = default)
+        IReadOnlyDictionary<string, object> variables,
+        IEnumerable<Activity> previousItinerary, CancellationToken cancellationToken = default)
     {
         ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
@@ -280,7 +280,7 @@ internal sealed class RoutingSlipEventPublisher :
     /// <returns>A task that completes after both failure events have been routed.</returns>
     public Task PublishRoutingSlipActivityCompensationFailedAsync(string activityName, Guid executionId,
         DateTimeOffset timestamp, TimeSpan duration, DateTimeOffset failureTimestamp, TimeSpan routingSlipDuration,
-        ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default)
+        ExceptionInfo exceptionInfo, IReadOnlyDictionary<string, object> variables, IReadOnlyDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
         ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentOutOfRangeException.ThrowIfLessThan(routingSlipDuration, TimeSpan.Zero);

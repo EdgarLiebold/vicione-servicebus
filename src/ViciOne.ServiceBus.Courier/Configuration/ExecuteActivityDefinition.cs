@@ -13,7 +13,7 @@ public abstract class ExecuteActivityDefinition<TActivity, TArguments> :
     int? _concurrentMessageLimit;
     string? _executeEndpointName;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an activity definition that initially uses generated endpoint settings.</summary>
     protected ExecuteActivityDefinition()
     {
     }
@@ -31,7 +31,7 @@ public abstract class ExecuteActivityDefinition<TActivity, TArguments> :
         }
     }
 
-    /// <summary>Gets or sets the execute endpoint definition.</summary>
+    /// <summary>Gets or sets the endpoint definition applied to execution messages for this activity.</summary>
     public IEndpointDefinition<IExecuteActivity<TArguments>>? ExecuteEndpointDefinition { get; set; }
 
     IEndpointDefinition? IExecuteActivityDefinition.ExecuteEndpointDefinition => ExecuteEndpointDefinition;
@@ -74,7 +74,7 @@ public abstract class ExecuteActivityDefinition<TActivity, TArguments> :
     Type IExecuteActivityDefinition.ArgumentType => typeof(TArguments);
 
     /// <summary>Overrides the generated execution endpoint settings.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="configure">The optional callback that overrides generated execution-endpoint settings.</param>
     protected void ExecuteEndpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
@@ -85,9 +85,9 @@ public abstract class ExecuteActivityDefinition<TActivity, TArguments> :
     }
 
     /// <summary>Configures the activity execution pipeline on its receive endpoint.</summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
-    /// <param name="executeActivityConfigurator">The execute activity configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="endpointConfigurator">The receive endpoint that hosts execution.</param>
+    /// <param name="executeActivityConfigurator">The execution pipeline to customize.</param>
+    /// <param name="context">The registration context used to resolve configuration dependencies.</param>
     protected virtual void ConfigureExecuteActivity(IReceiveEndpointConfigurator endpointConfigurator,
         IExecuteActivityConfigurator<TActivity, TArguments> executeActivityConfigurator, IRegistrationContext context)
     {

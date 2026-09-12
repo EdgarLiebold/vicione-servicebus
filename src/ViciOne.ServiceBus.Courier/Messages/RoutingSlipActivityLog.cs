@@ -17,7 +17,7 @@ internal sealed class RoutingSlipActivityLog :
     /// <param name="host">The host that executed the activity.</param>
     /// <param name="executionId">The non-empty activity execution identifier.</param>
     /// <param name="name">The non-empty activity name.</param>
-    /// <param name="timestamp">The activity completion timestamp.</param>
+    /// <param name="timestamp">The time when activity execution started.</param>
     /// <param name="duration">The non-negative activity duration.</param>
     public RoutingSlipActivityLog(HostInfo host, Guid executionId, string name, DateTimeOffset timestamp, TimeSpan duration)
     {
@@ -60,7 +60,7 @@ internal sealed class RoutingSlipActivityLog :
     public Guid ExecutionId { get; set; }
     /// <summary>Gets or sets the activity name.</summary>
     public string Name { get; set; } = null!;
-    /// <summary>Gets or sets the activity completion timestamp.</summary>
+    /// <summary>Gets or sets the time when activity execution started.</summary>
     public DateTimeOffset Timestamp { get; set; }
     /// <summary>Gets or sets the activity duration.</summary>
     public TimeSpan Duration { get; set; }

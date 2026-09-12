@@ -9,10 +9,10 @@ public interface RoutingSlipActivityFaulted
     /// <summary>The tracking number of the routing slip that faulted.</summary>
     Guid TrackingNumber { get; }
 
-    /// <summary>The tracking number of this activity execution.</summary>
+    /// <summary>The identifier of this activity execution.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>The time when activity execution faulted.</summary>
+    /// <summary>The time when activity execution started.</summary>
     DateTimeOffset Timestamp { get; }
 
     /// <summary>The duration of the activity execution.</summary>
@@ -28,10 +28,10 @@ public interface RoutingSlipActivityFaulted
     ExceptionInfo ExceptionInfo { get; }
 
     /// <summary>The arguments that were specified for the activity at execution.</summary>
-    IDictionary<string, object> Arguments { get; }
+    IReadOnlyDictionary<string, object> Arguments { get; }
 
     /// <summary>
     /// The routing-slip variables at the point the activity faulted.
     /// </summary>
-    IDictionary<string, object> Variables { get; }
+    IReadOnlyDictionary<string, object> Variables { get; }
 }

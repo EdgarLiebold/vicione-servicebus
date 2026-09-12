@@ -9,7 +9,7 @@ public static class RoutingSlipEventExtensions
 {
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing slip.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -21,7 +21,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing slip.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -33,7 +33,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed compensation result.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensated event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The result.</returns>
@@ -45,7 +45,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed compensation result.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensated event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The result.</returns>
@@ -57,7 +57,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensated event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -69,7 +69,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensated event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -81,7 +81,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed compensation-failure result.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensation-failed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The result.</returns>
@@ -93,7 +93,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed compensation-failure result.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensation-failed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The result.</returns>
@@ -105,7 +105,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensation-failed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -117,7 +117,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-compensation-failed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -127,9 +127,9 @@ public static class RoutingSlipEventExtensions
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed activity argument, with routing-slip variables applied as overrides.</summary>
+    /// <summary>Gets a typed activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The argument.</returns>
@@ -139,9 +139,9 @@ public static class RoutingSlipEventExtensions
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed activity argument, with routing-slip variables applied as overrides.</summary>
+    /// <summary>Gets a typed activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The argument.</returns>
@@ -153,7 +153,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed activity result.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The result.</returns>
@@ -165,7 +165,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed activity result.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The result.</returns>
@@ -177,7 +177,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -189,7 +189,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -199,9 +199,9 @@ public static class RoutingSlipEventExtensions
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed faulted-activity argument, with routing-slip variables applied as overrides.</summary>
+    /// <summary>Gets a typed faulted-activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The argument.</returns>
@@ -211,9 +211,9 @@ public static class RoutingSlipEventExtensions
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed faulted-activity argument, with routing-slip variables applied as overrides.</summary>
+    /// <summary>Gets a typed faulted-activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The argument.</returns>
@@ -225,7 +225,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -237,7 +237,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received activity-faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -249,7 +249,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip compensation-failed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -261,7 +261,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip compensation-failed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -273,7 +273,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -285,7 +285,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -297,7 +297,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -309,11 +309,35 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipFaulted> context, string key, T? defaultValue = null)
+        where T : struct
+    {
+        return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
+    }
+
+    /// <summary>Gets a reference-valued variable from a routing-slip revision event.</summary>
+    /// <typeparam name="T">The requested reference type.</typeparam>
+    /// <param name="context">The received revision event.</param>
+    /// <param name="key">The variable key.</param>
+    /// <param name="defaultValue">The value returned when the key is absent or cannot produce a value.</param>
+    /// <returns>The converted variable or <paramref name="defaultValue" />.</returns>
+    public static T? GetVariable<T>(this ConsumeContext<RoutingSlipRevised> context, string key, T? defaultValue = null)
+        where T : class
+    {
+        return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
+    }
+
+    /// <summary>Gets a value-typed variable from a routing-slip revision event.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="context">The received revision event.</param>
+    /// <param name="key">The variable key.</param>
+    /// <param name="defaultValue">The value returned when the key is absent or cannot produce a value.</param>
+    /// <returns>The converted variable or <paramref name="defaultValue" />.</returns>
+    public static T? GetVariable<T>(this ConsumeContext<RoutingSlipRevised> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
@@ -321,7 +345,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip terminated event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -333,7 +357,7 @@ public static class RoutingSlipEventExtensions
 
     /// <summary>Gets a typed routing-slip variable.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The received routing-slip terminated event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
     /// <returns>The variable.</returns>
@@ -343,15 +367,15 @@ public static class RoutingSlipEventExtensions
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    static T? GetDictionaryValue<T>(IObjectDeserializer context, IDictionary<string, object>? arguments, IDictionary<string, object>? variables,
+    static T? GetDictionaryValue<T>(IObjectDeserializer context, IReadOnlyDictionary<string, object>? arguments, IReadOnlyDictionary<string, object>? variables,
         string key, T? defaultValue = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
-        IDictionary<string, object>? argumentsDictionary = variables?.Count > 0
-            ? arguments?.Count > 0 ? variables.MergeLeft(arguments) : variables
+        IReadOnlyDictionary<string, object>? argumentsDictionary = variables?.Count > 0
+            ? arguments?.Count > 0 ? Merge(variables, arguments) : variables
             : arguments;
 
         if (argumentsDictionary == null)
@@ -360,20 +384,34 @@ public static class RoutingSlipEventExtensions
         return context.GetValue(argumentsDictionary, key, defaultValue);
     }
 
-    static T? GetDictionaryValue<T>(IObjectDeserializer context, IDictionary<string, object>? arguments, IDictionary<string, object>? variables,
+    static T? GetDictionaryValue<T>(IObjectDeserializer context, IReadOnlyDictionary<string, object>? arguments, IReadOnlyDictionary<string, object>? variables,
         string key, T? defaultValue = null)
         where T : struct
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
-        IDictionary<string, object>? argumentsDictionary = variables?.Count > 0
-            ? arguments?.Count > 0 ? variables.MergeLeft(arguments) : variables
+        IReadOnlyDictionary<string, object>? argumentsDictionary = variables?.Count > 0
+            ? arguments?.Count > 0 ? Merge(variables, arguments) : variables
             : arguments;
 
         if (argumentsDictionary == null)
             return defaultValue;
 
         return context.GetValue(argumentsDictionary, key, defaultValue);
+    }
+
+    static IReadOnlyDictionary<string, object> Merge(
+        IReadOnlyDictionary<string, object> variables,
+        IReadOnlyDictionary<string, object> arguments)
+    {
+        var values = new Dictionary<string, object>(variables, StringComparer.OrdinalIgnoreCase);
+        foreach ((string key, object? value) in arguments)
+        {
+            if (value is not null || !values.ContainsKey(key))
+                values[key] = value!;
+        }
+
+        return values;
     }
 }

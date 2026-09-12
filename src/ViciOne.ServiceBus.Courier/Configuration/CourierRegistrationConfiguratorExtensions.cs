@@ -9,7 +9,7 @@ public static class CourierRegistrationConfiguratorExtensions
 {
     /// <summary>Adds Courier runtime services and message-correlation conventions to this bus registration.</summary>
     /// <param name="configurator">The configurator to update.</param>
-    /// <returns>The registration configurator produced by the operation.</returns>
+    /// <returns>The same registration configurator for fluent composition.</returns>
     public static IRegistrationConfigurator AddCourier(this IRegistrationConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -22,7 +22,7 @@ public static class CourierRegistrationConfiguratorExtensions
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The optional action that configures the execution pipeline.</param>
-    /// <returns>The execute activity registration configurator produced by the operation.</returns>
+    /// <returns>A configurator for the registered execution-only activity.</returns>
     public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
         this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
@@ -36,7 +36,7 @@ public static class CourierRegistrationConfiguratorExtensions
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="executeActivityDefinitionType">The runtime execute activity definition type used by the operation.</param>
     /// <param name="configure">The optional action that configures the execution pipeline.</param>
-    /// <returns>The execute activity registration configurator produced by the operation.</returns>
+    /// <returns>A configurator for the registered execution-only activity.</returns>
     public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
         this IRegistrationConfigurator configurator, Type? executeActivityDefinitionType,
         Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
@@ -59,7 +59,7 @@ public static class CourierRegistrationConfiguratorExtensions
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configureExecute">The optional action that configures the execution pipeline.</param>
     /// <param name="configureCompensate">The optional action that configures the compensation pipeline.</param>
-    /// <returns>The activity registration configurator produced by the operation.</returns>
+    /// <returns>A configurator for the registered compensatable activity.</returns>
     public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
         this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
@@ -77,7 +77,7 @@ public static class CourierRegistrationConfiguratorExtensions
     /// <param name="activityDefinitionType">The runtime activity definition type used by the operation.</param>
     /// <param name="configureExecute">The optional action that configures the execution pipeline.</param>
     /// <param name="configureCompensate">The optional action that configures the compensation pipeline.</param>
-    /// <returns>The activity registration configurator produced by the operation.</returns>
+    /// <returns>A configurator for the registered compensatable activity.</returns>
     public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
         this IRegistrationConfigurator configurator, Type? activityDefinitionType,
         Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,

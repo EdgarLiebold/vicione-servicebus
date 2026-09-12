@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines configuration for compensate activity endpoint.</summary>
+/// <summary>Applies explicit endpoint settings and Courier naming to an activity compensation endpoint.</summary>
 /// <typeparam name="TActivity">The activity type.</typeparam>
 /// <typeparam name="TLog">The log type.</typeparam>
 internal sealed class CompensateActivityEndpointDefinition<TActivity, TLog> :
@@ -8,17 +8,17 @@ internal sealed class CompensateActivityEndpointDefinition<TActivity, TLog> :
     where TActivity : class, ICompensateActivity<TLog>
     where TLog : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="settings">The settings that control the operation.</param>
+    /// <summary>Creates a compensation endpoint definition from registration settings.</summary>
+    /// <param name="settings">The endpoint settings to apply.</param>
     public CompensateActivityEndpointDefinition(IEndpointSettings<IEndpointDefinition<ICompensateActivity<TLog>>> settings)
         : base(settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
     }
 
-    /// <summary>Formats endpoint name.</summary>
-    /// <param name="formatter">The formatter.</param>
-    /// <returns>The formatted endpoint name.</returns>
+    /// <summary>Derives the compensation endpoint name from the activity and log contracts.</summary>
+    /// <param name="formatter">The application endpoint-name formatter.</param>
+    /// <returns>The formatted compensation endpoint name.</returns>
     protected override string FormatEndpointName(IEndpointNameFormatter formatter)
     {
         ArgumentNullException.ThrowIfNull(formatter);

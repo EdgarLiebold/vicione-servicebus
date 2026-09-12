@@ -107,8 +107,10 @@ public sealed class RoutingSlipEventPublisherContractTests
         Assert.NotSame(messages[0].Variables, messages[1].Variables);
         Assert.NotSame(messages[0].Data, messages[1].Data);
 
-        messages[0].Variables["poison"] = true;
-        messages[0].Data["poison"] = true;
+        var firstVariables = Assert.IsAssignableFrom<IDictionary<string, object>>(messages[0].Variables);
+        var firstData = Assert.IsAssignableFrom<IDictionary<string, object>>(messages[0].Data);
+        Assert.Throws<NotSupportedException>(() => firstVariables["poison"] = true);
+        Assert.Throws<NotSupportedException>(() => firstData["poison"] = true);
 
         Assert.Empty(messages[1].Variables);
         Assert.Empty(messages[1].Data);

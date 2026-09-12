@@ -12,30 +12,34 @@ internal sealed class ScopeExecuteActivityFactory<TActivity, TArguments> :
 {
     readonly IExecuteActivityScopeProvider<TActivity, TArguments> _scopeProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="scopeProvider">The scope provider.</param>
+    /// <summary>Initializes the factory with the provider that owns execution scopes.</summary>
+    /// <param name="scopeProvider">The provider used to resolve an activity and its execution scope.</param>
     public ScopeExecuteActivityFactory(IExecuteActivityScopeProvider<TActivity, TArguments> scopeProvider)
     {
         _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
     }
 
-    /// <summary>Runs the configured action.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Resolves a scoped activity, invokes its pipeline, and releases the scope after completion.</summary>
+    /// <param name="context">The execution context for which an activity is resolved.</param>
+    /// <param name="next">The activity pipeline invoked within the acquired scope.</param>
+    /// <param name="cancellationToken">The token that cancels scope acquisition before the pipeline starts.</param>
+    /// <returns>A task that completes after the activity pipeline and scope disposal finish.</returns>
     public async Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        await using IExecuteActivityScopeContext<TActivity, TArguments> scope = await _scopeProvider.GetActivityScopeAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IExecuteActivityScopeContext<TActivity, TArguments> acquiredScope =
+            await _scopeProvider.GetActivityScopeAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The execute activity scope provider returned null.");
+        await using IExecuteActivityScopeContext<TActivity, TArguments> scope = acquiredScope;
 
         await next.SendAsync(scope.Context).ConfigureAwait(false);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds this scoped factory and its scope provider to the pipeline probe graph.</summary>
+    /// <param name="context">The probe context that receives the factory scope.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

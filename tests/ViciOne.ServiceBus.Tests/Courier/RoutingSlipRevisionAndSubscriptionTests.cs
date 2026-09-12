@@ -111,6 +111,59 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-TERMINATION", "terminate-discards-source-itinerary-and-publishes-terminal-state")]
+    public async Task Termination_DiscardsTheRemainingItineraryAndPublishesItsTerminalStateAsync()
+    {
+        TimeSpan timeout = CourierTestSupport.OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var executionOrder = new ConcurrentQueue<string>();
+        using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-termination");
+        ExecuteActivityTestHarness<TerminatingActivity, RevisionArguments> terminating = harness.ExecuteActivity<
+            TerminatingActivity,
+            RevisionArguments>();
+        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> remaining = harness.ExecuteActivity<
+            RecordingRevisionActivity,
+            RevisionArguments>(_ => new RecordingRevisionActivity(executionOrder));
+        using var terminated = new CourierMessageRecorder<RoutingSlipTerminated>(1);
+        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        terminated.Configure(harness);
+        activityCompleted.Configure(harness);
+        completed.Configure(harness);
+        await harness.StartAsync(cancellationToken);
+
+        try
+        {
+            Guid trackingNumber = NewId.NextGuid();
+            var builder = new RoutingSlipBuilder(trackingNumber);
+            builder.AddActivity(terminating.Name, terminating.ExecuteAddress, new RevisionArguments("terminate"));
+            builder.AddActivity("Discarded", remaining.ExecuteAddress, new RevisionArguments("must-not-run"));
+
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
+            await Task.WhenAll(
+                terminated.WaitAsync(timeout, cancellationToken),
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+
+            Assert.Empty(executionOrder);
+            ConsumeContext<RoutingSlipTerminated> terminal = Assert.Single(terminated.Messages);
+            Assert.Equal(trackingNumber, terminal.Message.TrackingNumber);
+            Assert.Equal(terminating.Name, terminal.Message.ActivityName);
+            Assert.Equal("terminated", terminal.Message.Variables["Outcome"]);
+            Activity discarded = Assert.Single(terminal.Message.DiscardedItinerary);
+            Assert.Equal("Discarded", discarded.Name);
+            Assert.Equal(remaining.ExecuteAddress, discarded.Address);
+            Assert.Single(activityCompleted.Messages);
+            Assert.Single(completed.Messages);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION", "activity-added-subscription")]
     public async Task RevisionAddedSubscription_ReceivesTheAppendedActivityAndTerminalCompletionAsync()
     {
@@ -296,6 +349,12 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
                     RoutingSlipEventContents.All,
                     "Subscribed");
             }));
+    }
+
+    public sealed class TerminatingActivity : IExecuteActivity<RevisionArguments>
+    {
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RevisionArguments> context) =>
+            Task.FromResult(context.Terminate(new { Outcome = "terminated" }));
     }
 
     public sealed record CustomEventArguments(string Value);

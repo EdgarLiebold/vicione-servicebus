@@ -26,7 +26,7 @@ internal sealed class RoutingSlipRoutingSlip :
     /// <param name="subscriptions">The lifecycle-event subscriptions.</param>
     public RoutingSlipRoutingSlip(Guid trackingNumber, DateTimeOffset createTimestamp, IEnumerable<Activity> activities,
         IEnumerable<ActivityLog> activityLogs, IEnumerable<CompensateLog> compensateLogs, IEnumerable<ActivityException> exceptions,
-        IDictionary<string, object> variables, IEnumerable<Subscription> subscriptions)
+        IEnumerable<KeyValuePair<string, object>> variables, IEnumerable<Subscription> subscriptions)
     {
         if (trackingNumber == Guid.Empty)
             throw new ArgumentException("The routing-slip tracking number cannot be empty.", nameof(trackingNumber));
@@ -52,15 +52,15 @@ internal sealed class RoutingSlipRoutingSlip :
     /// <summary>Gets or sets the routing-slip creation timestamp.</summary>
     public DateTimeOffset CreateTimestamp { get; set; }
     /// <summary>Gets or sets the remaining itinerary.</summary>
-    public IList<Activity> Itinerary { get; set; } = null!;
+    public IReadOnlyList<Activity> Itinerary { get; set; } = null!;
     /// <summary>Gets or sets the completed activity records.</summary>
-    public IList<ActivityLog> ActivityLogs { get; set; } = null!;
+    public IReadOnlyList<ActivityLog> ActivityLogs { get; set; } = null!;
     /// <summary>Gets or sets the pending compensation records.</summary>
-    public IList<CompensateLog> CompensateLogs { get; set; } = null!;
+    public IReadOnlyList<CompensateLog> CompensateLogs { get; set; } = null!;
     /// <summary>Gets or sets the routing-slip variables.</summary>
-    public IDictionary<string, object> Variables { get; set; } = null!;
+    public IReadOnlyDictionary<string, object> Variables { get; set; } = null!;
     /// <summary>Gets or sets the activity failure records.</summary>
-    public IList<ActivityException> ActivityExceptions { get; set; } = null!;
+    public IReadOnlyList<ActivityException> ActivityExceptions { get; set; } = null!;
     /// <summary>Gets or sets the lifecycle-event subscriptions.</summary>
-    public IList<Subscription> Subscriptions { get; set; } = null!;
+    public IReadOnlyList<Subscription> Subscriptions { get; set; } = null!;
 }
