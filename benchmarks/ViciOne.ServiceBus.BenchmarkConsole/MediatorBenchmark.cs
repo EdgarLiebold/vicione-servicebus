@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.BenchmarkConsole;
 
@@ -28,8 +29,9 @@ public class MediatorBenchmark
     [GlobalSetup]
     public void Setup()
     {
-        _mediator = Bus.Factory.CreateMediator(cfg =>
+        _mediator = MediatorFactory.Create(cfg =>
         {
+            cfg.Limits(MessageLimits.Conservative);
             cfg.Consumer<ExampleCommandHandler>();
         });
 

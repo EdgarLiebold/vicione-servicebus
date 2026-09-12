@@ -29,7 +29,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
             return new MediatorRegistrationContext(registration);
         }
 
-        collection.AddSingleton(e => MediatorFactory(e, baseAddress));
+        collection.AddSingleton(provider => CreateMediator(provider, baseAddress));
         collection.AddSingleton(CreateRegistrationContext);
 
         AddViciOneServiceBusComponents(collection);
@@ -76,7 +76,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
         });
     }
 
-    IMediator MediatorFactory(IServiceProvider provider, Uri? baseAddress)
+    IMediator CreateMediator(IServiceProvider provider, Uri? baseAddress)
     {
         ConfigureLogContext(provider);
 
@@ -85,8 +85,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
             ?? throw new ConfigurationException(
                 "Message limits for bus 'mediator': MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.");
 
-        return Bus.Factory.CreateMediator(
-            baseAddress,
+        return MediatorFactory.Create(
             cfg =>
             {
                 cfg.Limits(limits);
@@ -94,6 +93,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
 
                 context.ConfigureConsumerKinds(cfg);
             },
-            provider.GetService<TimeProvider>() ?? TimeProvider.System);
+            baseAddress,
+            provider.GetService<TimeProvider>());
     }
 }

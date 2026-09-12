@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -16,7 +17,7 @@ public sealed class ExpiredForwardingMediatorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observer = new CountingSendObserver();
         var deliveryCount = 0;
-        var mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
+        var mediator = MediatorFactory.Create(configuration => configuration.Limits(MessageLimits.Conservative));
         using ConnectHandle observerHandle = mediator.ConnectSendObserver(observer);
         using ConnectHandle handlerHandle = mediator.ConnectHandler<ForwardMessage>(async context =>
         {

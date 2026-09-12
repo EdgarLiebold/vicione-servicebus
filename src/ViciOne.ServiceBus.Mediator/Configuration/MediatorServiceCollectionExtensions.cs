@@ -17,6 +17,7 @@ public static class MediatorServiceCollectionExtensions
         Action<IMediatorRegistrationConfigurator>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(services);
+        MediatorFactory.ValidateBaseAddress(baseAddress);
         if (services.Any(descriptor => descriptor.ServiceType == typeof(IMediator)))
         {
             throw new ConfigurationException(

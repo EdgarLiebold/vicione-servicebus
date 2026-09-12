@@ -16,7 +16,7 @@ public sealed class MediatorDispatchTests
     public void MissingLimits_FailsBeforeDirectAndContainerMediatorMaterialization()
     {
         ConfigurationException direct = Assert.Throws<ConfigurationException>(() =>
-            Bus.Factory.CreateMediator(_ => { }));
+            MediatorFactory.Create(_ => { }));
         using ServiceProvider provider = new ServiceCollection()
             .AddMediator(_ => { })
             .BuildServiceProvider();
@@ -35,7 +35,7 @@ public sealed class MediatorDispatchTests
     {
         var invocations = 0;
 
-        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
         {
             Interlocked.Increment(ref invocations);
             configuration.Limits(MessageLimits.Conservative);
@@ -48,7 +48,7 @@ public sealed class MediatorDispatchTests
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "custom-request-address-preserved")]
     public async Task CustomRequestEndpoint_PreservesItsLogicalDestinationAsync()
     {
-        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
         {
             configuration.Limits(MessageLimits.Conservative);
             configuration.Handler<AddressedRequest>(context =>
@@ -71,7 +71,7 @@ public sealed class MediatorDispatchTests
     public async Task OversizedSerializedBody_IsRejectedBeforeMediatorDispatchAsync()
     {
         var handled = 0;
-        IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        IMediator mediator = MediatorFactory.Create(configuration =>
         {
             configuration.Limits(new MessageLimits { MaxBodyBytes = 64, MaxEnvelopeBytes = 64, MaxJsonDepth = 32 });
             configuration.Handler<DispatchMessage>(_ =>
@@ -92,6 +92,30 @@ public sealed class MediatorDispatchTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "logical-request-address-in-admission-failure")]
+    public async Task OversizedRequest_ReportsItsLogicalDestinationAddressAsync()
+    {
+        var logicalAddress = new Uri("loopback://localhost/logical-oversized-request");
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
+            configuration.Limits(new MessageLimits { MaxBodyBytes = 64, MaxEnvelopeBytes = 64, MaxJsonDepth = 32 }));
+        using RequestHandle<DispatchMessage> request = mediator.CreateRequest(
+            logicalAddress,
+            new DispatchMessage(new string('x', 256)),
+            new RequestTimeout(OperationTimeout()),
+            TestContext.Current.CancellationToken);
+        Task<Response<AddressedResponse>> response = request.GetResponseAsync<AddressedResponse>(
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        MessageTooLargeException sendFailure = await Assert.ThrowsAsync<MessageTooLargeException>(() =>
+            request.Message.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+        RequestException responseFailure = await Assert.ThrowsAsync<RequestException>(() =>
+            response.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+
+        Assert.Equal(logicalAddress, sendFailure.EndpointAddress);
+        Assert.Same(sendFailure, responseFailure.InnerException);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "exact-byte-limit-is-accepted")]
     public async Task SerializedBody_AtTheExactByteLimitIsDispatchedAsync()
     {
@@ -99,7 +123,7 @@ public sealed class MediatorDispatchTests
         var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options) { MaxDepth = 32 };
         int exactLength = JsonSerializer.SerializeToUtf8Bytes(message, options).Length;
         MessageBody? observed = null;
-        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
         {
             configuration.Limits(new MessageLimits
             {
@@ -129,7 +153,7 @@ public sealed class MediatorDispatchTests
     {
         MessageBody? observed = null;
         var message = new MutableDispatchMessage { Value = "before" };
-        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
         {
             configuration.Limits(MessageLimits.Conservative);
             configuration.Handler<MutableDispatchMessage>(context =>
@@ -172,7 +196,7 @@ public sealed class MediatorDispatchTests
     public async Task JsonDepth_AllowsTheConfiguredDepthAndRejectsTheNextLevelAsync()
     {
         var handled = 0;
-        IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        IMediator mediator = MediatorFactory.Create(configuration =>
         {
             configuration.Limits(new MessageLimits { MaxBodyBytes = 4096, MaxEnvelopeBytes = 4096, MaxJsonDepth = 3 });
             configuration.Handler<DepthMessage>(_ =>
@@ -236,7 +260,7 @@ public sealed class MediatorDispatchTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
+        IMediator mediator = MediatorFactory.Create(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         var received = 0;
         var first = new DispatchMessage("first");
@@ -268,7 +292,7 @@ public sealed class MediatorDispatchTests
         var publishedCount = 0;
         var sent = new SentMessage(NewId.NextGuid());
         var published = new PublishedMessage(NewId.NextGuid());
-        IMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        IMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<SentMessage>(context =>
@@ -299,7 +323,7 @@ public sealed class MediatorDispatchTests
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new MediatorDispatchException("handler failed");
-        IMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        IMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<DispatchMessage>(_ => throw expected);
@@ -320,7 +344,7 @@ public sealed class MediatorDispatchTests
         using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         var entered = NewSignal();
         var never = NewSignal();
-        IMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        IMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<DispatchMessage>(async context =>
@@ -347,7 +371,7 @@ public sealed class MediatorDispatchTests
         using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         var entered = NewSignal();
         var never = NewSignal();
-        IMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        IMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<RequestMessage>(async context =>
@@ -378,7 +402,7 @@ public sealed class MediatorDispatchTests
     public async Task PublishWithoutConsumer_UsesTheMandatoryBoundaryAsync(bool mandatory)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
+        IMediator mediator = MediatorFactory.Create(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
         Task publish = mediator.PublishAsync(

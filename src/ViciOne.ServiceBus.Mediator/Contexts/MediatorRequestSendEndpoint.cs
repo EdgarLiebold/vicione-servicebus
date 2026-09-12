@@ -22,9 +22,7 @@ internal sealed class MediatorRequestSendEndpoint<TRequest> :
         _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
     }
 
-    /// <summary>Returns the mediator send endpoint.</summary>
-    /// <param name="cancellationToken">Cancels endpoint resolution before the endpoint is returned.</param>
-    /// <returns>A completed task containing the mediator endpoint.</returns>
+    /// <inheritdoc />
     protected override Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();

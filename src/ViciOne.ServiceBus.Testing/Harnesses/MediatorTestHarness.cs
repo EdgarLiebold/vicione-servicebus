@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Mediator;
@@ -9,11 +10,16 @@ namespace ViciOne.ServiceBus.Testing;
 /// <summary>Hosts an isolated in-process mediator and records its consume, publish, and send activity.</summary>
 public class MediatorTestHarness :
     AsyncTestHarness,
-    IBaseTestHarness
+    IBaseTestHarness,
+    IAsyncDisposable
 {
+    ConnectHandle? _consumeObserverConnection;
     BusTestConsumeObserver? _consumed;
+    int _disposed;
     IMediator? _mediator;
+    ConnectHandle? _publishObserverConnection;
     BusTestPublishObserver? _published;
+    ConnectHandle? _sendObserverConnection;
     BusTestSendObserver? _sent;
 
     /// <summary>Creates a mediator harness that uses the system clock.</summary>
@@ -65,10 +71,11 @@ public class MediatorTestHarness :
 
     /// <summary>Creates the mediator and attaches harness observers.</summary>
     /// <param name="cancellationToken">The token checked before mediator creation.</param>
-    /// <returns>A completed task after the mediator is ready.</returns>
-    public virtual Task StartAsync(CancellationToken cancellationToken = default)
+    /// <returns>A task that completes after the mediator and its observers are ready.</returns>
+    public virtual async Task StartAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
         if (_mediator != null)
             throw new InvalidOperationException("The mediator test harness has already been started.");
 
@@ -88,17 +95,23 @@ public class MediatorTestHarness :
 
             _mediator = CreateMediator();
 
-            _mediator.ConnectConsumeObserver(_consumed);
-            _mediator.ConnectPublishObserver(_published);
-            _mediator.ConnectSendObserver(_sent);
+            _consumeObserverConnection = _mediator.ConnectConsumeObserver(_consumed);
+            _publishObserverConnection = _mediator.ConnectPublishObserver(_published);
+            _sendObserverConnection = _mediator.ConnectSendObserver(_sent);
         }
-        catch
+        catch (Exception startupException)
         {
-            DisposeObservers();
+            var failures = new List<Exception>();
+            DisposeObservers(failures);
+            await DisposeMediatorAsync(failures).ConfigureAwait(false);
+            if (failures.Count > 0)
+            {
+                failures.Insert(0, startupException);
+                throw new AggregateException("Mediator test harness startup and cleanup both failed.", failures);
+            }
+
             throw;
         }
-
-        return Task.CompletedTask;
     }
 
     /// <summary>Applies subscriber and derived-class configuration to a mediator.</summary>
@@ -112,9 +125,31 @@ public class MediatorTestHarness :
     /// <inheritdoc />
     public override void Dispose()
     {
-        DisposeObservers();
+        DisposeAsync().AsTask().GetAwaiter().GetResult();
+    }
 
-        base.Dispose();
+    /// <summary>Disconnects harness observers and releases the owned mediator and timeout resources.</summary>
+    /// <returns>A task that completes after every cleanup attempt finishes.</returns>
+    public virtual async ValueTask DisposeAsync()
+    {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+            return;
+
+        var failures = new List<Exception>();
+        DisposeObservers(failures);
+        await DisposeMediatorAsync(failures).ConfigureAwait(false);
+
+        try
+        {
+            base.Dispose();
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
+
+        if (failures.Count > 0)
+            throw new AggregateException("One or more mediator test harness resources could not be released.", failures);
     }
 
     /// <summary>Creates a mediator request client using the harness assertion timeout.</summary>
@@ -128,23 +163,56 @@ public class MediatorTestHarness :
 
     IMediator CreateMediator()
     {
-        return Bus.Factory.CreateMediator(configurator =>
+        return MediatorFactory.Create(configurator =>
         {
-            // An isolated harness owns its message limit policy just as an application-owned bus does.
+            // The harness enforces its body policy before subscriber configuration adds handlers.
             configurator.Limits(MessageLimits.Conservative);
             ConfigureMediator(configurator);
         });
     }
 
-    void DisposeObservers()
+    async ValueTask DisposeMediatorAsync(ICollection<Exception> failures)
     {
-        _consumed?.Dispose();
-        _published?.Dispose();
-        _sent?.Dispose();
+        IMediator? mediator = Interlocked.Exchange(ref _mediator, null);
+        if (mediator == null)
+            return;
 
-        _consumed = null;
-        _published = null;
-        _sent = null;
-        _mediator = null;
+        try
+        {
+            await mediator.DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
+    }
+
+    void DisposeObservers(ICollection<Exception> failures)
+    {
+        DisposeResource(ref _consumeObserverConnection, failures);
+        DisposeResource(ref _publishObserverConnection, failures);
+        DisposeResource(ref _sendObserverConnection, failures);
+
+        DisposeResource(ref _consumed, failures);
+        DisposeResource(ref _published, failures);
+        DisposeResource(ref _sent, failures);
+    }
+
+    static void DisposeResource<T>(ref T? resource, ICollection<Exception> failures)
+        where T : class, IDisposable
+    {
+        T? owned = resource;
+        resource = null;
+        if (owned == null)
+            return;
+
+        try
+        {
+            owned.Dispose();
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -18,7 +19,7 @@ public sealed class MediatorTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var timeProvider = new FakeTimeProvider(StartTime);
-        using var harness = new MediatorTestHarness(timeProvider)
+        await using var harness = new MediatorTestHarness(timeProvider)
         {
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
@@ -54,7 +55,7 @@ public sealed class MediatorTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("expected mediator failure");
-        using var harness = new MediatorTestHarness
+        await using var harness = new MediatorTestHarness
         {
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
@@ -71,6 +72,28 @@ public sealed class MediatorTestHarnessBehaviorTests
 
         Assert.Same(expected, actual);
         Assert.Same(expected, observed.Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-MEDIATOR", "async-owned-resource-cleanup")]
+    public async Task DisposeAsync_ReleasesTheOwnedMediatorAndIsIdempotentAsync()
+    {
+        var harness = new MediatorTestHarness
+        {
+            TestTimeout = OperationTimeout(),
+            TestInactivityTimeout = OperationTimeout(),
+        };
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        IMediator mediator = harness.Mediator;
+
+        await harness.DisposeAsync();
+        await harness.DisposeAsync();
+
+        Assert.Throws<ObjectDisposedException>(() =>
+        {
+            _ = mediator.CreateRequestClient<MediatorRequest>(new RequestTimeout(OperationTimeout()));
+        });
+        Assert.Throws<ObjectDisposedException>(harness.BeginTestScope);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()

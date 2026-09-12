@@ -23,7 +23,7 @@ public class MediatorMessageLatencyTransport :
 
     public Task StartAsync(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
     {
-        _mediator = Bus.Factory.CreateMediator(callback);
+        _mediator = MediatorFactory.Create(callback);
 
         return Task.CompletedTask;
     }

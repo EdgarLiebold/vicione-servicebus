@@ -46,7 +46,7 @@ static class MediatorMessageBodySerializer
         }
     }
 
-    sealed class BoundedMessageBodyStream : Stream
+    internal sealed class BoundedMessageBodyStream : Stream
     {
         readonly Uri _endpointAddress;
         readonly int _maximumBytes;
@@ -55,8 +55,9 @@ static class MediatorMessageBodySerializer
 
         public BoundedMessageBodyStream(int maximumBytes, Uri endpointAddress)
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maximumBytes);
             _maximumBytes = maximumBytes;
-            _endpointAddress = endpointAddress;
+            _endpointAddress = endpointAddress ?? throw new ArgumentNullException(nameof(endpointAddress));
         }
 
         public override bool CanRead => false;
@@ -75,6 +76,9 @@ static class MediatorMessageBodySerializer
 
         public MessageBody Complete()
         {
+            if (_completed)
+                throw new InvalidOperationException("The mediator message body has already been completed.");
+
             byte[] content = _stream.GetBuffer();
             int length = checked((int)_stream.Length);
             _completed = true;

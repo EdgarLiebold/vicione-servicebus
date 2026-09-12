@@ -1343,3 +1343,120 @@ only explicit unsupported-operation contracts, real state-machine schedule-decla
 semantics, and `NotImplementedException` as a retry classification; none is a dummy implementation.
 Protected `review/` and `TestResults/` contents were neither changed nor staged. The complete A+
 source goal remains active for the next unreviewed owner.
+
+## Iteration 89 outcome
+
+Review the complete `ViciOne.ServiceBus.Mediator` capability as one coherent owner: direct and
+container construction, send and publish dispatch, request/response routing, observer ownership,
+message-body materialization, dependency-injection scope preservation, request-handler adapters,
+and the public test harness. Preserve all mediator behavior while removing inherited factory and
+host-builder compatibility entry points, closing observer and resource-lifetime defects, enforcing
+configuration and address boundaries before side effects, and making every API shape directly
+testable. Retain Mediator as an independent feature assembly directly beneath `src`; do not nest
+it inside the Core project merely for visual uniformity.
+
+## Iteration 89 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-MEDIATOR-FACTORY` | default/custom address, clock, limits, and construction boundaries | factory contract tests | exact endpoint addresses, pre-callback validation, required limits, and one explicit factory entry point |
+| `REQ-VSB-MEDIATOR-CONFIGURATION` | limits and materialization callback ownership | factory and dispatch tests | single declaration, deterministic diagnostics, one callback invocation, and no partial service registration |
+| `REQ-VSB-MEDIATOR-OBSERVERS` | configuration-time and runtime consume/send/publish observers | observer contract tests | primary/response consumption, strict send/publish isolation, disconnect, exact fault, and observer-fault containment |
+| `REQ-VSB-MEDIATOR-ADVANCED-SEND` | typed, runtime, initializer, and pipe send forms | advanced API tests | every overload, exact contract, exact pipe invocation, null boundaries, cancellation, and endpoint resolution |
+| `REQ-VSB-MEDIATOR-ADVANCED-PUBLISH` | typed, runtime, initializer, and pipe publish forms | advanced API tests | every overload, publication semantics, exact pipe invocation, null boundaries, and observer isolation |
+| `REQ-VSB-MEDIATOR-REQUEST-API` | direct and consume-context request handles and clients | request API tests | message/initializer/address/client matrix, correlation metadata, scope propagation, null boundaries, and cancellation |
+| `REQ-VSB-SCOPED-MEDIATOR` | scoped publish, request, client factory, and connectors | scoped mediator tests | all public forms execute inside one DI scope, thread-safe lazy context, exact routes, and connector stability |
+| `REQ-VSB-MEDIATOR-BODY` | canonical bounded JSON materialization | body serializer, receive-context, and dispatch tests | exact bytes, owned buffer, exact limit, overflow, unsupported stream operations, cancellation, and logical diagnostic address |
+| `REQ-VSB-MEDIATOR-SERIALIZATION-CONTEXT` | typed/runtime projection and unsupported transport serialization | serialization-context tests | identity-preserving projections, required types, dictionary conversion, and consistent unsupported-operation failures |
+| `REQ-VSB-MEDIATOR-RECEIVE-CONTEXT` | metadata, attached work, delivery/fault state, and notifications | receive-context tests | exact body/address/providers, dispatch waits for attached work, required arguments, cancellation-before-state, and terminal flags |
+| `REQ-VSB-MEDIATOR-REQUEST-HANDLER` | one-way and request/response handler adapters | request-handler tests | exact message, cancellation, typed response, null context, and explicit null-response failure |
+| `REQ-VSB-TEST-HARNESS-MEDIATOR` | observation and owned asynchronous lifetime | harness behavior tests | request/response evidence, exact failure, observer cleanup, mediator disposal, base cleanup, and idempotence |
+| `REQ-VSB-SOURCE-NAVIGATION` | all 29 original Mediator source files | architecture tests and manual ledger | independent project boundary, final 28-file owner, matching type/namespace/file/folder responsibility, and no empty directory |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in all 3,082 original Mediator source lines | manual review plus documentation gates | current code and behavior only; no history, filler, generic placeholder text, or generated rewrite |
+
+## Iteration 89 mutation obligations
+
+- Disconnect configuration-time consume observers from the materialized runtime: the exact
+  configuration-observer test must fail with no recorded consume stages.
+- Route publications through send observers: the strict observer-isolation test must fail by
+  recording the publication as a send.
+- Report the physical mediator endpoint instead of an addressed request's logical destination on
+  body admission failure: the logical-address regression test must fail on the exact URI.
+- Allow a request-response handler to return `null`: the handler contract must fail because the
+  explicit handler diagnostic was replaced by a downstream argument failure.
+- Skip asynchronous mediator disposal in the test harness: the lifetime test must fail because a
+  request client can still be created through the leaked mediator.
+
+## Iteration 89 completion
+
+All 29 original Mediator production files and their 3,082 lines were read manually in full together
+with every direct test and the affected test-harness implementation. No generator or scripted
+comment rewrite was used. Every comment was checked against the implementation while the file was
+understood. Two generic return descriptions found by the repository documentation gate were then
+rewritten to state the exact one-way handler task contract. The final Mediator owner contains 28
+C# files and 2,730 lines because two compatibility adapter files were removed and one explicit
+factory file was added.
+
+The physical layout follows assembly ownership rather than visual nesting. `src` is the list of
+independent projects; `src/ViciOne.ServiceBus` is specifically the Core project and is not a wrapper
+for the other assemblies. Mediator therefore remains at `src/ViciOne.ServiceBus.Mediator`.
+Persistence, Scheduling, and Transports remain family folders for interchangeable integration
+projects. Nesting Mediator beneath the Core project would misstate ownership and expose it to SDK
+default compile globs. Every remaining Mediator filename, namespace, type, and folder matches its
+responsibility, and no empty directory remains.
+
+`MediatorFactory.Create` is now the single direct construction entry point. The inherited
+`Bus.Factory.CreateMediator` adapter and host-builder `UseMediator` compatibility surface were
+removed; dependency-injection construction remains the conventional `AddMediator` entry point.
+Base addresses are validated as absolute loopback addresses before callbacks or service-collection
+mutation. Direct and container configuration reject duplicate limits and duplicate materialization
+callbacks. The advanced send and publish overload-hiding relationship is owned by the shared
+Abstractions contracts and remains explicitly recorded for that owner rather than being hidden by
+a Mediator-only compatibility layer.
+
+Configuration-time observers now participate in the materialized runtime. Publish observers are
+strictly isolated from send observers, receive observers cover both primary and response
+dispatchers, and observer cleanup is owned by the mediator. Addressed endpoints no longer create an
+unbounded URI cache, admission failures retain the logical destination, and the bounded body stream
+rejects invalid ranges, repeated completion, cancellation, and post-completion writes. Receive and
+serialization contexts validate every required runtime boundary and expose canonical owned JSON.
+
+Scoped mediator client-factory creation is lazy and thread-safe. All contextual and non-contextual
+request handle/client forms and every scoped publish form preserve the calling dependency-injection
+scope and exact route. Request-response handlers reject a `null` response with a handler-specific
+diagnostic. `MediatorTestHarness` now owns observer handles and the mediator's asynchronous lifetime,
+attempts every cleanup path, aggregates independent failures, and is idempotent.
+
+The direct Mediator selection passes 86/86 tests. Package coverage increased from 59.90% lines and
+46.97% branches to 88.46% lines and 75.48% branches. The method-level calculation covers 267
+methods and reports zero CRAP scores above 10. Remaining unexecuted lines are visible defensive
+registration delegation, rare concurrent cleanup, and compiler-generated state-machine paths and
+are not represented as executed evidence.
+
+Five isolated counterchanges were compiled and executed. Losing configured consume observers,
+mixing publish dispatch into send observers, using the physical endpoint for addressed admission
+failure, permitting a null handler response, and leaking the harness-owned mediator each made its
+precise regression test fail. Every mutation was restored manually. Final SHA-256 values are
+`b2b00e6339be67ae86e1f435f030d15183b3e6954cb50071ff38f365e6690d76` for
+`MediatorFactory.cs`, `022f62c0fa0990d68f0b7499e6b715c812ef2fa3c8a3f98952d3bfb2bcb0354e`
+for `MediatorSendEndpoint.cs`, `e5ca5266da8197d43fc1f0fc011d3afae8851fa4aa9d3e15d4329c15a87a54cb`
+for `MediatorRequestHandler.cs`, and
+`5363b3f2430dcf1473984b598b25f70c116556dc84a469c73cdcae3ec8c35ad9` for
+`MediatorTestHarness.cs`.
+
+The final Release Engineering solution builds with zero warnings and errors. Both repository
+format gates pass without changes. The official serial Unit solution passes 5,840/5,840 tests
+across 22 hosts with zero failures and zero skips; this includes all 292 architecture tests, the
+complete bidirectional async naming gate, source layout, comment hygiene, public documentation, and
+the 42 new requirement projections.
+
+Fresh-package verification passes 18 developer journeys using 31 freshly packed ViciOne packages,
+three isolated provider-testing consumers, and all 30 runtime API assemblies. The intentional API
+diff contains only the single direct factory, removal of the two compatibility adapter types and
+their four methods, and the harness's truthful `IAsyncDisposable` contract. The packed public API
+contains 19,222 lines with SHA-256
+`92338a749f24cbd843a1bb74359acd423948970efff88ab7e727e9317a2a3103`.
+`git diff --check` and CoreRequirements JSON validation pass. Repository-wide product source has
+zero C# preprocessor directives and zero empty source directories. The protected `review/` and
+`TestResults/` trees were neither changed nor staged. The complete A+ source goal remains active
+for the next unreviewed owner.

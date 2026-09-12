@@ -19,6 +19,9 @@ public static class MediatorRequestExtensions
         CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(mediator);
+        ArgumentNullException.ThrowIfNull(request);
+
         try
         {
             using RequestHandle<IRequest<T>> handle = mediator.CreateRequest(request, timeout, cancellationToken);

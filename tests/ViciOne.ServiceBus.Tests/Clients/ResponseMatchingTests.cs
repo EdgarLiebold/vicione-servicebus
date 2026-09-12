@@ -318,7 +318,7 @@ public sealed class ResponseMatchingTests
     }
 
     private static IMediator CreateMediator(string responseValue) =>
-        Bus.Factory.CreateMediator(configurator =>
+        MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<MatchingRequest>(context =>

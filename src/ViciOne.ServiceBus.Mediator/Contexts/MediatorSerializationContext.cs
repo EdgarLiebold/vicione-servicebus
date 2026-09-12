@@ -21,7 +21,7 @@ internal sealed class MediatorSerializationContext<TMessage> :
     public MediatorSerializationContext(IObjectDeserializer deserializer, MessageContext context, TMessage message, string[] supportedMessageTypes)
         : base(deserializer, context, supportedMessageTypes)
     {
-        _message = message;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
     /// <summary>Returns the materialized message when it implements the requested contract.</summary>
@@ -59,27 +59,30 @@ internal sealed class MediatorSerializationContext<TMessage> :
         return false;
     }
 
-    /// <summary>Rejects transport serialization because mediator dispatch has no serialized envelope.</summary>
-    /// <returns>The message serializer.</returns>
+    /// <summary>Rejects transport serialization because mediator dispatch has no transport envelope.</summary>
+    /// <returns>This member never returns.</returns>
+    /// <exception cref="NotSupportedException">Always thrown because no transport serializer exists.</exception>
     public override IMessageSerializer GetMessageSerializer()
     {
         throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
-    /// <summary>Rejects transport serialization because mediator dispatch has no serialized envelope.</summary>
+    /// <summary>Rejects transport serialization because mediator dispatch has no transport envelope.</summary>
     /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="envelope">The envelope.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The message serializer.</returns>
+    /// <param name="envelope">The transport envelope that cannot be represented by the mediator.</param>
+    /// <param name="message">The materialized message.</param>
+    /// <returns>This member never returns.</returns>
+    /// <exception cref="NotSupportedException">Always thrown because no transport serializer exists.</exception>
     public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
     {
         throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
-    /// <summary>Rejects transport serialization because mediator dispatch has no serialized envelope.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageTypes">The message types.</param>
-    /// <returns>The message serializer.</returns>
+    /// <summary>Rejects transport serialization because mediator dispatch has no transport envelope.</summary>
+    /// <param name="message">The materialized message.</param>
+    /// <param name="messageTypes">The declared transport contract identifiers.</param>
+    /// <returns>This member never returns.</returns>
+    /// <exception cref="NotSupportedException">Always thrown because no transport serializer exists.</exception>
     public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
     {
         throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
@@ -87,11 +90,12 @@ internal sealed class MediatorSerializationContext<TMessage> :
 
     /// <summary>Projects a contract instance to the dictionary representation used by initializers.</summary>
     /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The contract instance to project.</param>
     /// <returns>The converted dictionary.</returns>
     public override Dictionary<string, object> ToDictionary<T>(T? message)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         return ConvertObject.ToDictionary(message);
     }
 }

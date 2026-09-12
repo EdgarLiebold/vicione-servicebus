@@ -8869,18 +8869,14 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IMediatorConfigurator [in
 TYPE interface public ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator [interfaces=ViciOne.ServiceBus.Configuration.IRegistrationConfigurator]
   METHOD public abstract System.Void ConfigureMediator(System.Action<ViciOne.ServiceBus.Configuration.IMediatorRegistrationContext,ViciOne.ServiceBus.Configuration.IMediatorConfigurator> configure)
 TYPE interface public ViciOne.ServiceBus.Configuration.IMediatorRegistrationContext [interfaces=ViciOne.ServiceBus.Configuration.IRegistrationContext]
-TYPE class public ViciOne.ServiceBus.Configuration.MediatorConfigurationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Mediator.IMediator CreateMediator(ViciOne.ServiceBus.Configuration.IBusFactorySelector selector, System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> configure)
-  METHOD public static ViciOne.ServiceBus.Mediator.IMediator CreateMediator(ViciOne.ServiceBus.Configuration.IBusFactorySelector selector, System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> configure)
-  METHOD public static ViciOne.ServiceBus.Mediator.IMediator CreateMediator(ViciOne.ServiceBus.Configuration.IBusFactorySelector selector, System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> configure, System.TimeProvider timeProvider)
-TYPE class public ViciOne.ServiceBus.Configuration.MediatorHostBuilderExtensions [static]
-  METHOD public static Microsoft.Extensions.Hosting.IHostBuilder UseMediator(Microsoft.Extensions.Hosting.IHostBuilder hostBuilder, System.Action<Microsoft.Extensions.Hosting.HostBuilderContext,ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator> configure = null)
 TYPE class public ViciOne.ServiceBus.Configuration.MediatorMessageLimitsConfigurationExtensions [static]
   METHOD public static System.Void Limits(ViciOne.ServiceBus.Configuration.IMediatorConfigurator configurator, ViciOne.ServiceBus.MessageLimits limits)
   METHOD public static ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator Limits(ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator configurator, ViciOne.ServiceBus.MessageLimits limits)
 TYPE interface public ViciOne.ServiceBus.Mediator.IMediator [interfaces=ViciOne.ServiceBus.Advanced.IClientFactory&ViciOne.ServiceBus.Advanced.IPublishEndpointProvider&ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector&ViciOne.ServiceBus.Advanced.Middleware.IRequestPipeConnector&ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserverConnector&ViciOne.ServiceBus.Advanced.Observers.IConsumeObserverConnector&ViciOne.ServiceBus.IPublishEndpoint&ViciOne.ServiceBus.ISendEndpoint]
 TYPE interface public ViciOne.ServiceBus.Mediator.IRequest<TResponse>
 TYPE interface public ViciOne.ServiceBus.Mediator.IScopedMediator [interfaces=ViciOne.ServiceBus.Mediator.IMediator]
+TYPE class public ViciOne.ServiceBus.Mediator.MediatorFactory [static]
+  METHOD public static ViciOne.ServiceBus.Mediator.IMediator Create(System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> configure, System.Uri baseAddress = null, System.TimeProvider timeProvider = null)
 TYPE class public ViciOne.ServiceBus.Mediator.MediatorRequestHandler<TRequest,TResponse> [abstract,interfaces=ViciOne.ServiceBus.IConsumer<TRequest>]
   CTOR protected ViciOne.ServiceBus.Mediator.MediatorRequestHandler<TRequest,TResponse>()
   METHOD protected abstract System.Threading.Tasks.Task<TResponse> HandleAsync(TRequest request, System.Threading.CancellationToken cancellationToken)
@@ -14074,13 +14070,14 @@ TYPE class public ViciOne.ServiceBus.Testing.InMemoryTestHarness [base=ViciOne.S
   PROPERTY System.String InputQueueName { public-get;  }
   PROPERTY System.Uri BaseAddress { public-get;  }
   PROPERTY System.Uri InputQueueAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.MediatorTestHarness [base=ViciOne.ServiceBus.Testing.AsyncTestHarness,interfaces=ViciOne.ServiceBus.Testing.IBaseTestHarness]
+TYPE class public ViciOne.ServiceBus.Testing.MediatorTestHarness [base=ViciOne.ServiceBus.Testing.AsyncTestHarness,interfaces=System.IAsyncDisposable&ViciOne.ServiceBus.Testing.IBaseTestHarness]
   CTOR public ViciOne.ServiceBus.Testing.MediatorTestHarness()
   CTOR public ViciOne.ServiceBus.Testing.MediatorTestHarness(System.TimeProvider timeProvider)
   EVENT System.Action<ViciOne.ServiceBus.Configuration.IMediatorConfigurator> MediatorConfiguring { public-add; public-remove; }
   METHOD protected virtual System.Void ConfigureMediator(ViciOne.ServiceBus.Configuration.IMediatorConfigurator configurator)
   METHOD public System.Void Dispose()
   METHOD public virtual System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeObserver(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)

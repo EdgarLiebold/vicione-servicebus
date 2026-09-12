@@ -45,6 +45,14 @@ internal sealed class MediatorReceiveContext<TMessage> :
         IObjectDeserializer objectDeserializer, MessageBody messageBody)
         : base(sendContext)
     {
+        ArgumentNullException.ThrowIfNull(sendContext);
+        ArgumentNullException.ThrowIfNull(sendEndpointProvider);
+        ArgumentNullException.ThrowIfNull(publishEndpointProvider);
+        ArgumentNullException.ThrowIfNull(publishTopology);
+        ArgumentNullException.ThrowIfNull(observers);
+        ArgumentNullException.ThrowIfNull(objectDeserializer);
+        ArgumentNullException.ThrowIfNull(messageBody);
+
         _observers = observers;
         _inputAddress = sendContext.DestinationAddress
             ?? throw new ArgumentException("A mediator send context must have a destination address.", nameof(sendContext));
@@ -61,7 +69,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
         _headers = new MessageIdHeaders(messageId);
 
         _receiveTasks = new PendingTaskCollection(4);
-        _messageBody = messageBody ?? throw new ArgumentNullException(nameof(messageBody));
+        _messageBody = messageBody;
 
         var messageContext = new MediatorSendMessageContext<TMessage>(sendContext);
 
@@ -73,52 +81,48 @@ internal sealed class MediatorReceiveContext<TMessage> :
         AddOrUpdatePayload<ConsumeContext>(() => _consumeContext, existing => _consumeContext);
     }
 
-    /// <summary>Gets the publish topology.</summary>
+    /// <inheritdoc />
     public IPublishTopology PublishTopology { get; }
 
-    /// <summary>Gets whether at least one consumer accepted the delivery.</summary>
+    /// <inheritdoc />
     public bool IsDelivered { get; internal set; }
-    /// <summary>Gets whether receive or consumer processing faulted.</summary>
+    /// <inheritdoc />
     public bool IsFaulted { get; private set; }
 
-    /// <summary>Gets whether mediator receive faults should be republished as transport fault messages.</summary>
+    /// <inheritdoc />
     public bool PublishFaults => false;
-    /// <summary>Gets the readable canonical JSON receive body.</summary>
+    /// <inheritdoc />
     public MessageBody Body => _messageBody;
 
-    /// <summary>Gets a task that completes after every task attached to this delivery.</summary>
+    /// <inheritdoc />
     public Task ReceiveCompleted => _receiveTasks.CompletedAsync(CancellationToken);
 
-    /// <summary>Adds asynchronous work whose completion belongs to this delivery.</summary>
-    /// <param name="task">The task to await before receive completion.</param>
+    /// <inheritdoc />
     public void AddReceiveTask(Task task)
     {
+        ArgumentNullException.ThrowIfNull(task);
         _receiveTasks.Add(task);
     }
 
-    /// <summary>Gets the send endpoint provider.</summary>
+    /// <inheritdoc />
     public ISendEndpointProvider SendEndpointProvider { get; }
-    /// <summary>Gets the publish endpoint provider.</summary>
+    /// <inheritdoc />
     public IPublishEndpointProvider PublishEndpointProvider { get; }
 
-    /// <summary>Gets whether this in-process delivery is a redelivery.</summary>
+    /// <inheritdoc />
     public bool Redelivered => false;
-    /// <summary>Gets the mediator headers containing the message identity.</summary>
+    /// <inheritdoc />
     public Headers TransportHeaders => _headers;
 
-    /// <summary>Marks the delivery successful and notifies consume observers.</summary>
-    /// <typeparam name="T">The consumed message contract.</typeparam>
-    /// <param name="context">The completed consume context.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes when consume observers finish processing the success notification.</returns>
+    /// <inheritdoc />
     public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
         IsDelivered = true;
 
         context.LogConsumed(duration, consumerType);
@@ -126,20 +130,16 @@ internal sealed class MediatorReceiveContext<TMessage> :
         return _observers.PostConsumeAsync(context, duration, consumerType);
     }
 
-    /// <summary>Marks consumer processing faulted and notifies consume observers.</summary>
-    /// <typeparam name="T">The faulted message contract.</typeparam>
-    /// <param name="context">The faulted consume context.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes when consume observers finish processing the fault notification.</returns>
+    /// <inheritdoc />
     public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        ArgumentNullException.ThrowIfNull(exception);
         IsFaulted = true;
 
         context.LogFaulted(duration, consumerType, exception);
@@ -149,15 +149,13 @@ internal sealed class MediatorReceiveContext<TMessage> :
         return _observers.ConsumeFaultAsync(context, duration, consumerType, exception);
     }
 
-    /// <summary>Marks receive processing faulted and notifies receive observers.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes when receive observers finish processing the fault notification.</returns>
+    /// <inheritdoc />
     public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
+        ArgumentNullException.ThrowIfNull(exception);
         IsFaulted = true;
 
         this.LogFaulted(exception);
@@ -165,14 +163,14 @@ internal sealed class MediatorReceiveContext<TMessage> :
         return _observers.ReceiveFaultAsync(this, exception);
     }
 
-    /// <summary>Gets the elapsed receive time measured by the configured time provider.</summary>
+    /// <inheritdoc />
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
-    /// <summary>Gets the mediator endpoint address that received the message.</summary>
+    /// <inheritdoc />
     public Uri InputAddress => _inputAddress;
-    /// <summary>Gets the JSON content type of the materialized in-process body.</summary>
+    /// <inheritdoc />
     public ContentType ContentType => MediatorReceiveContext.JsonContentType;
 
-    class FaultContext :
+    sealed class FaultContext :
         ConsumerFaultContext
     {
         public FaultContext(string messageType, string consumerType)

@@ -13,16 +13,17 @@ public abstract class MediatorRequestHandler<TRequest> :
 {
     /// <summary>Passes the consumed request to <see cref="HandleAsync" />.</summary>
     /// <param name="context">The request delivery context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>The task returned by <see cref="HandleAsync" /> for the current delivery.</returns>
     public Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return HandleAsync(context.Message, context.CancellationToken);
     }
 
     /// <summary>Handles a mediator request that does not produce a response.</summary>
     /// <param name="request">The request message.</param>
     /// <param name="cancellationToken">The token that cancels request handling.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task whose completion signals that the supplied request has been processed.</returns>
     protected abstract Task HandleAsync(TRequest request, CancellationToken cancellationToken);
 }
 
@@ -39,10 +40,12 @@ public abstract class MediatorRequestHandler<TRequest, TResponse> :
 {
     /// <summary>Handles the consumed request and sends the returned response.</summary>
     /// <param name="context">The request delivery context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the response has been dispatched.</returns>
     public async Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
-        var response = await HandleAsync(context.Message, context.CancellationToken).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        TResponse response = await HandleAsync(context.Message, context.CancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException($"The mediator request handler '{GetType().FullName}' returned a null response.");
 
         await context.RespondAsync(response).ConfigureAwait(false);
     }

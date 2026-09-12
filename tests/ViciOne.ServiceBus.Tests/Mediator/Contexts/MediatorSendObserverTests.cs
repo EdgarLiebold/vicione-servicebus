@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -17,7 +18,7 @@ public sealed class MediatorSendObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var oneWayConsumed = new TaskCompletionSource<ConsumeContext<OneWayMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        ServiceBusMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<OneWayMessage>(context =>
@@ -70,7 +71,7 @@ public sealed class MediatorSendObserverTests
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("mediator handler failed");
-        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        ServiceBusMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<FaultingMediatorMessage>(_ => Task.FromException(expected));
@@ -100,7 +101,7 @@ public sealed class MediatorSendObserverTests
     {
         var handled = 0;
         var expected = new InvalidOperationException("property getter failed");
-        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        ServiceBusMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<FaultingSerializationMessage>(_ =>
@@ -128,7 +129,7 @@ public sealed class MediatorSendObserverTests
     public async Task BodyLimitFailure_ReportsPreAndFaultWithoutDispatchOrPostAsync()
     {
         var handled = 0;
-        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        ServiceBusMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(new MessageLimits { MaxBodyBytes = 32, MaxEnvelopeBytes = 32, MaxJsonDepth = 16 });
             configurator.Handler<MutableObserverMessage>(_ =>
@@ -157,7 +158,7 @@ public sealed class MediatorSendObserverTests
     {
         using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         var handled = 0;
-        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        ServiceBusMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<MutableObserverMessage>(_ =>
@@ -187,7 +188,7 @@ public sealed class MediatorSendObserverTests
         string? handledValue = null;
         byte[]? handledBody = null;
         string? handledContentType = null;
-        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        ServiceBusMediator mediator = MediatorFactory.Create(configurator =>
         {
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<MutableObserverMessage>(context =>

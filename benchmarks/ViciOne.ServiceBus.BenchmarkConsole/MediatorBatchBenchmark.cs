@@ -24,12 +24,12 @@ public class MediatorBatchBenchmark
     [GlobalSetup]
     public void Setup()
     {
-        _mediator = Bus.Factory.CreateMediator(cfg =>
+        _mediator = MediatorFactory.Create(cfg =>
         {
             cfg.Handler<BenchmarkCommand>(context => Task.CompletedTask);
         });
 
-        _responder = Bus.Factory.CreateMediator(cfg =>
+        _responder = MediatorFactory.Create(cfg =>
         {
             cfg.Handler<BenchmarkRequest>(context => context.RespondAsync(new BenchmarkResponse()));
         });

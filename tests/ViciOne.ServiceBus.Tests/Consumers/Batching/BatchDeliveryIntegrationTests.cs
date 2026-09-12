@@ -280,7 +280,7 @@ public sealed class BatchDeliveryIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var delivered = NewSignal<IMessageBatch<MediatorBatchItem>>();
         var consumer = new MediatorBatchConsumer(delivered);
-        IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        IMediator mediator = MediatorFactory.Create(configuration =>
         {
             configuration.Limits(MessageLimits.Conservative);
             configuration.Consumer(() => consumer);

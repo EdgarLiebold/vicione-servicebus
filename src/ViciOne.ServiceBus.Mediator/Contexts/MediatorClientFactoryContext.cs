@@ -31,68 +31,51 @@ internal sealed class MediatorClientFactoryContext :
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Connects consume pipe.</summary>
-    /// <typeparam name="T">The response message contract.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <inheritdoc />
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _connector.ConnectConsumePipe(pipe);
     }
 
-    /// <summary>Connects consume pipe.</summary>
-    /// <typeparam name="T">The response message contract.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <inheritdoc />
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
         where T : class
     {
         return _connector.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>Connects request pipe.</summary>
-    /// <typeparam name="T">The response message contract.</typeparam>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <inheritdoc />
     public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _connector.ConnectRequestPipe(requestId, pipe);
     }
 
-    /// <summary>Gets the response address.</summary>
+    /// <inheritdoc />
     public Uri ResponseAddress { get; }
 
-    /// <summary>Gets request endpoint.</summary>
-    /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <returns>The request endpoint.</returns>
+    /// <inheritdoc />
     public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
         where T : class
     {
         return new MediatorRequestSendEndpoint<T>(_endpoint, consumeContext);
     }
 
-    /// <summary>Gets request endpoint.</summary>
-    /// <typeparam name="T">The request message contract.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <returns>The request endpoint.</returns>
+    /// <inheritdoc />
     public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
         return new MediatorRequestSendEndpoint<T>(_endpoint.GetSendEndpoint(destinationAddress), consumeContext);
     }
 
-    /// <summary>Gets the default timeout.</summary>
+    /// <inheritdoc />
     public RequestTimeout DefaultTimeout { get; }
 
-    /// <summary>Gets the message routes.</summary>
+    /// <inheritdoc />
     public IMessageRouteTable MessageRoutes => MessageRouteTable.Empty;
 
-    /// <summary>Gets the time provider.</summary>
+    /// <inheritdoc />
     public TimeProvider TimeProvider { get; }
 }

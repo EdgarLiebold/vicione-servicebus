@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>Applies publish semantics and observers before dispatching through a mediator send endpoint.</summary>
+/// <summary>Marks outgoing mediator contexts as publications and applies the configured publish pipe.</summary>
 internal sealed class MediatorPublishSendEndpoint :
     SendEndpointProxy,
     IPublishObserverConnector
@@ -13,34 +13,30 @@ internal sealed class MediatorPublishSendEndpoint :
     readonly PublishObservable _observers;
     readonly IPublishPipe _publishPipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="endpoint">The endpoint.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    public MediatorPublishSendEndpoint(ISendEndpoint endpoint, IPublishPipe publishPipe)
+    /// <summary>Creates a publishing view over the mediator send endpoint.</summary>
+    /// <param name="endpoint">The mediator endpoint that performs the dispatch.</param>
+    /// <param name="publishPipe">The pipe that applies publication metadata.</param>
+    /// <param name="observers">The observers notified only for mediator publications.</param>
+    public MediatorPublishSendEndpoint(ISendEndpoint endpoint, IPublishPipe publishPipe, PublishObservable observers)
         : base(endpoint)
     {
-        _publishPipe = publishPipe;
-
-        _observers = new PublishObservable();
+        _publishPipe = publishPipe ?? throw new ArgumentNullException(nameof(publishPipe));
+        _observers = observers ?? throw new ArgumentNullException(nameof(observers));
     }
 
-    /// <summary>Connects publish observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <inheritdoc />
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _observers.Connect(observer);
     }
 
-    /// <summary>Gets pipe proxy.</summary>
-    /// <typeparam name="T">The published message contract.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <returns>The pipe proxy.</returns>
+    /// <inheritdoc />
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new PublishPipeAdapter<T>(_publishPipe, pipe);
     }
-    class PublishPipeAdapter<T> :
+    sealed class PublishPipeAdapter<T> :
         IPipe<SendContext<T>>
         where T : class
     {
@@ -49,7 +45,7 @@ internal sealed class MediatorPublishSendEndpoint :
 
         public PublishPipeAdapter(IPublishPipe publishPipe, IPipe<SendContext<T>>? pipe)
         {
-            _publishPipe = publishPipe;
+            _publishPipe = publishPipe ?? throw new ArgumentNullException(nameof(publishPipe));
             _pipe = pipe;
         }
 
@@ -60,6 +56,7 @@ internal sealed class MediatorPublishSendEndpoint :
 
         public async Task SendAsync(SendContext<T> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var publishContext = context.GetPayload<MessageSendContext<T>>();
 
             publishContext.IsPublish = true;

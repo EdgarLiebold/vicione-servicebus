@@ -26,7 +26,7 @@ public class MediatorRequestResponseTransport :
     public Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _mediator = Bus.Factory.CreateMediator(configureReceiveEndpoint);
+        _mediator = MediatorFactory.Create(configureReceiveEndpoint);
         return Task.CompletedTask;
     }
 

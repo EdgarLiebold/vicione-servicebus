@@ -62,14 +62,13 @@ public sealed class MediatorRequestTests
     public async Task MissingMediatorResponse_ExpiresOnlyWhenTheInjectedTimeProviderAdvancesAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        IMediator mediator = Bus.Factory.CreateMediator(
-            null,
+        IMediator mediator = MediatorFactory.Create(
             configurator =>
             {
                 configurator.Limits(MessageLimits.Conservative);
                 configurator.Handler<PendingRequest>(_ => Task.CompletedTask);
             },
-            timeProvider);
+            timeProvider: timeProvider);
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(new RequestTimeout(TimeSpan.FromMinutes(1)));
         var message = new PendingRequest("no-response");
@@ -146,7 +145,7 @@ public sealed class MediatorRequestTests
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "missing-handler-owned-task-failures")]
     public async Task MissingMediatorHandler_FaultsEveryPublicRequestTaskWithItsOwnedFailureAsync()
     {
-        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
+        IMediator mediator = MediatorFactory.Create(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(new RequestTimeout(OperationTimeout()));
         using RequestHandle<PendingRequest> request = client.Create(

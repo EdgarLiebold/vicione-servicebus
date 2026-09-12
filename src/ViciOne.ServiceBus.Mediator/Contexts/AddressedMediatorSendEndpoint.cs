@@ -12,6 +12,8 @@ internal sealed class AddressedMediatorSendEndpoint :
         : base(endpoint)
     {
         _destinationAddress = destinationAddress ?? throw new ArgumentNullException(nameof(destinationAddress));
+        if (!destinationAddress.IsAbsoluteUri)
+            throw new ArgumentException("A mediator destination address must be absolute.", nameof(destinationAddress));
     }
 
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
