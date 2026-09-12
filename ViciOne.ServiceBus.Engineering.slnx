@@ -37,7 +37,7 @@
     <Project Path="src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj" />
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
-    <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />
     <Project Path="src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
@@ -82,7 +82,7 @@
     <Project Path="tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj" />
     <Project Path="tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj" />
     <Project Path="tests/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj" />
-    <Project Path="tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj" />
+    <Project Path="tests/Transports/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj" />
     <Project Path="tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj" />
     <Project Path="tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj" />
   </Folder>

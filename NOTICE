@@ -9,9 +9,6 @@ Copyright 2007-2024 Chris Patterson
 ViciOne.ServiceBus
 Copyright 2026 Edgar Liebold
 
-The implementation in src/ViciOne.ServiceBus.SignalR/Utils/ConcurrentHashSet.cs
-retains source provenance from https://stackoverflow.com/a/11034999/6558597.
-
 The z-base-32 alphabet in
 src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/ZBase32Formatter.cs
 follows the design published at

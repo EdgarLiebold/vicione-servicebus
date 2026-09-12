@@ -1564,3 +1564,112 @@ only an internal codec, so the packed public API remains unchanged at 19,222 lin
 `92338a749f24cbd843a1bb74359acd423948970efff88ab7e727e9317a2a3103`. The protected `review/` and
 `TestResults/` trees were neither changed nor staged. The complete A+ source goal remains active for
 the next unreviewed owner.
+
+## Iteration 91 outcome
+
+Review the complete `ViciOne.ServiceBus.SignalR` integration as one coherent transport-adjacent
+backplane owner: public composition, endpoint identity, local connection and subscription state,
+cross-node broadcast/connection/group/user delivery, acknowledged group membership, protocol
+serialization, client invocation results and cancellation, dependency-injection scope ownership,
+logging, and malformed-contract rejection. Preserve SignalR scale-out behavior while replacing the
+legacy public implementation surface with one minimal Greenfield composition API and completing the
+modern .NET SignalR lifetime-manager contract.
+
+Move the independent project to `src/Transports/ViciOne.ServiceBus.SignalR` and its tests to the
+matching `tests/Transports` family because the package adapts ViciOne.ServiceBus as a SignalR
+backplane. `src/ViciOne.ServiceBus` remains the Core project itself, not a container for sibling
+assemblies. Other independent Core, feature, and tooling packages remain direct children of `src`;
+family folders are used only where several interchangeable providers or integrations share one
+architectural axis. This avoids false ownership and the SDK's recursive default compile globs.
+
+## Iteration 91 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-SIGNALR-PUBLIC-API` | composition and timeout configuration | configuration tests | exact two-type public API, fluent return, custom/default timeout, duplicate-hub rejection, null boundary, and no partial registration |
+| `REQ-VSB-SIGNALR-LOCAL` | connection, group, user, broadcast, disconnect, and failure logging | local lifetime-manager tests | exact recipients, exclusions, ordinal identity, membership cleanup, cancellation, and partial-write diagnostics |
+| `REQ-VSB-SIGNALR-SCALEOUT` | cross-node fanout and acknowledged group commands | scale-out tests | exact recipients, no origin echo, remote add/remove acknowledgement, unknown connection, timeout, cancellation, and invalid command rejection |
+| `REQ-VSB-SIGNALR-FANOUT` | multi-connection/group/user selection | fanout tests | stable ordinal de-duplication across repeated identifiers and overlapping memberships |
+| `REQ-VSB-SIGNALR-CLIENT-RESULTS` | typed client invocations, completion, error, cancellation, disconnect, and stale delivery | client-result tests | local and remote success/null/error/cancel, owning-connection enforcement, protocol/invocation identity, timeout, disconnect cleanup, and duplicate suppression |
+| `REQ-VSB-SIGNALR-SERIALIZATION` | protocol fanout and stored frames | serializer and serialization tests | every registered protocol, exact owned payloads, empty/malformed input rejection, and single-completion enforcement |
+| `REQ-VSB-SIGNALR-CONTRACTS` | bus-delivered internal command boundaries | contract-validation and boundary tests | every required string, payload collection, exclusion, action, connection, group, user, and invocation member rejected before effects |
+| `REQ-VSB-SIGNALR-SCOPES` | per-operation DI scope ownership | configuration and client-result tests | asynchronous scope creation, async-only disposal after success and failure, and required scoped services |
+| `REQ-VSB-SIGNALR-RUNTIME-STATE` | subscription and pending-invocation indexes | runtime-state and client-result tests | ordinal keys, idempotent removal, ownership, duplicate invocation rejection, and terminal removal semantics |
+| `REQ-VSB-SOURCE-NAVIGATION` | all 32 original SignalR source files | architecture tests and manual ledger | one transport-family project, final 31-file owner, matching type/namespace/file/folder responsibility, and no empty directory |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in all 1,368 original source lines and all replacement code | manual review plus documentation gates | current code and behavior only; exact ownership and concurrency semantics; no history, filler, generated rewrite, or stale names |
+
+## Iteration 91 mutation obligations
+
+- Remove identifier de-duplication from connection, group, and user fanout: each of the three exact
+  fanout tests must fail by observing duplicate delivery.
+- Change group identity from ordinal to case-insensitive comparison: the group case-sensitivity test
+  must fail because two distinct SignalR groups collapse into one.
+- Remove owning-connection validation from pending client invocations: the wrong-connection result
+  test must fail because a different connection can complete the invocation.
+- Omit asynchronous disposal of an operation scope: the DI lifetime test must fail because its
+  async-only scoped resource is not disposed.
+
+## Iteration 91 completion
+
+All 32 original SignalR production files and their 1,368 lines were read manually in full together
+with the complete replacement implementation, every comment, every direct test, the project file,
+the requirements manifest, and the packed public surface. No generator or scripted comment rewrite
+was used. Every comment was checked while its implementation was understood. The final owner has 31
+C# files and 1,840 lines. Multi-type files were split so each independently meaningful runtime type
+has a matching filename. The project and tests now occupy the matching `Transports` family, the old
+paths and three empty move-remnant directories are absent, and all current solution, capability,
+validation, and repository-graph paths agree.
+
+The public package now exposes exactly `SignalRBackplaneOptions` and
+`SignalRBackplaneExtensions.AddSignalRBackplane<THub>`. Registration is fluent, rejects missing or
+duplicate composition before partial mutation, and validates the acknowledged remote-group timeout
+with the repository's actionable feature/bus/problem/fix diagnostic shape. All consumer definitions,
+wire contracts, runtime indexes, serializers, scopes, and lifetime-manager implementation details
+are internal.
+
+The lifetime manager now implements modern typed SignalR client results across nodes, including null
+results, remote errors and cancellation, caller cancellation, timeouts, disconnect cleanup, stale or
+duplicate delivery, and protocol/invocation identity validation. Connection, group, and user
+identifiers use ordinal semantics. Multi-target fanout removes repeated identifiers and overlapping
+members before delivery. Group commands are acknowledged by the owning node, endpoint identifiers
+are deterministic and bounded, request handles are disposed, and bus operation scopes are created
+and disposed asynchronously. Operational failures use the injected typed logger rather than ambient
+context.
+
+The focused profile grows from 41 to 96 tests and passes 96/96. Fresh focused coverage is 99.5585%
+lines and 91.7910% branches across 110 instrumented methods, with no CRAP score above 30. The highest
+risk method is `ConnectionConsumer.DeliverAsync` at CRAP 18.0069 with 97.22% line and 83.33% branch
+coverage. Remaining formal branch gaps are compiler-generated asynchronous paths, simple consumer
+constructors, and defensive binder/delegation branches; they are not represented as executed
+evidence.
+
+Four isolated counterchanges were compiled and executed. Removing fanout de-duplication made all
+three targeted fanout regressions fail; case-insensitive group identity, missing pending-invocation
+ownership, and leaked async scopes each made their precise regression test fail. Every counterchange
+was restored manually. Final SHA-256 values are
+`d2ae3366c1fa906cdd1cc6978c037c0da3e49ad5b5485fde3c7585178276b625` for
+`ServiceBusHubLifetimeManager.cs`,
+`6ad37586732aa02c35f044dcf3c7e51bee7c2c81057bb29feb1379650e8cfa85` for
+`PendingClientInvocationTracker.cs`,
+`618a42ea5f8fd6b86ead8cb2f26f17d2b7571eb2a8deeb38171cb2048513ceec` for
+`ConnectionSubscriptionIndex.cs`,
+`55ee9e13f63b6092956668f470a274543692dcec02e196101fb9a58748cf7a43` for
+`DependencyInjectionBackplaneScopeProvider.cs`, and
+`e794618f8ddef6f1d45628e7ecfccca1c99c47935221eaf074825768c8906cce` for
+`HubMessageSerializer.cs`.
+
+The final serial Release Unit solution passes 5,951/5,951 tests with zero failures and zero skips;
+the complete Architecture project separately passes 292/292. These include the
+repository-wide bidirectional async-name/implementation gate, source navigation, comments,
+configuration diagnostics, requirement projections, and public documentation. The focused and
+Architecture builds finish with zero warnings and errors. Both repository format gates pass with
+zero changes across 5,778 Engineering and 5,356 Unit files. Requirements and metadata JSON,
+`git diff --check`, repository-wide C# preprocessor, and empty-source-directory checks pass.
+
+Fresh-package verification passes twice: 18 developer journeys using 31 freshly packed ViciOne
+packages, three executed isolated provider-testing consumers, and all 30 runtime API assemblies.
+The manually reviewed SignalR API diff removes 118 inherited implementation-surface lines and adds
+only the two intended Greenfield types. The packed public API contains 19,104 lines with SHA-256
+`34c7a90ef04451531e03134e0891e752a410996742627d4648941427f04aee27`.
+Protected `review/` and `TestResults/` contents were neither changed nor staged. The complete A+
+source goal remains active for the next unreviewed owner.
