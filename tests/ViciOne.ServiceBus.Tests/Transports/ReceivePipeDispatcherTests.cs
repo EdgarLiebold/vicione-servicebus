@@ -159,7 +159,7 @@ public sealed class ReceivePipeDispatcherTests
         public ISendEndpointProvider SendEndpointProvider => throw new NotSupportedException();
         public IPublishEndpointProvider PublishEndpointProvider => throw new NotSupportedException();
         public bool PublishFaults => false;
-        public MessageBody Body { get; } = new BytesMessageBody([]);
+        public MessageBody Body { get; } = new BinaryMessageBody(ReadOnlyMemory<byte>.Empty);
 
         public Task NotifyConsumedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
             CancellationToken cancellationToken = default)

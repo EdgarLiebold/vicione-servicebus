@@ -87,7 +87,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             Uri destination = context.DestinationAddress
                 ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
             DateTimeOffset now = _timeProvider.GetUtcNow();
-            byte[] body = context.Serializer.GetMessageBody(context).GetBytes();
+            byte[] body = context.Serializer.GetMessageBody(context).ToArray();
             byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now).ToArray();
             string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
             Guid id = context.MessageId.Value;

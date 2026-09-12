@@ -58,7 +58,7 @@ public sealed class EventHubInteropAndContextTests
                 Serializer = ServiceBusMetadataJson.MessageSerializer,
                 CorrelationId = correlationId,
             };
-            var eventData = new EventData(ServiceBusMetadataJson.MessageSerializer.GetMessageBody(sendContext).GetBytes())
+            var eventData = new EventData(ServiceBusMetadataJson.MessageSerializer.GetMessageBody(sendContext).ToArray())
             {
                 ContentType = SystemTextJsonMessageSerializer.JsonContentType.MediaType,
             };
@@ -127,7 +127,7 @@ public sealed class EventHubInteropAndContextTests
             var source = new DefaultSerializerMessage(state.RunId, "default-contract");
             var sendContext = new MessageSendContext<IDefaultSerializerMessage>(source);
             Assert.Null(sendContext.Serializer);
-            var eventData = new EventData(ServiceBusMetadataJson.MessageSerializer.GetMessageBody(sendContext).GetBytes());
+            var eventData = new EventData(ServiceBusMetadataJson.MessageSerializer.GetMessageBody(sendContext).ToArray());
             await using EventHubProducerClient producer = fixture.CreateRawProducer(eventHubName);
 
             await producer.SendAsync([eventData], cancellationToken)

@@ -639,3 +639,87 @@ old culture, key, acronym, and duplicate behavior. Four additional isolated coun
 killed and restored for API visibility, direct textual consume headers, value-type `TryGetValue`,
 and exactly-once object projection; a contradictory `NotNullWhen(true)` mutation was rejected by
 the compiler before execution.
+
+## Confirmed iteration-83 message-body findings
+
+The public `MessageBody` contract, every concrete implementation, and all production consumers of
+its former byte, stream, and text accessors were traced across Abstractions, Core, Mediator,
+MessagePack, Persistence, Scheduling, ActiveMQ, Amazon SQS, Azure Service Bus, Event Hubs,
+RabbitMQ, and SQL Transport. Every file changed from that trace was then read manually in full,
+including its comments, namespace, type/file relationship, and physical project owner.
+
+1. The former interface did not define byte ownership. Some implementations returned retained
+   mutable arrays, some returned fresh arrays, some exposed native-provider storage, and Mediator
+   could not return content at all. The same logical body could therefore change after creation or
+   behave differently depending on accessor order. The Greenfield contract must own one immutable
+   materialized byte snapshot and expose only defensive copies and newly opened read-only streams.
+2. Binary payload bytes and text-only transport carriers are separate representations. Treating
+   arbitrary binary as UTF-8 silently corrupts payload meaning, while always Base64-encoding a JSON
+   text body changes interoperable wire contracts. `TryGetTransportText` now expresses an existing
+   lossless text carrier, and `GetRequiredTransportText` defines the strict text-only boundary.
+3. `ArrayMessageBody`, `BytesMessageBody`, and `MemoryMessageBody` represented the same binary
+   concept with different ownership semantics. One sealed `BinaryMessageBody` removes the
+   ambiguity without removing behavior: selected memory, empty bodies, exact bytes, independent
+   streams, and non-text capability are directly tested.
+4. Lazy JSON and MessagePack bodies retained mutable caller graphs and could serialize more than
+   once under concurrent first access. They now materialize a stable serialized snapshot at the
+   owning boundary. Tests vary accessor order, mutate the source after construction, access in
+   parallel, and verify a single serialization.
+5. The Mediator previously retained only a measured length and threw for every body read. This
+   violated the public readable-body promise and prevented downstream observers and middleware from
+   seeing what would be dispatched. It now performs one bounded canonical JSON materialization
+   before dispatch, respects cancellation and configured admission limits, and exposes the same
+   stable body contract as transports.
+6. Native transport wrappers for NMS, Amazon SQS, and Azure Service Bus could otherwise retain
+   mutable SDK objects or memory. They now snapshot native input on construction. SQS distinguishes
+   direct payload text from a structurally valid SNS notification envelope; documentation does not
+   claim cryptographic validation that the implementation does not perform.
+7. SQL persistence must store genuine JSON transport text as text and opaque MessagePack as binary.
+   PostgreSQL and SQL Server real-provider tests prove the database representation and exact typed
+   roundtrip, including high-bit and null bytes. The common SQL receive body preserves the same
+   distinction.
+8. Text-backed schedule and outbox records require one canonical reversible carrier for opaque
+   bytes. Quartz and classic Entity Framework outbox now persist MessagePack as canonical Base64,
+   rehydrate it, and deliver/replay the exact typed payload. Their tests exercise the actual store
+   and delivery pipes rather than testing only a helper.
+9. ActiveMQ must use a native bytes message for MessagePack on both OpenWire and AMQP. Real Artemis
+   acceptance now proves send, publish, and successful forwarding, exact identifiers and content
+   type, and a binary native received body. Amazon SQS/SNS LocalStack acceptance proves the opposite
+   necessary transformation: binary envelope to canonical text carrier and text carrier back to
+   exact binary MessagePack.
+10. A successful `ForwardMessagePipe` rebuilds transport metadata, so whole source and destination
+    envelopes are not expected to be identical. The correct invariant is an exact typed payload,
+    content type, identifiers, and byte ownership together with the expected new forwarding
+    metadata. The new test also kills a copy-body counterchange because that invalid implementation
+    incorrectly leaves the complete envelope unchanged.
+11. `src/ViciOne.ServiceBus` is not a general container for all assemblies. It is the directory of
+    the Core assembly and its internal capability folders. Sibling `src/ViciOne.ServiceBus.*`
+    directories are independent first-party assemblies; `Persistence`, `Scheduling`, and
+    `Transports` group independent provider projects. Moving those projects beneath Core would
+    falsely imply Core ownership, complicate project-reference direction, and expose nested source
+    files to default SDK globs. The topology is retained, while each genuine filename, namespace,
+    and directory mismatch remains subject to the complete owner-file review.
+
+Five deliberately narrow mutations were applied one at a time, compiled, executed against their
+owning acceptance, and restored immediately. Copy-body forwarding, UTF-8 persistence of opaque
+Quartz bytes, UTF-8 persistence of opaque Entity Framework outbox bytes, ActiveMQ text messages for
+MessagePack, and extraction of an SNS wrapper rather than its payload all produced the expected
+red result. Final real-provider runs pass ActiveMQ OpenWire/AMQP under `vicione-856b34496390`,
+Amazon SQS/SNS under `vicione-1eee9ac4c69b`, PostgreSQL under `vicione-c6477f50991d`, and SQL Server
+under `vicione-5a43c63de896`.
+
+The final normal sequential Release Engineering build passes with zero warnings and errors, and
+the complete sequential Unit solution passes 5,477 tests with no failures or skips. Both format
+verification gates and `git diff --check` pass. Fresh-package validation passes all 18 journeys,
+31 packages, three provider-testing consumers, and 30 runtime API assemblies; the reviewed public
+API is 19,674 lines with SHA-256
+`7841eea6a51d14b0dfbe8062838e5d1cacb10248b55da34ad5add0f6f0cc186d`.
+
+Core-host instrumentation measures 43,447/62,001 lines (70.07%) and 14,967/23,883 branches
+(62.67%) across product assemblies loaded by that test host. The separate Quartz coverage host
+passes all 216 tests; within it, `ViciOne.ServiceBus.Quartz` measures 98.01% line and 85.36% branch
+coverage. The Quartz host's aggregate 32.98% line and 27.09% branch figures are not a useful product
+quality headline because it loads many unrelated assemblies without executing their owning tests.
+Likewise, the two reports must not be summed or presented as repository-wide coverage. A truthful
+whole-suite merged figure requires coverage instrumentation in every test host and deduplication of
+overlapping modules, which remains a dedicated repository-wide owner.

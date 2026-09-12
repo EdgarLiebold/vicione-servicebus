@@ -10,7 +10,7 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.AmazonSqs;
 
 /// <summary>Reads service-bus headers from Amazon SQS message attributes and system attributes.</summary>
-public class AmazonSqsHeaderProvider :
+internal sealed class AmazonSqsHeaderProvider :
     IHeaderProvider
 {
     readonly SqsMessageBody _body;
@@ -21,8 +21,8 @@ public class AmazonSqsHeaderProvider :
     /// <param name="body">The parsed message body, including an optional Amazon SNS topic ARN.</param>
     public AmazonSqsHeaderProvider(Message message, SqsMessageBody body)
     {
-        _message = message;
-        _body = body;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
+        _body = body ?? throw new ArgumentNullException(nameof(body));
     }
 
     /// <summary>Tries to read a message attribute, message identifier, topic ARN, or sent timestamp.</summary>
@@ -37,10 +37,16 @@ public class AmazonSqsHeaderProvider :
             return value != null;
         }
 
+        if (_body.TryGetNotificationHeader(key, out var notificationValue))
+        {
+            value = notificationValue;
+            return true;
+        }
+
         if (nameof(Message.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _message.MessageId;
-            return true;
+            return value != null;
         }
 
         if ("TopicArn".Equals(key, StringComparison.OrdinalIgnoreCase))
@@ -68,19 +74,33 @@ public class AmazonSqsHeaderProvider :
         return false;
     }
 
-    /// <summary>Enumerates the logical message identifier and all non-null string message attributes.</summary>
+    /// <summary>Enumerates the logical message identifier and all non-null string attributes from SQS and an optional SNS envelope.</summary>
     /// <returns>The available header name/value pairs.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
-        if (!TryGetHeader(MessageHeaders.MessageId, out _))
-            yield return new KeyValuePair<string, object>(MessageHeaders.MessageId, _message.MessageId);
+        bool hasNativeMessageIdAttribute = _message.MessageAttributes != null
+            && _message.MessageAttributes.TryGetValue(MessageHeaders.MessageId, out var nativeMessageIdAttribute)
+            && nativeMessageIdAttribute.StringValue != null;
+        bool hasNotificationMessageIdAttribute = _body.TryGetNotificationHeader(MessageHeaders.MessageId, out _);
+        if (!hasNativeMessageIdAttribute && !hasNotificationMessageIdAttribute && _message.MessageId is { } messageId)
+            yield return new KeyValuePair<string, object>(MessageHeaders.MessageId, messageId);
 
+        var emittedKeys = new HashSet<string>(StringComparer.Ordinal);
         if (_message.MessageAttributes != null)
         {
             foreach (KeyValuePair<string, object> header in _message.MessageAttributes
                          .Where(x => x.Value.StringValue != null)
                          .Select(x => new KeyValuePair<string, object>(x.Key, x.Value.StringValue)))
+            {
+                emittedKeys.Add(header.Key);
                 yield return header;
+            }
+        }
+
+        foreach (KeyValuePair<string, string> header in _body.GetNotificationHeaders())
+        {
+            if (emittedKeys.Add(header.Key))
+                yield return new KeyValuePair<string, object>(header.Key, header.Value);
         }
     }
 }

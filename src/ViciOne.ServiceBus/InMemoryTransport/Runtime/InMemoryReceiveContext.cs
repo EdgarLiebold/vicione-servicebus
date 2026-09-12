@@ -24,7 +24,7 @@ internal sealed class InMemoryReceiveContext :
     {
         _message = message;
 
-        _body = new BytesMessageBody(message.Body);
+        _body = new BinaryMessageBody(message.Body);
     }
 
     /// <summary>Gets the provider for the message's transport headers.</summary>

@@ -122,7 +122,8 @@ public sealed class AmazonSqsRawJsonTests
                         rawConsumed.TrySetResult(new ForwardObservation(
                             context.Advanced().ReceiveContext.ContentType,
                             context.Message.CommandId,
-                            context.Headers.Get<string>(HeaderName)));
+                            context.Headers.Get<string>(HeaderName),
+                            context.Advanced().ReceiveContext.TransportHeaders.Get<string>(HeaderName)));
                         await context.Advanced().PublishAsync(new RawForwarded(context.Message.CommandId), context.CancellationToken);
                     }
                     catch (Exception exception)
@@ -142,7 +143,8 @@ public sealed class AmazonSqsRawJsonTests
                     forwarded.TrySetResult(new ForwardObservation(
                         context.Advanced().ReceiveContext.ContentType,
                         context.Message.CorrelationId,
-                        context.Headers.Get<string>(HeaderName)));
+                        context.Headers.Get<string>(HeaderName),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get<string>(HeaderName)));
                     return Task.CompletedTask;
                 });
             });
@@ -171,9 +173,11 @@ public sealed class AmazonSqsRawJsonTests
             ForwardObservation actualForwarded = await forwarded.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(SystemTextJsonRawMessageSerializer.JsonContentType, actualRaw.ContentType);
-            Assert.Equal((commandId, HeaderValue), (actualRaw.CorrelationId, actualRaw.HeaderValue));
+            Assert.Equal((commandId, expectedHeader), (actualRaw.CorrelationId, actualRaw.HeaderValue));
+            Assert.Equal(HeaderValue, actualRaw.TransportHeaderValue);
             Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, actualForwarded.ContentType);
             Assert.Equal((commandId, expectedHeader), (actualForwarded.CorrelationId, actualForwarded.HeaderValue));
+            Assert.Equal(expectedHeader, actualForwarded.TransportHeaderValue);
         }
         finally
         {
@@ -214,5 +218,6 @@ public sealed class AmazonSqsRawJsonTests
     private sealed record ForwardObservation(
         System.Net.Mime.ContentType ContentType,
         Guid CorrelationId,
-        string? HeaderValue);
+        string? HeaderValue,
+        string? TransportHeaderValue);
 }

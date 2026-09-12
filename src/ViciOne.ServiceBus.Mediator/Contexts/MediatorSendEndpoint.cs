@@ -14,7 +14,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>Measures and dispatches messages through the mediator receive pipeline.</summary>
+/// <summary>Materializes and dispatches messages through the mediator receive pipeline.</summary>
 internal sealed class MediatorSendEndpoint :
     ITransportSendEndpoint,
     IPublishEndpointProvider,
@@ -140,7 +140,7 @@ internal sealed class MediatorSendEndpoint :
     /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the message has passed through the mediator receive pipeline.</returns>
     public Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
@@ -155,7 +155,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the supplied send pipeline and mediator dispatch finish.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -170,7 +170,7 @@ internal sealed class MediatorSendEndpoint :
     /// <summary>Sends a message to the configured destination.</summary>
     /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after runtime contract dispatch finishes.</returns>
     public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -185,7 +185,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="message">The message to process.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after dispatch through the specified runtime contract.</returns>
     public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -201,7 +201,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the untyped send pipeline and mediator dispatch finish.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -217,7 +217,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after runtime contract dispatch through the supplied pipeline finishes.</returns>
     public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -235,7 +235,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after dispatch through the specified runtime contract and pipeline.</returns>
     public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -252,7 +252,7 @@ internal sealed class MediatorSendEndpoint :
     /// <typeparam name="T">The message contract initialized from <paramref name="values" />.</typeparam>
     /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after message initialization and mediator dispatch finish.</returns>
     public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
@@ -270,7 +270,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after initialization, the typed send pipeline, and mediator dispatch finish.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -288,7 +288,7 @@ internal sealed class MediatorSendEndpoint :
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after initialization, the untyped send pipeline, and mediator dispatch finish.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -303,12 +303,12 @@ internal sealed class MediatorSendEndpoint :
         await SendMessageAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Creates send context.</summary>
+    /// <summary>Creates a send context and applies the supplied send pipeline.</summary>
     /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <returns>A task containing the configured send context.</returns>
     public async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -333,29 +333,29 @@ internal sealed class MediatorSendEndpoint :
         if (ForwardingExpiration.TryDiscard(context))
             return;
 
-        long serializedBodyBytes = await MediatorMessageBodySizer.MeasureAsync(
-            context.Message,
-            _bodySerializerOptions,
-            _messageLimits,
-            _destinationAddress,
-            cancellationToken).ConfigureAwait(false);
-
-        var receiveContext = new MediatorReceiveContext<T>(
-            context,
-            this,
-            this,
-            _publishTopology,
-            _receiveObservers,
-            _objectDeserializer,
-            serializedBodyBytes)
-        {
-            IsDelivered = context.IsPublish && !context.Mandatory
-        };
-
         try
         {
             if (_sendObservers.Count > 0)
                 await _sendObservers.PreSendAsync(context).ConfigureAwait(false);
+
+            MessageBody messageBody = await MediatorMessageBodySerializer.SerializeAsync(
+                context.Message,
+                _bodySerializerOptions,
+                _messageLimits,
+                _destinationAddress,
+                cancellationToken).ConfigureAwait(false);
+
+            var receiveContext = new MediatorReceiveContext<T>(
+                context,
+                this,
+                this,
+                _publishTopology,
+                _receiveObservers,
+                _objectDeserializer,
+                messageBody)
+            {
+                IsDelivered = context.IsPublish && !context.Mandatory
+            };
 
             await _dispatcher.DispatchAsync(receiveContext, NoLockReceiveContext.Instance, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -365,7 +365,18 @@ internal sealed class MediatorSendEndpoint :
         catch (Exception ex)
         {
             if (_sendObservers.Count > 0)
-                await _sendObservers.SendFaultAsync(context, ex).ConfigureAwait(false);
+            {
+                try
+                {
+                    await _sendObservers.SendFaultAsync(context, ex).ConfigureAwait(false);
+                }
+                catch (Exception observerException)
+                {
+                    LogContext.Error?.Log(observerException,
+                        "A mediator send-fault observer failed after the send operation faulted: {DestinationAddress}",
+                        context.DestinationAddress);
+                }
+            }
 
             throw;
         }

@@ -66,9 +66,12 @@ public sealed class AmazonSqsMessageDataTests
             MessageDataObservation observation = await handled.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(expected, observation.Value);
-            Assert.Equal("urn", observation.Address.Scheme);
-            Assert.StartsWith("urn:file:", observation.Address.OriginalString, StringComparison.Ordinal);
-            string objectKey = observation.Address.OriginalString["urn:file:".Length..];
+            Assert.Equal("s3", observation.Address.Scheme);
+            Assert.Equal(bucketName, observation.Address.IdnHost);
+            Assert.True(observation.Address.IsDefaultPort);
+            Assert.Empty(observation.Address.Query);
+            Assert.Empty(observation.Address.Fragment);
+            string objectKey = observation.Address.AbsolutePath.TrimStart('/');
             ListObjectsV2Response objects = await fixture.S3Client.ListObjectsV2Async(
                     new ListObjectsV2Request { BucketName = bucketName },
                     cancellationToken)

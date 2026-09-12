@@ -33,6 +33,6 @@ internal static class PayloadAdmissionTransportBoundary
                     "Correct the named configuration before starting the host"));
         }
 
-        _ = transportContext.Body.GetBytes();
+        _ = transportContext.Body.Length;
     }
 }

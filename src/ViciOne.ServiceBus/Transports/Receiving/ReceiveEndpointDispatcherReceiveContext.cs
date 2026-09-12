@@ -21,7 +21,7 @@ internal sealed class ReceiveEndpointDispatcherReceiveContext :
         ArgumentNullException.ThrowIfNull(headers);
         ArgumentNullException.ThrowIfNull(payloads);
 
-        _body = new BytesMessageBody(body);
+        _body = new BinaryMessageBody(body);
 
         HeaderProvider = new ReadOnlyDictionaryHeaderProvider(headers);
     }

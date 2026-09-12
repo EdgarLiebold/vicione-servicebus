@@ -1,45 +1,87 @@
+using System.Reflection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Abstractions.Tests.Contexts;
 
-/// <summary>
-/// The census of the <see cref="MessageBody" /> contract inside the abstractions assembly.
-/// </summary>
-/// <remarks>
-/// Every other Fact in this class states something about one named body. None of them notices a
-/// sixth implementation appearing beside them, and a body nobody constructs is a body nobody holds
-/// to the contract. This class is the one that fails when that happens.
-/// <para>
-/// The scope is the abstractions assembly alone, which is the assembly this project owns. The core
-/// and MessagePack bodies are declared elsewhere, carry their corresponding contracts, and belong to
-/// their own test projects; claiming them here would be a completeness claim this project cannot
-/// keep.
-/// </para>
-/// </remarks>
+/// <summary>Verifies the public body contract and every implementation owned by Abstractions.</summary>
 public sealed class MessageBodyContractTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-BODY-CONTRACT", "greenfield-readable-shape")]
+    public void PublicContract_IsAlwaysReadableAndHasExplicitRepresentations()
+    {
+        Type contract = typeof(MessageBody);
+
+        Assert.Equal(typeof(long), contract.GetProperty(nameof(MessageBody.Length))?.PropertyType);
+        Assert.Equal(typeof(byte[]), contract.GetMethod(nameof(MessageBody.ToArray), Type.EmptyTypes)?.ReturnType);
+        Assert.Equal(typeof(Stream), contract.GetMethod("OpenReadStream", Type.EmptyTypes)?.ReturnType);
+        MethodInfo transportTextMethod = Assert.Single(contract.GetMethods(), method =>
+            method.Name == nameof(MessageBody.TryGetTransportText));
+        Assert.Equal(typeof(bool), transportTextMethod.ReturnType);
+        ParameterInfo transportTextParameter = Assert.Single(transportTextMethod.GetParameters());
+        Assert.True(transportTextParameter.IsOut);
+        Assert.Equal(typeof(string).MakeByRefType(), transportTextParameter.ParameterType);
+        Assert.Null(contract.GetMethod("GetTransportText", Type.EmptyTypes));
+        Assert.Null(contract.GetProperty("Content"));
+        Assert.Null(contract.GetMethod("GetBytes", Type.EmptyTypes));
+        Assert.Null(contract.GetMethod("GetString", Type.EmptyTypes));
+        Assert.Null(contract.GetMethod("GetStream", Type.EmptyTypes));
+
+        Type textContract = typeof(TransportTextMessageBody);
+        Assert.True(textContract.IsInterface);
+        Assert.Contains(typeof(MessageBody), textContract.GetInterfaces());
+        MethodInfo payloadMethod = Assert.Single(textContract.GetMethods());
+        Assert.Equal(nameof(TransportTextMessageBody.TryGetPayloadText), payloadMethod.Name);
+        Assert.Equal(typeof(bool), payloadMethod.ReturnType);
+        ParameterInfo payloadParameter = Assert.Single(payloadMethod.GetParameters());
+        Assert.True(payloadParameter.IsOut);
+        Assert.Equal(typeof(string).MakeByRefType(), payloadParameter.ParameterType);
+
+        MethodInfo requiredTextMethod = typeof(MessageBodyExtensions).GetMethod(
+            nameof(MessageBodyExtensions.GetRequiredTransportText),
+            [typeof(MessageBody)])!;
+        Assert.Equal(typeof(string), requiredTextMethod.ReturnType);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-BODY-CONTRACT", "required-transport-text-rejects-missing-body")]
+    public void RequiredTransportText_RejectsAMissingBodyAtTheExtensionBoundary()
+    {
+        MessageBody? body = null;
+
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => body!.GetRequiredTransportText());
+
+        Assert.Equal("body", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-BODY-CONTRACT", "one-public-binary-body")]
+    public void Abstractions_ExportsOneSealedBinaryBodyAndNoRedundantLegacyBodies()
+    {
+        Assembly assembly = typeof(MessageBody).Assembly;
+
+        Type? binaryBody = assembly.GetType("ViciOne.ServiceBus.Advanced.Serialization.BinaryMessageBody");
+        Assert.NotNull(binaryBody);
+        Assert.True(binaryBody.IsSealed);
+        Assert.Null(assembly.GetType("ViciOne.ServiceBus.Advanced.Serialization.ArrayMessageBody"));
+        Assert.Null(assembly.GetType("ViciOne.ServiceBus.Advanced.Serialization.BytesMessageBody"));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-BODY-CONTRACT", "abstractions-concrete-type-set")]
     public void EveryConcreteAbstractionsMessageBody_IsInTheExplicitContractSet()
     {
-        // Compile-verified type anchors rather than a written list of names. A name list keeps
-        // asserting after the thing it names was renamed, moved or dropped, and stays green because
-        // it only ever compares itself; if one of these five types stops existing, this file stops
-        // compiling.
+        // Compile-time anchors make a removed or renamed contract fail before the runtime census.
         var contract = new[]
         {
-            IdentityOf(typeof(ArrayMessageBody)),
             IdentityOf(typeof(Base64MessageBody)),
-            IdentityOf(typeof(BytesMessageBody)),
+            IdentityOf(typeof(BinaryMessageBody)),
             IdentityOf(typeof(EmptyMessageBody)),
             IdentityOf(typeof(StringMessageBody)),
         }.Order(StringComparer.Ordinal);
 
-        // Non-public types are included on purpose: the claim is about what the assembly declares,
-        // not about what it exports. An internal body would carry the same contract and would be
-        // just as untested. Value types are included for the same reason - filtering on IsClass would
-        // have made a struct implementation invisible to a census that claims to see everything.
+        // Internal implementations participate because their behavior is still part of this assembly.
         var declared = typeof(MessageBody).Assembly.GetTypes()
             .Where(type => !type.IsInterface && !type.IsAbstract && typeof(MessageBody).IsAssignableFrom(type))
             .Select(IdentityOf)

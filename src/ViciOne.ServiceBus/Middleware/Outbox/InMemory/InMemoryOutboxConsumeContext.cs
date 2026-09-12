@@ -150,7 +150,7 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
             SentTime = context.SentTime ?? now,
             ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
             MessageType = string.Join(";", context.SupportedMessageTypes),
-            Body = body.GetString()
+            Body = body.GetRequiredTransportText()
         };
 
         if (context.TimeToLive.HasValue)

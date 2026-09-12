@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.MessageJournal;
+
 /// <summary>Immutable raw observation presented only to the explicitly configured journal policy.</summary>
 /// <remarks>
 /// A capture may contain sensitive payload and header data. It is never passed to a persistence
@@ -21,15 +22,16 @@ public sealed class MessageJournalCapture
         IEnumerable<string> messageTypes,
         IReadOnlyDictionary<string, string> metadata,
         IReadOnlyDictionary<string, string> headers,
-        ReadOnlyMemory<byte> body)
+        byte[] body)
     {
+        ArgumentNullException.ThrowIfNull(body);
         Operation = operation;
         Outcome = outcome;
         ContentType = contentType;
         MessageTypes = Array.AsReadOnly(messageTypes.ToArray());
         Metadata = Snapshot(metadata);
         Headers = Snapshot(headers);
-        _body = body.ToArray();
+        _body = body;
     }
 
     /// <summary>Gets the operation.</summary>
@@ -50,7 +52,7 @@ public sealed class MessageJournalCapture
     /// <summary>Gets the headers.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
-    /// <summary>Gets the body.</summary>
+    /// <summary>Gets an independently mutable copy of the captured body.</summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
     private static IReadOnlyDictionary<string, string> Snapshot(IReadOnlyDictionary<string, string> source)

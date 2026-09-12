@@ -296,7 +296,7 @@ public sealed class PayloadAdmissionMessagePackTests
         {
             Interlocked.Increment(ref _preSendCalls);
             TransportSendContext transport = Assert.IsType<TransportSendContext>(context, exactMatch: false);
-            BodyLength = transport.Body.GetBytes().LongLength;
+            BodyLength = transport.Body.ToArray().LongLength;
             ApplicationSerializationReads = BoundaryPayload.SerializationReads;
             BoundaryPayload.StopCountingSerializationReads();
             return Task.CompletedTask;

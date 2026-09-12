@@ -13,12 +13,11 @@ public sealed class CoreMessageBodyContractTests
     {
         string[] expected =
         [
-            IdentityOf(typeof(MemoryMessageBody)),
             IdentityOf(typeof(SystemTextJsonMessageBody<>)),
             IdentityOf(typeof(SystemTextJsonObjectMessageBody)),
             IdentityOf(typeof(SystemTextJsonRawMessageBody<>)),
         ];
-        string[] actual = typeof(MemoryMessageBody).Assembly.GetTypes()
+        string[] actual = typeof(SystemTextJsonObjectMessageBody).Assembly.GetTypes()
             .Where(type => !type.IsInterface && !type.IsAbstract && typeof(MessageBody).IsAssignableFrom(type))
             .Select(Normalize)
             .Distinct()
@@ -41,7 +40,7 @@ public sealed class CoreMessageBodyContractTests
             .Order(StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Equal(["ViciOne.ServiceBus.Mediator.Contexts.MeasuredMediatorMessageBody"], actual);
+        Assert.Empty(actual);
     }
 
     private static Type Normalize(Type type) =>

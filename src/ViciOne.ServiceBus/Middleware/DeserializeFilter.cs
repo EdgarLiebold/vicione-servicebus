@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Middleware;
 
@@ -43,15 +44,28 @@ public class DeserializeFilter :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
 
+        MessageBody transportBody = context.Body;
         if (context.TryGetPayload(out MessageLimits? limits)
-            && context.Body.Length is { } actualBytes
-            && actualBytes > limits.MaxEnvelopeBytes)
+            && transportBody.Length > limits.MaxEnvelopeBytes)
         {
-            throw new MessageTooLargeException(actualBytes, limits.MaxEnvelopeBytes, context.InputAddress);
+            throw new MessageTooLargeException(transportBody.Length, limits.MaxEnvelopeBytes, context.InputAddress);
         }
 
         if (!context.TryGetPayload(out ConsumeContext? consumeContext))
-            consumeContext = _serializers.GetMessageDeserializer(context.ContentType).Deserialize(context);
+        {
+            IMessageDeserializer deserializer = _serializers.GetMessageDeserializer(context.ContentType);
+            MessageBody normalizedBody = TransportTextMessageBodyNormalizer.Normalize(transportBody, deserializer);
+            if (ReferenceEquals(normalizedBody, transportBody))
+                consumeContext = deserializer.Deserialize(context);
+            else
+            {
+                SerializerContext serializerContext = deserializer.Deserialize(
+                    normalizedBody,
+                    context.TransportHeaders,
+                    context.InputAddress);
+                consumeContext = new BodyConsumeContext(context, serializerContext);
+            }
+        }
 
         Activity.Current?.AddConsumeContextTags(consumeContext);
 

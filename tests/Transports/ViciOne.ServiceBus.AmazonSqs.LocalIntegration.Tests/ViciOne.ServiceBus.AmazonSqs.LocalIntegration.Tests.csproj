@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
     <ProjectReference Include="../../../src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj" />
     <ProjectReference Include="../../../src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />

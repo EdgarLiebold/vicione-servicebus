@@ -1,7 +1,7 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
@@ -12,57 +12,49 @@ internal sealed class SystemTextJsonRawMessageBody<TMessage> :
     MessageBody
     where TMessage : class
 {
-    readonly SendContext<TMessage> _context;
-    readonly object? _message;
-    readonly JsonSerializerOptions _options;
-    byte[]? _bytes;
-    string? _string;
+    readonly byte[] _content;
 
-    /// <summary>Creates a lazily encoded raw JSON body.</summary>
+    /// <summary>Creates an owned snapshot of the raw JSON body.</summary>
     /// <param name="context">The outgoing message and admission policy.</param>
-    /// <param name="options">The immutable JSON serializer options.</param>
+    /// <param name="options">The JSON serializer options used while creating the snapshot.</param>
     /// <param name="message">An alternate message value, or <see langword="null" /> to use the context message.</param>
     public SystemTextJsonRawMessageBody(SendContext<TMessage> context, JsonSerializerOptions options, object? message = null)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-        _message = message ?? context.Message;
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(options);
+        _content = Serialize(context, options, message ?? context.Message);
     }
 
     /// <summary>Gets the exact encoded UTF-8 byte length.</summary>
-    public long? Length => GetBytes().LongLength;
+    public long Length => _content.LongLength;
+
+    /// <summary>Copies the raw JSON content into a new array.</summary>
+    /// <returns>An independently mutable copy of the raw JSON content.</returns>
+    public byte[] ToArray() => (byte[])_content.Clone();
 
     /// <summary>Opens a non-writable stream over the raw JSON body.</summary>
     /// <returns>A readable stream positioned at the start of the body.</returns>
-    public Stream GetStream()
+    public Stream OpenReadStream() => new MemoryStream(_content, false);
+
+    /// <summary>Tries to get the raw JSON text.</summary>
+    /// <param name="text">The serialized message text.</param>
+    /// <returns>Always <see langword="true" />.</returns>
+    public bool TryGetTransportText([NotNullWhen(true)] out string? text)
     {
-        return new MemoryStream(GetBytes(), false);
+        text = MessageDefaults.Encoding.GetString(_content);
+        return true;
     }
 
-    /// <summary>Gets the raw JSON body as UTF-8 bytes.</summary>
-    /// <returns>The serialized message bytes.</returns>
-    public byte[] GetBytes()
+    static byte[] Serialize(SendContext<TMessage> context, JsonSerializerOptions options, object? message)
     {
-        if (_bytes != null)
-            return _bytes;
-
-        if (_string != null)
-        {
-            _bytes = Encoding.UTF8.GetBytes(_string);
-            return _bytes;
-        }
-
         try
         {
-            if (!_context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
-            {
-                _bytes = JsonSerializer.SerializeToUtf8Bytes(_message, _options);
-                return _bytes;
-            }
+            if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+                return JsonSerializer.SerializeToUtf8Bytes(message, options);
 
             IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
             using (var writer = new Utf8JsonWriter(bodyBuffer))
-                JsonSerializer.Serialize(writer, _message, _message?.GetType() ?? typeof(object), _options);
+                JsonSerializer.Serialize(writer, message, message?.GetType() ?? typeof(object), options);
 
             _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
 
@@ -71,9 +63,7 @@ internal sealed class SystemTextJsonRawMessageBody<TMessage> :
             bodyBuffer.WrittenMemory.Span.CopyTo(envelopeBuffer.GetSpan(bodyBuffer.WrittenCount));
             envelopeBuffer.Advance(bodyBuffer.WrittenCount);
             admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
-            _bytes = envelopeBuffer.WrittenMemory.ToArray();
-
-            return _bytes;
+            return envelopeBuffer.WrittenMemory.ToArray();
         }
         catch (PayloadAdmissionException)
         {
@@ -83,16 +73,5 @@ internal sealed class SystemTextJsonRawMessageBody<TMessage> :
         {
             throw new SerializationException("Failed to serialize message", ex);
         }
-    }
-
-    /// <summary>Gets the raw JSON body as text.</summary>
-    /// <returns>The serialized message text.</returns>
-    public string GetString()
-    {
-        if (_string != null)
-            return _string;
-
-        _string = Encoding.UTF8.GetString(GetBytes());
-        return _string;
     }
 }

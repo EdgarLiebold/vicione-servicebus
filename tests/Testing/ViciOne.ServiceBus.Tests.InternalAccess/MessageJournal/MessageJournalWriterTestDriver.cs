@@ -37,7 +37,7 @@ public sealed class MessageJournalWriterTestDriver
                 ["urn:message:ViciOne:JournalTest"],
                 metadata ?? new Dictionary<string, string>(StringComparer.Ordinal),
                 headers ?? new Dictionary<string, string>(StringComparer.Ordinal),
-                body));
+                body.ToArray()));
     }
 
     public Task ObserveCaptureFailureAsync(Exception failure)

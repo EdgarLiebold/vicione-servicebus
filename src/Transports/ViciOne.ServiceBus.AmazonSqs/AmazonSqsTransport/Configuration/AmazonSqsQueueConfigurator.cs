@@ -23,7 +23,7 @@ public class AmazonSqsQueueConfigurator :
         : base(queueName, durable, autoDelete)
     {
         QueueAttributes = queueAttributes ?? new Dictionary<string, object>();
-        QueueSubscriptionAttributes = queueSubscriptionAttributes ?? new Dictionary<string, object>();
+        QueueSubscriptionAttributes = AmazonSqsAttributeDictionary.CopySubscriptionAttributes(queueSubscriptionAttributes);
         QueueTags = queueTags ?? new Dictionary<string, string>();
 
         if (AmazonSqsEndpointAddress.IsFifo(queueName))
@@ -31,12 +31,12 @@ public class AmazonSqsQueueConfigurator :
     }
 
     /// <summary>Initializes queue configuration from an existing topology entity.</summary>
-    /// <param name="source">The queue topology entity whose settings and collections are reused.</param>
+    /// <param name="source">The queue topology entity whose settings initialize this configurator.</param>
     public AmazonSqsQueueConfigurator(Queue source)
         : base(source.EntityName, source.Durable, source.AutoDelete)
     {
         QueueAttributes = source.QueueAttributes;
-        QueueSubscriptionAttributes = source.QueueSubscriptionAttributes;
+        QueueSubscriptionAttributes = AmazonSqsAttributeDictionary.CopySubscriptionAttributes(source.QueueSubscriptionAttributes);
         QueueTags = source.QueueTags;
     }
 

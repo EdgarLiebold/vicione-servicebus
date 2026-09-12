@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Text.Json;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -93,6 +94,125 @@ public sealed class MediatorSendObserverTests
         Assert.Same(observer.Events[0].Context, observer.Events[1].Context);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-SEND-OBSERVER", "serialization-fault-without-dispatch")]
+    public async Task SerializationFailure_ReportsPreAndExactFaultWithoutDispatchOrPostAsync()
+    {
+        var handled = 0;
+        var expected = new InvalidOperationException("property getter failed");
+        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.Handler<FaultingSerializationMessage>(_ =>
+            {
+                Interlocked.Increment(ref handled);
+                return Task.CompletedTask;
+            });
+        });
+        await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
+        var observer = new RecordingSendObserver();
+        using ConnectHandle observerHandle = mediator.ConnectSendObserver(observer);
+        var message = new FaultingSerializationMessage(expected);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            mediator.SendAsync(message, TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, failure);
+        Assert.Equal(0, Volatile.Read(ref handled));
+        Assert.Equal(["Pre", "Fault"], observer.Events.Select(observation => observation.Stage));
+        Assert.Same(expected, observer.Events[1].Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-SEND-OBSERVER", "body-limit-fault-after-pre-send")]
+    public async Task BodyLimitFailure_ReportsPreAndFaultWithoutDispatchOrPostAsync()
+    {
+        var handled = 0;
+        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(new MessageLimits { MaxBodyBytes = 32, MaxEnvelopeBytes = 32, MaxJsonDepth = 16 });
+            configurator.Handler<MutableObserverMessage>(_ =>
+            {
+                Interlocked.Increment(ref handled);
+                return Task.CompletedTask;
+            });
+        });
+        await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
+        var observer = new RecordingSendObserver();
+        using ConnectHandle observerHandle = mediator.ConnectSendObserver(observer);
+
+        MessageTooLargeException failure = await Assert.ThrowsAsync<MessageTooLargeException>(() =>
+            mediator.SendAsync(
+                new MutableObserverMessage { Value = new string('x', 128) },
+                TestContext.Current.CancellationToken));
+
+        Assert.Equal(0, Volatile.Read(ref handled));
+        Assert.Equal(["Pre", "Fault"], observer.Events.Select(observation => observation.Stage));
+        Assert.Same(failure, observer.Events[1].Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-SEND-OBSERVER", "serialization-cancellation-after-pre-send")]
+    public async Task SerializationCancellation_ReportsPreAndFaultWithoutDispatchOrPostAsync()
+    {
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        var handled = 0;
+        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.Handler<MutableObserverMessage>(_ =>
+            {
+                Interlocked.Increment(ref handled);
+                return Task.CompletedTask;
+            });
+        });
+        await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
+        var observer = new RecordingSendObserver();
+        using ConnectHandle recordingHandle = mediator.ConnectSendObserver(observer);
+        using ConnectHandle cancellationHandle = mediator.ConnectSendObserver(new PreSendActionObserver(_ => source.Cancel()));
+
+        OperationCanceledException failure = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            mediator.SendAsync(new MutableObserverMessage { Value = "cancel" }, source.Token));
+
+        Assert.Equal(source.Token, failure.CancellationToken);
+        Assert.Equal(0, Volatile.Read(ref handled));
+        Assert.Equal(["Pre", "Fault"], observer.Events.Select(observation => observation.Stage));
+        Assert.Same(failure, observer.Events[1].Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-SEND-OBSERVER", "pre-send-mutation-body-and-json-content-type-consistency")]
+    public async Task PreSendMutation_IsReflectedInTheHandlerMessageAndReadableBodyAsync()
+    {
+        string? handledValue = null;
+        byte[]? handledBody = null;
+        string? handledContentType = null;
+        ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.Handler<MutableObserverMessage>(context =>
+            {
+                handledValue = context.Message.Value;
+                handledBody = context.Advanced().ReceiveContext.Body.ToArray();
+                handledContentType = context.Advanced().ReceiveContext.ContentType.MediaType;
+                return Task.CompletedTask;
+            });
+        });
+        await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
+        using ConnectHandle observerHandle = mediator.ConnectSendObserver(new PreSendActionObserver(message =>
+        {
+            Assert.IsType<MutableObserverMessage>(message).Value = "after-pre-send";
+        }));
+        var message = new MutableObserverMessage { Value = "before-pre-send" };
+
+        await mediator.SendAsync(message, TestContext.Current.CancellationToken);
+
+        Assert.Equal("after-pre-send", handledValue);
+        Assert.Equal("application/json", handledContentType);
+        using JsonDocument document = JsonDocument.Parse(Assert.IsType<byte[]>(handledBody));
+        Assert.Equal("after-pre-send", document.RootElement.GetProperty("value").GetString());
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -125,6 +245,22 @@ public sealed class MediatorSendObserverTests
         }
     }
 
+    private sealed class PreSendActionObserver(Action<object> action) : ISendObserver
+    {
+        public Task PreSendAsync<T>(SendContext<T> context)
+            where T : class
+        {
+            action(context.Message);
+            return Task.CompletedTask;
+        }
+
+        public Task PostSendAsync<T>(SendContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+    }
+
     private sealed record SendObservation(
         string Stage,
         Type MessageType,
@@ -139,4 +275,14 @@ public sealed class MediatorSendObserverTests
     private sealed record MediatorResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
     private sealed record FaultingMediatorMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    private sealed class FaultingSerializationMessage(Exception exception)
+    {
+        public string Value => throw exception;
+    }
+
+    private sealed class MutableObserverMessage
+    {
+        public string Value { get; set; } = string.Empty;
+    }
 }

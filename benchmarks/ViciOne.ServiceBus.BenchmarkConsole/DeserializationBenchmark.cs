@@ -58,9 +58,6 @@ public class DeserializationBenchmark
         _messagePackMessageBody = _messagePackSerializer.GetMessageBody(sendContext);
         _systemTextJsonMessageBody = _systemTextJsonSerializer.GetMessageBody(sendContext);
 
-        // Triggers any lazy serialization.
-        _ = _messagePackMessageBody.GetBytes();
-        _ = _systemTextJsonMessageBody.GetBytes();
     }
 
     [Benchmark]

@@ -43,6 +43,6 @@ internal static class MessagePackRoundTrip
                 $"MessagePack did not return a supported message of type '{typeof(T)}'.");
         }
 
-        return new RoundTripResult<T>(roundTripped, serializerContext, body.GetBytes(), requestId);
+        return new RoundTripResult<T>(roundTripped, serializerContext, body.ToArray(), requestId);
     }
 }

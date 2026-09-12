@@ -26,7 +26,7 @@ public sealed class EventHubReceiveContext :
         _eventArgs = eventArgs;
         _eventData = eventArgs.Data;
 
-        _body = new MemoryMessageBody(eventArgs.Data.Body);
+        _body = new BinaryMessageBody(eventArgs.Data.Body);
     }
 
     /// <summary>Gets a provider that exposes Event Hubs identifiers and application properties as message headers.</summary>

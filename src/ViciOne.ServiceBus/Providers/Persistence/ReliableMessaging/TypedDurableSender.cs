@@ -96,7 +96,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
                 messageDataOffloadObserved));
         }
 
-        byte[] body = transportContext.Body.GetBytes();
+        byte[] body = transportContext.Body.ToArray();
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));

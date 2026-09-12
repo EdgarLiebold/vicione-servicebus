@@ -96,8 +96,8 @@ public sealed class SystemTextJsonIsolationTests
         var envelopeContext = new MessageSendContext<ConfiguredMessage>(message) { Serializer = envelope };
         var rawContext = new MessageSendContext<ConfiguredMessage>(message) { Serializer = raw };
 
-        using JsonDocument envelopeDocument = JsonDocument.Parse(envelope.GetMessageBody(envelopeContext).GetBytes());
-        using JsonDocument rawDocument = JsonDocument.Parse(raw.GetMessageBody(rawContext).GetBytes());
+        using JsonDocument envelopeDocument = JsonDocument.Parse(envelope.GetMessageBody(envelopeContext).ToArray());
+        using JsonDocument rawDocument = JsonDocument.Parse(raw.GetMessageBody(rawContext).ToArray());
 
         Assert.Equal(27, envelopeDocument.RootElement.GetProperty("message").GetProperty("message_id").GetInt32());
         Assert.Equal(27, rawDocument.RootElement.GetProperty("message_id").GetInt32());
@@ -216,7 +216,7 @@ public sealed class SystemTextJsonIsolationTests
     public void PayloadPolicy_CannotAlterTheStableMetadataCodec()
     {
         var metadata = new ConfiguredMessage { MessageId = 27 };
-        string before = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(metadata).GetString();
+        string before = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(metadata).GetRequiredTransportText();
         var configuration = new SerializationConfiguration();
         configuration.ConfigureSystemTextJsonSerializerOptions(options =>
         {
@@ -226,7 +226,7 @@ public sealed class SystemTextJsonIsolationTests
         });
 
         ISerialization payload = configuration.CreateSerializerCollection();
-        string after = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(metadata).GetString();
+        string after = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(metadata).GetRequiredTransportText();
 
         Assert.Equal(before, after);
         using JsonDocument metadataDocument = JsonDocument.Parse(after);
@@ -243,7 +243,7 @@ public sealed class SystemTextJsonIsolationTests
     private static string SerializeObject(ISerialization serialization) =>
         Assert.IsAssignableFrom<IObjectDeserializer>(serialization.GetMessageSerializer())
             .SerializeObject(new ConfiguredMessage { MessageId = 27 })
-            .GetString();
+            .GetRequiredTransportText();
 
     public sealed class ConfiguredMessage
     {

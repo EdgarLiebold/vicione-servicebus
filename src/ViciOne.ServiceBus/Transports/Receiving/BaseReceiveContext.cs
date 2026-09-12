@@ -69,10 +69,9 @@ public abstract class BaseReceiveContext :
             return body;
 
         if (TryGetPayload(out MessageLimits? limits)
-            && body.Length is { } actualBytes
-            && actualBytes > limits.MaxEnvelopeBytes)
+            && body.Length > limits.MaxEnvelopeBytes)
         {
-            throw new MessageTooLargeException(actualBytes, limits.MaxEnvelopeBytes, InputAddress);
+            throw new MessageTooLargeException(body.Length, limits.MaxEnvelopeBytes, InputAddress);
         }
 
         Interlocked.CompareExchange(ref _validatedBody, body, null);

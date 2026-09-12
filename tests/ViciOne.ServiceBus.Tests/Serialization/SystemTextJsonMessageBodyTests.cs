@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -42,8 +43,8 @@ public sealed class SystemTextJsonMessageBodyTests
     [Theory]
     [InlineData(MessageBodyFirstAccessor.Length)]
     [InlineData(MessageBodyFirstAccessor.Bytes)]
-    [InlineData(MessageBodyFirstAccessor.String)]
-    [InlineData(MessageBodyFirstAccessor.Stream)]
+    [InlineData(MessageBodyFirstAccessor.TransportText)]
+    [InlineData(MessageBodyFirstAccessor.ReadStream)]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "accessor-order-and-read-only-stream")]
     public void EveryAccessorOrder_ExposesTheExactReadOnlyEnvelope(
         MessageBodyFirstAccessor firstAccessor)
@@ -73,5 +74,67 @@ public sealed class SystemTextJsonMessageBodyTests
             firstAccessor);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "eager-owned-snapshot-single-serialization")]
+    public void Construction_DetachesTheEnvelopeFromLaterMessageAndMetadataMutation()
+    {
+        var message = new MutableBodyMessage { Id = 27, Text = "before" };
+        var expectedOptions = new JsonSerializerOptions(ServiceBusMetadataJson.Options);
+        var envelope = new JsonMessageEnvelope
+        {
+            MessageId = MessageId.ToString("D"),
+            MessageTypes = [MessageUrn.ForTypeString<MutableBodyMessage>()],
+            Message = message,
+            Headers = new Dictionary<string, object?> { ["source"] = "before" },
+        };
+        byte[] expected = JsonSerializer.SerializeToUtf8Bytes(envelope, expectedOptions);
+        var converter = new CountingMutableBodyMessageConverter();
+        var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options);
+        options.Converters.Add(converter);
+        var context = new MessageSendContext<MutableBodyMessage>(message);
+        var body = new SystemTextJsonMessageBody<MutableBodyMessage>(context, options, envelope);
+        Assert.Equal(1, converter.WriteCount);
+
+        message.Id = 99;
+        message.Text = "after";
+        envelope.Headers["source"] = "after";
+        envelope.MessageId = Guid.NewGuid().ToString("D");
+
+        Parallel.For(0, 128, _ =>
+        {
+            Assert.Equal(expected, body.ToArray());
+            Assert.Equal(expected, MessageBodyContractAssertions.Read(body.OpenReadStream()));
+            Assert.Equal(System.Text.Encoding.UTF8.GetString(expected), body.GetRequiredTransportText());
+        });
+
+        Assert.Equal(1, converter.WriteCount);
+    }
+
     private sealed record BodyMessage(int Id, string Text);
+
+    private sealed class MutableBodyMessage
+    {
+        public int Id { get; set; }
+
+        public string Text { get; set; } = string.Empty;
+    }
+
+    private sealed class CountingMutableBodyMessageConverter : JsonConverter<MutableBodyMessage>
+    {
+        int _writeCount;
+
+        public int WriteCount => Volatile.Read(ref _writeCount);
+
+        public override MutableBodyMessage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+            throw new NotSupportedException();
+
+        public override void Write(Utf8JsonWriter writer, MutableBodyMessage value, JsonSerializerOptions options)
+        {
+            Interlocked.Increment(ref _writeCount);
+            writer.WriteStartObject();
+            writer.WriteNumber("id", value.Id);
+            writer.WriteString("text", value.Text);
+            writer.WriteEndObject();
+        }
+    }
 }

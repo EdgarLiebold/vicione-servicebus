@@ -56,6 +56,12 @@ public interface IAmazonSqsReceiveEndpointConfigurator :
     /// <param name="configure">The callback that updates the connection-context pipe.</param>
     void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>>? configure);
 
+    /// <summary>
+    /// Disables raw delivery for queue subscriptions and requires every received body to be a structurally valid Amazon SNS notification envelope.
+    /// Use this for queues dedicated to Amazon SNS subscriptions.
+    /// </summary>
+    void RequireSnsNotificationEnvelope();
+
     /// <summary>Disables FIFO message-group partitioning and sequence ordering.</summary>
     void DisableMessageOrdering();
 }

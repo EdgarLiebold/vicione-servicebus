@@ -80,7 +80,7 @@ public class TopicSendTransportContext :
     /// <returns>The transport's agent handles.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
-        return new IAgent[] { _supervisor };
+        return [_supervisor];
     }
 
     /// <summary>Creates an Amazon SNS send context for a client-context transport operation.</summary>
@@ -125,7 +125,7 @@ public class TopicSendTransportContext :
 
         var request = new PublishBatchRequestEntry
         {
-            Message = context.Body.GetString(),
+            Message = context.Body.GetRequiredTransportText(),
             MessageAttributes = new Dictionary<string, MessageAttributeValue>()
         };
 

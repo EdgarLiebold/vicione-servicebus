@@ -102,7 +102,7 @@ public sealed class RawMessageContextTests
         IProbeResult probe = serializer.GetProbeResult(TestContext.Current.CancellationToken);
         string probeJson = JsonSerializer.Serialize(probe.Results);
 
-        Assert.Equal("{\"value\":27}", body.GetString());
+        Assert.Equal("{\"value\":27}", body.GetRequiredTransportText());
         Assert.Contains(SystemTextJsonRawMessageSerializer.JsonMediaType, probeJson, StringComparison.Ordinal);
         Assert.Contains("System.Text.Json", probeJson, StringComparison.Ordinal);
         Assert.Equal("text", Assert.Throws<ArgumentNullException>(() => serializer.GetMessageBody(null!)).ParamName);

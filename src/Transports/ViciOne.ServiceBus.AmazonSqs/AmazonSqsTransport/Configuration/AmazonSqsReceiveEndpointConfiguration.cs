@@ -140,6 +140,20 @@ public class AmazonSqsReceiveEndpointConfiguration :
         if (_settings.QueueAttributes.Keys.Any(key => string.Equals(key, global::Amazon.SQS.QueueAttributeName.RedrivePolicy, StringComparison.Ordinal)))
             yield return this.Failure("RedrivePolicy", "must not be configured while ViciOne owns the distinct error and skipped queues");
 
+        if (_settings.QueueSubscriptionAttributes.TryGetValue("RawMessageDelivery", out object? rawMessageDelivery))
+        {
+            if (rawMessageDelivery is not string value || !bool.TryParse(value, out bool rawDelivery))
+                yield return this.Failure("RawMessageDelivery", "must be the string 'true' or 'false'");
+            else if (_settings.RequiresSnsNotificationEnvelope == rawDelivery)
+            {
+                yield return this.Failure(
+                    "RawMessageDelivery",
+                    "must be configured together with RequireSnsNotificationEnvelope so delivery and receive formats agree");
+            }
+        }
+        else if (_settings.RequiresSnsNotificationEnvelope)
+            yield return this.Failure("RawMessageDelivery", "must be 'false' when an Amazon SNS notification envelope is required");
+
         foreach (var result in base.Validate())
             yield return result.WithParentKey(queueName);
     }
@@ -241,6 +255,13 @@ public class AmazonSqsReceiveEndpointConfiguration :
     public void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>>? configure)
     {
         configure?.Invoke(_connectionConfigurator);
+    }
+
+    /// <summary>Disables raw subscription delivery and requires Amazon SNS notification envelopes on this receive endpoint.</summary>
+    public void RequireSnsNotificationEnvelope()
+    {
+        _settings.QueueSubscriptionAttributes["RawMessageDelivery"] = "false";
+        _settings.RequiresSnsNotificationEnvelope = true;
     }
 
     /// <summary>Disables the endpoint's ordered-delivery constraint.</summary>

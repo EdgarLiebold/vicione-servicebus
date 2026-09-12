@@ -147,21 +147,21 @@ public sealed class ContextMetadataExtensionsTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-RECEIVE-BODY", "explicit-byte-and-stream-access")]
-    public void BodyReaders_ExposeBytesAndStreamsAndRejectMissingContexts()
+    [RequirementCoverage("REQ-VSB-RECEIVE-BODY", "explicit-content-and-stream-access")]
+    public void BodyReaders_ExposeContentAndStreamsAndRejectMissingContexts()
     {
         byte[] expected = [1, 2, 3];
         ReceiveContext context = CreateReceiveContext(new TestHeaders(), new TestMessageBody(expected));
 
-        Assert.Equal(expected, context.GetBodyBytes());
-        using Stream stream = context.GetBodyStream();
+        Assert.Equal(expected, context.GetBodyContent());
+        using Stream stream = context.OpenBodyStream();
         Assert.Equal(expected, ReadAll(stream));
         Assert.Equal(
             "context",
-            Assert.Throws<ArgumentNullException>(() => ReceiveContextBodyExtensions.GetBodyBytes(null!)).ParamName);
+            Assert.Throws<ArgumentNullException>(() => ReceiveContextBodyExtensions.GetBodyContent(null!)).ParamName);
         Assert.Equal(
             "context",
-            Assert.Throws<ArgumentNullException>(() => ReceiveContextBodyExtensions.GetBodyStream(null!)).ParamName);
+            Assert.Throws<ArgumentNullException>(() => ReceiveContextBodyExtensions.OpenBodyStream(null!)).ParamName);
     }
 
     [Fact]
@@ -277,15 +277,26 @@ public sealed class ContextMetadataExtensionsTests
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    private sealed class TestMessageBody(byte[] bytes) : MessageBody
+    private sealed class TestMessageBody : MessageBody
     {
-        public long? Length => bytes.LongLength;
+        private readonly byte[] _content;
 
-        public Stream GetStream() => new MemoryStream(bytes, writable: false);
+        public TestMessageBody(byte[] content)
+        {
+            _content = [.. content];
+        }
 
-        public byte[] GetBytes() => [.. bytes];
+        public long Length => _content.LongLength;
 
-        public string GetString() => Encoding.UTF8.GetString(bytes);
+        public byte[] ToArray() => (byte[])_content.Clone();
+
+        public Stream OpenReadStream() => new MemoryStream(_content, writable: false);
+
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text)
+        {
+            text = Encoding.UTF8.GetString(_content);
+            return true;
+        }
     }
 
     private sealed class StringHeaderAdapter : ITransportSetHeaderAdapter<string>

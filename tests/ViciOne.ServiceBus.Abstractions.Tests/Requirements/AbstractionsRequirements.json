@@ -1,80 +1,87 @@
 [
    {
-      "requirementId" : "REQ-VSB-ARRAY-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-BINARY-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "SegmentAccessors_ExposeOnlyTheSelectedBytes",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests",
-      "variantKey" : "segment-accessors-consistent"
+      "testMethod" : "Constructor_CopiesOnlyTheSelectedContent",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BinaryMessageBodyTests",
+      "variantKey" : "selected-content-owned-snapshot"
    },
    {
-      "requirementId" : "REQ-VSB-ARRAY-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-BINARY-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Stream_RejectsWritesAndPreservesTheBody",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests",
-      "variantKey" : "stream-read-only"
+      "testMethod" : "EmptyContent_ExposesOneConsistentBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BinaryMessageBodyTests",
+      "variantKey" : "empty-content"
    },
    {
-      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-BINARY-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "EmptyText_ExposesAnEmptyBody",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
-      "variantKey" : "empty-text-empty-body"
+      "testMethod" : "TransportText_RequiresAnExplicitSerializerDefinedCarrier",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BinaryMessageBodyTests",
+      "variantKey" : "no-implicit-binary-text-carrier"
    },
    {
-      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-STREAM",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "InvalidText_ThrowsFormatExceptionForBinaryAccess",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
-      "variantKey" : "invalid-text-format-error"
-   },
-   {
-      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
-      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Stream_RejectsWritesAndPreservesTheBody",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
-      "variantKey" : "stream-read-only"
+      "testMethod" : "OpenReadStream_ReturnsIndependentReadOnlyStreams",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BinaryMessageBodyTests",
+      "variantKey" : "independent-read-only-streams"
    },
    {
       "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "ValidText_ExposesDecodedBytesAndOriginalText",
+      "testMethod" : "ValidCarrier_ExposesDecodedContentAndPreservesText",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
-      "variantKey" : "valid-text-decoded-body"
+      "variantKey" : "decoded-content-and-carrier-text"
    },
    {
-      "requirementId" : "REQ-VSB-BYTES-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Bytes_ExposeOneConsistentBody",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
-      "variantKey" : "accessors-consistent"
+      "testMethod" : "EmptyCarrier_ExposesAnEmptyBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "empty-carrier"
    },
    {
-      "requirementId" : "REQ-VSB-BYTES-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "NullInput_ExposesAnEmptyBody",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
-      "variantKey" : "null-input-empty-body"
+      "testMethod" : "Constructor_RejectsMalformedOrNonCanonicalCarrierImmediately",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "eager-canonical-carrier-validation"
    },
    {
-      "requirementId" : "REQ-VSB-BYTES-MESSAGE-BODY",
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Stream_RejectsWritesAndPreservesBothBodies",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
-      "variantKey" : "stream-read-only"
+      "testMethod" : "Constructor_RejectsMissingCarrierImmediately",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "required-carrier"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-STREAM",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OpenReadStream_ReturnsIndependentReadOnlyStreams",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "base64-independent-read-only-streams"
    },
    {
       "requirementId" : "REQ-VSB-EMPTY-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Instance_ExposesAnEmptyBody",
+      "testMethod" : "Instance_ExposesTheCanonicalEmptyBody",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
-      "variantKey" : "instance-empty-body"
+      "variantKey" : "canonical-empty-body"
    },
    {
       "requirementId" : "REQ-VSB-EMPTY-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Stream_RejectsWritesAndPreservesTheBody",
+      "testMethod" : "Type_IsSealedAndHasNoPublicConstructor",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
-      "variantKey" : "stream-read-only"
+      "variantKey" : "single-public-instance"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-STREAM",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OpenReadStream_ReturnsIndependentReadOnlyStreams",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
+      "variantKey" : "empty-independent-read-only-streams"
    },
    {
       "requirementId" : "REQ-VSB-EXCEPTION-FILTER",
@@ -152,6 +159,27 @@
       "testMethod" : "EveryConcreteAbstractionsMessageBody_IsInTheExplicitContractSet",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests",
       "variantKey" : "abstractions-concrete-type-set"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicContract_IsAlwaysReadableAndHasExplicitRepresentations",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests",
+      "variantKey" : "greenfield-readable-shape"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RequiredTransportText_RejectsAMissingBodyAtTheExtensionBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests",
+      "variantKey" : "required-transport-text-rejects-missing-body"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Abstractions_ExportsOneSealedBinaryBodyAndNoRedundantLegacyBodies",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests",
+      "variantKey" : "one-public-binary-body"
    },
    {
       "requirementId" : "REQ-VSB-NEWID-FORMATTER",
@@ -408,30 +436,44 @@
    {
       "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "EmptyText_ExposesAnEmptyBody",
+      "testMethod" : "Text_ExposesExactUtf8ContentAndOriginalTransportText",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
-      "variantKey" : "empty-text-empty-body"
+      "variantKey" : "strict-utf8-content"
    },
    {
       "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "NonAsciiText_UsesUtf8ByteLength",
+      "testMethod" : "EmptyAndWhitespaceText_ArePreserved",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
-      "variantKey" : "non-ascii-utf8-length"
+      "variantKey" : "empty-and-whitespace-preserved"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-STREAM",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OpenReadStream_ReturnsIndependentReadOnlyStreams",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+      "variantKey" : "text-independent-read-only-streams"
    },
    {
       "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Stream_RejectsWritesAndPreservesAllBodies",
+      "testMethod" : "Constructor_RejectsMissingTextImmediately",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
-      "variantKey" : "stream-read-only"
+      "variantKey" : "required-text"
    },
    {
       "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "WhitespaceText_IsPreserved",
+      "testMethod" : "TakeUtf8Ownership_RetainsCapacityAndExposesOnlyIsolatedPrefixContent",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
-      "variantKey" : "whitespace-preserved"
+      "variantKey" : "internal-owned-utf8-buffer-prefix"
+   },
+   {
+      "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TakeUtf8Ownership_RejectsMissingInvalidOrMalformedContent",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+      "variantKey" : "internal-owned-utf8-buffer-guards"
    },
    {
       "requirementId" : "REQ-VSB-TYPE-EXTENSIONS",
@@ -1472,9 +1514,9 @@
    {
       "requirementId" : "REQ-VSB-MESSAGE-TOO-LARGE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Constructor_RejectsAMissingInputAddress",
+      "testMethod" : "Constructor_RejectsAMissingEndpointAddress",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageTooLargeExceptionTests",
-      "variantKey" : "required-input-address"
+      "variantKey" : "required-endpoint-address"
    },
    {
       "requirementId" : "REQ-VSB-INITIALIZED-MESSAGE",
@@ -2005,7 +2047,7 @@
   ,{ "requirementId": "REQ-VSB-RECEIVE-METADATA", "variantKey": "invariant-utc-sent-time", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "SentTime_IsParsedInvariantlyAndNormalizedToUtc" }
   ,{ "requirementId": "REQ-VSB-RECEIVE-METADATA", "variantKey": "content-encoding", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "ContentEncoding_UsesTheDefaultOrTheDeclaredEncoding" }
   ,{ "requirementId": "REQ-VSB-RECEIVE-METADATA", "variantKey": "required-boundaries", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "MetadataReaders_RejectMissingContextsHeadersAndKeys" }
-  ,{ "requirementId": "REQ-VSB-RECEIVE-BODY", "variantKey": "explicit-byte-and-stream-access", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "BodyReaders_ExposeBytesAndStreamsAndRejectMissingContexts" }
+  ,{ "requirementId": "REQ-VSB-RECEIVE-BODY", "variantKey": "explicit-content-and-stream-access", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "BodyReaders_ExposeContentAndStreamsAndRejectMissingContexts" }
   ,{ "requirementId": "REQ-VSB-SEND-HEADER-COPY", "variantKey": "required-boundaries", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "HeaderCopy_RejectsEveryMissingRequiredInput" }
   ,{ "requirementId": "REQ-VSB-RUNTIME-DISPATCH", "variantKey": "internal-static-runtime-dispatchers", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Internals.Dispatching.EndpointDispatcherTests", "testMethod": "RuntimeDispatchers_AreInternalStaticImplementationTypes" }
   ,{ "requirementId": "REQ-VSB-RUNTIME-DISPATCH", "variantKey": "send-overloads-forward-exact-contract-arguments-and-task", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Internals.Dispatching.EndpointDispatcherTests", "testMethod": "SendDispatcher_ForwardsEveryOverloadAndReturnedTaskExactlyAsync" }
@@ -2034,15 +2076,12 @@
   ,{ "requirementId": "REQ-VSB-ADVANCED-CONTEXT-KEYS", "variantKey": "consume-and-send-capability-lookup", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.ContextTransportKeyExtensionsTests", "testMethod": "Getters_ReturnTheExactTransportCapabilityValuesOrNull" }
   ,{ "requirementId": "REQ-VSB-ADVANCED-CONTEXT-KEYS", "variantKey": "receiver-boundaries-and-method-names", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.ContextTransportKeyExtensionsTests", "testMethod": "Contract_RejectsNullReceiversAndUsesVerbShapedGetterNames" }
   ,{ "requirementId": "REQ-VSB-ADVANCED-CONTEXT-KEYS", "variantKey": "send-capability-mutation-and-absence", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.ContextTransportKeyExtensionsTests", "testMethod": "Setters_MutateOnlyTheMatchingCapabilityAndReportAbsencePrecisely" }
-  ,{ "requirementId": "REQ-VSB-ARRAY-MESSAGE-BODY", "variantKey": "default-segment-is-consistently-empty", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests", "testMethod": "DefaultSegment_ExposesOneConsistentEmptyBody" }
-  ,{ "requirementId": "REQ-VSB-BASE64-MESSAGE-BODY", "variantKey": "required-text-boundary", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests", "testMethod": "Constructor_RejectsMissingTextImmediately" }
   ,{ "requirementId": "REQ-VSB-CONSUME-SEND", "variantKey": "declaration-order-required-boundaries", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.SendConsumeContextExtensionsTests", "testMethod": "EveryOverload_RejectsTheFirstMissingParameterBeforeResolvingAnEndpoint" }
   ,{ "requirementId": "REQ-VSB-CONSUME-SEND", "variantKey": "distinct-cancellation-sources-are-linked", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.SendConsumeContextExtensionsTests", "testMethod": "DistinctCancellationSources_CancelTheInFlightSendFromEitherOwnerAsync" }
   ,{ "requirementId": "REQ-VSB-CONSUME-SEND", "variantKey": "initializer-overload-forwarding", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.SendConsumeContextExtensionsTests", "testMethod": "InitializerOverloads_ForwardTheExactValuesPipeAndContractOnceAsync" }
   ,{ "requirementId": "REQ-VSB-CONSUME-SEND", "variantKey": "runtime-overload-forwarding", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.SendConsumeContextExtensionsTests", "testMethod": "RuntimeOverloads_UseTheAdvancedRuntimeContractAndForwardEveryArgumentAsync" }
   ,{ "requirementId": "REQ-VSB-CONSUME-SEND", "variantKey": "single-source-and-shared-cancellation-token-identity", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.SendConsumeContextExtensionsTests", "testMethod": "SingleOrSharedCancellationSource_PreservesTheOriginalTokenIdentityAsync" }
   ,{ "requirementId": "REQ-VSB-CONSUME-SEND", "variantKey": "typed-overload-forwarding", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Contexts.SendConsumeContextExtensionsTests", "testMethod": "TypedOverloads_ForwardTheExactMessagePipeAndTokenOnceAsync" }
-  ,{ "requirementId": "REQ-VSB-STRING-MESSAGE-BODY", "variantKey": "required-text-boundary", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests", "testMethod": "Constructor_RejectsMissingTextImmediately" }
   ,{ "requirementId": "REQ-VSB-RECEIVE-METADATA", "variantKey": "all-supported-timestamp-representations-normalize-to-utc", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "SentTime_NormalizesEverySupportedTimestampRepresentationToUtc" }
   ,{ "requirementId": "REQ-VSB-RECEIVE-METADATA", "variantKey": "invalid-content-encoding-is-rejected", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "ContentEncoding_RejectsAnUnknownDeclaredEncoding" }
   ,{ "requirementId": "REQ-VSB-RECEIVE-METADATA", "variantKey": "named-context-readers-forward-exact-standard-headers", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.ContextMetadataExtensionsTests", "testMethod": "NamedContextReaders_ExposeEveryStandardHeaderWithoutChangingItsMeaning" }

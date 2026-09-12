@@ -741,3 +741,94 @@ independent body Red Team reports FAIL for the existing cross-project `MessageBo
 defines the next atomic owner: immutable byte ownership, explicit text encoding, readable Mediator
 content, all implementations/callers, adversarial mutation tests, and an Embedded-target allocation
 gate. This is retained as an explicit next iteration rather than hidden by a partial local fix.
+
+## Iteration 83 outcome
+
+Replace the implementation-defined `MessageBody` capability with one Greenfield contract that is
+always materialized, length-known, byte-stable, independently streamable, and explicit about the
+text representation required by text-only transports. Consolidate redundant array, byte-array, and
+memory implementations without losing segment, empty, UTF-8, Base64, JSON, MessagePack, native
+provider, mediator, forwarding, durable, journal, outbox, or scheduling behavior.
+
+## Iteration 83 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-MESSAGE-BODY-CONTRACT` | public shape and concrete owner census | Abstractions, Core, MessagePack, and provider tests | exact length, defensive `byte[]` copies, independent `OpenReadStream`, optional transport text, sealed concrete types |
+| `REQ-VSB-BINARY-MESSAGE-BODY` | selected memory, empty content, ownership | Abstractions serialization tests | exact segment, constructor snapshot, source mutation isolation, no implicit binary-to-text conversion |
+| `REQ-VSB-TEXT-MESSAGE-BODY` | UTF-8 text and Base64 carrier text | Abstractions serialization tests | exact bytes/text, eager validation, source stability, malformed Base64 boundary |
+| `REQ-VSB-MESSAGE-BODY-STREAM` | repeatable independent streams | shared owner assertions | position zero, read-only behavior, independent positions and disposal, unchanged content |
+| `REQ-VSB-SERIALIZED-BODY-SNAPSHOT` | JSON and MessagePack materialization | Core and MessagePack tests | source mutation isolation, accessor order, concurrent access, exact bytes, single serialization |
+| `REQ-VSB-MEDIATOR-BODY` | bounded canonical JSON materialization before dispatch | Core mediator and architecture tests | readable exact body, byte length, oversize rejection, cancellation, dispatch ordering, bounded growth |
+| `REQ-VSB-NATIVE-BODY-SNAPSHOT` | ActiveMQ, SQS, and Azure Service Bus adapters | owning provider tests | constructor-time snapshot, no caller/native mutation leakage, exact text/binary representation |
+| `REQ-VSB-BODY-CROSS-OWNER` | forwarding, move, persistence, journal, outbox, scheduling | owning unit/integration tests | byte-for-byte transport paths and exact text-only carrier paths preserve all features |
+| `REQ-VSB-SOURCE-NAVIGATION` | body filenames, namespaces, and visibility | architecture tests and manual ledger | one type per file, no redundant binary implementation, provider adapters remain with providers |
+| `REQ-VSB-SOURCE-COMMENTS` | every fully read body and caller file | manual review plus hygiene gates | current ownership, encoding, stream, failure, and completion semantics only |
+
+## Iteration 83 mutation obligations
+
+- Return caller/native memory directly, delay a snapshot, or expose a mutable array: mutation after
+  construction and returned-view adversarial tests must observe the breach.
+- Remove exact length or defensive byte-copy access, or make optional transport-text discovery
+  throw for an opaque body: public-shape and mediator contract tests must fail.
+- Reuse one stream, expose a writable stream, inherit position, or let disposal affect later reads:
+  independent-stream tests must fail.
+- Decode opaque binary bytes as text or conflate Base64 carrier text with decoded bytes:
+  exact-representation and capability tests must fail.
+- Serialize JSON or MessagePack more than once, race first materialization, or observe later source
+  mutation: concurrency, invocation-count, and snapshot tests must fail.
+- Measure mediator content without retaining it, allocate beyond its declared hard bound, dispatch
+  before materialization, or lose cancellation: direct and architecture tests must fail.
+- Read SQS, NMS, or BinaryData again after construction, or return native storage: provider mutation
+  tests must fail.
+- Decode a binary body at a byte-only destination or Base64-encode a textual body at a text-only
+  destination: cross-owner transport and persistence assertions must fail.
+- Restore `ArrayMessageBody` or `MemoryMessageBody`, keep an unsealed concrete body, or export a
+  provider-only implementation: compile-bound census and public API review must fail.
+- Retain implementation-defined ownership prose, ambiguous `GetString`, or obsolete measured-only
+  mediator comments: manual review and documentation checks must reject the exact source.
+
+## Iteration 83 completion
+
+The complete public body contract, every production implementation, every changed byte/text
+consumer, and their directly affected comments were read manually before the final design was
+accepted. `MessageBody` is now one immutable, materialized contract with an exact `Length`, a
+defensive `ToArray`, an independent read-only `OpenReadStream`, and an optional explicit transport
+text capability. The three overlapping array/memory implementations were replaced by one sealed
+`BinaryMessageBody`; JSON, MessagePack, Mediator, native-provider, forwarding, journal, durable,
+outbox, scheduling, and SQL owners now preserve the same snapshot and representation rules.
+
+The apparently repeated `ViciOne.ServiceBus` path was also adjudicated during this pass. The
+directory `src/ViciOne.ServiceBus` is the Core project, while the sibling
+`src/ViciOne.ServiceBus.*` directories are separate product assemblies. Persistence, Scheduling,
+and Transports remain repository-level provider groups containing separate adapter projects. This
+topology makes assembly and dependency ownership visible; nesting sibling projects inside the Core
+project would create a false ownership relationship and SDK glob hazards. Genuine type, namespace,
+filename, and folder mismatches will still be corrected in each complete owning pass.
+
+Five isolated counterchanges were compiled, executed, killed, and restored: forwarding with a copy
+serializer, non-Base64 Quartz persistence, non-Base64 Entity Framework outbox persistence, ActiveMQ
+text transport for binary MessagePack, and acceptance of the native SNS wrapper instead of its
+payload. The final sequential Release Engineering build and both formatting gates have zero
+warnings, errors, or changes. The complete Unit solution passes 5,477 tests with no failures or
+skips. Fresh package validation passes 18 developer journeys, 31 packages, three isolated provider
+consumers, and all 30 runtime API assemblies. The deliberate 19,674-line public API has SHA-256
+`7841eea6a51d14b0dfbe8062838e5d1cacb10248b55da34ad5add0f6f0cc186d`.
+
+Real-provider acceptance passes for ActiveMQ OpenWire and AMQP (2/2), Amazon SQS/SNS through
+LocalStack (1/1), PostgreSQL (1/1), and SQL Server (1/1). The new cross-owner tests additionally
+prove successful in-memory forwarding, Quartz store/rehydrate/deliver, and classic Entity Framework
+outbox store/replay with exact MessagePack binary payloads. An internal read-only Red Team found no
+remaining Critical or High implementation defect; its originally missing cross-owner acceptance
+cases are now implemented. This internal review is supporting evidence, not an independent external
+acceptance.
+
+Core-host instrumentation reports 43,447 of 62,001 lines (70.07%) and 14,967 of 23,883 branches
+(62.67%). The separate Quartz host passes 216 tests and instruments the Quartz product project at
+98.01% line and 85.36% branch coverage. These figures are reported per instrumented host rather
+than merged or extrapolated into a false whole-suite percentage; repository-wide merged coverage
+remains a later dedicated owner because most test projects do not yet carry the MTP coverage
+provider. Source hygiene finds no C# preprocessor directives, no empty source directories, and no
+dummy, stub, TODO, FIXME, or compatibility-shim marker. The remaining generic asynchronous return
+comments belong to source owners not yet manually read and remain queued for their mandatory
+file-by-file passes; no comment generator or bulk rewrite is used.

@@ -32,12 +32,14 @@ public sealed class AmazonSqsTopologyTests
     {
         var subscriptionAttributes = new Dictionary<string, object>
         {
-            ["RawMessageDelivery"] = "false"
+            ["rawmessagedelivery"] = "false"
         };
 
         var topic = new TopicEntity(1, "orders", true, false, topicSubscriptionAttributes: subscriptionAttributes);
 
-        Assert.Equal("false", topic.TopicSubscriptionAttributes["RawMessageDelivery"]);
+        KeyValuePair<string, object> attribute = Assert.Single(topic.TopicSubscriptionAttributes);
+        Assert.Equal("RawMessageDelivery", attribute.Key);
+        Assert.Equal("false", attribute.Value);
     }
 
     [Fact]

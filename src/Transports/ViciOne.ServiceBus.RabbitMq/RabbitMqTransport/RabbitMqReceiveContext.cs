@@ -38,7 +38,7 @@ public sealed class RabbitMqReceiveContext :
         DeliveryTag = deliveryTag;
         Properties = properties;
 
-        _body = new MemoryMessageBody(body);
+        _body = new BinaryMessageBody(body);
     }
 
     /// <summary>Gets a header provider over the immutable AMQP properties.</summary>

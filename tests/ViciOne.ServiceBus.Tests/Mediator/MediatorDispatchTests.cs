@@ -1,5 +1,8 @@
+using System.Reflection;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Mediator;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -84,8 +87,84 @@ public sealed class MediatorDispatchTests
 
         Assert.True(failure.ActualBytes > failure.MaximumBytes);
         Assert.Equal(64, failure.MaximumBytes);
-        Assert.Equal(new Uri("loopback://localhost/mediator"), failure.InputAddress);
+        Assert.Equal(new Uri("loopback://localhost/mediator"), failure.EndpointAddress);
         Assert.Equal(0, Volatile.Read(ref handled));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "exact-byte-limit-is-accepted")]
+    public async Task SerializedBody_AtTheExactByteLimitIsDispatchedAsync()
+    {
+        var message = new MutableDispatchMessage { Value = "exact-boundary" };
+        var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options) { MaxDepth = 32 };
+        int exactLength = JsonSerializer.SerializeToUtf8Bytes(message, options).Length;
+        MessageBody? observed = null;
+        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            configuration.Limits(new MessageLimits
+            {
+                MaxBodyBytes = exactLength,
+                MaxEnvelopeBytes = exactLength,
+                MaxJsonDepth = 32,
+            });
+            configuration.Handler<MutableDispatchMessage>(context =>
+            {
+                observed = context.Advanced().ReceiveContext.Body;
+                return Task.CompletedTask;
+            });
+        });
+
+        await mediator.SendAsync(message, TestContext.Current.CancellationToken);
+
+        StringMessageBody body = Assert.IsType<StringMessageBody>(observed);
+        Assert.Equal(exactLength, body.Length);
+        FieldInfo contentField = typeof(StringMessageBody).GetField("_content", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        byte[] ownedBuffer = Assert.IsType<byte[]>(contentField.GetValue(body));
+        Assert.InRange(ownedBuffer.Length, exactLength, exactLength);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-BODY", "readable-owned-snapshot-before-dispatch")]
+    public async Task ReceiveBody_IsReadableAndUnaffectedByConsumerMutationAsync()
+    {
+        MessageBody? observed = null;
+        var message = new MutableDispatchMessage { Value = "before" };
+        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.Handler<MutableDispatchMessage>(context =>
+            {
+                observed = context.Advanced().ReceiveContext.Body;
+                context.Message.Value = "after";
+                return Task.CompletedTask;
+            });
+        });
+
+        await mediator.SendAsync(message, TestContext.Current.CancellationToken);
+
+        MessageBody body = Assert.IsAssignableFrom<MessageBody>(observed);
+        var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options)
+        {
+            MaxDepth = MessageLimits.Conservative.MaxJsonDepth,
+        };
+        byte[] expected = JsonSerializer.SerializeToUtf8Bytes(
+            new MutableDispatchMessage { Value = "before" },
+            options);
+        Assert.Equal(expected.LongLength, body.Length);
+        Assert.Equal(expected, body.ToArray());
+        Assert.Equal(System.Text.Encoding.UTF8.GetString(expected), body.GetRequiredTransportText());
+        Assert.IsNotAssignableFrom<Stream>(body);
+        using Stream stream = body.OpenReadStream();
+        using Stream second = body.OpenReadStream();
+        Assert.NotSame(stream, second);
+        Assert.Equal(expected[0], stream.ReadByte());
+        Assert.Equal(0, second.Position);
+        stream.Dispose();
+        using var copied = new MemoryStream();
+        second.CopyTo(copied);
+        Assert.Equal(expected, copied.ToArray());
+        Assert.False(second.CanWrite);
+        Assert.Equal(expected, body.ToArray());
     }
 
     [Fact]
@@ -337,6 +416,11 @@ public sealed class MediatorDispatchTests
         .OperationTimeout!.Value;
 
     private sealed record DispatchMessage(string Value);
+
+    private sealed class MutableDispatchMessage
+    {
+        public string Value { get; set; } = string.Empty;
+    }
 
     private sealed class DepthMessage
     {

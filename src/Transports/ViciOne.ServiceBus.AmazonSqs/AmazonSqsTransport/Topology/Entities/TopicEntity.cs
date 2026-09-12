@@ -24,7 +24,7 @@ public class TopicEntity :
         Durable = durable;
         AutoDelete = autoDelete;
         TopicAttributes = topicAttributes ?? new Dictionary<string, object>();
-        TopicSubscriptionAttributes = topicSubscriptionAttributes ?? new Dictionary<string, object>();
+        TopicSubscriptionAttributes = AmazonSqsAttributeDictionary.CopySubscriptionAttributes(topicSubscriptionAttributes);
         TopicTags = topicTags ?? new Dictionary<string, string>();
 
         SetRawDeliveryDefault();

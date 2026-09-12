@@ -13,7 +13,7 @@ public static class ServiceBusMetadataSerializer
     {
         return value == null
             ? null
-            : ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(value).GetString();
+            : ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(value).GetRequiredTransportText();
     }
 
     /// <summary>Converts infrastructure metadata to a reference type.</summary>

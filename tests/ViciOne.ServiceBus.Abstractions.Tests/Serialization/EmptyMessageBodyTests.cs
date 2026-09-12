@@ -1,66 +1,45 @@
+using System.Reflection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Abstractions.Tests.Serialization;
 
-/// <summary>
-/// The contract of <see cref="EmptyMessageBody" />: the canonical empty body answers every accessor
-/// with an empty body and never with nothing.
-/// </summary>
-/// <remarks>
-/// The product exposes a single public body instance. The test therefore verifies every observable
-/// value without pretending that the accessor order can be reset on fresh instances. Object
-/// identity is not asserted because it is not part of the message-body contract.
-/// </remarks>
 public sealed class EmptyMessageBodyTests
 {
-    private static readonly byte[] EmptyBytes = [];
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EMPTY-MESSAGE-BODY", "canonical-empty-body")]
+    public void Instance_ExposesTheCanonicalEmptyBody()
+    {
+        EmptyMessageBody body = EmptyMessageBody.Instance;
 
-    private const string EmptyText = "";
+        Assert.Same(body, EmptyMessageBody.Instance);
+        Assert.Equal(0, body.Length);
+        Assert.Empty(body.ToArray());
+        Assert.Equal(string.Empty, body.GetRequiredTransportText());
+        using Stream stream = body.OpenReadStream();
+        Assert.Equal(0, stream.Length);
+        Assert.False(stream.CanWrite);
+    }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EMPTY-MESSAGE-BODY", "instance-empty-body")]
-    public void Instance_ExposesAnEmptyBody()
+    [RequirementCoverage("REQ-VSB-EMPTY-MESSAGE-BODY", "single-public-instance")]
+    public void Type_IsSealedAndHasNoPublicConstructor()
     {
-        AssertExposes(EmptyMessageBody.Instance, EmptyBytes, EmptyText);
+        Assert.True(typeof(EmptyMessageBody).IsSealed);
+        Assert.Empty(typeof(EmptyMessageBody).GetConstructors(BindingFlags.Public | BindingFlags.Instance));
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EMPTY-MESSAGE-BODY", "stream-read-only")]
-    public void Stream_RejectsWritesAndPreservesTheBody()
+    [RequirementCoverage("REQ-VSB-MESSAGE-BODY-STREAM", "empty-independent-read-only-streams")]
+    public void OpenReadStream_ReturnsIndependentReadOnlyStreams()
     {
-        var body = EmptyMessageBody.Instance;
+        using Stream first = EmptyMessageBody.Instance.OpenReadStream();
+        using Stream second = EmptyMessageBody.Instance.OpenReadStream();
 
-        using (var stream = body.GetStream())
-        {
-            // A zero-length stream is the case where read-only matters most: the default MemoryStream
-            // constructor hands out a growable buffer, so a caller could have written a body into
-            // what is by definition empty.
-            Assert.False(stream.CanWrite);
-            Assert.Throws<NotSupportedException>(() => stream.WriteByte(0x00));
-        }
-
-        AssertExposes(body, EmptyBytes, EmptyText);
-    }
-
-    /// <summary>
-    /// Holds all four accessors against the exact external values. No product accessor is the oracle
-    /// of another, so a body that answers consistently but wrongly still fails here.
-    /// </summary>
-    private static void AssertExposes(MessageBody body, byte[] expectedBytes, string expectedText)
-    {
-        Assert.Equal<long?>(expectedBytes.LongLength, body.Length);
-        Assert.Equal(expectedBytes, body.GetBytes());
-        Assert.Equal(expectedText, body.GetString());
-        Assert.Equal(expectedBytes, ReadStream(body));
-    }
-
-    private static byte[] ReadStream(MessageBody body)
-    {
-        using var stream = body.GetStream();
-        using var buffer = new MemoryStream();
-        stream.CopyTo(buffer);
-
-        return buffer.ToArray();
+        Assert.NotSame(first, second);
+        Assert.False(first.CanWrite);
+        Assert.False(second.CanWrite);
+        Assert.Throws<NotSupportedException>(() => first.WriteByte(0x00));
+        Assert.Equal(0, second.Position);
     }
 }

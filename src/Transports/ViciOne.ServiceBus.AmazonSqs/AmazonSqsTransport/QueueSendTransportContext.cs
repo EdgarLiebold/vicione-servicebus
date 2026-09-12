@@ -121,7 +121,7 @@ public class QueueSendTransportContext :
 
         operationToken.ThrowIfCancellationRequested();
 
-        var message = new SendMessageBatchRequestEntry("", context.Body.GetString())
+        var message = new SendMessageBatchRequestEntry("", context.Body.GetRequiredTransportText())
         {
             Id = sendContext.MessageId.ToString(),
             MessageAttributes = new Dictionary<string, MessageAttributeValue>()

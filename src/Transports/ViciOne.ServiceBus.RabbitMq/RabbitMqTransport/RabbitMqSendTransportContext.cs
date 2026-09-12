@@ -172,7 +172,7 @@ public class RabbitMqSendTransportContext :
         if (exchange.Equals(RabbitMqExchangeNames.ReplyTo))
             exchange = "";
 
-        var body = context.Body.GetBytes();
+        byte[] body = context.Body.ToArray();
 
         if (context.TryGetPayload(out PublishContext? publishContext))
             context.Mandatory = context.Mandatory || publishContext.Mandatory;

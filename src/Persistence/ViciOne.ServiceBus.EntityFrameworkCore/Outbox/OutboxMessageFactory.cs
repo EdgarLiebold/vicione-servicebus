@@ -39,7 +39,7 @@ internal static class OutboxMessageFactory
             SentTime = context.SentTime ?? now,
             ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
             MessageType = string.Join(";", context.SupportedMessageTypes),
-            Body = body.GetString(),
+            Body = body.GetRequiredTransportText(),
             InboxMessageId = inboxMessageId,
             InboxConsumerId = inboxConsumerId,
             OutboxId = outboxId,

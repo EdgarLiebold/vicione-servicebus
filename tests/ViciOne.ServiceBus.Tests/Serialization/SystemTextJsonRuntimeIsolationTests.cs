@@ -178,7 +178,7 @@ public sealed class SystemTextJsonRuntimeIsolationTests
             if (typeof(T) != typeof(TMessage))
                 return Task.CompletedTask;
 
-            using JsonDocument document = JsonDocument.Parse(context.Serializer.GetMessageBody(context).GetBytes());
+            using JsonDocument document = JsonDocument.Parse(context.Serializer.GetMessageBody(context).ToArray());
             JsonProperty property = Assert.Single(document.RootElement.GetProperty("message").EnumerateObject());
 
             lock (_payloadPropertyNames)

@@ -1,93 +1,68 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
-using System.Threading;
 using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>Provides cached body access for Apache NMS text and byte messages.</summary>
-public class ActiveMqMessageBody :
-    MessageBody
+/// <summary>Owns a stable snapshot of an Apache NMS text or byte message.</summary>
+internal sealed class ActiveMqMessageBody :
+    MessageBody,
+    TransportTextMessageBody
 {
-    readonly IMessage _message;
-    readonly object _gate = new();
-    byte[]? _bytes;
-    bool _initialized;
-    string? _string;
+    readonly byte[] _content;
+    readonly string? _text;
 
-    /// <summary>Creates a body adapter for an Apache NMS message.</summary>
-    /// <param name="message">The native message whose body is exposed.</param>
+    /// <summary>Creates an owned body snapshot from an Apache NMS message.</summary>
+    /// <param name="message">The native message to snapshot.</param>
     public ActiveMqMessageBody(IMessage message)
     {
-        _message = message ?? throw new ArgumentNullException(nameof(message));
-    }
+        ArgumentNullException.ThrowIfNull(message);
 
-    /// <summary>
-    /// Gets the exact encoded byte length returned by <see cref="GetBytes" />. The body is initialized
-    /// once so length, stream, byte, and string accessors observe the same provider snapshot.
-    /// </summary>
-    public long? Length
-    {
-        get
+        switch (message)
         {
-            EnsureInitialized();
-            return _bytes!.LongLength;
+            case ITextMessage text:
+                _text = text.Text ?? string.Empty;
+                _content = MessageDefaults.Encoding.GetBytes(_text);
+                break;
+
+            case IBytesMessage bytes:
+                byte[]? content = bytes.Content;
+                _content = content is null ? [] : (byte[])content.Clone();
+                break;
+
+            default:
+                throw new ActiveMqTransportException(
+                    $"The message type is not supported: {TypeCache.GetShortName(message.GetType())}");
         }
     }
+
+    /// <summary>Gets the exact snapshot length in bytes.</summary>
+    public long Length => _content.LongLength;
+
+    /// <summary>Copies the native-message snapshot into a new array.</summary>
+    /// <returns>An independently mutable copy of the snapshot.</returns>
+    public byte[] ToArray() => (byte[])_content.Clone();
 
     /// <summary>Creates a read-only stream over the cached body bytes.</summary>
     /// <returns>A non-writable memory stream positioned at the beginning of the body.</returns>
-    public Stream GetStream()
+    public Stream OpenReadStream() => new MemoryStream(_content, false);
+
+    /// <summary>Tries to get the native text-message content without interpreting byte messages.</summary>
+    /// <param name="text">The native text snapshot for a text message.</param>
+    /// <returns><see langword="true" /> for a text message; otherwise, <see langword="false" />.</returns>
+    public bool TryGetTransportText([NotNullWhen(true)] out string? text)
     {
-        EnsureInitialized();
-        return new MemoryStream(_bytes!, false);
+        text = _text;
+        return text is not null;
     }
 
-    /// <summary>Gets the cached body bytes.</summary>
-    /// <returns>The UTF-8 bytes of a text message or a snapshot of a byte message.</returns>
-    public byte[] GetBytes()
+    /// <summary>Tries to expose the native text-message payload without interpreting byte messages as text.</summary>
+    /// <param name="text">The native text snapshot for an Apache NMS text message.</param>
+    /// <returns><see langword="true" /> for text messages; otherwise, <see langword="false" />.</returns>
+    public bool TryGetPayloadText([NotNullWhen(true)] out string? text)
     {
-        EnsureInitialized();
-        return _bytes!;
-    }
-
-    /// <summary>Gets the cached body as text.</summary>
-    /// <returns>The text body or the configured decoding of a byte message.</returns>
-    public string GetString()
-    {
-        EnsureInitialized();
-        return _string!;
-    }
-
-    void EnsureInitialized()
-    {
-        if (Volatile.Read(ref _initialized))
-            return;
-
-        lock (_gate)
-        {
-            if (_initialized)
-                return;
-
-            switch (_message)
-            {
-                case ITextMessage text:
-                    _string = text.Text ?? string.Empty;
-                    _bytes = Encoding.UTF8.GetBytes(_string);
-                    break;
-
-                case IBytesMessage bytes:
-                    byte[]? content = bytes.Content;
-                    _bytes = content is null ? [] : (byte[])content.Clone();
-                    _string = MessageDefaults.Encoding.GetString(_bytes);
-                    break;
-
-                default:
-                    throw new ActiveMqTransportException(
-                        $"The message type is not supported: {TypeCache.GetShortName(_message.GetType())}");
-            }
-
-            Volatile.Write(ref _initialized, true);
-        }
+        text = _text;
+        return text is not null;
     }
 }

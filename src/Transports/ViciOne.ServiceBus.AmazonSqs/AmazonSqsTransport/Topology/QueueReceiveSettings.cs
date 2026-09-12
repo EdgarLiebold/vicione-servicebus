@@ -50,6 +50,9 @@ public class QueueReceiveSettings :
     public bool IsOrdered { get; set; }
 
     /// <inheritdoc />
+    public bool RequiresSnsNotificationEnvelope { get; set; }
+
+    /// <inheritdoc />
     public int VisibilityTimeout { get; set; }
 
     /// <inheritdoc />

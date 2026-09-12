@@ -68,6 +68,15 @@ static class MessagePackSerializationRuntime
         return MessagePackSerializer.Deserialize<T>(buffer, Options);
     }
 
+    /// <summary>Deserializes MessagePack content without requiring a mutable array.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="buffer">The MessagePack payload content.</param>
+    /// <returns>The decoded value.</returns>
+    public static T Deserialize<T>(ReadOnlyMemory<byte> buffer)
+    {
+        return MessagePackSerializer.Deserialize<T>(buffer, Options);
+    }
+
     /// <summary>
     /// Deserializes a payload using a message type selected at runtime.
     /// </summary>

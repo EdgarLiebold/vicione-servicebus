@@ -171,7 +171,7 @@ public static class SerializerContextExtensions
 
         return dictionary.Count == 0
             ? null
-            : deserializer.SerializeObject(dictionary).GetString();
+            : deserializer.SerializeObject(dictionary).GetRequiredTransportText();
     }
 
     /// <summary>Deserializes a sequence of metadata entries into a case-insensitive dictionary.</summary>

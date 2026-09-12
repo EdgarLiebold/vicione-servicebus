@@ -598,10 +598,12 @@ TYPE struct public ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T
   PROPERTY T Message { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> Pipe { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.MessageBody
-  METHOD public abstract System.Byte[] GetBytes()
-  METHOD public abstract System.IO.Stream GetStream()
-  METHOD public abstract System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
+  METHOD public abstract System.Boolean TryGetTransportText(out System.String text)
+  METHOD public abstract System.Byte[] ToArray()
+  METHOD public abstract System.IO.Stream OpenReadStream()
+  PROPERTY System.Int64 Length { public-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.MessageBodyExtensions [static]
+  METHOD public static System.String GetRequiredTransportText(ViciOne.ServiceBus.Advanced.MessageBody body)
 TYPE interface public ViciOne.ServiceBus.Advanced.MessageContext
   PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
@@ -1048,8 +1050,8 @@ TYPE interface public ViciOne.ServiceBus.Advanced.ReceiveContext [interfaces=Vic
   PROPERTY ViciOne.ServiceBus.Advanced.MessageBody Body { public-get;  }
   PROPERTY ViciOne.ServiceBus.ISendEndpointProvider SendEndpointProvider { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.ReceiveContextBodyExtensions [static]
-  METHOD public static System.Byte[] GetBodyBytes(ViciOne.ServiceBus.Advanced.ReceiveContext context)
-  METHOD public static System.IO.Stream GetBodyStream(ViciOne.ServiceBus.Advanced.ReceiveContext context)
+  METHOD public static System.Byte[] GetBodyContent(ViciOne.ServiceBus.Advanced.ReceiveContext context)
+  METHOD public static System.IO.Stream OpenBodyStream(ViciOne.ServiceBus.Advanced.ReceiveContext context)
 TYPE class public ViciOne.ServiceBus.Advanced.ReceiveContextExtensions [static]
   METHOD public static System.Guid GetHeaderId(ViciOne.ServiceBus.Advanced.Headers headers, System.String key, System.Guid defaultValue)
   METHOD public static System.Guid GetMessageId(ViciOne.ServiceBus.Advanced.Headers headers, System.Guid defaultValue)
@@ -1357,36 +1359,29 @@ TYPE interface public ViciOne.ServiceBus.Advanced.SendHeaders [interfaces=ViciOn
 TYPE class public ViciOne.ServiceBus.Advanced.SendHeadersExtensions [static]
   METHOD public static System.Void CopyFrom(ViciOne.ServiceBus.Advanced.SendHeaders sendHeaders, ViciOne.ServiceBus.Advanced.Headers headers)
   METHOD public static System.Void CopyFrom<THeaderValue>(ViciOne.ServiceBus.Transports.ITransportSetHeaderAdapter<THeaderValue> adapter, System.Collections.Generic.IDictionary<System.String,THeaderValue> sendHeaders, ViciOne.ServiceBus.Advanced.Headers headers)
-TYPE class public ViciOne.ServiceBus.Advanced.Serialization.ArrayMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
-  CTOR public ViciOne.ServiceBus.Advanced.Serialization.ArrayMessageBody(System.ArraySegment<System.Byte> bytes)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
-TYPE class public ViciOne.ServiceBus.Advanced.Serialization.Base64MessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
+TYPE class public ViciOne.ServiceBus.Advanced.Serialization.Base64MessageBody [sealed,interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
   CTOR public ViciOne.ServiceBus.Advanced.Serialization.Base64MessageBody(System.String text)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
-TYPE class public ViciOne.ServiceBus.Advanced.Serialization.BytesMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
-  CTOR public ViciOne.ServiceBus.Advanced.Serialization.BytesMessageBody(System.Byte[] bytes)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
+  METHOD public virtual System.Boolean TryGetTransportText(out System.String text)
+  METHOD public virtual System.Byte[] ToArray()
+  METHOD public virtual System.IO.Stream OpenReadStream()
+  PROPERTY System.Int64 Length { public-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.Serialization.BinaryMessageBody [sealed,interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
+  CTOR public ViciOne.ServiceBus.Advanced.Serialization.BinaryMessageBody(System.ReadOnlyMemory<System.Byte> content)
+  METHOD public virtual System.Boolean TryGetTransportText(out System.String text)
+  METHOD public virtual System.Byte[] ToArray()
+  METHOD public virtual System.IO.Stream OpenReadStream()
+  PROPERTY System.Int64 Length { public-get;  }
 TYPE delegate public ViciOne.ServiceBus.Advanced.Serialization.DeserializerFactory [sealed]
   CTOR public ViciOne.ServiceBus.Advanced.Serialization.DeserializerFactory(System.Object object, System.IntPtr method)
   METHOD public virtual System.IAsyncResult BeginInvoke(System.AsyncCallback callback, System.Object object)
   METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.IMessageDeserializer EndInvoke(System.IAsyncResult result)
   METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.IMessageDeserializer Invoke()
-TYPE class public ViciOne.ServiceBus.Advanced.Serialization.EmptyMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
-  CTOR public ViciOne.ServiceBus.Advanced.Serialization.EmptyMessageBody()
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.MessageBody Instance { public-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.Serialization.EmptyMessageBody [sealed,interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
+  METHOD public virtual System.Boolean TryGetTransportText(out System.String text)
+  METHOD public virtual System.Byte[] ToArray()
+  METHOD public virtual System.IO.Stream OpenReadStream()
+  PROPERTY System.Int64 Length { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Advanced.Serialization.EmptyMessageBody Instance { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.Serialization.IMessageData
   PROPERTY System.Boolean HasValue { public-get;  }
   PROPERTY System.Uri Address { public-get;  }
@@ -1497,12 +1492,13 @@ TYPE class public ViciOne.ServiceBus.Advanced.Serialization.SerializerContextExt
   METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IDictionary<System.String,System.Object> dictionary, System.String key, T defaultValue = null)
   METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> dictionary, System.String key, T defaultValue = null)
   METHOD public static T GetValue<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, ViciOne.ServiceBus.Transports.IHeaderProvider headers, System.String key, T defaultValue = null)
-TYPE class public ViciOne.ServiceBus.Advanced.Serialization.StringMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
+TYPE class public ViciOne.ServiceBus.Advanced.Serialization.StringMessageBody [sealed,interfaces=ViciOne.ServiceBus.Advanced.TransportTextMessageBody]
   CTOR public ViciOne.ServiceBus.Advanced.Serialization.StringMessageBody(System.String body)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
+  METHOD public virtual System.Boolean TryGetPayloadText(out System.String text)
+  METHOD public virtual System.Boolean TryGetTransportText(out System.String text)
+  METHOD public virtual System.Byte[] ToArray()
+  METHOD public virtual System.IO.Stream OpenReadStream()
+  PROPERTY System.Int64 Length { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.SerializerContext [interfaces=ViciOne.ServiceBus.Advanced.MessageContext&ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer]
   METHOD public abstract System.Boolean IsSupportedMessageType(System.Type messageType)
   METHOD public abstract System.Boolean IsSupportedMessageType<TMessage>()
@@ -1588,6 +1584,8 @@ TYPE interface public ViciOne.ServiceBus.Advanced.TransformContext [interfaces=V
 TYPE interface public ViciOne.ServiceBus.Advanced.TransformContext<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.TransformContext]
   PROPERTY System.Boolean HasInput { public-get;  }
   PROPERTY TMessage Input { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Advanced.TransportTextMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
+  METHOD public abstract System.Boolean TryGetPayloadText(out System.String text)
 TYPE class public ViciOne.ServiceBus.Advanced.TypeCache [static]
   METHOD public static System.String GetShortName(System.Type type)
 TYPE class public ViciOne.ServiceBus.Advanced.TypeCache<T> [sealed]
@@ -2662,10 +2660,10 @@ TYPE class public ViciOne.ServiceBus.MessageSensitivityDescriptor [sealed,interf
   PROPERTY System.Collections.Frozen.FrozenSet<System.String> SensitiveMembers { public-get;  }
   PROPERTY ViciOne.ServiceBus.MessagePayloadSensitivity PayloadSensitivity { public-get;  }
 TYPE class public ViciOne.ServiceBus.MessageTooLargeException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
-  CTOR public ViciOne.ServiceBus.MessageTooLargeException(System.Int64 actualBytes, System.Int64 maximumBytes, System.Uri inputAddress)
+  CTOR public ViciOne.ServiceBus.MessageTooLargeException(System.Int64 actualBytes, System.Int64 maximumBytes, System.Uri endpointAddress)
   PROPERTY System.Int64 ActualBytes { public-get;  }
   PROPERTY System.Int64 MaximumBytes { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
+  PROPERTY System.Uri EndpointAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.MessageUrnAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.MessageUrnAttribute(System.String urn, System.Boolean useDefaultPrefix = true)
   PROPERTY System.Uri Urn { public-get;  }
@@ -4003,12 +4001,6 @@ TYPE interface public ViciOne.ServiceBus.ActiveMq.ActiveMqHostSettings
   PROPERTY System.Uri HostAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.ActiveMq.ActiveMqHostSettingsExtensions [static]
   METHOD public static System.String ToDescription(ViciOne.ServiceBus.ActiveMq.ActiveMqHostSettings settings)
-TYPE class public ViciOne.ServiceBus.ActiveMq.ActiveMqMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
-  CTOR public ViciOne.ServiceBus.ActiveMq.ActiveMqMessageBody(Apache.NMS.IMessage message)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
 TYPE interface public ViciOne.ServiceBus.ActiveMq.ActiveMqMessageContext
   PROPERTY Apache.NMS.IMessage TransportMessage { public-get;  }
   PROPERTY Apache.NMS.IPrimitiveMap Properties { public-get;  }
@@ -4844,10 +4836,6 @@ TYPE enum public ViciOne.ServiceBus.AmazonSqs.AmazonSqsEndpointAddress.AddressTy
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.AmazonSqs.AmazonSqsEndpointAddress.AddressType Queue = 0
   FIELD public const ViciOne.ServiceBus.AmazonSqs.AmazonSqsEndpointAddress.AddressType Topic = 1
-TYPE class public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHeaderProvider [interfaces=ViciOne.ServiceBus.Transports.IHeaderProvider]
-  CTOR public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHeaderProvider(Amazon.SQS.Model.Message message, ViciOne.ServiceBus.AmazonSqs.SqsMessageBody body)
-  METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
-  METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
 TYPE class public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost [base=ViciOne.ServiceBus.Transports.BaseHost,interfaces=ViciOne.ServiceBus.AmazonSqs.IAmazonSqsHost]
   CTOR public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost(ViciOne.ServiceBus.AmazonSqs.Configuration.IAmazonSqsHostConfiguration hostConfiguration, ViciOne.ServiceBus.AmazonSqs.IAmazonSqsBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
@@ -5042,6 +5030,7 @@ TYPE class public ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEnd
   METHOD public virtual System.Void ConfigureClient(System.Action<ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.AmazonSqs.ClientContext>> configure)
   METHOD public virtual System.Void ConfigureConnection(System.Action<ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.AmazonSqs.ConnectionContext>> configure)
   METHOD public virtual System.Void DisableMessageOrdering()
+  METHOD public virtual System.Void RequireSnsNotificationEnvelope()
   METHOD public virtual System.Void Subscribe(System.String topicName, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsTopicSubscriptionConfigurator> configure = null)
   METHOD public virtual System.Void Subscribe<T>(System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsTopicSubscriptionConfigurator> configure = null)
   PROPERTY System.Boolean AutoDelete {  public-set; }
@@ -5220,6 +5209,7 @@ TYPE interface public ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConf
   METHOD public abstract System.Void ConfigureClient(System.Action<ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.AmazonSqs.ClientContext>> configure)
   METHOD public abstract System.Void ConfigureConnection(System.Action<ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.AmazonSqs.ConnectionContext>> configure)
   METHOD public abstract System.Void DisableMessageOrdering()
+  METHOD public abstract System.Void RequireSnsNotificationEnvelope()
   METHOD public abstract System.Void Subscribe(System.String topicName, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsTopicSubscriptionConfigurator> callback = null)
   METHOD public abstract System.Void Subscribe<T>(System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsTopicSubscriptionConfigurator> callback = null)
   PROPERTY System.Int32 ConcurrentDeliveryLimit {  public-set; }
@@ -5310,6 +5300,7 @@ TYPE interface public ViciOne.ServiceBus.AmazonSqs.ReceiveSettings [interfaces=V
   METHOD public abstract System.Uri GetInputAddress(System.Uri hostAddress)
   PROPERTY System.Boolean IsOrdered { public-get;  }
   PROPERTY System.Boolean PurgeOnStartup { public-get;  }
+  PROPERTY System.Boolean RequiresSnsNotificationEnvelope { public-get;  }
   PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> QueueAttributes { public-get;  }
   PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> QueueSubscriptionAttributes { public-get;  }
   PROPERTY System.Int32 ConcurrentDeliveryLimit { public-get;  }
@@ -5385,10 +5376,6 @@ TYPE class public ViciOne.ServiceBus.AmazonSqs.SqsHeaderValueConverter [interfac
   CTOR public ViciOne.ServiceBus.AmazonSqs.SqsHeaderValueConverter(ViciOne.ServiceBus.Transports.AllowTransportHeader allowTransportHeader = null)
   METHOD public virtual System.Boolean TryConvert(ViciOne.ServiceBus.Advanced.HeaderValue headerValue, out ViciOne.ServiceBus.Advanced.HeaderValue<Amazon.SQS.Model.MessageAttributeValue> result)
   METHOD public virtual System.Boolean TryConvert<T>(ViciOne.ServiceBus.Advanced.HeaderValue<T> headerValue, out ViciOne.ServiceBus.Advanced.HeaderValue<Amazon.SQS.Model.MessageAttributeValue> result)
-TYPE class public ViciOne.ServiceBus.AmazonSqs.SqsMessageBody [sealed,base=ViciOne.ServiceBus.Advanced.Serialization.StringMessageBody,interfaces=ViciOne.ServiceBus.Advanced.IJsonMessageBody]
-  CTOR public ViciOne.ServiceBus.AmazonSqs.SqsMessageBody(Amazon.SQS.Model.Message message)
-  METHOD public virtual System.Nullable<System.Text.Json.JsonElement> GetJsonElement(System.Text.Json.JsonSerializerOptions options)
-  PROPERTY System.String TopicArn { public-get;  }
 TYPE class public ViciOne.ServiceBus.AmazonSqs.SqsMoveTransport<TSettings>
   CTOR protected ViciOne.ServiceBus.AmazonSqs.SqsMoveTransport<TSettings>(System.String destination, ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter<TSettings> topologyFilter)
   METHOD protected System.Threading.Tasks.Task MoveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.Action<Amazon.SQS.Model.SendMessageBatchRequestEntry,System.Collections.Generic.IDictionary<System.String,Amazon.SQS.Model.MessageAttributeValue>> preSend, System.Threading.CancellationToken cancellationToken)
@@ -5541,6 +5528,7 @@ TYPE class public ViciOne.ServiceBus.AmazonSqs.Topology.QueueReceiveSettings [ba
   METHOD public virtual System.Uri GetInputAddress(System.Uri hostAddress)
   PROPERTY System.Boolean IsOrdered { public-get; public-set; }
   PROPERTY System.Boolean PurgeOnStartup { public-get; public-set; }
+  PROPERTY System.Boolean RequiresSnsNotificationEnvelope { public-get; public-set; }
   PROPERTY System.Int32 ConcurrentDeliveryLimit { public-get; public-set; }
   PROPERTY System.Int32 ConcurrentMessageLimit { public-get;  }
   PROPERTY System.Int32 MaxVisibilityTimeoutRenewal { public-get; public-set; }
@@ -6411,12 +6399,6 @@ TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance [base=Vi
   METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
   METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
   METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageBody [interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
-  CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageBody(System.BinaryData data)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
 TYPE interface public ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageContext [interfaces=ViciOne.ServiceBus.Advanced.PartitionKeyConsumeContext]
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Properties { public-get;  }
   PROPERTY System.DateTimeOffset EnqueuedTime { public-get;  }
@@ -18840,12 +18822,6 @@ TYPE class public ViciOne.ServiceBus.Serialization.JsonMessageEnvelope [sealed,i
   PROPERTY System.String SourceAddress { public-get; public-set; }
   PROPERTY System.String[] MessageTypes { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Serialization.MemoryMessageBody [sealed,interfaces=ViciOne.ServiceBus.Advanced.MessageBody]
-  CTOR public ViciOne.ServiceBus.Serialization.MemoryMessageBody(System.ReadOnlyMemory<System.Byte> memory)
-  METHOD public virtual System.Byte[] GetBytes()
-  METHOD public virtual System.IO.Stream GetStream()
-  METHOD public virtual System.String GetString()
-  PROPERTY System.Nullable<System.Int64> Length { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.MessageIdHeaders [sealed,interfaces=ViciOne.ServiceBus.Advanced.Headers]
   CTOR public ViciOne.ServiceBus.Serialization.MessageIdHeaders(System.Guid messageId)
   METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)

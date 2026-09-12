@@ -45,7 +45,7 @@ public sealed class SerializerContextContractTests
         var context = CreateContext(new ContextMessage(27), [MessageType]);
 
         MessageBody body = context.SerializeObject(new ContextMessage(73));
-        ContextMessage? reference = context.DeserializeObject<ContextMessage>(body.GetString());
+        ContextMessage? reference = context.DeserializeObject<ContextMessage>(body.GetRequiredTransportText());
         int? value = context.DeserializeObject<int>("42");
 
         Assert.Equal(new ContextMessage(73), reference);

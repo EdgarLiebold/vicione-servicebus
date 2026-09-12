@@ -31,11 +31,9 @@ public sealed class AmazonSqsReceiveContext :
         TransportMessage.MessageAttributes ??= new Dictionary<string, MessageAttributeValue>();
         TransportMessage.Attributes ??= new Dictionary<string, string>();
 
-        var messageBody = new SqsMessageBody(message);
-
-        _body = messageBody;
-
-        _headerProvider = new AmazonSqsHeaderProvider(TransportMessage, messageBody);
+        var transportBody = new SqsMessageBody(message, settings.RequiresSnsNotificationEnvelope);
+        _headerProvider = new AmazonSqsHeaderProvider(TransportMessage, transportBody);
+        _body = transportBody;
     }
 
     /// <summary>Gets the provider that reads envelope and Amazon SQS headers.</summary>

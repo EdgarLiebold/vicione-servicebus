@@ -783,9 +783,9 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         {
             Interlocked.Increment(ref _preSendCalls);
             TransportSendContext transport = Assert.IsAssignableFrom<TransportSendContext>(context);
-            FirstBodyLength = transport.Body.GetBytes().LongLength;
-            SecondBodyLength = transport.Body.GetString().Length > 0
-                ? transport.Body.GetBytes().LongLength
+            FirstBodyLength = transport.Body.ToArray().LongLength;
+            SecondBodyLength = transport.Body.GetRequiredTransportText().Length > 0
+                ? transport.Body.ToArray().LongLength
                 : null;
             return Task.CompletedTask;
         }

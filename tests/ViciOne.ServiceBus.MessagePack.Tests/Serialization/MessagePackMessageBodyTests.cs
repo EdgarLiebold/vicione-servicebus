@@ -35,25 +35,30 @@ public sealed class MessagePackMessageBodyTests
     [Theory]
     [InlineData(FirstAccessor.Length)]
     [InlineData(FirstAccessor.Bytes)]
-    [InlineData(FirstAccessor.String)]
-    [InlineData(FirstAccessor.Stream)]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-BODY", "accessor-order-and-read-only-stream")]
-    public void EveryAccessorOrder_DescribesTheSameReadOnlyBody(FirstAccessor firstAccessor)
+    [InlineData(FirstAccessor.TransportText)]
+    [InlineData(FirstAccessor.ReadStream)]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-BODY", "owned-snapshot-single-serialization-and-read-only-accessors")]
+    public void EveryAccessorOrder_DescribesTheSameOwnedBody(FirstAccessor firstAccessor)
     {
+        var oracle = new BodyMessage { Id = 27, Text = "Grüße" };
+        byte[] expected = MessagePackSerializer.Serialize(
+            oracle,
+            ExternalOracleOptions,
+            TestContext.Current.CancellationToken);
         var source = new BodyMessage { Id = 27, Text = "Grüße" };
         var body = new MessagePackMessageBody<BodyMessage>(source);
+        Assert.Equal(1, source.GetSerializationCount());
+        source.Id = 99;
+        source.Text = "changed";
 
         ReadFirst(body, firstAccessor);
 
-        byte[] bytes = body.GetBytes();
-        string text = body.GetString();
-        using var stream = body.GetStream();
+        byte[] bytes = body.ToArray();
+        string text = body.GetRequiredTransportText();
+        using var stream = body.OpenReadStream();
+        using var independent = body.OpenReadStream();
         using var streamed = new MemoryStream();
         stream.CopyTo(streamed);
-        var expected = MessagePackSerializer.Serialize(
-            source,
-            ExternalOracleOptions,
-            TestContext.Current.CancellationToken);
         var restored = MessagePackSerializer.Deserialize<BodyMessage>(
             bytes,
             ExternalOracleOptions,
@@ -64,10 +69,25 @@ public sealed class MessagePackMessageBodyTests
         Assert.Equal(Convert.ToBase64String(bytes), text);
         Assert.Equal(bytes, streamed.ToArray());
         Assert.False(stream.CanWrite);
-        Assert.Throws<NotSupportedException>(() => stream.WriteByte(0xFF));
-        Assert.Equal(expected, body.GetBytes());
+        Assert.Throws<NotSupportedException>(() => { stream.WriteByte(0xFF); });
+        MemoryStream memoryStream = Assert.IsType<MemoryStream>(stream);
+        Assert.False(memoryStream.TryGetBuffer(out _));
+        Assert.Throws<UnauthorizedAccessException>(memoryStream.GetBuffer);
+        Assert.NotSame(stream, independent);
+        Assert.Equal(0, independent.Position);
+        bytes.AsSpan().Fill(0x00);
+        Assert.Equal(expected, body.ToArray());
         Assert.Equal(27, restored.Id);
         Assert.Equal("Grüße", restored.Text);
+
+        Parallel.For(0, 128, _ =>
+        {
+            Assert.Equal(expected.LongLength, body.Length);
+            Assert.Equal(expected, body.ToArray());
+            Assert.Equal(expected, Read(body.OpenReadStream()));
+            Assert.Equal(Convert.ToBase64String(expected), body.GetRequiredTransportText());
+        });
+        Assert.Equal(1, source.GetSerializationCount());
     }
 
     private static void ReadFirst(MessageBody body, FirstAccessor firstAccessor)
@@ -78,13 +98,13 @@ public sealed class MessagePackMessageBodyTests
                 _ = body.Length;
                 break;
             case FirstAccessor.Bytes:
-                _ = body.GetBytes();
+                _ = body.ToArray();
                 break;
-            case FirstAccessor.String:
-                _ = body.GetString();
+            case FirstAccessor.TransportText:
+                _ = body.GetRequiredTransportText();
                 break;
-            case FirstAccessor.Stream:
-                body.GetStream().Dispose();
+            case FirstAccessor.ReadStream:
+                body.OpenReadStream().Dispose();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(firstAccessor), firstAccessor, null);
@@ -103,14 +123,34 @@ public sealed class MessagePackMessageBodyTests
     {
         Length,
         Bytes,
-        String,
-        Stream,
+        TransportText,
+        ReadStream,
     }
 
-    public sealed class BodyMessage
+    public sealed class BodyMessage : IMessagePackSerializationCallbackReceiver
     {
+        int _serializationCount;
+
         public int Id { get; set; }
 
         public string Text { get; set; } = string.Empty;
+
+        public int GetSerializationCount() => Volatile.Read(ref _serializationCount);
+
+        public void OnBeforeSerialize() => Interlocked.Increment(ref _serializationCount);
+
+        public void OnAfterDeserialize()
+        {
+        }
+    }
+
+    static byte[] Read(Stream stream)
+    {
+        using (stream)
+        using (var destination = new MemoryStream())
+        {
+            stream.CopyTo(destination);
+            return destination.ToArray();
+        }
     }
 }

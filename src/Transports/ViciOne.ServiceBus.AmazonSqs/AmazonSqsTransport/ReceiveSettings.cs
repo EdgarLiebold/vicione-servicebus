@@ -33,6 +33,9 @@ public interface ReceiveSettings :
     /// <summary>Gets whether FIFO messages are partitioned by <c>MessageGroupId</c> and ordered by <c>SequenceNumber</c>.</summary>
     bool IsOrdered { get; }
 
+    /// <summary>Gets whether every received body must be an Amazon SNS notification envelope.</summary>
+    bool RequiresSnsNotificationEnvelope { get; }
+
     /// <summary>Gets or sets the queue visibility timeout, in seconds.</summary>
     int VisibilityTimeout { get; set; }
 

@@ -70,7 +70,7 @@ public sealed class ReceiveEndpointDispatcherTests
         };
         byte[] bytes = body == DispatchBody.Empty
             ? []
-            : new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options).GetMessageBody(sendContext).GetBytes();
+            : new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options).GetMessageBody(sendContext).ToArray();
         var headers = new Dictionary<string, object>
         {
             [MessageHeaders.ContentType] = SystemTextJsonRawMessageSerializer.JsonContentType,

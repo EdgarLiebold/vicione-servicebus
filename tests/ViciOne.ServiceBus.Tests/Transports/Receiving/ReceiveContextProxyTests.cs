@@ -102,7 +102,7 @@ public sealed class ReceiveContextProxyTests
 
         public Task? AttachedTask { get; private set; }
 
-        public MessageBody Body { get; } = new MemoryMessageBody(new byte[] { 1, 2, 3 });
+        public MessageBody Body { get; } = new BinaryMessageBody(new byte[] { 1, 2, 3 });
 
         public CancellationToken CancellationToken { get; } = new CancellationTokenSource().Token;
 

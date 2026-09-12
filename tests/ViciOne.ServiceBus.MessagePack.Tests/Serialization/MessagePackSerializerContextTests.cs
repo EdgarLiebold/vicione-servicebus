@@ -20,7 +20,7 @@ public sealed class MessagePackSerializerContextTests
         var serializer = new MessagePackMessageSerializer();
 
         Assert.Throws<MessagePackSerializationException>(() =>
-            serializer.Deserialize(new BytesMessageBody([0xC1]), EmptyHeaders.Instance));
+            serializer.Deserialize(new BinaryMessageBody(new byte[] { 0xC1 }), EmptyHeaders.Instance));
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public sealed class MessagePackSerializerContextTests
         Assert.Equal("body", Assert.Throws<ArgumentNullException>(() =>
             serializer.Deserialize(null!, EmptyHeaders.Instance)).ParamName);
         Assert.Equal("headers", Assert.Throws<ArgumentNullException>(() =>
-            serializer.Deserialize(new BytesMessageBody([]), null!)).ParamName);
+            serializer.Deserialize(new BinaryMessageBody(ReadOnlyMemory<byte>.Empty), null!)).ParamName);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public sealed class MessagePackSerializerContextTests
         };
         byte[] envelopeBytes = MessagePackSerializationRuntime.Serialize(envelope);
 
-        return serializer.Deserialize(new BytesMessageBody(envelopeBytes), EmptyHeaders.Instance);
+        return serializer.Deserialize(new BinaryMessageBody(envelopeBytes), EmptyHeaders.Instance);
     }
 
     private sealed class ContextValue

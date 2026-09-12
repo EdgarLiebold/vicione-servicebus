@@ -40,13 +40,13 @@ public class JsonSerializationBenchmark
     [Benchmark(Description = "System.Text.Json byte[]")]
     public byte[] SystemTextJson()
     {
-        return _serializer.GetMessageBody(_averageMessageSendContext).GetBytes();
+        return _serializer.GetMessageBody(_averageMessageSendContext).ToArray();
     }
 
     [Benchmark(Description = "System.Text.Json string")]
     public string SystemTextJsonString()
     {
-        return _serializer.GetMessageBody(_averageMessageSendContext).GetString();
+        return _serializer.GetMessageBody(_averageMessageSendContext).GetRequiredTransportText();
     }
 }
 

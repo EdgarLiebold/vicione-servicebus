@@ -77,7 +77,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
         public Task SendAsync(SendContext<SerializedTransportMessage> context)
         {
             var contentType = new ContentType(_message.ContentType);
-            context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));
+            context.Serializer = new CopyBodySerializer(contentType, new BinaryMessageBody(_message.Body));
             context.ContentType = contentType;
             ReliableEnvelopeMetadataCodec.Apply(context, _message.Metadata, context.GetTimeProvider().GetUtcNow());
             context.MessageId = _message.MessageId;

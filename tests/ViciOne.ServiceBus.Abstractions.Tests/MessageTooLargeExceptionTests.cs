@@ -5,20 +5,20 @@ namespace ViciOne.ServiceBus.Abstractions.Tests;
 
 public sealed class MessageTooLargeExceptionTests
 {
-    private static readonly Uri InputAddress = new("loopback://localhost/oversized");
+    private static readonly Uri EndpointAddress = new("loopback://localhost/oversized");
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-TOO-LARGE", "complete-diagnostics")]
     public void Constructor_PreservesEveryDiagnosticValue()
     {
-        var exception = new MessageTooLargeException(65, 64, InputAddress);
+        var exception = new MessageTooLargeException(65, 64, EndpointAddress);
 
         Assert.Equal(65, exception.ActualBytes);
         Assert.Equal(64, exception.MaximumBytes);
-        Assert.Equal(InputAddress, exception.InputAddress);
+        Assert.Equal(EndpointAddress, exception.EndpointAddress);
         Assert.Contains("65 bytes", exception.Message, StringComparison.Ordinal);
         Assert.Contains("64 bytes", exception.Message, StringComparison.Ordinal);
-        Assert.Contains(InputAddress.AbsoluteUri, exception.Message, StringComparison.Ordinal);
+        Assert.Contains(EndpointAddress.AbsoluteUri, exception.Message, StringComparison.Ordinal);
     }
 
     [Theory]
@@ -30,17 +30,17 @@ public sealed class MessageTooLargeExceptionTests
     public void Constructor_RejectsInvalidSizeRelationships(long actualBytes, long maximumBytes, string parameterName)
     {
         ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
-            new MessageTooLargeException(actualBytes, maximumBytes, InputAddress));
+            new MessageTooLargeException(actualBytes, maximumBytes, EndpointAddress));
 
         Assert.Equal(parameterName, exception.ParamName);
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGE-TOO-LARGE", "required-input-address")]
-    public void Constructor_RejectsAMissingInputAddress()
+    [RequirementCoverage("REQ-VSB-MESSAGE-TOO-LARGE", "required-endpoint-address")]
+    public void Constructor_RejectsAMissingEndpointAddress()
     {
         Assert.Equal(
-            "inputAddress",
+            "endpointAddress",
             Assert.Throws<ArgumentNullException>(() => new MessageTooLargeException(65, 64, null!)).ParamName);
     }
 }

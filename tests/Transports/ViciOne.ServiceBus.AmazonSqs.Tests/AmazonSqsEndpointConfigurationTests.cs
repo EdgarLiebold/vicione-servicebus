@@ -52,6 +52,79 @@ public sealed class AmazonSqsEndpointConfigurationTests
         Assert.Contains("error and skipped", failure.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION", "sns-envelope-requirement-is-explicit")]
+    public void SnsNotificationEnvelope_IsOptionalByDefaultAndCanBeExplicitlyRequired()
+    {
+        AmazonSqsBusConfiguration bus = CreateBusConfiguration();
+        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
+        var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
+            bus.HostConfiguration.CreateReceiveEndpointConfiguration(
+                "orders",
+                configurator => configurator.RequireSnsNotificationEnvelope()));
+
+        Assert.True(endpoint.Settings.RequiresSnsNotificationEnvelope);
+        Assert.Equal("false", endpoint.Settings.QueueSubscriptionAttributes["RawMessageDelivery"]);
+        Assert.DoesNotContain(endpoint.Validate(), result => result.Disposition == ValidationResultDisposition.Failure);
+
+        var defaults = new QueueReceiveSettings(
+            new AmazonSqsEndpointConfiguration(
+                new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology())),
+            "defaults",
+            true,
+            false);
+        Assert.False(defaults.RequiresSnsNotificationEnvelope);
+    }
+
+    [Theory]
+    [InlineData("false", false)]
+    [InlineData("true", true)]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION", "sns-envelope-and-raw-delivery-conflicts-are-rejected")]
+    public void SnsNotificationEnvelopeAndRawDelivery_RejectContradictoryConfiguration(
+        string rawMessageDelivery,
+        bool requireEnvelope)
+    {
+        AmazonSqsBusConfiguration bus = CreateBusConfiguration();
+        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
+        var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
+            bus.HostConfiguration.CreateReceiveEndpointConfiguration("orders", configurator =>
+            {
+                if (requireEnvelope)
+                    configurator.RequireSnsNotificationEnvelope();
+                configurator.QueueSubscriptionAttributes["RawMessageDelivery"] = rawMessageDelivery;
+            }));
+
+        ValidationResult failure = Assert.Single(
+            endpoint.Validate(),
+            result => result.Disposition == ValidationResultDisposition.Failure
+                && result.Key.Contains("RawMessageDelivery", StringComparison.Ordinal));
+        Assert.Contains("RequireSnsNotificationEnvelope", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION", "case-variant-raw-delivery-cannot-bypass-envelope-validation")]
+    public void SnsNotificationEnvelopeAndCaseVariantRawDelivery_RejectContradictoryConfiguration()
+    {
+        AmazonSqsBusConfiguration bus = CreateBusConfiguration();
+        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
+        var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
+            bus.HostConfiguration.CreateReceiveEndpointConfiguration("orders", configurator =>
+            {
+                configurator.RequireSnsNotificationEnvelope();
+                configurator.QueueSubscriptionAttributes["rawmessagedelivery"] = "true";
+            }));
+
+        KeyValuePair<string, object> attribute = Assert.Single(endpoint.Settings.QueueSubscriptionAttributes);
+        Assert.Equal("RawMessageDelivery", attribute.Key);
+        Assert.Equal("true", attribute.Value);
+
+        ValidationResult failure = Assert.Single(
+            endpoint.Validate(),
+            result => result.Disposition == ValidationResultDisposition.Failure
+                && result.Key.Contains("RawMessageDelivery", StringComparison.Ordinal));
+        Assert.Contains("RequireSnsNotificationEnvelope", failure.Message, StringComparison.Ordinal);
+    }
+
     private static AmazonSqsBusConfiguration CreateBusConfiguration() =>
         new(new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology()));
 }

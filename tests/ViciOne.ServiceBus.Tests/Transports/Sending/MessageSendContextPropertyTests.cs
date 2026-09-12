@@ -221,7 +221,7 @@ public sealed class MessageSendContextPropertyTests
 
     private sealed class RecordingSerializer(byte[] bytes) : IMessageSerializer
     {
-        private readonly MessageBody _body = new MemoryMessageBody(bytes);
+        private readonly MessageBody _body = new BinaryMessageBody(bytes);
 
         public ContentType ContentType { get; } = new("application/vnd.vicione.context-test");
 

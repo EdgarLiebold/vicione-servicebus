@@ -63,7 +63,7 @@ internal sealed class ScheduleMessageConsumer<TBus> :
 
     /// <summary>Creates or replaces a one-time trigger identified by the scheduling token.</summary>
     /// <param name="context">The one-time scheduling command context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after Quartz stores the one-time trigger.</returns>
     public async Task ConsumeAsync(ConsumeContext<ScheduleMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -92,7 +92,7 @@ internal sealed class ScheduleMessageConsumer<TBus> :
 
     /// <summary>Creates or replaces a cron trigger identified by schedule group and identifier.</summary>
     /// <param name="context">The recurring scheduling command context.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after Quartz stores the recurring trigger.</returns>
     public async Task ConsumeAsync(ConsumeContext<ScheduleRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -181,7 +181,7 @@ internal sealed class ScheduleMessageConsumer<TBus> :
 
         builder = builder
             .UsingJobData(QuartzJobDataKeys.DestinationAddress, destination.ToString())
-            .UsingJobData(QuartzJobDataKeys.Body, messageBody.GetString())
+            .UsingJobData(QuartzJobDataKeys.Body, messageBody.GetRequiredTransportText())
             .UsingJobData(QuartzJobDataKeys.ContentType, context.ReceiveContext.ContentType.ToString())
             .UsingJobData(QuartzJobDataKeys.MessageTypes, string.Join(";", messageTypes));
 

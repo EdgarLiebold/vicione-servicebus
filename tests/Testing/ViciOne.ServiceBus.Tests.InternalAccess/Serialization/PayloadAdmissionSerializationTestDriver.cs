@@ -17,6 +17,6 @@ public static class PayloadAdmissionSerializationTestDriver
         context.GetOrAddPayload(
             () => new PayloadAdmissionSerializationContext(runtime, messageDataOffloadObserved: false));
 
-        return new SystemTextJsonMessageBody<T>(context, options, envelope).GetBytes();
+        return new SystemTextJsonMessageBody<T>(context, options, envelope).ToArray();
     }
 }

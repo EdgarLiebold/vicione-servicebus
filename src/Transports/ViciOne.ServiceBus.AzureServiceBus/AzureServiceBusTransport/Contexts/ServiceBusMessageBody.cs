@@ -1,42 +1,40 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>Exposes an Azure <see cref="BinaryData"/> message body through the transport body abstraction.</summary>
-public class ServiceBusMessageBody :
+/// <summary>Owns a stable snapshot of an Azure <see cref="BinaryData"/> message body.</summary>
+internal sealed class ServiceBusMessageBody :
     MessageBody
 {
-    readonly BinaryData _data;
+    readonly byte[] _content;
 
-    /// <summary>Initializes the body from Azure binary data.</summary>
-    /// <param name="data">The received message body.</param>
+    /// <summary>Creates an owned body snapshot from Azure binary data.</summary>
+    /// <param name="data">The received message body to snapshot.</param>
     public ServiceBusMessageBody(BinaryData data)
     {
-        _data = data ?? throw new ArgumentNullException(nameof(data));
+        ArgumentNullException.ThrowIfNull(data);
+        _content = data.ToArray();
     }
 
     /// <summary>Gets the body length in bytes.</summary>
-    public long? Length => _data.ToMemory().Length;
+    public long Length => _content.LongLength;
 
-    /// <summary>Creates a readable stream over the body.</summary>
-    /// <returns>A stream containing the body bytes.</returns>
-    public Stream GetStream()
-    {
-        return _data.ToStream();
-    }
+    /// <summary>Copies the body snapshot into a new array.</summary>
+    /// <returns>An independently mutable copy of the body.</returns>
+    public byte[] ToArray() => (byte[])_content.Clone();
 
-    /// <summary>Copies the body to a byte array.</summary>
-    /// <returns>The body bytes.</returns>
-    public byte[] GetBytes()
-    {
-        return _data.ToArray();
-    }
+    /// <summary>Creates a read-only stream over the body snapshot.</summary>
+    /// <returns>An independently disposable stream positioned at the beginning of the body.</returns>
+    public Stream OpenReadStream() => new MemoryStream(_content, false);
 
-    /// <summary>Decodes the body using <see cref="BinaryData"/>'s string representation.</summary>
-    /// <returns>The decoded body text.</returns>
-    public string GetString()
+    /// <summary>Reports that native binary content has no serializer-defined text representation.</summary>
+    /// <param name="text">Always <see langword="null" />.</param>
+    /// <returns>Always <see langword="false" />.</returns>
+    public bool TryGetTransportText([NotNullWhen(true)] out string? text)
     {
-        return _data.ToString();
+        text = null;
+        return false;
     }
 }

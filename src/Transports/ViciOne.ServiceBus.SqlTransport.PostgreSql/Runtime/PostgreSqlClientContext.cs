@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.SqlTransport.Serialization;
 using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
@@ -225,7 +226,7 @@ internal sealed class PostgreSqlClientContext :
     /// <summary>Updates a queue's last-used timestamp.</summary>
     /// <param name="queueName">The queue to mark as used.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after PostgreSQL updates the queue timestamp.</returns>
     public override Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -264,7 +265,7 @@ internal sealed class PostgreSqlClientContext :
     /// <param name="queueName">The destination queue.</param>
     /// <param name="context">The serialized message and send metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after PostgreSQL enqueues the message.</returns>
     public override Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -277,6 +278,7 @@ internal sealed class PostgreSqlClientContext :
         DateTime? expirationTime = context.TimeToLive.HasValue
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
+        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
 
         return ExecuteDatabaseOperationAsync((connection, transaction, token) =>
         {
@@ -285,8 +287,8 @@ internal sealed class PostgreSqlClientContext :
                 entity_name = queueName,
                 priority = (int)(context.Priority ?? 100),
                 transport_message_id = context.TransportMessageId,
-                body = new JsonParameter(context.Body.GetString()),
-                binary_body = default(byte[]?),
+                body = new JsonParameter(bodyStorage.Text),
+                binary_body = bodyStorage.Binary,
                 content_type = context.ContentType?.MediaType,
                 message_type = string.Join(";", context.SupportedMessageTypes),
                 message_id = context.MessageId,
@@ -317,7 +319,7 @@ internal sealed class PostgreSqlClientContext :
     /// <param name="topicName">The source topic used to resolve subscriptions.</param>
     /// <param name="context">The serialized message and publish metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after PostgreSQL publishes the message to matching subscriptions.</returns>
     public override Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(topicName);
@@ -330,6 +332,7 @@ internal sealed class PostgreSqlClientContext :
         DateTime? expirationTime = context.TimeToLive.HasValue
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
+        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
 
         return ExecuteDatabaseOperationAsync((connection, transaction, token) =>
         {
@@ -338,8 +341,8 @@ internal sealed class PostgreSqlClientContext :
                 entity_name = topicName,
                 priority = (int)(context.Priority ?? 100),
                 transport_message_id = context.TransportMessageId,
-                body = new JsonParameter(context.Body.GetString()),
-                binary_body = default(byte[]?),
+                body = new JsonParameter(bodyStorage.Text),
+                binary_body = bodyStorage.Binary,
                 content_type = context.ContentType?.MediaType,
                 message_type = string.Join(";", context.SupportedMessageTypes),
                 message_id = context.MessageId,

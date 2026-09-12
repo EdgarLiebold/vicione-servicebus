@@ -69,7 +69,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
         {
             Serializer = serialization.GetMessageSerializer(),
         };
-        string body = sourceContext.Body.GetString();
+        string body = sourceContext.Body.GetRequiredTransportText();
         string expectedMessageType = MessageUrn.ForTypeString<ScheduledPayload>();
         string[] supportedMessageTypes = [expectedMessageType];
         var timeProvider = new FakeTimeProvider(CurrentTime);

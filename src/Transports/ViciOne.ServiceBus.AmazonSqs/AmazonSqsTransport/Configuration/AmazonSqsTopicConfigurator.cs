@@ -21,7 +21,7 @@ public class AmazonSqsTopicConfigurator :
         : base(topicName, durable, autoDelete)
     {
         TopicAttributes = topicAttributes ?? new Dictionary<string, object>();
-        TopicSubscriptionAttributes = topicSubscriptionAttributes ?? new Dictionary<string, object>();
+        TopicSubscriptionAttributes = AmazonSqsAttributeDictionary.CopySubscriptionAttributes(topicSubscriptionAttributes);
         TopicTags = topicTags ?? new Dictionary<string, string>();
 
         if (AmazonSqsEndpointAddress.IsFifo(topicName))
@@ -29,7 +29,7 @@ public class AmazonSqsTopicConfigurator :
     }
 
     /// <summary>Initializes topic configuration from an existing topology entity.</summary>
-    /// <param name="source">The topic topology entity whose settings and collections are reused.</param>
+    /// <param name="source">The topic topology entity whose settings initialize this configurator.</param>
     public AmazonSqsTopicConfigurator(Topic source)
         : this(source.EntityName, source.Durable, source.AutoDelete, source.TopicAttributes, source.TopicSubscriptionAttributes, source.TopicTags)
     {

@@ -175,4 +175,64 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         Assert.Same(expected, actual);
         Assert.Empty(queueInfo.SubscriptionArns);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SNS-SUBSCRIPTION", "outbound-raw-delivery-name-is-canonical")]
+    public async Task QueueSubscription_CanonicalizesTheOutboundRawMessageDeliveryNameAsync()
+    {
+        const string topicArn = "arn:aws:sns:eu-central-1:123456789012:events";
+        const string queueArn = "arn:aws:sqs:eu-central-1:123456789012:orders";
+        var expected = new InvalidOperationException("stop after request capture");
+        SubscribeRequest? observedRequest = null;
+
+        IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create((method, arguments) => method.Name switch
+        {
+            nameof(IAmazonSimpleNotificationService.SubscribeAsync) => CaptureAndStopAsync(arguments),
+            _ => throw new NotSupportedException(method.Name)
+        });
+        IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, _) => throw new NotSupportedException(method.Name));
+        var topicInfo = new TopicInfo("events", topicArn, sns, CancellationToken.None, true);
+        var queueInfo = new QueueInfo(
+            "orders",
+            "https://sqs.eu-central-1.amazonaws.com/123456789012/orders",
+            new Dictionary<string, string> { [QueueAttributeName.QueueArn] = queueArn },
+            sqs,
+            CancellationToken.None,
+            true);
+        ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
+        {
+            "get_CancellationToken" => CancellationToken.None,
+            nameof(ConnectionContext.GetTopicAsync) => Task.FromResult(topicInfo),
+            nameof(ConnectionContext.GetQueueAsync) => Task.FromResult(queueInfo),
+            _ => throw new NotSupportedException(method.Name)
+        });
+        var context = new AmazonSqsClientContext(connection, sqs, sns, CancellationToken.None);
+        SqsTopic topic = InterfaceProxy<SqsTopic>.Create((method, _) => method.Name switch
+        {
+            "get_TopicSubscriptionAttributes" => new Dictionary<string, object> { ["rawmessagedelivery"] = "false" },
+            _ => throw new NotSupportedException(method.Name)
+        });
+        SqsQueue queue = InterfaceProxy<SqsQueue>.Create((method, _) => method.Name switch
+        {
+            "get_QueueSubscriptionAttributes" => new Dictionary<string, object>(),
+            _ => throw new NotSupportedException(method.Name)
+        });
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => context.CreateQueueSubscriptionAsync(topic, queue, CancellationToken.None));
+
+        Assert.Same(expected, actual);
+        SubscribeRequest request = Assert.IsType<SubscribeRequest>(observedRequest);
+        KeyValuePair<string, string> attribute = Assert.Single(request.Attributes);
+        Assert.Equal("RawMessageDelivery", attribute.Key);
+        Assert.Equal("false", attribute.Value);
+
+        Task<SubscribeResponse> CaptureAndStopAsync(object?[]? arguments)
+        {
+            Assert.NotNull(arguments);
+            Assert.Equal(2, arguments.Length);
+            observedRequest = Assert.IsType<SubscribeRequest>(arguments[0]);
+            return Task.FromException<SubscribeResponse>(expected);
+        }
+    }
 }

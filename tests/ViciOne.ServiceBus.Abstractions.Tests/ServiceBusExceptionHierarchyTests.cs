@@ -15,7 +15,7 @@ public sealed class ServiceBusExceptionHierarchyTests
         var messageSize = new MessageTooLargeException(
             actualBytes: 65,
             maximumBytes: 64,
-            inputAddress: new Uri("loopback://localhost/input"));
+            endpointAddress: new Uri("loopback://localhost/input"));
         var payload = new PayloadAdmissionException(
             PayloadAdmissionStage.SerializedBody,
             actualBytes: 65,

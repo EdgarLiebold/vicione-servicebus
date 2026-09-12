@@ -30,7 +30,7 @@ internal static class MessageJournalCaptureFactory
             context.SupportedMessageTypes ?? [],
             metadata,
             SnapshotHeaders(context.Headers),
-            body.GetBytes());
+            body.ToArray());
     }
 
     public static MessageJournalCapture CreateConsume<T>(
@@ -50,7 +50,7 @@ internal static class MessageJournalCaptureFactory
             context.Advanced().SupportedMessageTypes,
             metadata,
             SnapshotHeaders(context.Headers),
-            context.Advanced().ReceiveContext.Body.GetBytes());
+            context.Advanced().ReceiveContext.Body.ToArray());
     }
 
     private static Dictionary<string, string> CreateMessageMetadata(MessageContext context, Exception? exception)

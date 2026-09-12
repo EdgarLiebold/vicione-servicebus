@@ -52,7 +52,7 @@ public class SqsMoveTransport<TSettings>
 
         operationToken.ThrowIfCancellationRequested();
 
-        var message = new SendMessageBatchRequestEntry("", context.Body.GetString()) { MessageAttributes = new Dictionary<string, MessageAttributeValue>() };
+        var message = new SendMessageBatchRequestEntry("", context.Body.GetRequiredTransportText()) { MessageAttributes = new Dictionary<string, MessageAttributeValue>() };
 
         if (context.TryGetPayload(out AmazonSqsMessageContext? receiveContext))
         {

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -25,8 +27,31 @@ public sealed class MessagePackMessageSerializerTests
 
         MessageBody body = serializer.GetMessageBody(Convert.ToBase64String(expected));
 
-        Assert.Equal(expected, body.GetBytes());
+        Assert.Equal(expected, body.ToArray());
         Assert.Equal("text", Assert.Throws<ArgumentNullException>(() => serializer.GetMessageBody(null!)).ParamName);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-BODY", "transport-text-carrier-normalization")]
+    public void TransportTextCarrier_NormalizesDirectAndProviderWrappedBase64WithTheSelectedSerializer(bool wrapped)
+    {
+        byte[] expected = MessagePackSerializationRuntime.Serialize(new ScalarMessage { IntValue = 27 });
+        string carrier = Convert.ToBase64String(expected);
+        string rawTransportText = wrapped
+            ? $"{{\"Type\":\"Notification\",\"Message\":\"{carrier}\"}}"
+            : carrier;
+        var transportBody = new TestTransportTextMessageBody(rawTransportText, carrier);
+        var serializer = new MessagePackMessageSerializer();
+
+        MessageBody normalized = TransportTextMessageBodyNormalizer.Normalize(transportBody, serializer);
+
+        Assert.IsType<Base64MessageBody>(normalized);
+        Assert.Equal(expected, normalized.ToArray());
+        Assert.Equal(carrier, normalized.GetRequiredTransportText());
+        Assert.Equal(Encoding.UTF8.GetBytes(rawTransportText), transportBody.ToArray());
+        Assert.Equal(Encoding.UTF8.GetByteCount(rawTransportText), transportBody.Length);
     }
 
     [Fact]
@@ -41,6 +66,36 @@ public sealed class MessagePackMessageSerializerTests
             Assert.Contains("messagepack", result.Results), exactMatch: false);
         Assert.Equal(MessagePackMessageSerializer.MediaType, Assert.Contains("contentType", scope));
         Assert.Equal("MessagePack", Assert.Contains("provider", scope));
+    }
+
+    private sealed class TestTransportTextMessageBody : MessageBody, TransportTextMessageBody
+    {
+        private readonly string _payloadText;
+        private readonly string _transportText;
+
+        public TestTransportTextMessageBody(string transportText, string payloadText)
+        {
+            _transportText = transportText;
+            _payloadText = payloadText;
+        }
+
+        public long Length => Encoding.UTF8.GetByteCount(_transportText);
+
+        public byte[] ToArray() => Encoding.UTF8.GetBytes(_transportText);
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
+
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text)
+        {
+            text = _transportText;
+            return true;
+        }
+
+        public bool TryGetPayloadText([NotNullWhen(true)] out string? text)
+        {
+            text = _payloadText;
+            return true;
+        }
     }
 
     [Fact]

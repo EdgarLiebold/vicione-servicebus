@@ -67,6 +67,6 @@ public sealed class SystemTextJsonForwardingSerializerTests
     private static JsonElement Serialize(SystemTextJsonForwardingSerializer serializer)
     {
         var context = new MessageSendContext<object>(new object());
-        return JsonSerializer.Deserialize<JsonElement>(serializer.GetMessageBody(context).GetBytes(), ServiceBusMetadataJson.Options);
+        return JsonSerializer.Deserialize<JsonElement>(serializer.GetMessageBody(context).ToArray(), ServiceBusMetadataJson.Options);
     }
 }

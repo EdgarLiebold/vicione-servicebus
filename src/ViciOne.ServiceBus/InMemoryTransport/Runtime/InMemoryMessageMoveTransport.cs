@@ -24,7 +24,7 @@ internal abstract class InMemoryMessageMoveTransport
     /// <param name="context">The receive context whose envelope is copied.</param>
     /// <param name="prepare">The callback that adds destination-specific headers.</param>
     /// <param name="cancellationToken">The token that cancels delivery to the destination exchange.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the destination exchange accepts the copied envelope.</returns>
     protected async Task MoveAsync(
         ReceiveContext context,
         Action<InMemoryTransportMessage, SendHeaders> prepare,
@@ -36,7 +36,7 @@ internal abstract class InMemoryMessageMoveTransport
 
         var messageId = context.GetMessageId(NewId.NextGuid());
 
-        var body = context.GetBodyBytes();
+        byte[] body = context.GetBodyContent();
 
         var transportMessage = new InMemoryTransportMessage(messageId, body, context.ContentType?.MediaType);
 

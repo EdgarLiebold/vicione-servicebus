@@ -76,7 +76,10 @@ public class AmazonSqsClientContext :
         var queueInfo = await ConnectionContext.GetQueueAsync(queue, cancellationToken).ConfigureAwait(false);
 
         Dictionary<string, string> subscriptionAttributes = topic.TopicSubscriptionAttributes.MergeLeft(queue.QueueSubscriptionAttributes)
-            .ToDictionary(x => x.Key, x => x.Value.ToString()!);
+            .ToDictionary(
+                x => AmazonSqsAttributeDictionary.CanonicalizeSubscriptionAttributeName(x.Key),
+                x => x.Value.ToString()!,
+                StringComparer.OrdinalIgnoreCase);
 
         var subscribeRequest = new SubscribeRequest
         {

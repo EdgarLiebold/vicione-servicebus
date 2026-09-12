@@ -24,7 +24,7 @@ public class QueueEntity :
         Durable = durable;
         AutoDelete = autoDelete;
         QueueAttributes = queueAttributes ?? new Dictionary<string, object>();
-        QueueSubscriptionAttributes = queueSubscriptionAttributes ?? new Dictionary<string, object>();
+        QueueSubscriptionAttributes = AmazonSqsAttributeDictionary.CopySubscriptionAttributes(queueSubscriptionAttributes);
         QueueTags = queueTags ?? new Dictionary<string, string>();
     }
 

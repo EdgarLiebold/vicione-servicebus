@@ -45,7 +45,7 @@ internal sealed class MessagePackMessageSerializer :
     {
         ArgumentNullException.ThrowIfNull(body);
         ArgumentNullException.ThrowIfNull(headers);
-        var messageBuffer = body.GetBytes();
+        ReadOnlyMemory<byte> messageBuffer = body.ToArray();
         var envelope = DeserializeMessageBuffer<MessagePackEnvelope>(messageBuffer);
 
         var messageContext = new EnvelopeMessageContext(envelope, this);
@@ -57,17 +57,17 @@ internal sealed class MessagePackMessageSerializer :
 
     /// <summary>Creates a message body from Base64-encoded MessagePack text.</summary>
     /// <param name="text">The Base64-encoded MessagePack bytes.</param>
-    /// <returns>A body that decodes the supplied Base64 text on access.</returns>
+    /// <returns>An owned body containing the eagerly decoded MessagePack bytes.</returns>
     public MessageBody GetMessageBody(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
         return new Base64MessageBody(text);
     }
 
-    /// <summary>Creates a lazily serialized MessagePack envelope for a send context.</summary>
+    /// <summary>Creates an owned serialized MessagePack envelope for a send context.</summary>
     /// <typeparam name="T">The message contract being sent.</typeparam>
     /// <param name="context">The send context that supplies message content and envelope metadata.</param>
-    /// <returns>A lazy MessagePack message body.</returns>
+    /// <returns>An owned snapshot of the MessagePack transport envelope.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
@@ -93,10 +93,19 @@ internal sealed class MessagePackMessageSerializer :
         ArgumentNullException.ThrowIfNull(value);
         return value switch
         {
-            string base64EncodedMessagePackBody => Convert.FromBase64String(base64EncodedMessagePackBody),
+            string base64EncodedMessagePackBody => DecodeCanonicalBase64(base64EncodedMessagePackBody),
             byte[] messagePackBody => messagePackBody,
             _ => MessagePackSerializationRuntime.Serialize(value)
         };
+    }
+
+    static byte[] DecodeCanonicalBase64(string text)
+    {
+        byte[] content = Convert.FromBase64String(text);
+        if (!string.Equals(text, Convert.ToBase64String(content), StringComparison.Ordinal))
+            throw new FormatException("The MessagePack payload must use the canonical padded Base64 representation without whitespace.");
+
+        return content;
     }
 
     /// <summary>Converts an envelope value to a reference-type contract.</summary>
@@ -128,11 +137,11 @@ internal sealed class MessagePackMessageSerializer :
 
     /// <summary>Creates a standalone MessagePack body for an object.</summary>
     /// <param name="value">The value to serialize, or <see langword="null"/> for an empty body.</param>
-    /// <returns>A lazy MessagePack body, or an empty body for a null value.</returns>
+    /// <returns>An owned MessagePack body, or the canonical empty body for a null value.</returns>
     public MessageBody SerializeObject(object? value)
     {
         if (value is null)
-            return new EmptyMessageBody();
+            return EmptyMessageBody.Instance;
 
         return new MessagePackMessageBody<object>(value);
     }
@@ -159,6 +168,11 @@ internal sealed class MessagePackMessageSerializer :
     }
 
     static T DeserializeMessageBuffer<T>(byte[] messageBuffer)
+    {
+        return MessagePackSerializationRuntime.Deserialize<T>(messageBuffer);
+    }
+
+    static T DeserializeMessageBuffer<T>(ReadOnlyMemory<byte> messageBuffer)
     {
         return MessagePackSerializationRuntime.Deserialize<T>(messageBuffer);
     }

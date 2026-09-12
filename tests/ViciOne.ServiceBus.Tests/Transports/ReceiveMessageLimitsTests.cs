@@ -24,7 +24,7 @@ public sealed class ReceiveMessageLimitsTests
 
         Assert.Equal(9, exception.ActualBytes);
         Assert.Equal(8, exception.MaximumBytes);
-        Assert.Equal(InputAddress, exception.InputAddress);
+        Assert.Equal(InputAddress, exception.EndpointAddress);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public sealed class ReceiveMessageLimitsTests
 
         Assert.Same(first, second);
         Assert.Equal(8, first.Length);
-        Assert.Equal(new byte[8], first.GetBytes());
+        Assert.Equal(new byte[8], first.ToArray());
     }
 
     static MessageLimits Limits(int maximumEnvelopeBytes) => new()

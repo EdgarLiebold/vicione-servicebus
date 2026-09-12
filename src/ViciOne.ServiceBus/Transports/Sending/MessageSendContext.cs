@@ -131,7 +131,7 @@ public class MessageSendContext<TMessage> :
     public string[] SupportedMessageTypes { get; set; }
 
     /// <inheritdoc />
-    public long? BodyLength => _body.IsValueCreated ? _body.Value.Length : default;
+    public long? BodyLength => _body.IsValueCreated ? _body.Value.Length : null;
 
     /// <inheritdoc />
     public SendContext<T> CreateProxy<T>(T message)

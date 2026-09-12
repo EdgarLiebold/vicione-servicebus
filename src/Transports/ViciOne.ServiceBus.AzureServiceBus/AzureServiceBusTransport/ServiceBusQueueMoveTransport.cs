@@ -31,11 +31,11 @@ public class ServiceBusQueueMoveTransport
         IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAwaited<SendEndpointContext>(async clientContext =>
         {
             if (!context.TryGetPayload(out ServiceBusMessageContext? messageContext))
-                throw new ArgumentException("The ReceiveContext must contain a BrokeredMessageContext (from Azure Service Bus)", nameof(context));
+                throw new ArgumentException("The ReceiveContext must contain a ServiceBusMessageContext (from Azure Service Bus)", nameof(context));
 
-            var body = context.GetBodyBytes();
+            ReadOnlyMemory<byte> body = context.GetBodyContent();
 
-            var message = new ServiceBusMessage(body)
+            var message = new ServiceBusMessage(BinaryData.FromBytes(body))
             {
                 ContentType = context.ContentType?.MediaType,
                 TimeToLive = messageContext.TimeToLive,

@@ -28,10 +28,10 @@ internal sealed class MessagePackForwardingSerializer :
         _envelope = new MessagePackEnvelope(envelope);
     }
 
-    /// <summary>Creates a lazy body from a private envelope snapshot and the current send metadata.</summary>
+    /// <summary>Creates an owned body from a private envelope snapshot and the current send metadata.</summary>
     /// <typeparam name="T">The forwarded message contract.</typeparam>
     /// <param name="context">The send context whose metadata is applied to the snapshot.</param>
-    /// <returns>A lazy MessagePack transport body independent of later calls.</returns>
+    /// <returns>An eagerly serialized MessagePack transport body independent of later calls.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {

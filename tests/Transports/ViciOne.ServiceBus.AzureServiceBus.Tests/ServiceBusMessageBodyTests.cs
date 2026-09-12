@@ -11,28 +11,59 @@ public sealed class ServiceBusMessageBodyTests
     [RequirementCoverage("REQ-VSB-ASB-MESSAGE-BODY", "all-access-orders-byte-length-and-readonly-stream")]
     public void EveryAccessorOrder_PreservesExactBytesAndByteLength()
     {
-        byte[] expected = Encoding.UTF8.GetBytes("aäあb");
-        var lengthFirst = new ServiceBusMessageBody(BinaryData.FromBytes(expected));
-        var stringFirst = new ServiceBusMessageBody(BinaryData.FromBytes(expected));
-        var bytesFirst = new ServiceBusMessageBody(BinaryData.FromBytes(expected));
-        var streamFirst = new ServiceBusMessageBody(BinaryData.FromBytes(expected));
+        const string expectedText = "aäあb";
+        byte[] expected = Encoding.UTF8.GetBytes(expectedText);
+        byte[] source = expected.ToArray();
+        var body = new ServiceBusMessageBody(BinaryData.FromBytes(source));
+        source[0] = 0x00;
 
-        long? measuredFirst = lengthFirst.Length;
-        _ = stringFirst.GetString();
-        _ = bytesFirst.GetBytes();
-        using Stream stream = streamFirst.GetStream();
-        using var copy = new MemoryStream();
-        stream.CopyTo(copy);
+        Assert.Equal(expected.LongLength, body.Length);
+        Assert.NotEqual(expectedText.Length, body.Length);
+        byte[] callerCopy = body.ToArray();
+        Assert.Equal(expected, callerCopy);
+        callerCopy.AsSpan().Clear();
+        Assert.Equal(expected, body.ToArray());
+        Assert.False(body.TryGetTransportText(out var transportText));
+        Assert.Null(transportText);
 
-        Assert.Equal(expected.LongLength, measuredFirst);
-        Assert.Equal(expected.LongLength, stringFirst.Length);
-        Assert.Equal(expected.LongLength, bytesFirst.Length);
-        Assert.Equal(expected.LongLength, streamFirst.Length);
-        Assert.NotEqual("aäあb".Length, lengthFirst.Length);
-        Assert.Equal(expected, lengthFirst.GetBytes());
-        Assert.Equal(expected, copy.ToArray());
-        Assert.False(stream.CanWrite);
-        Assert.Equal(0, new ServiceBusMessageBody(BinaryData.FromBytes([])).Length);
+        using Stream first = body.OpenReadStream();
+        using Stream second = body.OpenReadStream();
+        Assert.False(first.CanWrite);
+        Assert.Throws<NotSupportedException>(() => first.WriteByte(0x00));
+        MemoryStream memoryStream = Assert.IsType<MemoryStream>(first);
+        Assert.False(memoryStream.TryGetBuffer(out _));
+        Assert.Throws<UnauthorizedAccessException>(memoryStream.GetBuffer);
+        Assert.Equal(expected[0], first.ReadByte());
+        Assert.Equal(0, second.Position);
+        first.Dispose();
+
+        Assert.Equal(expected, ReadRemaining(second));
+        Assert.Equal(expected, body.ToArray());
+    }
+
+    [Fact]
+    public void EmptyAndMalformedBodies_RemainOpaqueBinaryContent()
+    {
+        var empty = new ServiceBusMessageBody(BinaryData.FromBytes([]));
+        var malformed = new ServiceBusMessageBody(BinaryData.FromBytes([0xC3, 0x28]));
+
+        Assert.Equal(0, empty.Length);
+        Assert.Empty(empty.ToArray());
+        Assert.False(empty.TryGetTransportText(out var emptyText));
+        Assert.Null(emptyText);
+        Assert.False(malformed.TryGetTransportText(out var malformedText));
+        Assert.Null(malformedText);
+        Assert.Equal(new byte[] { 0xC3, 0x28 }, malformed.ToArray());
+    }
+
+    [Fact]
+    public void Type_IsProviderInternalAndSealed()
+    {
+        Type type = typeof(ServiceBusMessageBody);
+
+        Assert.True(type.IsNotPublic);
+        Assert.True(type.IsSealed);
+        Assert.Contains(typeof(MessageBody), type.GetInterfaces());
     }
 
     [Fact]
@@ -40,5 +71,12 @@ public sealed class ServiceBusMessageBodyTests
     public void Constructor_RejectsMissingBinaryDataImmediately()
     {
         Assert.Equal("data", Assert.Throws<ArgumentNullException>(() => new ServiceBusMessageBody(null!)).ParamName);
+    }
+
+    private static byte[] ReadRemaining(Stream stream)
+    {
+        using var result = new MemoryStream();
+        stream.CopyTo(result);
+        return result.ToArray();
     }
 }

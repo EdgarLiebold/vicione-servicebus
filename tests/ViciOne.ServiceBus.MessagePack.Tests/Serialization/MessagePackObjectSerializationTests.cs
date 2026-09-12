@@ -15,11 +15,11 @@ public sealed class MessagePackObjectSerializationTests
 
         MessageBody empty = serializer.SerializeObject(null);
         MessageBody body = serializer.SerializeObject(new ObjectValue { Id = 27, Name = "Frank" });
-        var restored = MessagePackSerializationRuntime.Deserialize<ObjectValue>(body.GetBytes());
+        var restored = MessagePackSerializationRuntime.Deserialize<ObjectValue>(body.ToArray());
 
         Assert.IsType<EmptyMessageBody>(empty);
-        Assert.Empty(empty.GetBytes());
-        Assert.NotEmpty(body.GetBytes());
+        Assert.Empty(empty.ToArray());
+        Assert.NotEmpty(body.ToArray());
         Assert.Equal(27, restored.Id);
         Assert.Equal("Frank", restored.Name);
     }

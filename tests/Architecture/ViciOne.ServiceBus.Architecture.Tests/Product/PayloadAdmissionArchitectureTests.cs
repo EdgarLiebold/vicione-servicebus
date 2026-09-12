@@ -22,6 +22,10 @@ public sealed class PayloadAdmissionArchitectureTests
         Assert.True(admission > activity);
         Assert.True(observer > admission);
         Assert.True(provider > observer);
+
+        string boundary = Source("src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionTransportBoundary.cs");
+        Assert.Contains("_ = transportContext.Body.Length", boundary, StringComparison.Ordinal);
+        Assert.DoesNotContain("transportContext.Body.ToArray()", boundary, StringComparison.Ordinal);
     }
 
     [Fact]

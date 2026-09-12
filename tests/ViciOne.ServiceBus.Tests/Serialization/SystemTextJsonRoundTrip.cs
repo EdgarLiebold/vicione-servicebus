@@ -44,7 +44,7 @@ internal static class SystemTextJsonRoundTrip
         return new SystemTextJsonRoundTripResult<T>(
             roundTripped,
             serializerContext,
-            body.GetBytes(),
+            body.ToArray(),
             serializer.ContentType.MediaType);
     }
 
@@ -73,7 +73,7 @@ internal static class SystemTextJsonRoundTrip
                 $"Raw System.Text.Json did not return a supported message of type '{typeof(T)}'.");
         }
 
-        return new SystemTextJsonRawRoundTripResult<T>(roundTripped, body.GetBytes(), serializer.ContentType.MediaType);
+        return new SystemTextJsonRawRoundTripResult<T>(roundTripped, body.ToArray(), serializer.ContentType.MediaType);
     }
 }
 

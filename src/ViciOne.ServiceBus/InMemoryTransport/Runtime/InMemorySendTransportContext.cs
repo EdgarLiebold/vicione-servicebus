@@ -91,7 +91,7 @@ internal sealed class InMemorySendTransportContext :
 
         var body = context.Body ?? throw new InvalidOperationException("The send context body has not been serialized.");
         var contentType = context.ContentType ?? throw new InvalidOperationException("The send context content type has not been set.");
-        var transportMessage = new InMemoryTransportMessage(messageId, body.GetBytes(), contentType.ToString())
+        var transportMessage = new InMemoryTransportMessage(messageId, body.ToArray(), contentType.ToString())
         {
             Delay = context.Delay,
             RoutingKey = context.RoutingKey

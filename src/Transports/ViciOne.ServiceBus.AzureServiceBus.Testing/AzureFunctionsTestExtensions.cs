@@ -42,7 +42,7 @@ public static class AzureFunctionsTestExtensions
         var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
 
         ServiceBusReceivedMessage receivedMessage = ServiceBusModelFactory.ServiceBusReceivedMessage(
-            body: new BinaryData(body.GetBytes()),
+            body: BinaryData.FromBytes(body.ToArray()),
             messageId: NewId.NextGuid().ToString(),
             contentType: SystemTextJsonRawMessageSerializer.JsonContentType.MediaType,
             deliveryCount: 1);

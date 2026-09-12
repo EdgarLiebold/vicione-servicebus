@@ -75,9 +75,9 @@ public sealed class SystemTextJsonRawMessageSerializer :
                 bodyElement = jsonMessageBody.GetJsonElement(_serializerOptions);
             else
             {
-                var bytes = body.GetBytes();
-                bodyElement = bytes.Length > 0
-                    ? JsonSerializer.Deserialize<JsonElement>(bytes, _serializerOptions)
+                ReadOnlyMemory<byte> content = body.ToArray();
+                bodyElement = content.Length > 0
+                    ? JsonSerializer.Deserialize<JsonElement>(content.Span, _serializerOptions)
                     : null;
             }
 
@@ -111,7 +111,7 @@ public sealed class SystemTextJsonRawMessageSerializer :
     /// <summary>Creates a raw JSON body for an outgoing message and optionally emits transport headers.</summary>
     /// <typeparam name="T">The outgoing message contract.</typeparam>
     /// <param name="context">The outgoing message and metadata.</param>
-    /// <returns>A lazily encoded raw JSON body.</returns>
+    /// <returns>An owned snapshot of the encoded raw JSON body.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {

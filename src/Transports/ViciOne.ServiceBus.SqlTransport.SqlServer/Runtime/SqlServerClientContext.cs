@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.SqlTransport.Serialization;
 using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
@@ -22,6 +23,7 @@ internal sealed class SqlServerClientContext :
     readonly string _createQueueSubscriptionSql;
     readonly string _createTopicSql;
     readonly string _createTopicSubscriptionSql;
+    readonly string _deadLetterMessagesSql;
     readonly string _deleteMessageSql;
     readonly string _deleteScheduledMessageSql;
     readonly string _moveMessageTypeSql;
@@ -33,7 +35,6 @@ internal sealed class SqlServerClientContext :
     readonly string _sendSql;
     readonly string _touchQueueSql;
     readonly string _unlockSql;
-    readonly string _deadLetterMessagesSql;
 
     /// <summary>Initializes a client that uses the specified SQL Server connection context.</summary>
     /// <param name="context">The connection context used to execute transport commands.</param>
@@ -215,7 +216,7 @@ internal sealed class SqlServerClientContext :
     /// <summary>Updates a queue's last-used timestamp.</summary>
     /// <param name="queueName">The queue to mark as used.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after SQL Server updates the queue timestamp.</returns>
     public override async Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -241,7 +242,7 @@ internal sealed class SqlServerClientContext :
     /// <param name="queueName">The destination queue.</param>
     /// <param name="context">The serialized message and send metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after SQL Server enqueues the message.</returns>
     public override async Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -258,7 +259,7 @@ internal sealed class SqlServerClientContext :
     /// <param name="topicName">The source topic used to resolve subscriptions.</param>
     /// <param name="context">The serialized message and publish metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after SQL Server publishes the message to matching subscriptions.</returns>
     public override async Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(topicName);
@@ -419,6 +420,7 @@ internal sealed class SqlServerClientContext :
     static object CreateMessageParameters<T>(string entityName, SqlMessageSendContext<T> context)
         where T : class
     {
+        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
         Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
         DateTime? expirationTime = context.TimeToLive.HasValue
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
@@ -429,8 +431,8 @@ internal sealed class SqlServerClientContext :
             entityName,
             priority = (int)(context.Priority ?? 100),
             transportMessageId = context.TransportMessageId,
-            body = context.Body.GetString(),
-            binaryBody = default(byte[]?),
+            body = bodyStorage.Text,
+            binaryBody = bodyStorage.Binary,
             contentType = context.ContentType?.MediaType,
             messageType = string.Join(";", context.SupportedMessageTypes),
             messageId = context.MessageId,

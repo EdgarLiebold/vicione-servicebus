@@ -11,8 +11,8 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 public sealed class MessagePackForwardingSerializerTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "reusable-serializer-isolates-lazy-bodies")]
-    public void ReusedForwardingSerializer_IsolatesEveryLazyBody()
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "reusable-serializer-isolates-eager-owned-bodies")]
+    public void ReusedForwardingSerializer_IsolatesEveryEagerOwnedBody()
     {
         var sourceContext = CreateContext(
             new ForwardedMessage { Changed = "original", Preserved = "kept" },
@@ -59,7 +59,7 @@ public sealed class MessagePackForwardingSerializerTests
         AttachPayloadAdmission(sendContext);
 
         MessageBody body = forwarding.GetMessageBody(sendContext);
-        MessagePackEnvelope envelope = MessagePackSerializationRuntime.Deserialize<MessagePackEnvelope>(body.GetBytes());
+        MessagePackEnvelope envelope = MessagePackSerializationRuntime.Deserialize<MessagePackEnvelope>(body.ToArray());
         SerializerContext serializerContext = new MessagePackMessageSerializer()
             .Deserialize(body, EmptyHeaders.Instance);
 
@@ -191,9 +191,13 @@ public sealed class MessagePackForwardingSerializerTests
         Assert.Equal("kept", message.Preserved);
     }
 
-    [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "overlay-rejects-invalid-base64-payload")]
-    public void Overlay_RejectsInvalidBase64Payload()
+    [Theory]
+    [InlineData("not-base64")]
+    [InlineData("Y Q==")]
+    [InlineData("YQ==\r\n")]
+    [InlineData("YR==")]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "overlay-rejects-noncanonical-base64-payload")]
+    public void Overlay_RejectsInvalidOrNoncanonicalBase64Payload(string payload)
     {
         var sourceContext = CreateContext(
             new ForwardedMessage(),
@@ -201,7 +205,7 @@ public sealed class MessagePackForwardingSerializerTests
         var envelope = new MessagePackEnvelope(sourceContext, sourceContext.Message)
         {
             IsNativeMessagePackPayload = false,
-            Message = "not-base64",
+            Message = payload,
         };
         var forwarding = new MessagePackForwardingSerializer(envelope);
 

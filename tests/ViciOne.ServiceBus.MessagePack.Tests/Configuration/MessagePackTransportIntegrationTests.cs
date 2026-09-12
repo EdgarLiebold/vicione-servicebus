@@ -246,6 +246,103 @@ public sealed class MessagePackTransportIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BODY-CROSS-OWNER", "messagepack-forward-message-pipe-success")]
+    public async Task ForwardAsync_PreservesTheMessagePackEnvelopeAndBinaryPayloadAsync()
+    {
+        TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions()
+            .OperationTimeout!.Value;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = new InMemoryTestHarness($"messagepack-forwarding-success-{NewId.NextGuid():N}")
+        {
+            TestTimeout = operationTimeout,
+        };
+        harness.BeginTestScope();
+        var sourceCompleted = new TaskCompletionSource<ConsumeContext<ForwardSuccessMessage>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var destinationCompleted = new TaskCompletionSource<ConsumeContext<ForwardSuccessMessage>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        Uri forwardAddress = new(harness.BaseAddress, "messagepack-success-forward");
+
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
+            configurator.Handler<ForwardSuccessMessage>(async context =>
+            {
+                await context.ForwardAsync(forwardAddress).ConfigureAwait(false);
+                sourceCompleted.TrySetResult(context);
+            });
+        harness.InMemoryBusConfiguring += configurator =>
+        {
+            configurator.ClearSerialization();
+            configurator.UseMessagePackSerializer();
+            configurator.ReceiveEndpoint("messagepack-success-forward", endpoint =>
+                endpoint.Handler<ForwardSuccessMessage>(context =>
+                {
+                    destinationCompleted.TrySetResult(context);
+                    return Task.CompletedTask;
+                }));
+        };
+
+        Guid messageId = Guid.Parse("944d5d2c-c7d0-4c61-a851-7838376c609f");
+        var message = new ForwardSuccessMessage
+        {
+            CorrelationId = Guid.Parse("e96cf638-550d-4447-8161-8dbf2c60279a"),
+            Value = "forwarded-messagepack",
+            Binary = [0x00, 0x7f, 0x80, 0xff, 0x01, 0xfe],
+        };
+
+        try
+        {
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
+                    message,
+                    context => context.MessageId = messageId,
+                    cancellationToken)
+                .WaitAsync(operationTimeout, cancellationToken);
+
+            ConsumeContext<ForwardSuccessMessage> source = await sourceCompleted.Task.WaitAsync(
+                operationTimeout,
+                cancellationToken);
+            ConsumeContext<ForwardSuccessMessage> destination = await destinationCompleted.Task.WaitAsync(
+                operationTimeout,
+                cancellationToken);
+
+            Assert.Equal(messageId, source.MessageId);
+            Assert.Equal(messageId, destination.MessageId);
+            Assert.Equal(message.CorrelationId, destination.Message.CorrelationId);
+            Assert.Equal(message.Value, destination.Message.Value);
+            Assert.Equal(message.Binary, destination.Message.Binary);
+            Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, source.Advanced().ReceiveContext.ContentType);
+            Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, destination.Advanced().ReceiveContext.ContentType);
+
+            MessageBody sourceBody = source.Advanced().ReceiveContext.Body;
+            MessageBody destinationBody = destination.Advanced().ReceiveContext.Body;
+            byte[] sourceBytes = sourceBody.ToArray();
+            byte[] destinationBytes = destinationBody.ToArray();
+            Assert.NotEqual(sourceBytes, destinationBytes);
+            Assert.Equal(sourceBytes.LongLength, sourceBody.Length);
+            Assert.Equal(destinationBytes.LongLength, destinationBody.Length);
+            byte[] stableSourceBytes = sourceBody.ToArray();
+            byte[] stableDestinationBytes = destinationBody.ToArray();
+            Assert.NotSame(sourceBytes, stableSourceBytes);
+            Assert.NotSame(destinationBytes, stableDestinationBytes);
+            Assert.Equal(sourceBytes, stableSourceBytes);
+            Assert.Equal(destinationBytes, stableDestinationBytes);
+            Assert.False(sourceBody.TryGetTransportText(out string? sourceTransportText));
+            Assert.False(destinationBody.TryGetTransportText(out string? destinationTransportText));
+            Assert.Null(sourceTransportText);
+            Assert.Null(destinationTransportText);
+            sourceBytes[0] ^= 0xff;
+            destinationBytes[0] ^= 0xff;
+            Assert.Equal(stableSourceBytes, sourceBody.ToArray());
+            Assert.Equal(stableDestinationBytes, destinationBody.ToArray());
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-REDELIVERY", "messagepack-envelope-remains-consumable")]
     public async Task DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDeliveryAsync()
     {
@@ -416,6 +513,13 @@ public sealed class MessagePackTransportIntegrationTests
     private sealed class ForwardExpirationMessage
     {
         public string Value { get; set; } = string.Empty;
+    }
+
+    private sealed class ForwardSuccessMessage
+    {
+        public byte[] Binary { get; init; } = [];
+        public Guid CorrelationId { get; init; }
+        public string Value { get; init; } = string.Empty;
     }
 
     private sealed record ForwardExpirationProjection(

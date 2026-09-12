@@ -12,10 +12,9 @@ namespace ViciOne.ServiceBus.Mediator.Contexts;
 
 static class MediatorReceiveContext
 {
-    const string ContentTypeHeaderValue = "application/vnd.vicione.servicebus+obj";
-    internal static readonly ContentType ObjectContentType = new ContentType(ContentTypeHeaderValue);
+    const string ContentTypeHeaderValue = "application/json";
+    internal static readonly ContentType JsonContentType = new(ContentTypeHeaderValue);
 }
-
 
 /// <summary>Represents an in-process delivery as a receive context without creating a transport envelope.</summary>
 /// <typeparam name="TMessage">The in-process message contract being received.</typeparam>
@@ -33,17 +32,17 @@ internal sealed class MediatorReceiveContext<TMessage> :
     readonly long _receiveStartedAt;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>Creates the receive-side view of a measured in-process send.</summary>
+    /// <summary>Creates the receive-side view of a materialized in-process send.</summary>
     /// <param name="sendContext">The materialized message and its send metadata.</param>
     /// <param name="sendEndpointProvider">The provider used for sends initiated while consuming the message.</param>
     /// <param name="publishEndpointProvider">The provider used for publishes initiated while consuming the message.</param>
     /// <param name="publishTopology">The topology used to resolve implemented message contracts.</param>
     /// <param name="observers">The receive observers notified during dispatch.</param>
     /// <param name="objectDeserializer">The deserializer used to project the materialized message to compatible contracts.</param>
-    /// <param name="serializedBodyBytes">The measured canonical JSON body length.</param>
+    /// <param name="messageBody">The canonical JSON snapshot exposed to the receive pipeline.</param>
     public MediatorReceiveContext(SendContext<TMessage> sendContext, ISendEndpointProvider sendEndpointProvider,
         IPublishEndpointProvider publishEndpointProvider, IPublishTopology publishTopology, IReceiveObserver observers,
-        IObjectDeserializer objectDeserializer, long serializedBodyBytes)
+        IObjectDeserializer objectDeserializer, MessageBody messageBody)
         : base(sendContext)
     {
         _observers = observers;
@@ -62,7 +61,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
         _headers = new MessageIdHeaders(messageId);
 
         _receiveTasks = new PendingTaskCollection(4);
-        _messageBody = new MeasuredMediatorMessageBody(serializedBodyBytes);
+        _messageBody = messageBody ?? throw new ArgumentNullException(nameof(messageBody));
 
         var messageContext = new MediatorSendMessageContext<TMessage>(sendContext);
 
@@ -84,7 +83,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
 
     /// <summary>Gets whether mediator receive faults should be republished as transport fault messages.</summary>
     public bool PublishFaults => false;
-    /// <summary>Gets the measured, non-materialized receive body.</summary>
+    /// <summary>Gets the readable canonical JSON receive body.</summary>
     public MessageBody Body => _messageBody;
 
     /// <summary>Gets a task that completes after every task attached to this delivery.</summary>
@@ -170,9 +169,8 @@ internal sealed class MediatorReceiveContext<TMessage> :
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
     /// <summary>Gets the mediator endpoint address that received the message.</summary>
     public Uri InputAddress => _inputAddress;
-    /// <summary>Gets the content type used for materialized in-process messages.</summary>
-    public ContentType ContentType => MediatorReceiveContext.ObjectContentType;
-
+    /// <summary>Gets the JSON content type of the materialized in-process body.</summary>
+    public ContentType ContentType => MediatorReceiveContext.JsonContentType;
 
     class FaultContext :
         ConsumerFaultContext
@@ -186,21 +184,4 @@ internal sealed class MediatorReceiveContext<TMessage> :
         public string MessageType { get; }
         public string ConsumerType { get; }
     }
-}
-
-sealed class MeasuredMediatorMessageBody : MessageBody
-{
-    public MeasuredMediatorMessageBody(long length)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(length);
-        Length = length;
-    }
-
-    public long? Length { get; }
-
-    public Stream GetStream() => throw new NotSupportedException("The in-process mediator has no serialized receive stream.");
-
-    public byte[] GetBytes() => throw new NotSupportedException("The in-process mediator has no serialized receive body.");
-
-    public string GetString() => throw new NotSupportedException("The in-process mediator has no serialized receive text.");
 }

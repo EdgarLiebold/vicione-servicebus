@@ -41,8 +41,8 @@ public class ActiveMqMoveTransport<TSettings>
 
         var message = messageContext.TransportMessage switch
         {
-            IBytesMessage _ => sessionContext.CreateBytesMessage(context.Body.GetBytes()),
-            ITextMessage _ => sessionContext.CreateTextMessage(context.Body.GetString()),
+            IBytesMessage _ => sessionContext.CreateBytesMessage(context.Body.ToArray()),
+            ITextMessage _ => sessionContext.CreateTextMessage(context.Body.GetRequiredTransportText()),
             _ => sessionContext.CreateMessage(),
         };
 

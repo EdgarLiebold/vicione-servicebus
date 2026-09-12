@@ -110,7 +110,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
             ContractIdentity = _contracts.GetIdentity(typeof(TOutgoingMessage)),
             DestinationAddress = destination,
             ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
-            Body = context.Serializer.GetMessageBody(context).GetBytes(),
+            Body = context.Serializer.GetMessageBody(context).ToArray(),
             Metadata = ReliableEnvelopeMetadataCodec.Capture(context, now),
             MessageId = context.MessageId,
             CorrelationId = context.CorrelationId,

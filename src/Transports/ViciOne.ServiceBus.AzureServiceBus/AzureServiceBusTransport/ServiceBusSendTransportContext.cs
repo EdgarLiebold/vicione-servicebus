@@ -213,7 +213,7 @@ public class ServiceBusSendTransportContext :
     static ServiceBusMessage CreateMessage<T>(AzureServiceBusSendContext<T> context)
         where T : class
     {
-        var message = new ServiceBusMessage(context.Body.GetBytes())
+        var message = new ServiceBusMessage(BinaryData.FromBytes(context.Body.ToArray()))
         {
             ContentType = (context.ContentType
                 ?? throw new InvalidOperationException("A content type is required before an Azure Service Bus message can be sent.")).ToString()
@@ -257,18 +257,18 @@ public class ServiceBusSendTransportContext :
         where T : class
     {
         if (context.TryGetPayload<ConsumeContext>(out var consumeContext)
-            && consumeContext.TryGetPayload<ServiceBusMessageContext>(out var brokeredMessageContext))
+            && consumeContext.TryGetPayload<ServiceBusMessageContext>(out var messageContext))
         {
             if (context.SessionId == null)
             {
-                if (brokeredMessageContext.ReplyToSessionId != null)
-                    context.SessionId = brokeredMessageContext.ReplyToSessionId;
-                else if (brokeredMessageContext.SessionId != null)
-                    context.SessionId = brokeredMessageContext.SessionId;
+                if (messageContext.ReplyToSessionId != null)
+                    context.SessionId = messageContext.ReplyToSessionId;
+                else if (messageContext.SessionId != null)
+                    context.SessionId = messageContext.SessionId;
             }
 
-            if (context.PartitionKey == null && brokeredMessageContext.PartitionKey != null)
-                context.PartitionKey = brokeredMessageContext.PartitionKey;
+            if (context.PartitionKey == null && messageContext.PartitionKey != null)
+                context.PartitionKey = messageContext.PartitionKey;
         }
     }
 }

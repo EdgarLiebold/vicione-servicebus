@@ -70,7 +70,7 @@ public sealed class SystemTextJsonMessageSerializer :
         {
             JsonElement? bodyElement = body is IJsonMessageBody jsonMessageBody
                 ? jsonMessageBody.GetJsonElement(_options)
-                : JsonSerializer.Deserialize<JsonElement>(body.GetBytes(), _options);
+                : JsonSerializer.Deserialize<JsonElement>(body.ToArray(), _options);
 
             var envelope = bodyElement?.Deserialize<MessageEnvelope>(_options);
             if (envelope == null)
@@ -104,7 +104,7 @@ public sealed class SystemTextJsonMessageSerializer :
     /// <summary>Creates an envelope-encoded JSON body for an outgoing message.</summary>
     /// <typeparam name="T">The outgoing message contract.</typeparam>
     /// <param name="context">The outgoing message and metadata.</param>
-    /// <returns>A lazily encoded envelope body.</returns>
+    /// <returns>An owned snapshot of the encoded envelope.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
@@ -182,7 +182,7 @@ public sealed class SystemTextJsonMessageSerializer :
     public MessageBody SerializeObject(object? value)
     {
         if (value == null)
-            return new EmptyMessageBody();
+            return EmptyMessageBody.Instance;
 
         return new SystemTextJsonObjectMessageBody(value, _options);
     }

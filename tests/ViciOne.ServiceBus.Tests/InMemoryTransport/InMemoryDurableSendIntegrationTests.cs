@@ -180,7 +180,7 @@ public sealed class InMemoryDurableSendIntegrationTests
                     {
                         var snapshot = new ConsumerSnapshot(
                             context.Message.Value,
-                            context.Advanced().ReceiveContext.Body.GetBytes(),
+                            context.Advanced().ReceiveContext.Body.ToArray(),
                             context.Headers.GetAll().ToArray());
                         observation.Entered.TrySetResult(snapshot);
                         if (shouldFail)

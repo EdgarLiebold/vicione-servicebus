@@ -59,7 +59,7 @@ public class SerializationBenchmark
     {
         var messageBody = _messagePackObjectSerializer.SerializeObject(_serializationSubject);
 
-        return messageBody.GetBytes();
+        return messageBody.ToArray();
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class SerializationBenchmark
     {
         MessageBody messageBody = _messagePackSerializer.GetMessageBody(_sendContext);
 
-        return messageBody.GetBytes();
+        return messageBody.ToArray();
     }
 
     [Benchmark]
@@ -79,7 +79,7 @@ public class SerializationBenchmark
     {
         MessageBody messageBody = _systemTextJsonSerializer.GetMessageBody(_sendContext);
 
-        return messageBody.GetBytes();
+        return messageBody.ToArray();
     }
 
     [Benchmark(Baseline = true)]
@@ -87,7 +87,7 @@ public class SerializationBenchmark
     {
         var messageBody = _systemTextJsonSerializer.SerializeObject(_serializationSubject);
 
-        return messageBody.GetBytes();
+        return messageBody.ToArray();
     }
 
 

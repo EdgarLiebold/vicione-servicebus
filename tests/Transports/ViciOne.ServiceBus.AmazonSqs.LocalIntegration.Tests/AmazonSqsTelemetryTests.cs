@@ -110,7 +110,7 @@ public sealed class AmazonSqsTelemetryTests
             Assert.Equal(send.SpanId, receive.ParentSpanId);
             Assert.Equal(receive.SpanId, process.ParentSpanId);
 
-            Assert.Equal("aws_sqs", Tag(send, ServiceBusTelemetry.Attributes.MessagingSystem));
+            Assert.Equal("aws.sns", Tag(send, ServiceBusTelemetry.Attributes.MessagingSystem));
             Assert.Equal("aws_sqs", Tag(receive, ServiceBusTelemetry.Attributes.MessagingSystem));
             Assert.Equal("aws_sqs", Tag(process, ServiceBusTelemetry.Attributes.MessagingSystem));
             Assert.Equal(messageId.ToString("D"), Tag(send, ServiceBusTelemetry.Attributes.MessageId));
