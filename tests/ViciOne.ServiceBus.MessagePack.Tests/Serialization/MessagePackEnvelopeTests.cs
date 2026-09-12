@@ -1,9 +1,12 @@
 using MessagePack;
 using MessagePack.Resolvers;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
@@ -14,6 +17,74 @@ public sealed class MessagePackEnvelopeTests
         MessagePackSerializerOptions.Standard
             .WithResolver(ContractlessStandardResolver.Instance)
             .WithSecurity(MessagePackSecurity.UntrustedData);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-ENVELOPE", "binary-only-payload-contract")]
+    public void EnvelopePayload_IsStaticallyRestrictedToOwnedBinaryContent()
+    {
+        var property = typeof(MessagePackEnvelope).GetProperty(nameof(MessagePackEnvelope.Message));
+        var message = new Order { Id = 27, Customer = "Frank" };
+        var sendContext = new MessageSendContext<Order>(message);
+        var envelope = new MessagePackEnvelope(sendContext, message);
+        MessageEnvelope contract = envelope;
+
+        Assert.NotNull(property);
+        Assert.Equal(typeof(byte[]), property.PropertyType);
+        Assert.Same(envelope.Message, contract.Message);
+        Assert.NotNull(contract.MessageTypes);
+        Assert.NotNull(contract.Headers);
+
+        envelope.MessageTypes = null;
+        envelope.Headers = null;
+
+        Assert.Null(contract.MessageTypes);
+        Assert.Null(contract.Headers);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-ENVELOPE", "complete-constructor-boundary")]
+    public void EnvelopeConstruction_RejectsEveryMissingOwnedInput()
+    {
+        var message = new Order { Id = 27, Customer = "Frank" };
+        var sendContext = new MessageSendContext<Order>(message);
+        var messageContext = new TestMessageContext();
+        var envelope = new MessagePackEnvelope(sendContext, message);
+
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope((SendContext)null!, message)).ParamName);
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope(sendContext, (object)null!)).ParamName);
+        Assert.Equal("serializedMessage", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope(sendContext, (byte[])null!)).ParamName);
+        Assert.Equal("envelope", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope((MessageEnvelope)null!)).ParamName);
+        Assert.Equal("serializedMessage", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope(envelope, null!, isNativeMessagePackPayload: true)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope((MessageContext)null!, message, [])).ParamName);
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope(messageContext, null!, [])).ParamName);
+        Assert.Equal("messageTypes", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackEnvelope(messageContext, message, null!)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            envelope.Update<Order>(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-ENVELOPE", "serialized-payload-snapshot")]
+    public void SerializedPayloadConstruction_OwnsItsInputBytes()
+    {
+        var message = new Order { Id = 27, Customer = "Frank" };
+        var context = new MessageSendContext<Order>(message);
+        byte[] source = MessagePackSerializationRuntime.Serialize(message);
+        byte[] expected = [.. source];
+
+        var envelope = new MessagePackEnvelope(context, source);
+        source.AsSpan().Fill(0x00);
+
+        Assert.NotSame(source, envelope.Message);
+        Assert.Equal(expected, envelope.Message);
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-CLONE", "native-payload-byte-identity")]
@@ -110,6 +181,25 @@ public sealed class MessagePackEnvelopeTests
     }
 
     private static ForeignEnvelope Foreign(object message) => new(message);
+
+    private sealed class TestMessageContext : BasePipeContext, MessageContext
+    {
+        private readonly DictionarySendHeaders _headers = new();
+
+        public Guid? MessageId => null;
+        public Guid? RequestId => null;
+        public Guid? CorrelationId => null;
+        public Guid? ConversationId => null;
+        public Guid? InitiatorId => null;
+        public DateTimeOffset? ExpirationTime => null;
+        public Uri? SourceAddress => null;
+        public Uri? DestinationAddress => null;
+        public Uri? ResponseAddress => null;
+        public Uri? FaultAddress => null;
+        public DateTimeOffset? SentTime => null;
+        public Headers Headers => _headers;
+        public HostInfo Host => HostMetadataCache.Host;
+    }
 
     private sealed class ForeignEnvelope(object message) : MessageEnvelope
     {

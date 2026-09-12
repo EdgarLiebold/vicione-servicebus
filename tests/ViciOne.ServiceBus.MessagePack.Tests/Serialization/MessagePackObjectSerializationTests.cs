@@ -1,5 +1,6 @@
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessagePack.Serialization;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -43,7 +44,10 @@ public sealed class MessagePackObjectSerializationTests
                 ["name"] = "dictionary",
             });
         ObjectValue? fromBytes = serializer.DeserializeObject<ObjectValue>(bytes);
-        ObjectValue? fromBase64 = serializer.DeserializeObject<ObjectValue>(Convert.ToBase64String(bytes));
+        string json = System.Text.Json.JsonSerializer.Serialize(
+            new ObjectValue { Id = 4, Name = "json" },
+            ServiceBusMetadataJson.Options);
+        ObjectValue? fromJson = serializer.DeserializeObject<ObjectValue>(json);
 
         Assert.Same(fallback, fromMissing);
         Assert.Same(direct, fromDirect);
@@ -51,8 +55,8 @@ public sealed class MessagePackObjectSerializationTests
         Assert.Equal("dictionary", fromDictionary.Name);
         Assert.Equal(2, fromBytes!.Id);
         Assert.Equal("bytes", fromBytes.Name);
-        Assert.Equal(2, fromBase64!.Id);
-        Assert.Equal("bytes", fromBase64.Name);
+        Assert.Equal(4, fromJson!.Id);
+        Assert.Equal("json", fromJson.Name);
     }
 
     [Fact]
@@ -66,13 +70,11 @@ public sealed class MessagePackObjectSerializationTests
         int? fromDirect = serializer.DeserializeObject<int>(27, 23);
         int? fromText = serializer.DeserializeObject<int>("28", 23);
         int? fromBytes = serializer.DeserializeObject<int>(bytes, 23);
-        int? fromBase64 = serializer.DeserializeObject<int>(Convert.ToBase64String(bytes), 23);
 
         Assert.Equal(23, fromMissing);
         Assert.Equal(27, fromDirect);
         Assert.Equal(28, fromText);
         Assert.Equal(29, fromBytes);
-        Assert.Equal(29, fromBase64);
     }
 
     [Fact]
@@ -83,20 +85,14 @@ public sealed class MessagePackObjectSerializationTests
         var fallback = new ObjectValue { Id = -1, Name = "fallback" };
 
         ObjectValue? reference = serializer.DeserializeObject<ObjectValue>(" \r\n\t", fallback);
+        ObjectValue? nullReference = serializer.DeserializeObject<ObjectValue>("null", fallback);
         int? value = serializer.DeserializeObject<int>(" \r\n\t", 23);
+        int? nullValue = serializer.DeserializeObject<int>("null", 23);
 
         Assert.Same(fallback, reference);
+        Assert.Same(fallback, nullReference);
         Assert.Equal(23, value);
-    }
-
-    [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION", "normalization-null-guard")]
-    public void ObjectBufferNormalization_RejectsNullWithExactOwnership()
-    {
-        var exception = Assert.Throws<ArgumentNullException>(() =>
-            MessagePackMessageSerializer.GetSerializedPayloadBytes(null!));
-
-        Assert.Equal("value", exception.ParamName);
+        Assert.Equal(23, nullValue);
     }
 
     private sealed class ObjectValue

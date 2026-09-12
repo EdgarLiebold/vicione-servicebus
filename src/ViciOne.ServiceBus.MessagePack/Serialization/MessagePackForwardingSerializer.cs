@@ -39,9 +39,6 @@ internal sealed class MessagePackForwardingSerializer :
         var envelope = new MessagePackEnvelope(_envelope);
         envelope.Update(context);
 
-        if (envelope.MessageTypes != null)
-            context.SupportedMessageTypes = envelope.MessageTypes;
-
         return new MessagePackMessageBody<T>(context, envelope);
     }
 
@@ -58,11 +55,8 @@ internal sealed class MessagePackForwardingSerializer :
         Dictionary<string, object> currentMessage;
 
         if (_envelope.Message is not null)
-        {
-            var payload = MessagePackMessageSerializer.GetSerializedPayloadBytes(_envelope.Message);
             currentMessage = MessagePackSerializationRuntime
-                .Deserialize<Dictionary<string, object>>(payload);
-        }
+                .Deserialize<Dictionary<string, object>>(_envelope.Message);
         else
             currentMessage = [];
 

@@ -85,9 +85,58 @@ public sealed class MessagePackConfigurationContractTests
 
         configurator.UseMessagePackDeserializer(isDefault);
 
-        MessagePackSerializerFactory factory = Assert.IsType<MessagePackSerializerFactory>(recorder.Factory);
-        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, factory.ContentType);
-        Assert.Equal(isDefault, recorder.IsDefault);
+        Registration registration = Assert.Single(recorder.Registrations);
+        Assert.Equal(nameof(IReceiveEndpointConfigurator.AddDeserializer), registration.Operation);
+        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, registration.Factory.ContentType);
+        Assert.Equal(isDefault, registration.IsDefault);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-CONFIGURATION", "bus-deserializer-registration")]
+    public void BusDeserializer_RegistersTheFactoryAndForwardsTheDefaultSelection(bool isDefault)
+    {
+        IBusFactoryConfigurator configurator =
+            DispatchProxy.Create<IBusFactoryConfigurator, RecordingBusFactoryConfigurator>();
+        var recorder = (RecordingBusFactoryConfigurator)configurator;
+
+        configurator.UseMessagePackDeserializer(isDefault);
+
+        Registration registration = Assert.Single(recorder.Registrations);
+        Assert.Equal(nameof(IBusFactoryConfigurator.AddDeserializer), registration.Operation);
+        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, registration.Factory.ContentType);
+        Assert.Equal(isDefault, registration.IsDefault);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-CONFIGURATION", "endpoint-bidirectional-registration")]
+    public void EndpointSerializer_RegistersOneSharedFactoryForBothDirections(bool isDefault)
+    {
+        IReceiveEndpointConfigurator configurator =
+            DispatchProxy.Create<IReceiveEndpointConfigurator, RecordingReceiveEndpointConfigurator>();
+        var recorder = (RecordingReceiveEndpointConfigurator)configurator;
+
+        configurator.UseMessagePackSerializer(isDefault);
+
+        AssertBidirectionalRegistration(recorder.Registrations, isDefault);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-CONFIGURATION", "bus-bidirectional-registration")]
+    public void BusSerializer_RegistersOneSharedFactoryForBothDirections(bool isDefault)
+    {
+        IBusFactoryConfigurator configurator =
+            DispatchProxy.Create<IBusFactoryConfigurator, RecordingBusFactoryConfigurator>();
+        var recorder = (RecordingBusFactoryConfigurator)configurator;
+
+        configurator.UseMessagePackSerializer(isDefault);
+
+        AssertBidirectionalRegistration(recorder.Registrations, isDefault);
     }
 
     [Fact]
@@ -106,23 +155,53 @@ public sealed class MessagePackConfigurationContractTests
         Assert.DoesNotContain("ViciOne.ServiceBus.JobService", references);
     }
 
-    private class RecordingReceiveEndpointConfigurator : DispatchProxy
+    private static void AssertBidirectionalRegistration(
+        IReadOnlyList<Registration> registrations,
+        bool isDefault)
     {
-        public ISerializerFactory? Factory { get; private set; }
+        Assert.Collection(
+            registrations,
+            serializer =>
+            {
+                Assert.Equal(nameof(IReceiveEndpointConfigurator.AddSerializer), serializer.Operation);
+                Assert.Equal(isDefault, serializer.IsDefault);
+                Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, serializer.Factory.ContentType);
+            },
+            deserializer =>
+            {
+                Assert.Equal(nameof(IReceiveEndpointConfigurator.AddDeserializer), deserializer.Operation);
+                Assert.Equal(isDefault, deserializer.IsDefault);
+                Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, deserializer.Factory.ContentType);
+            });
+        Assert.Same(registrations[0].Factory, registrations[1].Factory);
+    }
 
-        public bool? IsDefault { get; private set; }
+    private abstract class RecordingConfigurator : DispatchProxy
+    {
+        public List<Registration> Registrations { get; } = [];
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? arguments)
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
-            if (targetMethod.Name != nameof(IReceiveEndpointConfigurator.AddDeserializer))
+            if (targetMethod.Name is not nameof(IReceiveEndpointConfigurator.AddSerializer)
+                and not nameof(IReceiveEndpointConfigurator.AddDeserializer))
+            {
                 throw new InvalidOperationException($"Unexpected configurator call '{targetMethod.Name}'.");
+            }
 
             Assert.NotNull(arguments);
-            Factory = Assert.IsType<ISerializerFactory>(arguments[0], exactMatch: false);
-            IsDefault = Assert.IsType<bool>(arguments[1]);
+            Registrations.Add(new Registration(
+                targetMethod.Name,
+                Assert.IsType<ISerializerFactory>(arguments[0], exactMatch: false),
+                Assert.IsType<bool>(arguments[1])));
             return null;
         }
     }
+
+    private class RecordingReceiveEndpointConfigurator : RecordingConfigurator;
+
+    private class RecordingBusFactoryConfigurator : RecordingConfigurator;
+
+    private sealed record Registration(string Operation, ISerializerFactory Factory, bool IsDefault);
 }

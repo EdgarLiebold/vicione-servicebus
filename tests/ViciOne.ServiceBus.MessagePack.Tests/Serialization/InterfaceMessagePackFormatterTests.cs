@@ -95,6 +95,33 @@ public sealed class InterfaceMessagePackFormatterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "complete-concrete-type-boundary")]
+    public void Cache_RejectsMissingFactoriesAndNonConcreteContractImplementations()
+    {
+        Assert.Equal("build", Assert.Throws<ArgumentNullException>(() =>
+            new ConcreteFormatterInvokerCache<ICached>(null!)).ParamName);
+
+        var cache = new ConcreteFormatterInvokerCache<ICached>(_ => FunctionalInvoker);
+
+        Assert.Equal("concreteType", Assert.Throws<ArgumentNullException>(() => cache.Get(null!)).ParamName);
+        Assert.Equal("concreteType", Assert.Throws<ArgumentException>(() => cache.Get(typeof(ICached))).ParamName);
+        Assert.Equal("concreteType", Assert.Throws<ArgumentException>(() => cache.Get(typeof(AbstractCached))).ParamName);
+        Assert.Equal("concreteType", Assert.Throws<ArgumentException>(() => cache.Get(typeof(string))).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "complete-invoker-boundary")]
+    public void Invoker_RequiresEveryFormatterOperation()
+    {
+        Assert.Equal("getFormatter", Assert.Throws<ArgumentNullException>(() =>
+            new ConcreteFormatterInvoker<ICached>(null!, SerializeCached, DeserializeCached)).ParamName);
+        Assert.Equal("serialize", Assert.Throws<ArgumentNullException>(() =>
+            new ConcreteFormatterInvoker<ICached>(GetFormatter, null!, DeserializeCached)).ParamName);
+        Assert.Equal("deserialize", Assert.Throws<ArgumentNullException>(() =>
+            new ConcreteFormatterInvoker<ICached>(GetFormatter, SerializeCached, null!)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "concurrent-cold-cache")]
     public async Task ConcurrentColdCache_CompilesOneSharedEntryAsync()
     {
@@ -329,7 +356,30 @@ public sealed class InterfaceMessagePackFormatterTests
         builder.DefineMethodOverride(getter, typeof(ICached).GetProperty(name)!.GetMethod!);
     }
 
-    private static readonly ConcreteFormatterInvoker<ICached> EmptyInvoker = new(null!, null!, null!);
+    private static readonly ConcreteFormatterInvoker<ICached> FunctionalInvoker = new(
+        GetFormatter,
+        SerializeCached,
+        DeserializeCached);
+
+    private static ConcreteFormatterInvoker<ICached> EmptyInvoker => FunctionalInvoker;
+
+    private static object GetFormatter(IFormatterResolver resolver) =>
+        resolver.GetFormatterWithVerify<Cached>();
+
+    private static void SerializeCached(
+        object formatter,
+        ref MessagePackWriter writer,
+        ICached value,
+        MessagePackSerializerOptions options)
+    {
+        ((IMessagePackFormatter<Cached>)formatter).Serialize(ref writer, (Cached)value, options);
+    }
+
+    private static ICached DeserializeCached(
+        object formatter,
+        ref MessagePackReader reader,
+        MessagePackSerializerOptions options) =>
+        ((IMessagePackFormatter<Cached>)formatter).Deserialize(ref reader, options);
 
     public interface ICached
     {
@@ -370,5 +420,12 @@ public sealed class InterfaceMessagePackFormatterTests
         public int Id { get; set; }
 
         public string Name { get; set; } = string.Empty;
+    }
+
+    public abstract class AbstractCached : ICached
+    {
+        public abstract int Id { get; }
+
+        public abstract string Name { get; }
     }
 }

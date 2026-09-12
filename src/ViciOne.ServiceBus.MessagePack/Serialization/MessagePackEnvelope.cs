@@ -39,8 +39,9 @@ internal sealed class MessagePackEnvelope :
     /// rather than a MessagePack-encoded object dictionary that requires metadata projection.
     /// </summary>
     public bool IsNativeMessagePackPayload { get; set; }
-    /// <summary>Gets or sets the encoded payload, normally as a byte array.</summary>
-    public object? Message { get; set; }
+    /// <summary>Gets or sets the encoded MessagePack payload.</summary>
+    public byte[]? Message { get; set; }
+    object? MessageEnvelope.Message => Message;
     /// <summary>Gets or sets the instant after which the message is expired.</summary>
     public DateTimeOffset? ExpirationTime { get; set; }
     /// <summary>Gets or sets the instant at which the message was sent.</summary>
@@ -70,7 +71,7 @@ internal sealed class MessagePackEnvelope :
         ArgumentNullException.ThrowIfNull(serializedMessage);
         ApplyMetadata(EnvelopeMetadataProjection.From(context));
         IsNativeMessagePackPayload = true;
-        Message = serializedMessage;
+        Message = (byte[])serializedMessage.Clone();
     }
 
     /// <summary>Creates a MessagePack envelope from another envelope without sharing mutable payload bytes.</summary>
@@ -83,7 +84,9 @@ internal sealed class MessagePackEnvelope :
         if (envelope is MessagePackEnvelope alreadyMessagePack)
         {
             IsNativeMessagePackPayload = alreadyMessagePack.IsNativeMessagePackPayload;
-            Message = CopyPayload(alreadyMessagePack.Message);
+            Message = alreadyMessagePack.Message is null
+                ? null
+                : (byte[])alreadyMessagePack.Message.Clone();
         }
         else
         {
@@ -101,7 +104,7 @@ internal sealed class MessagePackEnvelope :
         ArgumentNullException.ThrowIfNull(serializedMessage);
         ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
         IsNativeMessagePackPayload = isNativeMessagePackPayload;
-        Message = serializedMessage;
+        Message = (byte[])serializedMessage.Clone();
     }
 
     /// <summary>Captures message metadata and serializes a payload whose supported contract URNs are supplied explicitly.</summary>
@@ -129,7 +132,7 @@ internal sealed class MessagePackEnvelope :
         ApplyMetadata(EnvelopeMetadataProjection.Overlay(this, context));
 
         if (MessageTypes != null)
-            context.SupportedMessageTypes = MessageTypes;
+            context.SupportedMessageTypes = [.. MessageTypes];
     }
 
     void ApplyMetadata(EnvelopeMetadataProjection metadata)
@@ -148,10 +151,5 @@ internal sealed class MessagePackEnvelope :
         SentTime = metadata.SentTime;
         Headers = metadata.Headers;
         Host = metadata.Host;
-    }
-
-    static object? CopyPayload(object? message)
-    {
-        return message is byte[] bytes ? bytes.Clone() : message;
     }
 }

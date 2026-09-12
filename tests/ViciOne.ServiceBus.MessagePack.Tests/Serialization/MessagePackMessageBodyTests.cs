@@ -32,6 +32,16 @@ public sealed class MessagePackMessageBodyTests
         Assert.Equal([expected], actual);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-BODY", "constructor-boundaries")]
+    public void Constructors_RejectMissingMessagesAtTheirOwningBoundaries()
+    {
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackMessageBody<BodyMessage>((SendContext<BodyMessage>)null!)).ParamName);
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackMessageBody<BodyMessage>((BodyMessage)null!)).ParamName);
+    }
+
     [Theory]
     [InlineData(FirstAccessor.Length)]
     [InlineData(FirstAccessor.Bytes)]

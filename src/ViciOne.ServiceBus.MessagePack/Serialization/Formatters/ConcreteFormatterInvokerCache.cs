@@ -32,7 +32,7 @@ sealed class ConcreteFormatterInvokerCache<TContract>
     /// <param name="build">The factory that compiles formatter access for a concrete type.</param>
     internal ConcreteFormatterInvokerCache(Func<Type, ConcreteFormatterInvoker<TContract>> build)
     {
-        _build = build;
+        _build = build ?? throw new ArgumentNullException(nameof(build));
 
         // Reusing the callback avoids allocating a closure on cache hits and misses.
         _createEntry = CreateEntry;
@@ -41,6 +41,13 @@ sealed class ConcreteFormatterInvokerCache<TContract>
     public ConcreteFormatterInvoker<TContract> Get(Type concreteType)
     {
         ArgumentNullException.ThrowIfNull(concreteType);
+        if (!typeof(TContract).IsAssignableFrom(concreteType) || concreteType.IsInterface || concreteType.IsAbstract)
+        {
+            throw new ArgumentException(
+                $"The formatter type must be a concrete implementation of '{typeof(TContract)}'.",
+                nameof(concreteType));
+        }
+
         return _entries.TryGetValue(concreteType, out var entry)
             ? entry.Value
             : _entries.GetValue(concreteType, _createEntry).Value;

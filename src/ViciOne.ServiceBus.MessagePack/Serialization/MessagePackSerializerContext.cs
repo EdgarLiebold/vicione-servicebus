@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using MessagePack;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
@@ -37,6 +38,7 @@ internal sealed class MessagePackSerializerContext :
     /// <typeparam name="T">The requested message contract.</typeparam>
     /// <param name="message">Receives the decoded message when the contract is supported and decoding succeeds.</param>
     /// <returns><see langword="true"/> when a non-null <typeparamref name="T"/> was decoded; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="OperationCanceledException">Payload deserialization reports cancellation.</exception>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
     {
@@ -54,6 +56,7 @@ internal sealed class MessagePackSerializerContext :
     /// <param name="messageType">The requested message contract type.</param>
     /// <param name="message">Receives the decoded message when the contract is supported and decoding succeeds.</param>
     /// <returns><see langword="true"/> when a non-null message was decoded; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="OperationCanceledException">Payload deserialization reports cancellation.</exception>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
         ArgumentNullException.ThrowIfNull(messageType);
@@ -66,19 +69,22 @@ internal sealed class MessagePackSerializerContext :
                 return false;
             }
 
-            var messagePackSerializedObjectBuffer = MessagePackMessageSerializer.GetSerializedPayloadBytes(_envelope.Message!);
-
             if (_envelope.IsNativeMessagePackPayload)
-                message = MessagePackSerializationRuntime.Deserialize(messageType, messagePackSerializedObjectBuffer);
+                message = MessagePackSerializationRuntime.Deserialize(messageType, _envelope.Message!);
             else
             {
                 var messageAsDictionary = MessagePackSerializationRuntime
-                    .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer);
+                    .Deserialize<Dictionary<string, object>>(_envelope.Message!);
 
                 message = messageAsDictionary.Transform(messageType, ServiceBusMetadataJson.Options);
             }
 
             return message != default;
+        }
+        catch (Exception exception) when (exception.GetBaseException() is OperationCanceledException cancellation)
+        {
+            ExceptionDispatchInfo.Capture(cancellation).Throw();
+            throw;
         }
         catch
         {

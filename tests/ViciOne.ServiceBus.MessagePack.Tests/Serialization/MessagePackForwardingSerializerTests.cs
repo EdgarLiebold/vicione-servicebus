@@ -11,6 +11,25 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 public sealed class MessagePackForwardingSerializerTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "owned-input-boundaries")]
+    public void ForwardingSerializer_RejectsEveryMissingOwnedInput()
+    {
+        Assert.Equal("envelope", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackForwardingSerializer(null!)).ParamName);
+
+        var sourceContext = CreateContext(
+            new ForwardedMessage(),
+            Guid.Parse("0dac5e86-7645-45b6-a3ad-1d22df1854c8"));
+        var forwarding = new MessagePackForwardingSerializer(
+            new MessagePackEnvelope(sourceContext, sourceContext.Message));
+
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            forwarding.GetMessageBody<ForwardedMessage>(null!)).ParamName);
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() =>
+            forwarding.Overlay<ForwardingOverlay>(null!)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "reusable-serializer-isolates-eager-owned-bodies")]
     public void ReusedForwardingSerializer_IsolatesEveryEagerOwnedBody()
     {
@@ -69,7 +88,7 @@ public sealed class MessagePackForwardingSerializerTests
         Assert.Equal("kept", message.Preserved);
     }
 
-    private static readonly string[] messageArray = new[] { "added" };
+    private static readonly string[] OverlayItems = ["added"];
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "recursive-case-insensitive-overlay-parity")]
@@ -95,7 +114,7 @@ public sealed class MessagePackForwardingSerializerTests
                 ["changed"] = "updated",
                 ["preserved"] = null,
             },
-            ["items"] = messageArray,
+            ["items"] = OverlayItems,
         });
         var sendContext = CreateContext(
             sourceContext.Message,
@@ -131,86 +150,6 @@ public sealed class MessagePackForwardingSerializerTests
 
         Assert.True(serializerContext.TryGetMessage<ForwardedMessage>(out var message));
         Assert.Equal("created", message.Changed);
-    }
-
-    [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "overlay-normalizes-object-payload")]
-    public void Overlay_NormalizesAnObjectPayloadBeforeMergingIt()
-    {
-        var sourceContext = CreateContext(
-            new ForwardedMessage(),
-            Guid.Parse("59444074-373c-4baf-a248-5475f215bbf8"));
-        var envelope = new MessagePackEnvelope(sourceContext, sourceContext.Message)
-        {
-            IsNativeMessagePackPayload = false,
-            Message = new Dictionary<string, object>
-            {
-                ["Changed"] = "original",
-                ["Preserved"] = "kept",
-            },
-        };
-        var forwarding = new MessagePackForwardingSerializer(envelope);
-
-        forwarding.Overlay(new ForwardingOverlay { Changed = "updated" });
-
-        SerializerContext serializerContext = new MessagePackMessageSerializer().Deserialize(
-            forwarding.GetMessageBody(sourceContext),
-            EmptyHeaders.Instance);
-        Assert.True(serializerContext.TryGetMessage<ForwardedMessage>(out var message));
-        Assert.Equal("updated", message.Changed);
-        Assert.Equal("kept", message.Preserved);
-    }
-
-    [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "overlay-normalizes-base64-payload")]
-    public void Overlay_NormalizesABase64PayloadBeforeMergingIt()
-    {
-        var sourceContext = CreateContext(
-            new ForwardedMessage(),
-            Guid.Parse("84a9d346-8af5-4834-8539-d20f91b32485"));
-        byte[] payload = MessagePackSerializationRuntime.Serialize(
-            new Dictionary<string, object>
-            {
-                ["Changed"] = "original",
-                ["Preserved"] = "kept",
-            });
-        var envelope = new MessagePackEnvelope(sourceContext, sourceContext.Message)
-        {
-            IsNativeMessagePackPayload = false,
-            Message = Convert.ToBase64String(payload),
-        };
-        var forwarding = new MessagePackForwardingSerializer(envelope);
-
-        forwarding.Overlay(new ForwardingOverlay { Changed = "updated" });
-
-        SerializerContext serializerContext = new MessagePackMessageSerializer().Deserialize(
-            forwarding.GetMessageBody(sourceContext),
-            EmptyHeaders.Instance);
-        Assert.True(serializerContext.TryGetMessage<ForwardedMessage>(out var message));
-        Assert.Equal("updated", message.Changed);
-        Assert.Equal("kept", message.Preserved);
-    }
-
-    [Theory]
-    [InlineData("not-base64")]
-    [InlineData("Y Q==")]
-    [InlineData("YQ==\r\n")]
-    [InlineData("YR==")]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "overlay-rejects-noncanonical-base64-payload")]
-    public void Overlay_RejectsInvalidOrNoncanonicalBase64Payload(string payload)
-    {
-        var sourceContext = CreateContext(
-            new ForwardedMessage(),
-            Guid.Parse("a1011ea6-2ffd-4863-a673-11240c36ee38"));
-        var envelope = new MessagePackEnvelope(sourceContext, sourceContext.Message)
-        {
-            IsNativeMessagePackPayload = false,
-            Message = payload,
-        };
-        var forwarding = new MessagePackForwardingSerializer(envelope);
-
-        Assert.Throws<FormatException>(
-            () => forwarding.Overlay(new ForwardingOverlay { Changed = "updated" }));
     }
 
     private static MessageSendContext<ForwardedMessage> CreateContext(

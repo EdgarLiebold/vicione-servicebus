@@ -57,14 +57,48 @@ public sealed class MessagePackSerializerContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "cancellation-remains-observable")]
+    public void TryGetMessage_DoesNotConvertCancellationIntoAnUnsupportedContract()
+    {
+        var serializer = new MessagePackMessageSerializer();
+        var message = new CancellationMessage();
+        var sendContext = new MessageSendContext<CancellationMessage>(message);
+        var envelope = new MessagePackEnvelope(sendContext, message);
+        byte[] envelopeBytes = MessagePackSerializationRuntime.Serialize(envelope);
+        SerializerContext context = serializer.Deserialize(
+            new BinaryMessageBody(envelopeBytes),
+            EmptyHeaders.Instance);
+
+        Assert.Throws<OperationCanceledException>(() =>
+            context.TryGetMessage<CancellationMessage>(out _));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "non-null-envelope-payload")]
-    public void SerializerContext_RejectsAnEnvelopeWithoutAPayload()
+    public void SerializerContext_RejectsEveryMissingOwnedInputAndPayload()
     {
         var serializer = new MessagePackMessageSerializer();
         var sendContext = new MessageSendContext<ContextValue>(new ContextValue());
-        var envelope = new MessagePackEnvelope(sendContext, sendContext.Message) { Message = null };
+        var envelope = new MessagePackEnvelope(sendContext, sendContext.Message);
         var messageContext = new EnvelopeMessageContext(envelope, serializer);
 
+        Assert.Equal("serializer", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackSerializerContext(null!, messageContext, [], envelope)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackSerializerContext(serializer, null!, [], envelope)).ParamName);
+        Assert.Equal("supportedMessageTypes", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackSerializerContext(serializer, messageContext, null!, envelope)).ParamName);
+        Assert.Equal("envelope", Assert.Throws<ArgumentNullException>(() =>
+            new MessagePackSerializerContext(serializer, messageContext, [], null!)).ParamName);
+
+        envelope.MessageTypes = null;
+        SerializerContext contextWithoutDeclaredTypes = serializer.Deserialize(
+            new BinaryMessageBody(MessagePackSerializationRuntime.Serialize(envelope)),
+            EmptyHeaders.Instance);
+
+        Assert.Empty(contextWithoutDeclaredTypes.SupportedMessageTypes);
+
+        envelope.Message = null;
         var exception = Assert.Throws<ArgumentException>(() =>
             new MessagePackSerializerContext(serializer, messageContext, [], envelope));
 
@@ -143,6 +177,15 @@ public sealed class MessagePackSerializerContextTests
     }
 
     private sealed class OtherContextValue;
+
+    private sealed class CancellationMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize() => throw new OperationCanceledException("Deserialization canceled.");
+    }
 
     private sealed class ContextNameOverlay
     {

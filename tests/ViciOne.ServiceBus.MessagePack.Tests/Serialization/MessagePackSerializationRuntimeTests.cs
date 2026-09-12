@@ -1,3 +1,4 @@
+using System.Buffers;
 using MessagePack;
 using MessagePack.Formatters;
 using ViciOne.ServiceBus.Courier.Contracts;
@@ -87,20 +88,26 @@ public sealed class MessagePackSerializationRuntimeTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-SERIALIZER", "object-buffer-inputs")]
-    public void ObjectBufferNormalization_AcceptsBytesBase64AndObjects()
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-SERIALIZER", "runtime-boundaries-and-nil")]
+    public void RuntimeOperations_ValidateOwnedInputsAndPreserveNil()
     {
-        var source = new BufferValue { Id = 27 };
-        byte[] serialized = MessagePackSerializationRuntime.Serialize(source);
+        var writer = new ArrayBufferWriter<byte>();
 
-        byte[] fromBytes = MessagePackMessageSerializer.GetSerializedPayloadBytes(serialized);
-        byte[] fromBase64 = MessagePackMessageSerializer.GetSerializedPayloadBytes(
-            Convert.ToBase64String(serialized));
-        byte[] fromObject = MessagePackMessageSerializer.GetSerializedPayloadBytes(source);
+        Assert.Equal("type", Assert.Throws<ArgumentNullException>(() =>
+            MessagePackSerializationRuntime.Serialize(null!, writer, null)).ParamName);
+        Assert.Equal("writer", Assert.Throws<ArgumentNullException>(() =>
+            MessagePackSerializationRuntime.Serialize(typeof(BufferValue), null!, null)).ParamName);
+        Assert.Equal("writer", Assert.Throws<ArgumentNullException>(() =>
+            MessagePackSerializationRuntime.Serialize<BufferValue>(null!, new BufferValue())).ParamName);
+        Assert.Equal("buffer", Assert.Throws<ArgumentNullException>(() =>
+            MessagePackSerializationRuntime.Deserialize<BufferValue>((byte[])null!)).ParamName);
+        Assert.Equal("messageType", Assert.Throws<ArgumentNullException>(() =>
+            MessagePackSerializationRuntime.Deserialize(null!, [])).ParamName);
+        Assert.Equal("buffer", Assert.Throws<ArgumentNullException>(() =>
+            MessagePackSerializationRuntime.Deserialize(typeof(BufferValue), null!)).ParamName);
 
-        Assert.Same(serialized, fromBytes);
-        Assert.Equal(serialized, fromBase64);
-        Assert.Equal(27, MessagePackSerializationRuntime.Deserialize<BufferValue>(fromObject).Id);
+        MessagePackSerializationRuntime.Serialize(typeof(BufferValue), writer, null);
+        Assert.Null(MessagePackSerializationRuntime.Deserialize(typeof(BufferValue), writer.WrittenSpan.ToArray()));
     }
 
     public sealed class BufferValue

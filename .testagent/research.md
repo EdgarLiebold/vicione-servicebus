@@ -723,3 +723,85 @@ quality headline because it loads many unrelated assemblies without executing th
 Likewise, the two reports must not be summed or presented as repository-wide coverage. A truthful
 whole-suite merged figure requires coverage instrumentation in every test host and deduplication of
 overlapping modules, which remains a dedicated repository-wide owner.
+
+## Confirmed iteration-84 MessagePack findings
+
+All fourteen non-generated C# files and 1,345 physical lines in
+`src/ViciOne.ServiceBus.MessagePack` were read manually in full. Their comments, primary types,
+namespaces, filenames, directory owners, project dependencies, public exports, and directly owning
+tests were adjudicated from the implementation. No comment generator or bulk comment rewrite was
+used.
+
+1. `MessagePackEnvelope.Message` was typed as `object?` even though every current producer writes
+   encoded MessagePack bytes. That type admitted inherited dictionary and inner Base64 string forms
+   which no Greenfield ViciOne wire path produces. The envelope now expresses the true `byte[]?`
+   invariant and implements the transport-neutral `MessageEnvelope.Message` member explicitly.
+2. The old normalization helper interpreted every remaining string as an inner Base64 MessagePack
+   payload. Serializer-independent envelope metadata is textual JSON, as in the System.Text.Json
+   serializer. Valid JSON object metadata therefore failed with a Base64 `FormatException`. String
+   metadata now uses scalar conversion first and shared `ServiceBusMetadataJson` parsing second;
+   binary payloads remain MessagePack.
+3. Removing the inner Base64 compatibility path does not remove the outer transport carrier.
+   `GetMessageBody(string)`, `Base64MessageBody`, and `TryGetTransportText` remain required because
+   SQS, Quartz, and other text-backed boundaries must carry the entire opaque MessagePack envelope
+   reversibly. The distinction is inner envelope payload versus outer transport representation.
+4. Serialized payload constructors and clones previously retained input arrays in some paths.
+   Every byte-bearing construction path now clones its input, and supported-message-type transfer
+   also creates a new array. Direct adversarial tests mutate caller/source storage and verify both
+   value identity and readable roundtrip.
+5. `MessagePackSerializerContext.TryGetMessage` caught every exception, including an
+   `OperationCanceledException` wrapped by MessagePack after a deserialization callback. That made
+   a requested abort indistinguishable from an unsupported or malformed contract. It now unwraps
+   and rethrows cancellation with preserved exception information while retaining the documented
+   non-throwing result for ordinary decoding failures.
+6. Formatter invokers accepted missing delegates, and their cache accepted null, interface,
+   abstract, or unrelated types until reflection/expression compilation failed elsewhere. The
+   owning constructors now reject each invalid input by exact parameter name before caching or
+   compilation.
+7. The four public configuration overloads were shape-tested but did not directly prove every
+   endpoint/bus serializer/deserializer operation for both `isDefault` states. Dispatch-proxy
+   recording now verifies call kind, ordering, flag forwarding, content type, and one shared factory
+   for each bidirectional registration.
+8. Message-data coverage now includes a malicious wire `nil` in addition to public null/empty
+   handles, inline bytes, inline text, and external references. JSON `null`, blank text, null
+   declared message types, and every serializer-context constructor parameter are also direct
+   behavior boundaries.
+9. Quartz already used the transport-neutral JSON metadata deserializer, so the suspected header
+   regression was not a product defect. The strengthened real scheduling test nevertheless proves
+   application-header preservation alongside canonical Base64 storage, exact binary body replay,
+   identifiers, content type, and typed delivery.
+10. The source topology is coherent. The two exported package-root types own composition and the
+    advanced factory; encoding mechanics are internal under `Serialization`; concrete formatter
+    mechanics are under `Serialization/Formatters`. Moving this independent project under the Core
+    project directory would misstate assembly ownership and risk SDK default-glob collisions.
+
+The focused native MTP host passes 113 tests. Direct package instrumentation reports a 99.36% line
+rate and 97.75% branch rate for `ViciOne.ServiceBus.MessagePack`. Coverage includes one generated
+MessagePack resolver class. In handwritten code the two uncovered sequence points follow
+non-returning `ExceptionDispatchInfo.Throw` calls; executing them is impossible by contract. The
+three partial handwritten conditions are defensive fallbacks around a guaranteed JSON-object
+projection and a closed formatter mapping table. They are retained because deleting the guards to
+inflate a percentage would reduce failure quality. The host-wide aggregate is deliberately not
+reported as product coverage because it loads many dependency assemblies without their owning
+test suites.
+
+Six isolated counterchanges were compiled and run one at a time, and each was killed by its owning
+test: retained caller payload bytes, removed JSON metadata parsing, omitted bidirectional endpoint
+deserialization, an unrelated formatter-cache type, discarded overlay bytes under payload
+admission, and removed cancellation propagation. Before remediation, the cancellation test also
+produced the expected red result against the original catch-all behavior. Every counterchange was
+restored manually before the final gates.
+
+The final sequential Engineering Release build reports zero warnings and errors; the complete Unit
+solution passes 5,485/5,485 tests with no skips; both format gates and `git diff --check` pass; and
+the locked MessagePack dependency graph includes the coverage collector. Fresh package validation
+passes all 18 journeys, 31 packages, three provider-testing consumers, and 30 runtime API
+assemblies. The public API remains 19,674 lines with SHA-256
+`7841eea6a51d14b0dfbe8062838e5d1cacb10248b55da34ad5add0f6f0cc186d`.
+
+No C# preprocessor directive, empty source directory, dummy implementation, optional Courier/Job
+Service product dependency, stale history comment, or file/type/namespace mismatch remains in the
+MessagePack owner. Repository lexical matches for “placeholder” are the actual saga schedule
+placeholder domain concept; `NotImplemented` is RabbitMQ reply code 540 and
+`NotImplementedException` is intentionally classified as a non-retryable input exception. They are
+not dummy production behavior.

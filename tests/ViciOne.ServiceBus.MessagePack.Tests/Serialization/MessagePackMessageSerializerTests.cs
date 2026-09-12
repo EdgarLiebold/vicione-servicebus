@@ -68,6 +68,18 @@ public sealed class MessagePackMessageSerializerTests
         Assert.Equal("MessagePack", Assert.Contains("provider", scope));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-SERIALIZER", "send-and-probe-boundaries")]
+    public void Serializer_RejectsMissingSendAndProbeContextsWithExactOwnership()
+    {
+        var serializer = new MessagePackMessageSerializer();
+
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            serializer.GetMessageBody<ScalarMessage>(null!)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            serializer.Probe(null!)).ParamName);
+    }
+
     private sealed class TestTransportTextMessageBody : MessageBody, TransportTextMessageBody
     {
         private readonly string _payloadText;

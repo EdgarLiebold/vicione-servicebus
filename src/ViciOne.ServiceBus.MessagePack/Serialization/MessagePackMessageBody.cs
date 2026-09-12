@@ -62,17 +62,14 @@ internal sealed class MessagePackMessageBody<TMessage> :
         }
 
         IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
-        if (envelope?.Message is byte[] serializedMessage)
+        if (envelope?.Message is { } serializedMessage)
         {
             serializedMessage.AsSpan().CopyTo(bodyBuffer.GetSpan(serializedMessage.Length));
             bodyBuffer.Advance(serializedMessage.Length);
         }
         else
-        {
-            object? message = envelope?.Message ?? context.Message;
             SerializeBounded(() =>
-                MessagePackSerializationRuntime.Serialize(message?.GetType() ?? typeof(object), bodyBuffer, message));
-        }
+                MessagePackSerializationRuntime.Serialize(context.Message.GetType(), bodyBuffer, context.Message));
 
         _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
 

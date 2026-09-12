@@ -1,4 +1,7 @@
+using MessagePack;
 using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.MessagePack.Serialization;
+using ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -51,8 +54,12 @@ public sealed class MessageDataFormatterTests
         var source = new ByteMessageDataContainer { Value = null };
 
         ByteMessageDataContainer result = MessagePackRoundTrip.Execute(source);
+        var reader = new MessagePackReader(new byte[] { MessagePackCode.Nil });
+        var formatter = new MessageDataFormatter<byte[]>();
+        var fromWireNil = formatter.Deserialize(ref reader, MessagePackSerializationRuntime.Options);
 
         Assert.Same(EmptyMessageData<byte[]>.Instance, result.Value);
+        Assert.Same(EmptyMessageData<byte[]>.Instance, fromWireNil);
     }
 
     private sealed class ByteMessageDataContainer

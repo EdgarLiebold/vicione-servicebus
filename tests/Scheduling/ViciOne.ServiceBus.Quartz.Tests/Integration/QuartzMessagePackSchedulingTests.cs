@@ -39,6 +39,7 @@ public sealed class QuartzMessagePackSchedulingTests
                         delivered.TrySetResult(new DeliveryObservation(
                             context.MessageId,
                             context.Message,
+                            context.Headers.Get<string>("ViciOne-MessagePack-Schedule"),
                             context.Advanced().ReceiveContext.ContentType.MediaType,
                             body.Length,
                             body.ToArray(),
@@ -65,7 +66,11 @@ public sealed class QuartzMessagePackSchedulingTests
             Destination,
             farFuture,
             expected,
-            Pipe.Execute<SendContext<MessagePackScheduledPayload>>(context => context.MessageId = messageId),
+            Pipe.Execute<SendContext<MessagePackScheduledPayload>>(context =>
+            {
+                context.MessageId = messageId;
+                context.Headers.Set("ViciOne-MessagePack-Schedule", "header-preserved");
+            }),
             cancellationToken);
         await scheduledCommand.Completed.WaitAsync(timeout, cancellationToken);
 
@@ -95,6 +100,7 @@ public sealed class QuartzMessagePackSchedulingTests
         Assert.Equal(expected.CorrelationId, result.Message.CorrelationId);
         Assert.Equal(expected.Value, result.Message.Value);
         Assert.Equal(expected.Binary, result.Message.Binary);
+        Assert.Equal("header-preserved", result.HeaderValue);
         Assert.Equal(new MessagePackSerializerFactory().ContentType.MediaType, result.ContentType);
         Assert.Equal(result.FirstBody.LongLength, result.Length);
         Assert.NotEmpty(result.FirstBody);
@@ -111,6 +117,7 @@ public sealed class QuartzMessagePackSchedulingTests
     private sealed record DeliveryObservation(
         Guid? MessageId,
         MessagePackScheduledPayload Message,
+        string? HeaderValue,
         string ContentType,
         long Length,
         byte[] FirstBody,

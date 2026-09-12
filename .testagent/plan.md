@@ -832,3 +832,76 @@ provider. Source hygiene finds no C# preprocessor directives, no empty source di
 dummy, stub, TODO, FIXME, or compatibility-shim marker. The remaining generic asynchronous return
 comments belong to source owners not yet manually read and remain queued for their mandatory
 file-by-file passes; no comment generator or bulk rewrite is used.
+
+## Iteration 84 outcome
+
+Make the complete MessagePack assembly a binary-owned Greenfield serialization boundary. Remove
+the inherited inner Base64/object payload compatibility path while retaining the explicit outer
+Base64 carrier required by text-only transports. Align serializer-independent metadata conversion,
+fail fast at every owned construction and configuration boundary, preserve cancellation, and close
+the whole assembly with direct coverage and mutation evidence.
+
+## Iteration 84 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-MESSAGEPACK-ENVELOPE` | binary-only payload and immutable ownership | MessagePack envelope tests | compile-bound `byte[]` property, independent constructor/clone bytes, null metadata projection |
+| `REQ-VSB-MESSAGEPACK-DESERIALIZATION` | native and overlay decoding, malformed input, cancellation | MessagePack serializer-context tests | supported/unsupported paths, exact boundaries, false for malformed payload, observable cancellation |
+| `REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION` | direct, dictionary, scalar, JSON text, binary, blank, and JSON null | MessagePack object tests | exact value/default result for every serializer-independent metadata form |
+| `REQ-VSB-MESSAGEPACK-CONFIGURATION` | endpoint/bus, serializer/deserializer, both default states | MessagePack configuration tests | exact call, factory, default flag, ordering, and shared bidirectional factory |
+| `REQ-VSB-MESSAGEPACK-FORMATTER-CACHE` | complete type/factory/delegate boundary | MessagePack formatter tests | null, interface, abstract, unrelated type, concurrency, failure caching, and weak-key behavior |
+| `REQ-VSB-MESSAGEPACK-MESSAGE-DATA` | inline text/bytes, external reference, empty handle, and wire nil | MessagePack data tests | exact value/address/ownership and canonical empty normalization |
+| `REQ-VSB-MESSAGEPACK-FORWARDING` | private snapshot, overlay, admission, and supported types | MessagePack forwarding tests | repeated owned bodies, exact overlay behavior, capacity-path survival, no legacy payload form |
+| `REQ-VSB-MESSAGEPACK-SCHEDULING` | text-backed Quartz carrier | Quartz integration tests | exact binary payload, canonical outer Base64, metadata identifiers, and application header |
+| `REQ-VSB-MESSAGEPACK-COVERAGE` | complete assembly host | native MTP coverage run | package line/branch rates, exact uncovered classification, no aggregate-host extrapolation |
+| `REQ-VSB-SOURCE-NAVIGATION` | all fourteen production files | manual owner ledger | one primary type per file and matching root/Serialization/Formatters ownership |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in all fourteen files | manual review plus format/hygiene gates | current behavior and failure semantics only; no history, filler, or generated rewrite |
+
+## Iteration 84 mutation obligations
+
+- Return the caller's serialized byte array instead of a snapshot: the payload-ownership test must
+  fail on reference identity before content corruption can be hidden.
+- Replace JSON metadata parsing with absence/default behavior: the complete reference-input test
+  must fail on the JSON object projection.
+- Omit the receive-side registration from the endpoint serializer composition: both default-state
+  rows must fail on the exact missing bidirectional operation.
+- Accept an unrelated concrete type in the formatter cache: the complete type-boundary test must
+  fail before delegate compilation.
+- Ignore the retained overlay bytes when payload admission is active: the forwarding test must
+  observe the original value instead of the applied replacement.
+- Remove cancellation propagation from `TryGetMessage`: the cancellation contract must fail because
+  the abort is converted into an ordinary unsupported/invalid result.
+
+## Iteration 84 completion
+
+All fourteen MessagePack production files and 1,345 physical lines were read manually in full,
+together with their direct tests and the Quartz scheduling integration. The envelope now owns only
+encoded `byte[]` payloads; all byte-bearing constructors and clones take defensive snapshots; and
+the old inner object/Base64 compatibility branch is gone. The outer Base64 message body remains as
+the explicit lossless carrier for text-only brokers and schedulers, so no transport capability was
+lost. Metadata strings now use the shared JSON contract rather than being guessed as Base64.
+
+Every formatter/cache delegate and serializer/configuration parameter has a direct exact-owner
+boundary. Cancellation raised by MessagePack callbacks is unwrapped and remains observable rather
+than being converted to `false`. Quartz delivery additionally proves that an application header
+survives the real stored MessagePack scheduling path. Seven red executions cover the initial
+cancellation defect and six isolated counterchanges; every counterchange was restored immediately.
+
+The final MessagePack host passes 113/113 tests with no failures or skips. Its package reports
+99.36% line coverage and 97.75% branch coverage. The only uncovered handwritten line sequence
+points are the compiler-emitted continuations after two non-returning
+`ExceptionDispatchInfo.Throw` calls. The remaining partial branches are defensive invariant guards
+for a non-null JSON object/dictionary projection and a statically declared formatter table, plus a
+MessagePack source-generator branch; none is represented as executed evidence.
+
+The normal sequential Release Engineering build has zero warnings and errors. The complete
+sequential Unit solution passes 5,485 tests with no failures or skips. Both repository format gates
+and `git diff --check` pass. Fresh-package verification passes 18 developer journeys, 31 packages,
+three isolated provider-testing consumers, and all 30 runtime API assemblies. The packed public API
+remains exactly 19,674 lines with SHA-256
+`7841eea6a51d14b0dfbe8062838e5d1cacb10248b55da34ad5add0f6f0cc186d`.
+
+The reviewed assembly has no preprocessor directives, dummy/placeholder implementation, optional
+Courier/Job Service dependency, file/type/namespace mismatch, or stale construction-history
+comment. Repository-wide source hygiene still reports zero C# preprocessor directives and zero
+empty source directories. The complete A+ source goal remains active for the next unreviewed owner.

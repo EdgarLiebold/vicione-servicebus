@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Mime;
+using System.Text.Json;
 using MessagePack;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
@@ -85,32 +86,9 @@ internal sealed class MessagePackMessageSerializer :
         scope.Add("provider", ProviderKey);
     }
 
-    /// <summary>Normalizes Base64 text, MessagePack bytes, or an arbitrary value to MessagePack bytes.</summary>
-    /// <param name="value">The Base64 text, byte array, or value to normalize.</param>
-    /// <returns>The original byte array, decoded Base64 bytes, or newly serialized MessagePack bytes.</returns>
-    public static byte[] GetSerializedPayloadBytes(object value)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-        return value switch
-        {
-            string base64EncodedMessagePackBody => DecodeCanonicalBase64(base64EncodedMessagePackBody),
-            byte[] messagePackBody => messagePackBody,
-            _ => MessagePackSerializationRuntime.Serialize(value)
-        };
-    }
-
-    static byte[] DecodeCanonicalBase64(string text)
-    {
-        byte[] content = Convert.FromBase64String(text);
-        if (!string.Equals(text, Convert.ToBase64String(content), StringComparison.Ordinal))
-            throw new FormatException("The MessagePack payload must use the canonical padded Base64 representation without whitespace.");
-
-        return content;
-    }
-
     /// <summary>Converts an envelope value to a reference-type contract.</summary>
     /// <typeparam name="T">The requested reference-type contract.</typeparam>
-    /// <param name="value">A direct value, object dictionary, textual scalar, Base64 body, or MessagePack payload.</param>
+    /// <param name="value">A direct value, object dictionary, JSON metadata text, or MessagePack payload.</param>
     /// <param name="defaultValue">The value returned when <paramref name="value"/> is absent or equal to this default.</param>
     /// <returns>The existing instance, converted scalar, projected dictionary, decoded contract, or supplied default.</returns>
     public T? DeserializeObject<T>(object? value, T? defaultValue = default)
@@ -126,7 +104,7 @@ internal sealed class MessagePackMessageSerializer :
 
     /// <summary>Converts an envelope value to a nullable value-type contract.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
-    /// <param name="value">A direct value, textual scalar, Base64 body, or MessagePack payload.</param>
+    /// <param name="value">A direct value, textual scalar, JSON metadata text, or MessagePack payload.</param>
     /// <param name="defaultValue">The value returned when <paramref name="value"/> is absent or equal to this default.</param>
     /// <returns>The direct value, converted scalar, decoded value, or supplied default.</returns>
     public T? DeserializeObject<T>(object? value, T? defaultValue = null)
@@ -162,7 +140,14 @@ internal sealed class MessagePackMessageSerializer :
             && typeConverter.TryConvert(text, out var result))
             return result;
 
-        var messageSerializedBuffer = GetSerializedPayloadBytes(value);
+        if (value is string json)
+            return JsonSerializer.Deserialize<T>(json, ServiceBusMetadataJson.Options) is { } deserialized
+                ? deserialized
+                : defaultValue;
+
+        byte[] messageSerializedBuffer = value is byte[] bytes
+            ? bytes
+            : MessagePackSerializationRuntime.Serialize(value);
 
         return DeserializeMessageBuffer<T>(messageSerializedBuffer);
     }
