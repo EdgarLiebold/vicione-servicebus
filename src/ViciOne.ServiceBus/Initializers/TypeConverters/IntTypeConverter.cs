@@ -1,9 +1,10 @@
 using System;
+using System.Globalization;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts int type values.</summary>
-public class IntTypeConverter :
+/// <summary>Converts supported scalar representations to and from a signed 32-bit integer.</summary>
+internal sealed class IntTypeConverter :
     ITypeConverter<string, int>,
     ITypeConverter<int, object>,
     ITypeConverter<int, string>,
@@ -15,35 +16,19 @@ public class IntTypeConverter :
     ITypeConverter<int, long>,
     ITypeConverter<int, ulong>
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(byte input, out int result)
     {
         result = input;
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(long input, out int result)
     {
-        result = Convert.ToInt32(input);
-        return true;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(object? input, out int result)
-    {
-        if (input != null)
+        if (input is >= int.MinValue and <= int.MaxValue)
         {
-            result = Convert.ToInt32(input);
+            result = (int)input;
             return true;
         }
 
@@ -51,72 +36,84 @@ public class IntTypeConverter :
         return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
+    public bool TryConvert(object? input, out int result)
+    {
+        if (input == null)
+        {
+            result = default;
+            return false;
+        }
+
+        try
+        {
+            result = Convert.ToInt32(input, CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException)
+        {
+            result = default;
+            return false;
+        }
+    }
+
+    /// <inheritdoc />
     public bool TryConvert(sbyte input, out int result)
     {
         result = input;
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(short input, out int result)
     {
         result = input;
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(string? input, out int result)
     {
-        return int.TryParse(input, out result);
+        return int.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(uint input, out int result)
     {
-        result = Convert.ToInt32(input);
-        return true;
+        if (input <= int.MaxValue)
+        {
+            result = (int)input;
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ulong input, out int result)
     {
-        result = Convert.ToInt32(input);
-        return true;
+        if (input <= int.MaxValue)
+        {
+            result = (int)input;
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ushort input, out int result)
     {
         result = input;
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(int input, out string result)
     {
-        result = input.ToString();
+        result = input.ToString(CultureInfo.InvariantCulture);
         return true;
     }
 }

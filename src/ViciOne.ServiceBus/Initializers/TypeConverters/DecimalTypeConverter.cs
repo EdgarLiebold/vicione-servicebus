@@ -3,8 +3,8 @@ using System.Globalization;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts decimal type values.</summary>
-public class DecimalTypeConverter :
+/// <summary>Converts supported scalar representations to and from decimal values.</summary>
+internal sealed class DecimalTypeConverter :
     ITypeConverter<string, decimal>,
     ITypeConverter<decimal, string>,
     ITypeConverter<decimal, object>,
@@ -17,115 +17,90 @@ public class DecimalTypeConverter :
     ITypeConverter<decimal, long>,
     ITypeConverter<decimal, ulong>
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(byte input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(int input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(long input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(object? input, out decimal result)
     {
-        if (input != null)
+        if (input == null)
         {
-            result = Convert.ToDecimal(input);
-            return true;
+            result = default;
+            return false;
         }
 
-        result = default;
-        return false;
+        try
+        {
+            result = Convert.ToDecimal(input, CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException)
+        {
+            result = default;
+            return false;
+        }
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(sbyte input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(short input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(string? input, out decimal result)
     {
         return decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(uint input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ulong input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ushort input, out decimal result)
     {
         result = Convert.ToDecimal(input);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(decimal input, out string result)
     {
         result = input.ToString(CultureInfo.InvariantCulture);

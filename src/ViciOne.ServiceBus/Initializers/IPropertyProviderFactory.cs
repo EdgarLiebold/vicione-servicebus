@@ -3,26 +3,14 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>Creates property provider instances.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-public interface IPropertyProviderFactory<TInput>
+/// <summary>Resolves value providers and conversions for one input-object type.</summary>
+internal interface IPropertyProviderFactory<TInput>
     where TInput : class
 {
-    /// <summary>
-    /// Return the factory to create a property provider for the specified type <typeparamref name="TResult" /> using the
-    /// <paramref name="propertyInfo" /> as the source.
-    /// </summary>
-    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
-    /// <param name="propertyInfo">The input property.</param>
-    /// <param name="provider">Receives the provider produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to create a provider that reads and converts <paramref name="propertyInfo" /> to <typeparamref name="TResult" />.</summary>
     bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyProvider<TInput, TResult>? provider);
 
-    /// <summary>Attempts to get property converter.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <typeparam name="TProperty">The property type.</typeparam>
-    /// <param name="converter">Receives the converter produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to resolve a conversion from <typeparamref name="TProperty" /> to <typeparamref name="T" />.</summary>
     bool TryGetPropertyConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter);
 }

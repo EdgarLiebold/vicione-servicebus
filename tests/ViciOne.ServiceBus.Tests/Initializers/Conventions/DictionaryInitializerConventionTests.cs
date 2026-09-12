@@ -1,12 +1,53 @@
 using System.Dynamic;
 using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.Contexts;
+using ViciOne.ServiceBus.Initializers.Conventions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Initializers.Conventions;
 
 public sealed class DictionaryInitializerConventionTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-CONVENTIONS", "dictionary-exact-and-unsupported-mapping-matrix")]
+    public async Task DictionaryConvention_DistinguishesExactMappingsFromUnsupportedTypesAsync()
+    {
+        var exact = new DictionaryInitializerConvention<ExactDictionaryMessage, Dictionary<string, Guid?>, Guid?>();
+        var valueProperty = typeof(ExactDictionaryMessage).GetProperty(nameof(ExactDictionaryMessage.Value))!;
+        var requestIdProperty = typeof(SendContext).GetProperty(nameof(SendContext.RequestId))!;
+        Assert.True(exact.TryGetPropertyInitializer<Guid?>(valueProperty, out var propertyInitializer));
+        Assert.True(exact.TryGetHeaderInitializer<Guid?>(requestIdProperty, out var headerInitializer));
+
+        Guid value = Guid.Parse("8e6005b3-06d2-4ed6-87d6-b19752c0c46d");
+        var values = new Dictionary<string, Guid?>
+        {
+            [nameof(ExactDictionaryMessage.Value)] = value,
+            ["__RequestId"] = value,
+        };
+        var message = new ExactDictionaryMessage();
+        InitializeContext<ExactDictionaryMessage, Dictionary<string, Guid?>> context =
+            new BaseInitializeContext(TestContext.Current.CancellationToken)
+                .CreateMessageContext(message)
+                .CreateInputContext(values);
+        var sendContext = new MessageSendContext<ExactDictionaryMessage>(message, TestContext.Current.CancellationToken);
+
+        await propertyInitializer.ApplyAsync(context, TestContext.Current.CancellationToken);
+        await headerInitializer.ApplyAsync(context, sendContext, TestContext.Current.CancellationToken);
+
+        Assert.Equal(value, message.Value);
+        Assert.Equal(value, sendContext.RequestId);
+
+        var unsupported = new DictionaryInitializerConvention<UnsupportedDictionaryMessage, Dictionary<string, DateOnly>, DateOnly>();
+        var countProperty = typeof(UnsupportedDictionaryMessage).GetProperty(nameof(UnsupportedDictionaryMessage.Count))!;
+        var timeToLiveProperty = typeof(SendContext).GetProperty(nameof(SendContext.TimeToLive))!;
+        Assert.False(unsupported.TryGetPropertyInitializer<int>(countProperty, out var unsupportedProperty));
+        Assert.Null(unsupportedProperty);
+        Assert.False(unsupported.TryGetHeaderInitializer<TimeSpan?>(timeToLiveProperty, out var unsupportedHeader));
+        Assert.Null(unsupportedHeader);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-DICTIONARY-INITIALIZER", "expando-scalar-enum-guid")]
     public async Task ExpandoObjectInput_ConvertsScalarEnumAndGuidValuesAsync()
@@ -120,6 +161,30 @@ public sealed class DictionaryInitializerConventionTests
         Assert.Equal("Category", actualOrder.Product.Category);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-HEADERS", "dictionary-prefixed-converted-header")]
+    public async Task DictionaryInput_UsesThePrefixedKeyWhenConvertingAStandardHeaderAsync()
+    {
+        var convention = new DictionaryInitializerConvention<HeaderMessage, Dictionary<string, object>, object>();
+        var headerProperty = typeof(SendContext).GetProperty(nameof(SendContext.TimeToLive));
+        Assert.NotNull(headerProperty);
+        Assert.True(convention.TryGetHeaderInitializer<TimeSpan?>(headerProperty, out var initializer));
+        Assert.NotNull(initializer);
+
+        var values = new Dictionary<string, object>
+        {
+            ["__TimeToLive"] = 5_000L,
+        };
+        var baseContext = new BaseInitializeContext(TestContext.Current.CancellationToken);
+        InitializeContext<HeaderMessage> messageContext = baseContext.CreateMessageContext(new HeaderMessage());
+        InitializeContext<HeaderMessage, Dictionary<string, object>> inputContext = messageContext.CreateInputContext(values);
+        var sendContext = new MessageSendContext<HeaderMessage>(messageContext.Message, TestContext.Current.CancellationToken);
+
+        await initializer.ApplyAsync(inputContext, sendContext, TestContext.Current.CancellationToken);
+
+        Assert.Equal(TimeSpan.FromSeconds(5), sendContext.TimeToLive);
+    }
+
     public interface MessageContract
     {
         int Id { get; }
@@ -162,5 +227,17 @@ public sealed class DictionaryInitializerConventionTests
     {
         Public = 1,
         Internal = 2,
+    }
+
+    private sealed class HeaderMessage;
+
+    private sealed class ExactDictionaryMessage
+    {
+        public Guid? Value { get; set; }
+    }
+
+    private sealed class UnsupportedDictionaryMessage
+    {
+        public int Count { get; set; }
     }
 }

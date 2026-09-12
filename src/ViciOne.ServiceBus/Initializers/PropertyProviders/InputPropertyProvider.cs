@@ -5,17 +5,17 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
-/// <summary>Copies the input property, as-is, for the property value.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TProperty">The property type.</typeparam>
-public class InputPropertyProvider<TInput, TProperty> :
+/// <summary>Reads one input property without conversion.</summary>
+/// <typeparam name="TInput">The input object type.</typeparam>
+/// <typeparam name="TProperty">The input property type.</typeparam>
+internal sealed class InputPropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
 {
     readonly IReadProperty<TInput, TProperty> _inputProperty;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="propertyInfo">The property info.</param>
+    /// <summary>Creates a provider for a readable input property.</summary>
+    /// <param name="propertyInfo">The readable input property.</param>
     public InputPropertyProvider(PropertyInfo? propertyInfo)
     {
         if (propertyInfo == null)
@@ -24,16 +24,20 @@ public class InputPropertyProvider<TInput, TProperty> :
         _inputProperty = ReadPropertyCache<TInput>.GetProperty<TProperty>(propertyInfo);
     }
 
-    /// <summary>Gets property.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Reads the configured property when the context contains an input.</summary>
+    /// <typeparam name="T">The message contract being initialized.</typeparam>
+    /// <param name="context">The message and input object used for the read.</param>
+    /// <param name="cancellationToken">The token that cancels property access.</param>
+    /// <returns>A task containing the input value, or the default value when no input is available.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TProperty?>(cancellationToken); return Task.FromResult(context.HasInput
-                    ? _inputProperty.Get(context.Input)
-                    : default);
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<TProperty?>(cancellationToken);
+
+        return Task.FromResult(context.HasInput
+            ? _inputProperty.Get(context.Input)
+            : default);
     }
 }

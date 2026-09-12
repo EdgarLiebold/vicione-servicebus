@@ -2,17 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts guid type values.</summary>
-public class GuidTypeConverter :
+/// <summary>Converts GUID values from text, objects, and time-sortable identifiers.</summary>
+internal sealed class GuidTypeConverter :
     ITypeConverter<string, Guid>,
     ITypeConverter<Guid, string>,
     ITypeConverter<Guid, NewId>,
     ITypeConverter<Guid, object>
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(NewId input, out Guid result)
     {
         result = input.ToGuid();
@@ -20,10 +17,7 @@ public class GuidTypeConverter :
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(object? input, out Guid result)
     {
         switch (input)
@@ -45,19 +39,13 @@ public class GuidTypeConverter :
         }
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(string? input, out Guid result)
     {
         return Guid.TryParse(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(Guid input, out string result)
     {
         result = input.ToString("D");

@@ -2,62 +2,50 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
-/// <summary>Converts to nullable property values.</summary>
-/// <typeparam name="TResult">The result produced by the operation.</typeparam>
-public class ToNullablePropertyConverter<TResult> :
+/// <summary>Wraps a value-type property in its nullable form.</summary>
+/// <typeparam name="TResult">The underlying value type.</typeparam>
+internal sealed class ToNullablePropertyConverter<TResult> :
     IPropertyConverter<TResult?, TResult>
     where TResult : struct
 {
-    /// <summary>Converts the supplied value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="input">The input.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the converted value.</returns>
+    /// <inheritdoc />
     public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TResult input, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TResult?>(cancellationToken); return Task.FromResult<TResult?>(input);
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<TResult?>(cancellationToken);
+
+        return Task.FromResult<TResult?>(input);
     }
 }
 
 
-/// <summary>Converts to nullable property values.</summary>
-/// <typeparam name="TResult">The result produced by the operation.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class ToNullablePropertyConverter<TResult, TInput> :
+/// <summary>Converts a property and wraps the result in its nullable form.</summary>
+/// <typeparam name="TResult">The underlying result value type.</typeparam>
+/// <typeparam name="TInput">The source value type.</typeparam>
+internal sealed class ToNullablePropertyConverter<TResult, TInput> :
     IPropertyConverter<TResult?, TInput>
     where TResult : struct
 {
     readonly IPropertyConverter<TResult, TInput> _converter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="converter">The converter.</param>
+    /// <summary>Creates a nullable wrapper around <paramref name="converter"/>.</summary>
+    /// <param name="converter">The converter that produces the underlying value.</param>
     public ToNullablePropertyConverter(IPropertyConverter<TResult, TInput> converter)
     {
-        _converter = converter;
+        _converter = converter ?? throw new ArgumentNullException(nameof(converter));
     }
 
-    /// <summary>Converts the supplied value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="input">The input.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the converted value.</returns>
-    public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
+    /// <inheritdoc />
+    public async Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        Task<TResult> resultTask = _converter.ConvertAsync(context, input, cancellationToken: cancellationToken);
-        if (resultTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult<TResult?>(resultTask.Result);
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        async Task<TResult?> ConvertAsync()
-        {
-            var result = await resultTask.ConfigureAwait(false);
-
-            return result;
-        }
-
-        return ConvertAsync();
+        Task<TResult> resultTask = _converter.ConvertAsync(context, input, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The property converter returned null.");
+        return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 }

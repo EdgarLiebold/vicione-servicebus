@@ -7,14 +7,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Caches type converter data.</summary>
-public class TypeConverterCache :
-    ITypeConverterCache
+/// <summary>Provides cached access to the built-in type converters.</summary>
+public static class TypeConverterCache
 {
-    readonly List<object> _converters;
-    readonly ConcurrentDictionary<Type, object> _typeConverters;
+    static readonly List<object> _converters;
+    static readonly object _lock = new();
+    static readonly ConcurrentDictionary<Type, object> _typeConverters;
 
-    TypeConverterCache()
+    static TypeConverterCache()
     {
         _typeConverters = new ConcurrentDictionary<Type, object>();
         _converters = new List<object>();
@@ -36,7 +36,7 @@ public class TypeConverterCache :
         AddSupportedTypes(typeof(VersionTypeConverter));
     }
 
-    bool ITypeConverterCache.TryGetTypeConverter<TProperty, TInput>([NotNullWhen(true)] out ITypeConverter<TProperty, TInput>? typeConverter)
+    static bool TryGetTypeConverterCore<TProperty, TInput>([NotNullWhen(true)] out ITypeConverter<TProperty, TInput>? typeConverter)
     {
         var neededType = typeof(ITypeConverter<TProperty, TInput>);
 
@@ -46,111 +46,124 @@ public class TypeConverterCache :
             return typeConverter != null;
         }
 
-        var matched = _converters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
-        if (matched != default)
+        lock (_lock)
         {
-            _typeConverters.GetOrAdd(neededType, matched);
-
-            typeConverter = matched as ITypeConverter<TProperty, TInput>;
-            return typeConverter != null;
-        }
-
-        var propertyType = typeof(TProperty);
-        if (propertyType == typeof(string) && typeof(INamedInitializerValue).IsAssignableFrom(typeof(TInput)))
-        {
-            var namedValueConverterType = typeof(NamedInitializerValueTypeConverter<>).MakeGenericType(typeof(TInput));
-            AddSupportedTypes(namedValueConverterType);
-        }
-        else if (propertyType.IsEnum)
-        {
-            var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
-            if (enumConverterType.ImplementsInterface(neededType))
-                AddSupportedTypes(enumConverterType);
-        }
-        else if (propertyType.IsNullable(out var underlyingType))
-        {
-            if (underlyingType == typeof(TInput))
+            if (_typeConverters.TryGetValue(neededType, out converter))
             {
-                var nullableType = typeof(ToNullableTypeConverter<>).MakeGenericType(underlyingType);
-                AddSupportedTypes(nullableType);
+                typeConverter = converter as ITypeConverter<TProperty, TInput>;
+                return typeConverter != null;
             }
-            else
+
+            var propertyType = typeof(TProperty);
+            if (propertyType == typeof(string) && typeof(INamedInitializerValue).IsAssignableFrom(typeof(TInput)))
             {
-                var converterType = typeof(ITypeConverter<,>).MakeGenericType(underlyingType, typeof(TInput));
-                if (_typeConverters.TryGetValue(converterType, out converter))
+                var namedValueConverterType = typeof(NamedInitializerValueTypeConverter<>).MakeGenericType(typeof(TInput));
+                AddSupportedTypes(namedValueConverterType);
+
+                if (_typeConverters.TryGetValue(neededType, out converter))
                 {
-                    var nullableType = typeof(ToNullableTypeConverter<,>).MakeGenericType(underlyingType, typeof(TInput));
-                    AddSupportedTypes(nullableType, converter);
+                    typeConverter = converter as ITypeConverter<TProperty, TInput>;
+                    return typeConverter != null;
                 }
             }
-        }
-        else if (typeof(TInput).IsNullable(out underlyingType))
-        {
-            if (underlyingType == propertyType)
+
+            var matched = _converters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
+            if (matched != default)
             {
-                var nullableType = typeof(FromNullableTypeConverter<>).MakeGenericType(underlyingType);
-                AddSupportedTypes(nullableType);
+                _typeConverters.GetOrAdd(neededType, matched);
+
+                typeConverter = matched as ITypeConverter<TProperty, TInput>;
+                return typeConverter != null;
             }
-            else
+
+            if (propertyType.IsEnum)
             {
-                var converterType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, underlyingType);
-                if (_typeConverters.TryGetValue(converterType, out converter))
+                var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
+                if (enumConverterType.ImplementsInterface(neededType))
+                    AddSupportedTypes(enumConverterType);
+            }
+            else if (propertyType.IsNullable(out var underlyingType))
+            {
+                if (underlyingType == typeof(TInput))
                 {
-                    var nullableType = typeof(FromNullableTypeConverter<,>).MakeGenericType(propertyType, underlyingType);
-                    AddSupportedTypes(nullableType, converter);
+                    var nullableType = typeof(ToNullableTypeConverter<>).MakeGenericType(underlyingType);
+                    AddSupportedTypes(nullableType);
+                }
+                else
+                {
+                    var converterType = typeof(ITypeConverter<,>).MakeGenericType(underlyingType, typeof(TInput));
+                    AddEnumConverterIfSupported(underlyingType, converterType);
+                    if (_typeConverters.TryGetValue(converterType, out converter))
+                    {
+                        var nullableType = typeof(ToNullableTypeConverter<,>).MakeGenericType(underlyingType, typeof(TInput));
+                        AddSupportedTypes(nullableType, converter);
+                    }
                 }
             }
-        }
+            else if (typeof(TInput).IsNullable(out underlyingType))
+            {
+                if (underlyingType == propertyType)
+                {
+                    var nullableType = typeof(FromNullableTypeConverter<>).MakeGenericType(underlyingType);
+                    AddSupportedTypes(nullableType);
+                }
+                else
+                {
+                    var converterType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, underlyingType);
+                    if (_typeConverters.TryGetValue(converterType, out converter))
+                    {
+                        var nullableType = typeof(FromNullableTypeConverter<,>).MakeGenericType(propertyType, underlyingType);
+                        AddSupportedTypes(nullableType, converter);
+                    }
+                }
+            }
 
-        if (_typeConverters.TryGetValue(neededType, out converter))
-        {
-            typeConverter = converter as ITypeConverter<TProperty, TInput>;
-            return typeConverter != null;
-        }
+            if (_typeConverters.TryGetValue(neededType, out converter))
+            {
+                typeConverter = converter as ITypeConverter<TProperty, TInput>;
+                return typeConverter != null;
+            }
 
-        typeConverter = null;
-        return false;
+            typeConverter = null;
+            return false;
+        }
     }
 
-    void AddSupportedTypes(Type converterType, params object[] args)
+    static void AddSupportedTypes(Type converterType, params object[] args)
     {
         Type[] interfaceTypes = converterType.GetInterfaces();
 
         Type[] types = interfaceTypes.Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ITypeConverter<,>)).ToArray();
         if (types.Length > 0)
         {
-            try
-            {
-                var converter = Activator.CreateInstance(converterType, args);
-                if (converter == null)
-                    return;
+            var converter = Activator.CreateInstance(converterType, args)
+                ?? throw new InvalidOperationException($"The converter type '{converterType}' could not be activated.");
 
-                _converters.Add(converter);
+            _converters.Add(converter);
 
-                foreach (var type in types)
-                    _typeConverters[type] = converter;
-            }
-            catch (Exception)
-            {
-                // Converter types that cannot be activated are excluded from the cache.
-            }
+            foreach (var type in types)
+                _typeConverters[type] = converter;
         }
     }
 
-    /// <summary>Attempts to get type converter.</summary>
-    /// <typeparam name="TProperty">The property type.</typeparam>
-    /// <typeparam name="TInputProperty">The input property type.</typeparam>
-    /// <param name="typeConverter">Receives the type converter produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    static void AddEnumConverterIfSupported(Type resultType, Type converterContract)
+    {
+        if (_typeConverters.ContainsKey(converterContract) || !resultType.IsEnum)
+            return;
+
+        Type enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(resultType);
+        if (enumConverterType.ImplementsInterface(converterContract))
+            AddSupportedTypes(enumConverterType);
+    }
+
+    /// <summary>Attempts to resolve the shared converter for a source and result type pair.</summary>
+    /// <typeparam name="TProperty">The converted result type.</typeparam>
+    /// <typeparam name="TInputProperty">The source value type.</typeparam>
+    /// <param name="typeConverter">The shared converter when the pair is supported.</param>
+    /// <returns><see langword="true" /> when a converter is available; otherwise, <see langword="false" />.</returns>
     public static bool TryGetTypeConverter<TProperty, TInputProperty>(
         [NotNullWhen(true)] out ITypeConverter<TProperty, TInputProperty>? typeConverter)
     {
-        return Cached.Cache.Value.TryGetTypeConverter(out typeConverter);
-    }
-
-
-    static class Cached
-    {
-        internal static readonly Lazy<ITypeConverterCache> Cache = new Lazy<ITypeConverterCache>(() => new TypeConverterCache());
+        return TryGetTypeConverterCore(out typeConverter);
     }
 }

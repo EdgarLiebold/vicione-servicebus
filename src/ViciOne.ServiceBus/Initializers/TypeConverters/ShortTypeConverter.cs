@@ -1,9 +1,10 @@
 using System;
+using System.Globalization;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts short type values.</summary>
-public class ShortTypeConverter :
+/// <summary>Converts supported scalar representations to and from a signed 16-bit integer.</summary>
+internal sealed class ShortTypeConverter :
     ITypeConverter<string, short>,
     ITypeConverter<short, string>,
     ITypeConverter<short, object>,
@@ -15,45 +16,19 @@ public class ShortTypeConverter :
     ITypeConverter<short, long>,
     ITypeConverter<short, ulong>
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(byte input, out short result)
     {
         result = input;
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(int input, out short result)
     {
-        result = Convert.ToInt16(input);
-        return true;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(long input, out short result)
-    {
-        result = Convert.ToInt16(input);
-        return true;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(object? input, out short result)
-    {
-        if (input != null)
+        if (input is >= short.MinValue and <= short.MaxValue)
         {
-            result = Convert.ToInt16(input);
+            result = (short)input;
             return true;
         }
 
@@ -61,62 +36,96 @@ public class ShortTypeConverter :
         return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
+    public bool TryConvert(long input, out short result)
+    {
+        if (input is >= short.MinValue and <= short.MaxValue)
+        {
+            result = (short)input;
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public bool TryConvert(object? input, out short result)
+    {
+        if (input == null)
+        {
+            result = default;
+            return false;
+        }
+
+        try
+        {
+            result = Convert.ToInt16(input, CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException)
+        {
+            result = default;
+            return false;
+        }
+    }
+
+    /// <inheritdoc />
     public bool TryConvert(sbyte input, out short result)
     {
         result = input;
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(string? input, out short result)
     {
-        return short.TryParse(input, out result);
+        return short.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(uint input, out short result)
     {
-        result = Convert.ToInt16(input);
-        return true;
+        if (input <= short.MaxValue)
+        {
+            result = (short)input;
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ulong input, out short result)
     {
-        result = Convert.ToInt16(input);
-        return true;
+        if (input <= (ulong)short.MaxValue)
+        {
+            result = (short)input;
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ushort input, out short result)
     {
-        result = Convert.ToInt16(input);
-        return true;
+        if (input <= short.MaxValue)
+        {
+            result = (short)input;
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(short input, out string result)
     {
-        result = input.ToString();
+        result = input.ToString(CultureInfo.InvariantCulture);
         return true;
     }
 }

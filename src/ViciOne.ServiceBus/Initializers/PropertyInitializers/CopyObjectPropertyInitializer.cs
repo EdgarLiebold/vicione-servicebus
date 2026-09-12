@@ -5,11 +5,11 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyInitializers;
 
-/// <summary>Initializes copy object property values.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TInputProperty">The input property type.</typeparam>
-public class CopyObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
+/// <summary>Copies an input property into an object-valued message property.</summary>
+/// <typeparam name="TMessage">The message contract being populated.</typeparam>
+/// <typeparam name="TInput">The input object containing the value.</typeparam>
+/// <typeparam name="TInputProperty">The runtime value type preserved in the object property.</typeparam>
+internal sealed class CopyObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
     IPropertyInitializer<TMessage, TInput>
     where TMessage : class
     where TInput : class
@@ -17,25 +17,31 @@ public class CopyObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
     readonly IReadProperty<TInput, TInputProperty> _inputProperty;
     readonly IWriteProperty<TMessage, object> _messageProperty;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="messagePropertyInfo">The message property info.</param>
-    /// <param name="inputPropertyInfo">The input property info.</param>
+    /// <summary>Creates a mapping to an object-valued message property.</summary>
+    /// <param name="messagePropertyInfo">The writable object-valued message property.</param>
+    /// <param name="inputPropertyInfo">The readable input property.</param>
     public CopyObjectPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
     {
         if (messagePropertyInfo == null)
             throw new ArgumentNullException(nameof(messagePropertyInfo));
+        if (inputPropertyInfo == null)
+            throw new ArgumentNullException(nameof(inputPropertyInfo));
 
         _inputProperty = ReadPropertyCache<TInput>.GetProperty<TInputProperty>(inputPropertyInfo);
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<object>(messagePropertyInfo);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Copies the configured input value into the message.</summary>
+    /// <param name="context">The message and input object.</param>
+    /// <param name="cancellationToken">The token that cancels property assignment.</param>
+    /// <returns>A task that completes after the value has been assigned.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        if (context.HasInput)
+            _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
 
         return Task.CompletedTask;
     }

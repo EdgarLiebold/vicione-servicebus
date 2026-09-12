@@ -252,6 +252,44 @@ public sealed class TaskInitializerExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-SOURCE", "caller-cancellation")]
+    public async Task PendingSource_ObservesCallerCancellationAsync()
+    {
+        var source = NewCompletionSource<Subject>();
+        using var cancellation = new CancellationTokenSource();
+
+        Task<string?> result = source.Task.SelectAsync(subject => subject.Name, cancellation.Token);
+        cancellation.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            result.WaitAsync(OperationTimeout, TestCancellationToken));
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.False(source.Task.IsCompleted);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-ASYNC-FALLBACK", "caller-cancellation")]
+    public async Task PendingFallback_ObservesCallerCancellationAsync()
+    {
+        Task<Subject> source = Task.FromResult(new Subject());
+        var fallback = NewCompletionSource<string>();
+        using var cancellation = new CancellationTokenSource();
+
+        Task<string> result = source.SelectOrFallbackAsync(
+            subject => subject.Name,
+            () => fallback.Task,
+            cancellation.Token);
+        cancellation.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            result.WaitAsync(OperationTimeout, TestCancellationToken));
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.False(fallback.Task.IsCompleted);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-DELEGATE-STATE", "fault-and-cancellation")]
     public async Task SelectorAndFallbackState_IsPropagatedWithoutWrappingOrTokenSubstitutionAsync()
     {

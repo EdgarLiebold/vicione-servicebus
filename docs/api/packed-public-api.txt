@@ -8310,8 +8310,8 @@ TYPE class public ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleIniti
   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> ScheduleSendAsync<T>(ViciOne.ServiceBus.IMessageScheduler scheduler, System.Uri destination, System.DateTimeOffset dueAt, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> ScheduleSendAsync<T>(ViciOne.ServiceBus.IMessageScheduler scheduler, System.Uri destination, System.DateTimeOffset dueAt, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Advanced.Initializers.PublishEndpointExtensions [static]
-  METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Type messageType, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Type messageType, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> pipe, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Type messageType, System.Object values, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task PublishAsync(ViciOne.ServiceBus.IPublishEndpoint endpoint, System.Type messageType, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PublishContext> pipe, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Advanced.Initializers.SendEndpointExtensions [static]
   METHOD public static System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Type messageType, System.Object values, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Type messageType, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
@@ -17219,151 +17219,22 @@ TYPE class public ViciOne.ServiceBus.DependencyInjection.SetScopedConsumeContext
 TYPE class public ViciOne.ServiceBus.DependencyInjection.TypedScopedConsumeContextProvider [base=ViciOne.ServiceBus.DependencyInjection.ScopedConsumeContextProvider]
   CTOR public ViciOne.ServiceBus.DependencyInjection.TypedScopedConsumeContextProvider(ViciOne.ServiceBus.DependencyInjection.IScopedConsumeContextProvider global)
   METHOD public System.IDisposable PushContext(ViciOne.ServiceBus.ConsumeContext context)
-TYPE class public ViciOne.ServiceBus.Initializers.Contexts.BaseInitializeContext [base=ViciOne.ServiceBus.Middleware.BasePipeContext,interfaces=ViciOne.ServiceBus.Initializers.InitializeContext]
-  CTOR public ViciOne.ServiceBus.Initializers.Contexts.BaseInitializeContext(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Boolean TryGetParent<T>(out ViciOne.ServiceBus.Initializers.InitializeContext<T> parentContext)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<T> CreateMessageContext<T>(T message)
-  PROPERTY System.Int32 Depth { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Initializers.InitializeContext Parent { public-get;  }
-TYPE class public ViciOne.ServiceBus.Initializers.Contexts.DynamicInitializeContext<TMessage,TInput> [base=ViciOne.ServiceBus.Initializers.Contexts.DynamicInitializeContext<TMessage>,interfaces=ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Contexts.DynamicInitializeContext<TMessage,TInput>(ViciOne.ServiceBus.Initializers.InitializeContext context, TMessage message, TInput input)
-  PROPERTY System.Boolean HasInput { public-get;  }
-  PROPERTY TInput Input { public-get;  }
-TYPE class public ViciOne.ServiceBus.Initializers.Contexts.DynamicInitializeContext<TMessage> [base=ViciOne.ServiceBus.Middleware.ProxyPipeContext,interfaces=ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.Contexts.DynamicInitializeContext<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext context, TMessage message)
-  METHOD public virtual System.Boolean TryGetParent<T>(out ViciOne.ServiceBus.Initializers.InitializeContext<T> parentContext)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<T> CreateMessageContext<T>(T message)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,T> CreateInputContext<T>(T input)
-  PROPERTY System.Int32 Depth { public-get;  }
-  PROPERTY System.Type MessageType { public-get;  }
-  PROPERTY TMessage Message { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Initializers.InitializeContext Parent { public-get;  }
-TYPE class public ViciOne.ServiceBus.Initializers.Contexts.ScopeInitializeContext [base=ViciOne.ServiceBus.Middleware.ScopePipeContext,interfaces=ViciOne.ServiceBus.Initializers.InitializeContext]
-  CTOR public ViciOne.ServiceBus.Initializers.Contexts.ScopeInitializeContext(ViciOne.ServiceBus.Advanced.PipeContext context)
-  METHOD public virtual System.Boolean TryGetParent<T>(out ViciOne.ServiceBus.Initializers.InitializeContext<T> parentContext)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<T> CreateMessageContext<T>(T message)
-  PROPERTY System.Int32 Depth { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Initializers.InitializeContext Parent { public-get;  }
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.ConventionTypeCache<TValue> [interfaces=ViciOne.ServiceBus.Initializers.Conventions.IConventionTypeCache<TValue>]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.ConventionTypeCache<TValue>(ViciOne.ServiceBus.Initializers.Conventions.IConventionTypeCacheFactory<TValue> typeFactory, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.DefaultInitializerConvention [base=ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.DefaultInitializerConvention()
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.DefaultInitializerConvention<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.DefaultInitializerConvention<TMessage,TInput>()
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.DefaultInitializerConvention<TMessage> [base=ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.DefaultInitializerConvention<TMessage>(ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.DictionaryInitializerConvention [base=ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.DictionaryInitializerConvention()
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.DictionaryInitializerConvention<TMessage,TInput,TValue> [interfaces=ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.DictionaryInitializerConvention<TMessage,TInput,TValue>()
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.DictionaryInitializerConvention<TMessage> [base=ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.DictionaryInitializerConvention<TMessage>(ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IConventionTypeCache<T>
-  METHOD public abstract TResult GetOrAdd<TKey,TResult>()
-TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IConventionTypeCacheFactory<TValue>
-  METHOD public abstract TValue Create<T>(ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
 TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention
   METHOD public abstract System.Boolean TryGetHeaderInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
   METHOD public abstract System.Boolean TryGetHeadersInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
   METHOD public abstract System.Boolean TryGetPropertyInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.Conventions.IMessageInputInitializerConvention<TMessage>]
+TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage,TInput>
   METHOD public abstract System.Boolean TryGetHeaderInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
   METHOD public abstract System.Boolean TryGetHeadersInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
   METHOD public abstract System.Boolean TryGetPropertyInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage> [interfaces=ViciOne.ServiceBus.Initializers.Conventions.IMessageInitializerConvention]
+TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage>
   METHOD public abstract System.Boolean TryGetHeaderInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
   METHOD public abstract System.Boolean TryGetHeadersInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
   METHOD public abstract System.Boolean TryGetPropertyInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IMessageInitializerConvention
-TYPE interface public ViciOne.ServiceBus.Initializers.Conventions.IMessageInputInitializerConvention<TMessage>
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention [abstract,interfaces=ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention]
-  CTOR protected ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention(ViciOne.ServiceBus.Initializers.Conventions.IConventionTypeCacheFactory<ViciOne.ServiceBus.Initializers.Conventions.IMessageInitializerConvention> cacheFactory)
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE class protected ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention<TMessage,TInput>()
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE class public ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention<TMessage> [abstract,interfaces=ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention<TMessage>]
-  CTOR protected ViciOne.ServiceBus.Initializers.Conventions.InitializerConvention<TMessage>(ViciOne.ServiceBus.Initializers.Conventions.IConventionTypeCacheFactory<ViciOne.ServiceBus.Initializers.Conventions.IMessageInputInitializerConvention<TMessage>> cacheFactory, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.DynamicMessageFactory<TMessage,TImplementation> [interfaces=ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.DynamicMessageFactory<TMessage,TImplementation>()
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> Create(ViciOne.ServiceBus.Initializers.InitializeContext context)
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.DynamicMessageFactory<TMessage> [interfaces=ViciOne.ServiceBus.Initializers.IMessageFactory&ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.DynamicMessageFactory<TMessage>()
-  METHOD public virtual System.Object Create()
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> Create(ViciOne.ServiceBus.Initializers.InitializeContext context)
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.HeaderInitializerInspector<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.Factories.IHeaderInitializerInspector<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.HeaderInitializerInspector<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Boolean Apply(ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput> builder, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE interface public ViciOne.ServiceBus.Initializers.Factories.IHeaderInitializerInspector<TMessage,TInput>
-  METHOD public abstract System.Boolean Apply(ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput> builder, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE interface public ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput>
-  METHOD public abstract System.Boolean IsInputPropertyUsed(System.String propertyName)
-  METHOD public abstract System.Void Add(System.String propertyName, ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-  METHOD public abstract System.Void Add(System.String propertyName, ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage> initializer)
-  METHOD public abstract System.Void Add(ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public abstract System.Void Add(ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage> initializer)
-  METHOD public abstract System.Void SetInputPropertyUsed(System.String propertyName)
-TYPE interface public ViciOne.ServiceBus.Initializers.Factories.IPropertyInitializerInspector<TMessage,TInput>
-  METHOD public abstract System.Boolean Apply(ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput> builder, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.InputHeaderInitializerInspector<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.Factories.IHeaderInitializerInspector<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.InputHeaderInitializerInspector<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Boolean Apply(ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput> builder, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.MessageInitializerBuilder<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.MessageInitializerBuilder<TMessage,TInput>(ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage> messageFactory)
-  METHOD public ViciOne.ServiceBus.Initializers.IMessageInitializer<TMessage> Build()
-  METHOD public virtual System.Boolean IsInputPropertyUsed(System.String propertyName)
-  METHOD public virtual System.Void Add(System.String propertyName, ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Void Add(System.String propertyName, ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage> initializer)
-  METHOD public virtual System.Void Add(ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Void Add(ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage> initializer)
-  METHOD public virtual System.Void SetInputPropertyUsed(System.String propertyName)
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.MessageInitializerFactory<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IMessageInitializerFactory<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.MessageInitializerFactory<TMessage,TInput>(ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention[] conventions)
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.MessageInitializerFactory<TMessage,TInput>(ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage> messageFactory, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention[] conventions)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.IMessageInitializer<TMessage> CreateMessageInitializer()
-TYPE class public ViciOne.ServiceBus.Initializers.Factories.PropertyInitializerInspector<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.Factories.IPropertyInitializerInspector<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.Factories.PropertyInitializerInspector<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Boolean Apply(ViciOne.ServiceBus.Initializers.Factories.IMessageInitializerBuilder<TMessage,TInput> builder, ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention convention)
-TYPE class public ViciOne.ServiceBus.Initializers.HeaderInitializers.CopyHeaderInitializer<TMessage,TInput,THeader> [interfaces=ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.HeaderInitializers.CopyHeaderInitializer<TMessage,TInput,THeader>(System.Reflection.PropertyInfo headerPropertyInfo, System.Reflection.PropertyInfo inputPropertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.HeaderInitializers.DictionaryCopyHeaderInitializer<TMessage,TInput,THeader> [interfaces=ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.HeaderInitializers.DictionaryCopyHeaderInitializer<TMessage,TInput,THeader>(System.Reflection.PropertyInfo propertyInfo, System.String key)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.HeaderInitializers.ProviderHeaderInitializer<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.HeaderInitializers.ProviderHeaderInitializer<TMessage,TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> propertyProvider, System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.HeaderInitializers.SetHeaderInitializer<TMessage,TInput,THeader> [interfaces=ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.HeaderInitializers.SetHeaderInitializer<TMessage,TInput,THeader>(System.String headerName, ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,THeader> provider)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.HeaderInitializers.SetStringHeaderInitializer<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.HeaderInitializers.SetStringHeaderInitializer<TMessage,TInput>(System.String headerName, System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>
   METHOD public abstract System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage>
   METHOD public abstract System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, ViciOne.ServiceBus.Advanced.SendContext sendContext, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Initializers.IMessageFactory
-  METHOD public abstract System.Object Create()
-TYPE interface public ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage>
-  METHOD public abstract ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> Create(ViciOne.ServiceBus.Initializers.InitializeContext context)
-TYPE interface public ViciOne.ServiceBus.Initializers.IMessageInitializerCache<TMessage>
-  METHOD public abstract ViciOne.ServiceBus.Initializers.IMessageInitializer<TMessage> GetInitializer(System.Type objectType)
-TYPE interface public ViciOne.ServiceBus.Initializers.IMessageInitializerFactory<TMessage>
-  METHOD public abstract ViciOne.ServiceBus.Initializers.IMessageInitializer<TMessage> CreateMessageInitializer()
 TYPE interface public ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TProperty>
   METHOD public abstract System.Threading.Tasks.Task<TResult> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TProperty input, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>
@@ -17372,139 +17243,20 @@ TYPE interface public ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMess
   METHOD public abstract System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>
   METHOD public abstract System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Initializers.IPropertyProviderFactory<TInput>
-  METHOD public abstract System.Boolean TryGetPropertyConverter<T,TProperty>(out ViciOne.ServiceBus.Initializers.IPropertyConverter<T,TProperty> converter)
-  METHOD public abstract System.Boolean TryGetPropertyProvider<TResult>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TResult> provider)
 TYPE interface public ViciOne.ServiceBus.Initializers.ITypeConverter<TResult,TInput>
   METHOD public abstract System.Boolean TryConvert(TInput input, out TResult result)
-TYPE class public ViciOne.ServiceBus.Initializers.MessageFactoryCache<TMessage> [static]
-  PROPERTY ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage> Factory { public-get;  }
 TYPE class public ViciOne.ServiceBus.Initializers.MessageInitializer [static]
   METHOD public static System.Void AddConvention<T>()
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Initializers.Conventions.IInitializerConvention> Conventions { public-get;  }
-TYPE class public ViciOne.ServiceBus.Initializers.MessageInitializer<TMessage,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IMessageInitializer<TMessage>]
-  CTOR public ViciOne.ServiceBus.Initializers.MessageInitializer<TMessage,TInput>(ViciOne.ServiceBus.Initializers.IMessageFactory<TMessage> factory, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>> initializers, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput>> headerInitializers)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(System.Object input, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object input, System.Object[] moreInputs, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object input, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>> InitializeAsync(System.Object input, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>> InitializeAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Object input, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> Create(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> Create(ViciOne.ServiceBus.Advanced.PipeContext context)
-TYPE class public ViciOne.ServiceBus.Initializers.MessageInitializerCache<TMessage> [interfaces=ViciOne.ServiceBus.Initializers.IMessageInitializerCache<TMessage>]
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object values, System.Object[] moreValues, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>> InitializeAsync(System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>> InitializeAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Object values, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Initializers.MessageInitializerCache<TMessage> [static]
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(System.Object input, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(System.Object input, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object input, System.Object[] moreInputs, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object input, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(ViciOne.ServiceBus.Advanced.PipeContext context, System.Object input, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> pipe, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>> InitializeAsync(System.Object input, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>> InitializeAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Object input, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static ViciOne.ServiceBus.Initializers.IMessageInitializer<TMessage> GetInitializer(System.Type inputType)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ArrayPropertyConverter<TElement,TInputElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TElement[],System.Collections.Generic.IEnumerable<TInputElement>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ArrayPropertyConverter<TElement,TInputElement>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TElement,TInputElement> converter)
-  METHOD public virtual System.Threading.Tasks.Task<TElement[]> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<TInputElement> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ArrayPropertyConverter<TElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TElement[],System.Collections.Generic.IEnumerable<TElement>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ArrayPropertyConverter<TElement>()
-  METHOD public virtual System.Threading.Tasks.Task<TElement[]> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<TElement> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryKeyPropertyConverter<TKey,TInputKey,TElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.Dictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TElement>>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryKeyPropertyConverter<TKey,TInputKey,TElement>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TKey,TInputKey> converter)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<TKey,TElement>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TElement>> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryPropertyConverter<TKey,TElement,TInputElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.Dictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TInputElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TInputElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TInputElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TInputElement>>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryPropertyConverter<TKey,TElement,TInputElement>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TElement,TInputElement> converter)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<TKey,TElement>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TInputElement>> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryPropertyConverter<TKey,TElement,TInputKey,TInputElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.Dictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TInputElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TInputElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TInputElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TInputElement>>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryPropertyConverter<TKey,TElement,TInputKey,TInputElement>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TKey,TInputKey> keyConverter, ViciOne.ServiceBus.Initializers.IPropertyConverter<TElement,TInputElement> elementConverter)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<TKey,TElement>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TInputKey,TInputElement>> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryPropertyConverter<TKey,TElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.Dictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyDictionary<TKey,TElement>,System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.DictionaryPropertyConverter<TKey,TElement>()
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<TKey,TElement>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey,TElement>> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.FromNullablePropertyConverter<TResult,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,System.Nullable<TInput>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.FromNullablePropertyConverter<TResult,TInput>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TInput> converter)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.FromNullablePropertyConverter<TResult> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,System.Nullable<TResult>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.FromNullablePropertyConverter<TResult>()
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.InitializePropertyConverter<TProperty,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TProperty,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.InitializePropertyConverter<TProperty,TInput>()
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.InitializePropertyConverter<TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TProperty,System.Object>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.InitializePropertyConverter<TProperty>()
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropertyConverter<TElement,TInputElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.ICollection<TElement>,System.Collections.Generic.IEnumerable<TInputElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<TElement>,System.Collections.Generic.IEnumerable<TInputElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IList<TElement>,System.Collections.Generic.IEnumerable<TInputElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyList<TElement>,System.Collections.Generic.IEnumerable<TInputElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.List<TElement>,System.Collections.Generic.IEnumerable<TInputElement>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropertyConverter<TElement,TInputElement>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TElement,TInputElement> converter)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TElement>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, System.Collections.Generic.IEnumerable<TInputElement> elements, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropertyConverter<TElement> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.ICollection<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IEnumerable<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IList<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.IReadOnlyList<TElement>,System.Collections.Generic.IEnumerable<TElement>>&ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Collections.Generic.List<TElement>,System.Collections.Generic.IEnumerable<TElement>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ListPropertyConverter<TElement>()
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<TElement>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Collections.Generic.IEnumerable<TElement> input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.TaskPropertyConverter<TResult,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Threading.Tasks.Task<TResult>,TInput>&ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,System.Threading.Tasks.Task<TInput>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.TaskPropertyConverter<TResult,TInput>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TInput> converter)
-  METHOD public virtual System.Threading.Tasks.Task<System.Threading.Tasks.Task<TResult>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TInput input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.TaskPropertyConverter<TResult> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Threading.Tasks.Task<TResult>,TResult>&ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,System.Threading.Tasks.Task<TResult>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.TaskPropertyConverter<TResult>()
-  METHOD public virtual System.Threading.Tasks.Task<System.Threading.Tasks.Task<TResult>> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, TResult input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ToNullablePropertyConverter<TResult,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Nullable<TResult>,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ToNullablePropertyConverter<TResult,TInput>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TInput> converter)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<TResult>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TInput input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ToNullablePropertyConverter<TResult> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Nullable<TResult>,TResult>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ToNullablePropertyConverter<TResult>()
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<TResult>> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TResult input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.ToObjectPropertyConverter<TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<System.Object,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.ToObjectPropertyConverter<TInput>()
-  METHOD public virtual System.Threading.Tasks.Task<System.Object> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TInput input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.TypePropertyConverter<TResult,TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.TypePropertyConverter<TResult,TInput>(ViciOne.ServiceBus.Initializers.ITypeConverter<TResult,TInput> converter)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.VariablePropertyConverter<TResult,TVariable,TValue> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TVariable>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.VariablePropertyConverter<TResult,TVariable,TValue>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TValue> propertyConverter)
-  METHOD public virtual System.Threading.Tasks.Task<TResult> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TVariable input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyConverters.VariablePropertyConverter<TResult,TVariable> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyConverter<TResult,TVariable>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyConverters.VariablePropertyConverter<TResult,TVariable>()
-  METHOD public virtual System.Threading.Tasks.Task<TResult> ConvertAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T> context, TVariable input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyInitializers.CopyAsyncObjectPropertyInitializer<TMessage,TInput,TInputProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyInitializers.CopyAsyncObjectPropertyInitializer<TMessage,TInput,TInputProperty>(System.Reflection.PropertyInfo messagePropertyInfo, System.Reflection.PropertyInfo inputPropertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyInitializers.CopyObjectPropertyInitializer<TMessage,TInput,TInputProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyInitializers.CopyObjectPropertyInitializer<TMessage,TInput,TInputProperty>(System.Reflection.PropertyInfo messagePropertyInfo, System.Reflection.PropertyInfo inputPropertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyInitializers.CopyPropertyInitializer<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyInitializers.CopyPropertyInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo messagePropertyInfo, System.Reflection.PropertyInfo inputPropertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyInitializers.DictionaryCopyPropertyInitializer<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyInitializers.DictionaryCopyPropertyInitializer<TMessage,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, System.String key)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyInitializers.ProviderPropertyInitializer<TMessage,TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyInitializers.ProviderPropertyInitializer<TMessage,TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> propertyProvider, System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.AsyncPropertyProvider<TInput,TProperty,TTask> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.AsyncPropertyProvider<TInput,TProperty,TTask>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,System.Threading.Tasks.Task<TTask>> provider, ViciOne.ServiceBus.Initializers.IPropertyConverter<TProperty,TTask> converter)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.AsyncPropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.AsyncPropertyProvider<TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,System.Threading.Tasks.Task<TProperty>> provider)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.ConstantPropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.ConstantPropertyProvider<TInput,TProperty>(TProperty propertyValue)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.FromNullablePropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.FromNullablePropertyProvider<TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,System.Nullable<TProperty>> provider)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.InputDictionaryPropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.InputDictionaryPropertyProvider<TInput,TProperty>(System.String key)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.InputPropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.InputPropertyProvider<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.ObjectPropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.ObjectPropertyProvider<TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProviderFactory<TInput> factory, ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,System.Object> provider)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.PropertyConverterPropertyProvider<TInput,TProperty,TInputProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.PropertyConverterPropertyProvider<TInput,TProperty,TInputProperty>(ViciOne.ServiceBus.Initializers.IPropertyConverter<TProperty,TInputProperty> converter, ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TInputProperty> inputProvider)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.PropertyProviderFactory<TInput> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProviderFactory<TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.PropertyProviderFactory<TInput>()
-  METHOD public virtual System.Boolean TryGetPropertyConverter<T,TProperty>(out ViciOne.ServiceBus.Initializers.IPropertyConverter<T,TProperty> converter)
-  METHOD public virtual System.Boolean TryGetPropertyProvider<TResult>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TResult> provider)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.TaskPropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,System.Threading.Tasks.Task<TProperty>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.TaskPropertyProvider<TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> provider)
-  METHOD public virtual System.Threading.Tasks.Task<System.Threading.Tasks.Task<TProperty>> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.ToNullablePropertyProvider<TInput,TProperty> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,System.Nullable<TProperty>>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.ToNullablePropertyProvider<TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> provider)
-  METHOD public virtual System.Threading.Tasks.Task<System.Nullable<TProperty>> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.PropertyProviders.VariablePropertyProvider<TInput,TProperty,TValue> [interfaces=ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TValue>]
-  CTOR public ViciOne.ServiceBus.Initializers.PropertyProviders.VariablePropertyProvider<TInput,TProperty,TValue>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> provider)
-  METHOD public virtual System.Threading.Tasks.Task<TValue> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Initializers.TaskInitializerExtensions [static]
   METHOD public static System.Threading.Tasks.Task<TResult> SelectAsync<TSource,TResult>(System.Threading.Tasks.Task<TSource> source, System.Func<TSource,TResult> selector, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<TResult> SelectOrFallbackAsync<TSource,TResult>(System.Threading.Tasks.Task<TSource> source, System.Func<TSource,System.Nullable<TResult>> selector, System.Func<System.Threading.Tasks.Task<TResult>> fallbackFactory, System.Threading.CancellationToken cancellationToken = null)
@@ -17513,169 +17265,8 @@ TYPE class public ViciOne.ServiceBus.Initializers.TaskInitializerExtensions [sta
   METHOD public static System.Threading.Tasks.Task<TResult> SelectOrFallbackAsync<TSource,TResult>(System.Threading.Tasks.Task<TSource> source, System.Func<TSource,TResult> selector, System.Func<System.Threading.Tasks.Task<TResult>> fallbackFactory, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<TResult> SelectOrFallbackAsync<TSource,TResult>(System.Threading.Tasks.Task<TSource> source, System.Func<TSource,TResult> selector, System.Func<TResult> fallbackFactory, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<TResult> SelectOrFallbackAsync<TSource,TResult>(System.Threading.Tasks.Task<TSource> source, System.Func<TSource,TResult> selector, TResult fallback, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.BooleanTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Boolean,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Boolean>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.BooleanTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Boolean input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Boolean result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Boolean result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.ByteTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Byte,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Byte>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.ByteTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Byte result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Byte result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.DateTimeOffsetTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.DateTimeOffset,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.DateTimeOffset,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.DateTimeOffset>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.DateTimeOffset>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.DateTimeOffset>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.DateTimeOffsetTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.DateTimeOffset input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.DateTimeOffset input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.DateTimeOffset input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.DateTimeOffset result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.DateTimeOffset result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.DecimalTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Decimal,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Decimal>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.DecimalTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.Decimal input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Decimal result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Decimal result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.DoubleTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Double,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Double>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.DoubleTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.Double input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Double result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Double result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.EnumTypeConverter<T> [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.UInt64>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.EnumTypeConverter<T>()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out T result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out T result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.ExceptionTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Exception>&ViciOne.ServiceBus.Initializers.ITypeConverter<ViciOne.ServiceBus.ExceptionInfo,System.Exception>&ViciOne.ServiceBus.Initializers.ITypeConverter<ViciOne.ServiceBus.ExceptionInfo,System.Object>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.ExceptionTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Exception input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Exception input, out ViciOne.ServiceBus.ExceptionInfo result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out ViciOne.ServiceBus.ExceptionInfo result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.FromNullableTypeConverter<T,TInput> [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Nullable<TInput>>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.FromNullableTypeConverter<T,TInput>(ViciOne.ServiceBus.Initializers.ITypeConverter<T,TInput> typeConverter)
-  METHOD public virtual System.Boolean TryConvert(System.Nullable<TInput> input, out T result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.FromNullableTypeConverter<T> [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<T,System.Nullable<T>>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.FromNullableTypeConverter<T>()
-  METHOD public virtual System.Boolean TryConvert(System.Nullable<T> input, out T result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.GuidTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Guid,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Guid,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Guid,ViciOne.ServiceBus.Advanced.NewId>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Guid>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.GuidTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Guid input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Guid result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Guid result)
-  METHOD public virtual System.Boolean TryConvert(ViciOne.ServiceBus.Advanced.NewId input, out System.Guid result)
-TYPE interface public ViciOne.ServiceBus.Initializers.TypeConverters.ITypeConverterCache
-  METHOD public abstract System.Boolean TryGetTypeConverter<TProperty,TInput>(out ViciOne.ServiceBus.Initializers.ITypeConverter<TProperty,TInput> typeConverter)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.IntTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int32,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Int32>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.IntTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Int32 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Int32 result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.LongTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int64,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Int64>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.LongTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Int64 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Int64 result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.ShortTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Int16,System.UInt64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Int16>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.ShortTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.Int16 result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.Int16 result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.StringTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Object>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.StringTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.String result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.TimeSpanTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.TimeSpan>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.Byte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.Double>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.Int16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.Int32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.Int64>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.SByte>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.String>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.UInt16>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.UInt32>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.TimeSpan,System.UInt64>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.TimeSpanTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Byte input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.Double input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.Int16 input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.Int32 input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.Int64 input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.SByte input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.TimeSpan input, out System.String result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt16 input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt32 input, out System.TimeSpan result)
-  METHOD public virtual System.Boolean TryConvert(System.UInt64 input, out System.TimeSpan result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.ToNullableTypeConverter<T,TInput> [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Nullable<T>,TInput>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.ToNullableTypeConverter<T,TInput>(ViciOne.ServiceBus.Initializers.ITypeConverter<T,TInput> typeConverter)
-  METHOD public virtual System.Boolean TryConvert(TInput input, out System.Nullable<T> result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.ToNullableTypeConverter<T> [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Nullable<T>,T>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.ToNullableTypeConverter<T>()
-  METHOD public virtual System.Boolean TryConvert(T input, out System.Nullable<T> result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.ToObjectTypeConverter<T> [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.Object,T>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.ToObjectTypeConverter<T>()
-  METHOD public virtual System.Boolean TryConvert(T input, out System.Object result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.TypeConverterCache [interfaces=ViciOne.ServiceBus.Initializers.TypeConverters.ITypeConverterCache]
+TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.TypeConverterCache [static]
   METHOD public static System.Boolean TryGetTypeConverter<TProperty,TInputProperty>(out ViciOne.ServiceBus.Initializers.ITypeConverter<TProperty,TInputProperty> typeConverter)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.UriTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Uri>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Uri,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Uri,System.String>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.UriTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Uri result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Uri result)
-  METHOD public virtual System.Boolean TryConvert(System.Uri input, out System.String result)
-TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.VersionTypeConverter [interfaces=ViciOne.ServiceBus.Initializers.ITypeConverter<System.String,System.Version>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Version,System.Object>&ViciOne.ServiceBus.Initializers.ITypeConverter<System.Version,System.String>]
-  CTOR public ViciOne.ServiceBus.Initializers.TypeConverters.VersionTypeConverter()
-  METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Version result)
-  METHOD public virtual System.Boolean TryConvert(System.String input, out System.Version result)
-  METHOD public virtual System.Boolean TryConvert(System.Version input, out System.String result)
 TYPE class public ViciOne.ServiceBus.Logging.EnabledLogger [sealed]
   METHOD public System.Void Log(System.Exception exception, System.String message, System.Object[] args)
   METHOD public System.Void Log(System.String message, System.Object[] args)

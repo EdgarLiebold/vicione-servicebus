@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.Factories;
 
-/// <summary>Builds message initializer components.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class MessageInitializerBuilder<TMessage, TInput> :
+/// <summary>Collects resolved mappings and creates an immutable message initializer.</summary>
+internal sealed class MessageInitializerBuilder<TMessage, TInput> :
     IMessageInitializerBuilder<TMessage, TInput>
     where TMessage : class
     where TInput : class
@@ -17,8 +15,8 @@ public class MessageInitializerBuilder<TMessage, TInput> :
     readonly HashSet<string> _inputPropertyUsed;
     readonly IMessageFactory<TMessage>? _messageFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="messageFactory">The message factory.</param>
+    /// <summary>Creates an empty mapping plan with an optional explicit message factory.</summary>
+    /// <param name="messageFactory">The factory used to create messages, or <see langword="null" /> to use the cached default.</param>
     public MessageInitializerBuilder(IMessageFactory<TMessage>? messageFactory)
     {
         if (!MessageTypeCache<TMessage>.IsValidMessageType)
@@ -31,53 +29,61 @@ public class MessageInitializerBuilder<TMessage, TInput> :
         _inputPropertyUsed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="propertyName">The property name.</param>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Adds or replaces an input-independent property mapping by name.</summary>
+    /// <param name="propertyName">The case-insensitive message-property name.</param>
+    /// <param name="initializer">The mapping to adapt to input-bearing initialization.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage> initializer)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+        ArgumentNullException.ThrowIfNull(initializer);
         _initializers[propertyName] = new PropertyAdapter(initializer);
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="propertyName">The property name.</param>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Adds or replaces an input-dependent property mapping by name.</summary>
+    /// <param name="propertyName">The case-insensitive message-property name.</param>
+    /// <param name="initializer">The mapping applied during initialization.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage, TInput> initializer)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+        ArgumentNullException.ThrowIfNull(initializer);
         _initializers[propertyName] = initializer;
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Adds an input-independent outgoing-header mapping.</summary>
+    /// <param name="initializer">The mapping to adapt to input-bearing initialization.</param>
     public void Add(IHeaderInitializer<TMessage> initializer)
     {
+        ArgumentNullException.ThrowIfNull(initializer);
         _headerInitializers.Add(new HeaderAdapter(initializer));
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="initializer">The initializer.</param>
+    /// <summary>Adds an input-dependent outgoing-header mapping.</summary>
+    /// <param name="initializer">The mapping applied by the initialized send pipe.</param>
     public void Add(IHeaderInitializer<TMessage, TInput> initializer)
     {
+        ArgumentNullException.ThrowIfNull(initializer);
         _headerInitializers.Add(initializer);
     }
 
-    /// <summary>Determines whether input property used.</summary>
-    /// <param name="propertyName">The property name.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a convention has claimed an input property.</summary>
+    /// <param name="propertyName">The case-insensitive input-property name.</param>
+    /// <returns><see langword="true" /> when the property is already claimed; otherwise, <see langword="false" />.</returns>
     public bool IsInputPropertyUsed(string propertyName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
         return _inputPropertyUsed.Contains(propertyName);
     }
 
-    /// <summary>Sets input property used.</summary>
-    /// <param name="propertyName">The property name.</param>
+    /// <summary>Marks an input property as claimed by a convention.</summary>
+    /// <param name="propertyName">The case-insensitive input-property name.</param>
     public void SetInputPropertyUsed(string propertyName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
         _inputPropertyUsed.Add(propertyName);
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
+    /// <summary>Creates an immutable initializer from the current property and header mappings.</summary>
+    /// <returns>The completed initializer plan.</returns>
     public IMessageInitializer<TMessage> Build()
     {
         IMessageFactory<TMessage> messageFactory = _messageFactory ?? MessageFactoryCache<TMessage>.Factory;
@@ -86,14 +92,14 @@ public class MessageInitializerBuilder<TMessage, TInput> :
     }
 
 
-    class PropertyAdapter :
+    sealed class PropertyAdapter :
         IPropertyInitializer<TMessage, TInput>
     {
         readonly IPropertyInitializer<TMessage> _initializer;
 
         public PropertyAdapter(IPropertyInitializer<TMessage> initializer)
         {
-            _initializer = initializer;
+            _initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
         }
 
         public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
@@ -103,14 +109,14 @@ public class MessageInitializerBuilder<TMessage, TInput> :
     }
 
 
-    class HeaderAdapter :
+    sealed class HeaderAdapter :
         IHeaderInitializer<TMessage, TInput>
     {
         readonly IHeaderInitializer<TMessage> _initializer;
 
         public HeaderAdapter(IHeaderInitializer<TMessage> initializer)
         {
-            _initializer = initializer;
+            _initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
         }
 
         public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)

@@ -2,9 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts enum type values.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class EnumTypeConverter<T> :
+/// <summary>Converts defined enum values from their names and supported integral representations.</summary>
+/// <typeparam name="T">The enum type.</typeparam>
+internal sealed class EnumTypeConverter<T> :
     ITypeConverter<T, string>,
     ITypeConverter<T, object>,
     ITypeConverter<T, sbyte>,
@@ -15,173 +15,96 @@ public class EnumTypeConverter<T> :
     ITypeConverter<T, uint>,
     ITypeConverter<T, long>,
     ITypeConverter<T, ulong>
-    where T : struct
+    where T : struct, Enum
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(byte input, out T result)
     {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
-        result = default;
-        return false;
+        return TryConvertNumeric(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(int input, out T result)
     {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
-        result = default;
-        return false;
+        return TryConvertNumeric(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(long input, out T result)
     {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
-        result = default;
-        return false;
+        return TryConvertNumeric(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(object? input, out T result)
     {
         if (input is string text)
             return TryConvert(text, out result);
 
-        if (input != null)
-        {
-            var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
+        return input == null ? ReturnFalse(out result) : TryConvertNumeric(input, out result);
+    }
 
+    /// <inheritdoc />
+    public bool TryConvert(sbyte input, out T result)
+    {
+        return TryConvertNumeric(input, out result);
+    }
+
+    /// <inheritdoc />
+    public bool TryConvert(short input, out T result)
+    {
+        return TryConvertNumeric(input, out result);
+    }
+
+    /// <inheritdoc />
+    public bool TryConvert(string? input, out T result)
+    {
+        if (Enum.TryParse(input, true, out result) && Enum.IsDefined(result))
+            return true;
+
+        result = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public bool TryConvert(uint input, out T result)
+    {
+        return TryConvertNumeric(input, out result);
+    }
+
+    /// <inheritdoc />
+    public bool TryConvert(ulong input, out T result)
+    {
+        return TryConvertNumeric(input, out result);
+    }
+
+    /// <inheritdoc />
+    public bool TryConvert(ushort input, out T result)
+    {
+        return TryConvertNumeric(input, out result);
+    }
+
+    static bool TryConvertNumeric(object input, out T result)
+    {
+        try
+        {
+            object value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)), System.Globalization.CultureInfo.InvariantCulture);
             if (Enum.IsDefined(typeof(T), value))
             {
                 result = (T)Enum.ToObject(typeof(T), value);
                 return true;
             }
         }
-
-        result = default;
-        return false;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(sbyte input, out T result)
-    {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
+        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException)
         {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
         }
 
         result = default;
         return false;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(short input, out T result)
+    static bool ReturnFalse(out T result)
     {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
-        result = default;
-        return false;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(string? input, out T result)
-    {
-        return Enum.TryParse(input, true, out result);
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(uint input, out T result)
-    {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
-        result = default;
-        return false;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(ulong input, out T result)
-    {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
-        result = default;
-        return false;
-    }
-
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryConvert(ushort input, out T result)
-    {
-        var value = Convert.ChangeType(input, Enum.GetUnderlyingType(typeof(T)));
-        if (Enum.IsDefined(typeof(T), value))
-        {
-            result = (T)Enum.ToObject(typeof(T), value);
-            return true;
-        }
-
         result = default;
         return false;
     }

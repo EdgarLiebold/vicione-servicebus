@@ -17,6 +17,8 @@ internal sealed class InitializerConventionRegistry
     {
         ArgumentNullException.ThrowIfNull(conventions);
         _conventions = conventions.ToList();
+        if (_conventions.Exists(static convention => convention is null))
+            throw new ArgumentException("The convention collection cannot contain null elements.", nameof(conventions));
     }
 
     internal IReadOnlyList<IInitializerConvention> Conventions
@@ -37,7 +39,7 @@ internal sealed class InitializerConventionRegistry
         lock (_lock)
         {
             if (_frozen)
-                throw new InvalidOperationException("Message initializer conventions are immutable after the first initializer is created.");
+                throw new InvalidOperationException("Message initializer conventions are immutable after the convention snapshot is first read.");
 
             if (_conventions.Any(static convention => convention.GetType() == typeof(T)))
                 return;

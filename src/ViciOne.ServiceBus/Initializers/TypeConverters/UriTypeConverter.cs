@@ -2,16 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts uri type values.</summary>
-public class UriTypeConverter :
+/// <summary>Converts between relative-or-absolute <see cref="Uri"/> values and text.</summary>
+internal sealed class UriTypeConverter :
     ITypeConverter<string, Uri>,
     ITypeConverter<Uri, string>,
     ITypeConverter<Uri, object>
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(Uri? input, out string? result)
     {
         result = input?.ToString();
@@ -19,10 +16,7 @@ public class UriTypeConverter :
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(object? input, out Uri? result)
     {
         switch (input)
@@ -32,16 +26,7 @@ public class UriTypeConverter :
                 return true;
 
             case string text when !string.IsNullOrWhiteSpace(text):
-                try
-                {
-                    result = new Uri(text);
-                    return true;
-                }
-                catch (FormatException)
-                {
-                    result = default;
-                    return false;
-                }
+                return Uri.TryCreate(text, UriKind.RelativeOrAbsolute, out result);
 
             default:
                 result = default;
@@ -49,10 +34,7 @@ public class UriTypeConverter :
         }
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(string? input, out Uri? result)
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -61,16 +43,6 @@ public class UriTypeConverter :
             return true;
         }
 
-        try
-        {
-            result = new Uri(input);
-
-            return true;
-        }
-        catch (FormatException)
-        {
-            result = default;
-            return false;
-        }
+        return Uri.TryCreate(input, UriKind.RelativeOrAbsolute, out result);
     }
 }

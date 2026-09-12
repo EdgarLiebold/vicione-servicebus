@@ -13,29 +13,27 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
 /// <summary>For an input type, builds the property providers for the requested result types.</summary>
 /// <typeparam name="TInput">The input type.</typeparam>
-public class PropertyProviderFactory<TInput> :
+internal sealed class PropertyProviderFactory<TInput> :
     IPropertyProviderFactory<TInput>
     where TInput : class
 {
-    /// <summary>
-    /// Return the factory to create a property provider for the specified type <typeparamref name="TResult" /> using the
-    /// <paramref name="propertyInfo" /> as the source.
-    /// </summary>
-    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
-    /// <param name="propertyInfo">The input property.</param>
-    /// <param name="provider">Receives the provider produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates a provider that reads one input property and exposes it as the requested result type.</summary>
+    /// <typeparam name="TResult">The property value type required by the message initializer.</typeparam>
+    /// <param name="propertyInfo">The readable property owned by <typeparamref name="TInput" />.</param>
+    /// <param name="provider">Receives the provider when the source and result types have a supported conversion path.</param>
+    /// <returns><see langword="true" /> when a provider can represent the requested conversion; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyProvider<TInput, TResult>? provider)
     {
+        ArgumentNullException.ThrowIfNull(propertyInfo);
         return CreateProviderFactory<TResult>(propertyInfo.PropertyType).TryGetProvider(propertyInfo, out provider);
     }
 
-    /// <summary>Attempts to get property converter.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <typeparam name="TProperty">The property type.</typeparam>
-    /// <param name="converter">Receives the converter produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates a converter between an input-property type and a requested result type.</summary>
+    /// <typeparam name="T">The requested result type.</typeparam>
+    /// <typeparam name="TProperty">The input-property type.</typeparam>
+    /// <param name="converter">Receives the converter when the type pair is supported.</param>
+    /// <returns><see langword="true" /> when the type pair has a supported conversion path; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
     {
         return CreateProviderFactory<T>(typeof(TProperty)).TryGetConverter(out converter);
@@ -58,7 +56,7 @@ public class PropertyProviderFactory<TInput> :
             return Activate(typeof(NullableResult<>).MakeGenericType(typeof(TInput), underlyingType!), this);
 
         if (type.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
-            return Activate(typeof(MessageDataResult<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
+            return Activate(typeof(MessageDataResult<,>).MakeGenericType(typeof(TInput), propertyType, types[0]));
 
         if (propertyType.IsNullable(out underlyingType))
             return Activate(typeof(NullableProperty<>).MakeGenericType(typeof(TInput), underlyingType!), this);
@@ -190,8 +188,8 @@ public class PropertyProviderFactory<TInput> :
     }
 
 
-    /// <summary>The property on the input is a Task.</summary>
-    /// <typeparam name="TTask">The ask type.</typeparam>
+    /// <summary>Adapts a task-valued input property to its result value.</summary>
+    /// <typeparam name="TTask">The task result type.</typeparam>
     class TaskProperty<TTask> :
         IProviderFactory
     {
@@ -269,16 +267,19 @@ public class PropertyProviderFactory<TInput> :
 
         public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
-            if (typeof(T) == typeof(TTask))
+            if (typeof(T).TryGetTaskResultType(out var taskType) && taskType == typeof(TTask))
             {
-                converter = new TaskPropertyConverter<T>() as IPropertyConverter<T, TProperty>;
-                return converter != default;
-            }
+                if (typeof(TProperty) == typeof(TTask))
+                {
+                    converter = new TaskPropertyConverter<TTask>() as IPropertyConverter<T, TProperty>;
+                    return converter != null;
+                }
 
-            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask>? taskConverter))
-            {
-                converter = new TaskPropertyConverter<T, TTask>(taskConverter) as IPropertyConverter<T, TProperty>;
-                return converter != default;
+                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TTask, TProperty>? taskConverter))
+                {
+                    converter = new TaskPropertyConverter<TTask, TProperty>(taskConverter) as IPropertyConverter<T, TProperty>;
+                    return converter != null;
+                }
             }
 
             converter = default;
@@ -345,13 +346,6 @@ public class PropertyProviderFactory<TInput> :
     class MessageDataResult<TSource, TValue> :
         IProviderFactory
     {
-        readonly IPropertyProviderFactory<TInput> _factory;
-
-        public MessageDataResult(IPropertyProviderFactory<TInput> factory)
-        {
-            _factory = factory;
-        }
-
         bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (TryGetConverter(out IPropertyConverter<T, TSource>? propertyConverter))
@@ -442,10 +436,10 @@ public class PropertyProviderFactory<TInput> :
                     return converter != null;
                 }
 
-                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TProperty>? propertyConverter))
+                if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TValue>? propertyConverter))
                 {
-                    converter = new ToNullablePropertyConverter<TValue, TProperty>(propertyConverter) as IPropertyConverter<T, TProperty>;
-                    return converter != default;
+                    converter = new FromNullablePropertyConverter<T, TValue>(propertyConverter) as IPropertyConverter<T, TProperty>;
+                    return converter != null;
                 }
             }
 
@@ -826,7 +820,7 @@ public class PropertyProviderFactory<TInput> :
 
             public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
             {
-                if (typeof(T) == typeof(TObject) && typeof(T).IsInterface && MessageTypeCache<T>.IsValidMessageType)
+                if (typeof(T) == typeof(TObject) && MessageTypeCache<T>.IsValidMessageType)
                 {
                     var converterType = typeof(InitializePropertyConverter<,>).MakeGenericType(typeof(T), typeof(TProperty));
 

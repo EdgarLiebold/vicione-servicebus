@@ -1,3 +1,5 @@
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.Contexts;
 using ViciOne.ServiceBus.Initializers.Conventions;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -8,6 +10,31 @@ namespace ViciOne.ServiceBus.Tests.Initializers.Conventions;
 
 public sealed class DefaultInitializerConventionTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-CONVENTIONS", "object-destination-sync-and-task-sources")]
+    public async Task ObjectDestinations_PreserveBothDirectAndAwaitedRuntimeValuesAsync()
+    {
+        var convention = new DefaultInitializerConvention<ObjectDestinationMessage, ObjectDestinationInput>();
+        var directProperty = typeof(ObjectDestinationMessage).GetProperty(nameof(ObjectDestinationMessage.Direct))!;
+        var awaitedProperty = typeof(ObjectDestinationMessage).GetProperty(nameof(ObjectDestinationMessage.Awaited))!;
+        Assert.True(convention.TryGetPropertyInitializer<object>(directProperty, out var directInitializer));
+        Assert.True(convention.TryGetPropertyInitializer<object>(awaitedProperty, out var awaitedInitializer));
+
+        var message = new ObjectDestinationMessage();
+        var directValue = new Uri("urn:vicione:initializer-value");
+        var input = new ObjectDestinationInput(directValue, Task.FromResult(73));
+        InitializeContext<ObjectDestinationMessage, ObjectDestinationInput> context =
+            new BaseInitializeContext(TestContext.Current.CancellationToken)
+                .CreateMessageContext(message)
+                .CreateInputContext(input);
+
+        await directInitializer.ApplyAsync(context, TestContext.Current.CancellationToken);
+        await awaitedInitializer.ApplyAsync(context, TestContext.Current.CancellationToken);
+
+        Assert.Same(directValue, message.Direct);
+        Assert.Equal(73, message.Awaited);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-HEADERS", "publish-context")]
     public async Task PublishInitializer_MapsStandardAndCustomHeaderPropertiesAsync()
@@ -154,6 +181,15 @@ public sealed class DefaultInitializerConventionTests
     {
         public string? __Header_ { get; init; }
     }
+
+    private sealed class ObjectDestinationMessage
+    {
+        public object? Awaited { get; set; }
+
+        public object? Direct { get; set; }
+    }
+
+    private sealed record ObjectDestinationInput(Uri Direct, Task<int> Awaited);
 }
 
 public interface HeaderInitializedMessage

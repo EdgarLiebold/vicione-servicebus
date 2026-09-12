@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyInitializers;
 /// <typeparam name="TMessage">The message contract being initialized.</typeparam>
 /// <typeparam name="TInput">The input-object type.</typeparam>
 /// <typeparam name="TProperty">The populated property type.</typeparam>
-public class ProviderPropertyInitializer<TMessage, TInput, TProperty> :
+internal sealed class ProviderPropertyInitializer<TMessage, TInput, TProperty> :
     IPropertyInitializer<TMessage, TInput>
     where TMessage : class
     where TInput : class
@@ -40,17 +40,21 @@ public class ProviderPropertyInitializer<TMessage, TInput, TProperty> :
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The property provider returned a null task.");
         if (propertyTask.IsCompletedSuccessfully)
         {
             if (_messageProperty.TargetType == context.MessageType)
-                _messageProperty.Set(context.Message, propertyTask.Result!);
+                _messageProperty.Set(context.Message, propertyTask.GetAwaiter().GetResult()!);
             return Task.CompletedTask;
         }
 
         async Task ApplyAsync()
         {
-            var propertyValue = await propertyTask.ConfigureAwait(false);
+            var propertyValue = await propertyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             if (_messageProperty.TargetType == context.MessageType)
                 _messageProperty.Set(context.Message, propertyValue!);

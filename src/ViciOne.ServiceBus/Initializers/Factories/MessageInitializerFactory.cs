@@ -7,35 +7,26 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.Factories;
 
-/// <summary>Creates message initializer instances.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class MessageInitializerFactory<TMessage, TInput> :
+/// <summary>Builds the initializer pipeline for one message and input contract pair.</summary>
+internal sealed class MessageInitializerFactory<TMessage, TInput> :
     IMessageInitializerFactory<TMessage>
     where TMessage : class
     where TInput : class
 {
     readonly IInitializerConvention[] _conventions;
-    readonly IMessageFactory<TMessage>? _messageFactory = null!;
+    readonly IMessageFactory<TMessage>? _messageFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="conventions">The conventions.</param>
     public MessageInitializerFactory(IInitializerConvention[] conventions)
     {
-        _conventions = conventions;
+        _conventions = SnapshotConventions(conventions);
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="messageFactory">The message factory.</param>
-    /// <param name="conventions">The conventions.</param>
     public MessageInitializerFactory(IMessageFactory<TMessage>? messageFactory, IInitializerConvention[] conventions)
     {
         _messageFactory = messageFactory;
-        _conventions = conventions;
+        _conventions = SnapshotConventions(conventions);
     }
 
-    /// <summary>Creates message initializer.</summary>
-    /// <returns>The created message initializer.</returns>
     public IMessageInitializer<TMessage> CreateMessageInitializer()
     {
         var builder = new MessageInitializerBuilder<TMessage, TInput>(_messageFactory);
@@ -125,5 +116,15 @@ public class MessageInitializerFactory<TMessage, TInput> :
     static IHeaderInitializerInspector<TMessage, TInput> CreateHeaderInspector(Expression<Func<SendContext, bool>> expression)
     {
         return new HeaderInitializerInspector<TMessage, TInput, bool>(expression.GetPropertyInfo());
+    }
+
+    static IInitializerConvention[] SnapshotConventions(IInitializerConvention[] conventions)
+    {
+        ArgumentNullException.ThrowIfNull(conventions);
+        IInitializerConvention[] snapshot = [.. conventions];
+        if (Array.Exists(snapshot, static convention => convention is null))
+            throw new ArgumentException("The convention collection cannot contain null elements.", nameof(conventions));
+
+        return snapshot;
     }
 }

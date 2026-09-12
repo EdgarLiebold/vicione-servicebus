@@ -3,28 +3,23 @@ using System.Collections.Concurrent;
 
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
-/// <summary>Caches convention type data.</summary>
-/// <typeparam name="TValue">The value stored by the member.</typeparam>
-public class ConventionTypeCache<TValue> :
-    IConventionTypeCache<TValue>
-    where TValue : class
+/// <summary>Caches one lazily created convention adapter per closed contract type.</summary>
+internal sealed class ConventionTypeCache :
+    IConventionTypeCache
 {
     readonly IInitializerConvention _convention;
     readonly ConcurrentDictionary<Type, Cached> _dictionary;
-    readonly IConventionTypeCacheFactory<TValue> _typeFactory;
+    readonly IConventionTypeCacheFactory _typeFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="typeFactory">The type factory.</param>
-    /// <param name="convention">The convention.</param>
-    public ConventionTypeCache(IConventionTypeCacheFactory<TValue> typeFactory, IInitializerConvention convention)
+    public ConventionTypeCache(IConventionTypeCacheFactory typeFactory, IInitializerConvention convention)
     {
         _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));
-        _convention = convention;
+        _convention = convention ?? throw new ArgumentNullException(nameof(convention));
 
         _dictionary = new ConcurrentDictionary<Type, Cached>();
     }
 
-    TResult IConventionTypeCache<TValue>.GetOrAdd<T, TResult>()
+    TResult IConventionTypeCache.GetOrAdd<T, TResult>()
     {
         var result = _dictionary.GetOrAdd(typeof(T), add => new CachedValue(() => _typeFactory.Create<T>(_convention))).Value as TResult;
         if (result == null)
@@ -36,20 +31,20 @@ public class ConventionTypeCache<TValue> :
 
     interface Cached
     {
-        TValue Value { get; }
+        object Value { get; }
     }
 
 
-    class CachedValue :
+    sealed class CachedValue :
         Cached
     {
-        readonly Lazy<TValue> _value;
+        readonly Lazy<object> _value;
 
-        public CachedValue(Func<TValue> valueFactory)
+        public CachedValue(Func<object> valueFactory)
         {
-            _value = new Lazy<TValue>(valueFactory);
+            _value = new Lazy<object>(valueFactory);
         }
 
-        public TValue Value => _value.Value;
+        public object Value => _value.Value;
     }
 }

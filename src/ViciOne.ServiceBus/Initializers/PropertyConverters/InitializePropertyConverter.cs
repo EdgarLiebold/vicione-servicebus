@@ -3,71 +3,61 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
-/// <summary>Converts initialize property values.</summary>
+/// <summary>Initializes a nested message property from a typed input object.</summary>
 /// <typeparam name="TProperty">The property type.</typeparam>
 /// <typeparam name="TInput">The input type.</typeparam>
-public class InitializePropertyConverter<TProperty, TInput> :
+internal sealed class InitializePropertyConverter<TProperty, TInput> :
     IPropertyConverter<TProperty, TInput>
     where TProperty : class
     where TInput : class
 {
     readonly IMessageInitializer<TProperty> _initializer;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Resolves and caches the nested initializer for the declared input type.</summary>
     public InitializePropertyConverter()
     {
         _initializer = MessageInitializerCache<TProperty>.GetInitializer(typeof(TInput));
     }
 
-    Task<TProperty?> IPropertyConverter<TProperty, TInput>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, TInput? input, CancellationToken cancellationToken)
+    async Task<TProperty?> IPropertyConverter<TProperty, TInput>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, TInput? input,
+        CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
         if (input == null)
-            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
+            return default;
 
         InitializeContext<TProperty> messageContext = MessageFactoryCache<TProperty>.Factory.Create(context);
 
-        Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
-        if (initTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult<TProperty?>(initTask.Result.Message);
-
-        async Task<TProperty?> ConvertAsync()
-        {
-            InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
-
-            return result.Message;
-        }
-
-        return ConvertAsync();
+        Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The nested message initializer returned null.");
+        InitializeContext<TProperty> result = await initTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return result.Message;
     }
 }
 
 
-/// <summary>Converts initialize property values.</summary>
+/// <summary>Initializes a nested message property from a runtime input object.</summary>
 /// <typeparam name="TProperty">The property type.</typeparam>
-public class InitializePropertyConverter<TProperty> :
+internal sealed class InitializePropertyConverter<TProperty> :
     IPropertyConverter<TProperty, object>
     where TProperty : class
 {
-    Task<TProperty?> IPropertyConverter<TProperty, object>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, object? input, CancellationToken cancellationToken)
+    async Task<TProperty?> IPropertyConverter<TProperty, object>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, object? input,
+        CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
         if (input == null)
-            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
+            return default;
 
         InitializeContext<TProperty> messageContext = MessageFactoryCache<TProperty>.Factory.Create(context);
 
         IMessageInitializer<TProperty> initializer = MessageInitializerCache<TProperty>.GetInitializer(input.GetType());
 
-        Task<InitializeContext<TProperty>> initTask = initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
-        if (initTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult<TProperty?>(initTask.Result.Message);
-
-        async Task<TProperty?> ConvertAsync()
-        {
-            InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
-
-            return result.Message;
-        }
-
-        return ConvertAsync();
+        Task<InitializeContext<TProperty>> initTask = initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The nested message initializer returned null.");
+        InitializeContext<TProperty> result = await initTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return result.Message;
     }
 }

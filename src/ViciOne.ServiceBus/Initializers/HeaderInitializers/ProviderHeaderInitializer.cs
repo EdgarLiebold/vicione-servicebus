@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
 /// <typeparam name="TMessage">The message contract being initialized.</typeparam>
 /// <typeparam name="TInput">The input-object type.</typeparam>
 /// <typeparam name="TProperty">The send-context property type.</typeparam>
-public class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
+internal sealed class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
     IHeaderInitializer<TMessage, TInput>
     where TMessage : class
     where TInput : class
@@ -42,19 +42,23 @@ public class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(sendContext);
-        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The property provider returned a null task.");
         if (propertyTask.IsCompletedSuccessfully)
         {
-            _messageProperty.Set(sendContext, propertyTask.Result!);
+            _messageProperty.Set(sendContext, propertyTask.GetAwaiter().GetResult()!);
             return Task.CompletedTask;
         }
 
-        return ApplyAsync(sendContext, propertyTask);
+        return ApplyAsync(sendContext, propertyTask, cancellationToken);
     }
 
-    async Task ApplyAsync(SendContext sendContext, Task<TProperty?> propertyTask)
+    async Task ApplyAsync(SendContext sendContext, Task<TProperty?> propertyTask, CancellationToken cancellationToken)
     {
-        var propertyValue = await propertyTask.ConfigureAwait(false);
+        var propertyValue = await propertyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         _messageProperty.Set(sendContext, propertyValue!);
     }

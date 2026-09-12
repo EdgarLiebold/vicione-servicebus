@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus;
 
 namespace ViciOne.ServiceBus.Initializers.Variables;
 
@@ -29,6 +30,7 @@ public sealed class TimestampVariable :
     Task<DateTimeOffset> IInitializerVariable<DateTimeOffset>.GetValueAsync<TMessage>(InitializeContext<TMessage> context,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
         var timestampContext = context.GetOrAddPayload<TimestampContext>(() => new Context(_timestamp));
 
@@ -40,6 +42,7 @@ public sealed class TimestampVariable :
     /// <returns>The captured timestamp.</returns>
     public static implicit operator DateTimeOffset(TimestampVariable variable)
     {
+        ArgumentNullException.ThrowIfNull(variable);
         return variable._timestamp;
     }
 

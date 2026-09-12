@@ -35,9 +35,12 @@ sealed class NamedInitializerValuePropertyConverter<TResult, TValue> :
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<TResult?>(cancellationToken);
 
         return input == null
             ? Task.FromResult<TResult?>(default)
-            : _nameConverter.ConvertAsync(context, input.Name, cancellationToken);
+            : _nameConverter.ConvertAsync(context, input.Name, cancellationToken)
+                ?? throw new InvalidOperationException("The name converter returned a null task.");
     }
 }

@@ -22,11 +22,12 @@ public static class MessageInitializer
         });
     }
 
-    /// <summary>Gets the registered initializer conventions in evaluation order.</summary>
+    /// <summary>Gets the immutable snapshot of initializer conventions in evaluation order.</summary>
     public static IReadOnlyList<IInitializerConvention> Conventions => _conventions.Conventions;
 
-    /// <summary>Registers an initializer convention.</summary>
+    /// <summary>Registers an initializer convention before the convention snapshot is first read.</summary>
     /// <typeparam name="T">The convention type to create and register.</typeparam>
+    /// <exception cref="InvalidOperationException">The convention snapshot has already been read.</exception>
     public static void AddConvention<T>()
         where T : IInitializerConvention, new()
     {
@@ -38,7 +39,7 @@ public static class MessageInitializer
 /// <summary>Creates a message and populates its properties and outgoing headers from a typed input object.</summary>
 /// <typeparam name="TMessage">The message contract produced by the initializer.</typeparam>
 /// <typeparam name="TInput">The input-object type consumed by the initializer.</typeparam>
-public class MessageInitializer<TMessage, TInput> :
+internal sealed class MessageInitializer<TMessage, TInput> :
     IMessageInitializer<TMessage>
     where TMessage : class
     where TInput : class
@@ -151,11 +152,15 @@ public class MessageInitializer<TMessage, TInput> :
             {
                 IMessageInitializer<TMessage> initializer = MessageInitializerCache<TMessage>.GetInitializer(moreInput.GetType());
 
-                initializeContext = await initializer.InitializeAsync(initializeContext, moreInput, cancellationToken: cancellationToken).ConfigureAwait(false);
+                initializeContext = await initializer.InitializeAsync(initializeContext, moreInput, cancellationToken: cancellationToken)
+                    .WaitAsync(cancellationToken)
+                    .ConfigureAwait(false);
             }
         }
 
-        return await PrepareInitializedMessageAsync(initializeContext, primaryInput, pipe, cancellationToken).ConfigureAwait(false);
+        return await PrepareInitializedMessageAsync(initializeContext, primaryInput, pipe, cancellationToken)
+            .WaitAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     async Task<InitializeContext<TMessage>> InitializeMessageAsync(TInput input, CancellationToken cancellationToken)
@@ -166,7 +171,9 @@ public class MessageInitializer<TMessage, TInput> :
         InitializeContext<TMessage> messageContext = _factory.Create(context)
             ?? throw new InvalidOperationException($"The message factory for '{typeof(TMessage)}' returned null.");
 
-        return await InitializeMessageAsync(messageContext, input, cancellationToken).ConfigureAwait(false);
+        return await InitializeMessageAsync(messageContext, input, cancellationToken)
+            .WaitAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     async Task<InitializeContext<TMessage>> InitializeMessageAsync(
@@ -177,7 +184,9 @@ public class MessageInitializer<TMessage, TInput> :
         cancellationToken.ThrowIfCancellationRequested();
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext, cancellationToken))).ConfigureAwait(false);
+        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext, cancellationToken)))
+            .WaitAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return messageContext;
     }
@@ -191,7 +200,9 @@ public class MessageInitializer<TMessage, TInput> :
         cancellationToken.ThrowIfCancellationRequested();
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext, cancellationToken))).ConfigureAwait(false);
+        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext, cancellationToken)))
+            .WaitAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return _headerInitializers.Length > 0
             ? new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>(inputContext.Message, new InitializerSendContextPipe(_headerInitializers, inputContext, pipe))
@@ -249,10 +260,12 @@ public class MessageInitializer<TMessage, TInput> :
         {
             ArgumentNullException.ThrowIfNull(context);
             context.CancellationToken.ThrowIfCancellationRequested();
-            await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(_context, context, context.CancellationToken))).ConfigureAwait(false);
+            await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(_context, context, context.CancellationToken)))
+                .WaitAsync(context.CancellationToken)
+                .ConfigureAwait(false);
 
             if (_pipe != null && _pipe.IsNotEmpty())
-                await _pipe.SendAsync(context).ConfigureAwait(false);
+                await _pipe.SendAsync(context).WaitAsync(context.CancellationToken).ConfigureAwait(false);
         }
 
         public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)

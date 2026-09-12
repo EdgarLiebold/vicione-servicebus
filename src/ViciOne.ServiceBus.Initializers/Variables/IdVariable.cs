@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
 
 namespace ViciOne.ServiceBus.Initializers.Variables;
 
@@ -28,6 +30,7 @@ public sealed class IdVariable :
 
     Task<Guid> IInitializerVariable<Guid>.GetValueAsync<TMessage>(InitializeContext<TMessage> context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
         var timestampContext = context.GetOrAddPayload<IdContext>(() => new Context(_id));
 
@@ -39,6 +42,7 @@ public sealed class IdVariable :
     /// <returns>The captured identifier.</returns>
     public static implicit operator Guid(IdVariable variable)
     {
+        ArgumentNullException.ThrowIfNull(variable);
         return variable._id;
     }
 

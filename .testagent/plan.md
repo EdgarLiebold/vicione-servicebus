@@ -905,3 +905,97 @@ The reviewed assembly has no preprocessor directives, dummy/placeholder implemen
 Courier/Job Service dependency, file/type/namespace mismatch, or stale construction-history
 comment. Repository-wide source hygiene still reports zero C# preprocessor directives and zero
 empty source directories. The complete A+ source goal remains active for the next unreviewed owner.
+
+## Iteration 85 outcome
+
+Review the complete initializer feature as one coherent owner: the optional
+`ViciOne.ServiceBus.Initializers` API assembly and the Core initializer engine that implements its
+conventions, factories, contexts, header/property initialization, property providers, and type
+conversion. Preserve the separate package boundary unless the fully read dependency graph proves a
+better Greenfield ownership model. Make every public and internal boundary explicit, cancellation-
+correct, deterministic, testable, and discoverable; align type, namespace, filename, folder, and
+comment ownership without compatibility-only API or feature loss.
+
+## Iteration 85 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-INITIALIZER-API` | typed/runtime send, publish, request, and schedule entry points | Core initializer and contract tests | every overload, exact forwarding, null boundaries, cancellation, and unsupported-capability behavior |
+| `REQ-VSB-INITIALIZER-VARIABLES` | identifier and UTC timestamp capture/reuse | variable and integration tests | explicit value, generated value, per-initialization reuse, cross-initialization isolation, and cancellation |
+| `REQ-VSB-INITIALIZER-CONTEXTS` | payload, values, headers, and scoped state | context and initializer tests | exact propagation, isolation, missing value behavior, and deterministic ownership |
+| `REQ-VSB-INITIALIZER-CONVENTIONS` | object, dictionary, dynamic, and registered convention selection | convention and registry tests | precedence, unsupported input, concurrency, cache behavior, and exact selected factory |
+| `REQ-VSB-INITIALIZER-FACTORIES` | message/header/property factory construction | factory and contract tests | complete parameter validation, stable inspection, immutable plans, and failure boundaries |
+| `REQ-VSB-INITIALIZER-CONVERTERS` | scalar, nullable, collection, dictionary, object graph, task, variable, and message-data conversion | converter tests | positive, negative, null, boundary, cancellation, and exact-type behavior |
+| `REQ-VSB-INITIALIZER-PROVIDERS` | synchronous/asynchronous input and converted property values | provider tests | exact value, task completion/failure/cancellation, invocation count, and context propagation |
+| `REQ-VSB-INITIALIZER-HEADERS` | copied, dictionary, provided, string, and fixed headers | header tests | normalization, overwrite semantics, invalid keys/values, exact output, and cancellation |
+| `REQ-VSB-INITIALIZER-OWNERSHIP` | optional API package versus Core implementation dependency | architecture tests and manual ledger | no cycle, no hidden facade, no accidental default-glob ownership, and minimal explicit imports |
+| `REQ-VSB-SOURCE-NAVIGATION` | all package and Core initializer files | architecture tests and manual ledger | one primary type per file where practical and matching type/namespace/folder ownership |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in the complete owner | manual review plus hygiene gates | current code/function semantics only; no history, filler, workaround, or generated prose |
+
+## Iteration 85 mutation obligations
+
+- Remove or misroute any public initializer overload: its exact forwarding, boundary, or
+  cancellation test must fail.
+- Reuse a variable across initialization scopes or create a new value per property: reuse and
+  isolation assertions must fail.
+- Change convention precedence, cache the wrong input/message pair, or accept an unsupported shape:
+  convention and concurrency tests must fail.
+- Skip an owned null/type/key validation or invoke a dependency before validation: exact parameter
+  and zero-side-effect assertions must fail.
+- Collapse nullable, collection, dictionary, task, variable, or message-data conversion into an
+  apparently similar path: positive and negative partition tests must observe the semantic change.
+- Invoke an asynchronous provider twice, hide its cancellation/failure, or use the wrong context:
+  invocation-count and propagation tests must fail.
+- Restore a broad unused global import, relocate a sibling assembly under the Core directory, or
+  keep a type/file/namespace mismatch: architecture and manual ownership checks must fail.
+- Retain a stale construction-history comment or replace understood semantics with generic filler:
+  the manual full-source ledger must reject the exact file.
+
+## Iteration 85 completion
+
+All 91 Core initializer files and all nine files in the optional initializer package were read
+manually in full. No generator or scripted comment rewrite was used. Every comment was checked
+against the implementation while its owning file was reviewed. Generic filler and construction-
+history prose were removed, and the remaining documentation describes current behavior,
+boundaries, cancellation, or failure semantics.
+
+`ViciOne.ServiceBus` remains the Core project. Persistence, Scheduling, Transports, Initializers,
+and the other capability packages remain sibling projects beneath `src` because they have
+independent package and dependency boundaries. Within the initializer owners, folders,
+namespaces, filenames, and types now agree: optional variables live in `Variables`, the unused
+optional-package global imports are gone, and implementation-only convention, cache, factory,
+provider, converter, and initializer types are internal. Compatibility-only public cache
+interfaces were removed without removing runtime behavior.
+
+The implementation now preserves cancellation and dependency faults across collection, task,
+variable, header, message-data, and provider paths; rejects null-returning asynchronous delegates;
+uses input contexts without inventing another message-object depth; initializes concrete
+dictionary object graphs; applies invariant and range-safe temporal, numeric, string, and enum
+conversion; and keeps cache and provider behavior deterministic. Public extension APIs have direct
+typed/runtime forwarding, validation, cancellation, probe, pipe, request, publish, send, and
+schedule coverage.
+
+The final Initializers selection passes 175/175 tests. Its unique aggregate coverage across the
+Core and optional initializer source is 2,404/2,461 lines (97.68%) and 1,045/1,160 branches
+(90.09%). The uncovered code is not represented as executed evidence: it is dominated by 41
+defensive false-return paths in the nested property-provider factory and two double-checked cache
+race paths, with a small remainder of isolated defensive null and exception branches.
+
+Four isolated manual counterchanges were compiled and executed: increasing input-view depth,
+rejecting concrete dictionary object graphs, ignoring a pre-canceled exact-array conversion, and
+accepting an out-of-range Unix timestamp. Each intended test failed for the changed semantic. Each
+source file was then restored manually and verified byte-for-byte against its pre-mutation SHA-256
+before the final build and test runs.
+
+The restored final Core host passes 2,879/2,879 tests, and the complete architecture host passes
+292/292 tests, both without failures or skips. The sequential Release Engineering build has zero
+warnings and errors. Format verification, `git diff --check`, and the requirement-projection gate
+pass. Fresh-package verification passes 18 developer journeys, 31 packages, three isolated
+provider-testing consumers, and all 30 runtime API assemblies. The packed public API is 19,265
+lines with SHA-256 `09ca6bb86e6d74034de1689eddae0d3e35b914f93b8d6f0a52b60091f22131e4`.
+
+Repository-wide source hygiene reports zero C# preprocessor directives and zero empty source
+directories. The only textual placeholder and `NotImplementedException` matches are respectively
+a real schedule-declaration placeholder in state-machine semantics and a real technical-failure
+classification; neither is dummy implementation. The complete A+ source goal remains active for
+the next unreviewed owner.

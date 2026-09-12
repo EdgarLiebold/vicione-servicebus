@@ -69,7 +69,9 @@ internal sealed class MessageDataPropertyConverter :
         if (input == null || !input.HasValue)
             return null;
 
-        var text = await input.Value.ConfigureAwait(false)
+        Task<string?> valueTask = input.Value
+            ?? throw new InvalidOperationException("The message data value task cannot be null.");
+        var text = await valueTask.WaitAsync(cancellationToken).ConfigureAwait(false)
             ?? throw new MessageDataException("The message data reference reported a value but returned null.");
 
         var bytes = Encoding.UTF8.GetBytes(text);

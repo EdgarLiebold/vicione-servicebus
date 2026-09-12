@@ -2,42 +2,43 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Initializers.Contexts;
 
-/// <summary>Carries state for scope initialize operations.</summary>
-public class ScopeInitializeContext :
+/// <summary>Represents the root of an initialization graph that inherits an existing pipeline context.</summary>
+internal sealed class ScopeInitializeContext :
     ScopePipeContext,
     InitializeContext
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a root context that exposes the payloads and cancellation state of <paramref name="context"/>.</summary>
+    /// <param name="context">The pipeline context inherited by message initialization.</param>
     public ScopeInitializeContext(PipeContext context)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
     }
 
-    /// <summary>Gets the depth.</summary>
-    public virtual int Depth => 0;
+    /// <summary>Gets the root depth, which is always zero.</summary>
+    public int Depth => 0;
 
-    /// <summary>Gets the parent.</summary>
-    public virtual InitializeContext? Parent => null;
+    /// <summary>Gets no initialization parent because this context is the graph root.</summary>
+    public InitializeContext? Parent => null;
 
-    /// <summary>Attempts to get parent.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="parentContext">Receives the parent context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public virtual bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
+    /// <summary>Reports that a root context has no typed parent.</summary>
+    /// <typeparam name="T">The requested parent message contract.</typeparam>
+    /// <param name="parentContext">Receives <see langword="null"/>.</param>
+    /// <returns>Always <see langword="false"/>.</returns>
+    public bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class
     {
         parentContext = default;
         return false;
     }
 
-    /// <summary>Creates message context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The created message context.</returns>
+    /// <summary>Creates the first typed message node in the initialization graph.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="message">The message instance owned by the new node.</param>
+    /// <returns>A child context for <paramref name="message"/>.</returns>
     public InitializeContext<T> CreateMessageContext<T>(T message)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         return new DynamicInitializeContext<T>(this, message);
     }
 }

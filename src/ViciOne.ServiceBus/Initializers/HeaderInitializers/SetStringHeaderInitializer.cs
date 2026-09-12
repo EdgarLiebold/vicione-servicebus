@@ -5,10 +5,10 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
 
-/// <summary>Set a header to a constant value from the input.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class SetStringHeaderInitializer<TMessage, TInput> :
+/// <summary>Copies a string input property into a named outgoing header.</summary>
+/// <typeparam name="TMessage">The initialized message contract.</typeparam>
+/// <typeparam name="TInput">The input object containing the header value.</typeparam>
+internal sealed class SetStringHeaderInitializer<TMessage, TInput> :
     IHeaderInitializer<TMessage, TInput>
     where TMessage : class
     where TInput : class
@@ -16,27 +16,35 @@ public class SetStringHeaderInitializer<TMessage, TInput> :
     readonly string _headerName;
     readonly IReadProperty<TInput, string> _inputProperty;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an input-property-to-named-header mapping.</summary>
     /// <param name="headerName">The header name.</param>
-    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="propertyInfo">The readable string input property.</param>
     public SetStringHeaderInitializer(string headerName, PropertyInfo propertyInfo)
     {
-        if (headerName == null)
-            throw new ArgumentNullException(nameof(headerName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(headerName);
+        if (propertyInfo == null)
+            throw new ArgumentNullException(nameof(propertyInfo));
 
         _headerName = headerName;
 
         _inputProperty = ReadPropertyCache<TInput>.GetProperty<string>(propertyInfo);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="sendContext">The send context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Copies the configured string value into the outgoing headers.</summary>
+    /// <param name="context">The initialized message and input object.</param>
+    /// <param name="sendContext">The outgoing context whose named header is assigned.</param>
+    /// <param name="cancellationToken">The token that cancels header assignment.</param>
+    /// <returns>A task that completes after the named header has been assigned.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var inputPropertyValue = _inputProperty.Get(context.Input);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(sendContext);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        if (!context.HasInput)
+            return Task.CompletedTask;
+
+        var inputPropertyValue = _inputProperty.Get(context.Input);
 
         sendContext.Headers.Set(_headerName, inputPropertyValue);
 

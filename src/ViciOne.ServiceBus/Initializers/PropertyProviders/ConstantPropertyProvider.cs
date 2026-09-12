@@ -2,30 +2,34 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
-/// <summary>Returns a constant value for the property.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TProperty">The property type.</typeparam>
-public class ConstantPropertyProvider<TInput, TProperty> :
+/// <summary>Returns the same configured value for every initialization.</summary>
+/// <typeparam name="TInput">The accepted input-object type.</typeparam>
+/// <typeparam name="TProperty">The constant value type.</typeparam>
+internal sealed class ConstantPropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
 {
     readonly Task<TProperty?> _propertyValue;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="propertyValue">The property value.</param>
+    /// <summary>Creates a provider for <paramref name="propertyValue" />.</summary>
+    /// <param name="propertyValue">The value returned by the provider.</param>
     public ConstantPropertyProvider(TProperty? propertyValue)
     {
         _propertyValue = Task.FromResult<TProperty?>(propertyValue);
     }
 
-    /// <summary>Gets property.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Returns the configured constant.</summary>
+    /// <typeparam name="T">The message contract being initialized.</typeparam>
+    /// <param name="context">The current initialization context.</param>
+    /// <param name="cancellationToken">The token that cancels value resolution.</param>
+    /// <returns>A task containing the configured value.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TProperty?>(cancellationToken); return _propertyValue;
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<TProperty?>(cancellationToken);
+
+        return _propertyValue;
     }
 }

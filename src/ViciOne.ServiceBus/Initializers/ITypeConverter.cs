@@ -1,13 +1,13 @@
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>A synchronous property type conversion, which may or may not succeed.</summary>
-/// <typeparam name="TResult">The result produced by the operation.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
+/// <summary>Attempts a synchronous conversion without throwing for an unsupported value.</summary>
+/// <typeparam name="TResult">The converted value type.</typeparam>
+/// <typeparam name="TInput">The source value type.</typeparam>
 public interface ITypeConverter<TResult, in TInput>
 {
-    /// <summary>Convert the input to the result type.</summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
-    /// <returns>True if the value was converted, otherwise false.</returns>
+    /// <summary>Attempts to convert <paramref name="input"/> to <typeparamref name="TResult"/>.</summary>
+    /// <param name="input">The source value.</param>
+    /// <param name="result">Receives the converted value when conversion succeeds.</param>
+    /// <returns><see langword="true"/> when the value is representable as <typeparamref name="TResult"/>.</returns>
     bool TryConvert(TInput? input, out TResult? result);
 }

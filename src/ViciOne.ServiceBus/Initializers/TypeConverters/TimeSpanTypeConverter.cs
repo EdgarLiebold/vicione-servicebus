@@ -1,9 +1,10 @@
 using System;
+using System.Globalization;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts time span type values.</summary>
-public class TimeSpanTypeConverter :
+/// <summary>Converts invariant duration text and numeric millisecond values to and from <see cref="TimeSpan" />.</summary>
+internal sealed class TimeSpanTypeConverter :
     ITypeConverter<string, TimeSpan>,
     ITypeConverter<TimeSpan, string>,
     ITypeConverter<TimeSpan, object>,
@@ -16,62 +17,39 @@ public class TimeSpanTypeConverter :
     ITypeConverter<TimeSpan, long>,
     ITypeConverter<TimeSpan, ulong>,
     ITypeConverter<TimeSpan, double>
-
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(TimeSpan input, out string result)
     {
-        result = input.ToString("c");
+        result = input.ToString("c", CultureInfo.InvariantCulture);
         return true;
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(byte input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(double input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(int input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(long input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(object? input, out TimeSpan result)
     {
         switch (input)
@@ -79,6 +57,33 @@ public class TimeSpanTypeConverter :
             case TimeSpan timeSpan:
                 result = timeSpan;
                 return true;
+
+            case sbyte value:
+                return TryFromMilliseconds(value, out result);
+
+            case byte value:
+                return TryFromMilliseconds(value, out result);
+
+            case short value:
+                return TryFromMilliseconds(value, out result);
+
+            case ushort value:
+                return TryFromMilliseconds(value, out result);
+
+            case int value:
+                return TryFromMilliseconds(value, out result);
+
+            case uint value:
+                return TryFromMilliseconds(value, out result);
+
+            case long value:
+                return TryFromMilliseconds(value, out result);
+
+            case ulong value:
+                return TryFromMilliseconds(value, out result);
+
+            case double value:
+                return TryFromMilliseconds(value, out result);
 
             case string text when !string.IsNullOrWhiteSpace(text):
                 return TryConvert(text, out result);
@@ -89,62 +94,53 @@ public class TimeSpanTypeConverter :
         }
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(sbyte input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(short input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(string? input, out TimeSpan result)
     {
-        return TimeSpan.TryParse(input, out result);
+        return TimeSpan.TryParse(input, CultureInfo.InvariantCulture, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(uint input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ulong input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(ushort input, out TimeSpan result)
     {
-        result = TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromMilliseconds(input, out result);
+    }
+
+    static bool TryFromMilliseconds(double milliseconds, out TimeSpan result)
+    {
+        if (double.IsFinite(milliseconds)
+            && milliseconds >= TimeSpan.MinValue.TotalMilliseconds
+            && milliseconds <= TimeSpan.MaxValue.TotalMilliseconds)
+        {
+            result = TimeSpan.FromMilliseconds(milliseconds);
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 }

@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
-using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-internal class DateTimeTypeConverter :
+/// <summary>Converts date/time values and signed Unix millisecond timestamps to UTC instants.</summary>
+internal sealed class DateTimeTypeConverter :
     ITypeConverter<string, DateTime>,
     ITypeConverter<int, DateTime>,
     ITypeConverter<long, DateTime>,
@@ -14,8 +14,6 @@ internal class DateTimeTypeConverter :
     ITypeConverter<DateTime, int>,
     ITypeConverter<DateTime, long>
 {
-    static DateTime Epoch => DateTimeConstants.Epoch.UtcDateTime;
-
     public bool TryConvert(DateTimeOffset input, out DateTime result)
     {
         result = input.UtcDateTime;
@@ -24,14 +22,12 @@ internal class DateTimeTypeConverter :
 
     public bool TryConvert(int input, out DateTime result)
     {
-        result = Epoch + TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromUnixMilliseconds(input, out result);
     }
 
     public bool TryConvert(long input, out DateTime result)
     {
-        result = Epoch + TimeSpan.FromMilliseconds(input);
-        return true;
+        return TryFromUnixMilliseconds(input, out result);
     }
 
     public bool TryConvert(object? input, out DateTime result)
@@ -39,7 +35,7 @@ internal class DateTimeTypeConverter :
         switch (input)
         {
             case DateTime dateTime:
-                result = dateTime;
+                result = NormalizeToUtc(dateTime);
                 return true;
 
             case DateTimeOffset dateTimeOffset:
@@ -57,9 +53,10 @@ internal class DateTimeTypeConverter :
 
     public bool TryConvert(string? input, out DateTime result)
     {
-        if (DateTimeOffset.TryParse(input, null, DateTimeStyles.AssumeUniversal, out var value))
+        if (DateTimeOffset.TryParse(input, CultureInfo.InvariantCulture,
+                DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var value))
         {
-            result = value.Offset == TimeSpan.Zero ? value.UtcDateTime : value.LocalDateTime;
+            result = value.UtcDateTime;
             return true;
         }
 
@@ -69,14 +66,12 @@ internal class DateTimeTypeConverter :
 
     public bool TryConvert(DateTime input, out int result)
     {
-        if (input >= Epoch)
+        DateTime utc = NormalizeToUtc(input);
+        long milliseconds = new DateTimeOffset(utc).ToUnixTimeMilliseconds();
+        if (milliseconds is >= int.MinValue and <= int.MaxValue)
         {
-            var timeSpan = input - Epoch;
-            if (timeSpan.TotalMilliseconds <= int.MaxValue)
-            {
-                result = (int)timeSpan.TotalMilliseconds;
-                return true;
-            }
+            result = (int)milliseconds;
+            return true;
         }
 
         result = default;
@@ -85,23 +80,35 @@ internal class DateTimeTypeConverter :
 
     public bool TryConvert(DateTime input, out long result)
     {
-        if (input >= Epoch)
-        {
-            var timeSpan = input - Epoch;
-            if (timeSpan.TotalMilliseconds <= long.MaxValue)
-            {
-                result = (long)timeSpan.TotalMilliseconds;
-                return true;
-            }
-        }
-
-        result = default;
-        return false;
+        DateTime utc = NormalizeToUtc(input);
+        result = new DateTimeOffset(utc).ToUnixTimeMilliseconds();
+        return true;
     }
 
     public bool TryConvert(DateTime input, out string result)
     {
-        result = input.ToString("O");
+        result = input.ToString("O", CultureInfo.InvariantCulture);
         return true;
+    }
+
+    static DateTime NormalizeToUtc(DateTime input) => input.Kind switch
+    {
+        DateTimeKind.Utc => input,
+        DateTimeKind.Local => input.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(input, DateTimeKind.Utc),
+    };
+
+    static bool TryFromUnixMilliseconds(long input, out DateTime result)
+    {
+        try
+        {
+            result = DateTimeOffset.FromUnixTimeMilliseconds(input).UtcDateTime;
+            return true;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            result = default;
+            return false;
+        }
     }
 }

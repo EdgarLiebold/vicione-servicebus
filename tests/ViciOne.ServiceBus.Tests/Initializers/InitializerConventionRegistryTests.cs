@@ -17,6 +17,6 @@ public sealed class InitializerConventionRegistryTests
         Assert.True(snapshot.ReusedSnapshot);
         Assert.Equal(typeof(DefaultInitializerConvention), snapshot.ConventionType);
         InvalidOperationException exception = Assert.IsType<InvalidOperationException>(snapshot.LateMutationException);
-        Assert.Equal("Message initializer conventions are immutable after the first initializer is created.", exception.Message);
+        Assert.Equal("Message initializer conventions are immutable after the convention snapshot is first read.", exception.Message);
     }
 }

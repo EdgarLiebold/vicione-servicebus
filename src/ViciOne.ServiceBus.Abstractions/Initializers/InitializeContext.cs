@@ -46,7 +46,10 @@ public interface InitializeContext<out TMessage> :
 public interface InitializeContext :
     PipeContext
 {
-    /// <summary>Gets the zero-based depth of this context in the initialized object graph.</summary>
+    /// <summary>
+    /// Gets the number of message-object edges from the root initialization context.
+    /// Associating an input object with a message context does not increase its depth.
+    /// </summary>
     int Depth { get; }
 
     /// <summary>

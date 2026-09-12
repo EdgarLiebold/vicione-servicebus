@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using ViciOne.ServiceBus.Initializers.HeaderInitializers;
 using ViciOne.ServiceBus.Initializers.PropertyInitializers;
 using ViciOne.ServiceBus.Initializers.PropertyProviders;
@@ -10,10 +9,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
-/// <summary>Applies conventions for default initializer.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class DefaultInitializerConvention<TMessage, TInput> :
+/// <summary>Maps message properties and encoded headers from a property-bearing input object.</summary>
+internal sealed class DefaultInitializerConvention<TMessage, TInput> :
     IInitializerConvention<TMessage, TInput>
     where TMessage : class
     where TInput : class
@@ -21,18 +18,12 @@ public class DefaultInitializerConvention<TMessage, TInput> :
     readonly IReadOnlyDictionary<string, PropertyInfo> _inputProperties;
     readonly IPropertyProviderFactory<TInput> _providerFactory;
 
-    /// <summary>Initializes a new instance.</summary>
     public DefaultInitializerConvention()
     {
         _inputProperties = MessageTypeCache<TInput>.Properties.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
         _providerFactory = new PropertyProviderFactory<TInput>();
     }
 
-    /// <summary>Attempts to get property initializer.</summary>
-    /// <typeparam name="TProperty">The property type.</typeparam>
-    /// <param name="propertyInfo">The property info.</param>
-    /// <param name="initializer">Receives the initializer produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
     {
@@ -78,18 +69,13 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
-    /// <summary>Attempts to get header initializer.</summary>
-    /// <typeparam name="TProperty">The property type.</typeparam>
-    /// <param name="propertyInfo">The property info.</param>
-    /// <param name="initializer">Receives the initializer produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
-        // A double underscore identifies a header initializer property.
-        var inputPropertyName = new StringBuilder(propertyName.Length + 2).Append("__").Append(propertyName).ToString();
+        // Standard send headers are sourced from input properties prefixed with two underscores.
+        var inputPropertyName = string.Concat("__", propertyName);
 
         if (_inputProperties.TryGetValue(inputPropertyName, out var inputPropertyInfo))
         {
@@ -114,19 +100,17 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
-    /// <summary>Attempts to get headers initializer.</summary>
-    /// <typeparam name="TProperty">The property type.</typeparam>
-    /// <param name="propertyInfo">The property info.</param>
-    /// <param name="initializer">Receives the initializer produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
-        if (propertyName.StartsWith("__Header_") && propertyName.Length > 9)
+        if (propertyName.StartsWith("__Header_", StringComparison.Ordinal) && propertyName.Length > 9)
         {
-            var headerName = propertyName.Substring(9).Replace("__", " ").Replace("_", "-").Replace(" ", "_");
+            var headerName = propertyName[9..]
+                .Replace("__", " ", StringComparison.Ordinal)
+                .Replace("_", "-", StringComparison.Ordinal)
+                .Replace(" ", "_", StringComparison.Ordinal);
 
             var inputPropertyType = propertyInfo.PropertyType;
 
@@ -151,25 +135,21 @@ public class DefaultInitializerConvention<TMessage, TInput> :
 }
 
 
-/// <summary>Applies conventions for default initializer.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class DefaultInitializerConvention<TMessage> :
+/// <summary>Dispatches the default mapping convention by input type for one message contract.</summary>
+internal sealed class DefaultInitializerConvention<TMessage> :
     InitializerConvention<TMessage>
     where TMessage : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="convention">The convention.</param>
     public DefaultInitializerConvention(IInitializerConvention convention)
         : base(new CacheFactory(), convention)
     {
     }
 
 
-    class CacheFactory :
-        IConventionTypeCacheFactory<IMessageInputInitializerConvention<TMessage>>
+    sealed class CacheFactory :
+        IConventionTypeCacheFactory
     {
-        IMessageInputInitializerConvention<TMessage> IConventionTypeCacheFactory<IMessageInputInitializerConvention<TMessage>>.Create<T>(
-            IInitializerConvention convention)
+        object IConventionTypeCacheFactory.Create<T>(IInitializerConvention convention)
         {
             return new DefaultInitializerConvention<TMessage, T>();
         }
@@ -177,21 +157,20 @@ public class DefaultInitializerConvention<TMessage> :
 }
 
 
-/// <summary>Applies conventions for default initializer.</summary>
-public class DefaultInitializerConvention :
+/// <summary>Dispatches the default mapping convention by message and input contract type.</summary>
+internal sealed class DefaultInitializerConvention :
     InitializerConvention
 {
-    /// <summary>Initializes a new instance.</summary>
     public DefaultInitializerConvention()
         : base(new CacheFactory())
     {
     }
 
 
-    class CacheFactory :
-        IConventionTypeCacheFactory<IMessageInitializerConvention>
+    sealed class CacheFactory :
+        IConventionTypeCacheFactory
     {
-        IMessageInitializerConvention IConventionTypeCacheFactory<IMessageInitializerConvention>.Create<T>(IInitializerConvention convention)
+        object IConventionTypeCacheFactory.Create<T>(IInitializerConvention convention)
         {
             return new DefaultInitializerConvention<T>(convention);
         }

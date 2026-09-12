@@ -1,15 +1,12 @@
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts to nullable type values.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class ToNullableTypeConverter<T> :
+/// <summary>Wraps a value type in its nullable form.</summary>
+/// <typeparam name="T">The underlying value type.</typeparam>
+internal sealed class ToNullableTypeConverter<T> :
     ITypeConverter<T?, T>
     where T : struct
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(T input, out T? result)
     {
         result = input;
@@ -18,26 +15,23 @@ public class ToNullableTypeConverter<T> :
 }
 
 
-/// <summary>Converts to nullable type values.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class ToNullableTypeConverter<T, TInput> :
+/// <summary>Converts a source value and wraps the result in nullable form.</summary>
+/// <typeparam name="T">The underlying result type.</typeparam>
+/// <typeparam name="TInput">The source value type.</typeparam>
+internal sealed class ToNullableTypeConverter<T, TInput> :
     ITypeConverter<T?, TInput>
     where T : struct
 {
     readonly ITypeConverter<T, TInput> _typeConverter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="typeConverter">The type converter.</param>
+    /// <summary>Creates a nullable adapter for <paramref name="typeConverter" />.</summary>
+    /// <param name="typeConverter">The converter that produces the underlying value.</param>
     public ToNullableTypeConverter(ITypeConverter<T, TInput> typeConverter)
     {
-        _typeConverter = typeConverter;
+        _typeConverter = typeConverter ?? throw new ArgumentNullException(nameof(typeConverter));
     }
 
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(TInput? input, out T? result)
     {
         if (_typeConverter.TryConvert(input, out var intermediateValue))

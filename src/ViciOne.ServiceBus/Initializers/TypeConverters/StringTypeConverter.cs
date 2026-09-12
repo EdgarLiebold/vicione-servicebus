@@ -1,19 +1,20 @@
+using System.Globalization;
+
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts string type values.</summary>
-public class StringTypeConverter :
+/// <summary>Formats runtime values as culture-independent text.</summary>
+internal sealed class StringTypeConverter :
     ITypeConverter<string, object>
 {
-    /// <summary>Attempts to convert the supplied value.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryConvert(object? input, out string? result)
     {
         if (input != null)
         {
-            result = input.ToString();
-            return true;
+            result = input is IFormattable formattable
+                ? formattable.ToString(format: null, CultureInfo.InvariantCulture)
+                : input.ToString();
+            return result != null;
         }
 
         result = null;
