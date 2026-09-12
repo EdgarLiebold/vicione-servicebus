@@ -26,6 +26,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     IRoutingSlipExecutor<TInput> _executor;
     FutureFault<TCommand, TFault, RoutingSlipFaulted>? _fault;
     FutureResult<TCommand, TResult, RoutingSlipCompleted>? _result;
+    bool _trackRoutingSlip;
 
     /// <summary>Creates routing-slip execution and terminal-event configuration for a future.</summary>
     /// <param name="configurator">The future state-machine configurator.</param>
@@ -100,6 +101,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Keeps the routing slip pending until its completion or fault event is consumed.</summary>
     public void TrackPendingRoutingSlip()
     {
+        _trackRoutingSlip = true;
         _executor.TrackRoutingSlip = true;
 
         CompletedIdProvider = GetTrackingNumber;
@@ -111,13 +113,13 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     public void BuildItinerary(BuildItineraryCallback<TInput> buildItinerary)
     {
         ArgumentNullException.ThrowIfNull(buildItinerary);
-        _executor = new BuildRoutingSlipExecutor<TInput>(buildItinerary);
+        _executor = new BuildRoutingSlipExecutor<TInput>(buildItinerary) { TrackRoutingSlip = _trackRoutingSlip };
     }
 
     /// <summary>Uses the registered itinerary planner to build each routing slip.</summary>
     public void BuildUsingItineraryPlanner()
     {
-        _executor = new PlanRoutingSlipExecutor<TInput>();
+        _executor = new PlanRoutingSlipExecutor<TInput> { TrackRoutingSlip = _trackRoutingSlip };
     }
 
     /// <summary>Validates the current configuration.</summary>
@@ -132,9 +134,9 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
         else
         {
             if (CompletedIdProvider == null)
-                yield return this.Failure("RoutingSlip", "Result", "WhenCompleted or TrackingPendingRoutingSlip must be configured");
+                yield return this.Failure("RoutingSlip", "Result", "OnRoutingSlipCompleted or TrackPendingRoutingSlip must be configured");
             if (FaultedIdProvider == null)
-                yield return this.Failure("RoutingSlip", "Fault", "WhenFaulted or TrackingPendingRoutingSlip must be configured");
+                yield return this.Failure("RoutingSlip", "Fault", "OnRoutingSlipFaulted or TrackPendingRoutingSlip must be configured");
         }
 
         if (_fault != null)
@@ -143,8 +145,6 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
                 yield return result.WithParentKey("RoutingSlip");
         }
 
-        if (_executor == null)
-            yield return this.Failure("RoutingSlip", "Build", "BuildItinerary or BuildUsingItineraryPlanner must be specified");
     }
 
     static object RoutingSlipFaultedValueProvider(BehaviorContext<FutureState, RoutingSlipFaulted> context)

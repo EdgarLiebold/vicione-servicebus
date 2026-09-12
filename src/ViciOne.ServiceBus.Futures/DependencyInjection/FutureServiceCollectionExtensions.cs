@@ -59,6 +59,8 @@ internal static class FutureServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(registrar);
+        ValidateConcreteClosedClass(typeof(T), "TFuture", "future");
+        ValidateConcreteClosedClass(typeof(TDefinition), "TDefinition", "future definition");
         return new FutureDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
     }
 
@@ -89,6 +91,8 @@ internal static class FutureServiceCollectionExtensions
         if (futureDefinitionType == null)
             return RegisterFuture<T, DefaultFutureDefinition<T>>(collection, registrar);
 
+        ValidateConcreteClosedClass(typeof(T), "TFuture", "future");
+        ValidateConcreteClosedClass(futureDefinitionType, nameof(futureDefinitionType), "future definition");
         if (!futureDefinitionType.TryGetSingleClosedGenericArguments(typeof(IFutureDefinition<>), out Type[] types) || types[0] != typeof(T))
         {
             throw new ArgumentException($"{TypeCache.GetShortName(futureDefinitionType)} is not a future definition of {TypeCache<T>.ShortName}",
@@ -102,35 +106,14 @@ internal static class FutureServiceCollectionExtensions
         return register.Register(collection, registrar);
     }
 
-    /// <summary>Registers a future and optional definition when both are selected by runtime type.</summary>
-    /// <param name="collection">The service collection that receives the future services.</param>
-    /// <param name="registrar">The container registrar that owns registration metadata.</param>
-    /// <param name="futureType">The runtime future state-machine type.</param>
-    /// <param name="futureDefinitionType">The runtime future definition type, or <see langword="null" /> for the default.</param>
-    /// <returns>The internal future registration.</returns>
-    internal static IFutureRegistration RegisterFuture(this IServiceCollection collection, IContainerRegistrar registrar, Type futureType,
-        Type? futureDefinitionType = null)
+    static void ValidateConcreteClosedClass(Type type, string parameterName, string role)
     {
-        ArgumentNullException.ThrowIfNull(collection);
-        ArgumentNullException.ThrowIfNull(registrar);
-        ArgumentNullException.ThrowIfNull(futureType);
-        if (!futureType.ImplementsInterface<SagaStateMachine<FutureState>>())
-            throw new ArgumentException($"The registered type must be a future: {TypeCache.GetShortName(futureType)}", nameof(futureType));
-
-        futureDefinitionType ??= typeof(DefaultFutureDefinition<>).MakeGenericType(futureType);
-
-        if (!futureDefinitionType.TryGetSingleClosedGenericArguments(typeof(IFutureDefinition<>), out Type[] types) || types[0] != futureType)
+        if (!type.IsClass || type.IsAbstract || type.ContainsGenericParameters)
         {
             throw new ArgumentException(
-                $"{TypeCache.GetShortName(futureDefinitionType)} is not a future definition of {TypeCache.GetShortName(futureType)}",
-                nameof(futureDefinitionType));
+                $"The {role} type must be a concrete, closed class: {TypeCache.GetShortName(type)}.",
+                parameterName);
         }
-
-        var futureRegistrar = (IFutureRegistrar)(Activator.CreateInstance(
-            typeof(FutureDefinitionRegistrar<,>).MakeGenericType(futureType, futureDefinitionType))
-            ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
-
-        return futureRegistrar.Register(collection, registrar);
     }
 
 

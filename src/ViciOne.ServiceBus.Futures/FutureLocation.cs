@@ -41,6 +41,8 @@ public readonly struct FutureLocation
         {
             var parsedId = IdParser.Parse(value);
             Id = parsedId.ToGuid();
+            if (Id == Guid.Empty)
+                throw CreateInvalidLocationException(location);
         }
         catch (ArgumentException exception)
         {
@@ -55,6 +57,9 @@ public readonly struct FutureLocation
     /// <param name="address">The absolute endpoint address that owns the future.</param>
     public FutureLocation(Guid id, Uri address)
     {
+        if (id == Guid.Empty)
+            throw new ArgumentException("The future identifier must not be empty.", nameof(id));
+
         ArgumentNullException.ThrowIfNull(address);
         if (!address.IsAbsoluteUri)
             throw new ArgumentException("Address must be an absolute URI.", nameof(address));

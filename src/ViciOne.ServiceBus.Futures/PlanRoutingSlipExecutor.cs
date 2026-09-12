@@ -31,11 +31,20 @@ internal sealed class PlanRoutingSlipExecutor<TInput> :
         await itineraryPlanner.PlanItineraryAsync(context, builder, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var routingSlip = builder.Build();
+        if (TrackRoutingSlip && !context.Saga.Pending.Add(trackingNumber))
+            throw new InvalidOperationException($"The future already contains pending operation '{trackingNumber}'.");
 
-        await context.ExecuteAsync(routingSlip, cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await context.ExecuteAsync(routingSlip, cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            if (TrackRoutingSlip)
+                context.Saga.Pending.Remove(trackingNumber);
 
-        if (TrackRoutingSlip)
-            context.Saga.Pending.Add(trackingNumber);
+            throw;
+        }
     }
 
     /// <summary>Gets or sets whether the routing slip remains pending until its terminal event is consumed.</summary>

@@ -105,8 +105,9 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
 
             ExecuteRoutingSlip(routingSlip =>
             {
-                routingSlip.BuildItinerary((context, builder) =>
+                routingSlip.BuildItinerary((context, builder, cancellationToken) =>
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     builder.AddActivity(ActivityName, destination.ExecuteAddress, new TransformArguments
                     {
                         CorrelationId = context.Message.CorrelationId,

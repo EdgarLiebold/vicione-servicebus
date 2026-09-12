@@ -11,9 +11,9 @@ public interface IItineraryPlanner<in TInput>
     where TInput : class
 {
     /// <summary>Adds activities and variables to the routing-slip itinerary.</summary>
-    /// <param name="value">The future event that supplies itinerary data and services.</param>
+    /// <param name="context">The future event that supplies itinerary data and services.</param>
     /// <param name="builder">The builder that receives the configuration.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task PlanItineraryAsync(BehaviorContext<FutureState, TInput> value, IItineraryBuilder builder, CancellationToken cancellationToken = default);
+    Task PlanItineraryAsync(BehaviorContext<FutureState, TInput> context, IItineraryBuilder builder, CancellationToken cancellationToken = default);
 }

@@ -187,7 +187,8 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     /// <param name="inputs">The selected values exposed as individual request input events.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendRangeAsync(BehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs, CancellationToken cancellationToken = default)
+    public async Task SendRangeAsync(BehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(inputs);
@@ -196,16 +197,17 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
         foreach (TInput input in inputSnapshot)
             ArgumentNullException.ThrowIfNull(input);
 
-        return Task.WhenAll(inputSnapshot.Select(input => SendAsync(context, input, cancellationToken: cancellationToken)));
+        foreach (TInput input in inputSnapshot)
+            await SendAsync(context, input, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Creates and stores the terminal future fault for a failed request.</summary>
+    /// <summary>Tries to create and store the terminal future fault for a failed request.</summary>
     /// <param name="context">The request-fault event context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SetFaultedAsync(BehaviorContext<FutureState, Fault<TRequest>> context, CancellationToken cancellationToken = default)
+    /// <returns><see langword="true" /> when the terminal fault was emitted; otherwise, <see langword="false" /> while operations remain pending.</returns>
+    public Task<bool> TrySetFaultedAsync(BehaviorContext<FutureState, Fault<TRequest>> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return _fault.SetFaultedAsync(context, cancellationToken: cancellationToken);
+        return _fault.TrySetFaultedAsync(context, cancellationToken: cancellationToken);
     }
 }

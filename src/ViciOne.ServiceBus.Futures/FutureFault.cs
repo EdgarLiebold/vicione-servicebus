@@ -45,22 +45,36 @@ internal sealed class FutureFault<TCommand, TFault, TInput> :
         yield break;
     }
 
-    /// <summary>Faults the future when permitted, sends the fault to subscribers, and stores it.</summary>
+    /// <summary>Tries to fault the future, send the fault to subscribers, and store it.</summary>
     /// <param name="context">The future event context that supplies state and fault data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SetFaultedAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    /// <returns><see langword="true" /> when the terminal fault was emitted; otherwise, <see langword="false" /> while operations remain pending.</returns>
+    public async Task<bool> TrySetFaultedAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
-        if (!WaitForPending || !context.Saga.HasPending())
-        {
-            context.SetFaulted(context.Saga.CorrelationId);
+        if (WaitForPending && context.Saga.HasPending())
+            return false;
 
+        DateTimeOffset? previousFaulted = context.Saga.Faulted;
+        bool wasPending = context.Saga.Pending.Contains(context.Saga.CorrelationId);
+        context.SetFaulted(context.Saga.CorrelationId);
+
+        try
+        {
             var fault = await context.SendMessageToSubscriptionsAsync(_factory,
                 context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
             context.SetFault(context.Saga.CorrelationId, fault);
+            return true;
+        }
+        catch
+        {
+            context.Saga.Faulted = previousFaulted;
+            if (wasPending)
+                context.Saga.Pending.Add(context.Saga.CorrelationId);
+
+            throw;
         }
     }
 
@@ -122,22 +136,36 @@ internal sealed class FutureFault<TFault> :
         yield break;
     }
 
-    /// <summary>Faults the future when permitted, sends the fault to subscribers, and stores it.</summary>
+    /// <summary>Tries to fault the future, send the fault to subscribers, and store it.</summary>
     /// <param name="context">The future state context used to create the fault.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SetFaultedAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
+    /// <returns><see langword="true" /> when the terminal fault was emitted; otherwise, <see langword="false" /> while operations remain pending.</returns>
+    public async Task<bool> TrySetFaultedAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
-        if (!WaitForPending || !context.Saga.HasPending())
-        {
-            context.SetFaulted(context.Saga.CorrelationId);
+        if (WaitForPending && context.Saga.HasPending())
+            return false;
 
+        DateTimeOffset? previousFaulted = context.Saga.Faulted;
+        bool wasPending = context.Saga.Pending.Contains(context.Saga.CorrelationId);
+        context.SetFaulted(context.Saga.CorrelationId);
+
+        try
+        {
             var fault = await context.SendMessageToSubscriptionsAsync(_factory,
                 context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
             context.SetFault(context.Saga.CorrelationId, fault);
+            return true;
+        }
+        catch
+        {
+            context.Saga.Faulted = previousFaulted;
+            if (wasPending)
+                context.Saga.Pending.Add(context.Saga.CorrelationId);
+
+            throw;
         }
     }
 

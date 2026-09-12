@@ -18,10 +18,15 @@ public static class FutureRegistrationConfiguratorRuntimeExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(futureType);
 
-        if (!futureType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types)
+        if (!futureType.IsClass || futureType.IsAbstract || futureType.ContainsGenericParameters
+            || !futureType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types)
             || types.Length != 1
             || types[0] != typeof(FutureState))
-            throw new ArgumentException($"The type is not a future state machine: {TypeCache.GetShortName(futureType)}.", nameof(futureType));
+        {
+            throw new ArgumentException(
+                $"The future type must be a concrete, closed state machine for {TypeCache<FutureState>.ShortName}: {TypeCache.GetShortName(futureType)}.",
+                nameof(futureType));
+        }
 
         var register = (IRegisterFuture)(Activator.CreateInstance(typeof(RegisterFuture<>).MakeGenericType(futureType))
             ?? throw new InvalidOperationException("The requested runtime type could not be activated."));

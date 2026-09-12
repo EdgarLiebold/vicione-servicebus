@@ -33,7 +33,7 @@ internal sealed class FutureResult<TCommand, TResult, TInput> :
     public IEnumerable<ValidationResult> Validate()
     {
         if (_factory == null)
-            yield return this.Failure("Response", "Factory", "Init or Create must be configured");
+            yield return this.Failure("Result", "Factory", "SetResultFactory or SetResultInitializer must be configured");
     }
 
     /// <summary>Completes the future, sends the result to subscribers, and stores the serialized result.</summary>
@@ -45,12 +45,25 @@ internal sealed class FutureResult<TCommand, TResult, TInput> :
         ArgumentNullException.ThrowIfNull(context);
         ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> factory = _factory
             ?? throw new InvalidOperationException("The future result factory has not been configured.");
+        DateTimeOffset? previousCompleted = context.Saga.Completed;
+        bool wasPending = context.Saga.Pending.Contains(context.Saga.CorrelationId);
         context.SetCompleted(context.Saga.CorrelationId);
 
-        var result = await context.SendMessageToSubscriptionsAsync(factory,
-            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
+        try
+        {
+            var result = await context.SendMessageToSubscriptionsAsync(factory,
+                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
-        context.SetResult(context.Saga.CorrelationId, result);
+            context.SetResult(context.Saga.CorrelationId, result);
+        }
+        catch
+        {
+            context.Saga.Completed = previousCompleted;
+            if (wasPending)
+                context.Saga.Pending.Add(context.Saga.CorrelationId);
+
+            throw;
+        }
     }
 }
 
@@ -80,7 +93,7 @@ internal sealed class FutureResult<TCommand, TResult> :
     public IEnumerable<ValidationResult> Validate()
     {
         if (_factory == null)
-            yield return this.Failure("Response", "Factory", "Init or Create must be configured");
+            yield return this.Failure("Result", "Factory", "SetResultFactory or SetResultInitializer must be configured");
     }
 
     /// <summary>Completes the future, sends the result to subscribers, and stores the serialized result.</summary>
@@ -92,11 +105,24 @@ internal sealed class FutureResult<TCommand, TResult> :
         ArgumentNullException.ThrowIfNull(context);
         ContextMessageFactory<BehaviorContext<FutureState>, TResult> factory = _factory
             ?? throw new InvalidOperationException("The future result factory has not been configured.");
+        DateTimeOffset? previousCompleted = context.Saga.Completed;
+        bool wasPending = context.Saga.Pending.Contains(context.Saga.CorrelationId);
         context.SetCompleted(context.Saga.CorrelationId);
 
-        var result = await context.SendMessageToSubscriptionsAsync(factory,
-            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
+        try
+        {
+            var result = await context.SendMessageToSubscriptionsAsync(factory,
+                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
-        context.SetResult(context.Saga.CorrelationId, result);
+            context.SetResult(context.Saga.CorrelationId, result);
+        }
+        catch
+        {
+            context.Saga.Completed = previousCompleted;
+            if (wasPending)
+                context.Saga.Pending.Add(context.Saga.CorrelationId);
+
+            throw;
+        }
     }
 }

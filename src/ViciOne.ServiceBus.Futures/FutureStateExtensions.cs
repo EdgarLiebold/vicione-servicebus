@@ -48,7 +48,7 @@ public static class FutureStateExtensions
         ArgumentNullException.ThrowIfNull(message);
         IDictionary<string, object> dictionary = context.SerializerContext.ToDictionary(message);
 
-        return new FutureMessage(dictionary, MessageTypeCache<T>.MessageTypeNames.ToArray());
+        return new FutureMessage(new Dictionary<string, object>(dictionary), MessageTypeCache<T>.MessageTypeNames.ToArray());
     }
 
     /// <summary>Deserializes all stored successful results that implement the requested contract.</summary>
@@ -91,13 +91,14 @@ public static class FutureStateExtensions
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
         cancellationToken.ThrowIfCancellationRequested();
+        var result = await factory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(result);
+        FutureMessage storedResult = context.CreateFutureMessage(result);
+
         if (!context.Saga.Completed.HasValue)
             SetCompleted(context, id);
 
-        var result = await factory(context).ConfigureAwait(false);
-        ArgumentNullException.ThrowIfNull(result);
-
-        context.Saga.Results[id] = context.CreateFutureMessage(result);
+        context.Saga.Results[id] = storedResult;
 
         return result;
     }
@@ -116,13 +117,14 @@ public static class FutureStateExtensions
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
         cancellationToken.ThrowIfCancellationRequested();
+        var result = await factory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(result);
+        FutureMessage storedResult = context.CreateFutureMessage(result);
+
         if (!context.Saga.Completed.HasValue)
             SetCompleted(context, id);
 
-        var result = await factory(context).ConfigureAwait(false);
-        ArgumentNullException.ThrowIfNull(result);
-
-        context.Saga.Results[id] = context.CreateFutureMessage(result);
+        context.Saga.Results[id] = storedResult;
 
         return result;
     }
@@ -133,19 +135,23 @@ public static class FutureStateExtensions
     /// <param name="context">The future event context used to create and serialize the result.</param>
     /// <param name="id">The completed operation identifier.</param>
     /// <param name="factory">The synchronous result factory.</param>
-    public static void SetResult<T, TResult>(this BehaviorContext<FutureState, T> context, Guid id, EventMessageFactory<FutureState, T, TResult> factory)
+    /// <returns>The created result.</returns>
+    public static TResult SetResult<T, TResult>(this BehaviorContext<FutureState, T> context, Guid id,
+        EventMessageFactory<FutureState, T, TResult> factory)
         where T : class
         where TResult : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
+        var result = factory(context);
+        ArgumentNullException.ThrowIfNull(result);
+        FutureMessage storedResult = context.CreateFutureMessage(result);
+
         if (!context.Saga.Completed.HasValue)
             SetCompleted(context, id);
 
-        var result = factory(context);
-        ArgumentNullException.ThrowIfNull(result);
-
-        context.Saga.Results[id] = context.CreateFutureMessage(result);
+        context.Saga.Results[id] = storedResult;
+        return result;
     }
 
     /// <summary>Creates and stores a successful result for a correlated operation.</summary>
@@ -159,13 +165,14 @@ public static class FutureStateExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
+        var result = factory(context);
+        ArgumentNullException.ThrowIfNull(result);
+        FutureMessage storedResult = context.CreateFutureMessage(result);
+
         if (!context.Saga.Completed.HasValue)
             SetCompleted(context, id);
 
-        var result = factory(context);
-        ArgumentNullException.ThrowIfNull(result);
-
-        context.Saga.Results[id] = context.CreateFutureMessage(result);
+        context.Saga.Results[id] = storedResult;
 
         return result;
     }
@@ -180,10 +187,12 @@ public static class FutureStateExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(result);
+        FutureMessage storedResult = context.CreateFutureMessage(result);
+
         if (!context.Saga.Completed.HasValue)
             SetCompleted(context, id);
 
-        context.Saga.Results[id] = context.CreateFutureMessage(result);
+        context.Saga.Results[id] = storedResult;
     }
 
     /// <summary>Marks one operation complete and completes the future when no work or fault remains.</summary>
@@ -235,9 +244,11 @@ public static class FutureStateExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(fault);
+        FutureMessage storedFault = context.CreateFutureMessage(fault);
+
         SetFaulted(context, id, timestamp);
 
-        context.Saga.Faults[id] = context.CreateFutureMessage(fault);
+        context.Saga.Faults[id] = storedFault;
     }
 
     /// <summary>Creates and stores a fault for a correlated operation.</summary>
@@ -246,49 +257,45 @@ public static class FutureStateExtensions
     /// <param name="context">The future event context used to create and serialize the fault.</param>
     /// <param name="id">The faulted operation identifier.</param>
     /// <param name="factory">The synchronous fault factory.</param>
-    public static void SetFault<T, TFault>(this BehaviorContext<FutureState, T> context, Guid id, EventMessageFactory<FutureState, T, TFault> factory)
+    /// <returns>The created fault.</returns>
+    public static TFault SetFault<T, TFault>(this BehaviorContext<FutureState, T> context, Guid id,
+        EventMessageFactory<FutureState, T, TFault> factory)
         where T : class
         where TFault : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
-        SetFaulted(context, id);
-
         var result = factory(context);
         ArgumentNullException.ThrowIfNull(result);
+        FutureMessage storedFault = context.CreateFutureMessage(result);
 
-        context.Saga.Faults[id] = context.CreateFutureMessage(result);
+        SetFaulted(context, id);
+        context.Saga.Faults[id] = storedFault;
+        return result;
     }
 
     /// <summary>Creates and stores a fault for a correlated operation.</summary>
     /// <typeparam name="T">The event contract available to the fault factory.</typeparam>
     /// <typeparam name="TFault">The fault contract.</typeparam>
-    /// <param name="future">The future state to update.</param>
     /// <param name="context">The future event context used to create and serialize the fault.</param>
     /// <param name="id">The faulted operation identifier.</param>
     /// <param name="factory">The asynchronous fault factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created fault.</returns>
-    public static async Task<TFault> SetFaultAsync<T, TFault>(this FutureState future, BehaviorContext<FutureState, T> context, Guid id,
+    public static async Task<TFault> SetFaultAsync<T, TFault>(this BehaviorContext<FutureState, T> context, Guid id,
         AsyncEventMessageFactory<FutureState, T, TFault> factory, CancellationToken cancellationToken = default)
         where T : class
         where TFault : class
     {
-        ArgumentNullException.ThrowIfNull(future);
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
         cancellationToken.ThrowIfCancellationRequested();
-        var timestamp = context.SentTime ?? context.GetUtcNow();
-
-        if (future.HasPending())
-            future.Pending?.Remove(id);
-
-        future.Faulted ??= timestamp;
-
         var fault = await factory(context).ConfigureAwait(false);
         ArgumentNullException.ThrowIfNull(fault);
+        FutureMessage storedFault = context.CreateFutureMessage(fault);
 
-        future.Faults[id] = context.CreateFutureMessage(fault);
+        SetFaulted(context, id);
+        context.Saga.Faults[id] = storedFault;
 
         return fault;
     }

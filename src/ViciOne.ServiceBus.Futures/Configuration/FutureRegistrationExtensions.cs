@@ -48,33 +48,42 @@ public static class FutureRegistrationExtensions
         return configurator.AddFuture<TFuture, RequestConsumerFutureDefinition<TFuture, TConsumer, TRequest, TResponse>>();
     }
 
-    /// <summary>Adds all futures found in the supplied assemblies, or in all loaded assemblies when none are supplied.</summary>
+    /// <summary>Adds all futures found in the supplied assemblies.</summary>
     /// <param name="configurator">The application registration configurator.</param>
-    /// <param name="assemblies">The assemblies to scan.</param>
-    public static void AddFutures(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
+    /// <param name="assemblies">One or more assemblies to scan.</param>
+    public static void AddFuturesFromAssemblies(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(assemblies);
-        AddFutures(configurator, null, assemblies);
+        AddFuturesFromAssemblies(configurator, null, assemblies);
     }
 
-    /// <summary>Adds matching futures from the supplied assemblies, or from all loaded assemblies when none are supplied.</summary>
+    /// <summary>Adds matching futures from the supplied assemblies.</summary>
     /// <param name="configurator">The application registration configurator.</param>
     /// <param name="filter">The optional predicate applied to discovered future state-machine types.</param>
-    /// <param name="assemblies">The assemblies to scan.</param>
-    public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Assembly[] assemblies)
+    /// <param name="assemblies">One or more assemblies to scan.</param>
+    public static void AddFuturesFromAssemblies(this IRegistrationConfigurator configurator, Func<Type, bool>? filter,
+        params Assembly[] assemblies)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(assemblies);
+        if (assemblies.Length == 0)
+            throw new ArgumentException("At least one assembly must be supplied.", nameof(assemblies));
         if (assemblies.Any(static assembly => assembly is null))
             throw new ArgumentException("Assemblies must not contain null entries.", nameof(assemblies));
-
-        if (assemblies.Length == 0)
-            assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
         var types = AssemblyTypeCache.FindTypes(assemblies, FutureRegistrationMetadata.IsFutureOrDefinition);
 
         AddFutures(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
+    }
+
+    /// <summary>Adds matching futures from every assembly currently loaded in the application domain.</summary>
+    /// <param name="configurator">The application registration configurator.</param>
+    /// <param name="filter">The optional predicate applied to discovered future state-machine types.</param>
+    public static void AddFuturesFromLoadedAssemblies(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        AddFuturesFromAssemblies(configurator, filter, AppDomain.CurrentDomain.GetAssemblies());
     }
 
     /// <summary>Adds all futures from the assembly containing the specified type that are in the same (or deeper) namespace.</summary>

@@ -120,6 +120,32 @@ public sealed class BatchFutureIntegrationTests
         Assert.All(observation.JobAttempts.Values, count => Assert.Equal(1, count));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FUTURE-TERMINATION", "deferred-fault-remains-subscribable-until-pending-work-finishes")]
+    public async Task DeferredFault_AcceptsAnotherSubscriberUntilTheLastPendingRequestFinishesAsync()
+    {
+        var observation = new BatchWorkObservation();
+        await using BatchFutureFixture fixture = await BatchFutureFixture.StartAsync(observation);
+        Guid correlationId = NewId.NextGuid();
+        var command = new BatchRequestMessage(correlationId, null, ["Error", "Delay"]);
+        Task<Response<BatchCompleted, BatchFaulted>> first = fixture.Client.Advanced()
+            .GetResponseAsync<BatchCompleted, BatchFaulted>(command, cancellationToken: fixture.CancellationToken);
+
+        await observation.DelayedEntered.Task.WaitAsync(fixture.Timeout, fixture.CancellationToken);
+        Assert.True(await fixture.Harness.Consumed.AnyAsync<Fault<ProcessBatchItem>>(fixture.CancellationToken));
+        Task<Response<BatchCompleted, BatchFaulted>> replay = fixture.Client.Advanced()
+            .GetResponseAsync<BatchCompleted, BatchFaulted>(command, cancellationToken: fixture.CancellationToken);
+
+        observation.ReleaseDelayed.TrySetResult();
+        Response<BatchCompleted, BatchFaulted>[] responses = await Task.WhenAll(first, replay)
+            .WaitAsync(fixture.Timeout, fixture.CancellationToken);
+
+        Assert.All(responses, response => Assert.True(response.Is(out Response<BatchFaulted>? _)));
+        Assert.Equal(2, fixture.Harness.Sent.Snapshot<BatchFaulted>().Count());
+        Assert.Equal(1, observation.JobAttempts["Error"]);
+        Assert.Equal(1, observation.JobAttempts["Delay"]);
+    }
+
 
     private static async Task WaitForSentCountAsync<T>(BatchFutureFixture fixture, int expectedCount)
         where T : class

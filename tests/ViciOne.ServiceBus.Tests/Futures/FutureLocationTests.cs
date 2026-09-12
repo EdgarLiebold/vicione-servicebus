@@ -50,6 +50,16 @@ public sealed class FutureLocationTests
         Assert.Equal("address", addressException.ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FUTURE-LOCATION-VALIDATION", "nonempty-future-identifier")]
+    public void Constructor_RejectsAnEmptyFutureIdentifier()
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new FutureLocation(Guid.Empty, new Uri("loopback://localhost/input-queue")));
+
+        Assert.Equal("id", exception.ParamName);
+    }
+
     [Theory]
     [InlineData("loopback://localhost/", "Address must contain an endpoint name.")]
     [InlineData("input-queue", "Address must be an absolute URI.")]

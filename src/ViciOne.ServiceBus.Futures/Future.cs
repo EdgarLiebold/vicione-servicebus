@@ -126,7 +126,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAwaited(context => request.SendAsync(context))
+                .ThenAwaited(context => request.SendAsync(context, context.CancellationToken))
         );
 
         return request;
@@ -148,7 +148,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAwaited(context => request.SendAsync(context, inputSelector(context.Message)))
+                .ThenAwaited(context => request.SendAsync(context, inputSelector(context.Message), context.CancellationToken))
         );
 
         return request;
@@ -171,7 +171,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAwaited(context => request.SendRangeAsync(context, inputSelector(context.Message)))
+                .ThenAwaited(context => request.SendRangeAsync(context, inputSelector(context.Message), context.CancellationToken))
         );
 
         return request;
@@ -187,7 +187,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAwaited(context => routingSlip.ExecuteAsync(context))
+                .ThenAwaited(context => routingSlip.ExecuteAsync(context, context.CancellationToken))
         );
 
         return routingSlip;
@@ -214,7 +214,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         if (request.PendingRequestIdProvider != null)
             FaultPendingRequest(requestFaulted, request.PendingRequestIdProvider);
         else
-            SetFaulted(requestFaulted, context => request.SetFaultedAsync(context, context.CancellationToken));
+            SetFaulted(requestFaulted, context => request.TrySetFaultedAsync(context, context.CancellationToken));
 
         return request;
     }
@@ -251,9 +251,9 @@ public abstract class Future<TCommand, TResult, TFault> :
         else
         {
             if (routingSlip.HasFault(out FutureFault<TCommand, TFault, RoutingSlipFaulted>? fault))
-                SetFaulted(routingSlipFaulted, context => fault.SetFaultedAsync(context, context.CancellationToken));
+                SetFaulted(routingSlipFaulted, context => fault.TrySetFaultedAsync(context, context.CancellationToken));
             else
-                SetFaulted(routingSlipFaulted, context => _fault.SetFaultedAsync(context, context.CancellationToken));
+                SetFaulted(routingSlipFaulted, context => _fault.TrySetFaultedAsync(context, context.CancellationToken));
         }
 
         if (routingSlip.CompletedIdProvider != null)
@@ -308,12 +308,12 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetResult(x => pendingIdProvider(x.Message), x => x.Message)
                 .IfElse(context => context.Saga.Completed.HasValue,
                     completed => completed
-                        .ThenAwaited(context => _result.SetResultAsync(context))
+                        .ThenAwaited(context => _result.SetResultAsync(context, context.CancellationToken))
                         .TransitionTo(Completed),
                     notCompleted => notCompleted.If(context => context.Saga.Faulted.HasValue,
-                        faulted => faulted
-                            .ThenAwaited(context => _fault.SetFaultedAsync(context))
-                            .TransitionTo(Faulted)))
+                        faulted => faulted.IfAwaited(
+                            context => _fault.TrySetFaultedAsync(context, context.CancellationToken),
+                            terminal => terminal.TransitionTo(Faulted))))
         );
     }
 
@@ -330,9 +330,9 @@ public abstract class Future<TCommand, TResult, TFault> :
             When(requestFaulted)
                 .SetFault(x => pendingIdProvider(x.Message.Message), x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
-                    faulted => faulted
-                        .ThenAwaited(context => _fault.SetFaultedAsync(context))
-                        .TransitionTo(Faulted))
+                    faulted => faulted.IfAwaited(
+                        context => _fault.TrySetFaultedAsync(context, context.CancellationToken),
+                        terminal => terminal.TransitionTo(Faulted)))
         );
     }
 
@@ -343,9 +343,9 @@ public abstract class Future<TCommand, TResult, TFault> :
             When(requestFaulted)
                 .SetFault(x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
-                    faulted => faulted
-                        .ThenAwaited(context => _fault.SetFaultedAsync(context))
-                        .TransitionTo(Faulted))
+                    faulted => faulted.IfAwaited(
+                        context => _fault.TrySetFaultedAsync(context, context.CancellationToken),
+                        terminal => terminal.TransitionTo(Faulted)))
         );
     }
 
@@ -369,7 +369,7 @@ public abstract class Future<TCommand, TResult, TFault> :
     }
 
     void IFutureStateMachineConfigurator.SetFaulted<T>(Event<T> requestCompleted,
-        Func<BehaviorContext<FutureState, T>, Task> callback)
+        Func<BehaviorContext<FutureState, T>, Task<bool>> callback)
     {
         SetFaulted(requestCompleted, callback);
     }
@@ -377,16 +377,17 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <summary>Configures an event to create the terminal fault and transition the future to faulted.</summary>
     /// <typeparam name="T">The event contract that triggers the fault.</typeparam>
     /// <param name="faultEvent">The event to configure.</param>
-    /// <param name="callback">The asynchronous callback that creates the fault.</param>
-    void SetFaulted<T>(Event<T> faultEvent, Func<BehaviorContext<FutureState, T>, Task> callback)
+    /// <param name="callback">The asynchronous callback that reports whether the terminal fault was emitted.</param>
+    void SetFaulted<T>(Event<T> faultEvent, Func<BehaviorContext<FutureState, T>, Task<bool>> callback)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(faultEvent);
         ArgumentNullException.ThrowIfNull(callback);
         DuringAny(
             When(faultEvent)
-                .ThenAwaited(context => callback(context))
-                .TransitionTo(Faulted)
+                .IfAwaited(
+                    context => callback(context),
+                    terminal => terminal.TransitionTo(Faulted))
         );
     }
 

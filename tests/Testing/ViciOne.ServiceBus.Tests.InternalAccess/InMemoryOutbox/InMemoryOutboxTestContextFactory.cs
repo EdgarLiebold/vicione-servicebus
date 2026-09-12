@@ -20,7 +20,10 @@ public static class InMemoryOutboxTestContextFactory
         ulong? transportSequenceNumber = null,
         Guid? messageId = null,
         bool isDelivered = false,
-        SerializerContext? serializerContext = null)
+        SerializerContext? serializerContext = null,
+        Uri? responseAddress = null,
+        Guid? requestId = null,
+        IServiceProvider? serviceProvider = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -41,7 +44,10 @@ public static class InMemoryOutboxTestContextFactory
             cancellationToken,
             scheduler,
             sentTime ?? DateTimeOffset.UnixEpoch,
-            messageId);
+            messageId,
+            responseAddress,
+            requestId,
+            serviceProvider);
         return consumeContext;
     }
 
@@ -58,6 +64,8 @@ public static class InMemoryOutboxTestContextFactory
         private object _message = null!;
         private Guid _messageId;
         private ReceiveContext _receiveContext = null!;
+        private Uri? _responseAddress;
+        private Guid? _requestId;
         private SerializerContext _serializerContext = null!;
         private DateTimeOffset _sentTime;
 
@@ -68,7 +76,10 @@ public static class InMemoryOutboxTestContextFactory
             CancellationToken cancellationToken,
             IMessageScheduler? scheduler,
             DateTimeOffset sentTime,
-            Guid? messageId)
+            Guid? messageId,
+            Uri? responseAddress,
+            Guid? requestId,
+            IServiceProvider? serviceProvider)
             where T : class
         {
             _message = message;
@@ -77,6 +88,11 @@ public static class InMemoryOutboxTestContextFactory
             _serializerContext = serializerContext;
             _cancellationToken = cancellationToken;
             _sentTime = sentTime;
+            _responseAddress = responseAddress;
+            _requestId = requestId;
+            if (serviceProvider is not null)
+                _payloads.Add(typeof(IServiceProvider), serviceProvider);
+
             if (scheduler is not null)
             {
                 MessageSchedulerContext schedulerContext = DispatchProxy.Create<MessageSchedulerContext, MessageSchedulerContextProxy>();
@@ -97,6 +113,10 @@ public static class InMemoryOutboxTestContextFactory
                     return _messageId;
                 case "get_SentTime":
                     return _sentTime;
+                case "get_ResponseAddress":
+                    return _responseAddress;
+                case "get_RequestId":
+                    return _requestId;
                 case "get_ReceiveContext":
                     return _receiveContext;
                 case "get_SerializerContext":
@@ -339,9 +359,19 @@ public static class InMemoryOutboxTestContextFactory
 public sealed class OutgoingMessageRecorder
 {
     private readonly List<object> _messages = [];
+    private readonly Action<object>? _beforeAdd;
+
+    public OutgoingMessageRecorder(Action<object>? beforeAdd = null)
+    {
+        _beforeAdd = beforeAdd;
+    }
 
     /// <summary>Gets recorded messages in emission order.</summary>
     public IReadOnlyList<object> Messages => _messages;
 
-    internal void Add(object message) => _messages.Add(message);
+    internal void Add(object message)
+    {
+        _beforeAdd?.Invoke(message);
+        _messages.Add(message);
+    }
 }

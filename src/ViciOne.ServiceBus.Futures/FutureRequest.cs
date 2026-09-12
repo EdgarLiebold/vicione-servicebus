@@ -43,8 +43,6 @@ internal sealed class FutureRequest<TInput, TRequest> :
     /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
-        if (_factory == null)
-            yield return this.Failure("Response", "Factory", "Init or Create must be configured");
         if (AddressProvider == null)
             yield return this.Failure("RequestAddressProvider", "must not be null");
     }
@@ -55,7 +53,7 @@ internal sealed class FutureRequest<TInput, TRequest> :
         return default;
     }
 
-    /// <summary>Creates and dispatches the request, then records its pending identifier when tracking is configured.</summary>
+    /// <summary>Creates the request, records its pending identifier, and dispatches it.</summary>
     /// <param name="context">The future event context used to create and dispatch the request.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -63,7 +61,11 @@ internal sealed class FutureRequest<TInput, TRequest> :
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
-        var destinationAddress = AddressProvider(context);
+        RequestAddressProvider<TInput> addressProvider = AddressProvider
+            ?? throw new InvalidOperationException("The future request address provider has not been configured.");
+        var destinationAddress = addressProvider(context);
+        if (destinationAddress is { IsAbsoluteUri: false })
+            throw new ArgumentException("The future request address provider must return an absolute URI or null.", nameof(AddressProvider));
 
         var endpoint = destinationAddress != null
             ? await context.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false)
@@ -74,13 +76,25 @@ internal sealed class FutureRequest<TInput, TRequest> :
         await _factory.UseAsync(context, async (ctx, s) =>
         {
             var pipe = new FutureRequestPipe<TRequest>(s.Pipe, context.ReceiveContext.InputAddress, context.Saga.CorrelationId);
-
-            await endpoint.SendAsync(s.Message, pipe, cancellationToken).ConfigureAwait(false);
-
-            if (PendingRequestIdProvider != null)
+            Guid? pendingId = PendingRequestIdProvider?.Invoke(s.Message);
+            if (pendingId == Guid.Empty)
+                throw new InvalidOperationException("A tracked future request must provide a nonempty pending operation identifier.");
+            if (pendingId.HasValue && !context.Saga.Pending.Add(pendingId.Value))
             {
-                var pendingId = PendingRequestIdProvider(s.Message);
-                context.Saga.Pending.Add(pendingId);
+                throw new InvalidOperationException(
+                    $"The future already contains pending operation '{pendingId.Value}'.");
+            }
+
+            try
+            {
+                await endpoint.SendAsync(s.Message, pipe, cancellationToken).ConfigureAwait(false);
+            }
+            catch
+            {
+                if (pendingId.HasValue)
+                    context.Saga.Pending.Remove(pendingId.Value);
+
+                throw;
             }
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }

@@ -45,7 +45,7 @@ public sealed class FutureState :
 
             return _pending;
         }
-        set => _pending = value;
+        set => _pending = value == null ? null : new HashSet<Guid>(value);
     }
 
     /// <summary>Gets or sets the endpoints subscribed to the future result.</summary>
@@ -61,7 +61,7 @@ public sealed class FutureState :
 
             return _subscriptions;
         }
-        set => _subscriptions = value;
+        set => _subscriptions = value == null ? null : new HashSet<FutureSubscription>(value, FutureSubscription.Comparer);
     }
 
     /// <summary>Gets or sets named values shared by future activities.</summary>
@@ -93,7 +93,7 @@ public sealed class FutureState :
 
             return _results;
         }
-        set => _results = value;
+        set => _results = value == null ? null : new Dictionary<Guid, FutureMessage>(value);
     }
 
     /// <summary>Gets or sets operation faults by operation identifier.</summary>
@@ -109,7 +109,7 @@ public sealed class FutureState :
 
             return _faults;
         }
-        set => _faults = value;
+        set => _faults = value == null ? null : new Dictionary<Guid, FutureMessage>(value);
     }
 
     /// <summary>Gets or sets the provider-specific optimistic-concurrency token.</summary>

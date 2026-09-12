@@ -13,6 +13,11 @@ public sealed class FutureSubscription :
     public FutureSubscription(Uri address, Guid? requestId = default)
     {
         ArgumentNullException.ThrowIfNull(address);
+        if (!address.IsAbsoluteUri)
+            throw new ArgumentException("The subscriber address must be an absolute URI.", nameof(address));
+        if (requestId == Guid.Empty)
+            throw new ArgumentException("The subscriber request identifier must not be empty.", nameof(requestId));
+
         RequestId = requestId;
         Address = address;
     }

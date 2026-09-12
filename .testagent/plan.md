@@ -1225,3 +1225,121 @@ declaration placeholder semantics and `NotImplementedException` as a retry failu
 classification; neither is a dummy implementation. Protected `review/` and `TestResults/`
 contents were neither changed nor staged. The complete A+ source goal remains active for the next
 unreviewed owner.
+
+## Iteration 88 outcome
+
+Review the complete `ViciOne.ServiceBus.Futures` capability as one coherent owner: durable state
+and stored messages, command correlation, pending request and routing-slip execution, terminal
+result and fault publication, subscriber replay, definitions, discovery, registration, and
+persistence-facing contracts. Preserve every future feature while removing dispatch/tracking race
+windows, configuration-order dependence, mutable stored-message aliases, incomplete cancellation,
+and delayed-fault state inconsistencies. Retain Futures as an independent feature assembly beneath
+`src`; align every type, filename, namespace, folder, and manually reviewed comment with its final
+responsibility.
+
+## Iteration 88 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-FUTURE-STATE-PERSISTENCE` | command, pending identifiers, subscriptions, variables, results, faults, and concurrency metadata | state and message contract tests plus provider integration tests | non-null rehydration, required values, comparer semantics, detached inputs, exact serialization, and provider round trip |
+| `REQ-VSB-FUTURE-REQUEST-DISPATCH` | publish, fixed send, context-selected send, one request, and request ranges | request contract and integration tests | exact destination, pending-before-dispatch, duplicate rejection, rollback on failed dispatch, deterministic range ordering, cancellation, and null boundaries |
+| `REQ-VSB-FUTURE-ROUTING-SLIP` | callback-built and container-planned itineraries | routing-slip contract and persistence integration tests | FutureId, subscription, tracking-before-dispatch, failed-dispatch rollback, callback cancellation, terminal result, terminal fault, and configuration-order independence |
+| `REQ-VSB-FUTURE-TERMINATION` | immediate fault, deferred fault, all-completed result, and durable replay | state-machine and batch integration tests | exact transition timing, no premature terminal state, late subscriber acceptance, one terminal outcome, and no repeated child work |
+| `REQ-VSB-FUTURE-SUBSCRIPTIONS` | response addresses with and without request identifiers | subscription contract tests | value equality, duplicate suppression, detached enumeration, request-id propagation, fan-out, cancellation, and send failure |
+| `REQ-VSB-FUTURE-VARIABLES` | synchronous and asynchronous values from typed events and state | variable extension tests | all overloads, case-insensitive lookup, null/empty keys, null factories/results, cancellation, replacement, and conversion failure |
+| `REQ-VSB-FUTURE-CONFIGURATION` | request, response, result, fault, routing-slip, and definition configuration | configuration contract tests | every overload, invalid callbacks, mutually required choices, repeated calls, endpoint settings, and exact validation diagnostics |
+| `REQ-VSB-FUTURE-REGISTRATION` | typed, runtime, assembly, explicit-type, namespace, and request-consumer registration | registration boundary and host tests | exact definition association, filter scope, invalid/abstract/open types, null elements, duplicate registration, endpoint ownership, and repository requirement |
+| `REQ-VSB-FUTURE-API` | complete public Futures surface | architecture and reflection contract tests | Greenfield names, cancellation placement, read-only stored-message exposure, no legacy aliases, and intentional package boundary |
+| `REQ-VSB-SOURCE-NAVIGATION` | all 55 Futures production files | architecture tests and manual ledger | independent project retained; one primary type per file where practical; exact type/namespace/folder ownership |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in all 4,430 Futures source lines | manual review plus hygiene gates | current code and behavior only; no history, filler, workaround, or generated prose |
+
+## Iteration 88 mutation obligations
+
+- Move pending registration after request or routing-slip dispatch, retain a failed-dispatch
+  identifier, or allow duplicate pending identifiers: exact observation and rollback assertions
+  must fail.
+- Replace sequential range state mutation with unsynchronized concurrent mutation, change input
+  order, or drop cancellation: deterministic dispatch assertions must fail.
+- Replace callback cancellation with a default token or make routing-slip tracking depend on
+  configuration order: callback and state assertions must fail.
+- Transition a deferred-fault future before all tracked work terminates, accept a duplicate command
+  as a terminal replay too early, or publish more than one terminal message: lifecycle integration
+  assertions must fail.
+- Retain caller-owned stored-message or persisted collection instances, accept invalid contract
+  names, or lose case-insensitive durable variables: snapshot and rehydration assertions must fail.
+- Accept an invalid runtime future/definition type or scan beyond the requested namespace: complete
+  registration-matrix assertions must fail.
+- Retain a stale construction-history comment or a type/file/namespace mismatch: the manual source
+  ledger and architecture checks must reject the exact file.
+
+## Iteration 88 completion
+
+All 55 Futures production files and their original 4,430 lines were read manually in full together
+with the directly affected tests. No generator or scripted comment rewrite was used. Every comment
+was checked against the implementation while that file was understood, and comments were retained
+or corrected only when they described current code or behavior. Futures remains an independent
+feature assembly at `src/ViciOne.ServiceBus.Futures`; `src` is the project/assembly list, while
+`src/ViciOne.ServiceBus` is the Core project. Persistence, Scheduling, and Transports continue to
+group provider assemblies by capability. Within Futures, all primary types, namespaces, filenames,
+and folders match their final ownership, and no additional visual wrapper directory is warranted.
+
+Stored future messages and persisted collection inputs now use detached, read-only snapshots.
+Message URNs, future locations, subscriptions, request identifiers, runtime registration types, and
+assembly/type scans reject malformed or ambiguous inputs before side effects. The registration API
+now distinguishes explicit types (`AddFutures`), explicit assemblies (`AddFuturesFromAssemblies`),
+and the loaded-assembly convenience (`AddFuturesFromLoadedAssemblies`) without overload ambiguity.
+The unused internal runtime `RegisterFuture` path was removed after static reference inspection
+confirmed that no product or test caller existed; no behavior or public API was removed.
+
+Pending request and routing-slip identifiers are now registered before transport dispatch and are
+rolled back when dispatch fails. Duplicate and empty identifiers are rejected deterministically,
+request ranges preserve input order without unsynchronized state mutation, and routing-slip
+tracking is independent of configuration order. Callback, dispatch, terminal publication, and
+pending-completion paths forward their caller cancellation tokens. Result/fault factories finish
+successfully before terminal state mutation, terminal publication failure rolls state back, and a
+deferred fault accepts further subscribers until every tracked operation has terminated. Variable,
+result, fault, and routing-slip binder names now satisfy the complete bidirectional async contract.
+
+The new direct contract matrix covers stored-state isolation, message URNs and round trips,
+locations and subscriptions, request dispatch and rollback, routing-slip configuration and
+tracking, all terminal configurator shapes, result/fault lifecycle behavior, variable conversion,
+consumer kinds, registration boundaries, and the default routing-slip fault mapping. Four shallow
+legacy registration cases and their three requirement projections were deleted only after the new
+matrix fully superseded them. The final Futures selection passes 106/106 tests. Futures coverage
+increased from 58.86% lines and 49.77% branches to 90.62% lines and 85.48% branches. The final
+method-level risk calculation covers 376 methods and reports zero CRAP scores above 30; the former
+unexecuted default routing-slip fault mapper now has 100% line coverage.
+
+Seven isolated counterchanges were compiled and executed. Moving pending registration after
+dispatch, dropping routing-slip tracking propagation, making deferred fault transition
+unconditional, returning a caller-owned stored-message dictionary, removing terminal-result
+rollback, mutating state before invoking a result factory, and dropping consume cancellation from
+pending completion each made its precise regression test fail. Every mutation was restored
+manually. Byte-for-byte verification produced final SHA-256 values
+`cbc23f9914735fc7d83c6a331409a8304ac57801baca6bfebc51f807d7d2d27e` for `FutureRequest.cs`,
+`8350e06e5d5c0acd416dcaab09701062bf4205bae6244b81d66b577067eade99` for
+`FutureRoutingSlipConfigurator.cs`, `f8c5ac8a2861cabd95a3cb4a5ee88e3bcc44bd3dd240ffb430a9af3a2dc511d5`
+for `FutureFault.cs`, `1e0e8387c67fe60acbe41dfff7df6d45f20119698dd4685fc9e880329401a6fd`
+for `FutureMessage.cs`, `3d7d77dfd6a2ce95748cbae5b078977f5aee9692a80d9fee42a6b0b58ff99a4a`
+for `FutureResult.cs`, and `bf616c5391d5221b0ce076f37e0fc4cca8cfcead5305e97a19145f1d0e32140e`
+for `FutureStateExtensions.cs`.
+
+The final Unit and Engineering solutions build in Release with zero warnings and errors. The
+official serial Unit solution passes 5,790/5,790 tests across 22 hosts with zero failures and zero
+skips; this includes the complete architecture, source-layout, comment-hygiene, requirement-
+projection, and bidirectional async gates. Both repository format gates pass without changes.
+Azure Table and Entity Framework Core local-integration projects compile against the changed
+Futures callback contract; real Azure Table cloud acceptance was already established in iteration
+49 and is not falsely represented as a new cloud run in this iteration.
+
+Fresh-package verification passes 18 developer journeys using 31 freshly packed ViciOne packages,
+three isolated provider-testing consumers, and all 30 runtime API assemblies. The intentional
+Greenfield Futures API changes were reviewed before updating the contract. The packed public API
+contains 19,225 lines with SHA-256
+`74bc8ccbe3fd160506783a365a85ba9ebf13f5657482edacaf75d54167cbf441`.
+`git diff --check` and CoreRequirements JSON validation pass. Repository-wide product source has
+zero C# preprocessor directives and zero empty source directories. The broad marker scan contains
+only explicit unsupported-operation contracts, real state-machine schedule-declaration placeholder
+semantics, and `NotImplementedException` as a retry classification; none is a dummy implementation.
+Protected `review/` and `TestResults/` contents were neither changed nor staged. The complete A+
+source goal remains active for the next unreviewed owner.

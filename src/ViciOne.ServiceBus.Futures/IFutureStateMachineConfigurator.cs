@@ -22,8 +22,8 @@ internal interface IFutureStateMachineConfigurator
     /// <summary>Configures an event to create and persist the terminal future fault.</summary>
     /// <typeparam name="T">The event contract that triggers the fault.</typeparam>
     /// <param name="requestCompleted">The event to configure.</param>
-    /// <param name="callback">The asynchronous fault callback executed for the event.</param>
-    void SetFaulted<T>(Event<T> requestCompleted, Func<BehaviorContext<FutureState, T>, Task> callback)
+    /// <param name="callback">The asynchronous callback that reports whether the terminal fault was emitted.</param>
+    void SetFaulted<T>(Event<T> requestCompleted, Func<BehaviorContext<FutureState, T>, Task<bool>> callback)
         where T : class;
 
     /// <summary>Configures a response event to store its result and remove the corresponding pending identifier.</summary>

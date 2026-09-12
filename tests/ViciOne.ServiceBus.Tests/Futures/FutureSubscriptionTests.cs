@@ -14,7 +14,7 @@ public sealed class FutureSubscriptionTests
         var requestId = Guid.Parse("4f2d7f0e-e020-4c89-aaf7-d67a8911af58");
         var subscription = new FutureSubscription(address, requestId);
         var equivalent = new FutureSubscription(address, requestId);
-        var differentRequest = new FutureSubscription(address, Guid.Empty);
+        var differentRequest = new FutureSubscription(address, Guid.Parse("24f3c9e1-838a-40f6-a40c-2ec03e6ed84c"));
         var differentAddress = new FutureSubscription(new Uri("loopback://localhost/other-result"), requestId);
 
         Assert.Equal(subscription, equivalent);
@@ -38,5 +38,26 @@ public sealed class FutureSubscriptionTests
 
         Assert.Equal("address", constructorException.ParamName);
         Assert.Equal("obj", comparerException.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FUTURE-SUBSCRIPTIONS", "subscription-address-is-absolute")]
+    public void Constructor_RejectsARelativeSubscriberAddress()
+    {
+        var address = new Uri("relative-results", UriKind.Relative);
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => new FutureSubscription(address));
+
+        Assert.Equal("address", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FUTURE-SUBSCRIPTIONS", "request-identifier-is-nonempty")]
+    public void Constructor_RejectsAnEmptyRequestIdentifier()
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new FutureSubscription(new Uri("loopback://localhost/future-result"), Guid.Empty));
+
+        Assert.Equal("requestId", exception.ParamName);
     }
 }

@@ -139,7 +139,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="valueFactory">The asynchronous value factory.</param>
     /// <returns>The same binder with the storage activity appended.</returns>
-    public static EventActivityBinder<FutureState, TData> SetVariable<TData, TValue>(this EventActivityBinder<FutureState, TData> binder, string key,
+    public static EventActivityBinder<FutureState, TData> SetVariableAwaited<TData, TValue>(this EventActivityBinder<FutureState, TData> binder, string key,
         AsyncEventMessageFactory<FutureState, TData, TValue> valueFactory)
         where TData : class
         where TValue : class
@@ -156,7 +156,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="valueFactory">The asynchronous value factory.</param>
     /// <returns>The same binder with the storage activity appended.</returns>
-    public static EventActivityBinder<FutureState> SetVariable<TValue>(this EventActivityBinder<FutureState> binder, string key,
+    public static EventActivityBinder<FutureState> SetVariableAwaited<TValue>(this EventActivityBinder<FutureState> binder, string key,
         AsyncEventMessageFactory<FutureState, TValue> valueFactory)
         where TValue : class
     {
@@ -192,9 +192,27 @@ public static class FutureVariableExtensions
         ArgumentNullException.ThrowIfNull(context);
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         if (context.Saga.HasVariables())
-            return context.SerializerContext.TryGetValue(context.Saga.Variables, key, out result);
+        {
+            try
+            {
+                return context.SerializerContext.TryGetValue(context.Saga.Variables, key, out result);
+            }
+            catch (Exception exception) when (IsConversionFailure(exception))
+            {
+                result = default;
+                return false;
+            }
+        }
 
         result = default;
         return false;
+    }
+
+    static bool IsConversionFailure(Exception exception)
+    {
+        return exception is not OperationCanceledException
+            and not OutOfMemoryException
+            and not StackOverflowException
+            and not AccessViolationException;
     }
 }

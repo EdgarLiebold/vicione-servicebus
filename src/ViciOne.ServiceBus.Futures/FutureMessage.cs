@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,8 +8,8 @@ namespace ViciOne.ServiceBus.Futures;
 /// <summary>Stores serialized message properties together with the contract URNs required to deserialize them.</summary>
 public sealed class FutureMessage
 {
-    IDictionary<string, object> _message = new Dictionary<string, object>();
-    string[] _supportedMessageTypes = [];
+    IReadOnlyDictionary<string, object> _message = FrozenDictionary<string, object>.Empty;
+    IReadOnlyList<string> _supportedMessageTypes = Array.AsReadOnly(Array.Empty<string>());
 
     /// <summary>Creates an empty instance for persistence materialization.</summary>
     public FutureMessage()
@@ -18,33 +19,33 @@ public sealed class FutureMessage
     /// <summary>Creates a stored message from its property values and supported contract URNs.</summary>
     /// <param name="message">The serialized message property values.</param>
     /// <param name="supportedMessageTypes">The URNs of contracts represented by the message.</param>
-    public FutureMessage(IDictionary<string, object> message, string[] supportedMessageTypes)
+    public FutureMessage(IReadOnlyDictionary<string, object> message, IReadOnlyList<string> supportedMessageTypes)
     {
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(supportedMessageTypes);
-        Message = message;
-        SupportedMessageTypes = supportedMessageTypes;
+        _message = Snapshot(message);
+        _supportedMessageTypes = SnapshotMessageTypes(supportedMessageTypes, nameof(supportedMessageTypes));
     }
 
-    /// <summary>Gets or sets the serialized message property values.</summary>
-    public IDictionary<string, object> Message
+    /// <summary>Gets or sets a detached, read-only snapshot of the serialized message property values.</summary>
+    public IReadOnlyDictionary<string, object> Message
     {
         get => _message;
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            _message = value;
+            _message = Snapshot(value);
         }
     }
 
-    /// <summary>Gets or sets the URNs of contracts represented by the message.</summary>
-    public string[] SupportedMessageTypes
+    /// <summary>Gets or sets a detached, read-only snapshot of the URNs represented by the message.</summary>
+    public IReadOnlyList<string> SupportedMessageTypes
     {
         get => _supportedMessageTypes;
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            _supportedMessageTypes = value;
+            _supportedMessageTypes = SnapshotMessageTypes(value, nameof(value));
         }
     }
 
@@ -68,5 +69,27 @@ public sealed class FutureMessage
         var typeUrn = MessageUrn.ForTypeString<T>();
 
         return SupportedMessageTypes.Any(x => typeUrn.Equals(x, StringComparison.OrdinalIgnoreCase));
+    }
+
+    static IReadOnlyDictionary<string, object> Snapshot(IReadOnlyDictionary<string, object> message)
+    {
+        return message.ToFrozenDictionary();
+    }
+
+    static IReadOnlyList<string> SnapshotMessageTypes(IReadOnlyList<string> messageTypes, string parameterName)
+    {
+        string[] snapshot = messageTypes.ToArray();
+        if (snapshot.Any(static value => !IsMessageContractUrn(value)))
+            throw new ArgumentException("Message contract identifiers must be absolute URNs in the urn:message namespace.", parameterName);
+
+        return Array.AsReadOnly(snapshot);
+    }
+
+    static bool IsMessageContractUrn(string? value)
+    {
+        return !string.IsNullOrWhiteSpace(value)
+            && value.StartsWith("urn:message:", StringComparison.OrdinalIgnoreCase)
+            && Uri.TryCreate(value, UriKind.Absolute, out Uri? uri)
+            && uri.Scheme.Equals("urn", StringComparison.OrdinalIgnoreCase);
     }
 }

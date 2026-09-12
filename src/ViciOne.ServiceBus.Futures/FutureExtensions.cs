@@ -46,7 +46,7 @@ public static class FutureExtensions
     /// <param name="getResultId">The selector for the completed operation identifier.</param>
     /// <param name="messageFactory">The asynchronous result factory.</param>
     /// <returns>The same binder with result storage appended.</returns>
-    public static EventActivityBinder<FutureState, T> SetResult<T, TResult>(this EventActivityBinder<FutureState, T> binder,
+    public static EventActivityBinder<FutureState, T> SetResultAwaited<T, TResult>(this EventActivityBinder<FutureState, T> binder,
         Func<BehaviorContext<FutureState, T>, Guid> getResultId, AsyncEventMessageFactory<FutureState, T, TResult> messageFactory)
         where T : class
         where TResult : class
