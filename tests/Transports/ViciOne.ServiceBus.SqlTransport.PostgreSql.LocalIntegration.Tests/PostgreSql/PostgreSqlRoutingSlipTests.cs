@@ -66,7 +66,7 @@ public sealed class PostgreSqlRoutingSlipTests
         }
     }
 
-    public interface RegistrationCompleted : RoutingSlipCompleted
+    public interface RegistrationCompleted : IRoutingSlipCompleted
     {
         string Value { get; }
     }

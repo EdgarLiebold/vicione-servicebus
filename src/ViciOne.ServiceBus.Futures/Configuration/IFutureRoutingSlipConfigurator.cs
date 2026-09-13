@@ -34,18 +34,18 @@ public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
 
     /// <summary>Configures how routing-slip completion produces the successful future result.</summary>
     /// <param name="configure">The callback that configures the future result message.</param>
-    void OnRoutingSlipCompleted(Action<IFutureResultConfigurator<TResult, RoutingSlipCompleted>> configure);
+    void OnRoutingSlipCompleted(Action<IFutureResultConfigurator<TResult, IRoutingSlipCompleted>> configure);
 
     /// <summary>Configures how a routing-slip fault produces the terminal future fault.</summary>
     /// <param name="configure">The callback that configures the future fault message.</param>
-    void OnRoutingSlipFaulted(Action<IFutureFaultConfigurator<TFault, RoutingSlipFaulted>> configure);
+    void OnRoutingSlipFaulted(Action<IFutureFaultConfigurator<TFault, IRoutingSlipFaulted>> configure);
 
     /// <summary>Adds state-machine activities executed when the routing slip completes.</summary>
     /// <param name="configure">The callback that adds activities to the completion event.</param>
     void WhenRoutingSlipCompleted(
-        Func<IEventActivityBinder<FutureState, RoutingSlipCompleted>, IEventActivityBinder<FutureState, RoutingSlipCompleted>> configure);
+        Func<IEventActivityBinder<FutureState, IRoutingSlipCompleted>, IEventActivityBinder<FutureState, IRoutingSlipCompleted>> configure);
 
     /// <summary>Adds state-machine activities executed when the routing slip faults.</summary>
     /// <param name="configure">The callback that adds activities to the fault event.</param>
-    void WhenRoutingSlipFaulted(Func<IEventActivityBinder<FutureState, RoutingSlipFaulted>, IEventActivityBinder<FutureState, RoutingSlipFaulted>> configure);
+    void WhenRoutingSlipFaulted(Func<IEventActivityBinder<FutureState, IRoutingSlipFaulted>, IEventActivityBinder<FutureState, IRoutingSlipFaulted>> configure);
 }

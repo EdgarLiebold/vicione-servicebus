@@ -16,7 +16,7 @@ internal static class CourierLogContextExtensions
     /// <param name="context">The routing-slip delivery that supplies trace identity and tracking metadata.</param>
     /// <returns>The started trace activity, or <see langword="null"/> when tracing is disabled.</returns>
     public static StartedActivity? StartExecuteActivity<TActivity, TArguments>(this ILogContext logContext,
-        ConsumeContext<RoutingSlip> context)
+        ConsumeContext<IRoutingSlip> context)
         where TActivity : IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -35,7 +35,7 @@ internal static class CourierLogContextExtensions
     /// <param name="context">The routing-slip delivery that supplies trace identity and tracking metadata.</param>
     /// <returns>The started trace activity, or <see langword="null"/> when tracing is disabled.</returns>
     public static StartedActivity? StartCompensateActivity<TActivity, TLog>(this ILogContext logContext,
-        ConsumeContext<RoutingSlip> context)
+        ConsumeContext<IRoutingSlip> context)
         where TActivity : ICompensateActivity<TLog>
         where TLog : class
     {
@@ -54,7 +54,7 @@ internal static class CourierLogContextExtensions
     /// <param name="context">The routing-slip delivery measured by the operation.</param>
     /// <returns>The execution metric operation, or <see langword="null"/> when metrics are disabled.</returns>
     public static MetricOperation? StartActivityExecuteInstrument<TActivity, TArguments>(this ILogContext logContext,
-        ConsumeContext<RoutingSlip> context)
+        ConsumeContext<IRoutingSlip> context)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class =>
         LogContextInstrumentationExtensions.StartProcess(logContext, context, "execute", "courier_execute");
@@ -66,7 +66,7 @@ internal static class CourierLogContextExtensions
     /// <param name="context">The routing-slip delivery measured by the operation.</param>
     /// <returns>The compensation metric operation, or <see langword="null"/> when metrics are disabled.</returns>
     public static MetricOperation? StartActivityCompensateInstrument<TActivity, TLog>(this ILogContext logContext,
-        ConsumeContext<RoutingSlip> context)
+        ConsumeContext<IRoutingSlip> context)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class =>
         LogContextInstrumentationExtensions.StartProcess(logContext, context, "compensate", "courier_compensate");

@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Provides timing, identity, variables, and event publication shared by activity host contexts.</summary>
 internal abstract class BaseCourierContext :
-    ConsumeContextScope<RoutingSlip>,
-    CourierContext
+    ConsumeContextScope<IRoutingSlip>,
+    ICourierContext
 {
     readonly Guid _executionId;
     readonly long _startedAt;
@@ -20,11 +20,10 @@ internal abstract class BaseCourierContext :
 
     /// <summary>Creates activity state from a received routing slip and its context-scoped clock.</summary>
     /// <param name="consumeContext">The routing-slip consume context to isolate for activity execution.</param>
-    protected BaseCourierContext(ConsumeContext<RoutingSlip> consumeContext)
+    protected BaseCourierContext(ConsumeContext<IRoutingSlip> consumeContext)
         : base(consumeContext)
     {
-        if (consumeContext == null)
-            throw new ArgumentNullException(nameof(consumeContext));
+        ArgumentNullException.ThrowIfNull(consumeContext);
 
         _timeProvider = consumeContext.GetTimeProvider();
         _startedAt = _timeProvider.GetTimestamp();
@@ -48,13 +47,13 @@ internal abstract class BaseCourierContext :
     Guid ActivityContext.ExecutionId => _executionId;
     IReadOnlyDictionary<string, object> ActivityContext.Variables => _variables;
 
-    RoutingSlip ConsumeContext<RoutingSlip>.Message => RoutingSlip;
+    IRoutingSlip ConsumeContext<IRoutingSlip>.Message => RoutingSlip;
 
     /// <summary>Gets the logical name of the activity represented by this context.</summary>
     public abstract string ActivityName { get; }
 
     Task ActivityContext.NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken)
     {
-        return NotifyConsumedAsync((ConsumeContext<RoutingSlip>)this, duration, consumerType, cancellationToken);
+        return NotifyConsumedAsync((ConsumeContext<IRoutingSlip>)this, duration, consumerType, cancellationToken);
     }
 }

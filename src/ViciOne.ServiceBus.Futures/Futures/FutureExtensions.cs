@@ -113,8 +113,8 @@ public static class FutureExtensions
     /// <param name="binder">The routing-slip fault event binder to extend.</param>
     /// <param name="messageFactory">The synchronous fault factory.</param>
     /// <returns>The same binder with fault storage appended.</returns>
-    public static IEventActivityBinder<FutureState, RoutingSlipFaulted> SetFault<TResult>(this IEventActivityBinder<FutureState, RoutingSlipFaulted> binder,
-        EventMessageFactory<FutureState, RoutingSlipFaulted, TResult> messageFactory)
+    public static IEventActivityBinder<FutureState, IRoutingSlipFaulted> SetFault<TResult>(this IEventActivityBinder<FutureState, IRoutingSlipFaulted> binder,
+        EventMessageFactory<FutureState, IRoutingSlipFaulted, TResult> messageFactory)
         where TResult : class
     {
         ArgumentNullException.ThrowIfNull(binder);

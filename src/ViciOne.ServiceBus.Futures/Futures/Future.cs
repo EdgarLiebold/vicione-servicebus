@@ -224,7 +224,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         where TInput : class
     {
         ArgumentNullException.ThrowIfNull(configure);
-        IEvent<RoutingSlipCompleted> routingSlipCompleted = Event<RoutingSlipCompleted>(FormatEventName<RoutingSlipCompleted>(), x =>
+        IEvent<IRoutingSlipCompleted> routingSlipCompleted = Event<IRoutingSlipCompleted>(FormatEventName<IRoutingSlipCompleted>(), x =>
         {
             x.CorrelateById(m => FutureIdOrFault(m.Advanced(), m.Message.Variables));
             x.OnMissingInstance(m => m
@@ -232,7 +232,7 @@ public abstract class Future<TCommand, TResult, TFault> :
             x.ConfigureConsumeTopology = false;
         });
 
-        IEvent<RoutingSlipFaulted> routingSlipFaulted = Event<RoutingSlipFaulted>(FormatEventName<RoutingSlipFaulted>(), x =>
+        IEvent<IRoutingSlipFaulted> routingSlipFaulted = Event<IRoutingSlipFaulted>(FormatEventName<IRoutingSlipFaulted>(), x =>
         {
             x.CorrelateById(m => FutureIdOrFault(m.Advanced(), m.Message.Variables));
             x.OnMissingInstance(m => m
@@ -250,7 +250,7 @@ public abstract class Future<TCommand, TResult, TFault> :
             FaultPendingRoutingSlip(routingSlipFaulted);
         else
         {
-            if (routingSlip.HasFault(out FutureFault<TCommand, TFault, RoutingSlipFaulted>? fault))
+            if (routingSlip.HasFault(out FutureFault<TCommand, TFault, IRoutingSlipFaulted>? fault))
                 SetFaulted(routingSlipFaulted, context => fault.TrySetFaultedAsync(context, context.CancellationToken));
             else
                 SetFaulted(routingSlipFaulted, context => _fault.TrySetFaultedAsync(context, context.CancellationToken));
@@ -258,7 +258,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         if (routingSlip.CompletedIdProvider != null)
             CompletePending(routingSlipCompleted, routingSlip.CompletedIdProvider);
-        else if (routingSlip.HasResult(out FutureResult<TCommand, TResult, RoutingSlipCompleted>? result))
+        else if (routingSlip.HasResult(out FutureResult<TCommand, TResult, IRoutingSlipCompleted>? result))
             SetResult(routingSlipCompleted, context => result.SetResultAsync(context, context.CancellationToken));
 
         return routingSlip;
@@ -336,7 +336,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         );
     }
 
-    void FaultPendingRoutingSlip(IEvent<RoutingSlipFaulted> requestFaulted)
+    void FaultPendingRoutingSlip(IEvent<IRoutingSlipFaulted> requestFaulted)
     {
         ArgumentNullException.ThrowIfNull(requestFaulted);
         DuringAny(

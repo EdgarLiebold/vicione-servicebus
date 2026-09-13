@@ -70,9 +70,67 @@ public sealed class CourierRegistrationBoundaryTests
         Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IRoutingSlipExecutor));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "runtime-registration-associates-matching-definition-types")]
+    public void RuntimeRegistration_AssociatesMatchingActivityDefinitions()
+    {
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
+
+        IActivityRegistrationConfigurator activity = configurator.AddActivity(
+            typeof(RegisteredActivity),
+            typeof(RegisteredActivityDefinition));
+        IExecuteActivityRegistrationConfigurator executeOnly = configurator.AddExecuteActivity(
+            typeof(RegisteredExecuteActivity),
+            typeof(RegisteredExecuteActivityDefinition));
+
+        Assert.NotNull(activity);
+        Assert.NotNull(executeOnly);
+        Assert.Contains(services, descriptor => descriptor.ImplementationType == typeof(RegisteredActivityDefinition));
+        Assert.Contains(services, descriptor => descriptor.ImplementationType == typeof(RegisteredExecuteActivityDefinition));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "runtime-registration-rejects-missing-inputs-and-mismatched-definitions")]
+    public void RuntimeRegistration_RejectsMissingInputsAndMismatchedDefinitions()
+    {
+        var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
+
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            CourierRegistrationConfiguratorRuntimeExtensions.AddActivity(null!, typeof(RegisteredActivity))).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            CourierRegistrationConfiguratorRuntimeExtensions.AddExecuteActivity(null!, typeof(RegisteredExecuteActivity))).ParamName);
+        Assert.Equal("activityType", Assert.Throws<ArgumentNullException>(() => configurator.AddActivity(null!)).ParamName);
+        Assert.Equal("activityType", Assert.Throws<ArgumentNullException>(() => configurator.AddExecuteActivity(null!)).ParamName);
+
+        ArgumentException activityDefinition = Assert.Throws<ArgumentException>(() => configurator.AddActivity(
+            typeof(RegisteredActivity),
+            typeof(RegisteredExecuteActivityDefinition)));
+        ArgumentException executeDefinition = Assert.Throws<ArgumentException>(() => configurator.AddExecuteActivity(
+            typeof(RegisteredExecuteActivity),
+            typeof(RegisteredActivityDefinition)));
+
+        Assert.Equal("activityDefinitionType", activityDefinition.ParamName);
+        Assert.Equal("activityDefinitionType", executeDefinition.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "generic-execute-only-registration-rejects-compensatable-activities")]
+    public void GenericExecuteOnlyRegistration_RejectsACompensatableActivity()
+    {
+        var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            configurator.AddExecuteActivity<RegisteredActivity, RegisteredArguments>());
+
+        Assert.Contains("AddActivity", exception.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(RegisteredActivity), exception.Message, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData(typeof(object), false)]
     [InlineData(typeof(ExecuteOnlyActivityWithTwoContracts), false)]
+    [InlineData(typeof(RegisteredActivity), false)]
     [InlineData(typeof(RegisteredExecuteActivity), true)]
     [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "runtime-registration-rejects-wrong-or-ambiguous-shapes")]
     public void RuntimeRegistration_RejectsTypesWithoutOneExactGenericContract(Type type, bool compensatableApi)

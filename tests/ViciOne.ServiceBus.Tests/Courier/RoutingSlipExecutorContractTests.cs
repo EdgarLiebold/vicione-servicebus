@@ -29,7 +29,7 @@ public sealed class RoutingSlipExecutorContractTests
         var clock = new FakeTimeProvider(CreatedAt);
         var arguments = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { ["input"] = "original" };
         var variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { ["tenant"] = "north" };
-        var itinerary = new List<Activity>
+        var itinerary = new List<IActivity>
         {
             new MutableActivity("ChargeCard", new Uri("loopback://localhost/charge"), arguments),
         };
@@ -42,7 +42,7 @@ public sealed class RoutingSlipExecutorContractTests
         variables["tenant"] = "south";
         itinerary.Clear();
 
-        RoutingSlip submitted = Assert.IsAssignableFrom<RoutingSlip>(Assert.Single(transport.Sent));
+        IRoutingSlip submitted = Assert.IsAssignableFrom<IRoutingSlip>(Assert.Single(transport.Sent));
         Assert.NotSame(source, submitted);
         Assert.Equal("original", Assert.Single(submitted.Itinerary).Arguments["input"]);
         Assert.Equal("north", submitted.Variables["tenant"]);
@@ -63,7 +63,7 @@ public sealed class RoutingSlipExecutorContractTests
         await executor.ExecuteAsync(source, TestContext.Current.CancellationToken);
         variables["tenant"] = "south";
 
-        RoutingSlipCompleted completed = Assert.IsAssignableFrom<RoutingSlipCompleted>(Assert.Single(transport.Published));
+        IRoutingSlipCompleted completed = Assert.IsAssignableFrom<IRoutingSlipCompleted>(Assert.Single(transport.Published));
         Assert.Equal(CreatedAt.AddMinutes(7), completed.Timestamp);
         Assert.Equal(TimeSpan.FromMinutes(7), completed.Duration);
         Assert.Equal("north", completed.Variables["tenant"]);
@@ -78,7 +78,7 @@ public sealed class RoutingSlipExecutorContractTests
         var clock = new FakeTimeProvider(CreatedAt);
         var executor = new RoutingSlipExecutor(transport, transport, clock);
         MutableRoutingSlip valid = MutableRoutingSlip.Create([], new Dictionary<string, object>());
-        RoutingSlip[] malformed =
+        IRoutingSlip[] malformed =
         [
             valid with { TrackingNumber = Guid.Empty },
             valid with { CreateTimestamp = default },
@@ -94,7 +94,7 @@ public sealed class RoutingSlipExecutorContractTests
             },
         ];
 
-        foreach (RoutingSlip routingSlip in malformed)
+        foreach (IRoutingSlip routingSlip in malformed)
         {
             ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() =>
                 executor.ExecuteAsync(routingSlip, TestContext.Current.CancellationToken));
@@ -121,25 +121,25 @@ public sealed class RoutingSlipExecutorContractTests
         Assert.Empty(transport.Published);
     }
 
-    private sealed record MutableRoutingSlip : RoutingSlip
+    private sealed record MutableRoutingSlip : IRoutingSlip
     {
         public Guid TrackingNumber { get; init; }
 
         public DateTimeOffset CreateTimestamp { get; init; }
 
-        public IReadOnlyList<Activity> Itinerary { get; init; } = [];
+        public IReadOnlyList<IActivity> Itinerary { get; init; } = [];
 
-        public IReadOnlyList<ActivityLog> ActivityLogs { get; init; } = [];
+        public IReadOnlyList<IActivityLog> ActivityLogs { get; init; } = [];
 
-        public IReadOnlyList<CompensateLog> CompensateLogs { get; init; } = [];
+        public IReadOnlyList<ICompensateLog> CompensateLogs { get; init; } = [];
 
         public IReadOnlyDictionary<string, object> Variables { get; init; } = new Dictionary<string, object>();
 
-        public IReadOnlyList<ActivityException> ActivityExceptions { get; init; } = [];
+        public IReadOnlyList<IActivityException> ActivityExceptions { get; init; } = [];
 
-        public IReadOnlyList<Subscription> Subscriptions { get; init; } = [];
+        public IReadOnlyList<ISubscription> Subscriptions { get; init; } = [];
 
-        public static MutableRoutingSlip Create(IReadOnlyList<Activity> itinerary, IReadOnlyDictionary<string, object> variables) =>
+        public static MutableRoutingSlip Create(IReadOnlyList<IActivity> itinerary, IReadOnlyDictionary<string, object> variables) =>
             new()
             {
                 TrackingNumber = NewId.NextGuid(),
@@ -149,7 +149,7 @@ public sealed class RoutingSlipExecutorContractTests
             };
     }
 
-    private sealed class MutableActivity(string name, Uri address, IReadOnlyDictionary<string, object> arguments) : Activity
+    private sealed class MutableActivity(string name, Uri address, IReadOnlyDictionary<string, object> arguments) : IActivity
     {
         public string Name { get; } = name;
 

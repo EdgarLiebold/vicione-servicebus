@@ -22,9 +22,9 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         ExecuteActivityTestHarness<RevisingActivity, RevisionArguments> revising = harness.AddExecuteActivity<
             RevisingActivity,
             RevisionArguments>(_ => new RevisingActivity(() => recording.ExecuteAddress, preserveSource: true));
-        using var revised = new CourierMessageRecorder<RoutingSlipRevised>(1);
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(3);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var revised = new CourierMessageRecorder<IRoutingSlipRevised>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(3);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         revised.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
@@ -45,7 +45,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(["appended", "source"], executionOrder);
-            ConsumeContext<RoutingSlipRevised> revision = Assert.Single(revised.Messages);
+            ConsumeContext<IRoutingSlipRevised> revision = Assert.Single(revised.Messages);
             Assert.Equal(trackingNumber, revision.Message.TrackingNumber);
             Assert.Equal(["Appended", "Source"], revision.Message.Itinerary.Select(x => x.Name));
             Assert.Empty(revision.Message.DiscardedItinerary);
@@ -72,9 +72,9 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         ExecuteActivityTestHarness<RevisingActivity, RevisionArguments> revising = harness.AddExecuteActivity<
             RevisingActivity,
             RevisionArguments>(_ => new RevisingActivity(() => recording.ExecuteAddress, preserveSource: false));
-        using var revised = new CourierMessageRecorder<RoutingSlipRevised>(1);
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var revised = new CourierMessageRecorder<IRoutingSlipRevised>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         revised.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
@@ -95,10 +95,10 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Empty(executionOrder);
-            ConsumeContext<RoutingSlipRevised> revision = Assert.Single(revised.Messages);
+            ConsumeContext<IRoutingSlipRevised> revision = Assert.Single(revised.Messages);
             Assert.Equal(trackingNumber, revision.Message.TrackingNumber);
             Assert.Empty(revision.Message.Itinerary);
-            Activity discarded = Assert.Single(revision.Message.DiscardedItinerary);
+            IActivity discarded = Assert.Single(revision.Message.DiscardedItinerary);
             Assert.Equal("Discarded", discarded.Name);
             Assert.Equal(recording.ExecuteAddress, discarded.Address);
             Assert.Single(activityCompleted.Messages);
@@ -124,9 +124,9 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> remaining = harness.AddExecuteActivity<
             RecordingRevisionActivity,
             RevisionArguments>(_ => new RecordingRevisionActivity(executionOrder));
-        using var terminated = new CourierMessageRecorder<RoutingSlipTerminated>(1);
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var terminated = new CourierMessageRecorder<IRoutingSlipTerminated>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         terminated.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
@@ -147,11 +147,11 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Empty(executionOrder);
-            ConsumeContext<RoutingSlipTerminated> terminal = Assert.Single(terminated.Messages);
+            ConsumeContext<IRoutingSlipTerminated> terminal = Assert.Single(terminated.Messages);
             Assert.Equal(trackingNumber, terminal.Message.TrackingNumber);
             Assert.Equal(terminating.Name, terminal.Message.ActivityName);
             Assert.Equal("terminated", terminal.Message.Variables["Outcome"]);
-            Activity discarded = Assert.Single(terminal.Message.DiscardedItinerary);
+            IActivity discarded = Assert.Single(terminal.Message.DiscardedItinerary);
             Assert.Equal("Discarded", discarded.Name);
             Assert.Equal(remaining.ExecuteAddress, discarded.Address);
             Assert.Single(activityCompleted.Messages);
@@ -179,9 +179,9 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             RevisionArguments>(_ => new SubscriptionRevisingActivity(
                 () => recording.ExecuteAddress,
                 harness.InputQueueAddress));
-        using var revised = new CourierMessageRecorder<RoutingSlipRevised>(1);
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var revised = new CourierMessageRecorder<IRoutingSlipRevised>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(2);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         revised.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
@@ -201,7 +201,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(["subscribed"], executionOrder);
-            ConsumeContext<RoutingSlipActivityCompleted> appended = Assert.Single(
+            ConsumeContext<IRoutingSlipActivityCompleted> appended = Assert.Single(
                 activityCompleted.Messages,
                 context => context.Message.ActivityName == "Subscribed");
             Assert.Equal("subscribed", appended.GetArgument<string>(nameof(RevisionArguments.Label)));
@@ -226,8 +226,8 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(), _ => new FirstCourierActivity());
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -249,7 +249,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
                 completed.WaitAsync(timeout, cancellationToken));
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
-            ConsumeContext<RoutingSlipActivityCompleted> actual = Assert.Single(activityCompleted.Messages);
+            ConsumeContext<IRoutingSlipActivityCompleted> actual = Assert.Single(activityCompleted.Messages);
             Assert.Equal(trackingNumber, actual.Message.TrackingNumber);
             Assert.Empty(actual.Message.Data);
             Assert.Empty(actual.Message.Variables);
@@ -365,7 +365,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             Task.FromResult(context.Completed());
     }
 
-    public interface RegistrationCompleted : RoutingSlipCompleted
+    public interface RegistrationCompleted : IRoutingSlipCompleted
     {
         string Value { get; }
     }

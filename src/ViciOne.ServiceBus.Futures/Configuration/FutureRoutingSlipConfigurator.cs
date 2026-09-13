@@ -24,16 +24,16 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
 {
     readonly IFutureStateMachineConfigurator _configurator;
     IRoutingSlipExecutor<TInput> _executor;
-    FutureFault<TCommand, TFault, RoutingSlipFaulted>? _fault;
-    FutureResult<TCommand, TResult, RoutingSlipCompleted>? _result;
+    FutureFault<TCommand, TFault, IRoutingSlipFaulted>? _fault;
+    FutureResult<TCommand, TResult, IRoutingSlipCompleted>? _result;
     bool _trackRoutingSlip;
 
     /// <summary>Creates routing-slip execution and terminal-event configuration for a future.</summary>
     /// <param name="configurator">The future state-machine configurator.</param>
     /// <param name="routingSlipCompleted">The routing-slip completion event.</param>
     /// <param name="routingSlipFaulted">The routing-slip fault event.</param>
-    public FutureRoutingSlipConfigurator(IFutureStateMachineConfigurator configurator, IEvent<RoutingSlipCompleted> routingSlipCompleted,
-        IEvent<RoutingSlipFaulted> routingSlipFaulted)
+    public FutureRoutingSlipConfigurator(IFutureStateMachineConfigurator configurator, IEvent<IRoutingSlipCompleted> routingSlipCompleted,
+        IEvent<IRoutingSlipFaulted> routingSlipFaulted)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(routingSlipCompleted);
@@ -48,34 +48,34 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     }
 
     /// <summary>Gets the selector that completes the pending routing-slip identifier.</summary>
-    public PendingFutureIdProvider<RoutingSlipCompleted>? CompletedIdProvider { get; private set; }
+    public PendingFutureIdProvider<IRoutingSlipCompleted>? CompletedIdProvider { get; private set; }
     /// <summary>Gets the selector that faults the pending routing-slip identifier.</summary>
-    public PendingFutureIdProvider<RoutingSlipFaulted>? FaultedIdProvider { get; private set; }
+    public PendingFutureIdProvider<IRoutingSlipFaulted>? FaultedIdProvider { get; private set; }
     /// <summary>Gets the routing-slip completion event.</summary>
-    public IEvent<RoutingSlipCompleted> Completed { get; }
+    public IEvent<IRoutingSlipCompleted> Completed { get; }
     /// <summary>Gets the routing-slip fault event.</summary>
-    public IEvent<RoutingSlipFaulted> Faulted { get; }
+    public IEvent<IRoutingSlipFaulted> Faulted { get; }
 
     /// <summary>Configures how routing-slip completion creates the successful future result.</summary>
     /// <param name="configure">The callback that configures the future result message.</param>
-    public void OnRoutingSlipCompleted(Action<IFutureResultConfigurator<TResult, RoutingSlipCompleted>> configure)
+    public void OnRoutingSlipCompleted(Action<IFutureResultConfigurator<TResult, IRoutingSlipCompleted>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
-        _result ??= new FutureResult<TCommand, TResult, RoutingSlipCompleted>();
+        _result ??= new FutureResult<TCommand, TResult, IRoutingSlipCompleted>();
 
-        var configurator = new FutureResultConfigurator<TCommand, TResult, RoutingSlipCompleted>(_result);
+        var configurator = new FutureResultConfigurator<TCommand, TResult, IRoutingSlipCompleted>(_result);
 
         configure(configurator);
     }
 
     /// <summary>Configures how a routing-slip fault creates the terminal future fault.</summary>
     /// <param name="configure">The callback that configures the future fault message.</param>
-    public void OnRoutingSlipFaulted(Action<IFutureFaultConfigurator<TFault, RoutingSlipFaulted>> configure)
+    public void OnRoutingSlipFaulted(Action<IFutureFaultConfigurator<TFault, IRoutingSlipFaulted>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
-        _fault ??= new FutureFault<TCommand, TFault, RoutingSlipFaulted>();
+        _fault ??= new FutureFault<TCommand, TFault, IRoutingSlipFaulted>();
 
-        var configurator = new FutureFaultConfigurator<TCommand, TFault, RoutingSlipFaulted>(_fault);
+        var configurator = new FutureFaultConfigurator<TCommand, TFault, IRoutingSlipFaulted>(_fault);
 
         configure(configurator);
     }
@@ -83,7 +83,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Adds state-machine activities executed when the routing slip completes.</summary>
     /// <param name="configure">The callback that adds activities to the completion event.</param>
     public void WhenRoutingSlipCompleted(
-        Func<IEventActivityBinder<FutureState, RoutingSlipCompleted>, IEventActivityBinder<FutureState, RoutingSlipCompleted>> configure)
+        Func<IEventActivityBinder<FutureState, IRoutingSlipCompleted>, IEventActivityBinder<FutureState, IRoutingSlipCompleted>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configurator.DuringAnyWhen(Completed, configure);
@@ -92,7 +92,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Adds state-machine activities executed when the routing slip faults.</summary>
     /// <param name="configure">The callback that adds activities to the fault event.</param>
     public void WhenRoutingSlipFaulted(
-        Func<IEventActivityBinder<FutureState, RoutingSlipFaulted>, IEventActivityBinder<FutureState, RoutingSlipFaulted>> configure)
+        Func<IEventActivityBinder<FutureState, IRoutingSlipFaulted>, IEventActivityBinder<FutureState, IRoutingSlipFaulted>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configurator.DuringAnyWhen(Faulted, configure);
@@ -147,7 +147,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
 
     }
 
-    static object RoutingSlipFaultedValueProvider(IBehaviorContext<FutureState, RoutingSlipFaulted> context)
+    static object RoutingSlipFaultedValueProvider(IBehaviorContext<FutureState, IRoutingSlipFaulted> context)
     {
         var message = context.GetCommand<TCommand>();
 
@@ -168,7 +168,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Returns the configured routing-slip result producer when present.</summary>
     /// <param name="result">Receives the configured result producer.</param>
     /// <returns><see langword="true" /> when result production is configured; otherwise, <see langword="false" />.</returns>
-    public bool HasResult([NotNullWhen(true)] out FutureResult<TCommand, TResult, RoutingSlipCompleted>? result)
+    public bool HasResult([NotNullWhen(true)] out FutureResult<TCommand, TResult, IRoutingSlipCompleted>? result)
     {
         result = _result;
         return result != null;
@@ -177,7 +177,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Returns the configured routing-slip fault producer when present.</summary>
     /// <param name="fault">Receives the configured fault producer.</param>
     /// <returns><see langword="true" /> when fault production is configured; otherwise, <see langword="false" />.</returns>
-    public bool HasFault([NotNullWhen(true)] out FutureFault<TCommand, TFault, RoutingSlipFaulted>? fault)
+    public bool HasFault([NotNullWhen(true)] out FutureFault<TCommand, TFault, IRoutingSlipFaulted>? fault)
     {
         fault = _fault;
         return fault != null;
@@ -193,12 +193,12 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
         return _executor.ExecuteAsync(context, cancellationToken: cancellationToken);
     }
 
-    static Guid GetTrackingNumber(RoutingSlipCompleted message)
+    static Guid GetTrackingNumber(IRoutingSlipCompleted message)
     {
         return message.TrackingNumber;
     }
 
-    static Guid GetTrackingNumber(RoutingSlipFaulted message)
+    static Guid GetTrackingNumber(IRoutingSlipFaulted message)
     {
         return message.TrackingNumber;
     }

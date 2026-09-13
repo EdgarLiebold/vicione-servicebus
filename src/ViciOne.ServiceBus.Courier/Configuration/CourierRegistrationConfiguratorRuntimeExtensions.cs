@@ -40,6 +40,13 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityType);
 
+        if (activityType.ImplementsInterface(typeof(IActivity<,>)))
+        {
+            throw new ArgumentException(
+                $"Compensatable Courier activities must be registered using AddActivity: {TypeCache.GetShortName(activityType)}",
+                nameof(activityType));
+        }
+
         Type[] types = GetSingleContractArguments(
             activityType,
             typeof(IExecuteActivity<>),

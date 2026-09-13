@@ -30,7 +30,7 @@ public sealed class RoutingSlipRequestProxyContractTests
 
         await proxy.ConsumeAsync(context);
 
-        RoutingSlip routingSlip = Assert.IsAssignableFrom<RoutingSlip>(Assert.Single(endpoint.Messages));
+        IRoutingSlip routingSlip = Assert.IsAssignableFrom<IRoutingSlip>(Assert.Single(endpoint.Messages));
         Assert.Equal(ContextTime, routingSlip.CreateTimestamp);
         Assert.Equal(requestId, routingSlip.Variables[RoutingSlipRequestVariableNames.RequestId]);
         Assert.Equal(ClientResponseAddress, routingSlip.Variables[RoutingSlipRequestVariableNames.ResponseAddress]);

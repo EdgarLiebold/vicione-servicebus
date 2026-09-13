@@ -24,8 +24,8 @@ public sealed class RoutingSlipArgumentIntegrationTests
         ExecuteActivityTestHarness<ResolveArgumentsActivity, ResolveArguments> activity = harness.AddExecuteActivity<
             ResolveArgumentsActivity,
             ResolveArguments>(_ => new ResolveArgumentsActivity(observed));
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
         completed.Configure(harness);
         activityCompleted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -57,7 +57,7 @@ public sealed class RoutingSlipArgumentIntegrationTests
             Assert.True(actual.Enabled);
             Assert.Equal(shape == ArgumentShape.Explicit ? activityTimestamp : variableTimestamp, actual.Timestamp);
             Assert.Equal(trackingNumber, Assert.Single(completed.Messages).Message.TrackingNumber);
-            ConsumeContext<RoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
+            ConsumeContext<IRoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
             Assert.Equal(trackingNumber, activityEvent.Message.TrackingNumber);
             Assert.Equal(expectedValue, activityEvent.GetArgument<string>(nameof(ResolveArguments.Value)));
             Assert.Equal(trackingNumber, activityEvent.GetArgument<Guid>(nameof(ResolveArguments.GuidValue)));

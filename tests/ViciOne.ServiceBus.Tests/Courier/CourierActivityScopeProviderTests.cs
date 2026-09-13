@@ -193,7 +193,7 @@ public sealed class CourierActivityScopeProviderTests
 
     private static ExecuteContext<TestArguments> CreateExecuteContext(TestArguments arguments, IServiceScope? existingScope = null)
     {
-        ConsumeContext<RoutingSlip> transport = CreateTransportContext();
+        ConsumeContext<IRoutingSlip> transport = CreateTransportContext();
         TestExecuteContext context = DispatchProxy.Create<TestExecuteContext, ExecuteContextProxy>();
         var proxy = (ExecuteContextProxy)(object)context;
         proxy.Arguments = arguments;
@@ -204,7 +204,7 @@ public sealed class CourierActivityScopeProviderTests
 
     private static CompensateContext<TestLog> CreateCompensateContext(TestLog log, IServiceScope? existingScope = null)
     {
-        ConsumeContext<RoutingSlip> transport = CreateTransportContext();
+        ConsumeContext<IRoutingSlip> transport = CreateTransportContext();
         TestCompensateContext context = DispatchProxy.Create<TestCompensateContext, CompensateContextProxy>();
         var proxy = (CompensateContextProxy)(object)context;
         proxy.Log = log;
@@ -213,7 +213,7 @@ public sealed class CourierActivityScopeProviderTests
         return context;
     }
 
-    private static ConsumeContext<RoutingSlip> CreateTransportContext()
+    private static ConsumeContext<IRoutingSlip> CreateTransportContext()
     {
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
         return InMemoryOutboxTestContextFactory.Create(builder.Build());

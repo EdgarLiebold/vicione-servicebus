@@ -25,7 +25,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         ExecuteActivityTestHarness<DelayedFaultingCourierActivity, DelayedCourierArguments> failing = harness.AddExecuteActivity<
             DelayedFaultingCourierActivity,
             DelayedCourierArguments>();
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
 
@@ -66,7 +66,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         ExecuteActivityTestHarness<InvalidResultOptionsCourierActivity, InvalidResultOptionsArguments> activity = harness.AddExecuteActivity<
             InvalidResultOptionsCourierActivity,
             InvalidResultOptionsArguments>();
-        using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
+        using var activityFaulted = new CourierMessageRecorder<IRoutingSlipActivityFaulted>(1);
         activityFaulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
 
@@ -103,12 +103,12 @@ public sealed class RoutingSlipFaultIntegrationTests
         {
             var builder = new RoutingSlipBuilder(NewId.NextGuid());
             builder.AddActivity(cancelling.Name, cancelling.ExecuteAddress, new CourierArguments("cancel"));
-            Task<IPublishedMessage<Fault<RoutingSlip>>> faultTask = harness.Published
-                .SelectAsync<Fault<RoutingSlip>>(cancellationToken)
+            Task<IPublishedMessage<Fault<IRoutingSlip>>> faultTask = harness.Published
+                .SelectAsync<Fault<IRoutingSlip>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: cancellationToken);
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
-            Fault<RoutingSlip> fault = (await faultTask.WaitAsync(timeout, cancellationToken)).Context.Message;
+            Fault<IRoutingSlip> fault = (await faultTask.WaitAsync(timeout, cancellationToken)).Context.Message;
 
             ExceptionInfo exception = Assert.Single(fault.Exceptions);
             Assert.Equal(TypeCache<ConsumerCanceledException>.ShortName, exception.ExceptionType);
@@ -141,12 +141,12 @@ public sealed class RoutingSlipFaultIntegrationTests
             var builder = new RoutingSlipBuilder(NewId.NextGuid());
             builder.AddActivity(cancelling.Name, cancelling.ExecuteAddress, new CourierArguments("cancel"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("begin compensation"));
-            Task<IPublishedMessage<Fault<RoutingSlip>>> faultTask = harness.Published
-                .SelectAsync<Fault<RoutingSlip>>(cancellationToken)
+            Task<IPublishedMessage<Fault<IRoutingSlip>>> faultTask = harness.Published
+                .SelectAsync<Fault<IRoutingSlip>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: cancellationToken);
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
-            Fault<RoutingSlip> fault = (await faultTask.WaitAsync(timeout, cancellationToken)).Context.Message;
+            Fault<IRoutingSlip> fault = (await faultTask.WaitAsync(timeout, cancellationToken)).Context.Message;
 
             ExceptionInfo exception = Assert.Single(fault.Exceptions);
             Assert.Equal(TypeCache<ConsumerCanceledException>.ShortName, exception.ExceptionType);
@@ -177,9 +177,9 @@ public sealed class RoutingSlipFaultIntegrationTests
         ExecuteActivityTestHarness<ThrowingCourierActivity, FaultingCourierArguments> throwing = harness.AddExecuteActivity<
             ThrowingCourierActivity,
             FaultingCourierArguments>();
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(2);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(2);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(2);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         activityCompleted.Configure(harness);
         compensated.Configure(harness);
         faulted.Configure(harness);
@@ -211,13 +211,13 @@ public sealed class RoutingSlipFaultIntegrationTests
                 "first",
                 Assert.Single(compensated.Messages, context => context.Message.ActivityName == first.Name)
                     .GetResult<string>(nameof(CourierLog.OriginalValue)));
-            ConsumeContext<RoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
+            ConsumeContext<IRoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
             Assert.Equal(trackingNumber, slipFailure.Message.TrackingNumber);
             Assert.False(slipFailure.Message.Variables.ContainsKey("ActivityValue"));
             ExceptionInfo actual = Assert.Single(slipFailure.Message.ActivityExceptions).ExceptionInfo;
             Assert.Equal(TypeCache<CourierExpectedException>.ShortName, actual.ExceptionType);
             Assert.Equal("thrown-courier-failure", actual.Message);
-            Assert.Empty(harness.Published.Snapshot<Fault<RoutingSlip>>());
+            Assert.Empty(harness.Published.Snapshot<Fault<IRoutingSlip>>());
         }
         finally
         {
@@ -244,10 +244,10 @@ public sealed class RoutingSlipFaultIntegrationTests
         ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
-        using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(2);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(2);
+        using var activityFaulted = new CourierMessageRecorder<IRoutingSlipActivityFaulted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(2);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         activityCompleted.Configure(harness);
         activityFaulted.Configure(harness);
         compensated.Configure(harness);
@@ -284,16 +284,16 @@ public sealed class RoutingSlipFaultIntegrationTests
                     .GetResult<string>(nameof(CourierLog.OriginalValue)));
             Assert.All(activityCompleted.Messages, context => Assert.Equal(trackingNumber, context.Message.TrackingNumber));
             Assert.All(compensated.Messages, context => Assert.Equal(trackingNumber, context.Message.TrackingNumber));
-            ConsumeContext<RoutingSlipActivityFaulted> activityFailure = Assert.Single(activityFaulted.Messages);
+            ConsumeContext<IRoutingSlipActivityFaulted> activityFailure = Assert.Single(activityFaulted.Messages);
             Assert.Equal(failing.Name, activityFailure.Message.ActivityName);
             Assert.Contains("expected-courier-failure", activityFailure.Message.ExceptionInfo.Message);
             Assert.Equal("fault-output", activityFailure.GetVariable<string>("FaultVariable"));
-            ConsumeContext<RoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
+            ConsumeContext<IRoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
             Assert.Equal(trackingNumber, slipFailure.Message.TrackingNumber);
             Assert.Equal("knife", slipFailure.GetVariable<string>("SlipVariable"));
             Assert.Equal("fault-output", slipFailure.GetVariable<string>("FaultVariable"));
             Assert.Single(slipFailure.Message.ActivityExceptions);
-            Assert.Empty(harness.Published.Snapshot<Fault<RoutingSlip>>());
+            Assert.Empty(harness.Published.Snapshot<Fault<IRoutingSlip>>());
         }
         finally
         {
@@ -319,8 +319,8 @@ public sealed class RoutingSlipFaultIntegrationTests
         ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(2);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(2);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -337,7 +337,7 @@ public sealed class RoutingSlipFaultIntegrationTests
                 compensated.WaitAsync(timeout, cancellationToken),
                 faulted.WaitAsync(timeout, cancellationToken));
 
-            ConsumeContext<RoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
+            ConsumeContext<IRoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
             Assert.False(slipFailure.Message.Variables.ContainsKey("ActivityValue"));
             Assert.Equal(2, compensated.Count);
         }
@@ -357,8 +357,8 @@ public sealed class RoutingSlipFaultIntegrationTests
         ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
-        using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
-        using var slipFaulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var activityFaulted = new CourierMessageRecorder<IRoutingSlipActivityFaulted>(1);
+        using var slipFaulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         activityFaulted.Configure(harness);
         slipFaulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -376,7 +376,7 @@ public sealed class RoutingSlipFaultIntegrationTests
 
             Assert.Single(activityFaulted.Messages);
             Assert.Single(slipFaulted.Messages);
-            Assert.Empty(harness.Published.Snapshot<Fault<RoutingSlip>>());
+            Assert.Empty(harness.Published.Snapshot<Fault<IRoutingSlip>>());
         }
         finally
         {

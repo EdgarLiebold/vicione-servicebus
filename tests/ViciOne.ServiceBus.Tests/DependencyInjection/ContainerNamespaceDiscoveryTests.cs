@@ -51,8 +51,8 @@ public sealed class ContainerNamespaceDiscoveryTests
                 new Uri("queue:PingSecond_execute"),
                 new ContainerDiscovery.PingArguments(routingCorrelationId));
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
-            IPublishedMessage<RoutingSlipCompleted> slipCompleted = await harness.Published
-                .SelectAsync<RoutingSlipCompleted>(
+            IPublishedMessage<IRoutingSlipCompleted> slipCompleted = await harness.Published
+                .SelectAsync<IRoutingSlipCompleted>(
                     message => message.Context.Message.TrackingNumber == routingCorrelationId,
                     cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);

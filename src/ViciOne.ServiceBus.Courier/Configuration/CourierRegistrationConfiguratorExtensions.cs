@@ -1,6 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
+using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -44,6 +45,13 @@ public static class CourierRegistrationConfiguratorExtensions
         where TArguments : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
+
+        if (typeof(TActivity).ImplementsInterface(typeof(IActivity<,>)))
+        {
+            throw new ArgumentException(
+                $"Compensatable Courier activities must be registered using AddActivity: {TypeCache<TActivity>.ShortName}");
+        }
+
         CourierServiceRegistration.Register(configurator.Services, configurator.BusType);
         IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
         IExecuteActivityRegistration registration = configurator.Services.RegisterExecuteActivity<TActivity, TArguments>(advanced.Registrar,

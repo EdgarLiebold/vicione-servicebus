@@ -8,14 +8,14 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 /// <summary>Adds in-memory-outbox behavior while preserving an underlying Courier activity context.</summary>
 internal abstract class InMemoryOutboxCourierContextProxy :
-    InMemoryOutboxConsumeContext<RoutingSlip>,
-    CourierContext
+    InMemoryOutboxConsumeContext<IRoutingSlip>,
+    ICourierContext
 {
-    readonly CourierContext _courierContext;
+    readonly ICourierContext _courierContext;
 
     /// <summary>Creates an outbox-decorated Courier context.</summary>
     /// <param name="courierContext">The Courier context whose activity state is preserved.</param>
-    protected InMemoryOutboxCourierContextProxy(CourierContext courierContext)
+    protected InMemoryOutboxCourierContextProxy(ICourierContext courierContext)
         : base(courierContext ?? throw new ArgumentNullException(nameof(courierContext)))
     {
         _courierContext = courierContext;

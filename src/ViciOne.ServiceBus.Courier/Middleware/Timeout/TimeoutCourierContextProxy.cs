@@ -8,16 +8,16 @@ namespace ViciOne.ServiceBus.Middleware.Timeout;
 
 /// <summary>Adds timeout cancellation while preserving an underlying Courier activity context.</summary>
 internal abstract class TimeoutCourierContextProxy :
-    TimeoutConsumeContext<RoutingSlip>,
-    CourierContext
+    TimeoutConsumeContext<IRoutingSlip>,
+    ICourierContext
 {
-    readonly CourierContext _courierContext;
+    readonly ICourierContext _courierContext;
 
     /// <summary>Creates a timeout-decorated Courier context.</summary>
     /// <param name="courierContext">The Courier context whose activity state is preserved.</param>
-    /// <param name="cancellationToken">The token that represents the configured timeout boundary.</param>
     /// <param name="timeout">The positive timeout used for fault diagnostics.</param>
-    protected TimeoutCourierContextProxy(CourierContext courierContext, CancellationToken cancellationToken, TimeSpan timeout)
+    /// <param name="cancellationToken">The token that represents the configured timeout boundary.</param>
+    protected TimeoutCourierContextProxy(ICourierContext courierContext, TimeSpan timeout, CancellationToken cancellationToken)
         : base(courierContext ?? throw new ArgumentNullException(nameof(courierContext)), cancellationToken, timeout)
     {
         _courierContext = courierContext;

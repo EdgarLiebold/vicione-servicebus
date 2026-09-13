@@ -241,7 +241,7 @@ public sealed class RoutingSlipRequestIntegrationTests
     private sealed class SuccessfulResponseProxy : RoutingSlipResponseProxy<CourierRequest, CourierResponse>
     {
         protected override Task<CourierResponse> CreateResponseMessageAsync(
-            ConsumeContext<RoutingSlipCompleted> context,
+            ConsumeContext<IRoutingSlipCompleted> context,
             CourierRequest request) =>
             Task.FromResult(new CourierResponse(
                 request.DomainRequestId,
@@ -255,7 +255,7 @@ public sealed class RoutingSlipRequestIntegrationTests
     private sealed class StandardFaultResponseProxy : RoutingSlipResponseProxy<CourierRequest, CourierResponse>
     {
         protected override Task<CourierResponse> CreateResponseMessageAsync(
-            ConsumeContext<RoutingSlipCompleted> context,
+            ConsumeContext<IRoutingSlipCompleted> context,
             CourierRequest request) =>
             throw new InvalidOperationException("The fault scenario must not create a success response.");
     }
@@ -265,7 +265,7 @@ public sealed class RoutingSlipRequestIntegrationTests
         protected override IRetryPolicy RetryPolicy { get; } = Retry.Immediate(1);
 
         protected override Task<CourierResponse> CreateResponseMessageAsync(
-            ConsumeContext<RoutingSlipCompleted> context,
+            ConsumeContext<IRoutingSlipCompleted> context,
             CourierRequest request) =>
             throw new InvalidOperationException("The fault scenario must not create a success response.");
     }
@@ -274,12 +274,12 @@ public sealed class RoutingSlipRequestIntegrationTests
         RoutingSlipResponseProxy<CourierRequest, CourierResponse, CourierFaultResponse>
     {
         protected override Task<CourierResponse> CreateResponseMessageAsync(
-            ConsumeContext<RoutingSlipCompleted> context,
+            ConsumeContext<IRoutingSlipCompleted> context,
             CourierRequest request) =>
             throw new InvalidOperationException("The declared fault scenario must not create a success response.");
 
         protected override Task<CourierFaultResponse> CreateFaultedResponseMessageAsync(
-            ConsumeContext<RoutingSlipFaulted> context,
+            ConsumeContext<IRoutingSlipFaulted> context,
             CourierRequest request,
             Guid requestId)
         {

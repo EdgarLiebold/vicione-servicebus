@@ -7,15 +7,15 @@ namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Adds scoped payloads while preserving the underlying Courier activity state.</summary>
 internal abstract class CourierContextScope :
-    ConsumeContextScope<RoutingSlip>,
-    CourierContext
+    ConsumeContextScope<IRoutingSlip>,
+    ICourierContext
 {
-    readonly CourierContext _courierContext;
+    readonly ICourierContext _courierContext;
 
     /// <summary>Creates an activity context scope initialized with local payloads.</summary>
     /// <param name="courierContext">The Courier context whose activity state is preserved.</param>
     /// <param name="payloads">The payload values visible within the new scope.</param>
-    protected CourierContextScope(CourierContext courierContext, params object[] payloads)
+    protected CourierContextScope(ICourierContext courierContext, params object[] payloads)
         : base(courierContext ?? throw new ArgumentNullException(nameof(courierContext)), payloads)
     {
         _courierContext = courierContext;

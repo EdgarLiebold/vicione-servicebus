@@ -750,6 +750,21 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "courier-project-folders-mirror-public-namespaces")]
+    public void CourierProjectSourceFolders_MirrorTheirPublicNamespaces()
+    {
+        const string namespaceRoot = "ViciOne.ServiceBus";
+        string projectRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Courier");
+        string projectPath = Path.Combine(projectRoot, "ViciOne.ServiceBus.Courier.csproj");
+        List<string> violations = FindNamespaceFolderViolations(projectRoot, namespaceRoot).ToList();
+        string rootNamespace = MsBuildEvaluation.PropertyOf(projectPath, "RootNamespace");
+        if (!StringComparer.Ordinal.Equals(namespaceRoot, rootNamespace))
+            violations.Add($"{RepositoryLayout.RelativeToRoot(projectPath)}: RootNamespace is {rootNamespace}, expected {namespaceRoot}");
+
+        Assert.Empty(violations.Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "entity-framework-source-is-grouped-by-current-responsibility")]
     public void EntityFrameworkProject_UsesOnlyCurrentResponsibilityFolders()
     {

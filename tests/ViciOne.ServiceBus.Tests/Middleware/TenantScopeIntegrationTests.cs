@@ -84,7 +84,7 @@ public sealed class TenantScopeIntegrationTests
                     new Uri($"queue:{DefaultEndpointNameFormatter.Instance.ExecuteActivity<TenantActivity, TenantArguments>()}"),
                     new TenantArguments(correlationId));
                 await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
-                Assert.True(await harness.Published.AnyAsync<RoutingSlipCompleted>(cancellationToken));
+                Assert.True(await harness.Published.AnyAsync<IRoutingSlipCompleted>(cancellationToken));
             }
             else
             {

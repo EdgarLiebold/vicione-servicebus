@@ -20,10 +20,10 @@ internal sealed class ExecuteActivityHostConfigurator<TActivity, TArguments> :
 {
     int? _concurrentMessageLimit;
     readonly IExecuteActivityFactory<TActivity, TArguments> _activityFactory;
-    readonly IBuildPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> _activityPipeConfigurator;
+    readonly PipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> _activityPipeConfigurator;
     readonly Uri? _compensateAddress;
     readonly ActivityConfigurationObservable _configurationObservers;
-    readonly IBuildPipeConfigurator<ExecuteContext<TArguments>> _executePipeConfigurator;
+    readonly PipeConfigurator<ExecuteContext<TArguments>> _executePipeConfigurator;
     readonly ActivityObservable _observers;
     readonly RoutingSlipConfigurator _routingSlipConfigurator;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
@@ -79,7 +79,7 @@ internal sealed class ExecuteActivityHostConfigurator<TActivity, TArguments> :
     }
 
     /// <summary>Gets the routing-slip transport contract consumed by this host.</summary>
-    public Type MessageType => typeof(RoutingSlip);
+    public Type MessageType => typeof(IRoutingSlip);
 
     /// <summary>Configures middleware after arguments are deserialized and before the activity instance is resolved.</summary>
     /// <param name="configure">The callback that configures the argument-level execution context.</param>
@@ -120,8 +120,8 @@ internal sealed class ExecuteActivityHostConfigurator<TActivity, TArguments> :
     {
         ArgumentNullException.ThrowIfNull(configure);
 
-        if (typeof(TMessage) != typeof(RoutingSlip))
-            throw new InvalidOperationException($"The activity host message type is {TypeCache<RoutingSlip>.ShortName}, not {TypeCache<TMessage>.ShortName}.");
+        if (typeof(TMessage) != typeof(IRoutingSlip))
+            throw new InvalidOperationException($"The activity host message type is {TypeCache<IRoutingSlip>.ShortName}, not {TypeCache<TMessage>.ShortName}.");
 
         configure((IActivityMessageConfigurator<TMessage>)(object)_routingSlipConfigurator);
     }
@@ -175,7 +175,7 @@ internal sealed class ExecuteActivityHostConfigurator<TActivity, TArguments> :
         {
             var concurrencyLimiter = new ConcurrencyLimiter(ConcurrentMessageLimit.Value, TypeCache<TActivity>.ShortName);
 
-            _routingSlipConfigurator.AddPipeSpecification(new ConcurrencyLimitConsumePipeSpecification<RoutingSlip>(concurrencyLimiter));
+            _routingSlipConfigurator.AddPipeSpecification(new ConcurrencyLimitConsumePipeSpecification<IRoutingSlip>(concurrencyLimiter));
         }
 
         var host = new ExecuteActivityHost<TActivity, TArguments>(executePipe, _compensateAddress);

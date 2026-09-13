@@ -21,8 +21,8 @@ public sealed class CourierContextContractTests
         var clock = new FakeTimeProvider(ActivityStartedAt);
         var builder = new RoutingSlipBuilder(Guid.Parse("95baf29e-6842-4052-8c00-ddc40a774aaa"), clock);
         builder.SetVariable("tenant", "north");
-        RoutingSlip routingSlip = builder.Build();
-        ConsumeContext<RoutingSlip> consumeContext = InMemoryOutboxTestContextFactory.Create(
+        IRoutingSlip routingSlip = builder.Build();
+        ConsumeContext<IRoutingSlip> consumeContext = InMemoryOutboxTestContextFactory.Create(
             routingSlip,
             TestContext.Current.CancellationToken);
         consumeContext.SetTimeProvider(clock);
@@ -30,16 +30,16 @@ public sealed class CourierContextContractTests
         ActivityContext original = owner;
         clock.Advance(TimeSpan.FromSeconds(17));
 
-        CourierContext[] contexts =
+        ICourierContext[] contexts =
         [
             owner,
             new TestCourierContextProxy(owner),
             new TestCourierContextScope(owner),
             new TestOutboxCourierContextProxy(owner),
-            new TestTimeoutCourierContextProxy(owner, CancellationToken.None, TimeSpan.FromMinutes(1)),
+            new TestTimeoutCourierContextProxy(owner, TimeSpan.FromMinutes(1), CancellationToken.None),
         ];
 
-        foreach (CourierContext context in contexts)
+        foreach (ICourierContext context in contexts)
         {
             ActivityContext activity = context;
             Assert.Equal(ActivityStartedAt, activity.Timestamp);
@@ -60,22 +60,22 @@ public sealed class CourierContextContractTests
         Assert.Equal("courierContext", Assert.Throws<ArgumentNullException>(() => new TestCourierContextScope(null!)).ParamName);
         Assert.Equal("courierContext", Assert.Throws<ArgumentNullException>(() => new TestOutboxCourierContextProxy(null!)).ParamName);
         Assert.Equal("courierContext", Assert.Throws<ArgumentNullException>(() =>
-            new TestTimeoutCourierContextProxy(null!, CancellationToken.None, TimeSpan.FromSeconds(1))).ParamName);
+            new TestTimeoutCourierContextProxy(null!, TimeSpan.FromSeconds(1), CancellationToken.None)).ParamName);
     }
 
-    private sealed class TestCourierContext(ConsumeContext<RoutingSlip> context) : BaseCourierContext(context)
+    private sealed class TestCourierContext(ConsumeContext<IRoutingSlip> context) : BaseCourierContext(context)
     {
         public override string ActivityName => "TestActivity";
     }
 
-    private sealed class TestCourierContextProxy(CourierContext context) : CourierContextProxy(context);
+    private sealed class TestCourierContextProxy(ICourierContext context) : CourierContextProxy(context);
 
-    private sealed class TestCourierContextScope(CourierContext context) : CourierContextScope(context);
+    private sealed class TestCourierContextScope(ICourierContext context) : CourierContextScope(context);
 
-    private sealed class TestOutboxCourierContextProxy(CourierContext context) : InMemoryOutboxCourierContextProxy(context);
+    private sealed class TestOutboxCourierContextProxy(ICourierContext context) : InMemoryOutboxCourierContextProxy(context);
 
     private sealed class TestTimeoutCourierContextProxy(
-        CourierContext context,
-        CancellationToken cancellationToken,
-        TimeSpan timeout) : TimeoutCourierContextProxy(context, cancellationToken, timeout);
+        ICourierContext context,
+        TimeSpan timeout,
+        CancellationToken cancellationToken) : TimeoutCourierContextProxy(context, timeout, cancellationToken);
 }

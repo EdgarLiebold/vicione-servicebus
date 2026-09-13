@@ -11,5 +11,5 @@ public interface IRoutingSlipExecutor
     /// <param name="routingSlip">The routing slip itinerary and variables.</param>
     /// <param name="cancellationToken">The token that cancels submission.</param>
     /// <returns>A task that completes when the routing slip has been submitted for execution.</returns>
-    Task ExecuteAsync(RoutingSlip routingSlip, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(IRoutingSlip routingSlip, CancellationToken cancellationToken = default);
 }

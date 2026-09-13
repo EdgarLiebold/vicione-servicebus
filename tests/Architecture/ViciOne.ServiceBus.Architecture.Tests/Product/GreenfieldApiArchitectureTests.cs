@@ -95,6 +95,21 @@ public sealed class GreenfieldApiArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-COURIER-API", "interfaces-use-dotnet-prefix")]
+    public void CourierInterfaces_UseTheDotNetInterfacePrefix()
+    {
+        string courierDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Courier");
+        string[] violations = Directory.EnumerateFiles(courierDirectory, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(FindUnprefixedInterfaces)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Courier interfaces must begin with I followed by an uppercase letter:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-CAPABILITIES", "standard-unsupported-capability-exceptions")]
     public void UnsupportedCapabilities_UseTheStandardBclContract()
     {

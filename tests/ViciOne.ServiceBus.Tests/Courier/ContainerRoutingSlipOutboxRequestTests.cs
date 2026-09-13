@@ -43,11 +43,11 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
                 new RequestingArguments("Hello"));
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
-            ISentMessage<RoutingSlipActivityCompleted> activityCompleted = await harness.Sent
-                .SelectAsync<RoutingSlipActivityCompleted>(cancellationToken)
+            ISentMessage<IRoutingSlipActivityCompleted> activityCompleted = await harness.Sent
+                .SelectAsync<IRoutingSlipActivityCompleted>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
-            ISentMessage<RoutingSlipCompleted> completed = await harness.Sent
-                .SelectAsync<RoutingSlipCompleted>(cancellationToken)
+            ISentMessage<IRoutingSlipCompleted> completed = await harness.Sent
+                .SelectAsync<IRoutingSlipCompleted>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             ActivityRequestSnapshot snapshot = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -60,8 +60,8 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Single(harness.Sent.Snapshot<RoutingSlipActivityCompleted>());
-        Assert.Single(harness.Sent.Snapshot<RoutingSlipCompleted>());
+        Assert.Single(harness.Sent.Snapshot<IRoutingSlipActivityCompleted>());
+        Assert.Single(harness.Sent.Snapshot<IRoutingSlipCompleted>());
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()

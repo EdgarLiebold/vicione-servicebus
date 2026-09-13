@@ -23,7 +23,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         ExecuteActivityTestHarness<ObservingExecuteCourierActivity, CourierArguments> next = harness.AddExecuteActivity<
             ObservingExecuteCourierActivity,
             CourierArguments>(_ => new ObservingExecuteCourierActivity(observed));
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
 
@@ -54,7 +54,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-empty");
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
 
@@ -85,8 +85,8 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(), _ => new FirstCourierActivity());
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -104,8 +104,8 @@ public sealed class RoutingSlipLifecycleIntegrationTests
                 completed.WaitAsync(timeout, cancellationToken));
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
-            ConsumeContext<RoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
-            ConsumeContext<RoutingSlipCompleted> completion = Assert.Single(completed.Messages);
+            ConsumeContext<IRoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
+            ConsumeContext<IRoutingSlipCompleted> completion = Assert.Single(completed.Messages);
             Assert.Equal(trackingNumber, activityEvent.Message.TrackingNumber);
             Assert.Equal(trackingNumber, completion.Message.TrackingNumber);
             Assert.Equal(activity.Name, activityEvent.Message.ActivityName);
@@ -136,8 +136,8 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             SecondCourierActivity,
             CourierArguments,
             CourierLog>(_ => new SecondCourierActivity(), _ => new SecondCourierActivity());
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(2);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -157,16 +157,16 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(2, activityCompleted.Count);
-            ConsumeContext<RoutingSlipActivityCompleted> firstEvent = Assert.Single(
+            ConsumeContext<IRoutingSlipActivityCompleted> firstEvent = Assert.Single(
                 activityCompleted.Messages,
                 context => context.Message.ActivityName == first.Name);
-            ConsumeContext<RoutingSlipActivityCompleted> secondEvent = Assert.Single(
+            ConsumeContext<IRoutingSlipActivityCompleted> secondEvent = Assert.Single(
                 activityCompleted.Messages,
                 context => context.Message.ActivityName == second.Name);
             Assert.Equal("first", firstEvent.GetResult<string>(nameof(CourierLog.OriginalValue)));
             Assert.Equal("second", secondEvent.GetResult<string>(nameof(CourierLog.OriginalValue)));
             Assert.Equal("knife", firstEvent.GetVariable<string>("SlipVariable"));
-            ConsumeContext<RoutingSlipCompleted> completion = Assert.Single(completed.Messages);
+            ConsumeContext<IRoutingSlipCompleted> completion = Assert.Single(completed.Messages);
             Assert.Equal(trackingNumber, completion.Message.TrackingNumber);
             Assert.Equal("first-output", completion.GetVariable<string>("ActivityValue"));
             Assert.Equal("second-output", completion.GetVariable<string>("SecondValue"));

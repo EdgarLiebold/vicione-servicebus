@@ -34,7 +34,7 @@ public sealed class FutureRoutingSlipContractTests
         };
         var recorder = new OutgoingMessageRecorder(message =>
         {
-            RoutingSlip routingSlip = Assert.IsAssignableFrom<RoutingSlip>(message);
+            IRoutingSlip routingSlip = Assert.IsAssignableFrom<IRoutingSlip>(message);
             Assert.Equal([routingSlip.TrackingNumber], state.Pending);
         });
         var machine = new ContextMachine();
@@ -91,7 +91,7 @@ public sealed class FutureRoutingSlipContractTests
         var command = new InputMessage(state.CorrelationId);
         var recorder = new OutgoingMessageRecorder(message =>
         {
-            RoutingSlip routingSlip = Assert.IsAssignableFrom<RoutingSlip>(message);
+            IRoutingSlip routingSlip = Assert.IsAssignableFrom<IRoutingSlip>(message);
             Assert.Equal([routingSlip.TrackingNumber], state.Pending);
         });
 
@@ -124,7 +124,7 @@ public sealed class FutureRoutingSlipContractTests
             .BuildServiceProvider();
         var recorder = new OutgoingMessageRecorder(message =>
         {
-            RoutingSlip routingSlip = Assert.IsAssignableFrom<RoutingSlip>(message);
+            IRoutingSlip routingSlip = Assert.IsAssignableFrom<IRoutingSlip>(message);
             Assert.Equal([routingSlip.TrackingNumber], state.Pending);
         });
 
@@ -185,7 +185,7 @@ public sealed class FutureRoutingSlipContractTests
     {
         var activityHost = new FixedHostInfo("routing-slip-activity");
         ExceptionInfo exception = new FaultExceptionInfo(new InvalidOperationException("activity failed"));
-        ActivityException activityException = new RoutingSlipActivityException(
+        IActivityException activityException = new RoutingSlipActivityException(
             "charge-card",
             activityHost,
             Guid.NewGuid(),
@@ -229,7 +229,7 @@ public sealed class FutureRoutingSlipContractTests
                 stateMachineConfigurator, machine.RoutingSlipCompleted, null!)).ParamName);
     }
 
-    private static async Task<RoutingSlipFutureFault> CaptureDefaultFaultAsync(IReadOnlyList<ActivityException> activityExceptions)
+    private static async Task<RoutingSlipFutureFault> CaptureDefaultFaultAsync(IReadOnlyList<IActivityException> activityExceptions)
     {
         var machine = new ContextMachine();
         var stateMachineConfigurator = new RecordingStateMachineConfigurator();
@@ -237,14 +237,14 @@ public sealed class FutureRoutingSlipContractTests
             stateMachineConfigurator,
             machine.RoutingSlipCompleted,
             machine.RoutingSlipFaulted);
-        Assert.True(configurator.HasFault(out FutureFault<InputMessage, RoutingSlipFutureFault, RoutingSlipFaulted>? producer));
+        Assert.True(configurator.HasFault(out FutureFault<InputMessage, RoutingSlipFutureFault, IRoutingSlipFaulted>? producer));
 
         Guid correlationId = Guid.NewGuid();
         Guid trackingNumber = Guid.NewGuid();
         Guid messageId = Guid.NewGuid();
         var command = new InputMessage(correlationId);
         DateTimeOffset timestamp = new(2026, 9, 12, 18, 0, 0, TimeSpan.Zero);
-        RoutingSlipFaulted faulted = new RoutingSlipFaultedMessage(
+        IRoutingSlipFaulted faulted = new RoutingSlipFaultedMessage(
             trackingNumber,
             timestamp,
             TimeSpan.FromSeconds(3),
@@ -288,9 +288,9 @@ public sealed class FutureRoutingSlipContractTests
 
         public IEvent<InputMessage> InputReceived { get; private set; } = null!;
 
-        public IEvent<RoutingSlipCompleted> RoutingSlipCompleted { get; private set; } = null!;
+        public IEvent<IRoutingSlipCompleted> RoutingSlipCompleted { get; private set; } = null!;
 
-        public IEvent<RoutingSlipFaulted> RoutingSlipFaulted { get; private set; } = null!;
+        public IEvent<IRoutingSlipFaulted> RoutingSlipFaulted { get; private set; } = null!;
     }
 
     private sealed class TrackThenBuildFuture : Future<InputMessage, ResultMessage>

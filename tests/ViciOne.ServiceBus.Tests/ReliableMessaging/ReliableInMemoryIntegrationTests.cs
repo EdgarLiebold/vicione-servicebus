@@ -117,7 +117,7 @@ public sealed class ReliableInMemoryIntegrationTests
             .AddScoped<IReliablePublisher, ReliablePublisher>()
             .AddViciOneServiceBusTestHarness(configuration =>
             {
-                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.SetTestTimeouts(timeout);
                 ConfigureReliableMessaging(configuration);
                 configuration.AddConsumer<ReliableConsumer, ReliableConsumerDefinition>();
                 configuration.AddConsumer<ReliableEventConsumer>();

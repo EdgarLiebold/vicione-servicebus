@@ -34,9 +34,9 @@ public sealed class ActivityTestHarnessTests
         await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<RoutingSlipFaulted>> faulted = harness.WaitForMessageAsync<RoutingSlipFaulted>(TestContext.Current.CancellationToken);
-            Task<ConsumeContext<RoutingSlipActivityCompensated>> activityCompensated =
-                harness.WaitForMessageAsync<RoutingSlipActivityCompensated>(TestContext.Current.CancellationToken);
+            Task<ConsumeContext<IRoutingSlipFaulted>> faulted = harness.WaitForMessageAsync<IRoutingSlipFaulted>(TestContext.Current.CancellationToken);
+            Task<ConsumeContext<IRoutingSlipActivityCompensated>> activityCompensated =
+                harness.WaitForMessageAsync<IRoutingSlipActivityCompensated>(TestContext.Current.CancellationToken);
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddSubscription(harness.BusAddress, RoutingSlipEvents.All);
@@ -45,8 +45,8 @@ public sealed class ActivityTestHarnessTests
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken: TestContext.Current.CancellationToken);
 
-            ConsumeContext<RoutingSlipFaulted> fault = await faulted.WaitAsync(timeout, cancellationToken);
-            ConsumeContext<RoutingSlipActivityCompensated> compensation =
+            ConsumeContext<IRoutingSlipFaulted> fault = await faulted.WaitAsync(timeout, cancellationToken);
+            ConsumeContext<IRoutingSlipActivityCompensated> compensation =
                 await activityCompensated.WaitAsync(timeout, cancellationToken);
             string executedValue = await executed.Task.WaitAsync(timeout, cancellationToken);
             string compensatedValue = await compensated.Task.WaitAsync(timeout, cancellationToken);
@@ -91,7 +91,7 @@ public sealed class ActivityTestHarnessTests
         await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<RoutingSlipCompleted>> completed = harness.WaitForMessageAsync<RoutingSlipCompleted>(TestContext.Current.CancellationToken);
+            Task<ConsumeContext<IRoutingSlipCompleted>> completed = harness.WaitForMessageAsync<IRoutingSlipCompleted>(TestContext.Current.CancellationToken);
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddSubscription(harness.BusAddress, RoutingSlipEvents.All);
@@ -99,7 +99,7 @@ public sealed class ActivityTestHarnessTests
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken: TestContext.Current.CancellationToken);
 
-            ConsumeContext<RoutingSlipCompleted> completion = await completed.WaitAsync(timeout, cancellationToken);
+            ConsumeContext<IRoutingSlipCompleted> completion = await completed.WaitAsync(timeout, cancellationToken);
             int value = await executed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal("ExecuteOnly", activity.Name);

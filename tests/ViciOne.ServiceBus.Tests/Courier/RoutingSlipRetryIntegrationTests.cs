@@ -28,8 +28,8 @@ public sealed class RoutingSlipRetryIntegrationTests
             RedeliveryArguments>(_ => new RedeliverThenFaultActivity(redeliveryAttempts));
         failing.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseDelayedRedelivery(
             redelivery => redelivery.Interval(1, TimeSpan.Zero));
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -74,8 +74,8 @@ public sealed class RoutingSlipRetryIntegrationTests
             RetryArguments>(_ => new RetryThenCompleteActivity(attempts));
         activity.ExecuteReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -96,10 +96,10 @@ public sealed class RoutingSlipRetryIntegrationTests
             Assert.Equal(
                 [new RetryObservation(0, 0, "retry-seed"), new RetryObservation(1, 0, "retry-seed")],
                 attempts);
-            ConsumeContext<RoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
+            ConsumeContext<IRoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
             Assert.Equal(activity.Name, activityEvent.Message.ActivityName);
             Assert.Equal(trackingNumber, activityEvent.Message.TrackingNumber);
-            ConsumeContext<RoutingSlipCompleted> slipEvent = Assert.Single(completed.Messages);
+            ConsumeContext<IRoutingSlipCompleted> slipEvent = Assert.Single(completed.Messages);
             Assert.Equal(trackingNumber, slipEvent.Message.TrackingNumber);
             Assert.Equal("immediate-retry-succeeded", slipEvent.GetVariable<string>("RetryResult"));
         }
@@ -128,8 +128,8 @@ public sealed class RoutingSlipRetryIntegrationTests
         ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.AddExecuteActivity<
             TerminalFaultActivity,
             RetryArguments>();
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -154,7 +154,7 @@ public sealed class RoutingSlipRetryIntegrationTests
                     new CompensationObservation(1, 0, "compensation-seed", "logged-value"),
                 ],
                 attempts);
-            ConsumeContext<RoutingSlipActivityCompensated> compensation = Assert.Single(compensated.Messages);
+            ConsumeContext<IRoutingSlipActivityCompensated> compensation = Assert.Single(compensated.Messages);
             Assert.Equal(compensating.Name, compensation.Message.ActivityName);
             Assert.Equal(trackingNumber, compensation.Message.TrackingNumber);
             Assert.Equal("logged-value", compensation.GetResult<string>(nameof(RetryLog.Value)));
@@ -176,21 +176,21 @@ public sealed class RoutingSlipRetryIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var attempts = new ConcurrentQueue<CompensationObservation>();
-        var subscribedActivityFailure = new TaskCompletionSource<ConsumeContext<RoutingSlipActivityCompensationFailed>>(
+        var subscribedActivityFailure = new TaskCompletionSource<ConsumeContext<IRoutingSlipActivityCompensationFailed>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        var subscribedSlipFailure = new TaskCompletionSource<ConsumeContext<RoutingSlipCompensationFailed>>(
+        var subscribedSlipFailure = new TaskCompletionSource<ConsumeContext<IRoutingSlipCompensationFailed>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         string subscriptionQueue = $"courier-compensation-subscription-{NewId.NextGuid():N}";
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-compensation-failed");
         harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(subscriptionQueue, endpoint =>
         {
             endpoint.ConfigureConsumeTopology = false;
-            endpoint.Handler<RoutingSlipActivityCompensationFailed>(context =>
+            endpoint.Handler<IRoutingSlipActivityCompensationFailed>(context =>
             {
                 subscribedActivityFailure.TrySetResult(context);
                 return Task.CompletedTask;
             });
-            endpoint.Handler<RoutingSlipCompensationFailed>(context =>
+            endpoint.Handler<IRoutingSlipCompensationFailed>(context =>
             {
                 subscribedSlipFailure.TrySetResult(context);
                 return Task.CompletedTask;
@@ -207,8 +207,8 @@ public sealed class RoutingSlipRetryIntegrationTests
         ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.AddExecuteActivity<
             TerminalFaultActivity,
             RetryArguments>();
-        using var publishedActivityFailure = new CourierMessageRecorder<RoutingSlipActivityCompensationFailed>(1);
-        using var publishedSlipFailure = new CourierMessageRecorder<RoutingSlipCompensationFailed>(1);
+        using var publishedActivityFailure = new CourierMessageRecorder<IRoutingSlipActivityCompensationFailed>(1);
+        using var publishedSlipFailure = new CourierMessageRecorder<IRoutingSlipCompensationFailed>(1);
         publishedActivityFailure.Configure(harness);
         publishedSlipFailure.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -294,8 +294,8 @@ public sealed class RoutingSlipRetryIntegrationTests
             RedeliveryArguments>(_ => new RedeliverThenFaultActivity(attempts));
         activity.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseDelayedRedelivery(
             redelivery => redelivery.Interval(redeliveryCount, TimeSpan.Zero));
-        using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var activityFaulted = new CourierMessageRecorder<IRoutingSlipActivityFaulted>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         activityFaulted.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -320,10 +320,10 @@ public sealed class RoutingSlipRetryIntegrationTests
                 Enumerable.Range(0, redeliveryCount + 1)
                     .Select(count => new RetryObservation(0, count, "redelivery-seed")),
                 attempts);
-            ConsumeContext<RoutingSlipActivityFaulted> activityFailure = Assert.Single(activityFaulted.Messages);
+            ConsumeContext<IRoutingSlipActivityFaulted> activityFailure = Assert.Single(activityFaulted.Messages);
             Assert.Equal("redelivery-terminal", activityFailure.GetVariable<string>("ErrorMessage"));
             Assert.Equal("redelivery-seed", activityFailure.GetVariable<string>("Seed"));
-            ConsumeContext<RoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
+            ConsumeContext<IRoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
             Assert.Equal(trackingNumber, slipFailure.Message.TrackingNumber);
             Assert.Equal("redelivery-terminal", slipFailure.GetVariable<string>("ErrorMessage"));
             Assert.Equal("redelivery-seed", slipFailure.GetVariable<string>("Seed"));
@@ -347,8 +347,8 @@ public sealed class RoutingSlipRetryIntegrationTests
             RetryArguments>(_ => new RetryThenFaultActivity(attempts));
         activity.ExecuteReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
-        using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var activityFaulted = new CourierMessageRecorder<IRoutingSlipActivityFaulted>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         activityFaulted.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -373,10 +373,10 @@ public sealed class RoutingSlipRetryIntegrationTests
                     new RetryObservation(2, 0, "retry-fault-seed"),
                 ],
                 attempts);
-            ConsumeContext<RoutingSlipActivityFaulted> activityFailure = Assert.Single(activityFaulted.Messages);
+            ConsumeContext<IRoutingSlipActivityFaulted> activityFailure = Assert.Single(activityFaulted.Messages);
             Assert.Equal("retry-terminal", activityFailure.GetVariable<string>("ErrorMessage"));
             Assert.Equal("retry-fault-seed", activityFailure.GetVariable<string>("Seed"));
-            ConsumeContext<RoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
+            ConsumeContext<IRoutingSlipFaulted> slipFailure = Assert.Single(faulted.Messages);
             Assert.Equal(trackingNumber, slipFailure.Message.TrackingNumber);
             Assert.Equal("retry-terminal", slipFailure.GetVariable<string>("ErrorMessage"));
             Assert.Equal("retry-fault-seed", slipFailure.GetVariable<string>("Seed"));
@@ -388,7 +388,7 @@ public sealed class RoutingSlipRetryIntegrationTests
     }
 
     private static void AssertActivityCompensationFailure(
-        ConsumeContext<RoutingSlipActivityCompensationFailed> context,
+        ConsumeContext<IRoutingSlipActivityCompensationFailed> context,
         Guid trackingNumber,
         string activityName)
     {
@@ -401,7 +401,7 @@ public sealed class RoutingSlipRetryIntegrationTests
     }
 
     private static void AssertSlipCompensationFailure(
-        ConsumeContext<RoutingSlipCompensationFailed> context,
+        ConsumeContext<IRoutingSlipCompensationFailed> context,
         Guid trackingNumber)
     {
         Assert.Equal(trackingNumber, context.Message.TrackingNumber);

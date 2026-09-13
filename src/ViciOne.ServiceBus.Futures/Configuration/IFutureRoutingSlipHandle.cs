@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IFutureRoutingSlipHandle
 {
     /// <summary>Gets the event raised when the routing slip faults.</summary>
-    IEvent<RoutingSlipFaulted> Faulted { get; }
+    IEvent<IRoutingSlipFaulted> Faulted { get; }
 
     /// <summary>Gets the event raised when the routing slip completes.</summary>
-    IEvent<RoutingSlipCompleted> Completed { get; }
+    IEvent<IRoutingSlipCompleted> Completed { get; }
 }

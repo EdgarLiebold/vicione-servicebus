@@ -44,9 +44,9 @@ public sealed class RoutingSlipHostConfigurationTests
         InvalidOperationException compensateFailure = Assert.Throws<InvalidOperationException>(() =>
             compensate.Message<CourierLog>(_ => { }));
 
-        Assert.Contains(nameof(RoutingSlip), executeFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(IRoutingSlip), executeFailure.Message, StringComparison.Ordinal);
         Assert.Contains(nameof(CourierArguments), executeFailure.Message, StringComparison.Ordinal);
-        Assert.Contains(nameof(RoutingSlip), compensateFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(IRoutingSlip), compensateFailure.Message, StringComparison.Ordinal);
         Assert.Contains(nameof(CourierLog), compensateFailure.Message, StringComparison.Ordinal);
     }
 
@@ -83,8 +83,8 @@ public sealed class RoutingSlipHostConfigurationTests
         ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -144,8 +144,8 @@ public sealed class RoutingSlipHostConfigurationTests
         ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
         await harness.StartAsync(cancellationToken);

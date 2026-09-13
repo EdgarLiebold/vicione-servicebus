@@ -26,27 +26,27 @@ public sealed class RoutingSlipEventAccessorTests
             ["count"] = 27,
         };
         ExceptionInfo exception = new FaultExceptionInfo(new InvalidOperationException("expected"));
-        ActivityException activityException = new RoutingSlipActivityException(
+        IActivityException activityException = new RoutingSlipActivityException(
             "ChargeCard", HostMetadataCache.Host, executionId, Timestamp, Duration, exception);
 
         var builder = new RoutingSlipBuilder(trackingNumber, new Microsoft.Extensions.Time.Testing.FakeTimeProvider(Timestamp));
         builder.SetVariables(values);
-        ConsumeContext<RoutingSlip> routingSlip = CreateContext<RoutingSlip>(builder.Build());
-        ConsumeContext<RoutingSlipActivityCompensated> compensated = CreateContext<RoutingSlipActivityCompensated>(
+        ConsumeContext<IRoutingSlip> routingSlip = CreateContext<IRoutingSlip>(builder.Build());
+        ConsumeContext<IRoutingSlipActivityCompensated> compensated = CreateContext<IRoutingSlipActivityCompensated>(
             new RoutingSlipActivityCompensatedMessage(HostMetadataCache.Host, trackingNumber, "ChargeCard", executionId, Timestamp, Duration, values, values));
-        ConsumeContext<RoutingSlipActivityCompensationFailed> compensationFailed = CreateContext<RoutingSlipActivityCompensationFailed>(
+        ConsumeContext<IRoutingSlipActivityCompensationFailed> compensationFailed = CreateContext<IRoutingSlipActivityCompensationFailed>(
             new RoutingSlipActivityCompensationFailedMessage(HostMetadataCache.Host, trackingNumber, "ChargeCard", executionId, Timestamp, Duration, exception, values, values));
-        ConsumeContext<RoutingSlipActivityCompleted> activityCompleted = CreateContext<RoutingSlipActivityCompleted>(
+        ConsumeContext<IRoutingSlipActivityCompleted> activityCompleted = CreateContext<IRoutingSlipActivityCompleted>(
             new RoutingSlipActivityCompletedMessage(HostMetadataCache.Host, trackingNumber, "ChargeCard", executionId, Timestamp, Duration, values, values, values));
-        ConsumeContext<RoutingSlipActivityFaulted> activityFaulted = CreateContext<RoutingSlipActivityFaulted>(
+        ConsumeContext<IRoutingSlipActivityFaulted> activityFaulted = CreateContext<IRoutingSlipActivityFaulted>(
             new RoutingSlipActivityFaultedMessage(HostMetadataCache.Host, trackingNumber, "ChargeCard", executionId, Timestamp, Duration, exception, values, values));
-        ConsumeContext<RoutingSlipCompensationFailed> slipCompensationFailed = CreateContext<RoutingSlipCompensationFailed>(
+        ConsumeContext<IRoutingSlipCompensationFailed> slipCompensationFailed = CreateContext<IRoutingSlipCompensationFailed>(
             new RoutingSlipCompensationFailedMessage(HostMetadataCache.Host, trackingNumber, Timestamp, Duration, exception, values));
-        ConsumeContext<RoutingSlipCompleted> completed = CreateContext<RoutingSlipCompleted>(
+        ConsumeContext<IRoutingSlipCompleted> completed = CreateContext<IRoutingSlipCompleted>(
             new RoutingSlipCompletedMessage(trackingNumber, Timestamp, Duration, values));
-        ConsumeContext<RoutingSlipFaulted> faulted = CreateContext<RoutingSlipFaulted>(
+        ConsumeContext<IRoutingSlipFaulted> faulted = CreateContext<IRoutingSlipFaulted>(
             new RoutingSlipFaultedMessage(trackingNumber, Timestamp, Duration, [activityException], values));
-        ConsumeContext<RoutingSlipTerminated> terminated = CreateContext<RoutingSlipTerminated>(
+        ConsumeContext<IRoutingSlipTerminated> terminated = CreateContext<IRoutingSlipTerminated>(
             new RoutingSlipTerminatedMessage(HostMetadataCache.Host, trackingNumber, "ChargeCard", executionId, Timestamp, Duration, values, []));
 
         AssertValues(routingSlip.GetVariable<string>("name"), routingSlip.GetVariable<int>("count"));
@@ -79,7 +79,7 @@ public sealed class RoutingSlipEventAccessorTests
         {
             ["shared"] = "argument",
         };
-        ConsumeContext<RoutingSlipActivityCompleted> context = CreateContext<RoutingSlipActivityCompleted>(
+        ConsumeContext<IRoutingSlipActivityCompleted> context = CreateContext<IRoutingSlipActivityCompleted>(
             new RoutingSlipActivityCompletedMessage(
                 HostMetadataCache.Host,
                 trackingNumber,
@@ -109,13 +109,13 @@ public sealed class RoutingSlipEventAccessorTests
             ["name"] = "north",
             ["count"] = 27,
         };
-        ConsumeContext<RoutingSlipRevised> context = CreateContext<RoutingSlipRevised>(
+        ConsumeContext<IRoutingSlipRevised> context = CreateContext<IRoutingSlipRevised>(
             new RoutingSlipRevisedMessage(HostMetadataCache.Host, trackingNumber, "ChargeCard", executionId, Timestamp, Duration, values, [], []));
 
         MethodInfo[] accessors = typeof(RoutingSlipEventExtensions)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Where(method => method.Name == nameof(RoutingSlipEventExtensions.GetVariable))
-            .Where(method => method.GetParameters()[0].ParameterType == typeof(ConsumeContext<RoutingSlipRevised>))
+            .Where(method => method.GetParameters()[0].ParameterType == typeof(ConsumeContext<IRoutingSlipRevised>))
             .ToArray();
 
         Assert.Equal(2, accessors.Length);
@@ -127,8 +127,8 @@ public sealed class RoutingSlipEventAccessorTests
     [RequirementCoverage("REQ-VSB-COURIER-ACCESSORS", "null-context-and-invalid-key-rejected-consistently")]
     public void EventAccessors_RejectNullContextsAndInvalidKeys()
     {
-        ConsumeContext<RoutingSlipCompleted>? missing = null;
-        ConsumeContext<RoutingSlipCompleted> context = CreateContext<RoutingSlipCompleted>(
+        ConsumeContext<IRoutingSlipCompleted>? missing = null;
+        ConsumeContext<IRoutingSlipCompleted> context = CreateContext<IRoutingSlipCompleted>(
             new RoutingSlipCompletedMessage(NewId.NextGuid(), Timestamp, Duration, new Dictionary<string, object>()));
 
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => missing!.GetVariable<string>("name")).ParamName);
@@ -142,7 +142,7 @@ public sealed class RoutingSlipEventAccessorTests
         Assert.Equal(27, value);
     }
 
-    private static T? InvokeAccessor<T>(IEnumerable<MethodInfo> accessors, ConsumeContext<RoutingSlipRevised> context, string key)
+    private static T? InvokeAccessor<T>(IEnumerable<MethodInfo> accessors, ConsumeContext<IRoutingSlipRevised> context, string key)
     {
         MethodInfo accessor = accessors.Single(method =>
         {

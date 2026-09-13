@@ -24,8 +24,8 @@ public sealed class RoutingSlipPayloadIntegrationTests
         ExecuteActivityTestHarness<MessageDataActivity, MessageDataArguments> activity = harness.AddExecuteActivity<
             MessageDataActivity,
             MessageDataArguments>(_ => new MessageDataActivity(observed));
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
@@ -66,7 +66,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         ExecuteActivityTestHarness<ObjectGraphActivity, ObjectGraphArguments> activity = harness.AddExecuteActivity<
             ObjectGraphActivity,
             ObjectGraphArguments>(_ => new ObjectGraphActivity(observed));
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
 
@@ -130,7 +130,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         ExecuteActivityTestHarness<NullableEnumActivity, NullableEnumArguments> activity = harness.AddExecuteActivity<
             NullableEnumActivity,
             NullableEnumArguments>(_ => new NullableEnumActivity(observed));
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
 
@@ -169,10 +169,10 @@ public sealed class RoutingSlipPayloadIntegrationTests
         ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
-        using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
-        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
-        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        using var activityCompleted = new CourierMessageRecorder<IRoutingSlipActivityCompleted>(2);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
+        using var compensated = new CourierMessageRecorder<IRoutingSlipActivityCompensated>(1);
+        using var faulted = new CourierMessageRecorder<IRoutingSlipFaulted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
         compensated.Configure(harness);
@@ -230,7 +230,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         ExecuteActivityTestHarness<OpaquePointActivity, OpaquePointArguments> activity = harness.AddExecuteActivity<
             OpaquePointActivity,
             OpaquePointArguments>(_ => new OpaquePointActivity(observed));
-        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         completed.Configure(harness);
         await harness.StartAsync(cancellationToken);
 

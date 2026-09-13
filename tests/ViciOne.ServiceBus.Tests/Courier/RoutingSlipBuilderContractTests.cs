@@ -18,15 +18,15 @@ public sealed class RoutingSlipBuilderContractTests
     [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "constructor-boundaries")]
     public void Constructors_RejectInvalidIdentityAndNullStateInputs()
     {
-        RoutingSlip routingSlip = new RoutingSlipBuilder(NewId.NextGuid()).Build();
+        IRoutingSlip routingSlip = new RoutingSlipBuilder(NewId.NextGuid()).Build();
 
         Assert.Throws<ArgumentException>(() => new RoutingSlipBuilder(Guid.Empty));
         Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(null!, activities => activities));
-        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, (Func<IEnumerable<Activity>, IEnumerable<Activity>>)null!));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, (Func<IEnumerable<IActivity>, IEnumerable<IActivity>>)null!));
         Assert.Throws<InvalidOperationException>(() => new RoutingSlipBuilder(routingSlip, _ => null!));
         Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, null!, []));
         Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, [], null!));
-        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, (IEnumerable<CompensateLog>)null!));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, (IEnumerable<ICompensateLog>)null!));
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public sealed class RoutingSlipBuilderContractTests
         Assert.Equal("elapsed", Assert.Throws<ArgumentOutOfRangeException>(() => builder.AddActivityException(
             HostMetadataCache.Host, "Activity", NewId.NextGuid(), DateTimeOffset.UtcNow, TimeSpan.FromTicks(-1),
             new FaultExceptionInfo(new InvalidOperationException()))).ParamName);
-        Assert.Throws<ArgumentNullException>(() => builder.AddActivityException((ActivityException)null!));
+        Assert.Throws<ArgumentNullException>(() => builder.AddActivityException((IActivityException)null!));
     }
 
     [Fact]
@@ -76,22 +76,22 @@ public sealed class RoutingSlipBuilderContractTests
         builder.SetVariable("tenant", "north");
         builder.AddSubscription(firstAddress, RoutingSlipEvents.Completed);
 
-        RoutingSlip first = builder.Build();
+        IRoutingSlip first = builder.Build();
         arguments["state"] = "caller-mutated";
         builder.SetVariable("tenant", "south");
         builder.AddActivity("Second", secondAddress);
         builder.AddSubscription(secondAddress, RoutingSlipEvents.Faulted);
 
-        Activity activity = Assert.Single(first.Itinerary);
+        IActivity activity = Assert.Single(first.Itinerary);
         Assert.Equal("original", activity.Arguments["STATE"]);
         Assert.Equal("north", first.Variables["TENANT"]);
         Assert.Single(first.Subscriptions);
-        var itinerary = Assert.IsAssignableFrom<ICollection<Activity>>(first.Itinerary);
+        var itinerary = Assert.IsAssignableFrom<ICollection<IActivity>>(first.Itinerary);
         Assert.True(itinerary.IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<ActivityLog>>(first.ActivityLogs).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<CompensateLog>>(first.CompensateLogs).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<ActivityException>>(first.ActivityExceptions).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<Subscription>>(first.Subscriptions).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<IActivityLog>>(first.ActivityLogs).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<ICompensateLog>>(first.CompensateLogs).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<IActivityException>>(first.ActivityExceptions).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<ISubscription>>(first.Subscriptions).IsReadOnly);
         var variables = Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(first.Variables);
         var activityArguments = Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(activity.Arguments);
         Assert.True(variables.IsReadOnly);
@@ -100,7 +100,7 @@ public sealed class RoutingSlipBuilderContractTests
         Assert.Throws<NotSupportedException>(() => variables.Add(new KeyValuePair<string, object>("late", 1)));
         Assert.Throws<NotSupportedException>(() => activityArguments.Add(new KeyValuePair<string, object>("late", 1)));
 
-        RoutingSlip second = builder.Build();
+        IRoutingSlip second = builder.Build();
         Assert.Equal(2, second.Itinerary.Count);
         Assert.Equal(2, second.Subscriptions.Count);
         Assert.Equal("south", second.Variables["tenant"]);
@@ -129,13 +129,13 @@ public sealed class RoutingSlipBuilderContractTests
             ["Timestamp"] = default(DateTime),
         });
 
-        RoutingSlip routingSlip = builder.Build();
+        IRoutingSlip routingSlip = builder.Build();
 
-        Activity projected = routingSlip.Itinerary[0];
+        IActivity projected = routingSlip.Itinerary[0];
         Assert.Equal(27, Assert.Single(projected.Arguments).Value);
         Assert.Equal("present", Assert.Single(projected.Arguments).Key, ignoreCase: true);
 
-        Activity explicitArguments = routingSlip.Itinerary[1];
+        IActivity explicitArguments = routingSlip.Itinerary[1];
         Assert.Equal(Guid.Empty, explicitArguments.Arguments["EmptyId"]);
         Assert.Equal(0, explicitArguments.Arguments["Count"]);
         Assert.Equal(false, explicitArguments.Arguments["Enabled"]);
@@ -324,7 +324,7 @@ public sealed class RoutingSlipBuilderContractTests
         var builder = new RoutingSlipBuilder(NewId.NextGuid(), new FakeTimeProvider(now));
         builder.AddActivity("Clock", new Uri("loopback://localhost/clock"));
 
-        RoutingSlip routingSlip = builder.Build();
+        IRoutingSlip routingSlip = builder.Build();
 
         Assert.Equal(now, routingSlip.CreateTimestamp);
         Assert.Equal(TimeSpan.Zero, routingSlip.CreateTimestamp.Offset);
@@ -343,9 +343,9 @@ public sealed class RoutingSlipBuilderContractTests
         };
 
         builder.AddActivity("Interface", new Uri("loopback://localhost/execute-interface"), arguments);
-        RoutingSlip routingSlip = builder.Build();
+        IRoutingSlip routingSlip = builder.Build();
 
-        Activity activity = Assert.Single(routingSlip.Itinerary);
+        IActivity activity = Assert.Single(routingSlip.Itinerary);
         Assert.Equal("Interface", activity.Name);
         Assert.Equal("contract", Assert.IsType<string>(activity.Arguments["name"]));
         Assert.Equal("mapped", Assert.IsAssignableFrom<IResult>(activity.Arguments["result"]).Value);
@@ -387,11 +387,11 @@ public sealed class RoutingSlipBuilderContractTests
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var received = new TaskCompletionSource<ConsumeContext<RoutingSlip>>(
+        var received = new TaskCompletionSource<ConsumeContext<IRoutingSlip>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-serialization");
         harness.InMemoryReceiveEndpointConfiguring += endpoint =>
-            endpoint.Handler<RoutingSlip>(context =>
+            endpoint.Handler<IRoutingSlip>(context =>
             {
                 received.TrySetResult(context);
                 return Task.CompletedTask;
@@ -409,11 +409,11 @@ public sealed class RoutingSlipBuilderContractTests
                 RoutingSlipEventContents.All);
 
             await harness.InputQueueSendEndpoint.SendAsync(builder.Build(), cancellationToken);
-            RoutingSlip actual = (await received.Task.WaitAsync(timeout, cancellationToken)).Message;
+            IRoutingSlip actual = (await received.Task.WaitAsync(timeout, cancellationToken)).Message;
 
             Assert.Equal(trackingNumber, actual.TrackingNumber);
             Assert.Equal("Serialized", Assert.Single(actual.Itinerary).Name);
-            Subscription subscription = Assert.Single(actual.Subscriptions);
+            ISubscription subscription = Assert.Single(actual.Subscriptions);
             Assert.Equal(RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted, subscription.Events);
             Assert.Equal(RoutingSlipEventContents.All, subscription.Include);
         }
@@ -443,7 +443,7 @@ public sealed class RoutingSlipBuilderContractTests
 
     public sealed record Child(string Value, Outer Parent);
 
-    private static Activity BuildNoArgumentActivity()
+    private static IActivity BuildNoArgumentActivity()
     {
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
         builder.AddActivity("NoArguments", new Uri("loopback://localhost/no-arguments"));
@@ -467,7 +467,7 @@ public sealed class RoutingSlipBuilderContractTests
         Uri Address,
         RoutingSlipEvents Events,
         RoutingSlipEventContents Include,
-        string? ActivityName) : Subscription
+        string? ActivityName) : ISubscription
     {
         public ViciOne.ServiceBus.Serialization.MessageEnvelope? Message => null;
     }

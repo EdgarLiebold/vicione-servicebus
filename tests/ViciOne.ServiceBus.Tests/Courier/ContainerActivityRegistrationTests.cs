@@ -57,11 +57,11 @@ public sealed class ContainerActivityRegistrationTests
             builder.AddActivity("ContainerActivity", new Uri($"queue:{executeName}"), new CourierArguments("expected"));
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
-            IPublishedMessage<RoutingSlipActivityCompleted> activity = await harness.Published
-                .SelectAsync<RoutingSlipActivityCompleted>(cancellationToken)
+            IPublishedMessage<IRoutingSlipActivityCompleted> activity = await harness.Published
+                .SelectAsync<IRoutingSlipActivityCompleted>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
-            IPublishedMessage<RoutingSlipCompleted> completed = await harness.Published
-                .SelectAsync<RoutingSlipCompleted>(cancellationToken)
+            IPublishedMessage<IRoutingSlipCompleted> completed = await harness.Published
+                .SelectAsync<IRoutingSlipCompleted>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(trackingNumber, activity.Context.Message.TrackingNumber);

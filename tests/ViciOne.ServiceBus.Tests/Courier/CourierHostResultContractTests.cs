@@ -2,6 +2,7 @@ using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Results;
+using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
@@ -135,8 +136,8 @@ public sealed class CourierHostResultContractTests
     public void HostExecuteContext_RequiresAnActivityAndBindsItsArguments()
     {
         HostExecuteContext<ActivityArguments> context = CreateExecuteContext(hasCompensation: true);
-        RoutingSlip empty = new RoutingSlipBuilder(NewId.NextGuid(), new FakeTimeProvider(CreatedAt)).Build();
-        ConsumeContext<RoutingSlip> emptyContext = CreateConsumeContext(empty);
+        IRoutingSlip empty = new RoutingSlipBuilder(NewId.NextGuid(), new FakeTimeProvider(CreatedAt)).Build();
+        ConsumeContext<IRoutingSlip> emptyContext = CreateConsumeContext(empty);
 
         ExecuteActivityContext<TestActivity, ActivityArguments> activityContext =
             context.CreateActivityContext(new TestActivity());
@@ -150,6 +151,54 @@ public sealed class CourierHostResultContractTests
         Assert.IsType<TestActivity>(activityContext.Activity);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-HOST-CONFIGURATION", "activity-host-construction-send-and-probe-boundaries")]
+    public async Task ActivityHosts_ValidateConstructionSendAndProbeBoundariesAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        IPipe<ExecuteContext<ActivityArguments>> executePipe = Pipe.Empty<ExecuteContext<ActivityArguments>>();
+        IPipe<CompensateContext<ActivityLog>> compensatePipe = Pipe.Empty<CompensateContext<ActivityLog>>();
+        var compensationAddress = new Uri("loopback://localhost/compensate");
+
+        Assert.Equal("executePipe", Assert.Throws<ArgumentNullException>(() =>
+            new ExecuteActivityHost<TestActivity, ActivityArguments>(null!, compensationAddress)).ParamName);
+        Assert.Equal("compensatePipe", Assert.Throws<ArgumentNullException>(() =>
+            new CompensateActivityHost<TestActivity, ActivityLog>(null!)).ParamName);
+
+        var executeHost = new ExecuteActivityHost<TestActivity, ActivityArguments>(executePipe, compensationAddress);
+        var executeOnlyHost = new ExecuteActivityHost<TestActivity, ActivityArguments>(executePipe, null);
+        var compensateHost = new CompensateActivityHost<TestActivity, ActivityLog>(compensatePipe);
+        IPipe<ConsumeContext<IRoutingSlip>> next = Pipe.Empty<ConsumeContext<IRoutingSlip>>();
+        var builder = new RoutingSlipBuilder(NewId.NextGuid(), new FakeTimeProvider(CreatedAt));
+        builder.AddActivity("Execute", new Uri("loopback://localhost/execute"), new ActivityArguments("input"));
+        ConsumeContext<IRoutingSlip> context = CreateConsumeContext(builder.Build());
+
+        Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            executeHost.SendAsync(null!, next))).ParamName);
+        Assert.Equal("next", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            executeHost.SendAsync(context, null!))).ParamName);
+        Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            compensateHost.SendAsync(null!, next))).ParamName);
+        Assert.Equal("next", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            compensateHost.SendAsync(context, null!))).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => executeHost.Probe(null!)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => compensateHost.Probe(null!)).ParamName);
+
+        IReadOnlyDictionary<string, object> executeProbe = Scope(executeHost.GetProbeResult(cancellationToken).Results, "filters");
+        Assert.Equal("executeActivity", Assert.Contains("filterType", executeProbe));
+        Assert.Equal(TypeCache<TestActivity>.ShortName, Assert.Contains("activityType", executeProbe));
+        Assert.Equal(TypeCache<ActivityArguments>.ShortName, Assert.Contains("argumentType", executeProbe));
+        Assert.Equal(compensationAddress, Assert.Contains("compensateAddress", executeProbe));
+
+        IReadOnlyDictionary<string, object> executeOnlyProbe = Scope(executeOnlyHost.GetProbeResult(cancellationToken).Results, "filters");
+        Assert.DoesNotContain("compensateAddress", executeOnlyProbe);
+
+        IReadOnlyDictionary<string, object> compensateProbe = Scope(compensateHost.GetProbeResult(cancellationToken).Results, "filters");
+        Assert.Equal("compensateActivity", Assert.Contains("filterType", compensateProbe));
+        Assert.Equal(TypeCache<TestActivity>.ShortName, Assert.Contains("activityType", compensateProbe));
+        Assert.Equal(TypeCache<ActivityLog>.ShortName, Assert.Contains("logType", compensateProbe));
+    }
+
     private static HostExecuteContext<ActivityArguments> CreateExecuteContext(bool hasCompensation)
     {
         var builder = new RoutingSlipBuilder(NewId.NextGuid(), new FakeTimeProvider(CreatedAt));
@@ -159,10 +208,10 @@ public sealed class CourierHostResultContractTests
             CreateConsumeContext(builder.Build()));
     }
 
-    private static ConsumeContext<RoutingSlip> CreateConsumeContext(RoutingSlip routingSlip)
+    private static ConsumeContext<IRoutingSlip> CreateConsumeContext(IRoutingSlip routingSlip)
     {
         SerializerContext serializerContext = CreateSerializerContext(routingSlip);
-        ConsumeContext<RoutingSlip> context = InMemoryOutboxTestContextFactory.Create(
+        ConsumeContext<IRoutingSlip> context = InMemoryOutboxTestContextFactory.Create(
             routingSlip,
             TestContext.Current.CancellationToken,
             serializerContext: serializerContext);
@@ -170,7 +219,7 @@ public sealed class CourierHostResultContractTests
         return context;
     }
 
-    private static SerializerContext CreateSerializerContext(RoutingSlip routingSlip)
+    private static SerializerContext CreateSerializerContext(IRoutingSlip routingSlip)
     {
         IObjectDeserializer deserializer = ServiceBusMetadataJson.ObjectDeserializer;
         var metadata = new EnvelopeMessageContext(new JsonMessageEnvelope(), deserializer);
@@ -179,16 +228,30 @@ public sealed class CourierHostResultContractTests
             ServiceBusMetadataJson.Options,
             SystemTextJsonMessageSerializer.JsonContentType,
             metadata,
-            [MessageUrn.ForTypeString<RoutingSlip>()],
+            [MessageUrn.ForTypeString<IRoutingSlip>()],
             message: routingSlip);
     }
 
     private static void AssertParameter(string expected, Action action) =>
         Assert.Equal(expected, Assert.ThrowsAny<ArgumentException>(action).ParamName);
 
+    private static IReadOnlyDictionary<string, object> Scope(
+        IReadOnlyDictionary<string, object> parent,
+        string key) =>
+        Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(Assert.Contains(key, parent));
+
     private sealed record ActivityArguments(string Value);
 
     private sealed record ActivityLog(string Value);
 
-    private sealed class TestActivity;
+    private sealed class TestActivity :
+        IExecuteActivity<ActivityArguments>,
+        ICompensateActivity<ActivityLog>
+    {
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ActivityArguments> context) =>
+            Task.FromResult(context.Completed());
+
+        public Task<CompensationResult> CompensateAsync(CompensateContext<ActivityLog> context) =>
+            Task.FromResult(context.Compensated());
+    }
 }

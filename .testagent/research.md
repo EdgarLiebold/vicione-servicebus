@@ -1268,3 +1268,74 @@ the real result in about four seconds. Complete solution builds remain serial bu
 not use `--no-incremental`, as required by this repository. MTP tests and Roslyn format verification
 run outside the filesystem sandbox because their named-pipe servers otherwise fail with
 `SocketException (13): Permission denied`.
+
+## Iteration 102 Courier interface and navigation research
+
+The post-Iteration-101 source inventory identifies Courier as the next coherent owner. Its complete
+135-file implementation and comments were manually read in Iteration 87; current inspection finds
+16 unprefixed interfaces: the advanced `CourierContext` facade and 15 immutable routing-slip wire
+contracts. Each is a real C# interface, so its message-contract role does not justify an exception
+to the .NET naming convention. The project currently relies on an inferred
+`ViciOne.ServiceBus.Courier` root namespace despite publishing types across 13 namespace branches.
+
+Courier remains correctly located at `src/ViciOne.ServiceBus.Courier` as an independent capability
+assembly. The Greenfield correction is internal to that project: declare the common
+`ViciOne.ServiceBus` root namespace and make physical folders mirror the already established
+namespaces. This changes navigation, filenames, and the 16 interface identities, but not package
+ownership or routing-slip behavior. No compatibility alias is appropriate.
+
+The current Courier inventory contains 137 production C# files. The project boundary is deliberate:
+`src/ViciOne.ServiceBus.Courier` is an independently shipped capability assembly, not a child of
+the Core project's physical folder. Within that project, source paths now mirror namespaces
+relative to the explicit `ViciOne.ServiceBus` root. The project root contains only infrastructure
+and the three exception types whose namespace is exactly `ViciOne.ServiceBus`; Courier-domain types
+live below `Courier/` and the remaining namespaces use their matching top-level branches. Empty
+legacy directories were removed.
+
+All 16 unprefixed interface declarations, their consumers, filenames, serialization identities,
+attributes, inheritance, generic constraints, and comments were inspected before the rename. A
+symbol-aware rename changed references after that classification but did not generate source or
+comments. Exact fully qualified scans find none of the old identities, and the packed API multiset
+contains only the intended 16 removals and 16 additions.
+
+The registration implementation contained unused internal generic and runtime overload chains;
+removing them reduced dead surface without changing a public feature. Decomposing activity scanning
+into compensatable and execute-only paths made definition ownership explicit. Manual inspection
+also found that both `AddExecuteActivity<TActivity,TArguments>` and its runtime-type counterpart
+accepted `IActivity<TArguments,TLog>` implementations, silently discarding their compensation
+capability. Both APIs now reject that misuse and direct callers to `AddActivity`. Removing the two
+guards in an isolated mutation caused exactly the generic and runtime rejection tests to fail; the
+restored guards pass.
+
+Coverage initially exposed two dead registration methods at CRAP 272 and two complex host state
+machines above CRAP 30. Dead overload removal and separation of host lifecycle notification from
+activity result evaluation reduced Courier complexity from 1,009 to 981. New requirement-mapped
+tests verify constructors, `SendAsync` null boundaries, probe metadata, and optional compensation
+addresses. Final coverage passes 3,283 tests and records 78.3472% line and 70.6344% branch across
+the Core host's 36-project reachability closure. Courier records 88.6212% line, 75.3304% branch,
+617 methods, and zero methods above CRAP 30. The accepted Cobertura artifact is
+`/private/tmp/vsb-iteration102-courier-final6.cobertura.xml`, SHA-256
+`5aed13e5db9cbe785a3edc46ad2456737299a65c32c88283fcdddf40ea9e7cdf`.
+
+The first post-change full run exposed an unrelated deterministic test race: a reliable-inbox test
+configured its inactivity interval to the same 30-second value as its outer wait. The two timers
+could expire in either order. Retaining the 30-second assertion timeout while using the harness's
+short inactivity default reduced the isolated case from about 31 seconds to about 3 seconds; three
+consecutive isolated runs and every subsequent complete run pass. A later full run also caught
+duplicate requirement-variant metadata on the newly added registration tests; unique variants and
+the canonical projection entries now pass the projection gate.
+
+The final serial Engineering build covers all 77 projects with zero warnings and errors. Both full
+Roslyn format gates pass with zero changes. All 23 native hermetic test hosts pass 6,250/6,250 with
+no failures or skips, including 301 architecture and 3,283 Core tests. Package verification passes
+18 developer journeys, 31 fresh packages, three isolated provider-testing consumers, and 30
+runtime API assemblies in both update and comparison mode. The 19,030-line packed contract SHA-256
+is `b81db7838a57f4205d2c10687643a8ce8853f85c6de4a96b6a07f843631b7d51`.
+
+Repository-wide C# preprocessor, exact old-identity, real `NotImplementedException` throw,
+empty-directory, requirements JSON, and Git whitespace scans are clean. The sole textual
+`NotImplementedException` occurrence is the intentional technical-failure classification that
+marks such application exceptions non-retryable; it is executable policy, not a dummy. Roslyn
+format requires running outside the filesystem sandbox because its build host opens a named pipe;
+fresh package consumers require network access outside the sandbox for NuGet. The protected
+`review/` and `TestResults/` trees were neither modified nor staged.

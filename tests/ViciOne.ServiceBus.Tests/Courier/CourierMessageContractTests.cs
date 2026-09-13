@@ -16,30 +16,30 @@ public sealed class CourierMessageContractTests
     [RequirementCoverage("REQ-VSB-COURIER-CONTRACTS", "public-collections-declare-read-only-intent")]
     public void PublicCollectionProperties_ExposeOnlyReadOnlyContracts()
     {
-        AssertPropertyType<Activity>(nameof(Activity.Arguments), typeof(IReadOnlyDictionary<string, object>));
-        AssertPropertyType<CompensateLog>(nameof(CompensateLog.Data), typeof(IReadOnlyDictionary<string, object>));
+        AssertPropertyType<IActivity>(nameof(IActivity.Arguments), typeof(IReadOnlyDictionary<string, object>));
+        AssertPropertyType<ICompensateLog>(nameof(ICompensateLog.Data), typeof(IReadOnlyDictionary<string, object>));
 
-        AssertPropertyType<RoutingSlip>(nameof(RoutingSlip.Itinerary), typeof(IReadOnlyList<Activity>));
-        AssertPropertyType<RoutingSlip>(nameof(RoutingSlip.ActivityLogs), typeof(IReadOnlyList<ActivityLog>));
-        AssertPropertyType<RoutingSlip>(nameof(RoutingSlip.CompensateLogs), typeof(IReadOnlyList<CompensateLog>));
-        AssertPropertyType<RoutingSlip>(nameof(RoutingSlip.Variables), typeof(IReadOnlyDictionary<string, object>));
-        AssertPropertyType<RoutingSlip>(nameof(RoutingSlip.ActivityExceptions), typeof(IReadOnlyList<ActivityException>));
-        AssertPropertyType<RoutingSlip>(nameof(RoutingSlip.Subscriptions), typeof(IReadOnlyList<Subscription>));
+        AssertPropertyType<IRoutingSlip>(nameof(IRoutingSlip.Itinerary), typeof(IReadOnlyList<IActivity>));
+        AssertPropertyType<IRoutingSlip>(nameof(IRoutingSlip.ActivityLogs), typeof(IReadOnlyList<IActivityLog>));
+        AssertPropertyType<IRoutingSlip>(nameof(IRoutingSlip.CompensateLogs), typeof(IReadOnlyList<ICompensateLog>));
+        AssertPropertyType<IRoutingSlip>(nameof(IRoutingSlip.Variables), typeof(IReadOnlyDictionary<string, object>));
+        AssertPropertyType<IRoutingSlip>(nameof(IRoutingSlip.ActivityExceptions), typeof(IReadOnlyList<IActivityException>));
+        AssertPropertyType<IRoutingSlip>(nameof(IRoutingSlip.Subscriptions), typeof(IReadOnlyList<ISubscription>));
 
-        AssertDictionaryProperties<RoutingSlipActivityCompensated>(nameof(RoutingSlipActivityCompensated.Data), nameof(RoutingSlipActivityCompensated.Variables));
-        AssertDictionaryProperties<RoutingSlipActivityCompensationFailed>(nameof(RoutingSlipActivityCompensationFailed.Data), nameof(RoutingSlipActivityCompensationFailed.Variables));
-        AssertDictionaryProperties<RoutingSlipActivityCompleted>(nameof(RoutingSlipActivityCompleted.Arguments), nameof(RoutingSlipActivityCompleted.Data), nameof(RoutingSlipActivityCompleted.Variables));
-        AssertDictionaryProperties<RoutingSlipActivityFaulted>(nameof(RoutingSlipActivityFaulted.Arguments), nameof(RoutingSlipActivityFaulted.Variables));
-        AssertDictionaryProperties<RoutingSlipCompensationFailed>(nameof(RoutingSlipCompensationFailed.Variables));
-        AssertDictionaryProperties<RoutingSlipCompleted>(nameof(RoutingSlipCompleted.Variables));
-        AssertDictionaryProperties<RoutingSlipFaulted>(nameof(RoutingSlipFaulted.Variables));
-        AssertDictionaryProperties<RoutingSlipRevised>(nameof(RoutingSlipRevised.Variables));
-        AssertDictionaryProperties<RoutingSlipTerminated>(nameof(RoutingSlipTerminated.Variables));
+        AssertDictionaryProperties<IRoutingSlipActivityCompensated>(nameof(IRoutingSlipActivityCompensated.Data), nameof(IRoutingSlipActivityCompensated.Variables));
+        AssertDictionaryProperties<IRoutingSlipActivityCompensationFailed>(nameof(IRoutingSlipActivityCompensationFailed.Data), nameof(IRoutingSlipActivityCompensationFailed.Variables));
+        AssertDictionaryProperties<IRoutingSlipActivityCompleted>(nameof(IRoutingSlipActivityCompleted.Arguments), nameof(IRoutingSlipActivityCompleted.Data), nameof(IRoutingSlipActivityCompleted.Variables));
+        AssertDictionaryProperties<IRoutingSlipActivityFaulted>(nameof(IRoutingSlipActivityFaulted.Arguments), nameof(IRoutingSlipActivityFaulted.Variables));
+        AssertDictionaryProperties<IRoutingSlipCompensationFailed>(nameof(IRoutingSlipCompensationFailed.Variables));
+        AssertDictionaryProperties<IRoutingSlipCompleted>(nameof(IRoutingSlipCompleted.Variables));
+        AssertDictionaryProperties<IRoutingSlipFaulted>(nameof(IRoutingSlipFaulted.Variables));
+        AssertDictionaryProperties<IRoutingSlipRevised>(nameof(IRoutingSlipRevised.Variables));
+        AssertDictionaryProperties<IRoutingSlipTerminated>(nameof(IRoutingSlipTerminated.Variables));
 
-        AssertPropertyType<RoutingSlipFaulted>(nameof(RoutingSlipFaulted.ActivityExceptions), typeof(IReadOnlyList<ActivityException>));
-        AssertPropertyType<RoutingSlipRevised>(nameof(RoutingSlipRevised.Itinerary), typeof(IReadOnlyList<Activity>));
-        AssertPropertyType<RoutingSlipRevised>(nameof(RoutingSlipRevised.DiscardedItinerary), typeof(IReadOnlyList<Activity>));
-        AssertPropertyType<RoutingSlipTerminated>(nameof(RoutingSlipTerminated.DiscardedItinerary), typeof(IReadOnlyList<Activity>));
+        AssertPropertyType<IRoutingSlipFaulted>(nameof(IRoutingSlipFaulted.ActivityExceptions), typeof(IReadOnlyList<IActivityException>));
+        AssertPropertyType<IRoutingSlipRevised>(nameof(IRoutingSlipRevised.Itinerary), typeof(IReadOnlyList<IActivity>));
+        AssertPropertyType<IRoutingSlipRevised>(nameof(IRoutingSlipRevised.DiscardedItinerary), typeof(IReadOnlyList<IActivity>));
+        AssertPropertyType<IRoutingSlipTerminated>(nameof(IRoutingSlipTerminated.DiscardedItinerary), typeof(IReadOnlyList<IActivity>));
     }
 
     [Fact]
@@ -52,13 +52,13 @@ public sealed class CourierMessageContractTests
         var arguments = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { ["order"] = 42 };
         var data = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { ["receipt"] = "original" };
         var activityArguments = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { ["input"] = "original" };
-        var itinerary = new List<Activity>
+        var itinerary = new List<IActivity>
         {
             new MutableActivity("ChargeCard", new Uri("loopback://localhost/charge"), activityArguments),
         };
-        var discarded = new List<Activity>(itinerary);
+        var discarded = new List<IActivity>(itinerary);
         var exception = ValidActivityException(executionId);
-        var exceptions = new List<ActivityException> { exception };
+        var exceptions = new List<IActivityException> { exception };
         ExceptionInfo exceptionInfo = new FaultExceptionInfo(new InvalidOperationException("expected"));
 
         object[] messages =
@@ -92,23 +92,23 @@ public sealed class CourierMessageContractTests
             }
         }
 
-        RoutingSlipActivityCompleted completed = Assert.IsAssignableFrom<RoutingSlipActivityCompleted>(messages[2]);
+        IRoutingSlipActivityCompleted completed = Assert.IsAssignableFrom<IRoutingSlipActivityCompleted>(messages[2]);
         Assert.Equal(42, completed.Arguments["order"]);
         Assert.Equal("original", completed.Data["receipt"]);
         AssertReadOnlyDictionary(Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(completed.Arguments));
         AssertReadOnlyDictionary(Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(completed.Data));
 
-        RoutingSlipFaulted faulted = Assert.IsAssignableFrom<RoutingSlipFaulted>(messages[6]);
+        IRoutingSlipFaulted faulted = Assert.IsAssignableFrom<IRoutingSlipFaulted>(messages[6]);
         Assert.Single(faulted.ActivityExceptions);
         AssertReadOnlyCollection(faulted.ActivityExceptions);
 
-        RoutingSlipRevised revised = Assert.IsAssignableFrom<RoutingSlipRevised>(messages[7]);
+        IRoutingSlipRevised revised = Assert.IsAssignableFrom<IRoutingSlipRevised>(messages[7]);
         Assert.Equal("original", Assert.Single(revised.Itinerary).Arguments["input"]);
         Assert.Equal("original", Assert.Single(revised.DiscardedItinerary).Arguments["input"]);
         AssertReadOnlyCollection(revised.Itinerary);
         AssertReadOnlyCollection(revised.DiscardedItinerary);
 
-        RoutingSlipTerminated terminated = Assert.IsAssignableFrom<RoutingSlipTerminated>(messages[8]);
+        IRoutingSlipTerminated terminated = Assert.IsAssignableFrom<IRoutingSlipTerminated>(messages[8]);
         Assert.Equal("original", Assert.Single(terminated.DiscardedItinerary).Arguments["input"]);
         AssertReadOnlyCollection(terminated.DiscardedItinerary);
     }
@@ -120,8 +120,8 @@ public sealed class CourierMessageContractTests
         Guid trackingNumber = NewId.NextGuid();
         Guid executionId = NewId.NextGuid();
         var values = new Dictionary<string, object>();
-        Activity activity = new MutableActivity("ChargeCard", new Uri("loopback://localhost/charge"), values);
-        ActivityException activityException = ValidActivityException(executionId);
+        IActivity activity = new MutableActivity("ChargeCard", new Uri("loopback://localhost/charge"), values);
+        IActivityException activityException = ValidActivityException(executionId);
         ExceptionInfo exceptionInfo = new FaultExceptionInfo(new InvalidOperationException("expected"));
 
         Action[] emptyTrackingNumberCases =
@@ -217,7 +217,7 @@ public sealed class CourierMessageContractTests
             Assert.Equal(parameterName, Assert.Throws<TException>(action).ParamName);
     }
 
-    private static ActivityException ValidActivityException(Guid executionId) =>
+    private static IActivityException ValidActivityException(Guid executionId) =>
         new RoutingSlipActivityException(
             "ChargeCard",
             HostMetadataCache.Host,
@@ -226,7 +226,7 @@ public sealed class CourierMessageContractTests
             Duration,
             new FaultExceptionInfo(new InvalidOperationException("expected")));
 
-    private sealed class MutableActivity(string name, Uri address, Dictionary<string, object> arguments) : Activity
+    private sealed class MutableActivity(string name, Uri address, Dictionary<string, object> arguments) : IActivity
     {
         public string Name { get; } = name;
 

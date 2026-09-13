@@ -80,17 +80,17 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
                         () => new FailingActivity(probe, failureMode)));
                 configurator.ReceiveEndpoint(eventsQueue, endpoint =>
                 {
-                    endpoint.Handler<RoutingSlipFaulted>(context =>
+                    endpoint.Handler<IRoutingSlipFaulted>(context =>
                     {
                         probe.Faulted.TrySetResult(context.Message.TrackingNumber);
                         return Task.CompletedTask;
                     });
-                    endpoint.Handler<RoutingSlipActivityCompensated>(context =>
+                    endpoint.Handler<IRoutingSlipActivityCompensated>(context =>
                     {
                         probe.Compensated.TrySetResult((context.Message.TrackingNumber, context.Message.ActivityName));
                         return Task.CompletedTask;
                     });
-                    endpoint.Handler<RoutingSlipCompleted>(context =>
+                    endpoint.Handler<IRoutingSlipCompleted>(context =>
                     {
                         probe.Completed.TrySetResult(context.Message.TrackingNumber);
                         return Task.CompletedTask;

@@ -27,18 +27,18 @@ public sealed class MessagePackDomainContractTests
         builder.AddSubscription(
             new Uri("loopback://courier/events"),
             RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);
-        RoutingSlip source = builder.Build();
+        IRoutingSlip source = builder.Build();
 
-        RoutingSlip result = MessagePackRoundTrip.Execute(source);
+        IRoutingSlip result = MessagePackRoundTrip.Execute(source);
 
         Assert.Equal(trackingNumber, result.TrackingNumber);
         Assert.Equal(source.CreateTimestamp, result.CreateTimestamp);
-        Activity activity = Assert.Single(result.Itinerary);
+        IActivity activity = Assert.Single(result.Itinerary);
         Assert.Equal("convert-video", activity.Name);
         Assert.Equal(new Uri("loopback://courier/convert-video"), activity.Address);
         Assert.Equal("input.mp4", activity.Arguments["path"]);
         Assert.Equal("north", result.Variables["tenant"]);
-        Subscription subscription = Assert.Single(result.Subscriptions);
+        ISubscription subscription = Assert.Single(result.Subscriptions);
         Assert.Equal(new Uri("loopback://courier/events"), subscription.Address);
         Assert.Equal(RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted, subscription.Events);
     }

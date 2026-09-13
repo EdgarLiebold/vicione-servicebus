@@ -6,6 +6,6 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures middleware for the routing-slip message consumed by an activity host.
 /// </summary>
 public interface IRoutingSlipConfigurator :
-    IActivityMessageConfigurator<RoutingSlip>
+    IActivityMessageConfigurator<IRoutingSlip>
 {
 }

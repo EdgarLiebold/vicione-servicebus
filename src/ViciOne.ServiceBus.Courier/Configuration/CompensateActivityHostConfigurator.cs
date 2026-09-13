@@ -20,8 +20,8 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
 {
     int? _concurrentMessageLimit;
     readonly ICompensateActivityFactory<TActivity, TLog> _activityFactory;
-    readonly IBuildPipeConfigurator<CompensateActivityContext<TActivity, TLog>> _activityPipeConfigurator;
-    readonly IBuildPipeConfigurator<CompensateContext<TLog>> _compensatePipeConfigurator;
+    readonly PipeConfigurator<CompensateActivityContext<TActivity, TLog>> _activityPipeConfigurator;
+    readonly PipeConfigurator<CompensateContext<TLog>> _compensatePipeConfigurator;
     readonly ActivityConfigurationObservable _configurationObservers;
     readonly ActivityObservable _observers;
     readonly RoutingSlipConfigurator _routingSlipConfigurator;
@@ -67,7 +67,7 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
     }
 
     /// <summary>Gets the routing-slip transport contract consumed by this host.</summary>
-    public Type MessageType => typeof(RoutingSlip);
+    public Type MessageType => typeof(IRoutingSlip);
 
     /// <summary>Configures middleware after the compensation log is deserialized and before the activity instance is resolved.</summary>
     /// <param name="configure">The callback that configures the log-level compensation context.</param>
@@ -108,8 +108,8 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
     {
         ArgumentNullException.ThrowIfNull(configure);
 
-        if (typeof(TMessage) != typeof(RoutingSlip))
-            throw new InvalidOperationException($"The activity host message type is {TypeCache<RoutingSlip>.ShortName}, not {TypeCache<TMessage>.ShortName}.");
+        if (typeof(TMessage) != typeof(IRoutingSlip))
+            throw new InvalidOperationException($"The activity host message type is {TypeCache<IRoutingSlip>.ShortName}, not {TypeCache<TMessage>.ShortName}.");
 
         configure((IActivityMessageConfigurator<TMessage>)(object)_routingSlipConfigurator);
     }
@@ -155,7 +155,7 @@ internal sealed class CompensateActivityHostConfigurator<TActivity, TLog> :
         {
             var concurrencyLimiter = new ConcurrencyLimiter(ConcurrentMessageLimit.Value, TypeCache<TActivity>.ShortName);
 
-            _routingSlipConfigurator.AddPipeSpecification(new ConcurrencyLimitConsumePipeSpecification<RoutingSlip>(concurrencyLimiter));
+            _routingSlipConfigurator.AddPipeSpecification(new ConcurrencyLimitConsumePipeSpecification<IRoutingSlip>(concurrencyLimiter));
         }
 
         var host = new CompensateActivityHost<TActivity, TLog>(compensatePipe);

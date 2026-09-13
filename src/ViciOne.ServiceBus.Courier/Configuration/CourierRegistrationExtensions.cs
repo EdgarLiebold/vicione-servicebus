@@ -118,38 +118,55 @@ public static class CourierRegistrationExtensions
 
         filter ??= _ => true;
 
-        IEnumerable<Type> activityTypes = types.Where(x => x.ImplementsInterface(typeof(IActivity<,>))).ToList();
-        IEnumerable<Type> activityDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IActivityDefinition<,,>))).ToList();
+        Type[] activityTypes = types.Where(IsCompensatableActivity).ToArray();
+        RegisterCompensatableActivities(configurator, filter, activityTypes, types.Where(IsCompensatableActivityDefinition));
 
-        var activities = from c in activityTypes
-                         join d in activityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>)).First() into dc
-                         from d in dc.DefaultIfEmpty()
-                         where filter(c)
-                         select new
-                         {
-                             ActivityType = c,
-                             DefinitionType = d
-                         };
-
-        foreach (var activity in activities)
-            configurator.AddActivity(activity.ActivityType, activity.DefinitionType);
-
-        IEnumerable<Type> executeActivityTypes = types.Where(x => x.ImplementsInterface(typeof(IExecuteActivity<>))).Except(activityTypes).ToList();
-        IEnumerable<Type> executeActivityDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IExecuteActivityDefinition<,>))).ToList();
-
-        var executeActivities = from c in executeActivityTypes
-                                join d in executeActivityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>)).First() into dc
-                                from d in dc.DefaultIfEmpty()
-                                where filter(c)
-                                select new
-                                {
-                                    ActivityType = c,
-                                    DefinitionType = d
-                                };
-
-        foreach (var executeActivity in executeActivities)
-            configurator.AddExecuteActivity(executeActivity.ActivityType, executeActivity.DefinitionType);
+        IEnumerable<Type> executeActivityTypes = types.Where(IsExecuteActivity).Except(activityTypes);
+        RegisterExecuteOnlyActivities(configurator, filter, executeActivityTypes, types.Where(IsExecuteActivityDefinition));
     }
+
+
+    static void RegisterCompensatableActivities(IRegistrationConfigurator configurator, Func<Type, bool> filter,
+        IEnumerable<Type> activityTypes, IEnumerable<Type> definitionTypes)
+    {
+        var activities = from activityType in activityTypes
+                         join definitionType in definitionTypes on activityType equals GetCompensatableActivityType(definitionType) into definitions
+                         from definitionType in definitions.DefaultIfEmpty()
+                         where filter(activityType)
+                         select (ActivityType: activityType, DefinitionType: definitionType);
+
+        foreach ((Type activityType, Type? definitionType) in activities)
+            configurator.AddActivity(activityType, definitionType);
+    }
+
+
+    static void RegisterExecuteOnlyActivities(IRegistrationConfigurator configurator, Func<Type, bool> filter,
+        IEnumerable<Type> activityTypes, IEnumerable<Type> definitionTypes)
+    {
+        var activities = from activityType in activityTypes
+                         join definitionType in definitionTypes on activityType equals GetExecuteActivityType(definitionType) into definitions
+                         from definitionType in definitions.DefaultIfEmpty()
+                         where filter(activityType)
+                         select (ActivityType: activityType, DefinitionType: definitionType);
+
+        foreach ((Type activityType, Type? definitionType) in activities)
+            configurator.AddExecuteActivity(activityType, definitionType);
+    }
+
+
+    static bool IsCompensatableActivity(Type type) => type.ImplementsInterface(typeof(IActivity<,>));
+
+    static bool IsCompensatableActivityDefinition(Type type) => type.ImplementsInterface(typeof(IActivityDefinition<,,>));
+
+    static bool IsExecuteActivity(Type type) => type.ImplementsInterface(typeof(IExecuteActivity<>));
+
+    static bool IsExecuteActivityDefinition(Type type) => type.ImplementsInterface(typeof(IExecuteActivityDefinition<,>));
+
+    static Type GetCompensatableActivityType(Type definitionType) =>
+        definitionType.GetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>)).First();
+
+    static Type GetExecuteActivityType(Type definitionType) =>
+        definitionType.GetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>)).First();
 
 
     static Type[] FindTypesInNamespace(Type type, Func<Type, bool> typeFilter)

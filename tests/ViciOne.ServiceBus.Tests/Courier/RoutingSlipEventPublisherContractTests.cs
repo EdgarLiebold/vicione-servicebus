@@ -36,7 +36,7 @@ public sealed class RoutingSlipEventPublisherContractTests
     [RequirementCoverage("REQ-VSB-COURIER-ROUTING", "empty-next-addresses-return-null")]
     public void EmptyRoutingSlip_HasNoExecutionOrCompensationAddress()
     {
-        RoutingSlip routingSlip = new RoutingSlipBuilder(NewId.NextGuid()).Build();
+        IRoutingSlip routingSlip = new RoutingSlipBuilder(NewId.NextGuid()).Build();
 
         Assert.True(routingSlip.RanToCompletion());
         Assert.Null(routingSlip.GetNextExecuteAddress());
@@ -55,7 +55,7 @@ public sealed class RoutingSlipEventPublisherContractTests
             address,
             RoutingSlipEvents.ActivityCompensated,
             RoutingSlipEventContents.Data);
-        RoutingSlip routingSlip = builder.Build();
+        IRoutingSlip routingSlip = builder.Build();
         var publisher = new RoutingSlipEventPublisher(endpoint, publishEndpoint, routingSlip);
         var variables = new Dictionary<string, object> { ["private"] = "variable" };
         var data = new Dictionary<string, object> { ["receipt"] = "compensated" };
@@ -69,7 +69,7 @@ public sealed class RoutingSlipEventPublisherContractTests
             data,
             TestContext.Current.CancellationToken);
 
-        RoutingSlipActivityCompensated message = Assert.IsAssignableFrom<RoutingSlipActivityCompensated>(
+        IRoutingSlipActivityCompensated message = Assert.IsAssignableFrom<IRoutingSlipActivityCompensated>(
             Assert.Single(endpoint.Messages));
         Assert.Empty(message.Variables);
         Assert.Equal("compensated", Assert.IsType<string>(message.Data["receipt"]));
@@ -100,8 +100,8 @@ public sealed class RoutingSlipEventPublisherContractTests
                 TestContext.Current.CancellationToken);
         }
 
-        RoutingSlipActivityCompensated[] messages = endpoint.Messages
-            .Cast<RoutingSlipActivityCompensated>()
+        IRoutingSlipActivityCompensated[] messages = endpoint.Messages
+            .Cast<IRoutingSlipActivityCompensated>()
             .ToArray();
         Assert.Equal(2, messages.Length);
         Assert.NotSame(messages[0].Variables, messages[1].Variables);
@@ -133,9 +133,9 @@ public sealed class RoutingSlipEventPublisherContractTests
         var data = new Dictionary<string, object> { ["receipt"] = 27 };
         var itineraryBuilder = new RoutingSlipBuilder(NewId.NextGuid());
         itineraryBuilder.AddActivity("Next", new Uri("loopback://localhost/next"));
-        Activity itineraryActivity = Assert.Single(itineraryBuilder.Build().Itinerary);
-        var itinerary = new List<Activity> { itineraryActivity };
-        var discardedItinerary = new List<Activity> { itineraryActivity };
+        IActivity itineraryActivity = Assert.Single(itineraryBuilder.Build().Itinerary);
+        var itinerary = new List<IActivity> { itineraryActivity };
+        var discardedItinerary = new List<IActivity> { itineraryActivity };
         var exceptionInfo = new FaultExceptionInfo(new InvalidOperationException("activity failed"));
         DateTimeOffset timestamp = DateTimeOffset.UtcNow;
         Guid executionId = NewId.NextGuid();
@@ -182,7 +182,7 @@ public sealed class RoutingSlipEventPublisherContractTests
             new Dictionary<string, object> { ["receipt"] = 27 },
             TestContext.Current.CancellationToken);
 
-        RoutingSlipActivityCompleted message = Assert.IsAssignableFrom<RoutingSlipActivityCompleted>(
+        IRoutingSlipActivityCompleted message = Assert.IsAssignableFrom<IRoutingSlipActivityCompleted>(
             Assert.Single(endpoint.Messages));
         Assert.Empty(message.Variables);
         Assert.Equal(42, message.Arguments["orderId"]);
@@ -202,7 +202,7 @@ public sealed class RoutingSlipEventPublisherContractTests
         var publisher = new RoutingSlipEventPublisher(endpoint, new UnexpectedPublishEndpoint(), builder.Build());
         var itineraryBuilder = new RoutingSlipBuilder(NewId.NextGuid());
         itineraryBuilder.AddActivity("Next", new Uri("loopback://localhost/next"));
-        Activity activity = Assert.Single(itineraryBuilder.Build().Itinerary);
+        IActivity activity = Assert.Single(itineraryBuilder.Build().Itinerary);
 
         await publisher.PublishRoutingSlipRevisedAsync(
             "ChargeCard",
@@ -214,7 +214,7 @@ public sealed class RoutingSlipEventPublisherContractTests
             [activity],
             TestContext.Current.CancellationToken);
 
-        RoutingSlipRevised message = Assert.IsAssignableFrom<RoutingSlipRevised>(Assert.Single(endpoint.Messages));
+        IRoutingSlipRevised message = Assert.IsAssignableFrom<IRoutingSlipRevised>(Assert.Single(endpoint.Messages));
         Assert.Empty(message.Variables);
         Assert.Single(message.Itinerary);
         Assert.Single(message.DiscardedItinerary);
@@ -275,7 +275,7 @@ public sealed class RoutingSlipEventPublisherContractTests
 
         await publisher.PublishRoutingSlipCompletedAsync(
             DateTimeOffset.UtcNow, TimeSpan.Zero, variables, cancellationToken);
-        Assert.IsAssignableFrom<RoutingSlipCompleted>(Assert.Single(endpoint.Messages));
+        Assert.IsAssignableFrom<IRoutingSlipCompleted>(Assert.Single(endpoint.Messages));
     }
 
     [Fact]
@@ -299,7 +299,7 @@ public sealed class RoutingSlipEventPublisherContractTests
 
         await publisher.PublishRoutingSlipActivityCompletedAsync(
             "chargecard", NewId.NextGuid(), DateTimeOffset.UtcNow, TimeSpan.Zero, values, values, values, cancellationToken);
-        Assert.IsAssignableFrom<RoutingSlipActivityCompleted>(Assert.Single(endpoint.Messages));
+        Assert.IsAssignableFrom<IRoutingSlipActivityCompleted>(Assert.Single(endpoint.Messages));
     }
 
     [Fact]
@@ -340,7 +340,7 @@ public sealed class RoutingSlipEventPublisherContractTests
             TestContext.Current.CancellationToken);
 
         Assert.Empty(endpoint.Messages);
-        Assert.IsAssignableFrom<RoutingSlipCompleted>(Assert.Single(publishEndpoint.Messages));
+        Assert.IsAssignableFrom<IRoutingSlipCompleted>(Assert.Single(publishEndpoint.Messages));
     }
 
     [Fact]
@@ -461,52 +461,52 @@ public sealed class RoutingSlipEventPublisherContractTests
             messages,
             completed => Assert.Equal(
                 "north",
-                Assert.IsAssignableFrom<RoutingSlipCompleted>(completed).Variables["tenant"]),
+                Assert.IsAssignableFrom<IRoutingSlipCompleted>(completed).Variables["tenant"]),
             faulted => Assert.Equal(
                 "north",
-                Assert.IsAssignableFrom<RoutingSlipFaulted>(faulted).Variables["tenant"]),
+                Assert.IsAssignableFrom<IRoutingSlipFaulted>(faulted).Variables["tenant"]),
             completedActivity =>
             {
-                RoutingSlipActivityCompleted activity = Assert.IsAssignableFrom<RoutingSlipActivityCompleted>(completedActivity);
+                IRoutingSlipActivityCompleted activity = Assert.IsAssignableFrom<IRoutingSlipActivityCompleted>(completedActivity);
                 Assert.Equal("north", activity.Variables["tenant"]);
                 Assert.Equal(42, activity.Arguments["orderId"]);
                 Assert.Equal(27, activity.Data["receipt"]);
             },
             faultedActivity =>
             {
-                RoutingSlipActivityFaulted activity = Assert.IsAssignableFrom<RoutingSlipActivityFaulted>(faultedActivity);
+                IRoutingSlipActivityFaulted activity = Assert.IsAssignableFrom<IRoutingSlipActivityFaulted>(faultedActivity);
                 Assert.Equal("north", activity.Variables["tenant"]);
                 Assert.Equal(42, activity.Arguments["orderId"]);
             },
             compensated =>
             {
-                RoutingSlipActivityCompensated activity = Assert.IsAssignableFrom<RoutingSlipActivityCompensated>(compensated);
+                IRoutingSlipActivityCompensated activity = Assert.IsAssignableFrom<IRoutingSlipActivityCompensated>(compensated);
                 Assert.Equal("north", activity.Variables["tenant"]);
                 Assert.Equal(27, activity.Data["receipt"]);
             },
             revised =>
             {
-                RoutingSlipRevised routingSlip = Assert.IsAssignableFrom<RoutingSlipRevised>(revised);
+                IRoutingSlipRevised routingSlip = Assert.IsAssignableFrom<IRoutingSlipRevised>(revised);
                 Assert.Equal("north", routingSlip.Variables["tenant"]);
                 Assert.Single(routingSlip.Itinerary);
                 Assert.Single(routingSlip.DiscardedItinerary);
             },
             terminated =>
             {
-                RoutingSlipTerminated routingSlip = Assert.IsAssignableFrom<RoutingSlipTerminated>(terminated);
+                IRoutingSlipTerminated routingSlip = Assert.IsAssignableFrom<IRoutingSlipTerminated>(terminated);
                 Assert.Equal("north", routingSlip.Variables["tenant"]);
                 Assert.Single(routingSlip.DiscardedItinerary);
             },
             activityCompensationFailed =>
             {
-                RoutingSlipActivityCompensationFailed activity =
-                    Assert.IsAssignableFrom<RoutingSlipActivityCompensationFailed>(activityCompensationFailed);
+                IRoutingSlipActivityCompensationFailed activity =
+                    Assert.IsAssignableFrom<IRoutingSlipActivityCompensationFailed>(activityCompensationFailed);
                 Assert.Equal("north", activity.Variables["tenant"]);
                 Assert.Equal(27, activity.Data["receipt"]);
             },
             compensationFailed => Assert.Equal(
                 "north",
-                Assert.IsAssignableFrom<RoutingSlipCompensationFailed>(compensationFailed).Variables["tenant"]));
+                Assert.IsAssignableFrom<IRoutingSlipCompensationFailed>(compensationFailed).Variables["tenant"]));
     }
 
     private static void AssertEmptyExecutionId(Action action)

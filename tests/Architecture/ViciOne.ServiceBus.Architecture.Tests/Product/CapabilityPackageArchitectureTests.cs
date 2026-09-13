@@ -30,7 +30,7 @@ public sealed class CapabilityPackageArchitectureTests
     public void CapabilityTypes_AreOwnedOnlyByTheirDedicatedAssemblies()
     {
         AssertAssembly("ViciOne.ServiceBus.Sagas", typeof(ISaga), typeof(ISagaStateMachine<>), typeof(ICorrelatedBy<>));
-        AssertAssembly("ViciOne.ServiceBus.Courier", typeof(IActivity<,>), typeof(IExecuteActivity<>), typeof(RoutingSlip));
+        AssertAssembly("ViciOne.ServiceBus.Courier", typeof(IActivity<,>), typeof(IExecuteActivity<>), typeof(IRoutingSlip));
         AssertAssembly("ViciOne.ServiceBus.Futures", typeof(FutureState));
         AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(IJobContext<>));
         AssertAssembly("ViciOne.ServiceBus.Mediator", typeof(IMediator));

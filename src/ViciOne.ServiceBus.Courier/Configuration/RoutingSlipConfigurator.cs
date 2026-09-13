@@ -6,19 +6,19 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Builds the receive pipeline applied to routing-slip messages.</summary>
 internal sealed class RoutingSlipConfigurator :
     IRoutingSlipConfigurator,
-    IBuildPipeConfigurator<ConsumeContext<RoutingSlip>>
+    IBuildPipeConfigurator<ConsumeContext<IRoutingSlip>>
 {
-    readonly IBuildPipeConfigurator<ConsumeContext<RoutingSlip>> _configurator;
+    readonly PipeConfigurator<ConsumeContext<IRoutingSlip>> _configurator;
 
     /// <summary>Creates an empty routing-slip receive-pipeline configurator.</summary>
     public RoutingSlipConfigurator()
     {
-        _configurator = new PipeConfigurator<ConsumeContext<RoutingSlip>>();
+        _configurator = new PipeConfigurator<ConsumeContext<IRoutingSlip>>();
     }
 
     /// <summary>Builds the routing-slip receive pipeline from its specifications.</summary>
     /// <returns>The configured routing-slip receive pipeline.</returns>
-    public IPipe<ConsumeContext<RoutingSlip>> Build()
+    public IPipe<ConsumeContext<IRoutingSlip>> Build()
     {
         return _configurator.Build();
     }
@@ -32,7 +32,7 @@ internal sealed class RoutingSlipConfigurator :
 
     /// <summary>Adds middleware to the routing-slip receive pipeline.</summary>
     /// <param name="specification">The pipeline specification to add.</param>
-    public void AddPipeSpecification(IPipeSpecification<ConsumeContext<RoutingSlip>> specification)
+    public void AddPipeSpecification(IPipeSpecification<ConsumeContext<IRoutingSlip>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
 

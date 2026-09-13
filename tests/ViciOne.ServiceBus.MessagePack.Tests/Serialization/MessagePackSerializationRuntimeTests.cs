@@ -21,11 +21,11 @@ public sealed class MessagePackSerializationRuntimeTests
     {
         IMessagePackFormatter<Fault>? faultFormatter =
             MessagePackSerializationRuntime.Options.Resolver.GetFormatter<Fault>();
-        IMessagePackFormatter<RoutingSlip>? routingSlipFormatter =
-            MessagePackSerializationRuntime.Options.Resolver.GetFormatter<RoutingSlip>();
+        IMessagePackFormatter<IRoutingSlip>? routingSlipFormatter =
+            MessagePackSerializationRuntime.Options.Resolver.GetFormatter<IRoutingSlip>();
 
         Assert.IsType<InterfaceConcreteMapFormatter<Fault, FaultEvent>>(faultFormatter);
-        Assert.IsType<InterfaceMessagePackFormatter<RoutingSlip>>(routingSlipFormatter);
+        Assert.IsType<InterfaceMessagePackFormatter<IRoutingSlip>>(routingSlipFormatter);
     }
 
     [Fact]

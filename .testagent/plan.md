@@ -2452,6 +2452,56 @@ whitespace gates pass. The 19,030-line packed contract has SHA-256
 The overall A+ goal remains active for the remaining complete source owners and the final
 repository-wide completion audit.
 
+## Iteration 102 Courier interface contract and navigation plan
+
+Iteration 102 starts from remotely verified commit
+`f3c660c3641c23d756a09f54b7869ad9213adcd6` and annotated tag
+`servicebus-a-plus-remediation-iteration-101-2026-09-13`. The complete 135-file Courier owner was
+manually read and behaviorally remediated in Iteration 87. This coherent follow-up rereads every
+remaining unprefixed interface, its consumers and comments, then validates the complete project's
+namespace/path model.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Apply one .NET interface convention | all public and internal Courier interfaces begin with `I` followed by an uppercase letter |
+| Preserve every routing-slip feature | contract members, inheritance, attributes, immutable collections, serialization, event routing, execution, compensation, and correlation remain equivalent |
+| Preserve consumer usability | all source, tests, samples, reflection identities, message mappings, package journeys, and packed API references use the new identities |
+| Align source navigation | retain Courier as an independent sibling capability; map every file to its namespace relative to an explicit `ViciOne.ServiceBus` root namespace |
+| Keep comments accurate | reread and manually correct affected declarations and references; do not generate documentation |
+| Reject regressions | red-first naming and folder rules, focused tests, isolated counterchanges, full build/test/coverage/format/package and hygiene gates |
+
+Symbol-aware rename support may update references only after manual declaration classification. It
+must not generate source behavior or comments. The permanent Greenfield API retains no legacy alias.
+
+### Iteration 102 completion
+
+Iteration 102 completes the Courier Greenfield interface and source-navigation normalization. All
+16 formerly unprefixed Courier interfaces now use the .NET `I` convention, every corresponding
+filename and consumer uses the same identity, and no compatibility alias remains. Courier stays an
+independent capability project beside Core; inside it, the explicit `ViciOne.ServiceBus` root
+namespace makes `Advanced/`, `Configuration/`, `Context/`, `Courier/`, `DependencyInjection/`,
+`Logging/`, `Middleware/`, and `Transports/` reflect the declared namespace branches. The three
+root files that declare `ViciOne.ServiceBus` exceptions remain correctly at the project root.
+
+The manual registration review removed unused overload chains, decomposed activity discovery by
+responsibility, and closed a real API boundary: execute-only registration now rejects a
+compensatable activity through both generic and runtime-type entry points. A controlled mutation
+of both guards produced exactly two failing cases and the restored implementation passes all 13
+registration cases. Execute and compensate hosts now separate lifecycle notification from result
+evaluation; new contract evidence covers their construction, arguments, and probe metadata.
+
+The final Engineering Release build passes all 77 projects with zero warnings and errors. Both
+format gates pass without changing any of 5,806 Engineering or 5,384 Unit files. The 23 native
+Unit/Architecture hosts pass 6,250/6,250 tests with no failure or skip, including 301 architecture
+and 3,283 Core-host cases. Fresh Core-host coverage is 78.3472% line and 70.6344% branch; Courier is
+88.6212% line and 75.3304% branch, and none of its 617 methods exceeds CRAP 30. Package validation
+passes 18 journeys, 31 freshly packed packages, three isolated provider-testing consumers, and all
+30 runtime APIs. The intentional 19,030-line packed contract has SHA-256
+`b81db7838a57f4205d2c10687643a8ce8853f85c6de4a96b6a07f843631b7d51`.
+
+The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
+continues with the remaining complete source owners and the final repository-wide audit.
+
 ## Iteration 101 JobService API and navigation plan
 
 Iteration 101 starts from remotely verified commit

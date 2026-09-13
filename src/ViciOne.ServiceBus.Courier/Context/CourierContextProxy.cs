@@ -7,14 +7,14 @@ namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Forwards routing-slip activity state and consume operations to an underlying Courier context.</summary>
 internal abstract class CourierContextProxy :
-    ConsumeContextProxy<RoutingSlip>,
-    CourierContext
+    ConsumeContextProxy<IRoutingSlip>,
+    ICourierContext
 {
-    readonly CourierContext _courierContext;
+    readonly ICourierContext _courierContext;
 
     /// <summary>Creates a forwarding view over an existing Courier context.</summary>
     /// <param name="courierContext">The Courier context whose consume operations and activity state are forwarded.</param>
-    protected CourierContextProxy(CourierContext courierContext)
+    protected CourierContextProxy(ICourierContext courierContext)
         : base(courierContext ?? throw new ArgumentNullException(nameof(courierContext)))
     {
         _courierContext = courierContext;
