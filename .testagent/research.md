@@ -805,3 +805,62 @@ MessagePack owner. Repository lexical matches for “placeholder” are the actu
 placeholder domain concept; `NotImplemented` is RabbitMQ reply code 540 and
 `NotImplementedException` is intentionally classified as a non-retryable input exception. They are
 not dummy production behavior.
+
+## Confirmed iteration-92 StateMachineVisualizer findings
+
+All four production C# files and 300 physical lines in
+`src/ViciOne.ServiceBus.StateMachineVisualizer` were read manually in full together with every
+comment, the project file, all directly owning tests, the requirement projection, and the immutable
+state-machine graph contracts consumed from Sagas. No source-comment generator or bulk source
+rewrite was used.
+
+The focused baseline passes 25/25 tests. After adding the repository-standard Microsoft Testing
+Platform coverage collector to the owning test host, fresh instrumentation measures the Visualizer
+assembly at 100% line and 100% branch coverage. The 3.31% aggregate host line rate is not package
+coverage because four large dependency assemblies are loaded without their owning tests.
+
+The mandatory Roslyn pairing heuristic classified the two public generator files as paired and the
+two internal helpers as unpaired. Manual call-chain review and the 100/100 instrumentation establish
+that both helpers are exercised indirectly through both generators; direct filename pairing is not
+behavioral evidence.
+
+The package uses `QuikGraph` and `QuikGraph.Graphviz` only to copy an already immutable graph into a
+second adjacency representation and serialize a small fixed DOT grammar. It uses none of the graph
+algorithms that would justify the dependency. The latest NuGet releases are still 2.5.0 from 2022.
+Owning the small deterministic serializers directly removes both packages, their transitive graph
+model, event-based formatter wiring, and platform-selected output line endings without changing the
+two-type public API or any supported diagram relationship.
+
+Mermaid currently encodes the syntax-sensitive characters exercised by the suite but emits all
+other control characters verbatim. Graphviz delegates the same boundary to the third-party
+formatter. Both output paths need explicit total label handling, canonical LF documents, invariant
+numeric identifiers, and exact tests for otherwise valid node names containing C0 controls.
+
+## Resolved iteration-92 StateMachineVisualizer findings
+
+The final source was manually reread after implementation. `StateMachineGraphProjection` now owns
+the only required projection: reference-identity indexing, immutable node observation, and stable
+edge grouping by source-node order. The Graphviz and Mermaid generators directly serialize their
+small fixed grammars, so the general-purpose QuikGraph and Graphviz formatter dependencies no
+longer add value or risk. All original shapes, relationships, typed labels, nested generic/array
+names, fault unwrapping, disconnected nodes, and concurrent repeatability remain covered.
+
+Graphviz escapes quotation marks and backslashes, normalizes CR/LF label breaks to DOT newlines,
+and visibly escapes every other control or unpaired UTF-16 surrogate. Mermaid entity-encodes its
+grammar delimiters, line controls, all remaining C0 controls, and unpaired surrogates while
+preserving valid scalar pairs. Both documents use invariant node identifiers and LF only. Public API
+shape remains exactly two sealed synchronous generators.
+
+The focused suite passes 29/29 and the package measures 100% line, 100% branch, complexity 125.
+Six non-equivalent isolated counterchanges were killed and restored. The pre-remediation dependency
+test also failed exactly on QuikGraph/QuikGraph.Graphviz, then passed after removal. Full validation
+passes at 5,955/5,955 tests, 292/292 Architecture tests, zero-warning Engineering Release build,
+both format gates, three locked restores, two fresh-package consumer gates, and unchanged packed API
+hash `34c7a90ef04451531e03134e0891e752a410996742627d4648941427f04aee27`.
+
+The online dependency pass found stable direct updates and exposed a real partial-family downgrade
+when only the initially reported top-level Microsoft packages were advanced. Aligning every
+centrally pinned Microsoft 10.0 package to 10.0.12 resolved the graph. The fresh-package gate then
+identified three isolated consumer projects with explicit 10.0.11 pins; these were aligned and
+their locks regenerated. The final inventory contains no outdated direct, vulnerable direct or
+transitive, or deprecated direct or transitive package.

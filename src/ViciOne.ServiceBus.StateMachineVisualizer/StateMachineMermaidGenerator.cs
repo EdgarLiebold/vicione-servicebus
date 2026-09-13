@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
-using QuikGraph;
 using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.StateMachineVisualizer.Internal;
 
@@ -9,7 +8,7 @@ namespace ViciOne.ServiceBus.StateMachineVisualizer;
 
 /// <summary>Renders a state-machine graph as a Mermaid flowchart document.</summary>
 /// <remarks>
-/// The constructor creates a private rendering snapshot that is not modified afterward. An instance can therefore
+/// The constructor captures a private rendering projection that is not modified afterward. An instance can therefore
 /// generate the same document repeatedly and can be shared by concurrent readers. Labels are encoded so state and
 /// event names cannot alter the generated Mermaid syntax.
 /// </remarks>
@@ -17,41 +16,37 @@ public sealed class StateMachineMermaidGenerator
 {
     const string OpenBracket = "«";
     const string CloseBracket = "»";
-    readonly AdjacencyGraph<StateMachineGraphNode, TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind>> _graph;
+    readonly StateMachineGraphProjection _graph;
 
     /// <summary>Creates a generator for the supplied state-machine graph.</summary>
     /// <param name="graph">The graph whose nodes and state-machine relationships are rendered.</param>
     /// <exception cref="ArgumentNullException"><paramref name="graph" /> is <see langword="null" />.</exception>
     public StateMachineMermaidGenerator(StateMachineGraph graph)
     {
-        _graph = StateMachineGraphFactory.Create(graph);
+        _graph = new StateMachineGraphProjection(graph);
     }
 
     /// <summary>Generates the complete Mermaid flowchart document.</summary>
-    /// <returns>A Mermaid document containing every node and relationship captured by the constructor.</returns>
+    /// <returns>A Mermaid document containing every node and relationship, using LF line endings.</returns>
     public string Generate()
     {
         StringBuilder output = new();
-        List<StateMachineGraphNode> nodes = [.. _graph.Vertices];
-        Dictionary<StateMachineGraphNode, int> indexes = new(nodes.Count);
-
         output.Append("flowchart TB;");
 
-        for (var index = 0; index < nodes.Count; index++)
+        for (var index = 0; index < _graph.Nodes.Count; index++)
         {
-            StateMachineGraphNode node = nodes[index];
-            indexes.Add(node, index);
-            output.Append(Environment.NewLine)
+            StateMachineGraphNode node = _graph.Nodes[index];
+            output.Append('\n')
                 .Append("    ")
                 .Append(FormatNode(node, index))
                 .Append(';');
         }
 
-        foreach (TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind> edge in _graph.Edges)
+        foreach (StateMachineGraphEdge edge in _graph.Edges)
         {
-            output.Append(Environment.NewLine)
+            output.Append('\n')
                 .Append("    ")
-                .Append(FormatEdge(edge, indexes))
+                .Append(FormatEdge(edge))
                 .Append(';');
         }
 
@@ -62,8 +57,9 @@ public sealed class StateMachineMermaidGenerator
     {
         StringBuilder escaped = new(label.Length);
 
-        foreach (char character in label)
+        for (var index = 0; index < label.Length; index++)
         {
+            char character = label[index];
             switch (character)
             {
                 case '&':
@@ -100,7 +96,28 @@ public sealed class StateMachineMermaidGenerator
                     escaped.Append("#10;");
                     break;
                 default:
-                    escaped.Append(character);
+                    if (char.IsHighSurrogate(character)
+                        && index + 1 < label.Length
+                        && char.IsLowSurrogate(label[index + 1]))
+                    {
+                        escaped.Append(character).Append(label[++index]);
+                    }
+                    else if (char.IsControl(character))
+                    {
+                        escaped.Append('#')
+                            .Append(((int)character).ToString(CultureInfo.InvariantCulture))
+                            .Append(';');
+                    }
+                    else if (char.IsSurrogate(character))
+                    {
+                        escaped.Append("#92;u")
+                            .Append(((int)character).ToString("X4", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        escaped.Append(character);
+                    }
+
                     break;
             }
         }
@@ -110,22 +127,28 @@ public sealed class StateMachineMermaidGenerator
 
     static string FormatNode(StateMachineGraphNode node, int index)
     {
+        string nodeId = InvariantIndex(index);
         if (node.Kind != StateMachineGraphNodeKind.State)
         {
             string nodeLabel = EscapeLabel(StateMachineNodeLabelFormatter.Format(node, OpenBracket, CloseBracket));
 
             if (node.IsCompositeEvent)
-                return $"{index}[\\\"{nodeLabel}\"/]";
+                return $"{nodeId}[\\\"{nodeLabel}\"/]";
 
-            return $"{index}[\"{nodeLabel}\"]";
+            return $"{nodeId}[\"{nodeLabel}\"]";
         }
 
-        return $"{index}([\"{EscapeLabel(node.Name)}\"])";
+        return $"{nodeId}([\"{EscapeLabel(node.Name)}\"])";
     }
 
-    static string FormatEdge(
-        TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind> edge,
-        IReadOnlyDictionary<StateMachineGraphNode, int> indexes) => edge.Tag == StateMachineGraphEdgeKind.StateInheritance
-        ? $"{indexes[edge.Source]} -. inherits .-> {indexes[edge.Target]}"
-        : $"{indexes[edge.Source]} --> {indexes[edge.Target]}";
+    string FormatEdge(StateMachineGraphEdge edge)
+    {
+        string source = InvariantIndex(_graph.IndexOf(edge.Source));
+        string target = InvariantIndex(_graph.IndexOf(edge.Target));
+        return edge.Kind == StateMachineGraphEdgeKind.StateInheritance
+            ? $"{source} -. inherits .-> {target}"
+            : $"{source} --> {target}";
+    }
+
+    static string InvariantIndex(int index) => index.ToString(CultureInfo.InvariantCulture);
 }

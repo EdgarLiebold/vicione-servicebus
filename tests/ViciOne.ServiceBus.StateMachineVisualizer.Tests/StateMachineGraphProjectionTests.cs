@@ -26,12 +26,12 @@ public sealed class StateMachineGraphProjectionTests
         Assert.Contains("    2 --> 7;", compositeMermaid, StringComparison.Ordinal);
         Assert.Contains("    7 --> 1;", compositeMermaid, StringComparison.Ordinal);
         Assert.Contains("    5[\\\"AllReceived\"/];", compositeMermaid, StringComparison.Ordinal);
-        Assert.Equal(compositeGraph.Edges.Count, composite.Split(Environment.NewLine).Count(line => line.Contains(" -> ", StringComparison.Ordinal)));
-        Assert.Equal(compositeGraph.Edges.Count, compositeMermaid.Split(Environment.NewLine).Count(line => line.Contains(" --> ", StringComparison.Ordinal)));
+        Assert.Equal(compositeGraph.Edges.Count, composite.Split('\n').Count(line => line.Contains(" -> ", StringComparison.Ordinal)));
+        Assert.Equal(compositeGraph.Edges.Count, compositeMermaid.Split('\n').Count(line => line.Contains(" --> ", StringComparison.Ordinal)));
         Assert.Contains("2 -> 4;", ordinary, StringComparison.Ordinal);
         Assert.Contains("2 -> 6;", ordinary, StringComparison.Ordinal);
         Assert.Contains("2 -> 7;", ordinary, StringComparison.Ordinal);
-        Assert.Equal(ordinaryGraph.Edges.Count, ordinary.Split(Environment.NewLine).Count(line => line.Contains(" -> ", StringComparison.Ordinal)));
+        Assert.Equal(ordinaryGraph.Edges.Count, ordinary.Split('\n').Count(line => line.Contains(" -> ", StringComparison.Ordinal)));
         Assert.NotEqual(ordinary, composite);
     }
 
@@ -44,7 +44,7 @@ public sealed class StateMachineGraphProjectionTests
         string graphviz = new StateMachineGraphvizGenerator(graph).Generate();
         string mermaid = new StateMachineMermaidGenerator(graph).Generate();
 
-        Assert.Equal(StateMachineGraphFixtures.PlatformLines("digraph G {\n}"), graphviz);
+        Assert.Equal(StateMachineGraphFixtures.CanonicalLines("digraph G {\n}"), graphviz);
         Assert.Equal("flowchart TB;", mermaid);
     }
 
@@ -58,11 +58,11 @@ public sealed class StateMachineGraphProjectionTests
         string mermaid = new StateMachineMermaidGenerator(graph).Generate();
 
         Assert.Equal(
-            StateMachineGraphFixtures.PlatformLines(
+            StateMachineGraphFixtures.CanonicalLines(
                 "digraph G {\n0 [shape=ellipse, label=\"Dormant\"];\n1 [shape=rectangle, label=\"Wake\"];\n}"),
             graphviz);
         Assert.Equal(
-            StateMachineGraphFixtures.PlatformLines("flowchart TB;\n    0([\"Dormant\"]);\n    1[\"Wake\"];"),
+            StateMachineGraphFixtures.CanonicalLines("flowchart TB;\n    0([\"Dormant\"]);\n    1[\"Wake\"];"),
             mermaid);
     }
 }

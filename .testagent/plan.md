@@ -1673,3 +1673,109 @@ only the two intended Greenfield types. The packed public API contains 19,104 li
 `34c7a90ef04451531e03134e0891e752a410996742627d4648941427f04aee27`.
 Protected `review/` and `TestResults/` contents were neither changed nor staged. The complete A+
 source goal remains active for the next unreviewed owner.
+
+## Iteration 92 outcome
+
+Make the independent StateMachineVisualizer tooling package own its small Graphviz DOT and Mermaid
+serialization boundary directly, produce culture- and platform-independent documents, and encode
+every allowed label without retaining a general-purpose graph dependency or changing the exact
+two-type public API.
+
+## Iteration 92 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-VISUALIZER-GRAPHVIZ` | canonical DOT, node shapes, all relationships, type labels, and total label escaping | Visualizer Graphviz and projection tests | exact whole documents, syntax-sensitive labels, C0 controls, composite nodes, inheritance, disconnected nodes, and empty graph |
+| `REQ-VSB-VISUALIZER-MERMAID` | canonical flowchart, node shapes, all relationships, type labels, and total entity encoding | Visualizer Mermaid and projection tests | exact whole documents, syntax-sensitive labels, C0 controls, composite nodes, inheritance, disconnected nodes, and empty graph |
+| `REQ-VSB-VISUALIZER-DETERMINISM` | generated documents use canonical LF and invariant numeric identifiers | both generator suites | exact normalized output and no carriage returns under repeatable and concurrent generation |
+| `REQ-VSB-VISUALIZER-API` | exactly two sealed generators with synchronous `Generate()` | Visualizer API tests and packed API gate | constructor guard, package namespace, exact public shape, concurrency, and unchanged packed contract |
+| `REQ-VSB-VISUALIZER-DEPENDENCIES` | the project uses only its two required ViciOne project references | Architecture capability test and locked restore | no direct or transitive QuikGraph dependency remains |
+| `REQ-VSB-SOURCE-NAVIGATION` | every remaining source file owns its matching type and responsibility | architecture tests and manual ledger | independent project remains directly under `src`; obsolete factory file and empty folder are absent |
+| `REQ-VSB-SOURCE-COMMENTS` | every source comment describes current code and behavior only | manual review plus documentation gates | no history, migration narrative, filler, generated comment, or stale dependency terminology |
+
+## Iteration 92 mutation obligations
+
+- Emit a C0 control character verbatim in Graphviz and Mermaid output: each exact control-label
+  regression must fail.
+- Remove a disconnected node from either serializer: the existing disconnected-node contract must
+  fail.
+- Render state inheritance as an ordinary edge: the state-machine input contract must fail in both
+  formats.
+- Stop unwrapping `Fault<T>` labels: both typed-event suites must fail.
+- Restore either direct QuikGraph package reference: the exact architecture dependency test must
+  fail.
+
+## Iteration 92 baseline
+
+The unchanged behavior suite passes 25/25 with zero failures and skips. Direct package
+instrumentation is 100% line and 100% branch coverage. Assertion review finds no assertion-free,
+trivial-only, tautological, or unawaited test: equality, string, collection, type, null, exception,
+negative, structural, and concurrency/state observations all have behavior-relevant assertions.
+The package public API is already appropriately synchronous because both operations are bounded
+in-memory text transformations; an `Async` member would be misleading.
+
+## Iteration 92 completion
+
+All four original Visualizer source files and their 300 physical lines were read manually in full
+together with every source comment, the project file, the complete owning test project, its
+requirements, and the immutable Sagas graph contracts consumed by the renderer. The final four-file
+owner has 399 physical lines. Every filename, type, namespace, visibility, responsibility, XML
+comment, and implementation comment was reviewed again after remediation. No generator or scripted
+source/comment rewrite was used.
+
+The package retains exactly its two sealed public generators and the synchronous `Generate()`
+contract. Both renderers now own small deterministic serializers over a shared reference-identity
+projection. They preserve every state-machine relationship and the established stable source-node
+edge order, include disconnected nodes, use invariant identifiers and canonical LF documents, and
+make all syntax-sensitive, control, and malformed-surrogate label data visible without permitting
+label text to alter the output grammar. The redundant QuikGraph projection and both QuikGraph
+packages are gone from the project, central package management, current source/test/sample graphs,
+and lock files. The independent tooling assembly remains a direct `src` project because nesting it
+inside the Core project folder would misrepresent package ownership; provider assemblies remain
+grouped under `Persistence`, `Scheduling`, and `Transports`.
+
+The focused profile grows from 25 to 29 tests and passes 29/29 with no failures or skips. Fresh
+instrumentation reports 100% line and 100% branch coverage with complexity 125 for
+`ViciOne.ServiceBus.StateMachineVisualizer`. Static assertion review accounts for all 29 tests and
+181 assertion call sites, with no assertion-free, tautological, trivial-only, unawaited, flaky,
+time-dependent, randomized, skipped, or swallowed-exception test. The source-to-test pairing
+heuristic finds the two public generators directly paired; the two internal helpers are proven
+through manual call-chain review and complete package instrumentation.
+
+Six isolated counterchanges were compiled and killed: raw Graphviz C0 output, raw Mermaid C0
+output, an omitted disconnected Graphviz node, ordinary Graphviz state inheritance, ordinary
+Mermaid state inheritance, and retained `Fault<T>` wrapper labels. The original dependency guard
+also produced the expected 291/292 red architecture result while both QuikGraph references were
+present. Every counterchange was restored manually; an attempted index substitution that left the
+observable document unchanged was correctly classified as equivalent and excluded from mutation
+evidence.
+
+Final SHA-256 values are
+`8a505bd8e1e156cfbd2594852beeccdbd82d2ecc89f73eec98b1e810bdeb52c5` for
+`StateMachineGraphProjection.cs`,
+`59e300721f7359673d91ba2a5e58083ab0b995c220f9b79b80e040ee226ff8ff` for
+`StateMachineNodeLabelFormatter.cs`,
+`7638cda417f764ba2ae86b60d0fe5726c081b17b44187b23526296e8e4dc5e65` for
+`StateMachineGraphvizGenerator.cs`, and
+`e50637f53141a3988d87cfc00f4422d37dfdd61925f3526d79d27a48f267f2fd` for
+`StateMachineMermaidGenerator.cs`.
+
+The dependency inventory also advanced every available direct stable package version, including an
+atomic Microsoft 10.0.12 family alignment and the independently versioned package consumers. A
+fresh online recheck reports zero outdated direct packages, zero known vulnerable direct or
+transitive packages, and zero deprecated direct or transitive packages. Product, Unit, and complete
+Engineering locked restores pass.
+
+The final serial Engineering Release build reports zero warnings and errors. The complete Unit and
+Architecture solution passes 5,955/5,955 tests with no failures or skips; the Architecture owner
+contains 292 passing tests. Both format/analyzer gates and `git diff --check` pass. All changed JSON
+and lock files parse, and source scans find no C# preprocessor directives, QuikGraph references,
+empty directories, or Visualizer dummy markers.
+
+Fresh-package verification passes first while updating the five package-consumer locks and again
+strictly against those tracked locks: 18 developer journeys, 31 freshly packed ViciOne packages,
+three executed provider-testing consumers, and all 30 runtime API assemblies. The packed public API
+remains exactly 19,104 lines with SHA-256
+`34c7a90ef04451531e03134e0891e752a410996742627d4648941427f04aee27`.
+Protected `review/` and `TestResults/` contents were neither changed nor staged. The repository-wide
+source goal remains active for the next unreviewed owner.

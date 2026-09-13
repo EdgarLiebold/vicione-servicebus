@@ -98,6 +98,24 @@ internal static class StateMachineGraphFixtures
             [Connect(initial, completed, StateMachineGraphEdgeKind.EventBinding)]);
     }
 
+    internal static StateMachineGraph ControlCharacters()
+    {
+        var initial = State("State\nline\rtail\0\t\b\f\u001f");
+        var completed = Event("Event\nline\rtail\0\t\b\f\u001f");
+        return new StateMachineGraph(
+            [initial, completed],
+            [Connect(initial, completed, StateMachineGraphEdgeKind.EventBinding)]);
+    }
+
+    internal static StateMachineGraph UnicodeBoundary()
+    {
+        var initial = State("State 😀 high\ud800 low\udc00");
+        var completed = Event("Event 😀 high\ud800 low\udc00");
+        return new StateMachineGraph(
+            [initial, completed],
+            [Connect(initial, completed, StateMachineGraphEdgeKind.EventBinding)]);
+    }
+
     internal static StateMachineGraph TypedEvents()
     {
         var initial = State("Initial");
@@ -121,9 +139,7 @@ internal static class StateMachineGraphFixtures
             ]);
     }
 
-    internal static string PlatformLines(string text) =>
-        text.Replace("\r", string.Empty, StringComparison.Ordinal)
-            .Replace("\n", Environment.NewLine, StringComparison.Ordinal);
+    internal static string CanonicalLines(string text) => text.ReplaceLineEndings("\n");
 
     private static StateMachineGraphNode State(string name) => StateMachineGraphNode.CreateState(name);
 
@@ -136,5 +152,4 @@ internal static class StateMachineGraphFixtures
         StateMachineGraphNode source,
         StateMachineGraphNode target,
         StateMachineGraphEdgeKind kind) => new(source, target, kind);
-
 }

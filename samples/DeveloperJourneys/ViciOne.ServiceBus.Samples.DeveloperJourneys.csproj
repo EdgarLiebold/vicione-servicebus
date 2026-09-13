@@ -14,8 +14,8 @@
   <!-- This project is deliberately a package consumer. ProjectReference is forbidden by the
        architecture gate and the verification script restores it from freshly packed NuGets. -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
     <PackageReference Include="ViciOne.ServiceBus" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.AzureServiceBus" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.AzureServiceBus.Testing" Version="1.0.0" />

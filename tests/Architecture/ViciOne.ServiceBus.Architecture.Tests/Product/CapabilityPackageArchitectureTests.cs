@@ -113,6 +113,7 @@ public sealed class CapabilityPackageArchitectureTests
             "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
             "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
             "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj");
+        AssertDirectPackages("src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj");
 
         AssertDirectPackages(
             "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj",

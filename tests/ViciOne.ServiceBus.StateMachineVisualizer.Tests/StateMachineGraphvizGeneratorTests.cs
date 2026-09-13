@@ -40,7 +40,8 @@ public sealed class StateMachineGraphvizGeneratorTests
         string output = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.Canonical())
             .Generate();
 
-        Assert.Equal(StateMachineGraphFixtures.PlatformLines(Expected), output);
+        Assert.Equal(StateMachineGraphFixtures.CanonicalLines(Expected), output);
+        Assert.DoesNotContain('\r', output);
     }
 
     [Fact]
@@ -80,12 +81,40 @@ public sealed class StateMachineGraphvizGeneratorTests
         string output = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.SyntaxSensitiveLabel())
             .Generate();
 
-        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.None);
+        string[] lines = output.Split('\n', StringSplitOptions.None);
         Assert.Equal(5, lines.Length);
         Assert.Equal("digraph G {", lines[0]);
         Assert.Contains("label=\"State \\\" hash# <tag> & slash\\\\ tick` line\\nnext\"", lines[1], StringComparison.Ordinal);
         Assert.Contains("label=\"Quote \\\" hash# <tag> & slash\\\\ tick` line\\nnext\"", lines[2], StringComparison.Ordinal);
         Assert.Equal("0 -> 1;", lines[3]);
         Assert.Equal("}", lines[4]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-VISUALIZER-GRAPHVIZ", "control-character-escaping")]
+    public void ControlCharacters_AreRenderedAsVisibleDotEscapes()
+    {
+        string output = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.ControlCharacters())
+            .Generate();
+
+        const string expected =
+            "digraph G {\n0 [shape=ellipse, label=\"State\\nline\\ntail\\\\u0000\\\\u0009\\\\u0008\\\\u000C\\\\u001F\"];\n"
+            + "1 [shape=rectangle, label=\"Event\\nline\\ntail\\\\u0000\\\\u0009\\\\u0008\\\\u000C\\\\u001F\"];\n0 -> 1;\n}";
+        Assert.Equal(expected, output);
+        Assert.DoesNotContain('\0', output);
+        Assert.DoesNotContain('\t', output);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-VISUALIZER-GRAPHVIZ", "unicode-scalar-boundary")]
+    public void UnicodeScalars_ArePreservedAndUnpairedSurrogatesAreEscaped()
+    {
+        string output = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.UnicodeBoundary())
+            .Generate();
+
+        Assert.Contains("label=\"State 😀 high\\\\uD800 low\\\\uDC00\"", output, StringComparison.Ordinal);
+        Assert.Contains("label=\"Event 😀 high\\\\uD800 low\\\\uDC00\"", output, StringComparison.Ordinal);
+        Assert.DoesNotContain('\ud800', output);
+        Assert.DoesNotContain('\udc00', output);
     }
 }

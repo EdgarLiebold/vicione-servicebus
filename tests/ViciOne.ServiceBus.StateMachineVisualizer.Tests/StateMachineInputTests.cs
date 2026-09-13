@@ -74,7 +74,7 @@ public sealed class StateMachineInputTests
         StateMachineGraph graph = machine.GetGraph();
         string output = new StateMachineGraphvizGenerator(graph).Generate();
 
-        Assert.Equal(StateMachineGraphFixtures.PlatformLines(ExpectedGraphviz), output);
+        Assert.Equal(StateMachineGraphFixtures.CanonicalLines(ExpectedGraphviz), output);
         StateMachineGraphNode exception = Assert.Single(
             graph.Nodes,
             node => node.Name == nameof(InvalidOperationException));
@@ -111,7 +111,7 @@ public sealed class StateMachineInputTests
 
         string output = new StateMachineMermaidGenerator(machine.GetGraph()).Generate();
 
-        Assert.Equal(StateMachineGraphFixtures.PlatformLines(ExpectedMermaid), output);
+        Assert.Equal(StateMachineGraphFixtures.CanonicalLines(ExpectedMermaid), output);
     }
 
     [Fact]
@@ -684,8 +684,8 @@ public sealed class StateMachineInputTests
 
         Assert.Equal(
             graph.Nodes.Count,
-            graphviz.Split(Environment.NewLine).Count(line => line.Contains(" [shape=", StringComparison.Ordinal)));
-        Assert.Equal(1 + graph.Nodes.Count + graph.Edges.Count, mermaid.Split(Environment.NewLine).Length);
+            graphviz.Split('\n').Count(line => line.Contains(" [shape=", StringComparison.Ordinal)));
+        Assert.Equal(1 + graph.Nodes.Count + graph.Edges.Count, mermaid.Split('\n').Length);
         AssertGraphvizContainsEveryEdge(graph, graphviz);
 
         foreach (StateMachineGraphEdge edge in graph.Edges)

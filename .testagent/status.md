@@ -483,3 +483,25 @@ metadata, and forwarding before unintended dependency work.
 The repository-wide source goal remains active. The two global compatibility-named findings outside
 this iteration are retained for their owning manual source reviews rather than being changed without
 complete context.
+
+## Iteration 92
+
+StateMachineVisualizer remediation is complete from the remotely secured iteration-91 commit
+`c98fc82eb12242770085d55a97bbdde1f30f082b`. All product files, comments, owning tests, requirements,
+dependencies, API, filenames, namespaces, and physical placement were manually reviewed. The
+package now owns deterministic Graphviz and Mermaid serialization without QuikGraph, retains its
+exact two-type synchronous public API and all graph features, and safely renders every label using
+canonical LF output.
+
+The focused profile passes 29/29 at 100% package line and branch coverage; six isolated mutations
+were killed and restored. The full Engineering build has zero warnings and errors, the complete
+Unit/Architecture solution passes 5,955/5,955 with no skips, and Architecture passes 292/292.
+Format, locked restore, JSON, preprocessor, empty-directory, dummy-marker, package-security, and
+whitespace gates pass. Two fresh-package runs validate 18 journeys, 31 packages, three isolated
+provider-testing consumers, and all 30 runtime APIs. The API contract remains 19,104 lines with
+SHA-256 `34c7a90ef04451531e03134e0891e752a410996742627d4648941427f04aee27`.
+
+All available direct stable dependency updates are applied, the Microsoft 10.0 family is coherent
+at 10.0.12, and isolated consumer pins and locks match. Current online inventories contain no
+outdated direct, known-vulnerable direct/transitive, or deprecated direct/transitive packages. The
+iteration is ready for commit, annotated tag, normal remote push, and final remote verification.

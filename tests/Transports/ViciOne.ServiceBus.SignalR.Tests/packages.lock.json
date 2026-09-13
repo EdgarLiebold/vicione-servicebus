@@ -4,9 +4,9 @@
     "net10.0": {
       "Microsoft.AspNetCore.SignalR.Protocols.MessagePack": {
         "type": "Direct",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "rZXe/AAxEMCYcya2CqK7veMVavIm04+CLOyXpmU1clXJ0MMaU2OogU0e8kshN2/ahOhYC54HkkOFr/gFvNtJBw==",
+        "requested": "[10.0.12, )",
+        "resolved": "10.0.12",
+        "contentHash": "RMytyb+1b+UI7m2NjYPMlkr6D//2OVSV7eBpmP6RQOOI4fuwk+h3xliGaX3O/fG13f60+Re480rc6xmN7jNg6w==",
         "dependencies": {
           "MessagePack": "2.5.302"
         }

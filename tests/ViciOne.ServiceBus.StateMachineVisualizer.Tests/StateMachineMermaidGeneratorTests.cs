@@ -39,7 +39,8 @@ public sealed class StateMachineMermaidGeneratorTests
         string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.Canonical())
             .Generate();
 
-        Assert.Equal(StateMachineGraphFixtures.PlatformLines(Expected), output);
+        Assert.Equal(StateMachineGraphFixtures.CanonicalLines(Expected), output);
+        Assert.DoesNotContain('\r', output);
     }
 
     [Fact]
@@ -79,7 +80,7 @@ public sealed class StateMachineMermaidGeneratorTests
         string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.SyntaxSensitiveLabel())
             .Generate();
 
-        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.None);
+        string[] lines = output.Split('\n', StringSplitOptions.None);
         Assert.Equal(4, lines.Length);
         Assert.Equal(
             "    0([\"State #quot; hash#35; #60;tag#62; #38; slash#92; tick#96; line#13;#10;next\"]);",
@@ -90,5 +91,33 @@ public sealed class StateMachineMermaidGeneratorTests
         Assert.Equal("    0 --> 1;", lines[3]);
         Assert.DoesNotContain("<tag>", output, StringComparison.Ordinal);
         Assert.DoesNotContain("line\r\nnext", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-VISUALIZER-MERMAID", "control-character-encoding")]
+    public void ControlCharacters_AreEncodedAsMermaidEntities()
+    {
+        string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.ControlCharacters())
+            .Generate();
+
+        const string expected =
+            "flowchart TB;\n    0([\"State#10;line#13;tail#0;#9;#8;#12;#31;\"]);\n"
+            + "    1[\"Event#10;line#13;tail#0;#9;#8;#12;#31;\"];\n    0 --> 1;";
+        Assert.Equal(expected, output);
+        Assert.DoesNotContain('\0', output);
+        Assert.DoesNotContain('\t', output);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-VISUALIZER-MERMAID", "unicode-scalar-boundary")]
+    public void UnicodeScalars_ArePreservedAndUnpairedSurrogatesAreEncoded()
+    {
+        string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.UnicodeBoundary())
+            .Generate();
+
+        Assert.Contains("State 😀 high#92;uD800 low#92;uDC00", output, StringComparison.Ordinal);
+        Assert.Contains("Event 😀 high#92;uD800 low#92;uDC00", output, StringComparison.Ordinal);
+        Assert.DoesNotContain('\ud800', output);
+        Assert.DoesNotContain('\udc00', output);
     }
 }
