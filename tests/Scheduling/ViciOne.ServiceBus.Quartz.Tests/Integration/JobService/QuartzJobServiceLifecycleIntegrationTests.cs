@@ -47,7 +47,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
             consumer,
             static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             lifecycle.Configure);
-        IRequestClient<SubmitJob<CalculationJob>> client = fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>();
+        IRequestClient<ISubmitJob<CalculationJob>> client = fixture.Bus.CreateRequestClient<ISubmitJob<CalculationJob>>();
 
         Guid acceptedJobId = await client.SubmitJobAsync(
                 jobId,
@@ -99,7 +99,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
             },
             lifecycle.Configure,
             configureJobService: static service => service.SlotWaitTime = TimeSpan.FromSeconds(1));
-        IRequestClient<SubmitJob<CalculationJob>> client = fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>();
+        IRequestClient<ISubmitJob<CalculationJob>> client = fixture.Bus.CreateRequestClient<ISubmitJob<CalculationJob>>();
 
         Guid[] accepted = await Task.WhenAll(jobIds.Select((jobId, index) => client.SubmitJobAsync(
                 jobId,
@@ -145,11 +145,11 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
             static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             lifecycle.Configure,
             configureJobService: static service => service.StatusCheckInterval = TimeSpan.FromSeconds(30));
-        var scheduledStatusCheck = new ScheduledMessageCapture(nameof(JobStatusCheckRequested));
-        var statusCheck = new ConsumeCompletionObserver<GetJobAttemptStatus>(message => message.JobId == jobId);
+        var scheduledStatusCheck = new ScheduledMessageCapture(nameof(IJobStatusCheckRequested));
+        var statusCheck = new ConsumeCompletionObserver<IGetJobAttemptStatus>(message => message.JobId == jobId);
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduledStatusCheck);
         using ConnectHandle statusObserver = fixture.Bus.ConnectConsumeObserver(statusCheck);
-        IRequestClient<SubmitJob<CalculationJob>> submitClient = fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>();
+        IRequestClient<ISubmitJob<CalculationJob>> submitClient = fixture.Bus.CreateRequestClient<ISubmitJob<CalculationJob>>();
 
         Guid acceptedJobId = await submitClient.SubmitJobAsync(
                 jobId,
@@ -166,8 +166,8 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, TestContext.Current.CancellationToken);
         await statusCheck.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        IRequestClient<GetJobState> stateClient = fixture.Bus.CreateRequestClient<GetJobState>();
-        JobState state = await stateClient.GetJobStateAsync(jobId, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
+        IRequestClient<IGetJobState> stateClient = fixture.Bus.CreateRequestClient<IGetJobState>();
+        IJobState state = await stateClient.GetJobStateAsync(jobId, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(jobId, acceptedJobId);
         Assert.Equal(jobId, execution.JobId);
@@ -179,7 +179,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         Assert.Null(state.Completed);
         Assert.Null(state.Faulted);
         Assert.Contains(scheduled.PayloadTypes, type =>
-            type.EndsWith($":{nameof(JobStatusCheckRequested)}", StringComparison.Ordinal));
+            type.EndsWith($":{nameof(IJobStatusCheckRequested)}", StringComparison.Ordinal));
         Assert.True(statusCheck.ObservedCount >= 1);
 
         consumer.Release();
@@ -203,9 +203,9 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
             static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             lifecycle.Configure,
             address => serviceAddress = address);
-        IRequestClient<SubmitJob<CalculationJob>> client = useExplicitServiceAddress
-            ? fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>(Assert.IsType<Uri>(serviceAddress))
-            : fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>();
+        IRequestClient<ISubmitJob<CalculationJob>> client = useExplicitServiceAddress
+            ? fixture.Bus.CreateRequestClient<ISubmitJob<CalculationJob>>(Assert.IsType<Uri>(serviceAddress))
+            : fixture.Bus.CreateRequestClient<ISubmitJob<CalculationJob>>();
 
         Guid acceptedJobId = await client.SubmitJobAsync(
                 jobId,
@@ -253,7 +253,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         {
             configurator.ReceiveEndpoint($"job-events-{NewId.NextGuid():N}", endpoint =>
             {
-                endpoint.Handler<JobSubmitted>(context =>
+                endpoint.Handler<IJobSubmitted>(context =>
                 {
                     if (_jobs.TryGetValue(context.Message.JobId, out JobSignals? signals))
                     {
@@ -266,7 +266,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
 
                     return Task.CompletedTask;
                 });
-                endpoint.Handler<JobStarted>(context =>
+                endpoint.Handler<IJobStarted>(context =>
                 {
                     if (_jobs.TryGetValue(context.Message.JobId, out JobSignals? signals))
                     {
@@ -279,7 +279,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
 
                     return Task.CompletedTask;
                 });
-                endpoint.Handler<JobCompleted>(context =>
+                endpoint.Handler<IJobCompleted>(context =>
                 {
                     if (_jobs.TryGetValue(context.Message.JobId, out JobSignals? signals))
                     {
@@ -291,7 +291,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
 
                     return Task.CompletedTask;
                 });
-                endpoint.Handler<JobCanceled>(context =>
+                endpoint.Handler<IJobCanceled>(context =>
                 {
                     if (_jobs.TryGetValue(context.Message.JobId, out JobSignals? signals))
                     {
@@ -325,7 +325,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
 
         public Task<JobExecutionSnapshot> Completed => _completed.Task;
 
-        public Task RunAsync(JobContext<CalculationJob> context)
+        public Task RunAsync(IJobContext<CalculationJob> context)
         {
             _completed.TrySetResult(Snapshot(context));
             return Task.CompletedTask;
@@ -343,7 +343,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         public Task<JobExecutionSnapshot> Started => _started.Task;
         public Task<bool> CancellationObserved => _cancellationObserved.Task;
 
-        public async Task RunAsync(JobContext<CalculationJob> context)
+        public async Task RunAsync(IJobContext<CalculationJob> context)
         {
             _started.TrySetResult(Snapshot(context));
             try
@@ -367,7 +367,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
 
         public void Release() => _release.TrySetResult();
 
-        public async Task RunAsync(JobContext<CalculationJob> context)
+        public async Task RunAsync(IJobContext<CalculationJob> context)
         {
             _started.TrySetResult(Snapshot(context));
             await _release.Task.WaitAsync(context.CancellationToken);
@@ -394,7 +394,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
 
         public void ReleaseAll() => _release.TrySetResult();
 
-        public async Task RunAsync(JobContext<CalculationJob> context)
+        public async Task RunAsync(IJobContext<CalculationJob> context)
         {
             if (!_executedJobIds.TryAdd(context.JobId, 0))
                 Interlocked.Increment(ref _duplicateExecutionCount);
@@ -430,7 +430,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         }
     }
 
-    private static JobExecutionSnapshot Snapshot(JobContext<CalculationJob> context) =>
+    private static JobExecutionSnapshot Snapshot(IJobContext<CalculationJob> context) =>
         new(context.JobId, context.AttemptId, context.RetryAttempt, context.Job.Label);
 
     private sealed class CalculationJob

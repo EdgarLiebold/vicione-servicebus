@@ -735,6 +735,21 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "job-service-project-folders-mirror-public-namespaces")]
+    public void JobServiceProjectSourceFolders_MirrorTheirPublicNamespaces()
+    {
+        const string namespaceRoot = "ViciOne.ServiceBus";
+        string projectRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.JobService");
+        string projectPath = Path.Combine(projectRoot, "ViciOne.ServiceBus.JobService.csproj");
+        List<string> violations = FindNamespaceFolderViolations(projectRoot, namespaceRoot).ToList();
+        string rootNamespace = MsBuildEvaluation.PropertyOf(projectPath, "RootNamespace");
+        if (!StringComparer.Ordinal.Equals(namespaceRoot, rootNamespace))
+            violations.Add($"{RepositoryLayout.RelativeToRoot(projectPath)}: RootNamespace is {rootNamespace}, expected {namespaceRoot}");
+
+        Assert.Empty(violations.Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "entity-framework-source-is-grouped-by-current-responsibility")]
     public void EntityFrameworkProject_UsesOnlyCurrentResponsibilityFolders()
     {
@@ -785,8 +800,6 @@ public sealed class SourceFileNamingArchitectureTests
         string[] allowedFiles =
         [
             "GlobalUsings.cs",
-            "JobServiceExtensions.cs",
-            "RecurringJobExtensions.cs",
             "ViciOne.ServiceBus.JobService.csproj",
             "packages.lock.json",
         ];

@@ -23,7 +23,7 @@ public sealed class RecurringJobExtensionsTests
             cancellation.Token);
 
         Assert.Equal(RecurringJobIdentity<ApiJob>.CreateId("nightly-index"), result);
-        SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(client.Request);
+        ISubmitJob<ApiJob> command = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(client.Request);
         Assert.Equal(result, command.JobId);
         Assert.Same(job, command.Job);
         Assert.Equal("0 15 2 ? * *", command.Schedule?.CronExpression);
@@ -45,7 +45,7 @@ public sealed class RecurringJobExtensionsTests
             properties => properties.Set("tenant", "north"),
             cancellation.Token);
 
-        SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(endpoint.Message);
+        ISubmitJob<ApiJob> command = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(endpoint.Message);
         Assert.Equal(result, command.JobId);
         Assert.Equal("0 30 6 ? * 2,6", command.Schedule?.CronExpression);
         Assert.Equal(TimeZoneInfo.Utc.Id, command.Schedule?.TimeZoneId);
@@ -86,7 +86,7 @@ public sealed class RecurringJobExtensionsTests
             new ApiJob { Label = "published-cron" },
             "0 45 8 ? * 2-6",
             cancellation.Token);
-        SubmitJob<ApiJob> publishedCronCommand = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(publishedCron.Message);
+        ISubmitJob<ApiJob> publishedCronCommand = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(publishedCron.Message);
         Assert.Equal(publishedCronId, publishedCronCommand.JobId);
         Assert.Equal("0 45 8 ? * 2-6", publishedCronCommand.Schedule?.CronExpression);
 
@@ -96,8 +96,8 @@ public sealed class RecurringJobExtensionsTests
             new ApiJob { Label = "published-configured" },
             schedule => schedule.WeeklyOn(DayOfWeek.Sunday, 3, 5),
             cancellation.Token);
-        SubmitJob<ApiJob> publishedConfiguredCommand =
-            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(publishedConfigured.Message);
+        ISubmitJob<ApiJob> publishedConfiguredCommand =
+            Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(publishedConfigured.Message);
         Assert.Equal(publishedConfiguredId, publishedConfiguredCommand.JobId);
         Assert.Equal("0 5 3 ? * 1", publishedConfiguredCommand.Schedule?.CronExpression);
         Assert.Equal(cancellation.Token, requestConfigured.CancellationToken);
@@ -119,7 +119,7 @@ public sealed class RecurringJobExtensionsTests
         Guid result = await endpoint.ScheduleJobAsync(jobId, start, job, cancellation.Token);
 
         Assert.Equal(jobId, result);
-        SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(endpoint.Message);
+        ISubmitJob<ApiJob> command = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(endpoint.Message);
         Assert.Same(job, command.Job);
         Assert.Equal(start.UtcDateTime, command.Schedule?.Start?.UtcDateTime);
         Assert.Equal(TimeSpan.Zero, command.Schedule?.Start?.Offset);
@@ -141,7 +141,7 @@ public sealed class RecurringJobExtensionsTests
             TestContext.Current.CancellationToken);
 
         Assert.Equal(jobId, result);
-        SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(client.Request);
+        ISubmitJob<ApiJob> command = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(client.Request);
         Assert.Equal("initialized-schedule", command.Job.Label);
         Assert.Equal(start, command.Schedule?.Start);
     }
@@ -158,8 +158,8 @@ public sealed class RecurringJobExtensionsTests
             start,
             new ApiJob { Label = "generated-typed" },
             cancellation.Token);
-        SubmitJob<ApiJob> generatedTypedCommand =
-            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(generatedTypedPublish.Message);
+        ISubmitJob<ApiJob> generatedTypedCommand =
+            Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(generatedTypedPublish.Message);
         Assert.NotEqual(Guid.Empty, generatedTypedId);
         Assert.Equal(generatedTypedId, generatedTypedCommand.JobId);
         Assert.Equal(start.UtcDateTime, generatedTypedCommand.Schedule?.Start?.UtcDateTime);
@@ -169,8 +169,8 @@ public sealed class RecurringJobExtensionsTests
             start,
             new { Label = "generated-values" },
             cancellation.Token);
-        SubmitJob<ApiJob> generatedValuesCommand =
-            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(generatedValuesPublish.Message);
+        ISubmitJob<ApiJob> generatedValuesCommand =
+            Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(generatedValuesPublish.Message);
         Assert.Equal(generatedValuesId, generatedValuesCommand.JobId);
         Assert.Equal("generated-values", generatedValuesCommand.Job.Label);
 
@@ -183,7 +183,7 @@ public sealed class RecurringJobExtensionsTests
             cancellation.Token));
         Assert.Equal(
             "explicit-values",
-            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(explicitValuesPublish.Message).Job.Label);
+            Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(explicitValuesPublish.Message).Job.Label);
 
         var explicitTypedRequest = new RecordingSubmitJobClient<ApiJob>();
         Guid explicitTypedId = NewId.NextGuid();
@@ -316,9 +316,9 @@ public sealed class RecurringJobExtensionsTests
             JobName,
             TestContext.Current.CancellationToken);
 
-        CancelJob cancel = Assert.IsAssignableFrom<CancelJob>(cancelEndpoint.Message);
-        RunJob runCommand = Assert.IsAssignableFrom<RunJob>(runEndpoint.Message);
-        FinalizeJob finalize = Assert.IsAssignableFrom<FinalizeJob>(finalizeEndpoint.Message);
+        ICancelJob cancel = Assert.IsAssignableFrom<ICancelJob>(cancelEndpoint.Message);
+        IRunJob runCommand = Assert.IsAssignableFrom<IRunJob>(runEndpoint.Message);
+        IFinalizeJob finalize = Assert.IsAssignableFrom<IFinalizeJob>(finalizeEndpoint.Message);
         Assert.Equal(expected, canceled);
         Assert.Equal(expected, runJobId);
         Assert.Equal(expected, finalized);

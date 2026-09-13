@@ -206,36 +206,36 @@ internal sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
 
                 var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
-                e.UsePartitioner<JobSubmitted>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobSubmitted>(partition, p => p.Message.JobId);
 
-                e.UsePartitioner<JobSlotAllocated>(partition, p => p.Message.JobId);
-                e.UsePartitioner<JobSlotUnavailable>(partition, p => p.Message.JobId);
-                e.UsePartitioner<Fault<AllocateJobSlot>>(partition, p => p.Message.Message.JobId);
+                e.UsePartitioner<IJobSlotAllocated>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobSlotUnavailable>(partition, p => p.Message.JobId);
+                e.UsePartitioner<Fault<IAllocateJobSlot>>(partition, p => p.Message.Message.JobId);
 
-                e.UsePartitioner<Fault<StartJobAttempt>>(partition, p => p.Message.Message.JobId);
+                e.UsePartitioner<Fault<IStartJobAttempt>>(partition, p => p.Message.Message.JobId);
 
-                e.UsePartitioner<JobAttemptCanceled>(partition, p => p.Message.JobId);
-                e.UsePartitioner<JobAttemptCompleted>(partition, p => p.Message.JobId);
-                e.UsePartitioner<JobAttemptFaulted>(partition, p => p.Message.JobId);
-                e.UsePartitioner<JobAttemptStarted>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobAttemptCanceled>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobAttemptCompleted>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobAttemptFaulted>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobAttemptStarted>(partition, p => p.Message.JobId);
 
-                e.UsePartitioner<GetJobState>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IGetJobState>(partition, p => p.Message.JobId);
 
-                e.UsePartitioner<JobCompleted>(partition, p => p.Message.JobId);
-                e.UsePartitioner<CancelJob>(partition, p => p.Message.JobId);
-                e.UsePartitioner<RetryJob>(partition, p => p.Message.JobId);
-                e.UsePartitioner<RunJob>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobCompleted>(partition, p => p.Message.JobId);
+                e.UsePartitioner<ICancelJob>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IRetryJob>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IRunJob>(partition, p => p.Message.JobId);
 
-                e.UsePartitioner<SaveJobCheckpoint>(partition, p => p.Message.JobId);
-                e.UsePartitioner<SetJobProgress>(partition, p => p.Message.JobId);
+                e.UsePartitioner<ISaveJobCheckpoint>(partition, p => p.Message.JobId);
+                e.UsePartitioner<ISetJobProgress>(partition, p => p.Message.JobId);
 
-                e.UsePartitioner<JobSlotWaitElapsed>(partition, p => p.Message.JobId);
-                e.UsePartitioner<JobRetryDelayElapsed>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobSlotWaitElapsed>(partition, p => p.Message.JobId);
+                e.UsePartitioner<IJobRetryDelayElapsed>(partition, p => p.Message.JobId);
             }
 
             var stateMachine = new JobStateMachine();
             e.StateMachineSaga(stateMachine, _jobRepository ?? new InMemorySagaRepository<JobSaga>(),
-                s => s.UseFilter(new PayloadFilter<SagaConsumeContext<JobSaga>, JobSagaSettings>(_options)));
+                s => s.UseFilter(new PayloadFilter<SagaConsumeContext<JobSaga>, IJobSagaSettings>(_options)));
 
             _jobSagaEndpointConfigurator = e;
 
@@ -254,23 +254,23 @@ internal sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
 
                 var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
-                e.UsePartitioner<StartJobAttempt>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<FinalizeJobAttempt>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<CancelJobAttempt>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<Fault<StartJob>>(partition, p => p.Message.Message.AttemptId);
+                e.UsePartitioner<IStartJobAttempt>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IFinalizeJobAttempt>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<ICancelJobAttempt>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<Fault<IStartJob>>(partition, p => p.Message.Message.AttemptId);
 
-                e.UsePartitioner<JobAttemptStarted>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<JobAttemptCompleted>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<JobAttemptCanceled>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<JobAttemptFaulted>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IJobAttemptStarted>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IJobAttemptCompleted>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IJobAttemptCanceled>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IJobAttemptFaulted>(partition, p => p.Message.AttemptId);
 
-                e.UsePartitioner<JobAttemptStatus>(partition, p => p.Message.AttemptId);
-                e.UsePartitioner<JobStatusCheckRequested>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IJobAttemptStatus>(partition, p => p.Message.AttemptId);
+                e.UsePartitioner<IJobStatusCheckRequested>(partition, p => p.Message.AttemptId);
             }
 
             var stateMachine = new JobAttemptStateMachine();
             e.StateMachineSaga(stateMachine, _jobAttemptRepository ?? new InMemorySagaRepository<JobAttemptSaga>(),
-                s => s.UseFilter(new PayloadFilter<SagaConsumeContext<JobAttemptSaga>, JobSagaSettings>(_options)));
+                s => s.UseFilter(new PayloadFilter<SagaConsumeContext<JobAttemptSaga>, IJobSagaSettings>(_options)));
 
             _jobAttemptSagaEndpointConfigurator = e;
 
@@ -289,15 +289,15 @@ internal sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
 
                 var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
-                e.UsePartitioner<AllocateJobSlot>(partition, p => p.Message.JobTypeId);
-                e.UsePartitioner<JobSlotReleased>(partition, p => p.Message.JobTypeId);
-                e.UsePartitioner<SetConcurrentJobLimit>(partition, p => p.Message.JobTypeId);
+                e.UsePartitioner<IAllocateJobSlot>(partition, p => p.Message.JobTypeId);
+                e.UsePartitioner<IJobSlotReleased>(partition, p => p.Message.JobTypeId);
+                e.UsePartitioner<ISetConcurrentJobLimit>(partition, p => p.Message.JobTypeId);
             }
 
             var stateMachine = new JobTypeStateMachine();
 
             e.StateMachineSaga(stateMachine, _jobTypeRepository ?? new InMemorySagaRepository<JobTypeSaga>(),
-                s => s.UseFilter(new PayloadFilter<SagaConsumeContext<JobTypeSaga>, JobSagaSettings>(_options)));
+                s => s.UseFilter(new PayloadFilter<SagaConsumeContext<JobTypeSaga>, IJobSagaSettings>(_options)));
 
             _jobTypeSagaEndpointConfigurator = e;
 

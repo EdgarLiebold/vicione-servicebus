@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Owns the job runtime and endpoint identity for one configured service instance.</summary>
 internal sealed class InstanceJobServiceSettings :
-    JobServiceSettings
+    IJobServiceSettings
 {
     readonly JobConsumerOptions _options;
 

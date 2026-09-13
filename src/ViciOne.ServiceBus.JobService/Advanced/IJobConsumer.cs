@@ -11,5 +11,5 @@ public interface IJobConsumer<in TJob> :
     /// <summary>Runs a job to completion.</summary>
     /// <param name="context">The job message, attempt, and progress context.</param>
     /// <returns>The active job-execution task.</returns>
-    Task RunAsync(JobContext<TJob> context);
+    Task RunAsync(IJobContext<TJob> context);
 }

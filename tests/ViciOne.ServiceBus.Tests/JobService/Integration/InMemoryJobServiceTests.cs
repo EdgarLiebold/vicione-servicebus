@@ -22,11 +22,11 @@ public sealed class InMemoryJobServiceTests
 
         Guid accepted = await fixture.SubmitAsync(jobId, new InMemoryJob("permanent-failure"));
         JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(message => message.JobId == jobId);
-        JobFaulted faulted = await fixture.PublishedAsync<JobFaulted>(message => message.JobId == jobId);
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(message => message.JobId == jobId);
+        IJobFaulted faulted = await fixture.PublishedAsync<IJobFaulted>(message => message.JobId == jobId);
         Fault<InMemoryJob> typedFault = await fixture.PublishedAsync<Fault<InMemoryJob>>(
             message => message.Message.Label == "permanent-failure");
-        JobState state = await fixture.GetStateAsync(jobId);
+        IJobState state = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(new JobExecutionSnapshot(jobId, attempt.AttemptId, 0, "permanent-failure"), attempt);
@@ -51,9 +51,9 @@ public sealed class InMemoryJobServiceTests
         await fixture.SubmitAsync(jobId, new InMemoryJob("retry"));
         JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
         JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == jobId);
-        JobState state = await fixture.GetStateAsync(jobId);
+        IJobState state = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(0, first.RetryAttempt);
         Assert.Equal(1, second.RetryAttempt);
@@ -79,9 +79,9 @@ public sealed class InMemoryJobServiceTests
         await fixture.SubmitAsync(jobId, new InMemoryJob("checkpoint"));
         CheckpointObservation first = await consumer.NextObservationAsync(fixture);
         CheckpointObservation second = await consumer.NextObservationAsync(fixture);
-        JobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == jobId);
-        JobState<TestCheckpoint> state = await fixture.GetStateAsync<TestCheckpoint>(jobId);
+        IJobState<TestCheckpoint> state = await fixture.GetStateAsync<TestCheckpoint>(jobId);
 
         Assert.Equal(new CheckpointObservation(jobId, 0, false, null), first);
         Assert.Equal(new CheckpointObservation(jobId, 1, true, "page-42"), second);
@@ -100,12 +100,12 @@ public sealed class InMemoryJobServiceTests
 
         Guid accepted = await fixture.SubmitAsync(jobId, new InMemoryJob("cancel"));
         JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
-        JobState started = await fixture.GetStateAsync(jobId);
+        IJobState started = await fixture.GetStateAsync(jobId);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "operator-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobCancellationSnapshot cancellation = await consumer.NextCancellationAsync(fixture);
-        JobCanceled canceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
-        JobSlotReleased released = await fixture.SentAsync<JobSlotReleased>(message => message.JobId == jobId);
-        JobState terminal = await fixture.GetStateAsync(jobId);
+        IJobCanceled canceled = await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
+        IJobSlotReleased released = await fixture.SentAsync<IJobSlotReleased>(message => message.JobId == jobId);
+        IJobState terminal = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(new JobExecutionSnapshot(jobId, attempt.AttemptId, 0, "cancel"), attempt);
@@ -133,11 +133,11 @@ public sealed class InMemoryJobServiceTests
         JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "retry-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await consumer.NextCancellationAsync(fixture);
-        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
 
         await fixture.Harness.Bus.RetryJobAsync(jobId, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == jobId);
 
         Assert.Equal(0, first.RetryAttempt);
@@ -162,11 +162,11 @@ public sealed class InMemoryJobServiceTests
         await fixture.SubmitAsync(runningJobId, new InMemoryJob("running"));
         JobExecutionSnapshot running = await consumer.NextAttemptAsync(fixture);
         await fixture.SubmitAsync(waitingJobId, new InMemoryJob("waiting"));
-        JobSlotWaitElapsed waited = await fixture.SentAsync<JobSlotWaitElapsed>(message => message.JobId == waitingJobId);
+        IJobSlotWaitElapsed waited = await fixture.SentAsync<IJobSlotWaitElapsed>(message => message.JobId == waitingJobId);
 
         await fixture.Harness.Bus.CancelJobAsync(waitingJobId, "waiting-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobCanceled waitingCanceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == waitingJobId);
-        JobState waitingState = await fixture.GetStateAsync(waitingJobId);
+        IJobCanceled waitingCanceled = await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == waitingJobId);
+        IJobState waitingState = await fixture.GetStateAsync(waitingJobId);
 
         Assert.Equal(runningJobId, running.JobId);
         Assert.Equal(waitingJobId, waited.JobId);
@@ -177,7 +177,7 @@ public sealed class InMemoryJobServiceTests
 
         await fixture.Harness.Bus.CancelJobAsync(runningJobId, "fixture-cleanup", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await consumer.NextCancellationAsync(fixture);
-        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == runningJobId);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == runningJobId);
     }
 
     [Fact]
@@ -200,16 +200,16 @@ public sealed class InMemoryJobServiceTests
                     "allocation-canceled",
                     cancellationToken: fixture.CancellationToken)
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-            await fixture.ConsumedCountAsync<CancelJob>(message => message.JobId == jobId, 1);
+            await fixture.ConsumedCountAsync<ICancelJob>(message => message.JobId == jobId, 1);
         }
         finally
         {
             distribution.Release();
         }
 
-        JobCanceled canceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
-        JobSlotReleased released = await fixture.SentAsync<JobSlotReleased>(message => message.JobId == jobId);
-        JobState state = await fixture.GetStateAsync(jobId);
+        IJobCanceled canceled = await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
+        IJobSlotReleased released = await fixture.SentAsync<IJobSlotReleased>(message => message.JobId == jobId);
+        IJobState state = await fixture.GetStateAsync(jobId);
 
         Assert.Equal("allocation-canceled", canceled.Reason);
         Assert.Equal(JobSlotDisposition.Canceled, released.Disposition);
@@ -228,14 +228,14 @@ public sealed class InMemoryJobServiceTests
 
         Guid accepted = await fixture.SubmitAsync(jobId, new InMemoryJob("complete"));
         JobExecutionSnapshot execution = await consumer.NextAttemptAsync(fixture);
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(message => message.JobId == jobId);
-        JobStarted started = await fixture.PublishedAsync<JobStarted>(message => message.JobId == jobId);
-        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == jobId);
-        JobCompleted<InMemoryJob> typedCompleted = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(message => message.JobId == jobId);
+        IJobStarted started = await fixture.PublishedAsync<IJobStarted>(message => message.JobId == jobId);
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(message => message.JobId == jobId);
+        IJobCompleted<InMemoryJob> typedCompleted = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == jobId);
-        JobState state = await fixture.GetStateAsync(jobId);
+        IJobState state = await fixture.GetStateAsync(jobId);
         PublishObservation observation = fixture.PublishRecorder.Single(
-            typeof(JobCompleted<InMemoryJob>), jobId);
+            typeof(IJobCompleted<InMemoryJob>), jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(jobId, submitted.JobId);
@@ -262,14 +262,14 @@ public sealed class InMemoryJobServiceTests
 
         await fixture.SubmitAsync(jobId, new InMemoryJob("finalize-completed"));
         await consumer.NextAttemptAsync(fixture);
-        await fixture.PublishedAsync<JobCompleted>(message => message.JobId == jobId);
+        await fixture.PublishedAsync<IJobCompleted>(message => message.JobId == jobId);
         Assert.Equal(JobLifecycleStatus.Completed, (await fixture.GetStateAsync(jobId)).Status);
 
         await fixture.Harness.Bus.FinalizeJobAsync(jobId, fixture.CancellationToken)
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        await fixture.ConsumedCountAsync<FinalizeJob>(message => message.JobId == jobId, 1);
+        await fixture.ConsumedCountAsync<IFinalizeJob>(message => message.JobId == jobId, 1);
 
-        JobState finalized = await fixture.GetStateAsync(jobId);
+        IJobState finalized = await fixture.GetStateAsync(jobId);
         Assert.Equal(JobLifecycleStatus.NotFound, finalized.Status);
     }
 
@@ -285,13 +285,13 @@ public sealed class InMemoryJobServiceTests
         await fixture.Harness.Bus.PublishAsync(new InMemoryJob("first"), fixture.CancellationToken)
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> firstCompleted = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> firstCompleted = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == first.JobId);
 
         await fixture.Harness.Bus.PublishAsync(new InMemoryJob("second"), fixture.CancellationToken)
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> secondCompleted = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> secondCompleted = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == second.JobId);
 
         Assert.NotEqual(Guid.Empty, first.JobId);
@@ -311,7 +311,7 @@ public sealed class InMemoryJobServiceTests
         await using JobServiceFixture fixture = await JobServiceFixture.StartAsync(consumer);
         Guid missingJobId = NewId.NextGuid();
 
-        JobState state = await fixture.GetStateAsync(missingJobId);
+        IJobState state = await fixture.GetStateAsync(missingJobId);
 
         Assert.Equal(missingJobId, state.JobId);
         Assert.Equal(JobLifecycleStatus.NotFound, state.Status);
@@ -339,16 +339,16 @@ public sealed class InMemoryJobServiceTests
                 schedule.Start = start;
                 schedule.EveryHours(1);
             });
-        await fixture.ConsumedCountAsync<JobSubmitted>(message => message.JobId == initialJobId, 1);
+        await fixture.ConsumedCountAsync<IJobSubmitted>(message => message.JobId == initialJobId, 1);
 
         await fixture.RunRecurringAsync(jobName);
         JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> firstCompleted = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> firstCompleted = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == initialJobId && message.Job.Label == "before-cancel");
-        await fixture.ConsumedCountAsync<JobCompleted>(message => message.JobId == initialJobId, 1);
+        await fixture.ConsumedCountAsync<IJobCompleted>(message => message.JobId == initialJobId, 1);
 
         Guid canceledJobId = await fixture.CancelRecurringAsync(jobName, "operator-pause");
-        JobCanceled canceled = await fixture.PublishedAsync<JobCanceled>(
+        IJobCanceled canceled = await fixture.PublishedAsync<IJobCanceled>(
             message => message.JobId == initialJobId && message.Reason == "operator-pause");
 
         Guid resumedJobId = await fixture.AddOrUpdateRecurringAsync(
@@ -359,10 +359,10 @@ public sealed class InMemoryJobServiceTests
                 schedule.Start = start;
                 schedule.EveryHours(1);
             });
-        await fixture.ConsumedCountAsync<JobSubmitted>(message => message.JobId == initialJobId, 2);
+        await fixture.ConsumedCountAsync<IJobSubmitted>(message => message.JobId == initialJobId, 2);
         await fixture.RunRecurringAsync(jobName);
         JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> secondCompleted = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> secondCompleted = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == initialJobId && message.Job.Label == "after-cancel");
 
         Assert.Equal(initialJobId, canceledJobId);
@@ -405,9 +405,9 @@ public sealed class InMemoryJobServiceTests
                     schedule.EverySeconds(seconds);
                 });
             jobIds.Add(name, jobId);
-            await fixture.ConsumedCountAsync<JobSubmitted>(message => message.JobId == jobId, 1);
+            await fixture.ConsumedCountAsync<IJobSubmitted>(message => message.JobId == jobId, 1);
 
-            JobState state = await fixture.GetStateAsync(jobId);
+            IJobState state = await fixture.GetStateAsync(jobId);
             Assert.True(state.IsRecurring);
             Assert.NotNull(state.NextStartDate);
         }
@@ -416,15 +416,15 @@ public sealed class InMemoryJobServiceTests
 
         await fixture.RunRecurringAsync("one");
         JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
-        await fixture.PublishedCountAsync<JobCompleted<InMemoryJob>>(message => message.JobId == jobIds["one"], 1);
-        await fixture.ConsumedCountAsync<JobCompleted>(message => message.JobId == jobIds["one"], 1);
+        await fixture.PublishedCountAsync<IJobCompleted<InMemoryJob>>(message => message.JobId == jobIds["one"], 1);
+        await fixture.ConsumedCountAsync<IJobCompleted>(message => message.JobId == jobIds["one"], 1);
 
         await fixture.RunRecurringAsync("one");
         JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
-        await fixture.PublishedCountAsync<JobCompleted<InMemoryJob>>(message => message.JobId == jobIds["one"], 2);
-        await fixture.ConsumedCountAsync<JobCompleted>(message => message.JobId == jobIds["one"], 2);
+        await fixture.PublishedCountAsync<IJobCompleted<InMemoryJob>>(message => message.JobId == jobIds["one"], 2);
+        await fixture.ConsumedCountAsync<IJobCompleted>(message => message.JobId == jobIds["one"], 2);
 
-        JobState beforeUpdate = await fixture.GetStateAsync(jobIds["one"]);
+        IJobState beforeUpdate = await fixture.GetStateAsync(jobIds["one"]);
         DateTimeOffset updatedStart = start.AddHours(12);
         Guid updatedJobId = await fixture.AddOrUpdateRecurringAsync(
             "one",
@@ -434,8 +434,8 @@ public sealed class InMemoryJobServiceTests
                 schedule.Start = updatedStart;
                 schedule.EverySeconds(10);
             });
-        await fixture.ConsumedCountAsync<JobSubmitted>(message => message.JobId == jobIds["one"], 2);
-        JobState afterUpdate = await fixture.GetStateAsync(jobIds["one"]);
+        await fixture.ConsumedCountAsync<IJobSubmitted>(message => message.JobId == jobIds["one"], 2);
+        IJobState afterUpdate = await fixture.GetStateAsync(jobIds["one"]);
 
         Guid unchangedJobId = await fixture.AddOrUpdateRecurringAsync(
             "one",
@@ -445,8 +445,8 @@ public sealed class InMemoryJobServiceTests
                 schedule.Start = updatedStart;
                 schedule.EverySeconds(10);
             });
-        await fixture.ConsumedCountAsync<JobSubmitted>(message => message.JobId == jobIds["one"], 3);
-        JobState afterNoOp = await fixture.GetStateAsync(jobIds["one"]);
+        await fixture.ConsumedCountAsync<IJobSubmitted>(message => message.JobId == jobIds["one"], 3);
+        IJobState afterNoOp = await fixture.GetStateAsync(jobIds["one"]);
 
         Assert.Equal(jobIds["one"], first.JobId);
         Assert.Equal(jobIds["one"], second.JobId);
@@ -471,8 +471,8 @@ public sealed class InMemoryJobServiceTests
         DateTimeOffset dueAt = fixture.Scheduler.UtcNow.AddHours(1);
 
         Guid jobId = await fixture.ScheduleAsync(dueAt, new InMemoryJob("one-shot"));
-        await fixture.ConsumedCountAsync<JobSubmitted>(message => message.JobId == jobId, 1);
-        JobState scheduled = await fixture.GetStateAsync(jobId);
+        await fixture.ConsumedCountAsync<IJobSubmitted>(message => message.JobId == jobId, 1);
+        IJobState scheduled = await fixture.GetStateAsync(jobId);
 
         Assert.False(scheduled.IsRecurring);
         Assert.Equal(JobLifecycleStatus.WaitingForSlot, scheduled.Status);
@@ -480,10 +480,10 @@ public sealed class InMemoryJobServiceTests
         fixture.Scheduler.Advance(TimeSpan.FromHours(1));
 
         JobExecutionSnapshot execution = await consumer.NextAttemptAsync(fixture);
-        JobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<JobCompleted<InMemoryJob>>(
+        IJobCompleted<InMemoryJob> completed = await fixture.PublishedAsync<IJobCompleted<InMemoryJob>>(
             message => message.JobId == jobId);
-        await fixture.ConsumedCountAsync<JobCompleted>(message => message.JobId == jobId, 1);
-        JobState terminal = await fixture.GetStateAsync(jobId);
+        await fixture.ConsumedCountAsync<IJobCompleted>(message => message.JobId == jobId, 1);
+        IJobState terminal = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(jobId, execution.JobId);
         Assert.Equal("one-shot", completed.Job.Label);
@@ -499,7 +499,7 @@ public sealed class InMemoryJobServiceTests
     {
         private readonly Channel<JobExecutionSnapshot> _attempts = Channel.CreateUnbounded<JobExecutionSnapshot>();
 
-        public Task RunAsync(JobContext<InMemoryJob> context) =>
+        public Task RunAsync(IJobContext<InMemoryJob> context) =>
             _attempts.Writer.WriteAsync(Snapshot(context), context.CancellationToken).AsTask();
 
         public Task<JobExecutionSnapshot> NextAttemptAsync(JobServiceFixture fixture) =>
@@ -511,7 +511,7 @@ public sealed class InMemoryJobServiceTests
     {
         private readonly Channel<JobExecutionSnapshot> _attempts = Channel.CreateUnbounded<JobExecutionSnapshot>();
 
-        public async Task RunAsync(JobContext<InMemoryJob> context)
+        public async Task RunAsync(IJobContext<InMemoryJob> context)
         {
             await _attempts.Writer.WriteAsync(Snapshot(context), context.CancellationToken);
             if (completeOnRetry && context.RetryAttempt > 0)
@@ -529,7 +529,7 @@ public sealed class InMemoryJobServiceTests
     {
         private readonly Channel<CheckpointObservation> _observations = Channel.CreateUnbounded<CheckpointObservation>();
 
-        public async Task RunAsync(JobContext<InMemoryJob> context)
+        public async Task RunAsync(IJobContext<InMemoryJob> context)
         {
             bool found = context.TryGetCheckpoint<TestCheckpoint>(out TestCheckpoint? checkpoint);
             await _observations.Writer.WriteAsync(
@@ -554,7 +554,7 @@ public sealed class InMemoryJobServiceTests
         private readonly Channel<JobCancellationSnapshot> _cancellations = Channel.CreateUnbounded<JobCancellationSnapshot>();
         private readonly TaskCompletionSource _never = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public async Task RunAsync(JobContext<InMemoryJob> context)
+        public async Task RunAsync(IJobContext<InMemoryJob> context)
         {
             JobExecutionSnapshot attempt = Snapshot(context);
             await _attempts.Writer.WriteAsync(attempt, context.CancellationToken);
@@ -590,7 +590,7 @@ public sealed class InMemoryJobServiceTests
         public Task Entered => _entered.Task;
 
         public async Task<Uri?> SelectInstanceAsync(
-            ConsumeContext<AllocateJobSlot> requestContext,
+            ConsumeContext<IAllocateJobSlot> requestContext,
             JobDistributionContext distributionContext,
             CancellationToken cancellationToken = default)
         {
@@ -606,7 +606,7 @@ public sealed class InMemoryJobServiceTests
     private sealed record JobCancellationSnapshot(Guid JobId, Guid AttemptId, bool IsCancellationRequested);
     private sealed record CheckpointObservation(Guid JobId, int RetryAttempt, bool Found, string? Cursor);
 
-    private static JobExecutionSnapshot Snapshot(JobContext<InMemoryJob> context) =>
+    private static JobExecutionSnapshot Snapshot(IJobContext<InMemoryJob> context) =>
         new(context.JobId, context.AttemptId, context.RetryAttempt, context.Job.Label);
 
     private sealed class JobServiceFixture : IAsyncDisposable
@@ -695,7 +695,7 @@ public sealed class InMemoryJobServiceTests
 
         public Task<Guid> SubmitAsync(Guid jobId, InMemoryJob job)
         {
-            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<SubmitJob<InMemoryJob>>();
+            IRequestClient<ISubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<ISubmitJob<InMemoryJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -705,14 +705,14 @@ public sealed class InMemoryJobServiceTests
             InMemoryJob job,
             Action<IRecurringJobScheduleConfigurator> configure)
         {
-            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<SubmitJob<InMemoryJob>>();
+            IRequestClient<ISubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<ISubmitJob<InMemoryJob>>();
             return client.AddOrUpdateRecurringJobAsync(jobName, job, configure, CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
 
         public Task<Guid> ScheduleAsync(DateTimeOffset start, InMemoryJob job)
         {
-            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<SubmitJob<InMemoryJob>>();
+            IRequestClient<ISubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<ISubmitJob<InMemoryJob>>();
             return client.ScheduleJobAsync(start, job, CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -767,17 +767,17 @@ public sealed class InMemoryJobServiceTests
             Assert.Equal(expectedCount, count);
         }
 
-        public Task<JobState> GetStateAsync(Guid jobId)
+        public Task<IJobState> GetStateAsync(Guid jobId)
         {
-            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
+            IRequestClient<IGetJobState> client = Harness.CreateRequestClient<IGetJobState>();
             return client.GetJobStateAsync(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
 
-        public Task<JobState<TCheckpoint>> GetStateAsync<TCheckpoint>(Guid jobId)
+        public Task<IJobState<TCheckpoint>> GetStateAsync<TCheckpoint>(Guid jobId)
             where TCheckpoint : class
         {
-            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
+            IRequestClient<IGetJobState> client = Harness.CreateRequestClient<IGetJobState>();
             return client.GetJobStateAsync<TCheckpoint>(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -815,12 +815,12 @@ public sealed class InMemoryJobServiceTests
 
         private static Guid? JobId(T message) => message switch
         {
-            JobSubmitted submitted => submitted.JobId,
-            JobStarted started => started.JobId,
-            JobCompleted completed => completed.JobId,
-            JobCompleted<InMemoryJob> completed => completed.JobId,
-            JobFaulted faulted => faulted.JobId,
-            JobCanceled canceled => canceled.JobId,
+            IJobSubmitted submitted => submitted.JobId,
+            IJobStarted started => started.JobId,
+            IJobCompleted completed => completed.JobId,
+            IJobCompleted<InMemoryJob> completed => completed.JobId,
+            IJobFaulted faulted => faulted.JobId,
+            IJobCanceled canceled => canceled.JobId,
             _ => null,
         };
     }

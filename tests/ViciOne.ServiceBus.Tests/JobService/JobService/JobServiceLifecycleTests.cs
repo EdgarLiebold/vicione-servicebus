@@ -203,7 +203,7 @@ public sealed class JobServiceLifecycleTests
 
         var endpoint = new ControlledPublishEndpoint();
         await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
-        SetConcurrentJobLimit announcement = endpoint.Single(JobConcurrencyUpdateKind.Configuration);
+        ISetConcurrentJobLimit announcement = endpoint.Single(JobConcurrencyUpdateKind.Configuration);
         await service.StopAsync(endpoint, TestContext.Current.CancellationToken);
 
         Assert.Equal(2, announcement.ConcurrentJobLimit);
@@ -313,7 +313,7 @@ public sealed class JobServiceLifecycleTests
             JobTypeId = service.GetJobTypeId<LifecycleJob>(),
             Job = new Dictionary<string, object>(),
         };
-        ConsumeContext<StartJob> context = InMemoryOutboxTestContextFactory.Create<StartJob>(
+        ConsumeContext<IStartJob> context = InMemoryOutboxTestContextFactory.Create<IStartJob>(
             command,
             cancellationToken);
         var pipe = new CancellationObservingJobPipe();
@@ -324,13 +324,13 @@ public sealed class JobServiceLifecycleTests
             pipe,
             new JobOptions<LifecycleJob> { JobCancellationTimeout = timeout },
             cancellationToken);
-        Assert.True(service.TryGetJob(command.JobId, out JobHandle? active));
+        Assert.True(service.TryGetJob(command.JobId, out IJobHandle? active));
         Assert.NotNull(active);
 
         await service.StopAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
 
         await pipe.CancellationObserved.WaitAsync(timeout, cancellationToken);
-        Assert.False(service.TryGetJob(command.JobId, out JobHandle? removed));
+        Assert.False(service.TryGetJob(command.JobId, out IJobHandle? removed));
         Assert.Null(removed);
         Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
     }
@@ -411,8 +411,8 @@ public sealed class JobServiceLifecycleTests
         Job = new Dictionary<string, object>(),
     };
 
-    private static ConsumeContext<StartJob> CreateStartContext(StartJobCommand command, CancellationToken cancellationToken) =>
-        InMemoryOutboxTestContextFactory.Create<StartJob>(command, cancellationToken);
+    private static ConsumeContext<IStartJob> CreateStartContext(StartJobCommand command, CancellationToken cancellationToken) =>
+        InMemoryOutboxTestContextFactory.Create<IStartJob>(command, cancellationToken);
 
     private static RuntimeJobService NewService(TimeSpan heartbeatInterval)
     {
@@ -425,7 +425,7 @@ public sealed class JobServiceLifecycleTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed class StubJobServiceSettings(TimeSpan heartbeatInterval) : JobServiceSettings
+    private sealed class StubJobServiceSettings(TimeSpan heartbeatInterval) : IJobServiceSettings
     {
         public IJobService Runtime => throw new NotSupportedException("The lifecycle tests drive the service directly.");
         public TimeSpan HeartbeatInterval { get; } = heartbeatInterval;
@@ -475,7 +475,7 @@ public sealed class JobServiceLifecycleTests
             services.AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
-                configuration.AddHandler<StartJob>(async context =>
+                configuration.AddHandler<IStartJob>(async context =>
                 {
                     TaskCompletionSource? handled = jobPipe.Handled;
                     try
@@ -511,8 +511,8 @@ public sealed class JobServiceLifecycleTests
             int before = JobPipe.Count;
             var handled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             JobPipe.Handled = handled;
-            ISendEndpoint handlerEndpoint = await _harness.GetHandlerEndpointAsync<StartJob>(cancellationToken: cancellationToken);
-            await handlerEndpoint.SendAsync<StartJob>(new
+            ISendEndpoint handlerEndpoint = await _harness.GetHandlerEndpointAsync<IStartJob>(cancellationToken: cancellationToken);
+            await handlerEndpoint.SendAsync<IStartJob>(new
             {
                 JobId = NewId.NextGuid(),
                 AttemptId = NewId.NextGuid(),
@@ -637,7 +637,7 @@ public sealed class JobServiceLifecycleTests
     {
         private readonly Dictionary<JobConcurrencyUpdateKind, Queue<PublicationControl>> _controls = [];
         private readonly Dictionary<JobConcurrencyUpdateKind, int> _counts = [];
-        private readonly List<SetConcurrentJobLimit> _messages = [];
+        private readonly List<ISetConcurrentJobLimit> _messages = [];
         private readonly object _lock = new();
         private int _activeHeartbeatPublications;
         private int _maximumConcurrentHeartbeatPublications;
@@ -661,7 +661,7 @@ public sealed class JobServiceLifecycleTests
                 return _counts.GetValueOrDefault(updateKind);
         }
 
-        public SetConcurrentJobLimit Single(JobConcurrencyUpdateKind updateKind)
+        public ISetConcurrentJobLimit Single(JobConcurrencyUpdateKind updateKind)
         {
             lock (_lock)
                 return Assert.Single(_messages, message => message.UpdateKind == updateKind);
@@ -670,7 +670,7 @@ public sealed class JobServiceLifecycleTests
         public async Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
             where T : class
         {
-            if (message is not SetConcurrentJobLimit limit)
+            if (message is not ISetConcurrentJobLimit limit)
                 return;
 
             PublicationControl? control;

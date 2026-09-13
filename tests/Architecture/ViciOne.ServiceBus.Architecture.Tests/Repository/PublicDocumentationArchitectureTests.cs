@@ -237,6 +237,10 @@ public sealed partial class PublicDocumentationArchitectureTests
         IndexerDeclarationSyntax indexer => indexer.ParameterList.Parameters.Select(static parameter => parameter.Identifier.ValueText).ToArray(),
         RecordDeclarationSyntax record when record.ParameterList is not null => record.ParameterList.Parameters
             .Select(static parameter => parameter.Identifier.ValueText).ToArray(),
+        ClassDeclarationSyntax @class when @class.ParameterList is not null => @class.ParameterList.Parameters
+            .Select(static parameter => parameter.Identifier.ValueText).ToArray(),
+        StructDeclarationSyntax @struct when @struct.ParameterList is not null => @struct.ParameterList.Parameters
+            .Select(static parameter => parameter.Identifier.ValueText).ToArray(),
         _ => [],
     };
 

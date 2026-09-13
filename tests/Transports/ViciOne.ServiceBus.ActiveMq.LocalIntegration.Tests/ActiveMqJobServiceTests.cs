@@ -22,8 +22,8 @@ public sealed class ActiveMqJobServiceTests
         JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "operator-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobCancellationSnapshot cancellation = await consumer.NextCancellationAsync(fixture);
-        JobCanceled canceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
-        JobSlotReleased released = await fixture.SentAsync<JobSlotReleased>(message => message.JobId == jobId);
+        IJobCanceled canceled = await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
+        IJobSlotReleased released = await fixture.SentAsync<IJobSlotReleased>(message => message.JobId == jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(new JobExecutionSnapshot(jobId, attempt.AttemptId, 0, "cancel"), attempt);
@@ -43,11 +43,11 @@ public sealed class ActiveMqJobServiceTests
 
         await fixture.SubmitAsync(jobId, new ActiveMqJob("status"));
         JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
-        JobState started = await fixture.GetStateAsync(jobId);
+        IJobState started = await fixture.GetStateAsync(jobId);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "status-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await consumer.NextCancellationAsync(fixture);
-        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
-        JobState canceled = await fixture.GetStateAsync(jobId);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
+        IJobState canceled = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(JobLifecycleStatus.Running, started.Status);
         Assert.Equal(0, started.LastRetryAttempt);
@@ -74,12 +74,12 @@ public sealed class ActiveMqJobServiceTests
         JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "retry-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await consumer.NextCancellationAsync(fixture);
-        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
 
         await fixture.Harness.Bus.RetryJobAsync(jobId, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
-        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == jobId);
-        JobCompleted<ActiveMqJob> typedCompleted = await fixture.PublishedAsync<JobCompleted<ActiveMqJob>>(
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(message => message.JobId == jobId);
+        IJobCompleted<ActiveMqJob> typedCompleted = await fixture.PublishedAsync<IJobCompleted<ActiveMqJob>>(
             message => message.JobId == jobId);
 
         Assert.Equal(0, first.RetryAttempt);
@@ -106,11 +106,11 @@ public sealed class ActiveMqJobServiceTests
         await fixture.SubmitAsync(runningJobId, new ActiveMqJob("running"));
         JobExecutionSnapshot running = await consumer.NextAttemptAsync(fixture);
         await fixture.SubmitAsync(waitingJobId, new ActiveMqJob("waiting"));
-        JobSlotWaitElapsed waited = await fixture.SentAsync<JobSlotWaitElapsed>(message => message.JobId == waitingJobId);
+        IJobSlotWaitElapsed waited = await fixture.SentAsync<IJobSlotWaitElapsed>(message => message.JobId == waitingJobId);
 
         await fixture.Harness.Bus.CancelJobAsync(waitingJobId, "waiting-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobCanceled waitingCanceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == waitingJobId);
-        JobState waitingState = await fixture.GetStateAsync(waitingJobId);
+        IJobCanceled waitingCanceled = await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == waitingJobId);
+        IJobState waitingState = await fixture.GetStateAsync(waitingJobId);
 
         Assert.Equal(runningJobId, running.JobId);
         Assert.Equal(waitingJobId, waited.JobId);
@@ -121,7 +121,7 @@ public sealed class ActiveMqJobServiceTests
 
         await fixture.Harness.Bus.CancelJobAsync(runningJobId, "fixture-cleanup", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await consumer.NextCancellationAsync(fixture);
-        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == runningJobId);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == runningJobId);
     }
 
     [Fact]
@@ -134,10 +134,10 @@ public sealed class ActiveMqJobServiceTests
 
         Guid accepted = await fixture.SubmitAsync(jobId, new ActiveMqJob("complete"));
         JobExecutionSnapshot execution = await consumer.NextAttemptAsync(fixture);
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(message => message.JobId == jobId);
-        JobStarted started = await fixture.PublishedAsync<JobStarted>(message => message.JobId == jobId);
-        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == jobId);
-        JobState state = await fixture.GetStateAsync(jobId);
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(message => message.JobId == jobId);
+        IJobStarted started = await fixture.PublishedAsync<IJobStarted>(message => message.JobId == jobId);
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(message => message.JobId == jobId);
+        IJobState state = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(jobId, submitted.JobId);
@@ -161,9 +161,9 @@ public sealed class ActiveMqJobServiceTests
         await fixture.Harness.Bus.PublishAsync(new ActiveMqJob("generated"), fixture.CancellationToken)
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobExecutionSnapshot execution = await consumer.NextAttemptAsync(fixture);
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(message => message.JobId == execution.JobId);
-        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == execution.JobId);
-        JobCompleted<ActiveMqJob> typedCompleted = await fixture.PublishedAsync<JobCompleted<ActiveMqJob>>(
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(message => message.JobId == execution.JobId);
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(message => message.JobId == execution.JobId);
+        IJobCompleted<ActiveMqJob> typedCompleted = await fixture.PublishedAsync<IJobCompleted<ActiveMqJob>>(
             message => message.JobId == execution.JobId);
 
         Assert.NotEqual(Guid.Empty, execution.JobId);
@@ -181,7 +181,7 @@ public sealed class ActiveMqJobServiceTests
         await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-not-found", consumer);
         Guid missingJobId = NewId.NextGuid();
 
-        JobState state = await fixture.GetStateAsync(missingJobId);
+        IJobState state = await fixture.GetStateAsync(missingJobId);
 
         Assert.Equal(missingJobId, state.JobId);
         Assert.Equal(JobLifecycleStatus.NotFound, state.Status);
@@ -197,7 +197,7 @@ public sealed class ActiveMqJobServiceTests
     {
         private readonly Channel<JobExecutionSnapshot> _attempts = Channel.CreateUnbounded<JobExecutionSnapshot>();
 
-        public Task RunAsync(JobContext<ActiveMqJob> context) =>
+        public Task RunAsync(IJobContext<ActiveMqJob> context) =>
             _attempts.Writer.WriteAsync(Snapshot(context), context.CancellationToken).AsTask();
 
         public Task<JobExecutionSnapshot> NextAttemptAsync(JobServiceFixture fixture) =>
@@ -211,7 +211,7 @@ public sealed class ActiveMqJobServiceTests
         private readonly Channel<JobCancellationSnapshot> _cancellations = Channel.CreateUnbounded<JobCancellationSnapshot>();
         private readonly TaskCompletionSource _never = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public async Task RunAsync(JobContext<ActiveMqJob> context)
+        public async Task RunAsync(IJobContext<ActiveMqJob> context)
         {
             JobExecutionSnapshot attempt = Snapshot(context);
             await _attempts.Writer.WriteAsync(attempt, context.CancellationToken);
@@ -242,7 +242,7 @@ public sealed class ActiveMqJobServiceTests
     private sealed record JobExecutionSnapshot(Guid JobId, Guid AttemptId, int RetryAttempt, string Label);
     private sealed record JobCancellationSnapshot(Guid JobId, Guid AttemptId, bool IsCancellationRequested);
 
-    private static JobExecutionSnapshot Snapshot(JobContext<ActiveMqJob> context) =>
+    private static JobExecutionSnapshot Snapshot(IJobContext<ActiveMqJob> context) =>
         new(context.JobId, context.AttemptId, context.RetryAttempt, context.Job.Label);
 
     private sealed class JobServiceFixture : IAsyncDisposable
@@ -322,7 +322,7 @@ public sealed class ActiveMqJobServiceTests
 
         public Task<Guid> SubmitAsync(Guid jobId, ActiveMqJob job)
         {
-            IRequestClient<SubmitJob<ActiveMqJob>> client = Harness.CreateRequestClient<SubmitJob<ActiveMqJob>>();
+            IRequestClient<ISubmitJob<ActiveMqJob>> client = Harness.CreateRequestClient<ISubmitJob<ActiveMqJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -347,9 +347,9 @@ public sealed class ActiveMqJobServiceTests
             return sent.Context.Message;
         }
 
-        public Task<JobState> GetStateAsync(Guid jobId)
+        public Task<IJobState> GetStateAsync(Guid jobId)
         {
-            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
+            IRequestClient<IGetJobState> client = Harness.CreateRequestClient<IGetJobState>();
             return client.GetJobStateAsync(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }

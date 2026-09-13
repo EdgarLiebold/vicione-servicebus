@@ -142,7 +142,7 @@ public sealed class SerializationContractIntegrationTests
             TestContext.Current.CancellationToken);
         SystemTextJsonRoundTripResult<ConvertVideo> jobRoundTrip =
             SystemTextJsonRoundTrip.ExecuteWithContext(initialized.Message);
-        StartJob command = new StartJobCommand
+        IStartJob command = new StartJobCommand
         {
             JobId = NewId.NextGuid(),
             AttemptId = NewId.NextGuid(),
@@ -150,7 +150,7 @@ public sealed class SerializationContractIntegrationTests
             JobTypeId = NewId.NextGuid(),
         };
 
-        SystemTextJsonRoundTripResult<StartJob> commandRoundTrip =
+        SystemTextJsonRoundTripResult<IStartJob> commandRoundTrip =
             SystemTextJsonRoundTrip.ExecuteWithContext(command);
         ConvertVideo? restored = commandRoundTrip.Context.DeserializeObject<ConvertVideo>(
             commandRoundTrip.Message.Job);

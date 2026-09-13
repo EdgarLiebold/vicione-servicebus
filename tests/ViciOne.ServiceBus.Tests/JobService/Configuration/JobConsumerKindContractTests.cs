@@ -313,17 +313,17 @@ public sealed class JobConsumerKindContractTests
 
     private sealed class FirstJobConsumer : IJobConsumer<JobMessage>
     {
-        public Task RunAsync(JobContext<JobMessage> context) => throw new NotSupportedException();
+        public Task RunAsync(IJobContext<JobMessage> context) => throw new NotSupportedException();
     }
 
     private sealed class SecondJobConsumer : IJobConsumer<JobMessage>
     {
-        public Task RunAsync(JobContext<JobMessage> context) => throw new NotSupportedException();
+        public Task RunAsync(IJobContext<JobMessage> context) => throw new NotSupportedException();
     }
 
     private sealed class UnregisteredJobConsumer : IJobConsumer<JobMessage>
     {
-        public Task RunAsync(JobContext<JobMessage> context) => throw new NotSupportedException();
+        public Task RunAsync(IJobContext<JobMessage> context) => throw new NotSupportedException();
     }
 
     private sealed class OrdinaryConsumer : IConsumer;

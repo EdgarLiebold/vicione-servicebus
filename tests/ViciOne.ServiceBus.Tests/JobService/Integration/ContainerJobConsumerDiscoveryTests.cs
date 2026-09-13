@@ -54,13 +54,13 @@ public sealed class ContainerJobConsumerDiscoveryTests
                 .GetRequiredService<IRequestClient<ContainerJobDiscovery.CrunchNumbers>>();
             var request = new ContainerJobDiscovery.CrunchNumbers(NewId.NextGuid(), 41);
 
-            Response<JobSubmissionAccepted> accepted = await client.GetResponseAsync<JobSubmissionAccepted>(
+            Response<IJobSubmissionAccepted> accepted = await client.GetResponseAsync<IJobSubmissionAccepted>(
                 request,
                 cancellationToken);
             ContainerJobDiscovery.JobSnapshot executed = await observation.Executed.Task
                 .WaitAsync(timeout, cancellationToken);
-            IPublishedMessage<JobCompleted<ContainerJobDiscovery.CrunchNumbers>> completed = await harness.Published
-                .SelectAsync<JobCompleted<ContainerJobDiscovery.CrunchNumbers>>(cancellationToken)
+            IPublishedMessage<IJobCompleted<ContainerJobDiscovery.CrunchNumbers>> completed = await harness.Published
+                .SelectAsync<IJobCompleted<ContainerJobDiscovery.CrunchNumbers>>(cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(request.CorrelationId, executed.CorrelationId);

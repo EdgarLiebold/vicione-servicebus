@@ -43,7 +43,7 @@ public sealed class JobConsumerMessageFilterTests
         var expected = new OperationCanceledException(cancellation.Token);
         var notifications = new RecordingNotifications([]);
         var consumer = new TestJobConsumer(_ => Task.FromException(expected));
-        JobContext<TestJob> jobContext = CreateJobContext(0, cancellation.Token);
+        IJobContext<TestJob> jobContext = CreateJobContext(0, cancellation.Token);
         ConsumerConsumeContext<TestJobConsumer, TestJob> context = CreateConsumerContext(consumer, jobContext, notifications);
         var filter = new JobConsumerMessageFilter<TestJobConsumer, TestJob>(Retry.None);
 
@@ -63,7 +63,7 @@ public sealed class JobConsumerMessageFilterTests
         TimeSpan delay = TimeSpan.FromMinutes(3);
         var notifications = new RecordingNotifications([]);
         var consumer = new TestJobConsumer(_ => Task.FromException(expected));
-        JobContext<TestJob> jobContext = CreateJobContext(1, TestContext.Current.CancellationToken);
+        IJobContext<TestJob> jobContext = CreateJobContext(1, TestContext.Current.CancellationToken);
         ConsumerConsumeContext<TestJobConsumer, TestJob> context = CreateConsumerContext(consumer, jobContext, notifications);
         var filter = new JobConsumerMessageFilter<TestJobConsumer, TestJob>(Retry.Intervals(TimeSpan.Zero, delay));
 
@@ -83,7 +83,7 @@ public sealed class JobConsumerMessageFilterTests
         var expected = new InvalidOperationException("terminal");
         var notifications = new RecordingNotifications([]);
         var consumer = new TestJobConsumer(_ => Task.FromException(expected));
-        JobContext<TestJob> jobContext = CreateJobContext(1, TestContext.Current.CancellationToken);
+        IJobContext<TestJob> jobContext = CreateJobContext(1, TestContext.Current.CancellationToken);
         ConsumerConsumeContext<TestJobConsumer, TestJob> context = CreateConsumerContext(consumer, jobContext, notifications);
         var filter = new JobConsumerMessageFilter<TestJobConsumer, TestJob>(Retry.Immediate(1));
 
@@ -92,7 +92,7 @@ public sealed class JobConsumerMessageFilterTests
         (Exception exception, TimeSpan? retryDelay) = Assert.Single(notifications.Faults);
         Assert.Same(expected, exception);
         Assert.Null(retryDelay);
-        Assert.True(context.TryGetPayload(out RetryContext<JobContext<TestJob>>? retryContext));
+        Assert.True(context.TryGetPayload(out RetryContext<IJobContext<TestJob>>? retryContext));
         Assert.NotNull(retryContext);
     }
 
@@ -110,7 +110,7 @@ public sealed class JobConsumerMessageFilterTests
             (await Assert.ThrowsAsync<ArgumentNullException>(() => filter.SendAsync(null!, new RejectingPipe()))).ParamName);
 
         var consumer = new TestJobConsumer(_ => Task.CompletedTask);
-        JobContext<TestJob> jobContext = CreateJobContext(0, TestContext.Current.CancellationToken);
+        IJobContext<TestJob> jobContext = CreateJobContext(0, TestContext.Current.CancellationToken);
         ConsumerConsumeContext<TestJobConsumer, TestJob> context = CreateConsumerContext(
             consumer,
             jobContext,
@@ -123,13 +123,13 @@ public sealed class JobConsumerMessageFilterTests
         IReadOnlyDictionary<string, object> consume = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
             Assert.Contains("consume", probe.Results));
         Assert.Equal(
-            $"RunAsync(JobContext<{TypeCache<TestJob>.ShortName}> context)",
+            $"RunAsync(IJobContext<{TypeCache<TestJob>.ShortName}> context)",
             Assert.Contains("method", consume));
     }
 
     private static ConsumerConsumeContext<TestJobConsumer, TestJob> CreateConsumerContext(
         TestJobConsumer consumer,
-        JobContext<TestJob> jobContext,
+        IJobContext<TestJob> jobContext,
         INotifyJobContext notifications)
     {
         ConsumeContext<TestJob> source = InMemoryOutboxTestContextFactory.Create(new TestJob());
@@ -138,7 +138,7 @@ public sealed class JobConsumerMessageFilterTests
         return new ConsumerConsumeContextProxy<TestJobConsumer, TestJob>(source, consumer);
     }
 
-    private static JobContext<TestJob> CreateJobContext(int retryAttempt, CancellationToken cancellationToken)
+    private static IJobContext<TestJob> CreateJobContext(int retryAttempt, CancellationToken cancellationToken)
     {
         TestJobContext context = DispatchProxy.Create<TestJobContext, JobContextProxy>();
         var proxy = (JobContextProxy)(object)context;
@@ -147,7 +147,7 @@ public sealed class JobConsumerMessageFilterTests
         return context;
     }
 
-    private interface TestJobContext : JobContext<TestJob>, JobContext;
+    private interface TestJobContext : IJobContext<TestJob>, IJobContext;
 
     private class JobContextProxy : DispatchProxy
     {
@@ -163,9 +163,9 @@ public sealed class JobConsumerMessageFilterTests
         };
     }
 
-    private sealed class TestJobConsumer(Func<JobContext<TestJob>, Task> run) : IJobConsumer<TestJob>
+    private sealed class TestJobConsumer(Func<IJobContext<TestJob>, Task> run) : IJobConsumer<TestJob>
     {
-        public Task RunAsync(JobContext<TestJob> context) => run(context);
+        public Task RunAsync(IJobContext<TestJob> context) => run(context);
     }
 
     private sealed class RecordingNotifications(List<string> trace) : INotifyJobContext
@@ -209,7 +209,7 @@ public sealed class JobConsumerMessageFilterTests
             return Task.CompletedTask;
         }
 
-        public Task NotifyProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default) =>
+        public Task NotifyProgressAsync(ISetJobProgress progress, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 

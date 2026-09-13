@@ -29,5 +29,5 @@ public interface INotifyJobContext
     /// <param name="progress">The progress snapshot to publish.</param>
     /// <param name="cancellationToken">The token that cancels notification publication.</param>
     /// <returns>A task that completes when the progress notification has been published.</returns>
-    Task NotifyProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default);
+    Task NotifyProgressAsync(ISetJobProgress progress, CancellationToken cancellationToken = default);
 }

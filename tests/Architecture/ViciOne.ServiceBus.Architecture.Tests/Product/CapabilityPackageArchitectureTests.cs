@@ -32,7 +32,7 @@ public sealed class CapabilityPackageArchitectureTests
         AssertAssembly("ViciOne.ServiceBus.Sagas", typeof(ISaga), typeof(ISagaStateMachine<>), typeof(ICorrelatedBy<>));
         AssertAssembly("ViciOne.ServiceBus.Courier", typeof(IActivity<,>), typeof(IExecuteActivity<>), typeof(RoutingSlip));
         AssertAssembly("ViciOne.ServiceBus.Futures", typeof(FutureState));
-        AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(JobContext<>));
+        AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(IJobContext<>));
         AssertAssembly("ViciOne.ServiceBus.Mediator", typeof(IMediator));
         AssertAssembly("ViciOne.ServiceBus.Initializers", typeof(InVar), typeof(AdvancedMessageInitializerExtensions));
         AssertProjectOwnsAllCompiledSources("src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj");

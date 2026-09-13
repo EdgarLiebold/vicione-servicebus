@@ -164,7 +164,7 @@ public sealed class JobTypeCapacityTests
         MessageException exception = Assert.Throws<MessageException>(() =>
             JobTypeStateMachineBehaviorExtensions.ValidateConcurrencyUpdate(message));
 
-        Assert.Equal(typeof(SetConcurrentJobLimit), exception.MessageType);
+        Assert.Equal(typeof(ISetConcurrentJobLimit), exception.MessageType);
     }
 
     [Fact]
@@ -213,7 +213,7 @@ public sealed class JobTypeCapacityTests
         NonPositiveOverrideDuration,
     }
 
-    private sealed class SetConcurrentJobLimitMessage : SetConcurrentJobLimit
+    private sealed class SetConcurrentJobLimitMessage : ISetConcurrentJobLimit
     {
         public Guid JobTypeId { get; set; }
         public Uri InstanceAddress { get; set; } = null!;

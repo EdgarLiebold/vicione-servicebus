@@ -26,8 +26,8 @@ public sealed class JobServiceExtensionsTests
             cancellation.Token);
 
         Assert.Equal(jobId, result);
-        Assert.Equal(typeof(SubmitJob<ApiJob>), endpoint.ContractType);
-        SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(endpoint.Message);
+        Assert.Equal(typeof(ISubmitJob<ApiJob>), endpoint.ContractType);
+        ISubmitJob<ApiJob> command = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(endpoint.Message);
         Assert.Same(job, command.Job);
         Assert.Equal(jobId, command.JobId);
         IReadOnlyDictionary<string, object> properties = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(command.JobProperties);
@@ -50,7 +50,7 @@ public sealed class JobServiceExtensionsTests
             cancellation.Token);
 
         Assert.Equal(jobId, result);
-        SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(client.Request);
+        ISubmitJob<ApiJob> command = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(client.Request);
         Assert.Equal("initialized", command.Job.Label);
         IReadOnlyDictionary<string, object> properties = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(command.JobProperties);
         Assert.Equal(7, properties["priority"]);
@@ -87,7 +87,7 @@ public sealed class JobServiceExtensionsTests
             new ApiJob { Label = "typed-publish" },
             properties => properties.Set("tenant", "north"),
             cancellation.Token);
-        SubmitJob<ApiJob> typedPublishCommand = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(typedPublish.Message);
+        ISubmitJob<ApiJob> typedPublishCommand = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(typedPublish.Message);
         Assert.NotEqual(Guid.Empty, typedPublishId);
         Assert.Equal(typedPublishId, typedPublishCommand.JobId);
         Assert.Equal("north", typedPublishCommand.JobProperties?["tenant"]);
@@ -96,7 +96,7 @@ public sealed class JobServiceExtensionsTests
         Guid valuesPublishId = await valuesPublish.SubmitJobFromValuesAsync<ApiJob>(
             new { Label = "values-publish" },
             cancellation.Token);
-        SubmitJob<ApiJob> valuesPublishCommand = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(valuesPublish.Message);
+        ISubmitJob<ApiJob> valuesPublishCommand = Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(valuesPublish.Message);
         Assert.Equal(valuesPublishId, valuesPublishCommand.JobId);
         Assert.Equal("values-publish", valuesPublishCommand.Job.Label);
 
@@ -105,8 +105,8 @@ public sealed class JobServiceExtensionsTests
             new { Label = "values-properties-publish" },
             properties => properties.Set("priority", 7),
             cancellation.Token);
-        SubmitJob<ApiJob> valuesPropertiesPublishCommand =
-            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(valuesPropertiesPublish.Message);
+        ISubmitJob<ApiJob> valuesPropertiesPublishCommand =
+            Assert.IsAssignableFrom<ISubmitJob<ApiJob>>(valuesPropertiesPublish.Message);
         Assert.Equal(valuesPropertiesPublishId, valuesPropertiesPublishCommand.JobId);
         Assert.Equal(7, valuesPropertiesPublishCommand.JobProperties?["priority"]);
 
@@ -249,7 +249,7 @@ public sealed class JobServiceExtensionsTests
 
         await endpoint.CancelJobAsync(jobId, reason, TestContext.Current.CancellationToken);
 
-        CancelJob command = Assert.IsAssignableFrom<CancelJob>(endpoint.Message);
+        ICancelJob command = Assert.IsAssignableFrom<ICancelJob>(endpoint.Message);
         Assert.Equal(jobId, command.JobId);
         Assert.Equal(JobCancellationReasons.CancellationRequested, command.Reason);
     }
@@ -269,13 +269,13 @@ public sealed class JobServiceExtensionsTests
             ArgumentNullException.ThrowIfNull(targetMethod);
             if (targetMethod.Name != nameof(IRequestClient<ApiJob>.GetResponseAsync)
                 || targetMethod.GetGenericArguments() is not [Type responseType]
-                || responseType != typeof(JobSubmissionAccepted))
+                || responseType != typeof(IJobSubmissionAccepted))
                 throw new NotSupportedException(targetMethod.Name);
 
             Request = args![0];
             CancellationToken = args.OfType<CancellationToken>().Single();
             var accepted = new JobSubmissionAcceptedResponse { JobId = AcceptedJobId };
-            return Task.FromResult(ResponseFactory.Create<JobSubmissionAccepted>(accepted));
+            return Task.FromResult(ResponseFactory.Create<IJobSubmissionAccepted>(accepted));
         }
     }
 }

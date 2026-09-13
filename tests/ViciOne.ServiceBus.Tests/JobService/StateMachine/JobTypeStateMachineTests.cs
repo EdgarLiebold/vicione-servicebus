@@ -142,7 +142,7 @@ public sealed class JobTypeStateMachineTests
         Assert.Equal(Now, saga.ServiceInstances[LiveInstance].LastAllocationAt);
         Assert.Equal(1, saga.ActiveAllocationCount);
         Assert.Equal(1, strategy.CallCount);
-        Assert.Equal(LiveInstance, Assert.Single(firstOutgoing.Messages.OfType<JobSlotAllocated>()).InstanceAddress);
+        Assert.Equal(LiveInstance, Assert.Single(firstOutgoing.Messages.OfType<IJobSlotAllocated>()).InstanceAddress);
 
         properties["tenant"] = "mutated";
         Assert.Equal("two", storedJobProperties["tenant"]);
@@ -157,7 +157,7 @@ public sealed class JobTypeStateMachineTests
 
         Assert.Single(saga.ActiveAllocations);
         Assert.Equal(1, strategy.CallCount);
-        Assert.Equal(LiveInstance, Assert.Single(duplicateOutgoing.Messages.OfType<JobSlotAllocated>()).InstanceAddress);
+        Assert.Equal(LiveInstance, Assert.Single(duplicateOutgoing.Messages.OfType<IJobSlotAllocated>()).InstanceAddress);
 
         var unavailableOutgoing = new OutgoingMessageRecorder();
         await RaiseAsync(machine, saga, machine.JobSlotRequested, new AllocateJobSlotCommand
@@ -170,8 +170,8 @@ public sealed class JobTypeStateMachineTests
         Assert.Single(saga.ActiveAllocations);
         Assert.Equal(1, strategy.CallCount);
         Assert.Equal(saga.ActiveAllocations[0].JobId,
-            Assert.Single(duplicateOutgoing.Messages.OfType<JobSlotAllocated>()).JobId);
-        Assert.Single(unavailableOutgoing.Messages.OfType<JobSlotUnavailable>());
+            Assert.Single(duplicateOutgoing.Messages.OfType<IJobSlotAllocated>()).JobId);
+        Assert.Single(unavailableOutgoing.Messages.OfType<IJobSlotUnavailable>());
     }
 
     [Theory]
@@ -202,7 +202,7 @@ public sealed class JobTypeStateMachineTests
         AssertState(machine, saga, machine.Idle);
         Assert.Empty(saga.ActiveAllocations);
         Assert.Equal(1, strategy.CallCount);
-        Assert.Single(outgoing.Messages.OfType<JobSlotUnavailable>());
+        Assert.Single(outgoing.Messages.OfType<IJobSlotUnavailable>());
     }
 
     [Fact]
@@ -286,7 +286,7 @@ public sealed class JobTypeStateMachineTests
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobTypeSaga, T>(consumeContext, instance);
         JobServiceOptions settings = CreateSettings();
-        sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
+        sagaContext.AddOrUpdatePayload<IJobSagaSettings>(() => settings, _ => settings);
         IBehaviorContext<JobTypeSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobTypeSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
@@ -315,7 +315,7 @@ public sealed class JobTypeStateMachineTests
         public int CallCount { get; private set; }
 
         public Task<Uri?> SelectInstanceAsync(
-            ConsumeContext<AllocateJobSlot> requestContext,
+            ConsumeContext<IAllocateJobSlot> requestContext,
             JobDistributionContext distributionContext,
             CancellationToken cancellationToken = default)
         {

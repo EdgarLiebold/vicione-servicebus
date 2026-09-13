@@ -653,3 +653,28 @@ APIs. The 19,030-line packed API contract has SHA-256
 
 The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
 remains active for the remaining complete source owners and final repository-wide audit.
+
+## Iteration 101
+
+Iteration 101 completes the JobService Greenfield interface and source-navigation normalization.
+All 45 public and internal interfaces now use the .NET `I` prefix, their filenames match their
+types, and no legacy compatibility alias remains. The independent JobService project stays beside
+Core; inside it, all 170 production files now mirror their namespaces relative to an explicit
+`ViciOne.ServiceBus` root. JobService-specific exceptions reside under `JobService/`, while only
+project infrastructure remains at the project root.
+
+Two red-first architecture rules enforce interface naming and path alignment. The complete host
+also exposed and closed an existing root-layout violation and a primary-constructor parameter gap
+in the public-documentation rule. The two new tests have two meaningful collection assertions and
+no quality smell; four of four substantive observed counterchanges are killed.
+
+The Engineering Release build passes all 77 projects with zero warnings and errors. The complete
+Unit/Architecture solution passes 6,243/6,243 without failure or skip, including 299 architecture
+tests. Fresh coverage is 75.3255% line and 68.0424% branch overall; JobService is 95.6189% line and
+89.7257% branch. Both full format gates, analyzer, JSON, whitespace, source hygiene, interface,
+folder, and empty-directory checks pass. Package validation passes 18 journeys, 31 freshly packed
+packages, three isolated provider-testing consumers, and all 30 runtime APIs. The 19,030-line
+contract SHA-256 is `f12d21461b1d4403c5ebed180f1c00d43a9a24b672745e0d3739452600091423`.
+
+The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
+continues with the remaining complete source owners and the final repository-wide audit.

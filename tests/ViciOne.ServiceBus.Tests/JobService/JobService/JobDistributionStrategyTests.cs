@@ -15,7 +15,7 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "least-loaded-eligible-instance-is-selected")]
     public async Task SelectInstance_SelectsTheLeastLoadedEligibleInstanceAsync()
     {
-        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        ConsumeContext<IAllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
             concurrentJobLimit: 2,
             new Dictionary<Uri, JobServiceInstanceState>
@@ -37,7 +37,7 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "least-recently-used-breaks-equal-load")]
     public async Task SelectInstance_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatchAsync()
     {
-        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        ConsumeContext<IAllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
             concurrentJobLimit: 1,
             new Dictionary<Uri, JobServiceInstanceState>
@@ -58,7 +58,7 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "fully-allocated-instances-are-ineligible")]
     public async Task SelectInstance_ReturnsNullWhenEveryInstanceIsAtItsLimitAsync()
     {
-        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        ConsumeContext<IAllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
             concurrentJobLimit: 1,
             new Dictionary<Uri, JobServiceInstanceState>
@@ -81,7 +81,7 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "required-inputs-and-cancellation-are-honored")]
     public async Task SelectInstance_RejectsMissingInputsAndCancellationAsync()
     {
-        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        ConsumeContext<IAllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
             concurrentJobLimit: 1,
             new Dictionary<Uri, JobServiceInstanceState>());
@@ -108,7 +108,7 @@ public sealed class JobDistributionStrategyTests
         Assert.Equal(canceled.Token, exception.CancellationToken);
     }
 
-    private static ConsumeContext<AllocateJobSlot> CreateRequestContext(Guid jobId)
+    private static ConsumeContext<IAllocateJobSlot> CreateRequestContext(Guid jobId)
     {
         TestConsumeContext context = DispatchProxy.Create<TestConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Message = new AllocateJobSlotMessage(jobId);
@@ -129,11 +129,11 @@ public sealed class JobDistributionStrategyTests
         });
     }
 
-    private interface TestConsumeContext : ConsumeContext<AllocateJobSlot>, ConsumeContext;
+    private interface TestConsumeContext : ConsumeContext<IAllocateJobSlot>, ConsumeContext;
 
     private class ConsumeContextProxy : DispatchProxy
     {
-        public AllocateJobSlot Message { get; set; } = null!;
+        public IAllocateJobSlot Message { get; set; } = null!;
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
             targetMethod?.Name switch
@@ -143,7 +143,7 @@ public sealed class JobDistributionStrategyTests
             };
     }
 
-    private sealed record AllocateJobSlotMessage(Guid JobId) : AllocateJobSlot
+    private sealed record AllocateJobSlotMessage(Guid JobId) : IAllocateJobSlot
     {
         public Guid JobTypeId { get; init; }
         public TimeSpan JobTimeout { get; init; }

@@ -33,8 +33,8 @@ public sealed class AzureTableJobServiceIntegrationTests
         Guid jobId = NewId.NextGuid();
 
         Guid acceptedJobId = await fixture.SubmitAsync(jobId, new PersistentJob("timed"));
-        JobStarted started = await fixture.PublishedAsync<JobStarted>(jobId, message => message.JobId);
-        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(jobId, message => message.JobId);
+        IJobStarted started = await fixture.PublishedAsync<IJobStarted>(jobId, message => message.JobId);
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(jobId, message => message.JobId);
         JobSaga persisted = await fixture.ReadJobAsync(jobId);
 
         Assert.Equal(jobId, acceptedJobId);
@@ -55,9 +55,9 @@ public sealed class AzureTableJobServiceIntegrationTests
         Guid jobId = NewId.NextGuid();
 
         Guid acceptedJobId = await fixture.SubmitAsync(jobId, new PersistentJob("complete"));
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(jobId, message => message.JobId);
-        JobStarted started = await fixture.PublishedAsync<JobStarted>(jobId, message => message.JobId);
-        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(jobId, message => message.JobId);
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(jobId, message => message.JobId);
+        IJobStarted started = await fixture.PublishedAsync<IJobStarted>(jobId, message => message.JobId);
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(jobId, message => message.JobId);
         JobExecutionSnapshot execution = await consumer.Completed
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobSaga persisted = await fixture.ReadJobAsync(jobId);
@@ -92,9 +92,9 @@ public sealed class AzureTableJobServiceIntegrationTests
         await fixture.Harness.Bus.CancelJobAsync(jobId, "operator-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         bool cancellationObserved = await consumer.CancellationObserved
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(jobId, message => message.JobId);
-        JobStarted started = await fixture.PublishedAsync<JobStarted>(jobId, message => message.JobId);
-        JobCanceled canceled = await fixture.PublishedAsync<JobCanceled>(jobId, message => message.JobId);
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(jobId, message => message.JobId);
+        IJobStarted started = await fixture.PublishedAsync<IJobStarted>(jobId, message => message.JobId);
+        IJobCanceled canceled = await fixture.PublishedAsync<IJobCanceled>(jobId, message => message.JobId);
         JobSaga persisted = await fixture.ReadJobAsync(jobId);
 
         Assert.Equal(jobId, acceptedJobId);
@@ -123,9 +123,9 @@ public sealed class AzureTableJobServiceIntegrationTests
         Guid acceptedJobId = await fixture.SubmitAsync(jobId, new PersistentJob("fault"));
         JobExecutionSnapshot execution = await consumer.Attempted
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(jobId, message => message.JobId);
-        JobStarted started = await fixture.PublishedAsync<JobStarted>(jobId, message => message.JobId);
-        JobFaulted faulted = await fixture.PublishedAsync<JobFaulted>(jobId, message => message.JobId);
+        IJobSubmitted submitted = await fixture.PublishedAsync<IJobSubmitted>(jobId, message => message.JobId);
+        IJobStarted started = await fixture.PublishedAsync<IJobStarted>(jobId, message => message.JobId);
+        IJobFaulted faulted = await fixture.PublishedAsync<IJobFaulted>(jobId, message => message.JobId);
         JobSaga persisted = await fixture.ReadJobAsync(jobId);
 
         Assert.Equal(jobId, acceptedJobId);
@@ -151,7 +151,7 @@ public sealed class AzureTableJobServiceIntegrationTests
 
         public Task<JobExecutionSnapshot> Completed => _completed.Task;
 
-        public Task RunAsync(JobContext<PersistentJob> context)
+        public Task RunAsync(IJobContext<PersistentJob> context)
         {
             _completed.TrySetResult(Snapshot(context));
             return Task.CompletedTask;
@@ -160,7 +160,7 @@ public sealed class AzureTableJobServiceIntegrationTests
 
     private sealed class TimedJobConsumer(FakeTimeProvider timeProvider, TimeSpan executionTime) : IJobConsumer<PersistentJob>
     {
-        public Task RunAsync(JobContext<PersistentJob> context)
+        public Task RunAsync(IJobContext<PersistentJob> context)
         {
             timeProvider.Advance(executionTime);
             return Task.CompletedTask;
@@ -178,7 +178,7 @@ public sealed class AzureTableJobServiceIntegrationTests
         public Task<bool> CancellationObserved => _cancellationObserved.Task;
         public Task<JobExecutionSnapshot> Started => _started.Task;
 
-        public async Task RunAsync(JobContext<PersistentJob> context)
+        public async Task RunAsync(IJobContext<PersistentJob> context)
         {
             _started.TrySetResult(Snapshot(context));
             try
@@ -199,7 +199,7 @@ public sealed class AzureTableJobServiceIntegrationTests
 
         public Task<JobExecutionSnapshot> Attempted => _attempted.Task;
 
-        public Task RunAsync(JobContext<PersistentJob> context)
+        public Task RunAsync(IJobContext<PersistentJob> context)
         {
             _attempted.TrySetResult(Snapshot(context));
             return Task.FromException(new ExpectedJobFailure());
@@ -217,7 +217,7 @@ public sealed class AzureTableJobServiceIntegrationTests
 
     private sealed record JobExecutionSnapshot(Guid JobId, Guid AttemptId, int RetryAttempt, string Label);
 
-    private static JobExecutionSnapshot Snapshot(JobContext<PersistentJob> context) =>
+    private static JobExecutionSnapshot Snapshot(IJobContext<PersistentJob> context) =>
         new(context.JobId, context.AttemptId, context.RetryAttempt, context.Job.Label);
 
     private sealed class JobServiceFixture<TConsumer> : IAsyncDisposable
@@ -292,7 +292,7 @@ public sealed class AzureTableJobServiceIntegrationTests
 
         public Task<Guid> SubmitAsync(Guid jobId, PersistentJob job)
         {
-            IRequestClient<SubmitJob<PersistentJob>> client = Harness.CreateRequestClient<SubmitJob<PersistentJob>>();
+            IRequestClient<ISubmitJob<PersistentJob>> client = Harness.CreateRequestClient<ISubmitJob<PersistentJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }

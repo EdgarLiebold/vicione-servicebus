@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.JobService;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Attaches job-consumer discovery to each configured service-instance endpoint.</summary>
-internal sealed class JobServiceEndpointConfigurationObserver :
+/// <param name="settings">The owning job-service settings.</param>
+/// <param name="configureEndpoint">The callback that adds job coordination dependencies to an endpoint.</param>
+internal sealed class JobServiceEndpointConfigurationObserver(
+    IJobServiceSettings settings,
+    Action<IReceiveEndpointConfigurator> configureEndpoint) :
     IEndpointConfigurationObserver
 {
-    readonly Action<IReceiveEndpointConfigurator> _configureEndpoint;
-    readonly JobServiceSettings _settings;
-
-    /// <summary>Creates an observer for consumer endpoints owned by one job-service instance.</summary>
-    /// <param name="settings">The owning job-service settings.</param>
-    /// <param name="configureEndpoint">The callback that adds job coordination dependencies to an endpoint.</param>
-    public JobServiceEndpointConfigurationObserver(JobServiceSettings settings, Action<IReceiveEndpointConfigurator> configureEndpoint)
-    {
-        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-        _configureEndpoint = configureEndpoint ?? throw new ArgumentNullException(nameof(configureEndpoint));
-    }
+    readonly Action<IReceiveEndpointConfigurator> _configureEndpoint =
+        configureEndpoint ?? throw new ArgumentNullException(nameof(configureEndpoint));
+    readonly IJobServiceSettings _settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
     /// <summary>Connects job-consumer discovery after a receive endpoint has been configured.</summary>
     /// <typeparam name="TConfigurator">The concrete receive-endpoint configurator type.</typeparam>

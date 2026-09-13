@@ -44,7 +44,7 @@ public sealed class JobProgressBufferTests
             Assert.False(notifications.Progress.IsCompleted);
 
             timeProvider.Advance(TimeSpan.FromTicks(1));
-            SetJobProgress actual = await notifications.Progress
+            ISetJobProgress actual = await notifications.Progress
                 .WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
 
             Assert.Equal(jobId, actual.JobId);
@@ -124,7 +124,7 @@ public sealed class JobProgressBufferTests
     private sealed class RecordingJobContext : INotifyJobContext
     {
         private readonly Exception? _failure;
-        private readonly TaskCompletionSource<SetJobProgress> _progress =
+        private readonly TaskCompletionSource<ISetJobProgress> _progress =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public RecordingJobContext(Exception? failure = null)
@@ -132,13 +132,13 @@ public sealed class JobProgressBufferTests
             _failure = failure;
         }
 
-        public Task<SetJobProgress> Progress => _progress.Task;
+        public Task<ISetJobProgress> Progress => _progress.Task;
 
         public Task NotifyCanceledAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyStartedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyCompletedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyFaultedAsync(Exception exception, TimeSpan? delay = null, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
-        public Task NotifyProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
+        public Task NotifyProgressAsync(ISetJobProgress progress, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled(cancellationToken);

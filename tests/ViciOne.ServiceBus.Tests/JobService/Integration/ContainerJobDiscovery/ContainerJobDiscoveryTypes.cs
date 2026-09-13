@@ -16,7 +16,7 @@ public sealed class JobObservation
 
 public sealed class CrunchNumbersConsumer(JobObservation observation) : IJobConsumer<CrunchNumbers>
 {
-    public Task RunAsync(JobContext<CrunchNumbers> context)
+    public Task RunAsync(IJobContext<CrunchNumbers> context)
     {
         observation.Executed.TrySetResult(new JobSnapshot(
             context.Job.CorrelationId,

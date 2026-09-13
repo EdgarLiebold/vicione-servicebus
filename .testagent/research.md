@@ -1199,3 +1199,72 @@ and topology call sites. Fresh coverage reports 75.3393% line and 68.0696% branc
 90.4990% line and 85.4839% branch for Futures. The final package gate passes all 18 journeys, 31
 packages, three isolated provider-testing consumers, and 30 runtime APIs. The 19,030-line contract
 hash is `a96d93cc091d97174baceb59fe5230228734c2b98a676431521e70a329cce9fa`.
+
+## Iteration 101 JobService API and navigation research
+
+The pre-change JobService analyzer reports 210 informational findings: 122 namespace/path
+mismatches, 45 unprefixed interface names, 14 primary-constructor suggestions, and 29 smaller
+expression/style suggestions. There are no warning or error diagnostics. The missing explicit root
+namespace causes Roslyn to infer `ViciOne.ServiceBus.JobService`, although the project intentionally
+publishes contracts in nine namespace branches rooted at `ViciOne.ServiceBus`.
+
+The 45 naming findings are 40 public message/execution interfaces and five internal runtime or
+configuration interfaces. All 41 affected files, 971 physical lines, signatures, attributes,
+inheritance relationships, and comments were reread before editing. They describe current behavior
+accurately. Because each declaration is a C# interface, message-contract vocabulary does not justify
+an exception to the .NET `I` prefix rule. The project is Greenfield and has no legacy compatibility
+obligation, so aliases would only perpetuate the ambiguity.
+
+The package remains correctly placed at `src/ViciOne.ServiceBus.JobService`: it is an independent
+first-party capability assembly, whereas `src/ViciOne.ServiceBus` owns Core. Namespace-relative
+folders inside the project are a separate concern and can be aligned without changing assembly,
+package, public namespace, or feature ownership.
+
+All 170 JobService production files now follow that ownership model. Their paths mirror nine
+namespace branches relative to `ViciOne.ServiceBus`; the two JobService-specific exceptions belong
+under `JobService/`, and the project root contains only `GlobalUsings.cs` plus project
+infrastructure. Thirteen obsolete empty directories were removed. Static configuration and
+background-work ownership evidence now names the current paths. Every renamed declaration and all
+comments in the 41 affected interface files were reread manually; the source and comments were not
+generated.
+
+All 45 declarations and their consumers now use the `I` prefix without compatibility aliases.
+Symbol-aware rename support was limited to references after manual classification and was disabled
+for comments and string literals. Generic arity, variance, inheritance, attributes, correlation,
+message initialization, state transitions, serialization, and consumer behavior remain intact.
+Fourteen primary constructors and 29 expression-level cleanups were then assessed and applied
+manually. The final JobService info-severity analyzer report is empty. Cancellation propagation was
+also corrected for `_jobCompletions.CompletedAsync(cancellationToken)`.
+
+Both new architecture rules were proved red first: one reported all 45 old interface declarations,
+and the other reported the former namespace/path divergence. The full architecture host then found
+two useful adjacent defects: the two root exceptions violated the stronger existing root policy,
+and the documentation rule did not yet understand class and struct primary-constructor parameters.
+Both were corrected and the final architecture host passes 299/299.
+
+The two new tests contain two meaningful collection assertions. Neither is assertion-free,
+trivial, self-referential, skipped, fixed-delay based, or dependent on mutable shared fixtures; a
+single assertion category is appropriate for these repository-wide invariants. Four substantive
+observed counterchanges were killed: the 45 old interface identities, the old namespace/path
+layout, JobService exceptions at the project root, and undocumented primary-constructor parameters.
+Equivalent expression and primary-constructor rewrites were not counted as mutations.
+
+Fresh coverage passes 3,278/3,278 and records 75.3255% line and 68.0424% branch overall.
+`ViciOne.ServiceBus.JobService` records 95.6189% line and 89.7257% branch with complexity 2,384. The
+artifact is `/private/tmp/vsb-iteration101-jobservice-final.cobertura.xml`, SHA-256
+`13c11b36fd86a504a27f5db3f25d6c1e5e91bfe9b50d47df7648e4e476d99f7e`.
+
+The final serial Unit/Architecture solution passes 6,243/6,243 with no failure or skip. The
+Engineering Release build passes all 77 projects with zero warnings and errors, and both complete
+format gates pass. Fresh package verification passes 18 journeys, 31 packages, three isolated
+provider-testing consumers, and 30 runtime APIs. The 19,030-line packed contract has SHA-256
+`f12d21461b1d4403c5ebed180f1c00d43a9a24b672745e0d3739452600091423`.
+
+Build diagnosis was kept reproducible. The first targeted parallel MSBuild invocation ran for more
+than five minutes and returned exit code 1 despite reporting zero warnings and errors. Process
+inspection showed active build nodes rather than a compile diagnostic. Using an isolated CLI home,
+`MSBUILDDISABLENODEREUSE=1`, serial `-m:1`, and `--no-dependencies` for the target project produced
+the real result in about four seconds. Complete solution builds remain serial but intentionally do
+not use `--no-incremental`, as required by this repository. MTP tests and Roslyn format verification
+run outside the filesystem sandbox because their named-pipe servers otherwise fail with
+`SocketException (13): Permission denied`.

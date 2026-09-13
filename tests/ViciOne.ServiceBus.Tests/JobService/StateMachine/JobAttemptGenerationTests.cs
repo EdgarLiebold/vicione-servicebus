@@ -244,7 +244,7 @@ public sealed class JobAttemptGenerationTests
     {
         Guid staleAttemptId = NewId.NextGuid();
 
-        yield return (StaleAttemptEvent.Started, (JobAttemptStarted)new JobAttemptStartedEvent
+        yield return (StaleAttemptEvent.Started, (IJobAttemptStarted)new JobAttemptStartedEvent
         {
             JobId = saga.CorrelationId,
             AttemptId = staleAttemptId,
@@ -252,7 +252,7 @@ public sealed class JobAttemptGenerationTests
             Timestamp = new DateTime(2026, 8, 15, 7, 0, 0, DateTimeKind.Utc),
             InstanceAddress = new Uri("loopback://localhost/old-instance"),
         });
-        yield return (StaleAttemptEvent.Completed, (JobAttemptCompleted)new JobAttemptCompletedEvent
+        yield return (StaleAttemptEvent.Completed, (IJobAttemptCompleted)new JobAttemptCompletedEvent
         {
             JobId = saga.CorrelationId,
             AttemptId = staleAttemptId,
@@ -260,14 +260,14 @@ public sealed class JobAttemptGenerationTests
             Timestamp = new DateTime(2026, 8, 15, 7, 1, 0, DateTimeKind.Utc),
             Duration = TimeSpan.FromMinutes(1),
         });
-        yield return (StaleAttemptEvent.Faulted, (JobAttemptFaulted)new JobAttemptFaultedEvent
+        yield return (StaleAttemptEvent.Faulted, (IJobAttemptFaulted)new JobAttemptFaultedEvent
         {
             JobId = saga.CorrelationId,
             AttemptId = staleAttemptId,
             RetryAttempt = 0,
             Timestamp = new DateTime(2026, 8, 15, 7, 1, 0, DateTimeKind.Utc),
         });
-        yield return (StaleAttemptEvent.Canceled, (JobAttemptCanceled)new JobAttemptCanceledEvent
+        yield return (StaleAttemptEvent.Canceled, (IJobAttemptCanceled)new JobAttemptCanceledEvent
         {
             JobId = saga.CorrelationId,
             AttemptId = staleAttemptId,
@@ -275,7 +275,7 @@ public sealed class JobAttemptGenerationTests
             Reason = "late cancellation from the previous attempt",
         });
 
-        StartJobAttempt command = new StartJobAttemptCommand
+        IStartJobAttempt command = new StartJobAttemptCommand
         {
             JobId = saga.CorrelationId,
             AttemptId = staleAttemptId,
@@ -285,7 +285,7 @@ public sealed class JobAttemptGenerationTests
             Job = saga.Job,
             JobTypeId = saga.JobTypeId,
         };
-        yield return (StaleAttemptEvent.StartFaulted, (Fault<StartJobAttempt>)new FaultEvent<StartJobAttempt>
+        yield return (StaleAttemptEvent.StartFaulted, (Fault<IStartJobAttempt>)new FaultEvent<IStartJobAttempt>
         {
             FaultId = NewId.NextGuid(),
             Timestamp = new DateTime(2026, 8, 15, 7, 1, 0, DateTimeKind.Utc),
@@ -297,11 +297,11 @@ public sealed class JobAttemptGenerationTests
     private static Task RaiseAsync(JobStateMachine machine, JobSaga saga, StaleAttemptEvent kind, object message) =>
         kind switch
         {
-            StaleAttemptEvent.Started => RaiseAsync(machine, saga, machine.AttemptStarted, (JobAttemptStarted)message),
-            StaleAttemptEvent.Completed => RaiseAsync(machine, saga, machine.AttemptCompleted, (JobAttemptCompleted)message),
-            StaleAttemptEvent.Faulted => RaiseAsync(machine, saga, machine.AttemptFaulted, (JobAttemptFaulted)message),
-            StaleAttemptEvent.Canceled => RaiseAsync(machine, saga, machine.AttemptCanceled, (JobAttemptCanceled)message),
-            StaleAttemptEvent.StartFaulted => RaiseAsync(machine, saga, machine.StartJobAttemptFaulted, (Fault<StartJobAttempt>)message),
+            StaleAttemptEvent.Started => RaiseAsync(machine, saga, machine.AttemptStarted, (IJobAttemptStarted)message),
+            StaleAttemptEvent.Completed => RaiseAsync(machine, saga, machine.AttemptCompleted, (IJobAttemptCompleted)message),
+            StaleAttemptEvent.Faulted => RaiseAsync(machine, saga, machine.AttemptFaulted, (IJobAttemptFaulted)message),
+            StaleAttemptEvent.Canceled => RaiseAsync(machine, saga, machine.AttemptCanceled, (IJobAttemptCanceled)message),
+            StaleAttemptEvent.StartFaulted => RaiseAsync(machine, saga, machine.StartJobAttemptFaulted, (Fault<IStartJobAttempt>)message),
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
         };
 
@@ -314,7 +314,7 @@ public sealed class JobAttemptGenerationTests
         OutgoingMessageRecorder outgoingMessages) =>
         terminalEvent switch
         {
-            TerminalAttemptEvent.Completed => RaiseAsync(machine, saga, machine.AttemptCompleted, (JobAttemptCompleted)new JobAttemptCompletedEvent
+            TerminalAttemptEvent.Completed => RaiseAsync(machine, saga, machine.AttemptCompleted, (IJobAttemptCompleted)new JobAttemptCompletedEvent
             {
                 JobId = saga.CorrelationId,
                 AttemptId = saga.AttemptId,
@@ -324,7 +324,7 @@ public sealed class JobAttemptGenerationTests
                 CheckpointChanged = checkpointChanged,
                 Checkpoint = checkpoint,
             }, outgoingMessages),
-            TerminalAttemptEvent.Faulted => RaiseAsync(machine, saga, machine.AttemptFaulted, (JobAttemptFaulted)new JobAttemptFaultedEvent
+            TerminalAttemptEvent.Faulted => RaiseAsync(machine, saga, machine.AttemptFaulted, (IJobAttemptFaulted)new JobAttemptFaultedEvent
             {
                 JobId = saga.CorrelationId,
                 AttemptId = saga.AttemptId,
@@ -334,7 +334,7 @@ public sealed class JobAttemptGenerationTests
                 CheckpointChanged = checkpointChanged,
                 Checkpoint = checkpoint,
             }, outgoingMessages),
-            TerminalAttemptEvent.Canceled => RaiseAsync(machine, saga, machine.AttemptCanceled, (JobAttemptCanceled)new JobAttemptCanceledEvent
+            TerminalAttemptEvent.Canceled => RaiseAsync(machine, saga, machine.AttemptCanceled, (IJobAttemptCanceled)new JobAttemptCanceledEvent
             {
                 JobId = saga.CorrelationId,
                 AttemptId = saga.AttemptId,
@@ -368,7 +368,7 @@ public sealed class JobAttemptGenerationTests
                 JobSagaEndpointAddress = new Uri("loopback://localhost/job-saga"),
                 JobTypeSagaEndpointAddress = new Uri("loopback://localhost/job-type-saga"),
             };
-            sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
+            sagaContext.AddOrUpdatePayload<IJobSagaSettings>(() => settings, _ => settings);
         }
         IBehaviorContext<JobSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);

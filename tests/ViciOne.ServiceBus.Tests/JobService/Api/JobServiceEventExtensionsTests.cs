@@ -14,11 +14,11 @@ public sealed class JobServiceEventExtensionsTests
         var expected = new EventJob("invoice-42");
         var payload = new Dictionary<string, object> { ["value"] = expected.Value };
 
-        Assert.Same(expected, CreateContext<StartJob>(payload, expected).GetJob<EventJob>());
-        Assert.Same(expected, CreateContext<FaultJob>(payload, expected).GetJob<EventJob>());
-        Assert.Same(expected, CreateContext<CompleteJob>(payload, expected).GetJob<EventJob>());
-        Assert.Same(expected, CreateContext<JobCompleted>(payload, expected).GetJob<EventJob>());
-        Assert.Same(expected, CreateContext<JobFaulted>(payload, expected).GetJob<EventJob>());
+        Assert.Same(expected, CreateContext<IStartJob>(payload, expected).GetJob<EventJob>());
+        Assert.Same(expected, CreateContext<IFaultJob>(payload, expected).GetJob<EventJob>());
+        Assert.Same(expected, CreateContext<ICompleteJob>(payload, expected).GetJob<EventJob>());
+        Assert.Same(expected, CreateContext<IJobCompleted>(payload, expected).GetJob<EventJob>());
+        Assert.Same(expected, CreateContext<IJobFaulted>(payload, expected).GetJob<EventJob>());
     }
 
     [Fact]
@@ -26,15 +26,15 @@ public sealed class JobServiceEventExtensionsTests
     public void GetJob_RejectsMissingLifecycleEventContexts()
     {
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
-            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<StartJob>)null!)).ParamName);
+            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<IStartJob>)null!)).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
-            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<FaultJob>)null!)).ParamName);
+            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<IFaultJob>)null!)).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
-            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<CompleteJob>)null!)).ParamName);
+            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<ICompleteJob>)null!)).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
-            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<JobCompleted>)null!)).ParamName);
+            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<IJobCompleted>)null!)).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
-            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<JobFaulted>)null!)).ParamName);
+            JobServiceEventExtensions.GetJob<EventJob>((ConsumeContext<IJobFaulted>)null!)).ParamName);
     }
 
     private static ConsumeContext<TContract> CreateContext<TContract>(

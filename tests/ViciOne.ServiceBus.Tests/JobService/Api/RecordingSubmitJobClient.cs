@@ -3,21 +3,21 @@ using ViciOne.ServiceBus.JobService.Messages;
 
 namespace ViciOne.ServiceBus.Tests.JobService.Api;
 
-internal sealed class RecordingSubmitJobClient<TJob> : IRequestClient<SubmitJob<TJob>>
+internal sealed class RecordingSubmitJobClient<TJob> : IRequestClient<ISubmitJob<TJob>>
     where TJob : class
 {
-    public SubmitJob<TJob>? Request { get; private set; }
+    public ISubmitJob<TJob>? Request { get; private set; }
     public CancellationToken CancellationToken { get; private set; }
 
     public Task<Response<TResponse>> GetResponseAsync<TResponse>(
-        SubmitJob<TJob> request,
+        ISubmitJob<TJob> request,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
         Request = request;
         CancellationToken = cancellationToken;
 
-        if (typeof(TResponse) != typeof(JobSubmissionAccepted))
+        if (typeof(TResponse) != typeof(IJobSubmissionAccepted))
             throw new NotSupportedException($"Response type '{typeof(TResponse)}' is not supported by this test client.");
 
         var accepted = new JobSubmissionAcceptedResponse { JobId = request.JobId };
@@ -25,7 +25,7 @@ internal sealed class RecordingSubmitJobClient<TJob> : IRequestClient<SubmitJob<
     }
 
     public Task<Response<TResponse>> GetResponseAsync<TResponse>(
-        SubmitJob<TJob> request,
+        ISubmitJob<TJob> request,
         RequestOptions options,
         CancellationToken cancellationToken = default)
         where TResponse : class

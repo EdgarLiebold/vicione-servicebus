@@ -25,7 +25,7 @@ public sealed class ConsumeJobContextCancellationTests
     {
         var endpoint = new RecordingSendEndpoint();
         var provider = new RecordingPublishEndpointProvider(endpoint);
-        ConsumeContext<StartJob> consumeContext = CreateContext(provider);
+        ConsumeContext<IStartJob> consumeContext = CreateContext(provider);
         await using var context = new ConsumeJobContext<TestJob>(
             consumeContext,
             new Uri("loopback://localhost/job-instance"),
@@ -64,7 +64,7 @@ public sealed class ConsumeJobContextCancellationTests
     public async Task ReportProgress_ObservesAnAlreadyCanceledOperationTokenAsync()
     {
         var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
-        ConsumeContext<StartJob> consumeContext = CreateContext(provider);
+        ConsumeContext<IStartJob> consumeContext = CreateContext(provider);
         var options = new JobOptions<TestJob>();
         options.ProgressBuffer.UpdateLimit = 1;
         await using var context = new ConsumeJobContext<TestJob>(
@@ -87,7 +87,7 @@ public sealed class ConsumeJobContextCancellationTests
     {
         var clock = new FakeTimeProvider();
         var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
-        ConsumeContext<StartJob> consumeContext = CreateContext(provider, clock);
+        ConsumeContext<IStartJob> consumeContext = CreateContext(provider, clock);
         await using var context = new ConsumeJobContext<TestJob>(
             consumeContext,
             new Uri("loopback://localhost/job-instance"),
@@ -113,7 +113,7 @@ public sealed class ConsumeJobContextCancellationTests
     {
         var clock = new FakeTimeProvider();
         var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
-        ConsumeContext<StartJob> consumeContext = CreateContext(provider, clock);
+        ConsumeContext<IStartJob> consumeContext = CreateContext(provider, clock);
         await using var context = new ConsumeJobContext<TestJob>(
             consumeContext,
             new Uri("loopback://localhost/job-instance"),
@@ -140,7 +140,7 @@ public sealed class ConsumeJobContextCancellationTests
         var clock = new FakeTimeProvider();
         var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
         var message = new StartJobMessage();
-        ConsumeContext<StartJob> consumeContext = CreateContext(provider, clock, message);
+        ConsumeContext<IStartJob> consumeContext = CreateContext(provider, clock, message);
         var options = new JobOptions<TestJob>
         {
             JobCancellationTimeout = TimeSpan.FromMinutes(1),
@@ -160,7 +160,7 @@ public sealed class ConsumeJobContextCancellationTests
             pipe,
             options,
             TestContext.Current.CancellationToken);
-        Assert.True(service.TryGetJob(message.JobId, out JobHandle? handle));
+        Assert.True(service.TryGetJob(message.JobId, out IJobHandle? handle));
         Assert.NotNull(handle);
 
         Task cancellation = handle.CancelAsync("shutdown", TestContext.Current.CancellationToken);
@@ -177,7 +177,7 @@ public sealed class ConsumeJobContextCancellationTests
     public async Task Constructor_AcceptsAStartCommandWithoutJobPropertiesAsync()
     {
         var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
-        ConsumeContext<StartJob> consumeContext = CreateContext(
+        ConsumeContext<IStartJob> consumeContext = CreateContext(
             provider,
             message: new StartJobMessage { JobProperties = null });
 
@@ -251,7 +251,7 @@ public sealed class ConsumeJobContextCancellationTests
             await context.DisposeAsync();
         }
 
-        SetJobProgress[] progress = endpoint.Messages.OfType<SetJobProgress>().ToArray();
+        ISetJobProgress[] progress = endpoint.Messages.OfType<ISetJobProgress>().ToArray();
         Assert.Equal(UpdateCount, progress.Length);
         Assert.Equal(
             Enumerable.Range(1, UpdateCount).Select(static value => (long)value),
@@ -276,7 +276,7 @@ public sealed class ConsumeJobContextCancellationTests
 
         await context.NotifyStartedAsync(TestContext.Current.CancellationToken);
 
-        JobStarted<TestJob> started = Assert.IsAssignableFrom<JobStarted<TestJob>>(endpoint.Messages[^1]);
+        IJobStarted<TestJob> started = Assert.IsAssignableFrom<IJobStarted<TestJob>>(endpoint.Messages[^1]);
         Assert.Same(job, started.Job);
         Assert.Equal(context.JobId, started.JobId);
         Assert.Equal(context.AttemptId, started.AttemptId);
@@ -303,12 +303,12 @@ public sealed class ConsumeJobContextCancellationTests
                 context.NotifyFaultedAsync(null!, null, TestContext.Current.CancellationToken))).ParamName);
     }
 
-    private static ConsumeContext<StartJob> CreateContext(
+    private static ConsumeContext<IStartJob> CreateContext(
         IPublishEndpointProvider publishEndpointProvider,
         TimeProvider? timeProvider = null,
-        StartJob? message = null)
+        IStartJob? message = null)
     {
-        TestConsumeContext<StartJob> context = DispatchProxy.Create<TestConsumeContext<StartJob>, ConsumeContextProxy>();
+        TestConsumeContext<IStartJob> context = DispatchProxy.Create<TestConsumeContext<IStartJob>, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Configure(message ?? new StartJobMessage(), publishEndpointProvider, timeProvider);
         return context;
     }
@@ -421,7 +421,7 @@ public sealed class ConsumeJobContextCancellationTests
             throw new NotSupportedException();
     }
 
-    private sealed class StartJobMessage : StartJob
+    private sealed class StartJobMessage : IStartJob
     {
         public Guid JobId { get; } = Guid.NewGuid();
         public Guid AttemptId { get; } = Guid.NewGuid();
@@ -436,7 +436,7 @@ public sealed class ConsumeJobContextCancellationTests
 
     private sealed record TestJob;
 
-    private sealed class StubJobServiceSettings(TimeProvider timeProvider) : JobServiceSettings
+    private sealed class StubJobServiceSettings(TimeProvider timeProvider) : IJobServiceSettings
     {
         public IJobService Runtime => throw new NotSupportedException("The test drives the job service directly.");
         public TimeSpan HeartbeatInterval => TimeSpan.FromDays(1);

@@ -2452,6 +2452,54 @@ whitespace gates pass. The 19,030-line packed contract has SHA-256
 The overall A+ goal remains active for the remaining complete source owners and the final
 repository-wide completion audit.
 
+## Iteration 101 JobService API and navigation plan
+
+Iteration 101 starts from remotely verified commit
+`32d689afab6f560723ffacba9e6c041a3b6d6120` and annotated tag
+`servicebus-a-plus-remediation-iteration-100-2026-09-13`. The complete 170-file JobService owner was
+manually read and behaviorally remediated in Iteration 93. This coherent follow-up rereads all 45
+remaining unprefixed interface declarations, their comments, complete consumer closure, filenames,
+and the project's namespace/path model.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Apply one .NET interface convention | all public and internal JobService interfaces begin with `I` followed by an uppercase letter |
+| Preserve every JobService feature | generic arity, variance, inheritance, attributes, members, message initialization, correlation, state-machine behavior, and serializers remain equivalent |
+| Preserve consumer usability | all source, tests, samples, benchmarks, reflection identities, messages, package journeys, and packed API references use the new identities |
+| Align source navigation | keep JobService as an independent sibling project; map its source folders to existing namespaces relative to an explicit `ViciOne.ServiceBus` root namespace |
+| Keep comments accurate | reread and manually correct every affected declaration and reference comment; do not generate documentation |
+| Reject regressions | red-first interface and namespace/folder rules, focused builds/tests, isolated counterchanges, full build/test/coverage/format/package and hygiene gates |
+
+Semantic rename tooling may update symbol references only after each declaration has been manually
+classified. It must not generate behavior or documentation, and every resulting declaration,
+filename, public contract, comment reference, and consumer diff will be inspected. No compatibility
+alias is retained in the permanent Greenfield fork.
+
+### Iteration 101 completion
+
+The complete JobService owner remains an independent sibling capability project, while all 170
+production files now mirror their declared namespaces beneath the explicit `ViciOne.ServiceBus`
+root namespace. All 45 JobService interfaces use the .NET `I` prefix, their filenames match their
+types, and no legacy alias remains. The two JobService-specific exceptions moved from the project
+root into the `ViciOne.ServiceBus.JobService` namespace; the root now contains infrastructure only.
+
+Two red-first architecture requirements protect interface naming and namespace-relative folder
+navigation. Existing root-layout and public-documentation rules exposed and closed two secondary
+gaps during the full-host run. The assertion audit finds two meaningful collection assertions and
+no empty, trivial, self-referential, skipped, or timing-dependent test. Four substantive observed
+counterchanges were killed; semantic-only style transformations required no artificial mutation.
+
+The final Engineering build passes all 77 projects with zero warnings and errors. The complete
+Unit/Architecture solution passes 6,243/6,243 with no failures or skips, including 299 architecture
+cases. Both full format gates, JSON, whitespace, source-hygiene, API-identity, and directory checks
+pass. Fresh coverage is 75.3255% line and 68.0424% branch overall; JobService is 95.6189% line and
+89.7257% branch. Package validation passes 18 journeys, 31 fresh packages, three isolated provider
+testing consumers, and all 30 runtime APIs. The 19,030-line contract has SHA-256
+`f12d21461b1d4403c5ebed180f1c00d43a9a24b672745e0d3739452600091423`.
+
+The overall A+ goal remains active for the remaining complete source owners and the final
+repository-wide completion audit.
+
 ## Iteration 100 Futures interface contract plan
 
 Iteration 100 starts from remotely verified commit

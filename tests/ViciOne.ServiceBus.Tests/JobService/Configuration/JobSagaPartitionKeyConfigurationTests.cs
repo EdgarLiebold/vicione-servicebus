@@ -24,39 +24,39 @@ public sealed class JobSagaPartitionKeyConfigurationTests
 
         bus.UseJobSagaPartitionKeyFormatters();
 
-        await AssertPartitionKeyAsync<AllocateJobSlot>(sendTopology, JobTypeId);
-        await AssertPartitionKeyAsync<JobSlotReleased>(sendTopology, JobTypeId);
-        await AssertPartitionKeyAsync<SetConcurrentJobLimit>(sendTopology, JobTypeId);
+        await AssertPartitionKeyAsync<IAllocateJobSlot>(sendTopology, JobTypeId);
+        await AssertPartitionKeyAsync<IJobSlotReleased>(sendTopology, JobTypeId);
+        await AssertPartitionKeyAsync<ISetConcurrentJobLimit>(sendTopology, JobTypeId);
 
-        await AssertPartitionKeyAsync<JobSubmitted>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<JobSlotAllocated>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<JobSlotUnavailable>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<Fault<AllocateJobSlot>>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<Fault<StartJobAttempt>>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<JobCompleted>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<GetJobState>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<StartJob>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<CancelJob>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<RetryJob>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<RunJob>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<SaveJobCheckpoint>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<SetJobProgress>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<JobSlotWaitElapsed>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<JobRetryDelayElapsed>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<CompleteJob>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<FaultJob>(sendTopology, JobId);
-        await AssertPartitionKeyAsync<GetJobAttemptStatus>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IJobSubmitted>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IJobSlotAllocated>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IJobSlotUnavailable>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<Fault<IAllocateJobSlot>>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<Fault<IStartJobAttempt>>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IJobCompleted>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IGetJobState>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IStartJob>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<ICancelJob>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IRetryJob>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IRunJob>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<ISaveJobCheckpoint>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<ISetJobProgress>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IJobSlotWaitElapsed>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IJobRetryDelayElapsed>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<ICompleteJob>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IFaultJob>(sendTopology, JobId);
+        await AssertPartitionKeyAsync<IGetJobAttemptStatus>(sendTopology, JobId);
 
-        await AssertPartitionKeyAsync<JobAttemptCanceled>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<JobAttemptCompleted>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<JobAttemptFaulted>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<JobAttemptStarted>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<StartJobAttempt>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<FinalizeJobAttempt>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<CancelJobAttempt>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<Fault<StartJob>>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<JobAttemptStatus>(sendTopology, AttemptId);
-        await AssertPartitionKeyAsync<JobStatusCheckRequested>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IJobAttemptCanceled>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IJobAttemptCompleted>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IJobAttemptFaulted>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IJobAttemptStarted>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IStartJobAttempt>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IFinalizeJobAttempt>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<ICancelJobAttempt>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<Fault<IStartJob>>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IJobAttemptStatus>(sendTopology, AttemptId);
+        await AssertPartitionKeyAsync<IJobStatusCheckRequested>(sendTopology, AttemptId);
     }
 
     [Fact]

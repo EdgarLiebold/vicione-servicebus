@@ -18,7 +18,7 @@ public sealed class SuperviseJobConsumerTests
         Guid jobId = NewId.NextGuid();
         var handle = new RecordingJobHandle(jobId, NewId.NextGuid());
         var consumer = new SuperviseJobConsumer(new StubJobService(handle));
-        ConsumeContext<CancelJobAttempt> context = CreateContext(
+        ConsumeContext<ICancelJobAttempt> context = CreateContext(
             new CancelJobAttemptMessage(jobId, NewId.NextGuid(), "stale attempt"));
 
         await consumer.ConsumeAsync(context);
@@ -34,7 +34,7 @@ public sealed class SuperviseJobConsumerTests
         Guid attemptId = NewId.NextGuid();
         var handle = new RecordingJobHandle(jobId, attemptId);
         var consumer = new SuperviseJobConsumer(new StubJobService(handle));
-        ConsumeContext<CancelJobAttempt> context = CreateContext(
+        ConsumeContext<ICancelJobAttempt> context = CreateContext(
             new CancelJobAttemptMessage(jobId, attemptId, "operator request"));
 
         await consumer.ConsumeAsync(context);
@@ -66,7 +66,7 @@ public sealed class SuperviseJobConsumerTests
 
         await consumer.ConsumeAsync(context);
 
-        JobAttemptStatus response = Assert.IsAssignableFrom<JobAttemptStatus>(
+        IJobAttemptStatus response = Assert.IsAssignableFrom<IJobAttemptStatus>(
             ((StatusConsumeContextProxy)(object)context).Response);
         Assert.Equal(jobId, response.JobId);
         Assert.Equal(attemptId, response.AttemptId);
@@ -105,19 +105,19 @@ public sealed class SuperviseJobConsumerTests
         var consumer = new SuperviseJobConsumer(new StubJobService(new RecordingJobHandle(NewId.NextGuid(), NewId.NextGuid())));
 
         Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            consumer.ConsumeAsync((ConsumeContext<CancelJobAttempt>)null!))).ParamName);
+            consumer.ConsumeAsync((ConsumeContext<ICancelJobAttempt>)null!))).ParamName);
         Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            consumer.ConsumeAsync((ConsumeContext<GetJobAttemptStatus>)null!))).ParamName);
+            consumer.ConsumeAsync((ConsumeContext<IGetJobAttemptStatus>)null!))).ParamName);
     }
 
-    private static ConsumeContext<CancelJobAttempt> CreateContext(CancelJobAttempt message)
+    private static ConsumeContext<ICancelJobAttempt> CreateContext(ICancelJobAttempt message)
     {
         TestConsumeContext context = DispatchProxy.Create<TestConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Message = message;
         return context;
     }
 
-    private static TestStatusConsumeContext CreateStatusContext(GetJobAttemptStatus message, TimeProvider timeProvider)
+    private static TestStatusConsumeContext CreateStatusContext(IGetJobAttemptStatus message, TimeProvider timeProvider)
     {
         TestStatusConsumeContext context = DispatchProxy.Create<TestStatusConsumeContext, StatusConsumeContextProxy>();
         ((StatusConsumeContextProxy)(object)context).Configure(message, timeProvider);
@@ -133,13 +133,13 @@ public sealed class SuperviseJobConsumerTests
         _ => throw new ArgumentOutOfRangeException(nameof(status), status, null),
     };
 
-    private interface TestConsumeContext : ConsumeContext<CancelJobAttempt>, ConsumeContext;
+    private interface TestConsumeContext : ConsumeContext<ICancelJobAttempt>, ConsumeContext;
 
-    private interface TestStatusConsumeContext : ConsumeContext<GetJobAttemptStatus>, ConsumeContext;
+    private interface TestStatusConsumeContext : ConsumeContext<IGetJobAttemptStatus>, ConsumeContext;
 
     private class ConsumeContextProxy : DispatchProxy
     {
-        public CancelJobAttempt Message { get; set; } = null!;
+        public ICancelJobAttempt Message { get; set; } = null!;
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
             targetMethod?.Name switch
@@ -152,12 +152,12 @@ public sealed class SuperviseJobConsumerTests
 
     private class StatusConsumeContextProxy : DispatchProxy
     {
-        private GetJobAttemptStatus _message = null!;
+        private IGetJobAttemptStatus _message = null!;
         private TimeProvider _timeProvider = null!;
 
         public object? Response { get; private set; }
 
-        public void Configure(GetJobAttemptStatus message, TimeProvider timeProvider)
+        public void Configure(IGetJobAttemptStatus message, TimeProvider timeProvider)
         {
             _message = message;
             _timeProvider = timeProvider;
@@ -187,11 +187,11 @@ public sealed class SuperviseJobConsumerTests
         }
     }
 
-    private sealed record CancelJobAttemptMessage(Guid JobId, Guid AttemptId, string? Reason) : CancelJobAttempt;
+    private sealed record CancelJobAttemptMessage(Guid JobId, Guid AttemptId, string? Reason) : ICancelJobAttempt;
 
-    private sealed record GetJobAttemptStatusMessage(Guid JobId, Guid AttemptId) : GetJobAttemptStatus;
+    private sealed record GetJobAttemptStatusMessage(Guid JobId, Guid AttemptId) : IGetJobAttemptStatus;
 
-    private sealed class RecordingJobHandle(Guid jobId, Guid attemptId, Task? execution = null) : JobHandle
+    private sealed class RecordingJobHandle(Guid jobId, Guid attemptId, Task? execution = null) : IJobHandle
     {
         public Guid JobId { get; } = jobId;
         public Guid AttemptId { get; } = attemptId;
@@ -212,13 +212,13 @@ public sealed class SuperviseJobConsumerTests
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    private sealed class StubJobService(JobHandle handle) : IJobService
+    private sealed class StubJobService(IJobHandle handle) : IJobService
     {
         public Uri InstanceAddress => throw new NotSupportedException();
-        public JobServiceSettings Settings => throw new NotSupportedException();
+        public IJobServiceSettings Settings => throw new NotSupportedException();
 
         public Task StartJobAsync<TJob>(
-            ConsumeContext<StartJob> context,
+            ConsumeContext<IStartJob> context,
             TJob job,
             IPipe<ConsumeContext<TJob>> jobPipe,
             JobOptions<TJob> jobOptions,
@@ -228,13 +228,13 @@ public sealed class SuperviseJobConsumerTests
         public Task StopAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference)
+        public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out IJobHandle? jobReference)
         {
             jobReference = jobId == handle.JobId ? handle : null;
             return jobReference is not null;
         }
 
-        public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobHandle) => throw new NotSupportedException();
+        public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out IJobHandle? jobHandle) => throw new NotSupportedException();
 
         public void RegisterJobType<TJob>(JobOptions<TJob> options, Guid jobTypeId, string jobTypeName)
             where TJob : class => throw new NotSupportedException();

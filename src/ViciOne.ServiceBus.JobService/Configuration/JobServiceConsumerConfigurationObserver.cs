@@ -13,14 +13,14 @@ internal sealed class JobServiceConsumerConfigurationObserver :
     readonly IReceiveEndpointConfigurator _configurator;
     readonly Action<IReceiveEndpointConfigurator> _configureEndpoint;
     readonly Dictionary<Type, IConsumeConfigurator> _consumerConfigurators;
-    readonly JobServiceSettings _settings;
+    readonly IJobServiceSettings _settings;
     bool _endpointConfigured;
 
     /// <summary>Creates an observer for one receive endpoint.</summary>
     /// <param name="configurator">The receive endpoint that owns discovered job consumers.</param>
     /// <param name="settings">The job-service runtime settings.</param>
     /// <param name="configureEndpoint">The endpoint configuration applied once when the first job consumer is discovered.</param>
-    public JobServiceConsumerConfigurationObserver(IReceiveEndpointConfigurator configurator, JobServiceSettings settings,
+    public JobServiceConsumerConfigurationObserver(IReceiveEndpointConfigurator configurator, IJobServiceSettings settings,
         Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -32,7 +32,7 @@ internal sealed class JobServiceConsumerConfigurationObserver :
 
         _settings = settings;
 
-        _consumerConfigurators = new Dictionary<Type, IConsumeConfigurator>();
+        _consumerConfigurators = [];
     }
 
     /// <summary>Captures the options of a discovered job consumer and applies its endpoint configuration once.</summary>

@@ -36,7 +36,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         JobFaultSnapshot faulted = await fixture.Events.Faulted
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         await fixture.StatusChecks.Completed.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
-        JobState state = await fixture.GetStateAsync();
+        IJobState state = await fixture.GetStateAsync();
 
         Assert.Equal(fixture.JobId, acceptedJobId);
         Assert.Equal(fixture.JobId, firstAttempt.JobId);
@@ -78,7 +78,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
 
         await fixture.SendStaleCompletionAsync(firstAttempt);
-        JobState stateWhileRetryRuns = await fixture.GetStateAsync();
+        IJobState stateWhileRetryRuns = await fixture.GetStateAsync();
 
         Assert.Equal(fixture.JobId, acceptedJobId);
         Assert.Equal(firstAttempt.AttemptId, suppressed.AttemptId);
@@ -104,7 +104,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         Assert.Equal(0, fixture.Events.FaultedCount);
         Assert.Equal(0, fixture.Events.CanceledCount);
         Assert.Contains(retrySchedule.PayloadTypes, type =>
-            type.EndsWith($":{nameof(JobRetryDelayElapsed)}", StringComparison.Ordinal));
+            type.EndsWith($":{nameof(IJobRetryDelayElapsed)}", StringComparison.Ordinal));
     }
 
     private sealed class SuspectAttemptFixture : IAsyncDisposable
@@ -123,7 +123,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
             SuspectTerminalProbe events,
             ScheduledMessageSequenceCapture statusSchedules,
             ScheduledMessageCapture retrySchedule,
-            ConsumeCompletionObserver<GetJobAttemptStatus> statusChecks,
+            ConsumeCompletionObserver<IGetJobAttemptStatus> statusChecks,
             ConnectHandle statusScheduleObserver,
             ConnectHandle retryScheduleObserver,
             ConnectHandle statusObserver)
@@ -149,7 +149,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         public SuspectTerminalProbe Events { get; }
         public ScheduledMessageSequenceCapture StatusSchedules { get; }
         public ScheduledMessageCapture RetrySchedule { get; }
-        public ConsumeCompletionObserver<GetJobAttemptStatus> StatusChecks { get; }
+        public ConsumeCompletionObserver<IGetJobAttemptStatus> StatusChecks { get; }
 
         public static async Task<SuspectAttemptFixture> StartAsync(int suspectRetryCount)
         {
@@ -176,9 +176,9 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
                     service.SuspectJobRetryCount = suspectRetryCount;
                     service.SuspectJobRetryDelay = TimeSpan.FromMinutes(1);
                 });
-            var statusSchedules = new ScheduledMessageSequenceCapture(nameof(JobStatusCheckRequested), expectedCount: 3);
-            var retrySchedule = new ScheduledMessageCapture(nameof(JobRetryDelayElapsed));
-            var statusChecks = new ConsumeCompletionObserver<GetJobAttemptStatus>(message => message.JobId == jobId, expectedCount: 2);
+            var statusSchedules = new ScheduledMessageSequenceCapture(nameof(IJobStatusCheckRequested), expectedCount: 3);
+            var retrySchedule = new ScheduledMessageCapture(nameof(IJobRetryDelayElapsed));
+            var statusChecks = new ConsumeCompletionObserver<IGetJobAttemptStatus>(message => message.JobId == jobId, expectedCount: 2);
             ConnectHandle statusScheduleObserver = bus.Bus.ConnectConsumeObserver(statusSchedules);
             ConnectHandle retryScheduleObserver = bus.Bus.ConnectConsumeObserver(retrySchedule);
             ConnectHandle statusObserver = bus.Bus.ConnectConsumeObserver(statusChecks);
@@ -200,7 +200,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
         public async Task<Guid> SubmitAsync()
         {
-            IRequestClient<SubmitJob<SuspectJob>> client = _bus.Bus.CreateRequestClient<SubmitJob<SuspectJob>>();
+            IRequestClient<ISubmitJob<SuspectJob>> client = _bus.Bus.CreateRequestClient<ISubmitJob<SuspectJob>>();
             return await client.SubmitJobAsync(
                     JobId,
                     new SuspectJob("silent-worker"),
@@ -226,9 +226,9 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
             await _bus.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, TestContext.Current.CancellationToken);
         }
 
-        public async Task<JobState> GetStateAsync()
+        public async Task<IJobState> GetStateAsync()
         {
-            IRequestClient<GetJobState> client = _bus.Bus.CreateRequestClient<GetJobState>();
+            IRequestClient<IGetJobState> client = _bus.Bus.CreateRequestClient<IGetJobState>();
             return await client.GetJobStateAsync(JobId).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         }
 
@@ -236,7 +236,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         {
             ISendEndpoint endpoint = await _bus.Bus.GetSendEndpointAsync(new Uri("loopback://localhost/job"))
                 .WaitAsync(Timeout, TestContext.Current.CancellationToken);
-            await endpoint.SendAsync<JobAttemptCompleted>(new
+            await endpoint.SendAsync<IJobAttemptCompleted>(new
             {
                 JobId,
                 AttemptId = attempt.AttemptId,
@@ -273,7 +273,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
         public void ReleaseRetry() => _retryRelease.TrySetResult();
 
-        public Task RunAsync(JobContext<SuspectJob> context)
+        public Task RunAsync(IJobContext<SuspectJob> context)
         {
             Interlocked.Increment(ref _attemptCount);
             var snapshot = new JobAttemptSnapshot(context.JobId, context.AttemptId, context.RetryAttempt);
@@ -288,7 +288,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         }
     }
 
-    private sealed class AttemptFaultSuppression(Guid jobId) : IFilter<ConsumeContext<JobAttemptFaulted>>
+    private sealed class AttemptFaultSuppression(Guid jobId) : IFilter<ConsumeContext<IJobAttemptFaulted>>
     {
         private static readonly string[] ExpectedEndpoints = ["job", "job-attempt"];
         private readonly TaskCompletionSource<SuppressedAttemptFault> _completed =
@@ -300,7 +300,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
         public Task<SuppressedAttemptFault> Completed => _completed.Task;
 
-        public Task SendAsync(ConsumeContext<JobAttemptFaulted> context, IPipe<ConsumeContext<JobAttemptFaulted>> next)
+        public Task SendAsync(ConsumeContext<IJobAttemptFaulted> context, IPipe<ConsumeContext<IJobAttemptFaulted>> next)
         {
             string endpoint = context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/');
             if (TrySuppress(context, endpoint))
@@ -311,7 +311,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
         public void Probe(ProbeContext context) => context.CreateScope("job-attempt-fault-suppression");
 
-        private bool TrySuppress(ConsumeContext<JobAttemptFaulted> context, string endpoint)
+        private bool TrySuppress(ConsumeContext<IJobAttemptFaulted> context, string endpoint)
         {
             if (!ExpectedEndpoints.Contains(endpoint, StringComparer.Ordinal)
                 || context.Message.JobId != jobId
@@ -370,13 +370,13 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         {
             configurator.ReceiveEndpoint($"suspect-job-events-{NewId.NextGuid():N}", endpoint =>
             {
-                endpoint.Handler<JobStarted>(context =>
+                endpoint.Handler<IJobStarted>(context =>
                 {
                     if (context.Message.JobId == jobId)
                         _startedAttempts.Enqueue(new JobStartedSnapshot(context.Message.AttemptId, context.Message.RetryAttempt));
                     return Task.CompletedTask;
                 });
-                endpoint.Handler<JobCompleted>(context =>
+                endpoint.Handler<IJobCompleted>(context =>
                 {
                     if (context.Message.JobId == jobId)
                     {
@@ -385,7 +385,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
                     }
                     return Task.CompletedTask;
                 });
-                endpoint.Handler<JobFaulted>(context =>
+                endpoint.Handler<IJobFaulted>(context =>
                 {
                     if (context.Message.JobId == jobId)
                     {
@@ -394,7 +394,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
                     }
                     return Task.CompletedTask;
                 });
-                endpoint.Handler<JobCanceled>(context =>
+                endpoint.Handler<IJobCanceled>(context =>
                 {
                     if (context.Message.JobId == jobId)
                         Interlocked.Increment(ref _canceledCount);

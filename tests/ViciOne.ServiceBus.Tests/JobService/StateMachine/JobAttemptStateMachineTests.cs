@@ -58,12 +58,12 @@ public sealed class JobAttemptStateMachineTests
         Assert.Equal(instanceAddress, saga.InstanceAddress);
         StateMachineTestScheduler.ScheduledCall scheduled = Assert.Single(scheduler.Scheduled);
         Assert.Equal(Now + settings.StatusCheckInterval, scheduled.DueAt);
-        JobStatusCheckRequested statusCheck = Assert.IsAssignableFrom<JobStatusCheckRequested>(scheduled.Message);
+        IJobStatusCheckRequested statusCheck = Assert.IsAssignableFrom<IJobStatusCheckRequested>(scheduled.Message);
         Assert.Equal(attemptId, statusCheck.AttemptId);
         Assert.Equal(jobId, statusCheck.JobId);
         Assert.Equal(scheduled.TokenId, saga.StatusCheckTokenId);
 
-        StartJob start = Assert.Single(outgoing.Messages.OfType<StartJob>());
+        IStartJob start = Assert.Single(outgoing.Messages.OfType<IStartJob>());
         Assert.Equal(jobId, start.JobId);
         Assert.Equal(attemptId, start.AttemptId);
         Assert.Equal(2, start.RetryAttempt);
@@ -124,7 +124,7 @@ public sealed class JobAttemptStateMachineTests
         outgoing = new OutgoingMessageRecorder();
         await RaiseAsync(machine, saga, machine.StatusCheckRequested.Received, statusCheck, settings, scheduler, outgoing, clock);
         AssertState(machine, saga, machine.Faulted);
-        JobAttemptFaulted fault = Assert.Single(outgoing.Messages.OfType<JobAttemptFaulted>());
+        IJobAttemptFaulted fault = Assert.Single(outgoing.Messages.OfType<IJobAttemptFaulted>());
         Assert.Equal(saga.JobId, fault.JobId);
         Assert.Equal(saga.CorrelationId, fault.AttemptId);
         Assert.Equal(retryAttempt, fault.RetryAttempt);
@@ -184,7 +184,7 @@ public sealed class JobAttemptStateMachineTests
         await SetStateAsync(machine, saga, machine.Starting);
         var expected = new FaultExceptionInfo(new InvalidOperationException("dispatch refused"));
         DateTimeOffset faulted = Now.AddMinutes(1);
-        Fault<StartJob> fault = new FaultEvent<StartJob>
+        Fault<IStartJob> fault = new FaultEvent<IStartJob>
         {
             FaultId = NewId.NextGuid(),
             Timestamp = faulted,
@@ -211,7 +211,7 @@ public sealed class JobAttemptStateMachineTests
 
         AssertState(machine, saga, machine.Faulted);
         Assert.Equal(faulted, saga.Faulted);
-        JobAttemptFaulted reported = Assert.Single(outgoing.Messages.OfType<JobAttemptFaulted>());
+        IJobAttemptFaulted reported = Assert.Single(outgoing.Messages.OfType<IJobAttemptFaulted>());
         Assert.Same(expected, reported.Exceptions);
 
         await RaiseAsync(
@@ -253,7 +253,7 @@ public sealed class JobAttemptStateMachineTests
             outgoing,
             new FakeTimeProvider(Now));
 
-        Assert.Same(cancel, Assert.Single(outgoing.Messages.OfType<CancelJobAttempt>()));
+        Assert.Same(cancel, Assert.Single(outgoing.Messages.OfType<ICancelJobAttempt>()));
         OutgoingMessageRecorder.SendObservation cancelObservation = Assert.Single(outgoing.SendObservations);
         Assert.Equal(saga.CorrelationId, cancelObservation.RequestId);
         Assert.Equal(CreateSettings().JobAttemptSagaEndpointAddress, cancelObservation.ResponseAddress);
@@ -280,7 +280,7 @@ public sealed class JobAttemptStateMachineTests
         var machine = new JobAttemptStateMachine();
         var saga = CreateActiveSaga(0);
         await SetStateAsync(machine, saga, machine.Starting);
-        Fault<StartJob> fault = new FaultEvent<StartJob>
+        Fault<IStartJob> fault = new FaultEvent<IStartJob>
         {
             FaultId = NewId.NextGuid(),
             Timestamp = Now,
@@ -375,7 +375,7 @@ public sealed class JobAttemptStateMachineTests
         }, settings, new StateMachineTestScheduler(new FakeTimeProvider(Now)), outgoing, new FakeTimeProvider(Now));
 
         AssertState(machine, saga, machine.Faulted);
-        JobAttemptFaulted fault = Assert.Single(outgoing.Messages.OfType<JobAttemptFaulted>());
+        IJobAttemptFaulted fault = Assert.Single(outgoing.Messages.OfType<IJobAttemptFaulted>());
         Assert.Equal(saga.JobId, fault.JobId);
         Assert.Equal(saga.CorrelationId, fault.AttemptId);
         Assert.Equal(1, fault.RetryAttempt);
@@ -410,7 +410,7 @@ public sealed class JobAttemptStateMachineTests
 
     private static void AssertStatusRequest(OutgoingMessageRecorder outgoing, JobAttemptSaga saga)
     {
-        GetJobAttemptStatus request = Assert.Single(outgoing.Messages.OfType<GetJobAttemptStatus>());
+        IGetJobAttemptStatus request = Assert.Single(outgoing.Messages.OfType<IGetJobAttemptStatus>());
         Assert.Equal(saga.JobId, request.JobId);
         Assert.Equal(saga.CorrelationId, request.AttemptId);
         OutgoingMessageRecorder.SendObservation observation = Assert.Single(outgoing.SendObservations);
@@ -442,7 +442,7 @@ public sealed class JobAttemptStateMachineTests
         var instance = new SagaInstance<JobAttemptSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobAttemptSaga, T>(consumeContext, instance);
-        sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
+        sagaContext.AddOrUpdatePayload<IJobSagaSettings>(() => settings, _ => settings);
         IBehaviorContext<JobAttemptSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobAttemptSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 

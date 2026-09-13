@@ -29,7 +29,7 @@ internal sealed class JobConsumerMessageFilter<TConsumer, TJob> :
         ArgumentNullException.ThrowIfNull(context);
 
         var scope = context.CreateScope("consume");
-        scope.Add("method", $"RunAsync(JobContext<{TypeCache<TJob>.ShortName}> context)");
+        scope.Add("method", $"RunAsync(IJobContext<{TypeCache<TJob>.ShortName}> context)");
     }
 
     /// <summary>Runs the terminal job-consumer method with lifecycle and retry notifications.</summary>
@@ -47,10 +47,10 @@ internal sealed class JobConsumerMessageFilter<TConsumer, TJob> :
 
     async Task RunJobAsync(PipeContext context, IJobConsumer<TJob> jobConsumer)
     {
-        var jobContext = context.GetPayload<JobContext<TJob>>();
+        var jobContext = context.GetPayload<IJobContext<TJob>>();
         var notifyJobContext = context.GetPayload<INotifyJobContext>();
 
-        RetryPolicyContext<JobContext<TJob>> policyContext = _retryPolicy.CreatePolicyContext(jobContext);
+        RetryPolicyContext<IJobContext<TJob>> policyContext = _retryPolicy.CreatePolicyContext(jobContext);
 
         try
         {
@@ -66,7 +66,7 @@ internal sealed class JobConsumerMessageFilter<TConsumer, TJob> :
         }
         catch (Exception exception)
         {
-            if (!policyContext.CanRetry(exception, out RetryContext<JobContext<TJob>> retryContext))
+            if (!policyContext.CanRetry(exception, out RetryContext<IJobContext<TJob>> retryContext))
             {
                 if (_retryPolicy.IsHandled(exception))
                 {

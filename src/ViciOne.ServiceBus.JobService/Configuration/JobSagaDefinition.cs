@@ -14,7 +14,7 @@ internal sealed class JobSagaDefinition :
     SagaDefinition<JobSaga>
 {
     readonly JobSagaOptions _options;
-    readonly JobSagaSettingsConfigurator _setOptions;
+    readonly IJobSagaSettingsConfigurator _setOptions;
 
     /// <summary>Captures the shared job-saga settings used to configure job coordination.</summary>
     /// <param name="options">The validated job-saga settings wrapper.</param>
@@ -44,34 +44,34 @@ internal sealed class JobSagaDefinition :
 
             var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
-            configurator.UsePartitioner<JobSubmitted>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobSubmitted>(partition, p => p.Message.JobId);
 
-            configurator.UsePartitioner<JobSlotAllocated>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<JobSlotUnavailable>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<Fault<AllocateJobSlot>>(partition, p => p.Message.Message.JobId);
+            configurator.UsePartitioner<IJobSlotAllocated>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobSlotUnavailable>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<Fault<IAllocateJobSlot>>(partition, p => p.Message.Message.JobId);
 
-            configurator.UsePartitioner<Fault<StartJobAttempt>>(partition, p => p.Message.Message.JobId);
+            configurator.UsePartitioner<Fault<IStartJobAttempt>>(partition, p => p.Message.Message.JobId);
 
-            configurator.UsePartitioner<JobAttemptCanceled>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<JobAttemptCompleted>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<JobAttemptFaulted>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<JobAttemptStarted>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobAttemptCanceled>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobAttemptCompleted>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobAttemptFaulted>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobAttemptStarted>(partition, p => p.Message.JobId);
 
-            configurator.UsePartitioner<GetJobState>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IGetJobState>(partition, p => p.Message.JobId);
 
-            configurator.UsePartitioner<JobCompleted>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<CancelJob>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<RetryJob>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<RunJob>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobCompleted>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<ICancelJob>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IRetryJob>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IRunJob>(partition, p => p.Message.JobId);
 
-            configurator.UsePartitioner<SetJobProgress>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<SaveJobCheckpoint>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<ISetJobProgress>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<ISaveJobCheckpoint>(partition, p => p.Message.JobId);
 
-            configurator.UsePartitioner<JobSlotWaitElapsed>(partition, p => p.Message.JobId);
-            configurator.UsePartitioner<JobRetryDelayElapsed>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobSlotWaitElapsed>(partition, p => p.Message.JobId);
+            configurator.UsePartitioner<IJobRetryDelayElapsed>(partition, p => p.Message.JobId);
         }
 
-        sagaConfigurator.UseFilter(new PayloadFilter<SagaConsumeContext<JobSaga>, JobSagaSettings>(_options));
+        sagaConfigurator.UseFilter(new PayloadFilter<SagaConsumeContext<JobSaga>, IJobSagaSettings>(_options));
 
         _setOptions.JobSagaEndpointAddress = configurator.InputAddress;
 

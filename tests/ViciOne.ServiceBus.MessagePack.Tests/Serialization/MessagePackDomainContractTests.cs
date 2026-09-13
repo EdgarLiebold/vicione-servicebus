@@ -66,7 +66,7 @@ public sealed class MessagePackDomainContractTests
             Job = jobRoundTrip.Context.ToDictionary(jobRoundTrip.Message),
             JobTypeId = NewId.NextGuid(),
         };
-        StartJob commandContract = command;
+        IStartJob commandContract = command;
 
         var commandRoundTrip = MessagePackRoundTrip.ExecuteWithContext(commandContract);
         var restoredJob = commandRoundTrip.Context.DeserializeObject<IConvertVideo>(commandRoundTrip.Message.Job);

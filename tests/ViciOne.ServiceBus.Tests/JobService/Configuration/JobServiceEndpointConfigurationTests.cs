@@ -97,9 +97,9 @@ public sealed class JobServiceEndpointConfigurationTests
         Assert.False(options.FinalizeCompleted);
         Assert.Same(timeZoneResolver, options.TimeZoneResolver);
         Assert.Equal(TimeZoneInfo.Utc, options.TimeZoneResolver!("factory-zone"));
-        Assert.Equal(new Uri("loopback://localhost/custom-job"), ((JobSagaSettings)options).JobSagaEndpointAddress);
-        Assert.Equal(new Uri("loopback://localhost/custom-job-type"), ((JobSagaSettings)options).JobTypeSagaEndpointAddress);
-        Assert.Equal(new Uri("loopback://localhost/custom-job-attempt"), ((JobSagaSettings)options).JobAttemptSagaEndpointAddress);
+        Assert.Equal(new Uri("loopback://localhost/custom-job"), ((IJobSagaSettings)options).JobSagaEndpointAddress);
+        Assert.Equal(new Uri("loopback://localhost/custom-job-type"), ((IJobSagaSettings)options).JobTypeSagaEndpointAddress);
+        Assert.Equal(new Uri("loopback://localhost/custom-job-attempt"), ((IJobSagaSettings)options).JobAttemptSagaEndpointAddress);
     }
 
     [Fact]
@@ -194,7 +194,7 @@ public sealed class JobServiceEndpointConfigurationTests
     [RequirementCoverage("REQ-VSB-JOB-ENDPOINT-CONFIGURATION", "coordination-addresses-fail-before-endpoint-configuration")]
     public void CoordinationAddresses_RejectUseBeforeEndpointConfiguration()
     {
-        JobSagaSettings settings = new JobServiceOptions();
+        IJobSagaSettings settings = new JobServiceOptions();
 
         InvalidOperationException job = Assert.Throws<InvalidOperationException>(() => settings.JobSagaEndpointAddress);
         InvalidOperationException jobType = Assert.Throws<InvalidOperationException>(() => settings.JobTypeSagaEndpointAddress);

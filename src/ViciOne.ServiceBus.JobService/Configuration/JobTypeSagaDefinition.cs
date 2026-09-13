@@ -14,7 +14,7 @@ internal sealed class JobTypeSagaDefinition :
     SagaDefinition<JobTypeSaga>
 {
     readonly JobSagaOptions _options;
-    readonly JobSagaSettingsConfigurator _setOptions;
+    readonly IJobSagaSettingsConfigurator _setOptions;
 
     /// <summary>Captures the shared job-saga settings used to configure job-type capacity coordination.</summary>
     /// <param name="options">The validated job-saga settings wrapper.</param>
@@ -44,12 +44,12 @@ internal sealed class JobTypeSagaDefinition :
 
             var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
-            configurator.UsePartitioner<AllocateJobSlot>(partition, p => p.Message.JobTypeId);
-            configurator.UsePartitioner<JobSlotReleased>(partition, p => p.Message.JobTypeId);
-            configurator.UsePartitioner<SetConcurrentJobLimit>(partition, p => p.Message.JobTypeId);
+            configurator.UsePartitioner<IAllocateJobSlot>(partition, p => p.Message.JobTypeId);
+            configurator.UsePartitioner<IJobSlotReleased>(partition, p => p.Message.JobTypeId);
+            configurator.UsePartitioner<ISetConcurrentJobLimit>(partition, p => p.Message.JobTypeId);
         }
 
-        sagaConfigurator.UseFilter(new PayloadFilter<SagaConsumeContext<JobTypeSaga>, JobSagaSettings>(_options));
+        sagaConfigurator.UseFilter(new PayloadFilter<SagaConsumeContext<JobTypeSaga>, IJobSagaSettings>(_options));
 
         _setOptions.JobTypeSagaEndpointAddress = configurator.InputAddress;
 

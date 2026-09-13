@@ -80,6 +80,21 @@ public sealed class GreenfieldApiArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-JOB-SERVICE-API", "interfaces-use-dotnet-prefix")]
+    public void JobServiceInterfaces_UseTheDotNetInterfacePrefix()
+    {
+        string jobServiceDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.JobService");
+        string[] violations = Directory.EnumerateFiles(jobServiceDirectory, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(FindUnprefixedInterfaces)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"JobService interfaces must begin with I followed by an uppercase letter:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-CAPABILITIES", "standard-unsupported-capability-exceptions")]
     public void UnsupportedCapabilities_UseTheStandardBclContract()
     {

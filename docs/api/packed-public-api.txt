@@ -8319,14 +8319,8 @@ TYPE class public ViciOne.ServiceBus.Initializers.Variables.TimestampVariable [s
 
 ASSEMBLY ViciOne.ServiceBus.JobService VERSION=1.0.0.0
 TYPE interface public ViciOne.ServiceBus.Advanced.IJobConsumer<TJob> [interfaces=ViciOne.ServiceBus.IConsumer]
-  METHOD public abstract System.Threading.Tasks.Task RunAsync(ViciOne.ServiceBus.Advanced.JobContext<TJob> context)
-TYPE interface public ViciOne.ServiceBus.Advanced.INotifyJobContext
-  METHOD public abstract System.Threading.Tasks.Task NotifyCanceledAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task NotifyCompletedAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task NotifyFaultedAsync(System.Exception exception, System.Nullable<System.TimeSpan> delay = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task NotifyProgressAsync(ViciOne.ServiceBus.Contracts.JobService.SetJobProgress progress, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task NotifyStartedAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Advanced.JobContext [interfaces=ViciOne.ServiceBus.Advanced.MessageContext&ViciOne.ServiceBus.Advanced.PipeContext&ViciOne.ServiceBus.IPublishEndpoint&ViciOne.ServiceBus.ISendEndpointProvider]
+  METHOD public abstract System.Threading.Tasks.Task RunAsync(ViciOne.ServiceBus.Advanced.IJobContext<TJob> context)
+TYPE interface public ViciOne.ServiceBus.Advanced.IJobContext [interfaces=ViciOne.ServiceBus.Advanced.MessageContext&ViciOne.ServiceBus.Advanced.PipeContext&ViciOne.ServiceBus.IPublishEndpoint&ViciOne.ServiceBus.ISendEndpointProvider]
   METHOD public abstract System.Boolean TryGetCheckpoint<TCheckpoint>(out TCheckpoint checkpoint)
   METHOD public abstract System.Threading.Tasks.Task ReportProgressAsync(System.Int64 value, System.Nullable<System.Int64> limit = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task SaveCheckpointAsync<TCheckpoint>(TCheckpoint checkpoint, System.Threading.CancellationToken cancellationToken = null)
@@ -8339,14 +8333,20 @@ TYPE interface public ViciOne.ServiceBus.Advanced.JobContext [interfaces=ViciOne
   PROPERTY ViciOne.ServiceBus.JobService.IPropertyCollection InstanceProperties { public-get;  }
   PROPERTY ViciOne.ServiceBus.JobService.IPropertyCollection JobProperties { public-get;  }
   PROPERTY ViciOne.ServiceBus.JobService.IPropertyCollection JobTypeProperties { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Advanced.JobContext<TJob> [interfaces=ViciOne.ServiceBus.Advanced.JobContext]
+TYPE interface public ViciOne.ServiceBus.Advanced.IJobContext<TJob> [interfaces=ViciOne.ServiceBus.Advanced.IJobContext]
   PROPERTY TJob Job { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Advanced.INotifyJobContext
+  METHOD public abstract System.Threading.Tasks.Task NotifyCanceledAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task NotifyCompletedAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task NotifyFaultedAsync(System.Exception exception, System.Nullable<System.TimeSpan> delay = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task NotifyProgressAsync(ViciOne.ServiceBus.Contracts.JobService.ISetJobProgress progress, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task NotifyStartedAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Advanced.JobServiceEventExtensions [static]
-  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.CompleteJob> context)
-  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.FaultJob> context)
-  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.JobCompleted> context)
-  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.JobFaulted> context)
-  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.StartJob> context)
+  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.ICompleteJob> context)
+  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.IFaultJob> context)
+  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.IJobCompleted> context)
+  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.IJobFaulted> context)
+  METHOD public static TJob GetJob<TJob>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.IStartJob> context)
 TYPE interface public ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator
   METHOD public abstract ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator ConfigureEndpoints(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configure)
   METHOD public abstract ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator ConfigureJobAttemptEndpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configure)
@@ -8436,19 +8436,19 @@ TYPE class public ViciOne.ServiceBus.Configuration.JobServiceRegistrationExtensi
   METHOD public static System.Boolean IsJobServiceEndpoint(ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.String name)
   METHOD public static ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator AddJobSagaStateMachines(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.JobSagaOptions> configure = null)
   METHOD public static ViciOne.ServiceBus.Configuration.IJobServiceRegistrationConfigurator AddJobService(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.JobConsumerOptions> configure = null)
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IAllocateJobSlot
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Guid JobTypeId { public-get;  }
   PROPERTY System.TimeSpan JobTimeout { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.CancelJob
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ICancelJob
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.String Reason { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.CancelJobAttempt
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ICancelJobAttempt
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.String Reason { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.CompleteJob
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ICompleteJob
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> InstanceProperties { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
@@ -8457,7 +8457,7 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.CompleteJob
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Guid JobTypeId { public-get;  }
   PROPERTY System.TimeSpan Duration { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.FaultJob
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IFaultJob
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
@@ -8465,24 +8465,24 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.FaultJob
   PROPERTY System.Int32 RetryAttempt { public-get;  }
   PROPERTY System.Nullable<System.TimeSpan> Duration { public-get;  }
   PROPERTY ViciOne.ServiceBus.ExceptionInfo Exceptions { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.FinalizeJob
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IFinalizeJob
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.FinalizeJobAttempt
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IFinalizeJobAttempt
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IGetJobAttemptStatus
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.GetJobState
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IGetJobState
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptCanceled
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobAttemptCanceled
   PROPERTY System.Boolean CheckpointChanged { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.String Reason { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobAttemptCompleted
   PROPERTY System.Boolean CheckpointChanged { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> InstanceProperties { public-get;  }
@@ -8492,7 +8492,7 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptComplete
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Int32 RetryAttempt { public-get;  }
   PROPERTY System.TimeSpan Duration { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobAttemptFaulted
   PROPERTY System.Boolean CheckpointChanged { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
@@ -8501,32 +8501,22 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
   PROPERTY System.Int32 RetryAttempt { public-get;  }
   PROPERTY System.Nullable<System.TimeSpan> RetryDelay { public-get;  }
   PROPERTY ViciOne.ServiceBus.ExceptionInfo Exceptions { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobAttemptStarted
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Int32 RetryAttempt { public-get;  }
   PROPERTY System.Uri InstanceAddress { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatus
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobAttemptStatus
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Status { public-get;  }
-TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Canceled = 3
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Completed = 2
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Faulted = 1
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Running = 0
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobCanceled
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobCanceled
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.String Reason { public-get;  }
-TYPE class public ViciOne.ServiceBus.Contracts.JobService.JobCancellationReasons [static]
-  FIELD public const System.String CancellationRequested = "Cancellation Requested"
-  FIELD public const System.String ConsumerInitiated = "Consumer Initiated"
-  FIELD public const System.String Shutdown = "Job Service Shutdown"
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobCompleted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobCompleted
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> InstanceProperties { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
@@ -8534,7 +8524,7 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobCompleted
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.TimeSpan Duration { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobCompleted<TJob>
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobCompleted<TJob>
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> InstanceProperties { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobTypeProperties { public-get;  }
@@ -8542,64 +8532,38 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobCompleted<TJob>
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.TimeSpan Duration { public-get;  }
   PROPERTY TJob Job { public-get;  }
-TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind Configuration = 0
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind Heartbeat = 2
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind InstanceStopped = 3
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind TemporaryOverride = 1
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobFaulted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobFaulted
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Nullable<System.TimeSpan> Duration { public-get;  }
   PROPERTY ViciOne.ServiceBus.ExceptionInfo Exceptions { public-get;  }
-TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus AllocatingSlot = 4
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Canceled = 10
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus CancellationPending = 11
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Completed = 8
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Faulted = 9
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus NotFound = 1
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Running = 6
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Starting = 5
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Submitted = 2
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Unknown = 0
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus WaitingForSlot = 3
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus WaitingToRetry = 7
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobRetryDelayElapsed
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobRetryDelayElapsed
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSchedule
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSchedule
   PROPERTY System.Nullable<System.DateTimeOffset> End { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> Start { public-get;  }
   PROPERTY System.String CronExpression { public-get;  }
   PROPERTY System.String TimeZoneId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSlotAllocated
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Uri InstanceAddress { public-get;  }
-TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Canceled = 2
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Completed = 0
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Faulted = 1
-  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Suspect = 3
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSlotReleased
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Guid JobTypeId { public-get;  }
   PROPERTY ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Disposition { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSlotUnavailable
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSlotUnavailable
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSlotWaitElapsed
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSlotWaitElapsed
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobStarted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobStarted
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Int32 RetryAttempt { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobStarted<TJob> [interfaces=ViciOne.ServiceBus.Contracts.JobService.JobStarted]
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobStarted<TJob> [interfaces=ViciOne.ServiceBus.Contracts.JobService.IJobStarted]
   PROPERTY TJob Job { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobState
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobState
   PROPERTY System.Boolean IsRecurring { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
@@ -8616,30 +8580,30 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobState
   PROPERTY System.Nullable<System.TimeSpan> Duration { public-get;  }
   PROPERTY System.String Reason { public-get;  }
   PROPERTY ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Status { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobState<TCheckpoint> [interfaces=ViciOne.ServiceBus.Contracts.JobService.JobState]
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobState<TCheckpoint> [interfaces=ViciOne.ServiceBus.Contracts.JobService.IJobState]
   PROPERTY TCheckpoint Checkpoint { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobStatusCheckRequested
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Nullable<System.Guid> JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSubmissionAccepted
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IJobSubmitted
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Guid JobTypeId { public-get;  }
   PROPERTY System.TimeSpan JobTimeout { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Contracts.JobService.JobSchedule Schedule { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.RetryJob
+  PROPERTY ViciOne.ServiceBus.Contracts.JobService.IJobSchedule Schedule { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IRetryJob
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.RunJob
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IRunJob
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.SaveJobCheckpoint
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ISaveJobCheckpoint
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ISetConcurrentJobLimit
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> InstanceProperties { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobTypeProperties { public-get;  }
   PROPERTY System.Guid JobTypeId { public-get;  }
@@ -8649,13 +8613,13 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLi
   PROPERTY System.String JobTypeName { public-get;  }
   PROPERTY System.Uri InstanceAddress { public-get;  }
   PROPERTY ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind UpdateKind { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.SetJobProgress
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ISetJobProgress
   PROPERTY System.Guid AttemptId { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY System.Int64 SequenceNumber { public-get;  }
   PROPERTY System.Int64 Value { public-get;  }
   PROPERTY System.Nullable<System.Int64> Limit { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.StartJob
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IStartJob
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
@@ -8665,7 +8629,7 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.StartJob
   PROPERTY System.Int32 RetryAttempt { public-get;  }
   PROPERTY System.Nullable<System.Int64> LastProgressLimit { public-get;  }
   PROPERTY System.Nullable<System.Int64> LastProgressValue { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.IStartJobAttempt
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Checkpoint { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Job { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
@@ -8677,16 +8641,49 @@ TYPE interface public ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
   PROPERTY System.Nullable<System.Int64> LastProgressValue { public-get;  }
   PROPERTY System.Uri InstanceAddress { public-get;  }
   PROPERTY System.Uri ServiceAddress { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>
+TYPE interface public ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> JobProperties { public-get;  }
   PROPERTY System.Guid JobId { public-get;  }
   PROPERTY TJob Job { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Contracts.JobService.JobSchedule Schedule { public-get;  }
-TYPE class public ViciOne.ServiceBus.JobAlreadyExistsException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
-  CTOR public ViciOne.ServiceBus.JobAlreadyExistsException(System.Guid jobId)
-  PROPERTY System.Guid JobId { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Contracts.JobService.IJobSchedule Schedule { public-get;  }
+TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Canceled = 3
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Completed = 2
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Faulted = 1
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobAttemptStatusKind Running = 0
+TYPE class public ViciOne.ServiceBus.Contracts.JobService.JobCancellationReasons [static]
+  FIELD public const System.String CancellationRequested = "Cancellation Requested"
+  FIELD public const System.String ConsumerInitiated = "Consumer Initiated"
+  FIELD public const System.String Shutdown = "Job Service Shutdown"
+TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind Configuration = 0
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind Heartbeat = 2
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind InstanceStopped = 3
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobConcurrencyUpdateKind TemporaryOverride = 1
+TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus AllocatingSlot = 4
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Canceled = 10
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus CancellationPending = 11
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Completed = 8
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Faulted = 9
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus NotFound = 1
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Running = 6
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Starting = 5
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Submitted = 2
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus Unknown = 0
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus WaitingForSlot = 3
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobLifecycleStatus WaitingToRetry = 7
+TYPE enum public ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Canceled = 2
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Completed = 0
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Faulted = 1
+  FIELD public const ViciOne.ServiceBus.Contracts.JobService.JobSlotDisposition Suspect = 3
 TYPE interface public ViciOne.ServiceBus.JobService.IJobDistributionStrategy
-  METHOD public abstract System.Threading.Tasks.Task<System.Uri> SelectInstanceAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot> requestContext, ViciOne.ServiceBus.JobService.JobDistributionContext distributionContext, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Uri> SelectInstanceAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.JobService.IAllocateJobSlot> requestContext, ViciOne.ServiceBus.JobService.JobDistributionContext distributionContext, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.JobService.IPropertyCollection [interfaces=System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>]
   METHOD public abstract System.Boolean TryGet(System.String key, out System.Object value)
   METHOD public abstract System.Nullable<TValue> Get<TValue>(System.String key, System.Nullable<TValue> defaultValue = null)
@@ -8713,6 +8710,9 @@ TYPE class public ViciOne.ServiceBus.JobService.JobAllocationState [sealed,inter
   PROPERTY System.DateTimeOffset ExpiresAt { public-get; public-set; }
   PROPERTY System.Guid JobId { public-get; public-set; }
   PROPERTY System.Uri InstanceAddress { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.JobService.JobAlreadyExistsException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
+  CTOR public ViciOne.ServiceBus.JobService.JobAlreadyExistsException(System.Guid jobId)
+  PROPERTY System.Guid JobId { public-get;  }
 TYPE class public ViciOne.ServiceBus.JobService.JobAttemptSaga [sealed,interfaces=ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance&ViciOne.ServiceBus.Sagas.ISagaVersion]
   CTOR public ViciOne.ServiceBus.JobService.JobAttemptSaga()
   PROPERTY System.Byte[] RowVersion { public-get; public-set; }
@@ -8771,18 +8771,18 @@ TYPE class public ViciOne.ServiceBus.JobService.JobServiceExtensions [static]
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, TJob job, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, TJob job, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<TJob> client, TJob job, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.Guid jobId, TJob job, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, TJob job, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, TJob job, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.Guid jobId, TJob job, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, TJob job, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, TJob job, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Guid jobId, System.Object values, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Object values, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Object values, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<TJob> client, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.Guid jobId, System.Object values, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.Object values, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Contracts.JobService.JobState<TCheckpoint>> GetJobStateAsync<TCheckpoint>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.GetJobState> client, System.Guid jobId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Contracts.JobService.JobState> GetJobStateAsync(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.GetJobState> client, System.Guid jobId, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.Guid jobId, System.Object values, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.Object values, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> SubmitJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.Object values, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Contracts.JobService.IJobState<TCheckpoint>> GetJobStateAsync<TCheckpoint>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.IGetJobState> client, System.Guid jobId, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.Contracts.JobService.IJobState> GetJobStateAsync(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.IGetJobState> client, System.Guid jobId, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.JobService.JobServiceInstanceInfo [sealed]
   PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> InstanceProperties { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> LastAllocationAt { public-get;  }
@@ -8792,6 +8792,9 @@ TYPE class public ViciOne.ServiceBus.JobService.JobServiceInstanceState [sealed]
   PROPERTY System.Collections.Generic.Dictionary<System.String,System.Object> Properties { public-get; public-set; }
   PROPERTY System.Nullable<System.DateTimeOffset> LastAllocationAt { public-get; public-set; }
   PROPERTY System.Nullable<System.DateTimeOffset> LastHeartbeatAt { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.JobService.JobServiceStoppingException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
+  CTOR public ViciOne.ServiceBus.JobService.JobServiceStoppingException(System.Guid jobId)
+  PROPERTY System.Guid JobId { public-get;  }
 TYPE class public ViciOne.ServiceBus.JobService.JobTypeSaga [sealed,interfaces=ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance&ViciOne.ServiceBus.Sagas.ISagaVersion]
   CTOR public ViciOne.ServiceBus.JobService.JobTypeSaga()
   PROPERTY System.Byte[] RowVersion { public-get; public-set; }
@@ -8811,20 +8814,20 @@ TYPE class public ViciOne.ServiceBus.JobService.RecurringJobExtensions [static]
   METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.String jobName, TJob job, System.Action<ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator> configure, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.String jobName, TJob job, System.Action<ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator> configure, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.String jobName, TJob job, System.String cronExpression, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.String jobName, TJob job, System.Action<ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator> configure, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.String jobName, TJob job, System.Action<ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator> configure, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.String jobName, TJob job, System.String cronExpression, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.String jobName, TJob job, System.Action<ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator> configure, System.Action<ViciOne.ServiceBus.JobService.ISetPropertyCollection> setJobProperties, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.String jobName, TJob job, System.Action<ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator> configure, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> AddOrUpdateRecurringJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.String jobName, TJob job, System.String cronExpression, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> CancelRecurringJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.String jobName, System.String reason = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> FinalizeRecurringJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.String jobName, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> RunRecurringJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.String jobName, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.DateTimeOffset start, TJob job, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Guid jobId, System.DateTimeOffset start, TJob job, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.DateTimeOffset start, TJob job, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.Guid jobId, System.DateTimeOffset start, TJob job, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.DateTimeOffset start, TJob job, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.Guid jobId, System.DateTimeOffset start, TJob job, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.DateTimeOffset start, System.Object values, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.Guid jobId, System.DateTimeOffset start, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.DateTimeOffset start, System.Object values, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.SubmitJob<TJob>> client, System.Guid jobId, System.DateTimeOffset start, System.Object values, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.DateTimeOffset start, System.Object values, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task<System.Guid> ScheduleJobFromValuesAsync<TJob>(ViciOne.ServiceBus.IRequestClient<ViciOne.ServiceBus.Contracts.JobService.ISubmitJob<TJob>> client, System.Guid jobId, System.DateTimeOffset start, System.Object values, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.JobService.RecurringJobScheduleConfiguratorExtensions [static]
   METHOD public static ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator DailyAt(ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator configurator, System.Int32 hour, System.Int32 minute = 0, System.Int32 second = 0)
   METHOD public static ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator EveryHours(ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator configurator, System.Int32 interval, System.Int32 startingHour = 0, System.Int32 minute = 0, System.Int32 second = 0, System.DayOfWeek[] days)
@@ -8835,9 +8838,6 @@ TYPE class public ViciOne.ServiceBus.JobService.RecurringJobScheduleConfigurator
   METHOD public static ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator OnDaysAt(ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator configurator, System.Int32 hour, System.Int32 minute = 0, System.Int32 second = 0, System.DayOfWeek[] days)
   METHOD public static ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator WeeklyOn(ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator configurator, System.DayOfWeek dayOfWeek, System.Int32 hour, System.Int32 minute = 0, System.Int32 second = 0)
   METHOD public static ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator YearlyOn(ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator configurator, System.Int32 month, System.Int32 dayOfMonth, System.Int32 hour, System.Int32 minute = 0, System.Int32 second = 0)
-TYPE class public ViciOne.ServiceBus.JobServiceStoppingException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
-  CTOR public ViciOne.ServiceBus.JobServiceStoppingException(System.Guid jobId)
-  PROPERTY System.Guid JobId { public-get;  }
 
 ASSEMBLY ViciOne.ServiceBus.Mediator VERSION=1.0.0.0
 TYPE class public Microsoft.Extensions.DependencyInjection.MediatorServiceCollectionExtensions [static]

@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Stores endpoint and supervision settings for direct job-service configuration.</summary>
 public sealed class JobServiceOptions :
-    JobSagaSettings,
+    IJobSagaSettings,
     IOptions,
     ISpecification
 {
@@ -98,11 +98,11 @@ public sealed class JobServiceOptions :
         set => _jobAttemptSagaEndpointAddress = value;
     }
 
-    Uri JobSagaSettings.JobSagaEndpointAddress => _jobSagaEndpointAddress
+    Uri IJobSagaSettings.JobSagaEndpointAddress => _jobSagaEndpointAddress
         ?? throw new InvalidOperationException("The job endpoint has not been configured.");
-    Uri JobSagaSettings.JobTypeSagaEndpointAddress => _jobTypeSagaEndpointAddress
+    Uri IJobSagaSettings.JobTypeSagaEndpointAddress => _jobTypeSagaEndpointAddress
         ?? throw new InvalidOperationException("The job-type endpoint has not been configured.");
-    Uri JobSagaSettings.JobAttemptSagaEndpointAddress => _jobAttemptSagaEndpointAddress
+    Uri IJobSagaSettings.JobAttemptSagaEndpointAddress => _jobAttemptSagaEndpointAddress
         ?? throw new InvalidOperationException("The job-attempt endpoint has not been configured.");
     /// <summary>Gets or sets the delay before capacity allocation is attempted again.</summary>
     public TimeSpan SlotWaitTime { get; set; }

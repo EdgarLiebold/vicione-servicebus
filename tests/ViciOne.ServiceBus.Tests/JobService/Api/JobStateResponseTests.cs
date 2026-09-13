@@ -41,8 +41,8 @@ public sealed class JobStateResponseTests
             EndDate = scheduleEnd,
         };
 
-        JobState<Checkpoint> typed = new JobStateResponse<Checkpoint>(source, checkpoint);
-        JobState untyped = typed;
+        IJobState<Checkpoint> typed = new JobStateResponse<Checkpoint>(source, checkpoint);
+        IJobState untyped = typed;
 
         Assert.Equal(jobId, typed.JobId);
         Assert.Equal(submitted, typed.Submitted);
@@ -67,10 +67,10 @@ public sealed class JobStateResponseTests
     [RequirementCoverage("REQ-VSB-JOB-STATE-API", "typed-projection-supports-an-absent-checkpoint")]
     public void TypedProjection_ExposesAnAbsentTypedCheckpoint()
     {
-        JobState<Checkpoint> typed = new JobStateResponse<Checkpoint>(new JobStateResponse());
+        IJobState<Checkpoint> typed = new JobStateResponse<Checkpoint>(new JobStateResponse());
 
         Assert.Null(typed.Checkpoint);
-        Assert.Null(((JobState)typed).Checkpoint);
+        Assert.Null(((IJobState)typed).Checkpoint);
     }
 
     private sealed record Checkpoint(long Offset);

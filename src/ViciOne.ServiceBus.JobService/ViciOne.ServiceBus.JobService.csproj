@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
     <PackageTags>ViciOne.ServiceBus;JobService</PackageTags>
     <Description>Distributed job submission, execution, retry, and scheduling for ViciOne.ServiceBus.</Description>
   </PropertyGroup>

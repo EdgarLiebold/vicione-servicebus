@@ -151,7 +151,7 @@
       "type": "JobConsumerOptions",
       "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobConsumerOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus.JobService/DependencyInjection/DependencyInjectionJobServiceRegistrationExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus.JobService/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs",
       "invariantCount": 3,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }
@@ -176,7 +176,7 @@
       "type": "JobSagaOptions",
       "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobSagaOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus.JobService/DependencyInjection/JobSagaRegistrationConfigurator.cs",
+      "registrationSource": "src/ViciOne.ServiceBus.JobService/DependencyInjection/Registration/JobSagaRegistrationConfigurator.cs",
       "invariantCount": 6,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }

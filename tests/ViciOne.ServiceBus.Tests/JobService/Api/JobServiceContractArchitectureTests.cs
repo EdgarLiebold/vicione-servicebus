@@ -11,8 +11,8 @@ public sealed class JobServiceContractArchitectureTests
     [RequirementCoverage("REQ-VSB-JOB-CONTRACT-BOUNDARY", "contracts-do-not-expose-mutable-dictionaries")]
     public void PublicContracts_DoNotExposeMutableDictionaryTypes()
     {
-        Type[] contracts = typeof(SubmitJob<>).Assembly.GetExportedTypes()
-            .Where(type => type.Namespace == typeof(SubmitJob<>).Namespace)
+        Type[] contracts = typeof(ISubmitJob<>).Assembly.GetExportedTypes()
+            .Where(type => type.Namespace == typeof(ISubmitJob<>).Namespace)
             .ToArray();
 
         PropertyInfo[] mutableProperties = contracts
@@ -27,7 +27,7 @@ public sealed class JobServiceContractArchitectureTests
     [RequirementCoverage("REQ-VSB-JOB-CONTRACT-BOUNDARY", "serializer-representations-are-internal")]
     public void SerializerRepresentations_AreNotPartOfThePublicApi()
     {
-        Type[] exposedRepresentations = typeof(SubmitJob<>).Assembly.GetExportedTypes()
+        Type[] exposedRepresentations = typeof(ISubmitJob<>).Assembly.GetExportedTypes()
             .Where(static type => type.Namespace == "ViciOne.ServiceBus.JobService.Messages")
             .ToArray();
 

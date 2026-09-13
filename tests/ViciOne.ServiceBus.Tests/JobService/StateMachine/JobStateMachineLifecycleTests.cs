@@ -62,7 +62,7 @@ public sealed class JobStateMachineLifecycleTests
         Assert.Equal("last", saga.Job["value"]);
         Assert.Equal("north", saga.JobProperties["region"]);
 
-        AllocateJobSlot request = Assert.Single(outgoing.Messages.OfType<AllocateJobSlot>());
+        IAllocateJobSlot request = Assert.Single(outgoing.Messages.OfType<IAllocateJobSlot>());
         Assert.Equal(jobId, request.JobId);
         Assert.Equal(jobTypeId, request.JobTypeId);
         Assert.Equal(TimeSpan.FromMinutes(9), request.JobTimeout);
@@ -105,7 +105,7 @@ public sealed class JobStateMachineLifecycleTests
         {
             AssertState(machine, saga, machine.Completed);
             Assert.Equal(JobSlotDisposition.Completed,
-                Assert.Single(outgoing.Messages.OfType<JobSlotReleased>()).Disposition);
+                Assert.Single(outgoing.Messages.OfType<IJobSlotReleased>()).Disposition);
         }
     }
 
@@ -169,10 +169,10 @@ public sealed class JobStateMachineLifecycleTests
         Assert.NotEqual(priorAttemptId, saga.AttemptId);
         Assert.Equal(0, saga.RetryAttempt);
         Assert.Null(saga.IncompleteAttempts);
-        FinalizeJobAttempt finalize = Assert.Single(outgoing.Messages.OfType<FinalizeJobAttempt>());
+        IFinalizeJobAttempt finalize = Assert.Single(outgoing.Messages.OfType<IFinalizeJobAttempt>());
         Assert.Equal(saga.CorrelationId, finalize.JobId);
         Assert.Equal(incompleteAttemptId, finalize.AttemptId);
-        Assert.Single(outgoing.Messages.OfType<AllocateJobSlot>());
+        Assert.Single(outgoing.Messages.OfType<IAllocateJobSlot>());
     }
 
     [Fact]
@@ -199,11 +199,11 @@ public sealed class JobStateMachineLifecycleTests
         Assert.NotNull(saga.NextStartDate);
         Assert.Null(saga.IncompleteAttempts);
         Assert.Equal(JobSlotDisposition.Faulted,
-            Assert.Single(outgoing.Messages.OfType<JobSlotReleased>()).Disposition);
-        Assert.Single(outgoing.Messages.OfType<FinalizeJobAttempt>());
+            Assert.Single(outgoing.Messages.OfType<IJobSlotReleased>()).Disposition);
+        Assert.Single(outgoing.Messages.OfType<IFinalizeJobAttempt>());
         StateMachineTestScheduler.ScheduledCall scheduled = Assert.Single(scheduler.Scheduled);
         Assert.Equal(saga.NextStartDate, scheduled.DueAt);
-        Assert.IsAssignableFrom<JobSlotWaitElapsed>(scheduled.Message);
+        Assert.IsAssignableFrom<IJobSlotWaitElapsed>(scheduled.Message);
     }
 
     [Fact]
@@ -216,7 +216,7 @@ public sealed class JobStateMachineLifecycleTests
         await SetStateAsync(machine, saga, machine.StartingJobAttempt);
         var expected = new FaultExceptionInfo(new InvalidOperationException("dispatch failed"));
         var outgoing = new OutgoingMessageRecorder();
-        Fault<StartJobAttempt> fault = new FaultEvent<StartJobAttempt>
+        Fault<IStartJobAttempt> fault = new FaultEvent<IStartJobAttempt>
         {
             FaultId = NewId.NextGuid(),
             Timestamp = Now,
@@ -238,12 +238,12 @@ public sealed class JobStateMachineLifecycleTests
         Assert.Equal(Now, saga.Faulted);
         Assert.Equal(expected.Message, saga.Reason);
         Assert.Equal([saga.AttemptId], saga.IncompleteAttempts);
-        FaultJob reported = Assert.Single(outgoing.Messages.OfType<FaultJob>());
+        IFaultJob reported = Assert.Single(outgoing.Messages.OfType<IFaultJob>());
         Assert.Same(expected, reported.Exceptions);
         Assert.Equal(TimeSpan.FromSeconds(17), reported.Duration);
-        Assert.Single(outgoing.Messages.OfType<JobFaulted>());
+        Assert.Single(outgoing.Messages.OfType<IJobFaulted>());
         Assert.Equal(JobSlotDisposition.Faulted,
-            Assert.Single(outgoing.Messages.OfType<JobSlotReleased>()).Disposition);
+            Assert.Single(outgoing.Messages.OfType<IJobSlotReleased>()).Disposition);
         OutgoingMessageRecorder.SendObservation faultObservation = Assert.Single(
             outgoing.SendObservations,
             observation => ReferenceEquals(observation.Message, reported));
@@ -287,10 +287,10 @@ public sealed class JobStateMachineLifecycleTests
 
         AssertState(machine, saga, machine.Canceled);
         Assert.Null(saga.NextStartDate);
-        JobCanceled canceled = Assert.Single(outgoing.Messages.OfType<JobCanceled>());
+        IJobCanceled canceled = Assert.Single(outgoing.Messages.OfType<IJobCanceled>());
         Assert.Equal(JobCancellationReasons.CancellationRequested, canceled.Reason);
         Assert.Equal(Now, canceled.Timestamp);
-        Assert.Equal(expectsRelease ? 1 : 0, outgoing.Messages.OfType<JobSlotReleased>().Count());
+        Assert.Equal(expectsRelease ? 1 : 0, outgoing.Messages.OfType<IJobSlotReleased>().Count());
     }
 
     [Fact]
@@ -315,10 +315,10 @@ public sealed class JobStateMachineLifecycleTests
         AssertState(machine, saga, machine.WaitingForSlot);
         Assert.Equal(JobCancellationReasons.Shutdown, saga.Reason);
         Assert.Equal(JobSlotDisposition.Canceled,
-            Assert.Single(outgoing.Messages.OfType<JobSlotReleased>()).Disposition);
+            Assert.Single(outgoing.Messages.OfType<IJobSlotReleased>()).Disposition);
         StateMachineTestScheduler.ScheduledCall scheduled = Assert.Single(scheduler.Scheduled);
         Assert.Equal(Now + settings.SlotWaitTime, scheduled.DueAt);
-        Assert.IsAssignableFrom<JobSlotWaitElapsed>(scheduled.Message);
+        Assert.IsAssignableFrom<IJobSlotWaitElapsed>(scheduled.Message);
     }
 
     [Fact]
@@ -361,8 +361,8 @@ public sealed class JobStateMachineLifecycleTests
         Assert.Equal("last", storedCheckpoint["STAGE"]);
         checkpoint["stage"] = "mutated";
         Assert.Equal("last", storedCheckpoint["stage"]);
-        Assert.Single(completedMessages.Messages.OfType<CompleteJob>());
-        Assert.Single(completedMessages.Messages.OfType<JobCompleted>());
+        Assert.Single(completedMessages.Messages.OfType<ICompleteJob>());
+        Assert.Single(completedMessages.Messages.OfType<IJobCompleted>());
 
         await SetStateAsync(machine, saga, machine.Faulted);
         DateTimeOffset faultedStart = Now.AddMinutes(-2);
@@ -387,8 +387,8 @@ public sealed class JobStateMachineLifecycleTests
         AssertState(machine, saga, machine.Faulted);
         Assert.Equal(faultedStart, saga.Started);
         Assert.Equal("faulted", saga.Checkpoint!["STAGE"]);
-        Assert.Single(faultedMessages.Messages.OfType<FaultJob>());
-        Assert.Single(faultedMessages.Messages.OfType<JobFaulted>());
+        Assert.Single(faultedMessages.Messages.OfType<IFaultJob>());
+        Assert.Single(faultedMessages.Messages.OfType<IJobFaulted>());
     }
 
     [Fact]
@@ -410,7 +410,7 @@ public sealed class JobStateMachineLifecycleTests
 
         Assert.True(machine.Accessor.GetStateExpression(machine.Final).Compile()(saga));
         Assert.Null(saga.IncompleteAttempts);
-        FinalizeJobAttempt[] finalizations = outgoing.Messages.OfType<FinalizeJobAttempt>().ToArray();
+        IFinalizeJobAttempt[] finalizations = outgoing.Messages.OfType<IFinalizeJobAttempt>().ToArray();
         Assert.Equal([first, second], finalizations.Select(static message => message.AttemptId));
         Assert.All(finalizations, message => Assert.Equal(saga.CorrelationId, message.JobId));
     }
@@ -461,7 +461,7 @@ public sealed class JobStateMachineLifecycleTests
         TimeProvider = new FixedTimeProvider(Now),
     };
 
-    private static Fault<AllocateJobSlot> CreateAllocationFault(JobSaga saga) => new FaultEvent<AllocateJobSlot>
+    private static Fault<IAllocateJobSlot> CreateAllocationFault(JobSaga saga) => new FaultEvent<IAllocateJobSlot>
     {
         FaultId = NewId.NextGuid(),
         Timestamp = Now,
@@ -484,7 +484,7 @@ public sealed class JobStateMachineLifecycleTests
         var instance = new SagaInstance<JobSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, StateSetupMessage>(consumeContext, instance);
-        sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
+        sagaContext.AddOrUpdatePayload<IJobSagaSettings>(() => settings, _ => settings);
 
         return sagaContext.CalculateNextStartDate();
     }
@@ -512,7 +512,7 @@ public sealed class JobStateMachineLifecycleTests
         var instance = new SagaInstance<JobSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, T>(consumeContext, instance);
-        sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
+        sagaContext.AddOrUpdatePayload<IJobSagaSettings>(() => settings, _ => settings);
         IBehaviorContext<JobSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 

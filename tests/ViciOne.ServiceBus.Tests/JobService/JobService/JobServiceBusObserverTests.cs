@@ -108,7 +108,7 @@ public sealed class JobServiceBusObserverTests
 
         public Uri InstanceAddress { get; } = new("loopback://localhost/job-service");
 
-        public JobServiceSettings Settings => throw new NotSupportedException();
+        public IJobServiceSettings Settings => throw new NotSupportedException();
 
         public Task BusStartedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
         {
@@ -125,17 +125,17 @@ public sealed class JobServiceBusObserverTests
         }
 
         public Task StartJobAsync<TJob>(
-            ConsumeContext<StartJob> context,
+            ConsumeContext<IStartJob> context,
             TJob job,
             IPipe<ConsumeContext<TJob>> jobPipe,
             JobOptions<TJob> jobOptions,
             CancellationToken cancellationToken = default)
             where TJob : class => throw new NotSupportedException();
 
-        public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference) =>
+        public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out IJobHandle? jobReference) =>
             throw new NotSupportedException();
 
-        public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobHandle) =>
+        public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out IJobHandle? jobHandle) =>
             throw new NotSupportedException();
 
         public void RegisterJobType<TJob>(JobOptions<TJob> options, Guid jobTypeId, string jobTypeName)

@@ -181,7 +181,7 @@ public sealed class JobServicePublicConfigurationApiTests
     private sealed class FirstDistributionStrategy : IJobDistributionStrategy
     {
         public Task<Uri?> SelectInstanceAsync(
-            ConsumeContext<AllocateJobSlot> requestContext,
+            ConsumeContext<IAllocateJobSlot> requestContext,
             JobDistributionContext distributionContext,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Uri?>(null);
@@ -190,7 +190,7 @@ public sealed class JobServicePublicConfigurationApiTests
     private sealed class SecondDistributionStrategy : IJobDistributionStrategy
     {
         public Task<Uri?> SelectInstanceAsync(
-            ConsumeContext<AllocateJobSlot> requestContext,
+            ConsumeContext<IAllocateJobSlot> requestContext,
             JobDistributionContext distributionContext,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Uri?>(null);
