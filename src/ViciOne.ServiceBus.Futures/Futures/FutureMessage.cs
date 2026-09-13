@@ -78,7 +78,7 @@ public sealed class FutureMessage
 
     static IReadOnlyList<string> SnapshotMessageTypes(IReadOnlyList<string> messageTypes, string parameterName)
     {
-        string[] snapshot = messageTypes.ToArray();
+        string[] snapshot = [.. messageTypes];
         if (snapshot.Any(static value => !IsMessageContractUrn(value)))
             throw new ArgumentException("Message contract identifiers must be absolute URNs in the urn:message namespace.", parameterName);
 

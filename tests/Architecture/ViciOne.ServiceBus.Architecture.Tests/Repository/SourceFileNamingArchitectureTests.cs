@@ -720,6 +720,21 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "futures-project-folders-mirror-public-namespaces")]
+    public void FuturesProjectSourceFolders_MirrorTheirPublicNamespaces()
+    {
+        const string namespaceRoot = "ViciOne.ServiceBus";
+        string projectRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Futures");
+        string projectPath = Path.Combine(projectRoot, "ViciOne.ServiceBus.Futures.csproj");
+        List<string> violations = FindNamespaceFolderViolations(projectRoot, namespaceRoot).ToList();
+        string rootNamespace = MsBuildEvaluation.PropertyOf(projectPath, "RootNamespace");
+        if (!StringComparer.Ordinal.Equals(namespaceRoot, rootNamespace))
+            violations.Add($"{RepositoryLayout.RelativeToRoot(projectPath)}: RootNamespace is {rootNamespace}, expected {namespaceRoot}");
+
+        Assert.Empty(violations.Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "entity-framework-source-is-grouped-by-current-responsibility")]
     public void EntityFrameworkProject_UsesOnlyCurrentResponsibilityFolders()
     {
@@ -910,6 +925,39 @@ public sealed class SourceFileNamingArchitectureTests
                 return StringComparer.Ordinal.Equals(actualFolder, expectedFolder)
                     ? null
                     : $"{RepositoryLayout.RelativeToRoot(path)}: expected top-level folder {expectedFolder ?? "<root>"} for {namespaceName}";
+            })
+            .OfType<string>()
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+    private static string[] FindNamespaceFolderViolations(string projectRoot, string namespaceRoot) =>
+        Directory.EnumerateFiles(projectRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains(
+                $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                RepositoryLayout.PathComparison))
+            .Where(path => Path.GetFileName(path) != "GlobalUsings.cs")
+            .Select(path =>
+            {
+                string relativePath = Path.GetRelativePath(projectRoot, path);
+                string actualFolder = Path.GetDirectoryName(relativePath) ?? string.Empty;
+                string[] namespaces = ReadNamespaces(path, CancellationToken.None);
+
+                if (namespaces.Length != 1)
+                    return $"{RepositoryLayout.RelativeToRoot(path)}: expected one namespace, found {namespaces.Length}";
+
+                string namespaceName = namespaces[0];
+                if (namespaceName != namespaceRoot
+                    && !namespaceName.StartsWith(namespaceRoot + ".", StringComparison.Ordinal))
+                {
+                    return $"{RepositoryLayout.RelativeToRoot(path)}: namespace {namespaceName} is outside {namespaceRoot}";
+                }
+
+                string expectedFolder = namespaceName == namespaceRoot
+                    ? string.Empty
+                    : namespaceName[(namespaceRoot.Length + 1)..].Replace('.', Path.DirectorySeparatorChar);
+                return StringComparer.Ordinal.Equals(actualFolder, expectedFolder)
+                    ? null
+                    : $"{RepositoryLayout.RelativeToRoot(path)}: expected folder {expectedFolder} for {namespaceName}";
             })
             .OfType<string>()
             .Order(StringComparer.Ordinal)

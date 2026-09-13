@@ -63,14 +63,16 @@ internal sealed class FutureConsumerKind :
         ArgumentNullException.ThrowIfNull(excludedRegistrationTypes);
 
         IContainerSelector selector = registrationContext.GetRequiredService<IContainerSelector>();
-        IFutureRegistration[] registrations = selector.GetRegistrations<IFutureRegistration>(registrationContext)
-            .Where(registration => !excludedRegistrationTypes.Contains(registration.Type))
-            .ToArray();
+        IFutureRegistration[] registrations =
+        [
+            .. selector.GetRegistrations<IFutureRegistration>(registrationContext)
+                .Where(registration => !excludedRegistrationTypes.Contains(registration.Type))
+        ];
 
         foreach (IFutureRegistration registration in registrations)
             registration.Configure(endpointConfigurator, registrationContext);
 
-        return registrations.Select(registration => registration.Type).ToArray();
+        return [.. registrations.Select(registration => registration.Type)];
     }
 
     public void ConfigureTestHarness(IConsumerKindTestHarnessContext context)
@@ -82,24 +84,16 @@ internal sealed class FutureConsumerKind :
     }
 
 
-    sealed class Registration :
+    sealed class Registration(IFutureRegistration registration, IFutureDefinition definition, string endpointName) :
         IConsumerKindRegistration
     {
-        static readonly IReadOnlyCollection<string> NoCompanionEndpoints = Array.Empty<string>();
-        readonly IFutureRegistration _registration;
-
-        public Registration(IFutureRegistration registration, IFutureDefinition definition, string endpointName)
-        {
-            _registration = registration;
-            Definition = definition;
-            EndpointDefinition = definition.EndpointDefinition;
-            EndpointName = endpointName;
-        }
+        static readonly IReadOnlyCollection<string> NoCompanionEndpoints = [];
+        readonly IFutureRegistration _registration = registration;
 
         public Type RegistrationType => _registration.Type;
-        public IDefinition Definition { get; }
-        public string EndpointName { get; }
-        public IEndpointDefinition? EndpointDefinition { get; }
+        public IDefinition Definition { get; } = definition;
+        public string EndpointName { get; } = endpointName;
+        public IEndpointDefinition? EndpointDefinition { get; } = definition.EndpointDefinition;
         public bool RequiresServiceInstance => false;
         public IReadOnlyCollection<string> CompanionEndpointNames => NoCompanionEndpoints;
 

@@ -628,3 +628,28 @@ contract has SHA-256 `a31b98d00ab15941a47bef08aa05447a24db4e445aba00d0838a0686ca
 
 The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
 remains active for the remaining complete source owners and the final repository-wide audit.
+
+## Iteration 100
+
+Iteration 100 completes the remaining Futures interface normalization and aligns the project tree
+with its namespaces. `Get<TFuture>` is now `IGet<TFuture>` with no compatibility alias; its
+correlation inheritance, generic constraint, public event consumer, and durable-result feature are
+preserved. `ViciOne.ServiceBus.Futures` remains an independent capability project beside the Core
+`ViciOne.ServiceBus` project. Within it, `Configuration/` and `Futures/` now reflect the existing
+namespace branches relative to the explicit `ViciOne.ServiceBus` root namespace.
+
+Two red-first architecture rules enforce the interface and folder decisions. A deliberate removal
+of correlated identity fails six required compile sites. Full-suite execution additionally exposed
+and closed one asynchronous observer race in the test harness and one stale hard-coded architecture
+path after the move.
+
+The Engineering Release build passes all 77 projects with zero warnings or errors. The complete
+Unit/Architecture solution passes 6,241/6,241 with no skips. Fresh coverage is 75.3393% line and
+68.0696% branch overall; Futures is 90.4990% line and 85.4839% branch. Both full format gates,
+requirements, source hygiene, API identity/path scans, and Git whitespace pass. Package validation
+passes 18 journeys, 31 fresh packages, three isolated provider-testing consumers, and all 30 runtime
+APIs. The 19,030-line packed API contract has SHA-256
+`a96d93cc091d97174baceb59fe5230228734c2b98a676431521e70a329cce9fa`.
+
+The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
+remains active for the remaining complete source owners and final repository-wide audit.

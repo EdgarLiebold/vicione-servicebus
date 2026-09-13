@@ -48,7 +48,7 @@ public static class FutureStateExtensions
         ArgumentNullException.ThrowIfNull(message);
         IDictionary<string, object> dictionary = context.SerializerContext.ToDictionary(message);
 
-        return new FutureMessage(new Dictionary<string, object>(dictionary), MessageTypeCache<T>.MessageTypeNames.ToArray());
+        return new FutureMessage(new Dictionary<string, object>(dictionary), [.. MessageTypeCache<T>.MessageTypeNames]);
     }
 
     /// <summary>Deserializes all stored successful results that implement the requested contract.</summary>
@@ -61,7 +61,7 @@ public static class FutureStateExtensions
         ArgumentNullException.ThrowIfNull(context);
         return context.Saga.HasResults()
             ? context.Saga.Results.Select(x => context.ToObject<T>(x.Value)).OfType<T>()
-            : Enumerable.Empty<T>();
+            : [];
     }
 
     /// <summary>Adds the response endpoint and optional request identifier as a future subscriber.</summary>

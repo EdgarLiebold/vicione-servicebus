@@ -52,8 +52,8 @@ internal sealed class FutureResultConfigurator<TCommand, TResult, TInput> :
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(IBehaviorContext<FutureState, TInput> context)
         {
-            return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
-            {
+            return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context),
+            [
                 new
                 {
                     context.Saga.Completed,
@@ -63,7 +63,7 @@ internal sealed class FutureResultConfigurator<TCommand, TResult, TInput> :
                 },
                 context.GetCommand<TCommand>(),
                 context.Message
-            });
+            ]);
         }
 
         _result.Factory = MessageFactory<TResult>.Create((Func<IBehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
@@ -115,8 +115,8 @@ internal sealed class FutureResultConfigurator<TCommand, TResult> :
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(IBehaviorContext<FutureState> context)
         {
-            return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
-            {
+            return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context),
+            [
                 new
                 {
                     context.Saga.Completed,
@@ -125,7 +125,7 @@ internal sealed class FutureResultConfigurator<TCommand, TResult> :
                     context.Saga.Location,
                 },
                 context.GetCommand<TCommand>()
-            });
+            ]);
         }
 
         _result.Factory = MessageFactory<TResult>.Create((Func<IBehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);

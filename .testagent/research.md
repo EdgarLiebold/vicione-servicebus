@@ -1161,3 +1161,41 @@ whitespace, source hygiene, and owner style audit pass. Fresh package validation
 31 packages, three isolated provider-testing consumers, and all 30 runtime API assemblies. The
 intentional `TimeProvider` constructor is the only packed-contract addition; the 19,030-line
 contract has SHA-256 `a31b98d00ab15941a47bef08aa05447a24db4e445aba00d0838a0686ca85aa0a`.
+
+## Iteration 100 Futures interface research
+
+The complete Futures source was manually read in Iteration 88 and remains at 55 files. A current
+syntax inventory finds exactly one unprefixed interface: the public empty correlated message
+contract `Get<TFuture>`. Its only product consumer is the public protected `ResultRequested` event
+on `Future<TCommand, TState>`, so the contract is behaviorally small but part of the packed public
+API. The name describes a command, not a method, yet it is still an interface exposed to C# callers;
+the .NET interface rule therefore applies just as it did to the Saga event and message contracts.
+
+No compatibility alias is appropriate in this permanent Greenfield fork. Renaming the declaration,
+file, and event generic argument to `IGet<TFuture>` preserves generic arity, correlation inheritance,
+constraint, state-machine behavior, and feature availability while making the contract immediately
+recognizable as an interface.
+
+The user's source-tree question prompted a second structural check rather than relocation beneath
+Core. Project directories express assembly and package ownership; source subdirectories express
+namespace and responsibility. `ViciOne.ServiceBus.Futures` is therefore correctly a sibling project,
+but its former root-level `ViciOne.ServiceBus.Futures` declarations and nested folders did not mirror
+their namespaces. Declaring `ViciOne.ServiceBus` as `RootNamespace` and moving those declarations
+beneath `Futures/` resolves all 23 IDE0130 findings without changing namespaces or binaries.
+
+Thirty additional optional expression findings were reviewed and applied manually. One IDE0290
+suggestion remains intentionally informational on the public convenience future definition: an
+explicit documented constructor is clearer at that framework boundary, and primary-constructor
+syntax would be cosmetic. There are no style warnings or errors.
+
+The first full test execution discovered that a harness test asserted observer counters after the
+handler task, although post-operation observer callbacks may legally finish later. Awaitable
+milestones for consume, publish, and send observations eliminate that scheduling race. The next
+complete run then found an architecture test with a hard-coded path to the old Futures layout; its
+current path was corrected. The final Unit/Architecture solution passes all 6,241 tests.
+
+The isolated correlation-inheritance counterchange fails compilation in six required correlation
+and topology call sites. Fresh coverage reports 75.3393% line and 68.0696% branch overall, and
+90.4990% line and 85.4839% branch for Futures. The final package gate passes all 18 journeys, 31
+packages, three isolated provider-testing consumers, and 30 runtime APIs. The 19,030-line contract
+hash is `a96d93cc091d97174baceb59fe5230228734c2b98a676431521e70a329cce9fa`.

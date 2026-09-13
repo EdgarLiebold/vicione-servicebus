@@ -35,7 +35,7 @@ public sealed class FutureSubscription :
     /// <returns><see langword="true" /> when both subscription identities match; otherwise, <see langword="false" />.</returns>
     public bool Equals(FutureSubscription? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
             return false;
         if (ReferenceEquals(this, other))
             return true;
@@ -83,9 +83,9 @@ public sealed class FutureSubscription :
         {
             if (ReferenceEquals(x, y))
                 return true;
-            if (ReferenceEquals(x, null))
+            if (x is null)
                 return false;
-            if (ReferenceEquals(y, null))
+            if (y is null)
                 return false;
             return x.Equals(y);
         }

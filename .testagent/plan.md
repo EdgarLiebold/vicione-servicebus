@@ -2451,3 +2451,41 @@ whitespace gates pass. The 19,030-line packed contract has SHA-256
 
 The overall A+ goal remains active for the remaining complete source owners and the final
 repository-wide completion audit.
+
+## Iteration 100 Futures interface contract plan
+
+Iteration 100 starts from remotely verified commit
+`045284d49168fac7f9ab0068453d81473bb2b150` and annotated tag
+`servicebus-a-plus-remediation-iteration-99-2026-09-13`. The complete Futures owner was manually
+read and remediated in Iteration 88. This bounded follow-up applies the subsequently adopted .NET
+interface naming rule to its sole remaining violation and rereads the declaration, behavior, direct
+consumer, tests, comments, filename, and packed contract.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Apply the .NET interface prefix | red-first owner rule reports the exact remaining interface and stays green after correction |
+| Preserve the durable query feature | the state-machine event retains correlation and all existing result-request behavior |
+| Preserve discoverability | the filename, type name, generic parameter, constraint, XML documentation, and consumer identity remain aligned |
+| Close the complete consumer surface | source, tests, package API, and isolated developer journeys compile against the new identity |
+| Demonstrate safety | focused architecture/Futures tests, full build and Unit/Architecture suite, API/package, format, and hygiene gates |
+
+No source or documentation generator will be used. This is an intentional Greenfield breaking
+rename, not a compatibility alias; both old identities must be absent at completion.
+
+### Iteration 100 completion
+
+The remaining Futures interface is normalized from `Get<TFuture>` to `IGet<TFuture>` without a
+compatibility alias, and its correlated message inheritance and state-machine event contract are
+preserved. The project remains an independent sibling of Core; its existing namespaces are now
+reflected by `Configuration/` and `Futures/` source branches relative to the explicit
+`ViciOne.ServiceBus` root namespace. A permanent red-first interface rule and a red-first
+namespace/folder rule protect both decisions.
+
+A full-suite observer race and one architecture test path coupled to the prior layout were exposed,
+fixed, and independently rerun. The final Engineering build, 6,241-test Unit/Architecture solution,
+format gates, coverage, package journeys, public API comparison, and hygiene checks pass. Futures
+coverage is 90.4990% line and 85.4839% branch. The packed 19,030-line contract has SHA-256
+`a96d93cc091d97174baceb59fe5230228734c2b98a676431521e70a329cce9fa`.
+
+The overall A+ goal remains active for the remaining complete source owners and the final
+repository-wide completion audit.

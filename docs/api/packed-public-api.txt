@@ -8144,7 +8144,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefiniti
   PROPERTY System.Uri RequestAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition<TFuture,TConsumer,TRequest,TResponse> [base=ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition<TFuture,TConsumer,TRequest,TResponse,ViciOne.ServiceBus.Fault<TRequest>>]
   CTOR public ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition<TFuture,TConsumer,TRequest,TResponse>(ViciOne.ServiceBus.Advanced.Registration.IConsumerDefinition<TConsumer> consumerDefinition)
-TYPE interface public ViciOne.ServiceBus.Futures.Contracts.Get<TFuture> [interfaces=ViciOne.ServiceBus.Advanced.ICorrelatedBy<System.Guid>]
+TYPE interface public ViciOne.ServiceBus.Futures.Contracts.IGet<TFuture> [interfaces=ViciOne.ServiceBus.Advanced.ICorrelatedBy<System.Guid>]
 TYPE class public ViciOne.ServiceBus.Futures.Future<TCommand,TResult,TFault> [abstract,base=ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine<ViciOne.ServiceBus.Futures.FutureState>]
   CTOR protected ViciOne.ServiceBus.Futures.Future<TCommand,TResult,TFault>()
   METHOD protected System.Void ConfigureCommand(System.Action<ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator<ViciOne.ServiceBus.Futures.FutureState,TCommand>> configure)
@@ -8160,7 +8160,7 @@ TYPE class public ViciOne.ServiceBus.Futures.Future<TCommand,TResult,TFault> [ab
   METHOD protected static System.Guid RequestIdOrDefault(ViciOne.ServiceBus.Advanced.MessageContext context)
   METHOD protected static System.Guid RequestIdOrFault(ViciOne.ServiceBus.Advanced.MessageContext context)
   PROPERTY ViciOne.ServiceBus.Sagas.IEvent<TCommand> CommandReceived { public-get; protected-set; }
-  PROPERTY ViciOne.ServiceBus.Sagas.IEvent<ViciOne.ServiceBus.Futures.Contracts.Get<TCommand>> ResultRequested { public-get; protected-set; }
+  PROPERTY ViciOne.ServiceBus.Sagas.IEvent<ViciOne.ServiceBus.Futures.Contracts.IGet<TCommand>> ResultRequested { public-get; protected-set; }
   PROPERTY ViciOne.ServiceBus.Sagas.IState Completed { public-get; protected-set; }
   PROPERTY ViciOne.ServiceBus.Sagas.IState Faulted { public-get; protected-set; }
   PROPERTY ViciOne.ServiceBus.Sagas.IState WaitingForCompletion { public-get; protected-set; }

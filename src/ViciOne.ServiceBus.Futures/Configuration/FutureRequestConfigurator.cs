@@ -119,7 +119,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> FactoryAsync(IBehaviorContext<FutureState, TInput> context)
         {
-            return MessageInitializerCache<TRequest>.InitializeMessageAsync(context, valueProvider(context), new object[] { context.Message });
+            return MessageInitializerCache<TRequest>.InitializeMessageAsync(context, valueProvider(context), [context.Message]);
         }
 
         _request.Factory = MessageFactory<TRequest>.Create((Func<IBehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>>)FactoryAsync);
@@ -193,7 +193,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(inputs);
         cancellationToken.ThrowIfCancellationRequested();
-        TInput[] inputSnapshot = inputs.ToArray();
+        TInput[] inputSnapshot = [.. inputs];
         foreach (TInput input in inputSnapshot)
             ArgumentNullException.ThrowIfNull(input);
 

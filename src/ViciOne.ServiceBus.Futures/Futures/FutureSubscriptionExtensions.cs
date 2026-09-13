@@ -25,25 +25,28 @@ public static class FutureSubscriptionExtensions
         ArgumentNullException.ThrowIfNull(factory);
         ArgumentNullException.ThrowIfNull(subscriptions);
         cancellationToken.ThrowIfCancellationRequested();
-        FutureSubscription[] subscriberSnapshot = subscriptions.ToArray();
+        FutureSubscription[] subscriberSnapshot = [.. subscriptions];
         foreach (FutureSubscription subscription in subscriberSnapshot)
             ArgumentNullException.ThrowIfNull(subscription);
 
         return await factory.UseAsync(context, async (ctx, s) =>
         {
-            Task[] tasks = subscriberSnapshot.Select(async subscription =>
-            {
-                var endpoint = await ctx.GetSendEndpointAsync(subscription.Address, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                if (subscription.RequestId.HasValue)
+            Task[] tasks =
+            [
+                .. subscriberSnapshot.Select(async subscription =>
                 {
-                    var pipe = new FutureResultPipe<T>(s.Pipe, subscription.RequestId.Value);
+                    var endpoint = await ctx.GetSendEndpointAsync(subscription.Address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                    await endpoint.SendAsync(s.Message, pipe, cancellationToken).ConfigureAwait(false);
-                }
-                else
-                    await endpoint.SendAsync(s.Message, s.Pipe, cancellationToken).ConfigureAwait(false);
-            }).ToArray();
+                    if (subscription.RequestId.HasValue)
+                    {
+                        var pipe = new FutureResultPipe<T>(s.Pipe, subscription.RequestId.Value);
+
+                        await endpoint.SendAsync(s.Message, pipe, cancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                        await endpoint.SendAsync(s.Message, s.Pipe, cancellationToken).ConfigureAwait(false);
+                })
+            ];
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
@@ -68,25 +71,28 @@ public static class FutureSubscriptionExtensions
         ArgumentNullException.ThrowIfNull(factory);
         ArgumentNullException.ThrowIfNull(subscriptions);
         cancellationToken.ThrowIfCancellationRequested();
-        FutureSubscription[] subscriberSnapshot = subscriptions.ToArray();
+        FutureSubscription[] subscriberSnapshot = [.. subscriptions];
         foreach (FutureSubscription subscription in subscriberSnapshot)
             ArgumentNullException.ThrowIfNull(subscription);
 
         return await factory.UseAsync(context, async (ctx, s) =>
         {
-            Task[] tasks = subscriberSnapshot.Select(async subscription =>
-            {
-                var endpoint = await ctx.GetSendEndpointAsync(subscription.Address, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                if (subscription.RequestId.HasValue)
+            Task[] tasks =
+            [
+                .. subscriberSnapshot.Select(async subscription =>
                 {
-                    var pipe = new FutureResultPipe<T>(s.Pipe, subscription.RequestId.Value);
+                    var endpoint = await ctx.GetSendEndpointAsync(subscription.Address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                    await endpoint.SendAsync(s.Message, pipe, cancellationToken).ConfigureAwait(false);
-                }
-                else
-                    await endpoint.SendAsync(s.Message, s.Pipe, cancellationToken).ConfigureAwait(false);
-            }).ToArray();
+                    if (subscription.RequestId.HasValue)
+                    {
+                        var pipe = new FutureResultPipe<T>(s.Pipe, subscription.RequestId.Value);
+
+                        await endpoint.SendAsync(s.Message, pipe, cancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                        await endpoint.SendAsync(s.Message, s.Pipe, cancellationToken).ConfigureAwait(false);
+                })
+            ];
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 

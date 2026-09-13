@@ -74,7 +74,7 @@ public static class FutureRegistrationExtensions
 
         var types = AssemblyTypeCache.FindTypes(assemblies, FutureRegistrationMetadata.IsFutureOrDefinition);
 
-        AddFutures(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
+        AddFutures(configurator, filter, [.. types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed)]);
     }
 
     /// <summary>Adds matching futures from every assembly currently loaded in the application domain.</summary>
@@ -167,6 +167,6 @@ public static class FutureRegistrationExtensions
                     || candidate.Namespace.Equals(type.Namespace, StringComparison.Ordinal));
         }
 
-        return AssemblyTypeCache.FindTypes(type.Assembly, TypeClassification.Concrete | TypeClassification.Closed, Filter).ToArray();
+        return [.. AssemblyTypeCache.FindTypes(type.Assembly, TypeClassification.Concrete | TypeClassification.Closed, Filter)];
     }
 }

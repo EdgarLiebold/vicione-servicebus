@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
     <PackageTags>ViciOne.ServiceBus;Futures</PackageTags>
     <Description>State-machine-backed future requests and durable result routing for ViciOne.ServiceBus.</Description>
   </PropertyGroup>

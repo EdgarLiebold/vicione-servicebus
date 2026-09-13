@@ -9,7 +9,7 @@ public sealed class TechnicalRetryArchitectureTests
     private static readonly IReadOnlyDictionary<string, (int Immediate, int Delayed)> CanonicalPolicyOwners =
         new Dictionary<string, (int Immediate, int Delayed)>(StringComparer.Ordinal)
         {
-            ["src/ViciOne.ServiceBus.Futures/DependencyInjection/DefaultFutureDefinition.cs"] = (1, 1),
+            ["src/ViciOne.ServiceBus.Futures/Futures/DependencyInjection/DefaultFutureDefinition.cs"] = (1, 1),
             ["src/ViciOne.ServiceBus.Futures/Configuration/RequestConsumerFutureDefinition.cs"] = (1, 0),
             ["src/ViciOne.ServiceBus.JobService/Configuration/JobAttemptSagaDefinition.cs"] = (1, 0),
             ["src/ViciOne.ServiceBus.JobService/Configuration/JobSagaDefinition.cs"] = (1, 0),

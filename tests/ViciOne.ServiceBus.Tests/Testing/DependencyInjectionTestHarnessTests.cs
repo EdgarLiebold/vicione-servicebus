@@ -618,6 +618,11 @@ public sealed class DependencyInjectionTestHarnessTests
             ContainerHandlerMessage actual = await handled.Task.WaitAsync(
                 timeout,
                 TestContext.Current.CancellationToken);
+            await Task.WhenAll(
+                    observer.ConsumeObserved,
+                    observer.PublishObserved,
+                    observer.SendObserved)
+                .WaitAsync(timeout, TestContext.Current.CancellationToken);
             harness.ForceInactive();
             await harness.InactivityTask.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
@@ -723,27 +728,36 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed class RecordingObserver : IConsumeObserver, IPublishObserver, ISendObserver
     {
+        private readonly TaskCompletionSource<bool> _consumeObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource<bool> _publishObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource<bool> _sendObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private int _consumeCount;
         private int _publishCount;
         private int _sendCount;
 
         public int ConsumeCount => Volatile.Read(ref _consumeCount);
 
+        public Task ConsumeObserved => _consumeObserved.Task;
+
         public int PublishCount => Volatile.Read(ref _publishCount);
 
+        public Task PublishObserved => _publishObserved.Task;
+
         public int SendCount => Volatile.Read(ref _sendCount);
+
+        public Task SendObserved => _sendObserved.Task;
 
         public Task PreConsumeAsync<T>(ConsumeContext<T> context)
             where T : class
         {
-            Interlocked.Increment(ref _consumeCount);
+            Record(ref _consumeCount, _consumeObserved);
             return Task.CompletedTask;
         }
 
         public Task PostConsumeAsync<T>(ConsumeContext<T> context)
             where T : class
         {
-            Interlocked.Increment(ref _consumeCount);
+            Record(ref _consumeCount, _consumeObserved);
             return Task.CompletedTask;
         }
 
@@ -753,14 +767,14 @@ public sealed class DependencyInjectionTestHarnessTests
         public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
-            Interlocked.Increment(ref _publishCount);
+            Record(ref _publishCount, _publishObserved);
             return Task.CompletedTask;
         }
 
         public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class
         {
-            Interlocked.Increment(ref _publishCount);
+            Record(ref _publishCount, _publishObserved);
             return Task.CompletedTask;
         }
 
@@ -770,19 +784,25 @@ public sealed class DependencyInjectionTestHarnessTests
         public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
-            Interlocked.Increment(ref _sendCount);
+            Record(ref _sendCount, _sendObserved);
             return Task.CompletedTask;
         }
 
         public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
-            Interlocked.Increment(ref _sendCount);
+            Record(ref _sendCount, _sendObserved);
             return Task.CompletedTask;
         }
 
         public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
+
+        private static void Record(ref int count, TaskCompletionSource<bool> observed)
+        {
+            if (Interlocked.Increment(ref count) >= 2)
+                observed.TrySetResult(true);
+        }
     }
 
     public sealed class ManagedSaga : ISaga

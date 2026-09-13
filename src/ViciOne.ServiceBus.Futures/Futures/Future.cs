@@ -24,8 +24,8 @@ public abstract class Future<TCommand, TResult, TFault> :
     where TResult : class
     where TFault : class
 {
-    readonly FutureFault<TFault> _fault = new FutureFault<TFault>();
-    readonly FutureResult<TCommand, TResult> _result = new FutureResult<TCommand, TResult>();
+    readonly FutureFault<TFault> _fault = new();
+    readonly FutureResult<TCommand, TResult> _result = new();
 
     /// <summary>Initializes the durable lifecycle and default terminal fault mapping for the future.</summary>
     protected Future()
@@ -70,11 +70,11 @@ public abstract class Future<TCommand, TResult, TFault> :
         {
             var message = context.GetCommand<TCommand>();
 
-            List<Fault> faults = context.Saga.Faults.Select(fault => context.ToObject<Fault>(fault.Value)).OfType<Fault>().ToList();
+            List<Fault> faults = [.. context.Saga.Faults.Select(fault => context.ToObject<Fault>(fault.Value)).OfType<Fault>()];
 
             var faulted = faults.First();
 
-            ExceptionInfo[] exceptions = faults.SelectMany(fault => fault.Exceptions).ToArray();
+            ExceptionInfo[] exceptions = [.. faults.SelectMany(fault => fault.Exceptions)];
 
             return new
             {
@@ -102,7 +102,7 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// </summary>
     public IEvent<TCommand> CommandReceived { get; protected set; } = null!;
     /// <summary>Gets the event that requests the stored terminal outcome of an existing future.</summary>
-    public IEvent<Get<TCommand>> ResultRequested { get; protected set; } = null!;
+    public IEvent<IGet<TCommand>> ResultRequested { get; protected set; } = null!;
     /// <summary>Configures correlation and topology behavior for the initiating command.</summary>
     /// <param name="configure">The callback that configures the command event.</param>
     protected void ConfigureCommand(Action<IEventCorrelationConfigurator<FutureState, TCommand>> configure)

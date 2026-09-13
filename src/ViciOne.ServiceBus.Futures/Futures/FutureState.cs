@@ -9,7 +9,7 @@ public sealed class FutureState :
     IConsumerKindOwnedState,
     ISagaVersion
 {
-    readonly object _syncRoot = new();
+    readonly Lock _syncRoot = new();
     Dictionary<Guid, FutureMessage>? _faults = [];
     HashSet<Guid>? _pending = [];
     Dictionary<Guid, FutureMessage>? _results = [];
@@ -41,11 +41,11 @@ public sealed class FutureState :
                 return _pending;
 
             lock (_syncRoot)
-                _pending ??= new HashSet<Guid>();
+                _pending ??= [];
 
             return _pending;
         }
-        set => _pending = value == null ? null : new HashSet<Guid>(value);
+        set => _pending = value == null ? null : [.. value];
     }
 
     /// <summary>Gets or sets the endpoints subscribed to the future result.</summary>
@@ -89,7 +89,7 @@ public sealed class FutureState :
                 return _results;
 
             lock (_syncRoot)
-                _results ??= new Dictionary<Guid, FutureMessage>();
+                _results ??= [];
 
             return _results;
         }
@@ -105,7 +105,7 @@ public sealed class FutureState :
                 return _faults;
 
             lock (_syncRoot)
-                _faults ??= new Dictionary<Guid, FutureMessage>();
+                _faults ??= [];
 
             return _faults;
         }
