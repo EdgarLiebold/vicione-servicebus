@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
 /// <summary>Projects an already materialized mediator message through the common deserialization context contract.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The materialized message contract exposed by this context.</typeparam>
 internal sealed class MediatorSerializationContext<TMessage> :
     BaseSerializerContext
     where TMessage : class
@@ -27,7 +27,7 @@ internal sealed class MediatorSerializationContext<TMessage> :
     /// <summary>Returns the materialized message when it implements the requested contract.</summary>
     /// <typeparam name="T">The requested message contract.</typeparam>
     /// <param name="message">Receives the message produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <returns><see langword="true" /> when the materialized message implements <typeparamref name="T" />; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
     {
@@ -44,7 +44,7 @@ internal sealed class MediatorSerializationContext<TMessage> :
     /// <summary>Returns the materialized message when it is assignable to the requested runtime type.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="message">Receives the message produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <returns><see langword="true" /> when the materialized message is assignable to <paramref name="messageType" />; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
         ArgumentNullException.ThrowIfNull(messageType);

@@ -2452,6 +2452,70 @@ whitespace gates pass. The 19,030-line packed contract has SHA-256
 The overall A+ goal remains active for the remaining complete source owners and the final
 repository-wide completion audit.
 
+## Iteration 103 Mediator owner plan
+
+Iteration 103 starts from remotely verified commit
+`c8f7915f48449defd9369cdfb5d10b90b10f09f8` and annotated tag
+`servicebus-a-plus-remediation-iteration-102-2026-09-14`. It treats the complete 28-file Mediator
+capability as one source owner. Every production file, declaration, implementation, and comment is
+read manually before any behavioral or documentation change; no source or comment generator is
+used.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Preserve the complete in-process messaging capability | dispatch, publish, send, request, observer, scope, serialization, expiration, cancellation, and dependency-injection tests remain green |
+| Apply the repository assembly/layout model | retain Mediator as an independent `src` sibling and align each internal path with its declared namespace relative to the project's root namespace |
+| Modernize the public Greenfield API | inspect every public type, member, parameter, default, name, null boundary, cancellation boundary, and configuration entry point without retaining compatibility aliases |
+| Keep implementation and comments accurate | manually verify every comment against the code and remediate stale, historical, redundant, or misleading text while reviewing the corresponding behavior |
+| Close test gaps rather than count test names | map API and meaningful branches to assertions, add red-first tests for uncovered boundaries, and kill controlled counterchanges for substantive corrections |
+| Demonstrate owner completion | focused and full builds/tests, owner and aggregate coverage/CRAP, assertion review, format, package/API, async naming, directives, hygiene, and namespace/file gates |
+
+Any cross-owner correction discovered through Mediator's consumer closure is included only when it
+is required to preserve a coherent public contract or to close a proven behavioral defect. The
+protected `review/` and `TestResults/` trees remain outside the iteration.
+
+### Iteration 103 completion
+
+The complete 28-file Mediator owner was read and reviewed manually without generating source or
+comments. Mediator remains an independently packaged sibling of Core. Its explicit
+`ViciOne.ServiceBus` root namespace now makes `Advanced/`, `Configuration/`, `DependencyInjection/`,
+and `Mediator/` express the namespaces and responsibilities they own; contexts and runtime
+implementation are nested below `Mediator/`. The standard Microsoft dependency-injection extension
+keeps its conventional `Microsoft.Extensions.DependencyInjection` namespace and its physical entry
+point is tested as the documented exception to the repository namespace-path rule. Empty legacy
+directories were removed.
+
+The public Greenfield API now rejects a null explicit base address and requires the registration
+callback that declares mandatory message limits. Both message-limit configuration forms use the
+same fluent return convention. Red-first tests prove these contracts before service-collection side
+effects, cover every service-collection and configuration null boundary, verify request-extension
+arguments, and execute the actual runtime-object pipe overloads and all scoped/runtime/client-context
+connector forms. Two permanent architecture requirements protect interface naming and
+namespace-relative layout. The focused Mediator profile passes 91/91.
+
+The final Engineering Release build passes all 77 projects with zero warnings and errors. Both full
+Roslyn format gates make no changes. All 23 native hermetic hosts pass 6,260/6,260 with no failures
+or skips, including 303 architecture and 3,291 Core-host tests. One earlier Core run reported a
+single transient failure before its output could be retained; five consecutive complete Core runs,
+including the accepted final matrix, then passed 3,291/3,291. Native MTP hosts are executed directly:
+forwarding the VSTest `--logger` option through solution-level `dotnet test` selected no tests and is
+not an authoritative result.
+
+Fresh Core-host coverage is 75.4858% line and 68.1517% branch across the host's reachability closure.
+Mediator is 90.7182% line and 77.5974% branch across 268 methods with complexity 322 and no CRAP score
+above 30. The coverage artifact is
+`/private/tmp/vsb-iteration103-mediator-gapcheck.cobertura.xml`, SHA-256
+`61f6f26fee246a7dfacd7388f78e56a65f3889d3816458cd3facef63af084cc7`. Package validation passes in
+both explicit update and immutable comparison modes: 18 journeys, 31 fresh packages, three isolated
+provider-testing consumers, and 30 runtime APIs. The intentionally changed 19,030-line packed API
+contract has SHA-256 `9f0d543184d729768ba0606420ca05d005c6e1bd1961bfeda472600d18985345`.
+
+Requirements JSON, Git whitespace, C# preprocessor, dummy-marker, old-identity, and empty-directory
+checks pass. The sole textual `NotImplementedException` is the executable policy that classifies
+that application failure as non-retryable, not a dummy implementation. The protected `review/` and
+`TestResults/` trees remain unchanged and unstaged. The overall A+ goal continues with the remaining
+complete source owners and the final repository-wide audit.
+
 ## Iteration 102 Courier interface contract and navigation plan
 
 Iteration 102 starts from remotely verified commit

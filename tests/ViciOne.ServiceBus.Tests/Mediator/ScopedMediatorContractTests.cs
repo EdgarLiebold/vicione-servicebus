@@ -40,7 +40,7 @@ public sealed class ScopedMediatorContractTests
         await publish.PublishAsync(messages[3], new RecordingPipe<PublishContext>(_ =>
             Interlocked.Increment(ref pipes)), token);
         await publish.PublishAsync((object)messages[4], token);
-        await publish.PublishAsync(messages[5], new RecordingPipe<PublishContext>(_ =>
+        await publish.PublishAsync((object)messages[5], new RecordingPipe<PublishContext>(_ =>
             Interlocked.Increment(ref pipes)), token);
         await publish.PublishAsync(messages[6], typeof(ScopedMessage), token);
         await publish.PublishAsync(messages[7], typeof(ScopedMessage), new RecordingPipe<PublishContext>(_ =>
@@ -81,6 +81,19 @@ public sealed class ScopedMediatorContractTests
         using ConnectHandle consumeHandle = mediator.ConnectConsumeObserver(new EmptyConsumeObserver());
         using ConnectHandle messageHandle = mediator.ConnectConsumeMessageObserver(new EmptyConsumeMessageObserver<ScopedMessage>());
         using ConnectHandle pipeHandle = mediator.ConnectConsumePipe(Pipe.Empty<ConsumeContext<ScopedMessage>>());
+        using ConnectHandle optionsPipeHandle = mediator.ConnectConsumePipe(
+            Pipe.Empty<ConsumeContext<ScopedMessage>>(),
+            ConnectPipeOptions.All);
+        using ConnectHandle requestPipeHandle = mediator.ConnectRequestPipe(
+            NewId.NextGuid(),
+            Pipe.Empty<ConsumeContext<ScopedMessage>>());
+        using ConnectHandle contextPipeHandle = contexts[0].ConnectConsumePipe(Pipe.Empty<ConsumeContext<ScopedMessage>>());
+        using ConnectHandle contextOptionsPipeHandle = contexts[0].ConnectConsumePipe(
+            Pipe.Empty<ConsumeContext<ScopedMessage>>(),
+            ConnectPipeOptions.All);
+        using ConnectHandle contextRequestPipeHandle = contexts[0].ConnectRequestPipe(
+            NewId.NextGuid(),
+            Pipe.Empty<ConsumeContext<ScopedMessage>>());
 
         Assert.All(contexts, context => Assert.Same(contexts[0], context));
         Assert.Equal(new Uri("loopback://localhost/response"), contexts[0].ResponseAddress);

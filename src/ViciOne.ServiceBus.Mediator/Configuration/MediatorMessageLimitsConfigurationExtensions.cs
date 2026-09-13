@@ -10,6 +10,8 @@ public static class MediatorMessageLimitsConfigurationExtensions
     /// <param name="configurator">The dependency-injection mediator registration.</param>
     /// <param name="limits">The maximum body size, envelope size, and JSON depth.</param>
     /// <returns>The registration block for continued configuration.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="configurator" /> or <paramref name="limits" /> is <see langword="null" />.</exception>
+    /// <exception cref="ConfigurationException">Message limits are invalid or were already declared.</exception>
     public static IMediatorRegistrationConfigurator Limits(
         this IMediatorRegistrationConfigurator configurator,
         MessageLimits limits)
@@ -31,7 +33,10 @@ public static class MediatorMessageLimitsConfigurationExtensions
     /// <summary>Assigns explicit limits to a directly-created mediator.</summary>
     /// <param name="configurator">The directly created mediator configuration.</param>
     /// <param name="limits">The maximum body size, envelope size, and JSON depth.</param>
-    public static void Limits(this IMediatorConfigurator configurator, MessageLimits limits)
+    /// <returns>The mediator configuration for continued configuration.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="configurator" /> or <paramref name="limits" /> is <see langword="null" />.</exception>
+    /// <exception cref="ConfigurationException">Message limits are invalid, unsupported by the selected mediator, or were already declared.</exception>
+    public static IMediatorConfigurator Limits(this IMediatorConfigurator configurator, MessageLimits limits)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(limits);
@@ -44,6 +49,7 @@ public static class MediatorMessageLimitsConfigurationExtensions
         }
 
         target.SetMessageLimits(limits);
+        return configurator;
     }
 }
 

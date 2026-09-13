@@ -1339,3 +1339,54 @@ marks such application exceptions non-retryable; it is executable policy, not a 
 format requires running outside the filesystem sandbox because its build host opens a named pipe;
 fresh package consumers require network access outside the sandbox for NuGet. The protected
 `review/` and `TestResults/` trees were neither modified nor staged.
+
+## Iteration 103 Mediator API and navigation research
+
+Mediator is an independently shipped capability assembly and therefore remains a sibling of the
+Core project directly below `src`; `src/ViciOne.ServiceBus` is the Core project boundary, not an
+umbrella directory. The same rule explains the repository's provider and integration families:
+cohesive persistence, scheduling, and transport assemblies are grouped beneath `Persistence/`,
+`Scheduling/`, and `Transports/`, while standalone capability assemblies remain direct siblings.
+Within every project, folders mirror the namespace below an explicit common root.
+
+All 28 Mediator production files and 2,730 source lines were read manually. No source or comment
+generator was used. The project now declares `ViciOne.ServiceBus` as its root namespace. Public
+mediator contracts and implementation live below `Mediator/`; their contexts and runtime are below
+`Mediator/Contexts` and `Mediator/Runtime`; configuration implementations live in `Configuration/`;
+and the conventional Microsoft service-collection entry point lives in `DependencyInjection/`.
+Two architecture tests fail red against the old tree and enforce the final interface and path rules.
+
+Public API review found three coherent Greenfield defects. The explicit address overload accepted a
+null address even though a separate default-address overload exists. Both dependency-injection
+callbacks were optional even though the mandatory message limits can only be declared through that
+callback, allowing registration of an unusable mediator. Finally, direct `Limits` returned void while
+the registration form was fluent. The repaired overloads validate all required arguments before
+changing the service collection, both callbacks are required, and both limit forms return their
+input contract. The exact packed API diff contains only those three intentional signature changes.
+
+Coverage exposed four tests whose static message types accidentally selected generic overloads
+instead of the intended runtime-object-plus-pipe overloads. Explicit object dispatch now proves the
+real paths. All consume-pipe option and request-pipe connector forms are exercised through the
+scoped mediator, runtime mediator, and client-factory context. The focused suite passes 91 tests.
+Fresh full-host instrumentation passes 3,291 tests and records 75.4858% line and 68.1517% branch
+coverage across the Core host. Mediator records 90.7182% line and 77.5974% branch coverage,
+complexity 322 across 268 methods, and no CRAP score above 30. Its remaining uncovered methods are
+internal registration delegations and transport-context projections, not unexecuted public
+Mediator entry-point implementations. The accepted artifact SHA-256 is
+`61f6f26fee246a7dfacd7388f78e56a65f3889d3816458cd3facef63af084cc7`.
+
+The first sandboxed test-project compile again stalled without a compiler diagnostic. Process
+inspection showed an active build node; terminating that exact process and rerunning outside the
+filesystem sandbox with disabled build servers produced the authoritative zero-warning build. A
+solution-level `dotnet test` attempt forwarded the VSTest `--logger` argument to native MTP hosts and
+reported zero selected tests. Direct execution of all 23 built native hosts is the correct path.
+One subsequent Core run reported one transient failure before a retained log existed; five complete
+3,291-test repetitions after it passed, including the final all-host matrix.
+
+The final Engineering build passes 77 projects with zero warnings or errors, both full format gates
+make no changes, and all 23 native hosts pass 6,260 tests without failure or skip. Package/API
+validation passes in update and comparison mode with 18 journeys, 31 packages, three isolated
+provider-testing consumers, and 30 runtime assemblies. The final 19,030-line contract SHA-256 is
+`9f0d543184d729768ba0606420ca05d005c6e1bd1961bfeda472600d18985345`. Requirements,
+directives, dummy markers, old identities, empty directories, and Git whitespace are clean; protected
+review and test-result trees remain untouched.

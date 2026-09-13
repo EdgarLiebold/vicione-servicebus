@@ -11,7 +11,7 @@ using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus.Mediator;
+namespace ViciOne.ServiceBus.Mediator.Runtime;
 
 /// <summary>Dispatches messages directly through in-process receive pipelines without a transport broker.</summary>
 internal sealed class InProcessMediator :

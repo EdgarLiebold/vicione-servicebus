@@ -8841,8 +8841,8 @@ TYPE class public ViciOne.ServiceBus.JobService.RecurringJobScheduleConfigurator
 
 ASSEMBLY ViciOne.ServiceBus.Mediator VERSION=1.0.0.0
 TYPE class public Microsoft.Extensions.DependencyInjection.MediatorServiceCollectionExtensions [static]
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator> configure = null)
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator> configure = null)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator> configure)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator> configure)
 TYPE class public ViciOne.ServiceBus.Advanced.MediatorRequestExtensions [static]
   METHOD public static System.Threading.Tasks.Task<T> SendRequestAsync<T>(ViciOne.ServiceBus.Mediator.IMediator mediator, ViciOne.ServiceBus.Mediator.IRequest<T> request, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Configuration.IMediatorConfigurator [interfaces=ViciOne.ServiceBus.Advanced.Observers.IConsumeObserverConnector&ViciOne.ServiceBus.Advanced.Observers.IPublishObserverConnector&ViciOne.ServiceBus.Advanced.Observers.ISendObserverConnector&ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator]
@@ -8850,7 +8850,7 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IMediatorRegistrationConf
   METHOD public abstract System.Void ConfigureMediator(System.Action<ViciOne.ServiceBus.Configuration.IMediatorRegistrationContext,ViciOne.ServiceBus.Configuration.IMediatorConfigurator> configure)
 TYPE interface public ViciOne.ServiceBus.Configuration.IMediatorRegistrationContext [interfaces=ViciOne.ServiceBus.Configuration.IRegistrationContext]
 TYPE class public ViciOne.ServiceBus.Configuration.MediatorMessageLimitsConfigurationExtensions [static]
-  METHOD public static System.Void Limits(ViciOne.ServiceBus.Configuration.IMediatorConfigurator configurator, ViciOne.ServiceBus.MessageLimits limits)
+  METHOD public static ViciOne.ServiceBus.Configuration.IMediatorConfigurator Limits(ViciOne.ServiceBus.Configuration.IMediatorConfigurator configurator, ViciOne.ServiceBus.MessageLimits limits)
   METHOD public static ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator Limits(ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator configurator, ViciOne.ServiceBus.MessageLimits limits)
 TYPE interface public ViciOne.ServiceBus.Mediator.IMediator [interfaces=ViciOne.ServiceBus.Advanced.IClientFactory&ViciOne.ServiceBus.Advanced.IPublishEndpointProvider&ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector&ViciOne.ServiceBus.Advanced.Middleware.IRequestPipeConnector&ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserverConnector&ViciOne.ServiceBus.Advanced.Observers.IConsumeObserverConnector&ViciOne.ServiceBus.IPublishEndpoint&ViciOne.ServiceBus.ISendEndpoint]
 TYPE interface public ViciOne.ServiceBus.Mediator.IRequest<TResponse>

@@ -47,7 +47,7 @@ public sealed class MediatorAdvancedApiTests
             }), cancellationToken);
         await endpoint.SendAsync((object)runtimeMessage, cancellationToken);
         await endpoint.SendAsync(declaredMessage, typeof(AdvancedMessage), cancellationToken);
-        await endpoint.SendAsync(runtimePipeMessage,
+        await endpoint.SendAsync((object)runtimePipeMessage,
             new RecordingPipe<SendContext>(context =>
             {
                 Assert.Equal(new Uri("loopback://localhost/mediator"), context.DestinationAddress);
@@ -127,7 +127,7 @@ public sealed class MediatorAdvancedApiTests
                 Interlocked.Increment(ref pipeInvocations);
             }), cancellationToken);
         await endpoint.PublishAsync((object)runtimeMessage, cancellationToken);
-        await endpoint.PublishAsync(runtimePipeMessage,
+        await endpoint.PublishAsync((object)runtimePipeMessage,
             new RecordingPipe<PublishContext>(context =>
             {
                 Assert.Equal(new Uri("loopback://localhost/mediator"), context.DestinationAddress);

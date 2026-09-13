@@ -75,6 +75,117 @@ public sealed class MediatorFactoryContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-DI", "null-explicit-base-address-is-rejected")]
+    public void AddMediator_RejectsANullExplicitBaseAddressBeforeChangingTheServiceCollection()
+    {
+        var services = new ServiceCollection();
+
+        ArgumentNullException failure = Assert.Throws<ArgumentNullException>(() =>
+            services.AddMediator((Uri)null!, ConfigureLimits));
+
+        Assert.Equal("baseAddress", failure.ParamName);
+        Assert.Empty(services);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-DI", "null-service-collection-is-rejected-by-every-overload")]
+    public void AddMediator_RejectsANullServiceCollectionFromEveryOverload(bool useExplicitBaseAddress)
+    {
+        ArgumentNullException failure = Assert.Throws<ArgumentNullException>(() =>
+        {
+            if (useExplicitBaseAddress)
+            {
+                MediatorServiceCollectionExtensions.AddMediator(
+                    null!,
+                    new Uri("loopback://localhost/application"),
+                    ConfigureLimits);
+            }
+            else
+                MediatorServiceCollectionExtensions.AddMediator(null!, ConfigureLimits);
+        });
+
+        Assert.Equal("services", failure.ParamName);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-DI", "null-configuration-is-rejected-by-every-overload")]
+    public void AddMediator_RejectsANullConfigurationBeforeChangingTheServiceCollection(bool useExplicitBaseAddress)
+    {
+        var services = new ServiceCollection();
+
+        ArgumentNullException failure = Assert.Throws<ArgumentNullException>(() =>
+        {
+            if (useExplicitBaseAddress)
+            {
+                services.AddMediator(
+                    new Uri("loopback://localhost/application"),
+                    (Action<IMediatorRegistrationConfigurator>)null!);
+            }
+            else
+                services.AddMediator((Action<IMediatorRegistrationConfigurator>)null!);
+        });
+
+        Assert.Equal("configure", failure.ParamName);
+        Assert.Empty(services);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-CONFIGURATION", "limits-use-one-fluent-return-convention")]
+    public async Task Limits_ReturnsTheConfiguredContractFromBothApiFormsAsync()
+    {
+        MethodInfo registrationLimits = GetLimitsMethod(typeof(IMediatorRegistrationConfigurator));
+        MethodInfo runtimeLimits = GetLimitsMethod(typeof(IMediatorConfigurator));
+        IMediatorRegistrationConfigurator? registrationInput = null;
+        IMediatorRegistrationConfigurator? registrationResult = null;
+        var services = new ServiceCollection();
+        services.AddMediator(configuration =>
+        {
+            registrationInput = configuration;
+            registrationResult = configuration.Limits(MessageLimits.Conservative);
+        });
+        IMediatorConfigurator? runtimeInput = null;
+        IMediatorConfigurator? runtimeResult = null;
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
+        {
+            runtimeInput = configuration;
+            runtimeResult = configuration.Limits(MessageLimits.Conservative);
+        });
+
+        Assert.Equal(typeof(IMediatorRegistrationConfigurator), registrationLimits.ReturnType);
+        Assert.Equal(typeof(IMediatorConfigurator), runtimeLimits.ReturnType);
+        Assert.Same(registrationInput, registrationResult);
+        Assert.Same(runtimeInput, runtimeResult);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-CONFIGURATION", "configuration-entry-points-reject-null-contracts")]
+    public void ConfigurationEntryPoints_RejectEveryNullRequiredContract()
+    {
+        AssertParameter("configurator", () =>
+            MediatorMessageLimitsConfigurationExtensions.Limits(
+                (IMediatorRegistrationConfigurator)null!,
+                MessageLimits.Conservative));
+        AssertParameter("configurator", () =>
+            MediatorMessageLimitsConfigurationExtensions.Limits(
+                (IMediatorConfigurator)null!,
+                MessageLimits.Conservative));
+        AssertParameter("limits", () =>
+            new ServiceCollection().AddMediator(configuration => configuration.Limits(null!)));
+        AssertParameter("limits", () =>
+            MediatorFactory.Create(configuration => configuration.Limits(null!)));
+        AssertParameter("configure", () =>
+            new ServiceCollection().AddMediator(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.ConfigureMediator(null!);
+            }));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DI", "duplicate-registration-is-rejected")]
     public void AddMediator_RejectsDuplicateRegistrationWithoutReplacingTheFirst()
     {
@@ -160,4 +271,18 @@ public sealed class MediatorFactoryContractTests
     private static IMediator CreateMediator(Uri? baseAddress = null) => MediatorFactory.Create(
         configuration => configuration.Limits(MessageLimits.Conservative),
         baseAddress);
+
+    private static void ConfigureLimits(IMediatorRegistrationConfigurator configuration) =>
+        configuration.Limits(MessageLimits.Conservative);
+
+    private static MethodInfo GetLimitsMethod(Type configuratorType) => Assert.Single(
+        typeof(MediatorMessageLimitsConfigurationExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static),
+        method => method.Name == nameof(MediatorMessageLimitsConfigurationExtensions.Limits)
+            && method.GetParameters()[0].ParameterType == configuratorType);
+
+    private static void AssertParameter(string expectedParameter, Action action)
+    {
+        ArgumentNullException failure = Assert.Throws<ArgumentNullException>(action);
+        Assert.Equal(expectedParameter, failure.ParamName);
+    }
 }

@@ -19,7 +19,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
     /// <summary>Initializes mediator registration for a service collection.</summary>
     /// <param name="collection">The service collection that receives mediator services.</param>
     /// <param name="baseAddress">The loopback address used as the root for mediator endpoints.</param>
-    public ServiceCollectionMediatorConfigurator(IServiceCollection collection, Uri? baseAddress)
+    public ServiceCollectionMediatorConfigurator(IServiceCollection collection, Uri baseAddress)
         : base(collection, new MediatorContainerRegistrar(collection))
     {
         IMediatorRegistrationContext CreateRegistrationContext(IServiceProvider provider)
@@ -76,7 +76,7 @@ internal sealed class ServiceCollectionMediatorConfigurator :
         });
     }
 
-    IMediator CreateMediator(IServiceProvider provider, Uri? baseAddress)
+    IMediator CreateMediator(IServiceProvider provider, Uri baseAddress)
     {
         ConfigureLogContext(provider);
 

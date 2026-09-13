@@ -58,6 +58,25 @@ public sealed class MediatorRequestTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "required-arguments")]
+    public async Task SendRequest_RejectsNullMediatorAndRequestArgumentsAsync()
+    {
+        var request = new UserFromUsername("valid");
+        ArgumentNullException mediatorFailure = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            MediatorRequestExtensions.SendRequestAsync<User>(
+                null!,
+                request,
+                cancellationToken: TestContext.Current.CancellationToken));
+        await using IMediator mediator = MediatorFactory.Create(configuration =>
+            configuration.Limits(MessageLimits.Conservative));
+        ArgumentNullException requestFailure = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            mediator.SendRequestAsync<User>(null!, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("mediator", mediatorFailure.ParamName);
+        Assert.Equal("request", requestFailure.ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "virtual-deadline")]
     public async Task MissingMediatorResponse_ExpiresOnlyWhenTheInjectedTimeProviderAdvancesAsync()
     {

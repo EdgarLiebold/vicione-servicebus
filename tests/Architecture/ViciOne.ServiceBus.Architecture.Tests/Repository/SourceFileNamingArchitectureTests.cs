@@ -155,7 +155,7 @@ public sealed class SourceFileNamingArchitectureTests
             ("src/ViciOne.ServiceBus/Context/Consumption", "ViciOne.ServiceBus.Context",
                 ["BaseConsumeContext.cs", "ConsumeContextOutgoingMessages.cs", "ConsumeContextProxy.cs", "ConsumeContextScope.cs",
                     "DeserializerConsumeContext.cs", "MessageConsumeContext.cs", "UnavailableConsumeContext.cs"]),
-            ("src/ViciOne.ServiceBus.Mediator/Contexts", "ViciOne.ServiceBus.Mediator.Contexts",
+            ("src/ViciOne.ServiceBus.Mediator/Mediator/Contexts", "ViciOne.ServiceBus.Mediator.Contexts",
                 ["MediatorConsumeContext.cs", "MediatorSendMessageContext.cs"]),
             ("src/ViciOne.ServiceBus/Middleware/Contexts", "ViciOne.ServiceBus.Middleware",
                 ["BindContextProxy.cs", "CorrelationIdConsumeContextProxy.cs"]),
@@ -762,6 +762,32 @@ public sealed class SourceFileNamingArchitectureTests
             violations.Add($"{RepositoryLayout.RelativeToRoot(projectPath)}: RootNamespace is {rootNamespace}, expected {namespaceRoot}");
 
         Assert.Empty(violations.Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "mediator-project-folders-mirror-owned-namespaces")]
+    public void MediatorProjectSourceFolders_MirrorOwnedNamespaces()
+    {
+        const string namespaceRoot = "ViciOne.ServiceBus";
+        string projectRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Mediator");
+        string projectPath = Path.Combine(projectRoot, "ViciOne.ServiceBus.Mediator.csproj");
+        string dependencyInjectionEntryPoint = Path.Combine(
+            projectRoot,
+            "DependencyInjection",
+            "MediatorServiceCollectionExtensions.cs");
+        string relativeEntryPoint = RepositoryLayout.RelativeToRoot(dependencyInjectionEntryPoint);
+        List<string> violations = FindNamespaceFolderViolations(projectRoot, namespaceRoot)
+            .Where(violation => !violation.StartsWith(relativeEntryPoint + ":", StringComparison.Ordinal))
+            .ToList();
+        string rootNamespace = MsBuildEvaluation.PropertyOf(projectPath, "RootNamespace");
+        if (!StringComparer.Ordinal.Equals(namespaceRoot, rootNamespace))
+            violations.Add($"{RepositoryLayout.RelativeToRoot(projectPath)}: RootNamespace is {rootNamespace}, expected {namespaceRoot}");
+
+        Assert.Empty(violations.Order(StringComparer.Ordinal));
+        Assert.True(File.Exists(dependencyInjectionEntryPoint), relativeEntryPoint);
+        Assert.Equal(
+            ["Microsoft.Extensions.DependencyInjection"],
+            ReadNamespaces(dependencyInjectionEntryPoint, TestContext.Current.CancellationToken));
     }
 
     [Fact]

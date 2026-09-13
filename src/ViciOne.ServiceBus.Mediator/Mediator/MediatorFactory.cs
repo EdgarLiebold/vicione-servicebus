@@ -1,6 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Mediator.Runtime;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator;
