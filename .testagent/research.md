@@ -1104,3 +1104,60 @@ misstate ownership and risk compile-item overlap. Persistence, scheduling, and t
 are different: they are cohesive external provider/integration families and therefore benefit from
 family directories. This is consistent with the project graph, package surface, architecture
 requirements, and `PO-2026-09-08-01`'s cohesion-and-owner rule.
+
+## Iteration 99 Initializers owner research
+
+The complete Initializers owner contains eight C# files and 598 lines. Six files expose thin
+advanced send, publish, request, and schedule overloads; their public APIs already validate required
+inputs or delegate to validated runtime dispatchers. Existing tests assert every overload's exact
+values, pipe, timeout, cancellation token, capability failure, and required-input behavior.
+
+`IdVariable` and `TimestampVariable` each contain a private, one-implementation interface used only
+as the payload-cache key for `InitializeContext.GetOrAddPayload`. The indirection adds no substitutable
+behavior and leaves the only two unprefixed interfaces in the project. A sealed nested context type
+provides the same distinct cache identity more directly. The current ID test proves multiple ID
+variables share one context value, but the equivalent timestamp invariant is only implicit. One
+direct test should cover both identities with deliberately different explicit values.
+
+The Roslyn static pairing report classifies all eight source files as paired. Extension-method
+pairing and reflection remain known heuristic limitations, so this result does not replace the
+manual test review, runtime coverage, or mutation checks. The directory and namespaces express an
+intentional split between public advanced facade extensions and internal initializer variable
+types; no project relocation or public API expansion is indicated.
+
+The completed review found no behavior or comment defect in the six advanced facade files. Their
+forwarding, timeout, cancellation, pipe, required-input, and unsupported-capability contracts are
+already covered by direct assertions. The two variable files contained needless private interfaces
+used only for distinct payload-cache identities and an inaccurate copied local name. Sealed nested
+context types preserve the cache identity without suggesting polymorphism, and a new combined test
+proves that distinct explicit ID and timestamp variables share the first value within one
+initialization context.
+
+A deliberate default-timestamp mutation survived the pre-existing suite, exposing a real gap. The
+default constructor now delegates to a public `TimeProvider` overload, enabling deterministic
+verification of the selected clock while preserving the system-clock convenience. Null clock,
+captured UTC value, UTC offset, and exact supplied-time behavior are asserted. The final manual
+pseudo-mutation audit kills four of four substantive counterchanges: removing either cache reuse,
+returning the default timestamp, and ignoring the supplied clock. The 20 directly reviewed tests
+contain no assertion-free, trivial-only, self-referential, blocking, skipped, fixed-delay, or
+mutable-shared-fixture behavior. The one intentional system-clock assertion uses a bounded interval;
+exact time semantics use the deterministic provider.
+
+Both new architecture rules were demonstrated red first. Interface naming reported exactly
+`IdContext` and `TimestampContext`; namespace navigation reported both variable files plus the
+evaluated root namespace. Both are green after the remediation. A final static scan finds no
+unprefixed Initializers interface, preprocessor directive, dummy marker, TODO/HACK marker,
+`NotImplementedException`, temporary marker, or empty owner directory.
+
+Fresh full-host coverage passes 3,278/3,278 and reports 75.3322% line and 68.0491% branch overall.
+`ViciOne.ServiceBus.Initializers` itself reports 100% line and 100% branch coverage with complexity
+13. The artifact is `/private/tmp/vsb-iteration99-initializers-final.cobertura.xml`, SHA-256
+`039bbdeeb0bed44ea4b49d9ea5310edb136b0e0352b57552b26b310aeed2dd8f`.
+
+The complete serial Unit/Architecture solution passes 6,239/6,239 with no failures or skips,
+including 295 architecture and 3,278 Core-host cases. The Engineering Release build passes all 77
+projects without warning or error. Both complete format gates, requirements JSON parsing, Git
+whitespace, source hygiene, and owner style audit pass. Fresh package validation passes 18 journeys,
+31 packages, three isolated provider-testing consumers, and all 30 runtime API assemblies. The
+intentional `TimeProvider` constructor is the only packed-contract addition; the 19,030-line
+contract has SHA-256 `a31b98d00ab15941a47bef08aa05447a24db4e445aba00d0838a0686ca85aa0a`.

@@ -50,6 +50,21 @@ public sealed class GreenfieldApiArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-INITIALIZER-API", "interfaces-use-dotnet-prefix")]
+    public void InitializerInterfaces_UseTheDotNetInterfacePrefix()
+    {
+        string initializerDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Initializers");
+        string[] violations = Directory.EnumerateFiles(initializerDirectory, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(FindUnprefixedInterfaces)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Initializer interfaces must begin with I followed by an uppercase letter:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-CAPABILITIES", "standard-unsupported-capability-exceptions")]
     public void UnsupportedCapabilities_UseTheStandardBclContract()
     {

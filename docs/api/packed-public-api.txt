@@ -8314,6 +8314,7 @@ TYPE class public ViciOne.ServiceBus.Initializers.Variables.IdVariable [sealed,i
 TYPE class public ViciOne.ServiceBus.Initializers.Variables.TimestampVariable [sealed,interfaces=ViciOne.ServiceBus.Initializers.IInitializerVariable<System.DateTimeOffset>]
   CTOR public ViciOne.ServiceBus.Initializers.Variables.TimestampVariable()
   CTOR public ViciOne.ServiceBus.Initializers.Variables.TimestampVariable(System.DateTimeOffset timestamp)
+  CTOR public ViciOne.ServiceBus.Initializers.Variables.TimestampVariable(System.TimeProvider timeProvider)
   METHOD public static System.DateTimeOffset op_Implicit(ViciOne.ServiceBus.Initializers.Variables.TimestampVariable variable)
 
 ASSEMBLY ViciOne.ServiceBus.JobService VERSION=1.0.0.0

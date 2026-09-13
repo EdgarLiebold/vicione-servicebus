@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
     <PackageTags>ViciOne.ServiceBus;Initializers</PackageTags>
     <Description>Convention-based message construction and property initialization for ViciOne.ServiceBus.</Description>
   </PropertyGroup>

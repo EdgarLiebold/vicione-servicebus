@@ -32,9 +32,9 @@ public sealed class IdVariable :
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
-        var timestampContext = context.GetOrAddPayload<IdContext>(() => new Context(_id));
+        var idContext = context.GetOrAddPayload<IdContext>(() => new IdContext(_id));
 
-        return Task.FromResult(timestampContext.Id);
+        return Task.FromResult(idContext.Id);
     }
 
     /// <summary>Returns the identifier captured by the variable.</summary>
@@ -46,21 +46,8 @@ public sealed class IdVariable :
         return variable._id;
     }
 
-
-    interface IdContext
+    sealed class IdContext(Guid id)
     {
-        Guid Id { get; }
-    }
-
-
-    sealed class Context :
-        IdContext
-    {
-        public Context(Guid id)
-        {
-            Id = id;
-        }
-
-        public Guid Id { get; }
+        public Guid Id { get; } = id;
     }
 }

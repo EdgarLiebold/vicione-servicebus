@@ -21,6 +21,59 @@ public sealed class VariablePropertyConverterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-VARIABLES", "default-timestamp-captures-current-utc-time")]
+    public void DefaultTimestampVariable_CapturesCurrentUtcTime()
+    {
+        DateTimeOffset earliest = TimeProvider.System.GetUtcNow().AddSeconds(-1);
+
+        DateTimeOffset timestamp = new TimestampVariable();
+
+        DateTimeOffset latest = TimeProvider.System.GetUtcNow().AddSeconds(1);
+        Assert.InRange(timestamp, earliest, latest);
+        Assert.Equal(TimeSpan.Zero, timestamp.Offset);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-VARIABLES", "time-provider")]
+    public void TimestampVariable_UsesProvidedTimeSourceAndRejectsMissingSource()
+    {
+        var expected = new DateTimeOffset(2026, 9, 13, 18, 45, 12, TimeSpan.Zero);
+        var timeProvider = new FixedTimeProvider(expected);
+
+        DateTimeOffset timestamp = new TimestampVariable(timeProvider);
+
+        Assert.Equal(expected, timestamp);
+        Assert.Equal("timeProvider", Assert.Throws<ArgumentNullException>(() => new TimestampVariable(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-VARIABLES", "explicit-values-share-one-initialization-context")]
+    public async Task ExplicitVariables_ShareTheFirstValueWithinOneInitializationContextAsync()
+    {
+        Guid firstId = new("3653c521-dbc9-4aae-9bd0-697490e4791c");
+        Guid secondId = new("82d455ec-af13-46cd-b8a7-097f524bf761");
+        var firstTimestamp = new DateTimeOffset(2026, 9, 12, 12, 34, 56, TimeSpan.Zero);
+        var secondTimestamp = firstTimestamp.AddHours(1);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        InitializeContext<IdMessage> context = await MessageInitializerCache<IdMessage>.InitializeAsync(
+            new { Id = Guid.NewGuid() }, cancellationToken);
+        IInitializerVariable<Guid> firstIdVariable = new IdVariable(firstId);
+        IInitializerVariable<Guid> secondIdVariable = new IdVariable(secondId);
+        IInitializerVariable<DateTimeOffset> firstTimestampVariable = new TimestampVariable(firstTimestamp);
+        IInitializerVariable<DateTimeOffset> secondTimestampVariable = new TimestampVariable(secondTimestamp);
+
+        Guid initialId = await firstIdVariable.GetValueAsync(context, cancellationToken);
+        Guid sharedId = await secondIdVariable.GetValueAsync(context, cancellationToken);
+        DateTimeOffset initialTimestamp = await firstTimestampVariable.GetValueAsync(context, cancellationToken);
+        DateTimeOffset sharedTimestamp = await secondTimestampVariable.GetValueAsync(context, cancellationToken);
+
+        Assert.Equal(firstId, initialId);
+        Assert.Equal(firstId, sharedId);
+        Assert.Equal(firstTimestamp, initialTimestamp);
+        Assert.Equal(firstTimestamp, sharedTimestamp);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-VARIABLES", "shared-id-and-captured-timestamp")]
     public async Task InitializerVariables_ShareTheContextIdAndPreserveTheCapturedTimestampAsync()
     {
@@ -134,5 +187,11 @@ public sealed class VariablePropertyConverterTests
         Guid StringId { get; }
 
         DateTimeOffset? Timestamp { get; }
+    }
+
+    sealed class FixedTimeProvider(DateTimeOffset utcNow) :
+        TimeProvider
+    {
+        public override DateTimeOffset GetUtcNow() => utcNow;
     }
 }

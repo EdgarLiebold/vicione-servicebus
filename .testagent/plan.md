@@ -2412,3 +2412,42 @@ The reviewed layout decision is retained: `src/ViciOne.ServiceBus` is the Core p
 independent capability projects are direct `src` siblings, and only cohesive external provider
 families are grouped below `Persistence`, `Scheduling`, and `Transports`. Iteration 99 will inventory
 and select the next complete source owner while preserving that ownership model.
+
+## Iteration 99 Initializers owner plan
+
+Iteration 99 reviews `ViciOne.ServiceBus.Initializers` as one complete owner: eight product files,
+598 lines, and its project definition. Each file and comment is read manually. No behavior or
+documentation generator is used.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Preserve the public initializer API | exact forwarding, capability, null, cancellation, and package-contract tests remain green |
+| Remove needless internal abstractions | replace the two one-implementation payload-key interfaces with sealed owner-specific context types |
+| Preserve per-initialization value sharing | a direct test proves distinct explicit ID and timestamp variables use the first value cached in one initialization context |
+| Apply .NET naming rules | a red-first project architecture rule reports both old internal interfaces and remains green after remediation |
+| Validate navigation and comments | every type, namespace, filename, directory, and XML comment is checked against current behavior |
+| Demonstrate owner completion | focused tests, killed mutation, project/full builds, complete tests, format, package/API, coverage, and hygiene gates |
+
+The static Roslyn pairing heuristic reports all eight source files as paired to tests. This is a
+discovery aid, not line, branch, or assertion-strength evidence; the relevant tests and assertions
+are reread directly before implementation.
+
+### Iteration 99 completion
+
+The complete Initializers owner has been read and reviewed manually. Its public facade remains in
+the independent `ViciOne.ServiceBus.Initializers` capability project, while its source folders now
+mirror the two public namespace branches relative to the explicit `ViciOne.ServiceBus` root. The
+two one-implementation cache-key interfaces are replaced by sealed context types, the ID local-name
+copy error is corrected, and timestamp capture accepts a testable `TimeProvider` while retaining the
+parameterless system-time convenience API.
+
+Three requirement-mapped behavioral tests and two permanent architecture tests protect the result.
+All four meaningful isolated counterchanges were killed after the initially surviving timestamp
+default was converted into a direct test gap and closed. The final Initializers package has 100%
+line and branch coverage. The complete Engineering build, 6,239-test Unit/Architecture solution,
+both full format gates, package journeys, requirements, API-contract, source-hygiene, and Git
+whitespace gates pass. The 19,030-line packed contract has SHA-256
+`a31b98d00ab15941a47bef08aa05447a24db4e445aba00d0838a0686ca85aa0a`.
+
+The overall A+ goal remains active for the remaining complete source owners and the final
+repository-wide completion audit.

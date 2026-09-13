@@ -15,9 +15,17 @@ public sealed class TimestampVariable :
     readonly DateTimeOffset _timestamp;
 
     /// <summary>Creates a variable that captures the current UTC time.</summary>
-    public TimestampVariable()
+    public TimestampVariable() :
+        this(TimeProvider.System)
     {
-        _timestamp = TimeProvider.System.GetUtcNow();
+    }
+
+    /// <summary>Creates a variable that captures the current UTC time from a time source.</summary>
+    /// <param name="timeProvider">The source that supplies the current UTC time.</param>
+    public TimestampVariable(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _timestamp = timeProvider.GetUtcNow();
     }
 
     /// <summary>Creates a variable that supplies the specified timestamp.</summary>
@@ -32,7 +40,7 @@ public sealed class TimestampVariable :
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
-        var timestampContext = context.GetOrAddPayload<TimestampContext>(() => new Context(_timestamp));
+        var timestampContext = context.GetOrAddPayload<TimestampContext>(() => new TimestampContext(_timestamp));
 
         return Task.FromResult(timestampContext.Timestamp);
     }
@@ -46,21 +54,8 @@ public sealed class TimestampVariable :
         return variable._timestamp;
     }
 
-
-    interface TimestampContext
+    sealed class TimestampContext(DateTimeOffset timestamp)
     {
-        DateTimeOffset Timestamp { get; }
-    }
-
-
-    sealed class Context :
-        TimestampContext
-    {
-        public Context(DateTimeOffset timestamp)
-        {
-            Timestamp = timestamp;
-        }
-
-        public DateTimeOffset Timestamp { get; }
+        public DateTimeOffset Timestamp { get; } = timestamp;
     }
 }
