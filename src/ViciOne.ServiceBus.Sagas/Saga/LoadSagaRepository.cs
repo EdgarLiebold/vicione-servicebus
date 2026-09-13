@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>The modern query saga repository, which can be used with any storage engine. Leverages the new interfaces for query context.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Loads saga state by correlation identifier through a storage-specific context.</summary>
+/// <typeparam name="TSaga">The saga state loaded by the repository.</typeparam>
 public class LoadSagaRepository<TSaga> :
     ILoadSagaRepository<TSaga>
     where TSaga : class, ISaga
@@ -15,7 +15,8 @@ public class LoadSagaRepository<TSaga> :
     /// <param name="repositoryContextFactory">The repository context factory.</param>
     public LoadSagaRepository(ILoadSagaRepositoryContextFactory<TSaga> repositoryContextFactory)
     {
-        _repositoryContextFactory = repositoryContextFactory;
+        _repositoryContextFactory = repositoryContextFactory
+            ?? throw new ArgumentNullException(nameof(repositoryContextFactory));
     }
 
     /// <summary>Loads the requested state.</summary>
@@ -24,13 +25,17 @@ public class LoadSagaRepository<TSaga> :
     /// <returns>A task that produces the load outcome.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _repositoryContextFactory.ExecuteAsync(context => context.LoadAsync(correlationId, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+        return _repositoryContextFactory.ExecuteAsync(
+            context => context.LoadAsync(correlationId, cancellationToken),
+            cancellationToken);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("loadSagaRepository");
 
         _repositoryContextFactory.Probe(scope);

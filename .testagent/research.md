@@ -947,3 +947,115 @@ child. Repeating the same commands outside the sandbox succeeds. This is the ret
 rule for future iterations: first confirm the active process and error; for MTP/Roslyn IPC, NuGet,
 restore, pack, format, or full-repository gates, use the approved outside-sandbox execution rather
 than changing source or tests to accommodate the environment.
+
+## Iteration 97 Saga owner research
+
+`ViciOne.ServiceBus.Sagas` is the next independent source owner without a complete manual A+
+acceptance. It is correctly a sibling of the Core project under `src`: Core references neither the
+Saga assembly nor its optional feature surface, while the Saga assembly references Core. Moving
+the project below `src/ViciOne.ServiceBus` would invert that physical ownership and expose its files
+to Core's recursive SDK compile glob. The internal directory vocabulary remains under review:
+`Sagas`, `Saga`, and `SagaStateMachine` currently express overlapping concepts and cannot be
+accepted merely because their assembly placement is correct.
+
+The baseline contains 357 C# files, 32,433 lines, 9,008 comment lines, no preprocessor directives,
+and 30 direct Saga/State-Machine test files with 101 declared test methods (147 executed cases).
+The complete unchanged Core host passes 3,256 tests. Microsoft Testing Platform coverage must run
+outside the sandbox because its named-pipe server is denied there; the same command outside the
+sandbox passes and writes the requested Cobertura artifact.
+
+Package instrumentation reports 60.8131% line coverage, 52.8113% branch coverage, complexity
+2,947, and 2,525 methods. The leading genuine risks are the uncovered DI registration paths and
+`SubState` API (CRAP 210 each), partially covered state-machine dispatch (CRAP 204.79), uncovered
+classic saga registration and missing-instance redelivery (CRAP 156 each), and uncovered schedule
+fault/execution paths (CRAP 72-110). Nine transition-classifier methods each score 42. Static
+filename pairing reports 269 unpaired source files; that heuristic is an index, not proof, because
+integration tests execute many internal collaborators through public behavior.
+
+The first manually read cohorts already show why a full pass is required. Several public comments
+are generic or grammatically stale, `RequestState` describes implementation fields imprecisely,
+dependency-injection repositories expose implementation-oriented public types without clear null
+boundaries, `MissingInstanceRedeliveryPipe.Probe` and both send-pipe probes emit no diagnostics,
+and a repository fallback is literally named `NotImplementedSagaRepositoryContextFactory`.
+These are candidate findings until their callers, tests, package surface, and replacement semantics
+have been read; none will be removed from a marker scan alone.
+
+### Iteration 97 final findings and disposition
+
+All 357 baseline production C# files and their comments were read manually in full. The three new
+types introduced by the remediation were then read with their complete callers and tests; no source
+or comment generator was used. The final owner contains 359 C# files and 32,622 physical lines.
+The external assembly placement is intentional: `src/ViciOne.ServiceBus` owns only Core, optional
+first-party capabilities are sibling projects, and external integrations are grouped under
+`Persistence`, `Scheduling`, and `Transports`. Within the Saga assembly, `Sagas` is the public
+domain/configuration surface, `Saga` owns repository execution contexts, and `SagaStateMachine`
+owns state-machine implementation. Those responsibilities and their dependency direction are
+distinct despite the related names, so collapsing them would reduce navigation accuracy.
+
+The repository API advertised capabilities it could not always execute. Its optional load/query
+factories silently became throwing stand-ins, dependency injection registered dispatch services
+that failed by design, and the default registration provider accepted a saga without selecting
+persistence. This was compatibility behavior rather than a valid Greenfield contract. The public
+`SagaRepository<TSaga>` is now a sealed dispatch-only repository. `CreateLoadable` and
+`CreateQueryable` return explicit `ILoadableSagaRepository<TSaga>` and
+`IQueryableSagaRepository<TSaga>` capability contracts, and Azure Table, DynamoDB, and Entity
+Framework callers use the capability they actually provide. The temporary, unsupported, and no-op
+repository implementations are gone. Registration without a persistence provider fails during
+configuration with the saga identity; in-memory registration remains explicit for production and
+is selected explicitly by the test harness.
+
+Missing-instance redelivery was configuration-shaped but did not provide a complete observable
+runtime contract. Its configurator and pipe are now internal sealed implementation types with null
+and policy validation, retry-observer lifetime ownership, diagnostic probing, exact terminal-pipe
+execution, and real scheduled redelivery carrying correlation, transport headers, serializer,
+message identity, and the consume cancellation token. Faulted schedule activities now persist the
+issued schedule token and pass the exact saga-operation token when canceling either supported
+message form.
+
+State-machine cancellation could be delayed, wrapped, observed as a fault, or replaced by
+telemetry cleanup. Completion checks, event raising, nested scheduling, state finalization,
+message filtering, transitions, behaviors, and exception traversal now preserve cooperative
+cancellation and its exact token. Observer fault callbacks are bypassed for cancellation, while
+fault telemetry still completes independently without replacing the primary outcome. Required
+dependencies are checked at their public or internal construction boundary, and implementation
+types without a consumer-facing construction purpose are internal and sealed. The full comment
+reread removed generic or stale descriptions and aligned retained prose with current behavior.
+
+Nineteen new requirement-mapped cases cover four missing-instance redelivery outcomes, nine
+repository capability/configuration boundaries, four cancellation paths, and two faulted-schedule
+cancellation paths. They contain exact state, identity, token, delay, header, scheduler, callback,
+exception, and DI graph assertions. A bounded assertion and anti-pattern audit found no sleep,
+wall-clock dependency, blocking wait, unawaited task, trivial assertion, swallowed exception,
+skip, mutable shared fixture, or assertion-free behavioral case. The sole caught reflection wrapper
+is rethrown through `ExceptionDispatchInfo`, preserving the original exception and stack.
+
+Five isolated non-equivalent source counterchanges were each compiled and killed by their exact
+test before manual restoration: replacing the selected missing-instance delay with zero, dropping
+each of the two faulted-schedule cancellation tokens independently, bypassing the pre-canceled
+completion check, and permitting saga registration without an explicit repository. Their observed
+failures were respectively the exact delay, exact token identity, cancellation terminality, and
+configuration exception.
+
+Fresh accepted full-host instrumentation raises Saga package coverage from 60.8131% to 62.4669%
+line and from 52.8113% to 54.4440% branch coverage. Complexity is 2,963 across 2,523 methods, and
+methods above CRAP 30 fall from 18 to 15. The remaining scores are dominated by broad declarative
+state-machine/DI composition entry points and generated branches; they remain visible in the
+source-wide completion audit rather than being misreported as absent. The coverage artifact is
+`/private/tmp/vsb-iteration97-sagas-final-fullhost.cobertura.xml` with SHA-256
+`f8c75157e348ed859c2dda67460ccfc4a9bfc6045b1d747800a40e151d8450b3`.
+
+Fresh package/API validation builds 31 packages, executes 18 developer journeys and three isolated
+provider consumers, and validates all 30 runtime assemblies. The intentional API change removes
+implementation types and unsupported capabilities while adding the two explicit composite
+capability contracts. The 19,029-line packed contract has SHA-256
+`6870002dc25251fe785d4e0bbd51a0f66c15ce533a3be92beb78224a2fa28486`.
+The requirements JSON, repository-owner preprocessor and dummy-marker scans, empty-directory scan,
+Git whitespace check, and full whitespace-format gate pass. A Saga-only optional info-level style
+scan reports 660 suggestions but no warning or error: 323 namespace/folder suggestions conflict
+with the intentional cross-assembly API namespace model, while 162 primary-constructor and 128
+other expression/style suggestions are non-semantic preferences. The remaining 47 interface-name
+findings expose a real Greenfield API decision inherited from the former DSL (`State`, `Event`,
+`BehaviorContext`, and related contracts). They are explicitly carried into the next Saga API
+naming iteration rather than bulk-renamed without consumer, comment, and package evidence. The
+strict build and final complete Unit/Architecture results are recorded in the iteration completion
+evidence.

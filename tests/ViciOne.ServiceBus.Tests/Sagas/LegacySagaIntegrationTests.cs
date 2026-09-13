@@ -313,7 +313,7 @@ public sealed class LegacySagaIntegrationTests
         ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> consumeContextFactory =
             new InMemorySagaConsumeContextFactory<TSaga>();
         var contextFactory = new InMemorySagaRepositoryContextFactory<TSaga>(dictionary, consumeContextFactory);
-        return new SagaRepository<TSaga>(contextFactory, contextFactory, contextFactory);
+        return SagaRepository<TSaga>.CreateQueryable(contextFactory, contextFactory, contextFactory);
     }
 
     private static InMemoryTestHarness CreateHarness(string suffix, TimeSpan timeout) =>

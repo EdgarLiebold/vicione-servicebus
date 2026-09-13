@@ -6,124 +6,192 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>The modern saga repository, which can be used with any storage engine. Leverages the new interfaces for consume and query context.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-public class SagaRepository<TSaga> :
-    ISagaRepository<TSaga>,
-    IQuerySagaRepository<TSaga>,
-    ILoadSagaRepository<TSaga>
+/// <summary>Dispatches correlated messages through a storage-specific saga repository context.</summary>
+/// <typeparam name="TSaga">The saga state handled by the repository.</typeparam>
+public sealed class SagaRepository<TSaga> :
+    ISagaRepository<TSaga>
     where TSaga : class, ISaga
 {
-    readonly ILoadSagaRepository<TSaga> _loadSagaRepository;
-    readonly QuerySagaRepository<TSaga> _querySagaRepository;
     readonly ISagaRepositoryContextFactory<TSaga> _repositoryContextFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repositoryContextFactory">The repository context factory.</param>
-    /// <param name="queryRepositoryContextFactory">The query repository context factory.</param>
-    /// <param name="loadSagaRepositoryContextFactory">The load saga repository context factory.</param>
-    public SagaRepository(ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
-        IQuerySagaRepositoryContextFactory<TSaga>? queryRepositoryContextFactory = null,
-        ILoadSagaRepositoryContextFactory<TSaga>? loadSagaRepositoryContextFactory = null)
+    /// <summary>Creates a repository that supports message dispatch.</summary>
+    /// <param name="repositoryContextFactory">The factory that opens storage-specific dispatch contexts.</param>
+    public SagaRepository(ISagaRepositoryContextFactory<TSaga> repositoryContextFactory)
     {
-        _repositoryContextFactory = repositoryContextFactory;
-        _querySagaRepository = new QuerySagaRepository<TSaga>(queryRepositoryContextFactory ?? NotImplementedSagaRepositoryContextFactory.Instance);
-        _loadSagaRepository = new LoadSagaRepository<TSaga>(loadSagaRepositoryContextFactory ?? NotImplementedSagaRepositoryContextFactory.Instance);
+        _repositoryContextFactory = repositoryContextFactory
+            ?? throw new ArgumentNullException(nameof(repositoryContextFactory));
     }
 
-    /// <summary>Loads the requested state.</summary>
-    /// <param name="correlationId">The correlation id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the load outcome.</returns>
-    public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
+    /// <summary>Creates a dispatch repository that also supports loading by correlation identifier.</summary>
+    /// <param name="repositoryContextFactory">The factory that opens storage-specific dispatch contexts.</param>
+    /// <param name="loadRepositoryContextFactory">The factory that opens storage-specific load contexts.</param>
+    /// <returns>A repository exposing dispatch and load capabilities.</returns>
+    public static ILoadableSagaRepository<TSaga> CreateLoadable(
+        ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
+        ILoadSagaRepositoryContextFactory<TSaga> loadRepositoryContextFactory)
     {
-        return _loadSagaRepository.LoadAsync(correlationId, cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(repositoryContextFactory);
+        ArgumentNullException.ThrowIfNull(loadRepositoryContextFactory);
+
+        return new LoadableSagaRepository(repositoryContextFactory, loadRepositoryContextFactory);
     }
 
-    /// <summary>Finds the matching value.</summary>
-    /// <param name="query">The query.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the matching value.</returns>
-    public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
+    /// <summary>Creates a dispatch repository that also supports querying and loading saga state.</summary>
+    /// <param name="repositoryContextFactory">The factory that opens storage-specific dispatch contexts.</param>
+    /// <param name="queryRepositoryContextFactory">The factory that opens storage-specific query contexts.</param>
+    /// <param name="loadRepositoryContextFactory">The factory that opens storage-specific load contexts.</param>
+    /// <returns>A repository exposing dispatch, query, and load capabilities.</returns>
+    public static IQueryableSagaRepository<TSaga> CreateQueryable(
+        ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
+        IQuerySagaRepositoryContextFactory<TSaga> queryRepositoryContextFactory,
+        ILoadSagaRepositoryContextFactory<TSaga> loadRepositoryContextFactory)
     {
-        return _querySagaRepository.FindAsync(query, cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(repositoryContextFactory);
+        ArgumentNullException.ThrowIfNull(queryRepositoryContextFactory);
+        ArgumentNullException.ThrowIfNull(loadRepositoryContextFactory);
+
+        return new QueryableLoadableSagaRepository(
+            repositoryContextFactory,
+            queryRepositoryContextFactory,
+            loadRepositoryContextFactory);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Writes the repository's storage-specific diagnostic structure.</summary>
+    /// <param name="context">The diagnostic context to populate.</param>
     public void Probe(ProbeContext context)
     {
-        var scope = context.CreateScope("sagaRepository");
+        ArgumentNullException.ThrowIfNull(context);
 
+        var scope = context.CreateScope("sagaRepository");
         _repositoryContextFactory.Probe(scope);
-        _querySagaRepository.Probe(scope);
-        _loadSagaRepository.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="policy">The policy.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+    /// <summary>Dispatches a message to the saga identified by the consume context's correlation identifier.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="context">The consumed message and its correlation metadata.</param>
+    /// <param name="policy">The policy that controls saga creation, use, and removal.</param>
+    /// <param name="next">The saga pipeline invoked for the selected instance.</param>
+    /// <returns>A task representing repository dispatch.</returns>
+    public Task SendAsync<T>(
+        ConsumeContext<T> context,
+        ISagaPolicy<TSaga, T> policy,
+        IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
-        var correlationId = context.CorrelationId ??
-            throw new SagaException("The CorrelationId was not specified", typeof(TSaga), typeof(T));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(policy);
+        ArgumentNullException.ThrowIfNull(next);
+
+        var correlationId = context.CorrelationId
+            ?? throw new SagaException("The CorrelationId was not specified", typeof(TSaga), typeof(T));
 
         return _repositoryContextFactory.SendAsync(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
     }
 
-    /// <summary>Sends query.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="query">The query.</param>
-    /// <param name="policy">The policy.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+    /// <summary>Dispatches a message to every saga selected by a repository query.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="context">The consumed message.</param>
+    /// <param name="query">The storage-independent saga predicate.</param>
+    /// <param name="policy">The policy that controls saga use and removal.</param>
+    /// <param name="next">The saga pipeline invoked for each selected instance.</param>
+    /// <returns>A task representing query-based repository dispatch.</returns>
+    public Task SendQueryAsync<T>(
+        ConsumeContext<T> context,
+        ISagaQuery<TSaga> query,
+        ISagaPolicy<TSaga, T> policy,
         IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(policy);
+        ArgumentNullException.ThrowIfNull(next);
+
         return _repositoryContextFactory.SendQueryAsync(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
     }
 
-
-    class NotImplementedSagaRepositoryContextFactory :
-        ILoadSagaRepositoryContextFactory<TSaga>,
-        IQuerySagaRepositoryContextFactory<TSaga>
+    sealed class LoadableSagaRepository :
+        ILoadableSagaRepository<TSaga>
     {
-        public static readonly NotImplementedSagaRepositoryContextFactory Instance = new NotImplementedSagaRepositoryContextFactory();
+        readonly SagaRepository<TSaga> _dispatchRepository;
+        readonly LoadSagaRepository<TSaga> _loadRepository;
 
-        static readonly string QueryErrorMessage =
-            $"Query-based saga correlation is not available when using current saga repository implementation: {TypeCache<TSaga>.ShortName}";
-
-        static readonly string LoadErrorMessage =
-            $"Load-based saga correlation is not available when using current saga repository implementation: {TypeCache<TSaga>.ShortName}";
-
-        NotImplementedSagaRepositoryContextFactory()
+        public LoadableSagaRepository(
+            ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
+            ILoadSagaRepositoryContextFactory<TSaga> loadRepositoryContextFactory)
         {
+            _dispatchRepository = new SagaRepository<TSaga>(repositoryContextFactory);
+            _loadRepository = new LoadSagaRepository<TSaga>(loadRepositoryContextFactory);
         }
 
-        public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return cancellationToken.IsCancellationRequested
-                ? Task.FromCanceled<T?>(cancellationToken)
-                : Task.FromException<T?>(new NotSupportedException(LoadErrorMessage));
-        }
+        public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default) =>
+            _loadRepository.LoadAsync(correlationId, cancellationToken);
+
+        public Task SendAsync<T>(
+            ConsumeContext<T> context,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class =>
+            _dispatchRepository.SendAsync(context, policy, next);
+
+        public Task SendQueryAsync<T>(
+            ConsumeContext<T> context,
+            ISagaQuery<TSaga> query,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class =>
+            _dispatchRepository.SendQueryAsync(context, query, policy, next);
 
         public void Probe(ProbeContext context)
         {
+            _dispatchRepository.Probe(context);
+            _loadRepository.Probe(context);
+        }
+    }
+
+    sealed class QueryableLoadableSagaRepository :
+        IQueryableSagaRepository<TSaga>
+    {
+        readonly SagaRepository<TSaga> _dispatchRepository;
+        readonly LoadSagaRepository<TSaga> _loadRepository;
+        readonly QuerySagaRepository<TSaga> _queryRepository;
+
+        public QueryableLoadableSagaRepository(
+            ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
+            IQuerySagaRepositoryContextFactory<TSaga> queryRepositoryContextFactory,
+            ILoadSagaRepositoryContextFactory<TSaga> loadRepositoryContextFactory)
+        {
+            _dispatchRepository = new SagaRepository<TSaga>(repositoryContextFactory);
+            _queryRepository = new QuerySagaRepository<TSaga>(queryRepositoryContextFactory);
+            _loadRepository = new LoadSagaRepository<TSaga>(loadRepositoryContextFactory);
         }
 
-        public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
-            where T : class
+        public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default) =>
+            _loadRepository.LoadAsync(correlationId, cancellationToken);
+
+        public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default) =>
+            _queryRepository.FindAsync(query, cancellationToken);
+
+        public Task SendAsync<T>(
+            ConsumeContext<T> context,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class =>
+            _dispatchRepository.SendAsync(context, policy, next);
+
+        public Task SendQueryAsync<T>(
+            ConsumeContext<T> context,
+            ISagaQuery<TSaga> query,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class =>
+            _dispatchRepository.SendQueryAsync(context, query, policy, next);
+
+        public void Probe(ProbeContext context)
         {
-            return cancellationToken.IsCancellationRequested
-                ? Task.FromCanceled<T>(cancellationToken)
-                : Task.FromException<T>(new NotSupportedException(QueryErrorMessage));
+            _dispatchRepository.Probe(context);
+            _queryRepository.Probe(context);
+            _loadRepository.Probe(context);
         }
     }
 }

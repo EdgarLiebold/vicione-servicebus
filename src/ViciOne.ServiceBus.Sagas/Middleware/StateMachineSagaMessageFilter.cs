@@ -9,10 +9,10 @@ using ViciOne.ServiceBus.Monitoring;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Dispatches the ConsumeContext to the consumer method for the specified message type.</summary>
-/// <typeparam name="TInstance">The consumer type.</typeparam>
-/// <typeparam name="TMessage">The message type.</typeparam>
-public class StateMachineSagaMessageFilter<TInstance, TMessage> :
+/// <summary>Raises the event correlated with a consumed message and completes terminal saga instances.</summary>
+/// <typeparam name="TInstance">The state-machine saga type.</typeparam>
+/// <typeparam name="TMessage">The correlated message type.</typeparam>
+internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
     ISagaMessageFilter<TInstance, TMessage>
     where TInstance : class, ISaga, SagaStateMachineInstance
     where TMessage : class
@@ -21,19 +21,21 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
     readonly Event<TMessage> _event;
     readonly SagaStateMachine<TInstance> _machine;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="machine">The machine.</param>
-    /// <param name="event">The event.</param>
+    /// <summary>Creates a filter for one state machine and correlated event.</summary>
+    /// <param name="machine">The state machine that owns the event.</param>
+    /// <param name="event">The event raised for each consumed message.</param>
     public StateMachineSagaMessageFilter(SagaStateMachine<TInstance> machine, Event<TMessage> @event)
     {
-        _machine = machine;
-        _event = @event;
+        _machine = machine ?? throw new ArgumentNullException(nameof(machine));
+        _event = @event ?? throw new ArgumentNullException(nameof(@event));
 
         _activityName = $"{_machine.Name} process";
     }
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("sagaStateMachine");
         scope.Set(new
         {
@@ -49,12 +51,16 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         _machine.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Executes the correlated event against the selected saga instance.</summary>
+    /// <param name="context">The saga instance and consumed message.</param>
+    /// <param name="next">The composed pipeline continuation retained by the filter contract.</param>
+    /// <returns>A task that completes after event execution and terminal-state evaluation.</returns>
     public async Task SendAsync(SagaConsumeContext<TInstance, TMessage> context, IPipe<SagaConsumeContext<TInstance, TMessage>> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         BehaviorContext<TInstance, TMessage> behaviorContext =
             new ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy<TMessage>(_machine, context, context, _event);
 
@@ -65,19 +71,23 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         {
             if (activity is { Activity: { IsAllDataRequested: true } })
             {
-                State<TInstance>? beginState = await behaviorContext.StateMachine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
+                State<TInstance>? beginState = await behaviorContext.StateMachine.Accessor
+                    .GetAsync(behaviorContext, context.CancellationToken)
+                    .ConfigureAwait(false);
                 if (beginState != null)
                     activity?.SetTag(ServiceBusTelemetry.Attributes.SagaStateBefore, beginState.Name);
             }
 
-            await _machine.RaiseEventAsync(behaviorContext).ConfigureAwait(false);
+            await _machine.RaiseEventAsync(behaviorContext, context.CancellationToken).ConfigureAwait(false);
 
-            if (await _machine.IsCompletedAsync(behaviorContext).ConfigureAwait(false))
-                await context.SetCompletedAsync().ConfigureAwait(false);
+            if (await _machine.IsCompletedAsync(behaviorContext, context.CancellationToken).ConfigureAwait(false))
+                await context.SetCompletedAsync(context.CancellationToken).ConfigureAwait(false);
         }
         catch (UnhandledEventException ex)
         {
-            State<TInstance>? currentState = await _machine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
+            State<TInstance>? currentState = await _machine.Accessor
+                .GetAsync(behaviorContext, context.CancellationToken)
+                .ConfigureAwait(false);
 
             var stateMachineException = new NotAcceptedStateMachineException(typeof(TInstance), typeof(TMessage),
                 context.CorrelationId ?? Guid.Empty, currentState?.Name ?? "(not initialized)", ex);
@@ -86,6 +96,10 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
             instrument?.RecordException(ex);
 
             throw stateMachineException;
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception exception)
         {
@@ -100,7 +114,9 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
             {
                 if (startedActivity.Activity.IsAllDataRequested)
                 {
-                    State<TInstance>? endState = await behaviorContext.StateMachine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
+                    State<TInstance>? endState = await behaviorContext.StateMachine.Accessor
+                        .GetAsync(behaviorContext, CancellationToken.None)
+                        .ConfigureAwait(false);
                     if (endState != null)
                         startedActivity.SetTag(ServiceBusTelemetry.Attributes.SagaStateAfter, endState.Name);
                 }

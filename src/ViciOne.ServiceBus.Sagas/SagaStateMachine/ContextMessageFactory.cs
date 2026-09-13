@@ -25,7 +25,10 @@ public class ContextMessageFactory<TContext, T>
     /// <returns>A task that produces the requested value.</returns>
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageAsync(TContext context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>(cancellationToken); Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> result = _messageFactory(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>(cancellationToken);
+
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> result = _messageFactory(context);
         if (result.Status == TaskStatus.RanToCompletion)
             return result;
 

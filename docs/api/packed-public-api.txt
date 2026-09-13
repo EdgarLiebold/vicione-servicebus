@@ -5632,8 +5632,8 @@ TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableSagaConcurrencyExcept
   CTOR public ViciOne.ServiceBus.Azure.Table.AzureTableSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId)
   CTOR public ViciOne.ServiceBus.Azure.Table.AzureTableSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId, System.Exception innerException)
 TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableSagaRepository [static]
-  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create<TSaga>(System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
-  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create<TSaga>(System.Func<Azure.Data.Tables.TableClient> tableClientFactory, ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter keyFormatter)
+  METHOD public static ViciOne.ServiceBus.Sagas.ILoadableSagaRepository<TSaga> Create<TSaga>(System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
+  METHOD public static ViciOne.ServiceBus.Sagas.ILoadableSagaRepository<TSaga> Create<TSaga>(System.Func<Azure.Data.Tables.TableClient> tableClientFactory, ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter keyFormatter)
 TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableSagaRepositoryRegistrationExtensions [static]
   METHOD public static System.Void UseAzureTableForRegisteredSagas(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
   METHOD public static ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator UseAzureTable(ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
@@ -7257,7 +7257,7 @@ TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException [
   CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId)
   CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId, System.Exception innerException)
 TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepository [static]
-  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create<TSaga>(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory, ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga> options)
+  METHOD public static ViciOne.ServiceBus.Sagas.ILoadableSagaRepository<TSaga> Create<TSaga>(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory, ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga> options)
 TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga> [sealed]
   CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga>(System.String tableName, System.Nullable<System.TimeSpan> timeToLive = null)
   CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga>(System.String tableName, System.Nullable<System.TimeSpan> timeToLive, System.TimeProvider timeProvider, System.Boolean consistentRead = true, System.Boolean allowEmptyStrings = true, System.Boolean retrieveDateTimeAsUtc = true, Amazon.DynamoDBv2.DynamoDBEntryConversion entryConversion = null)
@@ -10291,9 +10291,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.InMemoryOutboxSagaConfigurati
 TYPE class public ViciOne.ServiceBus.Configuration.InMemorySagaRepositoryRegistrationExtensions [static]
   METHOD public static System.Void SetInMemorySagaRepositoryProvider(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator)
   METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> InMemoryRepository<T>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> configurator)
-TYPE class public ViciOne.ServiceBus.Configuration.InMemorySagaRepositoryRegistrationProvider [interfaces=ViciOne.ServiceBus.Configuration.ISagaRepositoryRegistrationProvider]
-  CTOR public ViciOne.ServiceBus.Configuration.InMemorySagaRepositoryRegistrationProvider()
-  METHOD public virtual System.Void Configure<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator)
 TYPE class public ViciOne.ServiceBus.Configuration.InMemorySagaRepositoryServiceCollectionExtensions [static]
   METHOD public static System.Void RegisterInMemorySagaRepository<TSaga>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
 TYPE class public ViciOne.ServiceBus.Configuration.InitiatedByOrOrchestratesSagaConnectorFactory<TSaga,TMessage> [interfaces=ViciOne.ServiceBus.Configuration.ISagaConnectorFactory]
@@ -10303,15 +10300,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.InitiatedBySagaConnectorFacto
 TYPE class public ViciOne.ServiceBus.Configuration.MessageRetrySagaConfigurationObserver<TSaga> [interfaces=ViciOne.ServiceBus.Configuration.ISagaConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.MessageRetrySagaConfigurationObserver<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Threading.CancellationToken cancellationToken, System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
   METHOD public virtual System.Void StateMachineSagaConfigured<TInstance>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TInstance> configurator, System.Object stateMachine)
-TYPE class public ViciOne.ServiceBus.Configuration.MissingInstanceRedeliveryConfigurator<TSaga,TMessage> [base=ViciOne.ServiceBus.Configuration.ExceptionSpecification,interfaces=ViciOne.ServiceBus.Configuration.ISpecification&ViciOne.ServiceBus.Sagas.IMissingInstanceRedeliveryConfigurator<TSaga,TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.MissingInstanceRedeliveryConfigurator<TSaga,TMessage>(ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator<TSaga,TMessage> configurator)
-  METHOD public ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>> Build()
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void OnRedeliveryLimitReached(System.Func<ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator<TSaga,TMessage>,ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>>> configure)
-  METHOD public virtual System.Void SetRetryPolicy(ViciOne.ServiceBus.Configuration.RetryPolicyFactory factory)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRetryObserver(ViciOne.ServiceBus.Advanced.Observers.IRetryObserver observer)
-  PROPERTY System.Boolean ConfigureMessageScheduler { public-get; public-set; }
-  PROPERTY System.Boolean ReplaceMessageId { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Configuration.NotDefaultValueTypeSagaQueryPropertySelector<TData,TProperty> [interfaces=ViciOne.ServiceBus.Configuration.ISagaQueryPropertySelector<TData,TProperty>]
   CTOR public ViciOne.ServiceBus.Configuration.NotDefaultValueTypeSagaQueryPropertySelector<TData,TProperty>(System.Func<ViciOne.ServiceBus.ConsumeContext<TData>,TProperty> selector)
   METHOD public virtual System.Boolean TryGetProperty(ViciOne.ServiceBus.ConsumeContext<TData> context, out TProperty property)
@@ -10433,9 +10421,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.SagaRegistrationExtensions [s
   METHOD public static System.Void AddSagasFromNamespaceContaining<T>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Func<System.Type,System.Boolean> filter = null)
   METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSaga<T,TDefinition>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ISagaConfigurator<T>> configure = null)
   METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine,T,TDefinition>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ISagaConfigurator<T>> configure = null)
-TYPE class public ViciOne.ServiceBus.Configuration.SagaRepositoryRegistrationProvider [interfaces=ViciOne.ServiceBus.Configuration.ISagaRepositoryRegistrationProvider]
-  CTOR public ViciOne.ServiceBus.Configuration.SagaRepositoryRegistrationProvider()
-  METHOD public virtual System.Void Configure<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator)
 TYPE class public ViciOne.ServiceBus.Configuration.SagaSpecification<TSaga> [base=ViciOne.ServiceBus.Configuration.OptionsSet,interfaces=ViciOne.ServiceBus.Configuration.ISagaSpecification<TSaga>]
   CTOR public ViciOne.ServiceBus.Configuration.SagaSpecification<TSaga>(System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ISagaMessageSpecification<TSaga>> messageSpecifications)
   FIELD protected readonly ViciOne.ServiceBus.Configuration.SagaConfigurationObservable Observers
@@ -10614,10 +10599,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.InitiatedByOrOrchestratesSagaMes
 TYPE class public ViciOne.ServiceBus.Middleware.InitiatedBySagaMessageFilter<TSaga,TMessage> [interfaces=ViciOne.ServiceBus.Middleware.ISagaMessageFilter<TSaga,TMessage>]
   CTOR public ViciOne.ServiceBus.Middleware.InitiatedBySagaMessageFilter<TSaga,TMessage>()
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Middleware.MissingInstanceRedeliveryPipe<TSaga,TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>>]
-  CTOR public ViciOne.ServiceBus.Middleware.MissingInstanceRedeliveryPipe<TSaga,TMessage>(ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>> finalPipe, ViciOne.ServiceBus.Configuration.RedeliveryOptions options)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ConsumeContext<TMessage> context)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE class public ViciOne.ServiceBus.Middleware.MissingSagaPipe<TSaga,TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>>]
   CTOR public ViciOne.ServiceBus.Middleware.MissingSagaPipe<TSaga,TMessage>(ViciOne.ServiceBus.Saga.SagaRepositoryContext<TSaga,TMessage> repositoryContext, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> next)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage> context)
@@ -10658,9 +10639,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.SendSagaPipe<TSaga,T> [interface
   CTOR public ViciOne.ServiceBus.Middleware.SendSagaPipe<TSaga,T>(ViciOne.ServiceBus.Sagas.ISagaPolicy<TSaga,T> policy, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,T>> next, System.Guid correlationId)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Saga.SagaRepositoryContext<TSaga,T> context)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter<TInstance,TMessage> [interfaces=ViciOne.ServiceBus.Middleware.ISagaMessageFilter<TInstance,TMessage>]
-  CTOR public ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter<TInstance,TMessage>(ViciOne.ServiceBus.Sagas.SagaStateMachine<TInstance> machine, ViciOne.ServiceBus.Sagas.Event<TMessage> event)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TInstance,TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TInstance,TMessage>> next)
 TYPE class public ViciOne.ServiceBus.RetryPolicies.RetrySagaConsumeContext<TSaga> [base=ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext,interfaces=ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga>]
   CTOR public ViciOne.ServiceBus.RetryPolicies.RetrySagaConsumeContext<TSaga>(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
   METHOD public TContext CreateNext<TContext>(ViciOne.ServiceBus.Advanced.Middleware.RetryContext retryContext)
@@ -10840,12 +10818,12 @@ TYPE class public ViciOne.ServiceBus.Saga.SagaQuery<TSaga> [interfaces=ViciOne.S
   CTOR public ViciOne.ServiceBus.Saga.SagaQuery<TSaga>(System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> filterExpression)
   METHOD public virtual System.Func<TSaga,System.Boolean> GetFilter()
   PROPERTY System.Linq.Expressions.Expression<System.Func<TSaga,System.Boolean>> FilterExpression { public-get;  }
-TYPE class public ViciOne.ServiceBus.Saga.SagaRepository<TSaga> [interfaces=ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga>&ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga>&ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga>]
-  CTOR public ViciOne.ServiceBus.Saga.SagaRepository<TSaga>(ViciOne.ServiceBus.Saga.ISagaRepositoryContextFactory<TSaga> repositoryContextFactory, ViciOne.ServiceBus.Saga.IQuerySagaRepositoryContextFactory<TSaga> queryRepositoryContextFactory = null, ViciOne.ServiceBus.Saga.ILoadSagaRepositoryContextFactory<TSaga> loadSagaRepositoryContextFactory = null)
+TYPE class public ViciOne.ServiceBus.Saga.SagaRepository<TSaga> [sealed,interfaces=ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga>]
+  CTOR public ViciOne.ServiceBus.Saga.SagaRepository<TSaga>(ViciOne.ServiceBus.Saga.ISagaRepositoryContextFactory<TSaga> repositoryContextFactory)
+  METHOD public static ViciOne.ServiceBus.Sagas.ILoadableSagaRepository<TSaga> CreateLoadable(ViciOne.ServiceBus.Saga.ISagaRepositoryContextFactory<TSaga> repositoryContextFactory, ViciOne.ServiceBus.Saga.ILoadSagaRepositoryContextFactory<TSaga> loadRepositoryContextFactory)
+  METHOD public static ViciOne.ServiceBus.Sagas.IQueryableSagaRepository<TSaga> CreateQueryable(ViciOne.ServiceBus.Saga.ISagaRepositoryContextFactory<TSaga> repositoryContextFactory, ViciOne.ServiceBus.Saga.IQuerySagaRepositoryContextFactory<TSaga> queryRepositoryContextFactory, ViciOne.ServiceBus.Saga.ILoadSagaRepositoryContextFactory<TSaga> loadRepositoryContextFactory)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, ViciOne.ServiceBus.Sagas.ISagaPolicy<TSaga,T> policy, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,T>> next)
   METHOD public virtual System.Threading.Tasks.Task SendQueryAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, ViciOne.ServiceBus.Sagas.ISagaQuery<TSaga> query, ViciOne.ServiceBus.Sagas.ISagaPolicy<TSaga,T> policy, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,T>> next)
-  METHOD public virtual System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<System.Guid>> FindAsync(ViciOne.ServiceBus.Sagas.ISagaQuery<TSaga> query, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<TSaga> LoadAsync(System.Guid correlationId, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE interface public ViciOne.ServiceBus.Saga.SagaRepositoryContext<TSaga,TMessage> [interfaces=ViciOne.ServiceBus.ConsumeContext<TMessage>&ViciOne.ServiceBus.Saga.ISagaConsumeContextFactory<TSaga>]
   METHOD public abstract System.Threading.Tasks.Task DeleteAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
@@ -10876,14 +10854,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.ActionActivity<TSaga> [int
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync<TData>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,TData> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,TData> next)
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T,TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,T,TException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,T> next)
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync<TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
-  METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor visitor)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.ActivityBehavior<TSaga> [interfaces=ViciOne.ServiceBus.Sagas.IBehavior<TSaga>]
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.ActivityBehavior<TSaga>(ViciOne.ServiceBus.Sagas.IStateMachineActivity<TSaga> activity, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,T> context)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T,TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,T,TException> context)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException> context)
   METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor visitor)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE class public ViciOne.ServiceBus.SagaStateMachine.ActivityBehaviorBuilder<TSaga> [interfaces=ViciOne.ServiceBus.SagaStateMachine.IBehaviorBuilder<TSaga>]
@@ -11112,9 +11082,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.EventCorrelationExpression
   CTOR public ViciOne.ServiceBus.SagaStateMachine.EventCorrelationExpressionConverter<TInstance,TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context)
   METHOD protected System.Linq.Expressions.Expression VisitMember(System.Linq.Expressions.MemberExpression m)
   METHOD public System.Linq.Expressions.Expression<System.Func<TInstance,System.Boolean>> Convert(System.Linq.Expressions.Expression<System.Func<TInstance,ViciOne.ServiceBus.ConsumeContext<TMessage>,System.Boolean>> expression)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.ExceptionTypeCache [static]
-  METHOD public static System.Threading.Tasks.Task FaultedAsync<TSaga,TMessage>(ViciOne.ServiceBus.Sagas.IBehavior<TSaga,TMessage> behavior, ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,TMessage> context, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static System.Threading.Tasks.Task FaultedAsync<TSaga>(ViciOne.ServiceBus.Sagas.IBehavior<TSaga> behavior, ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context, System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.SagaStateMachine.ExecuteActivityBinder<TInstance> [interfaces=ViciOne.ServiceBus.SagaStateMachine.IActivityBinder<TInstance>]
   CTOR public ViciOne.ServiceBus.SagaStateMachine.ExecuteActivityBinder<TInstance>(ViciOne.ServiceBus.Sagas.Event event, ViciOne.ServiceBus.Sagas.IStateMachineActivity<TInstance> activity)
   METHOD public virtual System.Boolean IsStateTransitionEvent(ViciOne.ServiceBus.Sagas.State state)
@@ -11239,20 +11206,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.FaultedRespondActivity<TSa
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE class public ViciOne.ServiceBus.SagaStateMachine.FaultedRespondActivity<TSaga,TException,TMessage> [interfaces=ViciOne.ServiceBus.Sagas.IStateMachineActivity<TSaga>]
   CTOR public ViciOne.ServiceBus.SagaStateMachine.FaultedRespondActivity<TSaga,TException,TMessage>(ViciOne.ServiceBus.SagaStateMachine.ContextMessageFactory<ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException>,TMessage> messageFactory)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,T> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,T> next)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T,TOtherException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,T,TOtherException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,T> next)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,T> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
-  METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor inspector)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.FaultedScheduleActivity<TSaga,TData,TException,TMessage> [interfaces=ViciOne.ServiceBus.Sagas.IStateMachineActivity<TSaga,TData>]
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.FaultedScheduleActivity<TSaga,TData,TException,TMessage>(ViciOne.ServiceBus.Sagas.Schedule<TSaga,TMessage> schedule, ViciOne.ServiceBus.Sagas.ScheduleTimeExceptionProvider<TSaga,TData,TException> timeProvider, ViciOne.ServiceBus.SagaStateMachine.ContextMessageFactory<ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TData,TException>,TMessage> messageFactory)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,TData> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,TData> next)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TData,T> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,TData> next)
-  METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor inspector)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.FaultedScheduleActivity<TSaga,TException,TMessage> [interfaces=ViciOne.ServiceBus.Sagas.IStateMachineActivity<TSaga>]
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.FaultedScheduleActivity<TSaga,TException,TMessage>(ViciOne.ServiceBus.Sagas.Schedule<TSaga,TMessage> schedule, ViciOne.ServiceBus.Sagas.ScheduleTimeExceptionProvider<TSaga,TException> timeProvider, ViciOne.ServiceBus.SagaStateMachine.ContextMessageFactory<ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException>,TMessage> messageFactory)
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,T> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,T> next)
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T,TOtherException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,T,TOtherException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,T> next)
@@ -11597,15 +11550,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.TaskMessageFactory<T>
   CTOR public ViciOne.ServiceBus.SagaStateMachine.TaskMessageFactory<T>(System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> messageFactory)
   METHOD public System.Threading.Tasks.Task UseAsync(System.Func<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>,System.Threading.Tasks.Task> callback, System.Threading.CancellationToken cancellationToken = null)
   METHOD public System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.TransitionActivity<TSaga> [interfaces=ViciOne.ServiceBus.Sagas.IStateMachineActivity<TSaga>]
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.TransitionActivity<TSaga>(ViciOne.ServiceBus.Sagas.State<TSaga> toState, ViciOne.ServiceBus.Sagas.IStateAccessor<TSaga> currentStateAccessor)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync<TData>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,TData> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,TData> next)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<T,TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,T,TException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,T> next)
-  METHOD public virtual System.Threading.Tasks.Task FaultedAsync<TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
-  METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor visitor)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  PROPERTY ViciOne.ServiceBus.Sagas.State ToState { public-get;  }
 TYPE class public ViciOne.ServiceBus.SagaStateMachine.TriggerEvent [interfaces=ViciOne.ServiceBus.Sagas.Event]
   CTOR public ViciOne.ServiceBus.SagaStateMachine.TriggerEvent(System.String name)
   METHOD public System.Boolean Equals(System.Object obj)
@@ -11825,6 +11769,7 @@ TYPE interface public ViciOne.ServiceBus.Sagas.IEventObserver<TSaga>
   METHOD public abstract System.Threading.Tasks.Task PostExecuteAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,T> context)
   METHOD public abstract System.Threading.Tasks.Task PreExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context)
   METHOD public abstract System.Threading.Tasks.Task PreExecuteAsync<T>(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,T> context)
+TYPE interface public ViciOne.ServiceBus.Sagas.ILoadableSagaRepository<TSaga> [interfaces=ViciOne.ServiceBus.Advanced.ILoadSagaRepository<TSaga>&ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga>]
 TYPE interface public ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator<TSaga,TMessage>
   METHOD public abstract ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>> Discard()
   METHOD public abstract ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>> Execute(System.Action<ViciOne.ServiceBus.ConsumeContext<TMessage>> callback)
@@ -11836,6 +11781,7 @@ TYPE interface public ViciOne.ServiceBus.Sagas.IMissingInstanceRedeliveryConfigu
   METHOD public abstract System.Void OnRedeliveryLimitReached(System.Func<ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator<TInstance,TData>,ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TData>>> configure)
 TYPE interface public ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga> [interfaces=ViciOne.ServiceBus.Operations.IProbeSite]
   METHOD public abstract System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<System.Guid>> FindAsync(ViciOne.ServiceBus.Sagas.ISagaQuery<TSaga> query, System.Threading.CancellationToken cancellationToken = null)
+TYPE interface public ViciOne.ServiceBus.Sagas.IQueryableSagaRepository<TSaga> [interfaces=ViciOne.ServiceBus.Sagas.ILoadableSagaRepository<TSaga>&ViciOne.ServiceBus.Sagas.IQuerySagaRepository<TSaga>]
 TYPE interface public ViciOne.ServiceBus.Sagas.IRequestConfigurator
   PROPERTY System.Boolean ClearRequestIdOnFaulted {  public-set; }
   PROPERTY System.Nullable<System.TimeSpan> TimeToLive {  public-set; }

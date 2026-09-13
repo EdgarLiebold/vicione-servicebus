@@ -2275,3 +2275,101 @@ that boundary; authoritative coverage, restore, pack, format, and full-suite gat
 sandbox with build-server reuse disabled where appropriate. The protected `review/` and
 `TestResults/` trees remain untouched and unstaged. The repository-wide A+ source goal remains
 active for the next unreviewed owner.
+
+## Iteration 97 Saga owner plan
+
+Iteration 97 reviews `src/ViciOne.ServiceBus.Sagas` as one coherent owner. The baseline contains
+357 production C# files and 32,433 physical lines. Earlier work moved saga contracts into their
+own assembly and repaired individual concurrency and request-outcome defects, but it did not read
+or accept the complete owner file by file. This iteration therefore covers the public classic-saga
+and state-machine API, repository execution, dependency-injection composition, middleware,
+scheduling, fault handling, comments, filenames, namespaces, and physical folders together.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Preserve every saga feature | direct and integration tests for classic sagas, state machines, queries, repositories, requests, scheduling, retries, observations, and container composition |
+| Make registration deterministic | exact DI service graphs, duplicate/idempotent registration behavior, argument validation, definition ownership, and concurrent resolution tests |
+| Make repository lifecycle terminal | insertion, load, query, update, delete, discard, undo, cancellation, failure, disposal, and concurrent-removal tests |
+| Make state-machine execution total | every configured/unhandled event path, transition, activity, condition, catch, fault, request, schedule, composite event, and completion branch |
+| Remove compatibility and dummy seams | every sentinel, fallback, unsupported member, historical alias, placeholder concept, and public implementation type must prove a current capability or be replaced without feature loss |
+| Align source navigation | every type, filename, namespace, directory, and visibility must communicate its owner; repeated `Sagas`/`Saga`/`SagaStateMachine` concepts require an explicit final disposition |
+| Make async and cancellation semantics exact | bidirectional async naming, token propagation, no sync-over-async, and terminal cancellation identity across all asynchronous paths |
+| Make comments truthful | manually read every production file and comment; retain only current code and functional semantics, with no generated, procedural, stale, or filler prose |
+| Demonstrate test strength | static source/test pairing, assertion and anti-pattern review, isolated source mutations, focused and full MTP runs, package coverage/CRAP, architecture, format, package, and hygiene gates |
+
+## Iteration 97 baseline and mutation obligations
+
+The unchanged baseline passes 3,256/3,256 Core tests, including 130/130 tests in the direct
+`SagaStateMachine` namespace and 17/17 in `Sagas`, with no skips. Instrumentation records 60.8131%
+line and 52.8113% branch coverage for `ViciOne.ServiceBus.Sagas`, complexity 2,947 across 2,525
+methods, 18 CRAP scores above 30, and 58 additional scores between 15 and 30. The mandatory static
+pairing heuristic identifies 269 source files without a filename-based test pair; indirect
+integration coverage must be distinguished from genuine missing behavior.
+
+- Remove or bypass one DI registration branch: an exact service-graph or runtime-resolution test
+  must fail.
+- Change one state-machine dispatch, unhandled-event, or completion branch: the exact observable
+  state, fault, or repository terminality assertion must fail.
+- Change missing-instance retry exhaustion or delay selection: the exact redelivery count, delay,
+  and terminal-pipe assertion must fail.
+- Change repository save/delete/discard/undo selection or disposal order: the exact lifecycle test
+  must fail.
+- Change a schedule/fault/request activity branch: the exact message, address, token, and terminal
+  state assertion must fail.
+- Change one transition-event classifier shared by binders: every applicable binder family must be
+  distinguished by direct evidence.
+- Reintroduce an obsolete alias, fallback, dummy seam, repeated owner path, stale comment, or async
+  naming mismatch: architecture or hygiene evidence must fail with the exact identity.
+- Every non-equivalent counterchange is run separately and restored manually before final gates;
+  surviving mutations are investigated rather than reported as killed.
+
+## Iteration 97 runtime and capability completion
+
+The complete 357-file baseline Saga owner and every comment were manually read; the three new
+types, their callers, and their tests were then reviewed in full. No generator or scripted rewrite
+authored source or comments. The final owner contains 359 C# files and 32,622 lines. Its assembly
+remains a sibling of Core because it is an optional capability depending on Core. Provider
+assemblies remain grouped by `Persistence`, `Scheduling`, and `Transports`; within the Saga
+assembly, public domain/configuration contracts, repository runtime contexts, and state-machine
+implementation retain distinct `Sagas`, `Saga`, and `SagaStateMachine` responsibilities.
+
+Repository capabilities are now truthful and fail closed. The dispatch repository no longer
+pretends to support load/query operations through throwing stand-ins, and dependency injection no
+longer registers a dispatch service that fails by design. Explicit loadable and queryable
+capability contracts replace those dummy paths, all affected persistence providers select their
+real capability, and a saga without an explicitly selected persistence provider fails during
+configuration. Missing-instance redelivery now schedules a real message with its complete
+metadata and observable retry lifecycle. Faulted scheduling and state-machine execution preserve
+the exact cancellation token and cancellation terminality across completion, dispatch, nested
+scheduling, transitions, observers, and telemetry cleanup. Implementation-only types are internal
+and sealed, required dependencies are guarded, probes expose current behavior, and changed
+comments describe only the resulting code contract.
+
+Nineteen exact requirement-mapped cases were added: four missing-instance redelivery cases, nine
+repository capability/configuration cases, four state-machine cancellation cases, and two
+faulted-schedule cancellation cases. Five isolated source counterchanges were killed and restored
+for redelivery delay, both schedule-cancellation variants, pre-canceled completion, and mandatory
+repository selection. The changed-test assertion/anti-pattern audit finds no shallow, unawaited,
+blocking, time-dependent, skipped, or shared-state test behavior.
+
+Fresh full-host coverage records 62.4669% line and 54.4440% branch coverage for
+`ViciOne.ServiceBus.Sagas`, up from 60.8131% and 52.8113%. Methods above CRAP 30 fall from 18 to 15.
+This large declarative owner therefore remains in the source-wide completion audit; the metrics are
+not presented as total behavioral coverage. The full Core host passes 3,275/3,275. The authoritative
+serial Unit/Architecture solution passes 6,233/6,233 with zero failures and skips, including
+292/292 repository-wide async naming and file/type/folder architecture cases. The complete
+Engineering Release build passes with zero warnings and errors.
+
+Requirements JSON, whitespace formatting, Git whitespace, preprocessor, dummy-marker,
+empty-directory, and changed-test smell checks pass. A Saga-only info-level style audit contains no
+warning or error and classifies 660 optional suggestions: 323 conflict with the intentional shared
+namespace model, 162 suggest primary constructors, 128 are non-semantic expression preferences,
+and 47 identify historical unprefixed interface names. The 47 interface findings are the bounded
+next Saga API iteration and will be evaluated contract by contract rather than mechanically
+renamed. Fresh package validation passes 18 developer journeys, 31 packages, three isolated
+provider consumers, and all 30 runtime API assemblies. The intentional 19,029-line API contract has
+SHA-256 `6870002dc25251fe785d4e0bbd51a0f66c15ce533a3be92beb78224a2fa28486`.
+
+The protected `review/` and `TestResults/` trees were not changed or staged. Iteration 97 is ready
+for its commit, annotated tag, normal remote push, and verification; the overall A+ goal remains
+active for the explicit Saga interface-naming decision and subsequent unreviewed source owners.

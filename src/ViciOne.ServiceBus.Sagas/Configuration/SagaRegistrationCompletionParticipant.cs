@@ -13,7 +13,7 @@ sealed class SagaRegistrationCompletionParticipant :
 
     public int Order => 100;
 
-    public ISagaRepositoryRegistrationProvider Provider { get; set; } = new SagaRepositoryRegistrationProvider();
+    public ISagaRepositoryRegistrationProvider Provider { get; set; } = new MissingSagaRepositoryRegistrationProvider();
 
     public static SagaRegistrationCompletionParticipant Ensure(IRegistrationConfigurator configurator) =>
         configurator.GetOrAddRegistrationCompletionParticipant(static () => new SagaRegistrationCompletionParticipant());

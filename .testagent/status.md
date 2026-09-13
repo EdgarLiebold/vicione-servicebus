@@ -542,3 +542,32 @@ scripts. `src/ViciOne.ServiceBus` remains the Core assembly owner; sibling capab
 the `Persistence`, `Scheduling`, and `Transports` provider groups are intentional and pass the
 repository architecture and consumer gates. The protected `review/` and `TestResults/` trees were
 not modified or staged. The complete source-wide A+ goal remains active after this owner is secured.
+
+## Iteration 97
+
+Iteration 97 completes the Saga runtime/capability remediation after a manual read of all 357
+baseline product files and comments. The dispatch repository now exposes only dispatch, explicit
+loadable/queryable repositories expose the additional operations they actually implement, and the
+temporary, unsupported, and no-op repository fallbacks are removed. Saga registration fails closed
+without an explicit persistence provider. Azure Table, DynamoDB, Entity Framework, in-memory, and
+test-harness composition use the resulting capability model without feature loss.
+
+Missing-instance redelivery now performs real scheduled delivery with preserved metadata and an
+observable retry lifecycle. Faulted scheduling and state-machine execution preserve cancellation
+identity through completion checks, dispatch, transitions, observers, nested scheduling, and
+telemetry cleanup. Nineteen exact requirement cases were added; five isolated mutations were killed
+and restored. The Core host passes 3,275 tests, and fresh Saga instrumentation records 62.4669% line
+and 54.4440% branch coverage, reducing methods above CRAP 30 from 18 to 15.
+
+The final serial Unit/Architecture solution passes 6,233/6,233 with no failures or skips, including
+292 architecture cases. The Engineering Release build has zero warnings and errors. Package
+validation passes 18 journeys, 31 fresh packages, three isolated provider consumers, and all 30
+runtime API contracts; the 19,029-line contract SHA-256 is
+`6870002dc25251fe785d4e0bbd51a0f66c15ce533a3be92beb78224a2fa28486`.
+
+Whitespace, requirements, preprocessor, dummy-marker, empty-directory, and changed-test quality
+checks pass. A non-mutating info-level style audit also identifies 47 historical unprefixed Saga
+interface names as a separate Greenfield API decision; that bounded naming iteration remains next.
+The physical project placement is accepted: Core owns only `src/ViciOne.ServiceBus`, independent
+capabilities are sibling assemblies, and external providers are grouped under `Persistence`,
+`Scheduling`, and `Transports`. The overall source-wide A+ goal remains active.

@@ -34,7 +34,7 @@ public sealed class FutureTerminalDispatchContractTests
         Assert.Equal([requestId], state.Pending);
         var resultRecorder = new OutgoingMessageRecorder();
 
-        EventExecutionException exception = await Assert.ThrowsAsync<EventExecutionException>(() => FutureBehaviorContextFactory.UseAsync(
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => FutureBehaviorContextFactory.UseAsync(
             machine,
             machine.ResponseReceived,
             state,
@@ -43,7 +43,7 @@ public sealed class FutureTerminalDispatchContractTests
             resultRecorder,
             source.Token));
 
-        Assert.IsAssignableFrom<OperationCanceledException>(exception.GetBaseException());
+        Assert.Equal(source.Token, exception.CancellationToken);
         Assert.True(source.IsCancellationRequested);
         Assert.False(state.Results.ContainsKey(state.CorrelationId));
         Assert.Empty(resultRecorder.Messages);

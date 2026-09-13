@@ -80,6 +80,6 @@ public static class EntityFrameworkSagaRepository<TSaga>
         var repositoryFactory =
             new EntityFrameworkSagaRepositoryContextFactory<TSaga>(dbContextFactory, consumeContextFactory, lockStrategy);
 
-        return new SagaRepository<TSaga>(repositoryFactory, repositoryFactory, repositoryFactory);
+        return SagaRepository<TSaga>.CreateQueryable(repositoryFactory, repositoryFactory, repositoryFactory);
     }
 }

@@ -56,6 +56,23 @@ internal static class StateMachineTestExecution
             ?? throw new Xunit.Sdk.XunitException("Expected the state-machine accessor to return the current state.");
     }
 
+    public static async Task<bool> IsCompletedAsync<TInstance>(
+        ViciOneServiceBusStateMachine<TInstance> machine,
+        TInstance instance,
+        CancellationToken cancellationToken)
+        where TInstance : class, SagaStateMachineInstance
+    {
+        var message = new StateMachineSignal();
+        ConsumeContext<StateMachineSignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
+        var sagaInstance = new SagaInstance<TInstance>(instance);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
+        using var sagaContext = new InMemorySagaConsumeContext<TInstance, StateMachineSignal>(consumeContext, sagaInstance);
+        BehaviorContext<TInstance> behaviorContext =
+            new ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy(machine, sagaContext, machine.Initial.Enter);
+
+        return await ((SagaStateMachine<TInstance>)machine).IsCompletedAsync(behaviorContext, cancellationToken);
+    }
+
     public static async Task TransitionToStateAsync<TInstance>(
         ViciOneServiceBusStateMachine<TInstance> machine,
         TInstance instance,

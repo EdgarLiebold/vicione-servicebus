@@ -98,9 +98,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
     }
 
-    Task<bool> SagaStateMachine<TInstance>.IsCompletedAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
+    async Task<bool> SagaStateMachine<TInstance>.IsCompletedAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
     {
-        return _isCompleted(context);
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return await _isCompleted(context).WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 
     string StateMachine.Name => _name;
@@ -121,6 +124,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     async Task StateMachine<TInstance>.RaiseEventAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
+
         State<TInstance> state = await _accessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
             ?? throw new SagaStateMachineException($"The state machine '{_name}' did not initialize its current state.");
 
@@ -132,6 +138,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     async Task StateMachine<TInstance>.RaiseEventAsync<T>(BehaviorContext<TInstance, T> context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
+
         State<TInstance> state = await _accessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
             ?? throw new SagaStateMachineException($"The state machine '{_name}' did not initialize its current state.");
 
@@ -322,16 +331,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="completed">The completed.</param>
     protected void SetCompleted(Func<TInstance, Task<bool>> completed)
     {
-        _isCompleted = completed != null
-            ? context => completed(context.Saga)
-            : NotCompletedByDefaultAsync;
+        ArgumentNullException.ThrowIfNull(completed);
+        _isCompleted = context => completed(context.Saga);
     }
 
     /// <summary>Sets completed.</summary>
     /// <param name="completed">The completed.</param>
     protected void SetCompleted(Func<BehaviorContext<TInstance>, Task<bool>> completed)
     {
-        _isCompleted = completed ?? NotCompletedByDefaultAsync;
+        ArgumentNullException.ThrowIfNull(completed);
+        _isCompleted = completed;
     }
 
     /// <summary>Sets the state machine instance to Completed when in the final state. The saga repository removes completed state machine instances.</summary>
@@ -342,7 +351,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     async Task<bool> IsFinalizedAsync(BehaviorContext<TInstance> context)
     {
-        State<TInstance>? currentState = await Accessor.GetAsync(context).ConfigureAwait(false);
+        State<TInstance>? currentState = await Accessor.GetAsync(context, context.CancellationToken).ConfigureAwait(false);
 
         return Final.Equals(currentState);
     }
@@ -983,7 +992,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="state1">The state.</param>
     /// <param name="state2">The other state.</param>
     /// <param name="state3">The other other state.</param>
-    /// <param name="state4">Okay, this is getting a bit ridiculous at this point.</param>
+    /// <param name="state4">The fourth state in which the activity is configured.</param>
     /// <param name="activities">The event and activities.</param>
     protected internal void During(State state1, State state2, State state3, State state4,
         params EventActivities<TInstance>[] activities)
@@ -1760,7 +1769,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
                 .CancelRequestTimeout(request, false));
     }
 
-    /// <summary>Declares a schedule placeholder that is stored with the state machine instance.</summary>
+    /// <summary>Declares a schedule whose pending message token is stored with the state machine instance.</summary>
     /// <typeparam name="TMessage">The request type.</typeparam>
     /// <param name="propertyExpression">The schedule property on the state machine.</param>
     /// <param name="tokenIdExpression">The property where the tokenId is stored.</param>
@@ -1777,7 +1786,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         Schedule(propertyExpression, tokenIdExpression, configurator.Settings);
     }
 
-    /// <summary>Declares a schedule placeholder that is stored with the state machine instance.</summary>
+    /// <summary>Declares a schedule whose pending message token is stored with the state machine instance.</summary>
     /// <typeparam name="TMessage">The scheduled message type.</typeparam>
     /// <param name="propertyExpression">The schedule property on the state machine.</param>
     /// <param name="tokenIdExpression">The property where the tokenId is stored.</param>
@@ -1835,7 +1844,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
                     BehaviorContext<TInstance, TMessage> eventContext = context.CreateProxy(schedule.Received, context.Message);
 
-                    await ((StateMachine<TInstance>)this).RaiseEventAsync(eventContext).ConfigureAwait(false);
+                    await ((StateMachine<TInstance>)this).RaiseEventAsync(eventContext, context.CancellationToken).ConfigureAwait(false);
 
                     if (schedule.GetTokenId(context.Saga) == tokenId)
                         schedule.SetTokenId(context.Saga, default);

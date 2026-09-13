@@ -129,6 +129,7 @@ public sealed class JobServicePublicConfigurationApiTests
         services.AddViciOneServiceBus(configuration =>
         {
             configuration.SetKebabCaseEndpointNameFormatter();
+            configuration.SetInMemorySagaRepositoryProvider();
             configuration.AddJobSagaStateMachines()
                 .ConfigureJobEndpoint(endpoint => endpoint.Name = "jobs-coordinator")
                 .ConfigureJobTypeEndpoint(endpoint => endpoint.Name = "job-types-coordinator")
@@ -204,6 +205,7 @@ public sealed class JobServicePublicConfigurationApiTests
         {
             ArgumentNullException.ThrowIfNull(configurator);
             SagaTypes.Add(typeof(TSaga));
+            configurator.InMemoryRepository();
         }
     }
 

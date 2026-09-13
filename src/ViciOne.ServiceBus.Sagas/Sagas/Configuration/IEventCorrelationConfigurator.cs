@@ -11,14 +11,14 @@ public interface IEventCorrelationConfigurator<TSaga, TMessage>
     where TMessage : class
 {
     /// <summary>
-    /// If set to true, the state machine suggests that the saga instance be inserted blinding prior to the get/lock
-    /// using a weaker isolation level. This prevents range locks in the database from slowing inserts.
+    /// When enabled, the repository may insert a new saga instance before acquiring the normal read lock,
+    /// using weaker isolation to avoid database range locks that serialize otherwise independent inserts.
     /// </summary>
     bool InsertOnInitial { set; }
 
     /// <summary>
-    /// If set to true, changes to the saga instance will not be saved to the repository. Note that the in-memory saga repository
-    /// does not support read-only since the changes are made directly to the saga instance.
+    /// When enabled, the repository does not persist changes made while handling the event. The in-memory repository
+    /// cannot provide this isolation because handlers operate on its stored instance directly.
     /// </summary>
     bool ReadOnly { set; }
 

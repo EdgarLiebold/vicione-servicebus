@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures missing instance redelivery.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
+internal sealed class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
     ExceptionSpecification,
     IMissingInstanceRedeliveryConfigurator<TSaga, TMessage>,
     ISpecification
@@ -16,55 +14,56 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
     where TMessage : class
 {
     readonly IMissingInstanceConfigurator<TSaga, TMessage> _configurator;
+    readonly RetryObservable _observers;
     IPipe<ConsumeContext<TMessage>> _finalPipe;
     RetryPolicyFactory _policyFactory = null!;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configurator">The configurator to update.</param>
     public MissingInstanceRedeliveryConfigurator(IMissingInstanceConfigurator<TSaga, TMessage> configurator)
     {
-        _configurator = configurator;
+        ArgumentNullException.ThrowIfNull(configurator);
 
+        _configurator = configurator;
+        _observers = new RetryObservable();
         _finalPipe = configurator.Discard();
     }
 
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
+        ArgumentNullException.ThrowIfNull(factory);
         _policyFactory = factory;
     }
 
-    /// <summary>Handles the notification for redelivery limit reached.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
     public void OnRedeliveryLimitReached(Func<IMissingInstanceConfigurator<TSaga, TMessage>, IPipe<ConsumeContext<TMessage>>> configure)
     {
-        _finalPipe = configure(_configurator) ?? _configurator.Discard();
+        ArgumentNullException.ThrowIfNull(configure);
+        _finalPipe = configure(_configurator)
+            ?? throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Missing instance redelivery",
+                    TypeCache<TSaga>.ShortName,
+                    "The redelivery-limit callback returned no terminal pipe.",
+                    "Return a discard, fault, or executable pipe from the redelivery-limit callback"));
     }
 
-    /// <summary>Connects retry observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
     {
-        return new EmptyConnectHandle();
+        ArgumentNullException.ThrowIfNull(observer);
+        return _observers.Connect(observer);
     }
 
-    /// <summary>Gets or sets the replace message id.</summary>
+    /// <summary>Gets or sets whether each redelivery receives a new message identifier.</summary>
     public bool ReplaceMessageId { get; set; } = true;
-    /// <summary>Gets or sets the configure message scheduler.</summary>
+    /// <summary>Gets or sets whether redelivery uses the configured scheduler instead of transport delay.</summary>
     public bool ConfigureMessageScheduler { get; set; } = true;
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Reports a missing retry policy before the consume pipeline is built.</summary>
+    /// <returns>The configuration failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
     public IPipe<ConsumeContext<TMessage>> Build()
     {
         var retryPolicy = _policyFactory(Filter);
@@ -73,6 +72,6 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
         if (ConfigureMessageScheduler)
             options |= RedeliveryOptions.ConfigureMessageScheduler;
 
-        return new MissingInstanceRedeliveryPipe<TSaga, TMessage>(retryPolicy, _finalPipe, options);
+        return new MissingInstanceRedeliveryPipe<TSaga, TMessage>(retryPolicy, _observers, _finalPipe, options);
     }
 }

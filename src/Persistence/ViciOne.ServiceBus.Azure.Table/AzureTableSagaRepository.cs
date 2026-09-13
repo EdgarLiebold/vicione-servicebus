@@ -16,7 +16,7 @@ public static class AzureTableSagaRepository
     /// <param name="keyFormatter">The strategy that maps saga identifiers to partition and row keys.</param>
     /// <returns>An Azure Table-backed saga repository.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="tableClientFactory"/> or <paramref name="keyFormatter"/> is <see langword="null"/>.</exception>
-    public static ISagaRepository<TSaga> Create<TSaga>(
+    public static ILoadableSagaRepository<TSaga> Create<TSaga>(
         Func<TableClient> tableClientFactory,
         IAzureTableSagaKeyFormatter keyFormatter)
         where TSaga : class, ISaga
@@ -30,7 +30,7 @@ public static class AzureTableSagaRepository
 
         var repositoryContextFactory = new AzureTableSagaRepositoryContextFactory<TSaga>(tableClientProvider, consumeContextFactory, keyFormatter);
 
-        return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
+        return SagaRepository<TSaga>.CreateLoadable(repositoryContextFactory, repositoryContextFactory);
     }
 
     /// <summary>Creates a saga repository using the saga type name as a constant partition key.</summary>
@@ -38,7 +38,7 @@ public static class AzureTableSagaRepository
     /// <param name="tableClientFactory">The factory that supplies the Azure Table client for each repository context.</param>
     /// <returns>An Azure Table-backed saga repository.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="tableClientFactory"/> is <see langword="null"/>.</exception>
-    public static ISagaRepository<TSaga> Create<TSaga>(Func<TableClient> tableClientFactory)
+    public static ILoadableSagaRepository<TSaga> Create<TSaga>(Func<TableClient> tableClientFactory)
         where TSaga : class, ISaga
     {
         return Create<TSaga>(tableClientFactory, new FixedPartitionSagaKeyFormatter(typeof(TSaga).Name));

@@ -13,6 +13,8 @@ public class InMemorySagaRepository<TSaga> :
     ILoadSagaRepository<TSaga>
     where TSaga : class, ISaga
 {
+    readonly LoadSagaRepository<TSaga> _loadRepository;
+    readonly QuerySagaRepository<TSaga> _queryRepository;
     readonly SagaRepository<TSaga> _repository;
     readonly IndexedSagaDictionary<TSaga> _sagas;
 
@@ -25,7 +27,9 @@ public class InMemorySagaRepository<TSaga> :
 
         var repositoryContextFactory = new InMemorySagaRepositoryContextFactory<TSaga>(_sagas, factory);
 
-        _repository = new SagaRepository<TSaga>(repositoryContextFactory, repositoryContextFactory, repositoryContextFactory);
+        _repository = new SagaRepository<TSaga>(repositoryContextFactory);
+        _queryRepository = new QuerySagaRepository<TSaga>(repositoryContextFactory);
+        _loadRepository = new LoadSagaRepository<TSaga>(repositoryContextFactory);
     }
 
     /// <summary>Gets or sets the value at the specified index.</summary>
@@ -41,7 +45,7 @@ public class InMemorySagaRepository<TSaga> :
     /// <returns>A task that produces the load outcome.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _repository.LoadAsync(correlationId, cancellationToken: cancellationToken);
+        return _loadRepository.LoadAsync(correlationId, cancellationToken);
     }
 
     /// <summary>Finds the matching value.</summary>
@@ -50,7 +54,7 @@ public class InMemorySagaRepository<TSaga> :
     /// <returns>A task that produces the matching value.</returns>
     public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
-        return _repository.FindAsync(query, cancellationToken: cancellationToken);
+        return _queryRepository.FindAsync(query, cancellationToken);
     }
 
     void IProbeSite.Probe(ProbeContext context)

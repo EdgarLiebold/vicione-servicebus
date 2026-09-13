@@ -26,7 +26,8 @@ public static class InMemoryOutboxTestContextFactory
         Uri? responseAddress = null,
         Guid? requestId = null,
         IServiceProvider? serviceProvider = null,
-        Uri? sourceAddress = null)
+        Uri? sourceAddress = null,
+        Guid? correlationId = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -38,7 +39,7 @@ public static class InMemoryOutboxTestContextFactory
             outgoingMessages,
             transportSequenceNumber,
             isDelivered);
-        serializerContext ??= DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
+        serializerContext ??= DispatchProxy.Create<SerializerContext, SerializerContextProxy>();
         TestConsumeContext<T> consumeContext = DispatchProxy.Create<TestConsumeContext<T>, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)consumeContext).Configure(
             message,
@@ -51,7 +52,8 @@ public static class InMemoryOutboxTestContextFactory
             responseAddress,
             requestId,
             serviceProvider,
-            sourceAddress);
+            sourceAddress,
+            correlationId);
         return consumeContext;
     }
 
@@ -65,6 +67,7 @@ public static class InMemoryOutboxTestContextFactory
         private readonly List<Task> _consumeTasks = [];
         private readonly Dictionary<Type, object> _payloads = [];
         private CancellationToken _cancellationToken;
+        private Guid? _correlationId;
         private object _message = null!;
         private Guid _messageId;
         private ReceiveContext _receiveContext = null!;
@@ -85,10 +88,12 @@ public static class InMemoryOutboxTestContextFactory
             Uri? responseAddress,
             Guid? requestId,
             IServiceProvider? serviceProvider,
-            Uri? sourceAddress)
+            Uri? sourceAddress,
+            Guid? correlationId)
             where T : class
         {
             _message = message;
+            _correlationId = correlationId;
             _messageId = messageId ?? NewId.NextGuid();
             _receiveContext = receiveContext;
             _serializerContext = serializerContext;
@@ -118,6 +123,14 @@ public static class InMemoryOutboxTestContextFactory
                     return _message;
                 case "get_MessageId":
                     return _messageId;
+                case "get_CorrelationId":
+                    return _correlationId;
+                case "get_ConversationId":
+                case "get_InitiatorId":
+                case "get_ExpirationTime":
+                case "get_DestinationAddress":
+                case "get_FaultAddress":
+                    return null;
                 case "get_SentTime":
                     return _sentTime;
                 case "get_ResponseAddress":
@@ -141,6 +154,10 @@ public static class InMemoryOutboxTestContextFactory
                 case "AddConsumeTask":
                     _consumeTasks.Add((Task)args![0]!);
                     return null;
+                case "GetSendEndpointAsync":
+                    return _receiveContext.SendEndpointProvider.GetSendEndpointAsync(
+                        (Uri)args![0]!,
+                        (CancellationToken)args[1]!);
                 case "HasPayloadType":
                     return _payloads.ContainsKey((Type)args![0]!);
                 case "TryGetPayload":
@@ -222,6 +239,7 @@ public static class InMemoryOutboxTestContextFactory
             {
                 "get_InputAddress" => _inputAddress,
                 "get_CancellationToken" => _cancellationToken,
+                "get_TransportHeaders" => EmptyHeaders.Instance,
                 "get_IsDelivered" => _isDelivered,
                 "get_PublishEndpointProvider" => _publishEndpointProvider,
                 "get_SendEndpointProvider" => _sendEndpointProvider,
@@ -252,6 +270,27 @@ public static class InMemoryOutboxTestContextFactory
             "get_SchedulerFactory" => new MessageSchedulerFactory(_ => Scheduler),
             _ => throw new NotSupportedException(targetMethod?.Name),
         };
+    }
+
+    private class SerializerContextProxy : DispatchProxy
+    {
+        private readonly global::ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer _serializer =
+            new TestMessageSerializer();
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        {
+            "GetMessageSerializer" when targetMethod.GetParameters().Length == 0 => _serializer,
+            _ => throw new NotSupportedException(targetMethod?.Name),
+        };
+    }
+
+    private sealed class TestMessageSerializer : global::ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer
+    {
+        public System.Net.Mime.ContentType ContentType { get; } = new("application/json");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context)
+            where T : class =>
+            throw new NotSupportedException("The test boundary records configured send contexts without serializing their bodies.");
     }
 
     private sealed class RecordingEndpointProvider(OutgoingMessageRecorder recorder) :
@@ -421,7 +460,10 @@ public sealed class OutgoingMessageRecorder
             message,
             context.RequestId,
             context.ResponseAddress,
-            context.FaultAddress));
+            context.FaultAddress,
+            context.MessageId,
+            context.Delay,
+            context.Headers.Get(MessageHeaders.RedeliveryCount, default(int?))));
     }
 
     /// <summary>Captures request, response, and fault routing metadata applied by a send pipe.</summary>
@@ -429,5 +471,8 @@ public sealed class OutgoingMessageRecorder
         object Message,
         Guid? RequestId,
         Uri? ResponseAddress,
-        Uri? FaultAddress);
+        Uri? FaultAddress,
+        Guid? MessageId,
+        TimeSpan? Delay,
+        int? RedeliveryCount);
 }

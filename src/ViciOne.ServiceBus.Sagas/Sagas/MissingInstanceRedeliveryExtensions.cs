@@ -4,27 +4,31 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Provides extension methods for missing instance redelivery.</summary>
+/// <summary>Configures delayed retries when a correlated saga instance does not exist.</summary>
 public static class MissingInstanceRedeliveryExtensions
 {
     /// <summary>
-    /// Redeliver uses the message scheduler to deliver the message to the queue at a future
-    /// time. The delivery count is incremented.
-    /// A message scheduler must be configured on the bus for redelivery to be enabled.
+    /// Builds a missing-instance pipe that reschedules the consumed message according to a retry
+    /// policy and increments its redelivery count. Scheduler-based redelivery is enabled by
+    /// default and requires a configured message scheduler; callers can select transport delay
+    /// through <see cref="IMissingInstanceRedeliveryConfigurator.ConfigureMessageScheduler" />.
     /// </summary>
-    /// <typeparam name="TInstance">The instance type.</typeparam>
-    /// <typeparam name="TData">The event data type.</typeparam>
-    /// <param name="configurator">The consume context of the message.</param>
-    /// <param name="configure">Configure the retry policy for the message redelivery.</param>
-    /// <returns>The pipe produced by the operation.</returns>
+    /// <typeparam name="TInstance">The saga instance type.</typeparam>
+    /// <typeparam name="TData">The correlated message type.</typeparam>
+    /// <param name="configurator">The missing-instance branch to replace.</param>
+    /// <param name="configure">The retry, terminal, observer, and scheduling configuration.</param>
+    /// <returns>The configured missing-instance redelivery pipe.</returns>
     public static IPipe<ConsumeContext<TData>> Redeliver<TInstance, TData>(this IMissingInstanceConfigurator<TInstance, TData> configurator,
         Action<IMissingInstanceRedeliveryConfigurator<TInstance, TData>> configure)
         where TInstance : SagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var specification = new MissingInstanceRedeliveryConfigurator<TInstance, TData>(configurator);
 
-        configure?.Invoke(specification);
+        configure(specification);
 
         IReadOnlyList<ValidationResult> result = specification.Validate().ThrowIfContainsFailure();
 

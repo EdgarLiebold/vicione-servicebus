@@ -17,7 +17,10 @@ public class StatePropertyConverter<TInstance> :
     public Task<string?> ConvertAsync<T>(InitializeContext<T> context, State<TInstance>? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<string?>(cancellationToken); return Task.FromResult(input?.Name);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<string?>(cancellationToken);
+
+        return Task.FromResult(input?.Name);
     }
 }
 

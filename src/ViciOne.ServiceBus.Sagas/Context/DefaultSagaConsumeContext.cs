@@ -34,7 +34,10 @@ public class DefaultSagaConsumeContext<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsCompleted = true;
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        IsCompleted = true;
 
         return Task.CompletedTask;
     }

@@ -52,6 +52,7 @@ public sealed class FeatureOptionsStartupValidationTests
         services.AddViciOneServiceBus(bus =>
         {
             bus.Limits(MessageLimits.Conservative);
+            bus.SetInMemorySagaRepositoryProvider();
             bus.AddJobService(options => ConfigureJobConsumer(options, invalid));
             bus.AddJobSagaStateMachines(options => ConfigureJobSaga(options, invalid));
             bus.ConfigureHealthCheckOptions(options => ConfigureHealth(options, invalid));

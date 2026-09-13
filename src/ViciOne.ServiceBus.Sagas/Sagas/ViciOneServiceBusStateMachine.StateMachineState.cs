@@ -122,6 +122,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         async Task State<TInstance>.RaiseAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!_behaviors.TryGetValue(context.Event, out ActivityBehaviorBuilder<TInstance>? activities))
             {
                 if (_ignoredEvents.TryGetValue(context.Event, out IStateEventFilter<TInstance>? filter) && filter.Filter(context))
@@ -151,6 +154,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 await activities.Behavior.ExecuteAsync(context).ConfigureAwait(false);
 
                 await _observer.PostExecuteAsync(context).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -162,6 +169,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         async Task State<TInstance>.RaiseAsync<T>(BehaviorContext<TInstance, T> context, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!_behaviors.TryGetValue(context.Event, out ActivityBehaviorBuilder<TInstance>? activities))
             {
                 if (_ignoredEvents.TryGetValue(context.Event, out IStateEventFilter<TInstance>? filter) && filter.Filter(context))
@@ -191,6 +201,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 await activities.Behavior.ExecuteAsync(context).ConfigureAwait(false);
 
                 await _observer.PostExecuteAsync(context).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {

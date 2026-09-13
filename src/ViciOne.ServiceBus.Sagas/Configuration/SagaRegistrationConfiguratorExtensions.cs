@@ -84,13 +84,13 @@ public static class SagaRegistrationConfiguratorExtensions
         where TSaga : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        SagaRegistrationCompletionParticipant.Ensure(configurator);
+        SagaRegistrationCompletionParticipant.RequireRepository<TSaga>(configurator);
         return new SagaRegistrationConfigurator<TSaga>(configurator);
     }
 
     /// <summary>Sets the provider that configures repositories not explicitly configured for registered sagas.</summary>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="provider">The provider that supplies a default repository configuration.</param>
     public static void SetSagaRepositoryProvider(this IRegistrationConfigurator configurator, ISagaRepositoryRegistrationProvider provider)
     {
         ArgumentNullException.ThrowIfNull(configurator);

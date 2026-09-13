@@ -3,28 +3,29 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>Executes activity state-machine behavior.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-public class ActivityBehavior<TSaga> :
+/// <summary>Composes one state-machine activity with the remaining behavior and its fault path.</summary>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
+internal sealed class ActivityBehavior<TSaga> :
     IBehavior<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
     readonly IStateMachineActivity<TSaga> _activity;
     readonly IBehavior<TSaga> _next;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activity">The activity.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <summary>Creates a behavior node from an activity and its continuation.</summary>
+    /// <param name="activity">The activity executed by this node.</param>
+    /// <param name="next">The behavior invoked after the activity.</param>
     public ActivityBehavior(IStateMachineActivity<TSaga> activity, IBehavior<TSaga> next)
     {
-        _activity = activity;
-        _next = next;
+        _activity = activity ?? throw new ArgumentNullException(nameof(activity));
+        _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
-    /// <summary>Accepts the supplied value.</summary>
-    /// <param name="visitor">The visitor.</param>
+    /// <summary>Visits this behavior and its complete activity chain.</summary>
+    /// <param name="visitor">The state-machine visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this, x =>
         {
             _activity.Accept(visitor);
@@ -32,22 +33,30 @@ public class ActivityBehavior<TSaga> :
         });
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Writes diagnostics for this activity and its continuation.</summary>
+    /// <param name="context">The diagnostic context to populate.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _activity.Probe(context);
         _next.Probe(context);
     }
 
-    /// <summary>Runs the configured action.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Executes the activity chain and routes non-cancellation failures through its fault chain.</summary>
+    /// <param name="context">The saga behavior context.</param>
+    /// <returns>A task that completes after execution or fault handling.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             await _activity.ExecuteAsync(context, _next).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception exception)
         {
@@ -55,17 +64,24 @@ public class ActivityBehavior<TSaga> :
         }
     }
 
-    /// <summary>Runs the configured action.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Executes a data-event activity chain and routes non-cancellation failures through its fault chain.</summary>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <param name="context">The saga and event data.</param>
+    /// <returns>A task that completes after execution or fault handling.</returns>
     public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         var behavior = new DataBehavior<TSaga, T>(_next);
         try
         {
             await _activity.ExecuteAsync(context, behavior).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception exception)
         {
@@ -73,27 +89,29 @@ public class ActivityBehavior<TSaga> :
         }
     }
 
-    /// <summary>Reports that the operation has faulted.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <typeparam name="TException">The exception handled by the member.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Runs this activity's typed data-event fault behavior.</summary>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception type.</typeparam>
+    /// <param name="context">The faulted saga and event data.</param>
+    /// <returns>A task that completes after fault handling.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         var behavior = new DataBehavior<TSaga, T>(_next);
 
         return _activity.FaultedAsync(context, behavior);
     }
 
-    /// <summary>Reports that the operation has faulted.</summary>
-    /// <typeparam name="TException">The exception handled by the member.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Runs this activity's fault behavior.</summary>
+    /// <typeparam name="TException">The exception type.</typeparam>
+    /// <param name="context">The faulted saga behavior context.</param>
+    /// <returns>A task that completes after fault handling.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _activity.FaultedAsync(context, _next);
     }
 }

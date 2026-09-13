@@ -26,12 +26,17 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public Task IgnoreAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
         }
 
         public Task ThrowAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new UnhandledEventException(_machine.Name, _context.Event.Name, CurrentState.Name);
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+
+            throw new UnhandledEventException(_machine.Name, _context.Event.Name, CurrentState.Name);
         }
     }
 }

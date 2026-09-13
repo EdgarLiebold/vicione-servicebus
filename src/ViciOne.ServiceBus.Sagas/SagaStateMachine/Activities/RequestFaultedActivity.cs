@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Contracts;
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
 /// <summary>
-/// Publishes the <see cref="RequestCompleted" /> event, used by the request state machine to track
-/// pending requests for a saga instance.
+/// Publishes the <see cref="RequestFaulted" /> event used by the request state machine to complete
+/// a pending request with its structured fault details.
 /// </summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>

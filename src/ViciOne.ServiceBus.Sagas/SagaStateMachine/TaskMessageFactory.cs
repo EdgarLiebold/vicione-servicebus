@@ -22,7 +22,10 @@ public class TaskMessageFactory<T>
     /// <returns>A task that produces the requested value.</returns>
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>(cancellationToken); return _messageFactory;
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>(cancellationToken);
+
+        return _messageFactory;
     }
 
     /// <summary>Applies the selected configuration.</summary>
@@ -31,7 +34,10 @@ public class TaskMessageFactory<T>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UseAsync(Func<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>, Task> callback, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> msgTask = _messageFactory;
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> msgTask = _messageFactory;
         if (msgTask.Status == TaskStatus.RanToCompletion)
             return callback(msgTask.GetAwaiter().GetResult());
 

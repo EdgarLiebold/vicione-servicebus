@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {
-    /// <summary>Accesses the current state as a string property.</summary>
+    /// <summary>Maps the saga's integer state index to the corresponding state-machine state.</summary>
     class IntStateAccessor :
         IStateAccessor<TInstance>
     {

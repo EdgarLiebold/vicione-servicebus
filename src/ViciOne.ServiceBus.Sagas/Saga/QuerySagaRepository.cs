@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>The modern query saga repository, which can be used with any storage engine. Leverages the new interfaces for query context.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Finds saga identifiers through a storage-specific query context.</summary>
+/// <typeparam name="TSaga">The saga state queried by the repository.</typeparam>
 public class QuerySagaRepository<TSaga> :
     IQuerySagaRepository<TSaga>
     where TSaga : class, ISaga
@@ -16,7 +16,8 @@ public class QuerySagaRepository<TSaga> :
     /// <param name="repositoryContextFactory">The repository context factory.</param>
     public QuerySagaRepository(IQuerySagaRepositoryContextFactory<TSaga> repositoryContextFactory)
     {
-        _repositoryContextFactory = repositoryContextFactory;
+        _repositoryContextFactory = repositoryContextFactory
+            ?? throw new ArgumentNullException(nameof(repositoryContextFactory));
     }
 
     /// <summary>Finds the matching value.</summary>
@@ -25,13 +26,19 @@ public class QuerySagaRepository<TSaga> :
     /// <returns>A task that produces the matching value.</returns>
     public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
-        return _repositoryContextFactory.ExecuteAsync<IEnumerable<Guid>>(async context => await context.QueryAsync(query, cancellationToken: cancellationToken).ConfigureAwait(false), cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(query);
+
+        return _repositoryContextFactory.ExecuteAsync<IEnumerable<Guid>>(
+            async context => await context.QueryAsync(query, cancellationToken).ConfigureAwait(false),
+            cancellationToken);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("querySagaRepository");
 
         _repositoryContextFactory.Probe(scope);

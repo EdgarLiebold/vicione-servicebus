@@ -15,7 +15,7 @@ public static class DynamoDbSagaRepository
     /// <param name="options">The immutable table, read-consistency, conversion, clock, and time-to-live settings.</param>
     /// <returns>An Amazon DynamoDB-backed saga repository.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="contextFactory"/> or <paramref name="options"/> is <see langword="null"/>.</exception>
-    public static ISagaRepository<TSaga> Create<TSaga>(
+    public static ILoadableSagaRepository<TSaga> Create<TSaga>(
         Func<IDynamoDBContext> contextFactory,
         DynamoDbSagaRepositoryOptions<TSaga> options)
         where TSaga : class, ISagaVersion
@@ -31,6 +31,6 @@ public static class DynamoDbSagaRepository
             consumeContextFactory,
             options);
 
-        return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
+        return SagaRepository<TSaga>.CreateLoadable(repositoryContextFactory, repositoryContextFactory);
     }
 }
