@@ -12,6 +12,7 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Testing;
 internal sealed class AzureServiceBusTestHarnessHostedService :
     IHostedService
 {
+    readonly Func<ServiceBusAdministrationClient> _createAdministrationClient;
     readonly ILogger<AzureServiceBusTestHarnessHostedService> _logger;
     readonly AzureServiceBusTestHarnessOptions _testOptions;
     readonly AzureServiceBusTransportOptions _transportOptions;
@@ -30,6 +31,29 @@ internal sealed class AzureServiceBusTestHarnessHostedService :
         _logger = logger;
         _transportOptions = transportOptions.Value;
         _testOptions = testOptions.Value;
+        _createAdministrationClient = () => new ServiceBusAdministrationClient(_transportOptions.ConnectionString);
+    }
+
+    /// <summary>Initializes the hosted service with an explicit administration-client factory.</summary>
+    /// <param name="transportOptions">The effective Azure Service Bus transport options.</param>
+    /// <param name="testOptions">The effective test-harness options.</param>
+    /// <param name="logger">The logger used to report deleted entities.</param>
+    /// <param name="createAdministrationClient">Creates the administration client used for cleanup.</param>
+    internal AzureServiceBusTestHarnessHostedService(
+        AzureServiceBusTransportOptions transportOptions,
+        AzureServiceBusTestHarnessOptions testOptions,
+        ILogger<AzureServiceBusTestHarnessHostedService> logger,
+        Func<ServiceBusAdministrationClient> createAdministrationClient)
+    {
+        ArgumentNullException.ThrowIfNull(transportOptions);
+        ArgumentNullException.ThrowIfNull(testOptions);
+        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(createAdministrationClient);
+
+        _logger = logger;
+        _transportOptions = transportOptions;
+        _testOptions = testOptions;
+        _createAdministrationClient = createAdministrationClient;
     }
 
     /// <summary>Cleans the namespace when startup cleanup is enabled.</summary>
@@ -54,7 +78,13 @@ internal sealed class AzureServiceBusTestHarnessHostedService :
 
     async Task CleanNamespaceAsync(CancellationToken cancellationToken)
     {
-        var managementClient = new ServiceBusAdministrationClient(_transportOptions.ConnectionString);
+        ServiceBusAdministrationClient managementClient = _createAdministrationClient();
+        if (managementClient == null)
+        {
+            throw new InvalidOperationException(
+                "The Azure Service Bus administration-client factory returned null.");
+        }
+
         AzureServiceBusCleanupResult result = await AzureServiceBusNamespaceCleaner
             .CleanAsync(managementClient, cancellationToken)
             .ConfigureAwait(false);

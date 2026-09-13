@@ -13,6 +13,29 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration;
 public sealed class AzureFunctionsTestExtensionsBoundaryTests
 {
     [Fact]
+    public void AddAzureFunctionsTestComponents_RegistersEachRequiredServiceOnceAndReturnsTheConfigurator()
+    {
+        var services = new ServiceCollection();
+        IBusRegistrationConfigurator? observedConfigurator = null;
+        services.AddViciOneServiceBusTestHarness(configurator =>
+        {
+            observedConfigurator = configurator;
+            Assert.Same(configurator, configurator.AddAzureFunctionsTestComponents());
+            Assert.Same(configurator, configurator.AddAzureFunctionsTestComponents());
+        });
+
+        Assert.NotNull(observedConfigurator);
+        ServiceDescriptor busHandle = Assert.Single(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IAsyncBusHandle));
+        Assert.Equal("AsyncBusHandle", busHandle.ImplementationType?.Name);
+        ServiceDescriptor receiver = Assert.Single(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IMessageReceiver));
+        Assert.Equal(typeof(MessageReceiver), receiver.ImplementationType);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ASB-FUNCTIONS-TESTING", "public-entry-points-validate-required-inputs")]
     public async Task PublicEntryPoints_RejectEveryMissingRequiredInputAsync()
     {

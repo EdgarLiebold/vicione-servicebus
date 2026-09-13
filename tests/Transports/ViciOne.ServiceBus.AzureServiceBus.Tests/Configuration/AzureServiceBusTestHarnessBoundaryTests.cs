@@ -1,8 +1,10 @@
+using System.Text.Json;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using global::Azure;
 using global::Azure.Core;
 using ViciOne.ServiceBus.AzureServiceBus.Testing;
+using ViciOne.ServiceBus.Serialization;
 using Xunit;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration;
@@ -53,6 +55,70 @@ public sealed class AzureServiceBusTestHarnessBoundaryTests
     }
 
     [Fact]
+    public void InputQueueAddress_BeforeBusCreation_ExplainsTheLifecycleBoundary()
+    {
+        var harness = new ConfigurationHarness(useMessageScheduler: true);
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => harness.InputQueueAddress);
+
+        Assert.Contains("before the bus has been created", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AdministrationClient_CanBeCreatedFromTheConfiguredNamespaceAndCredential()
+    {
+        var harness = new ConfigurationHarness(useMessageScheduler: true);
+
+        ServiceBusAdministrationClient client = harness.CreateAdministrationClientForTest();
+
+        Assert.IsType<ServiceBusAdministrationClient>(client);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task CreateBusAsync_ConfiguresProviderCallbacksAddressAndSchedulerSelectionAsync(bool useMessageScheduler)
+    {
+        var harness = new ConfigurationHarness(useMessageScheduler);
+        var busCalls = 0;
+        var endpointCalls = 0;
+        var providerBusCalls = 0;
+        var providerEndpointCalls = 0;
+        harness.BusConfiguring += _ => busCalls++;
+        harness.ReceiveEndpointConfiguring += _ => endpointCalls++;
+        harness.AzureServiceBusConfiguring += _ => providerBusCalls++;
+        harness.AzureServiceBusReceiveEndpointConfiguring += _ => providerEndpointCalls++;
+
+        IBusControl bus = await harness.CreateBusForTestAsync(TestContext.Current.CancellationToken);
+        string probe = JsonSerializer.Serialize(
+            bus.GetProbeResult(TestContext.Current.CancellationToken),
+            ServiceBusMetadataJson.Options);
+
+        Assert.Equal(1, busCalls);
+        Assert.Equal(1, endpointCalls);
+        Assert.Equal(1, providerBusCalls);
+        Assert.Equal(1, providerEndpointCalls);
+        Assert.Equal(new Uri("sb://namespace.example/input_queue"), harness.InputQueueAddress);
+        Assert.Equal(useMessageScheduler, probe.Contains("serviceBusScheduler", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task CreateBusAsync_WithPreCanceledToken_DoesNotInvokeConfigurationAsync()
+    {
+        var harness = new ConfigurationHarness(useMessageScheduler: true);
+        var configurationCalls = 0;
+        harness.AzureServiceBusConfiguring += _ => configurationCalls++;
+        using var cancellationSource = new CancellationTokenSource();
+        cancellationSource.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            harness.CreateBusForTestAsync(cancellationSource.Token));
+
+        Assert.Equal(cancellationSource.Token, exception.CancellationToken);
+        Assert.Equal(0, configurationCalls);
+    }
+
+    [Fact]
     public async Task CleanAsync_DeletesEveryEnumeratedEntityAndForwardsTheExactTokenAsync()
     {
         var administrationClient = new RecordingAdministrationClient(["orders", "billing"], ["events", "audit"]);
@@ -95,6 +161,36 @@ public sealed class AzureServiceBusTestHarnessBoundaryTests
         await harness.CleanAsync(TestContext.Current.CancellationToken);
 
         Assert.Empty(administrationClient.DeletedQueues);
+    }
+
+    [Fact]
+    public async Task CleanAsync_AcceptsATopicThatDisappearsBetweenEnumerationAndDeletionAsync()
+    {
+        var administrationClient = new RecordingAdministrationClient([], ["events"])
+        {
+            DeleteFailure = new RequestFailedException(404, "The topic no longer exists."),
+        };
+        var harness = new TestableHarness(administrationClient);
+
+        await harness.CleanAsync(TestContext.Current.CancellationToken);
+
+        Assert.Empty(administrationClient.DeletedTopics);
+    }
+
+    private sealed class ConfigurationHarness
+        : AzureServiceBusTestHarness
+    {
+        public ConfigurationHarness(bool useMessageScheduler)
+            : base(new Uri("sb://namespace.example"), Credential)
+        {
+            UseMessageScheduler = useMessageScheduler;
+        }
+
+        public ServiceBusAdministrationClient CreateAdministrationClientForTest() =>
+            base.CreateAdministrationClient();
+
+        public Task<IBusControl> CreateBusForTestAsync(CancellationToken cancellationToken) =>
+            base.CreateBusAsync(cancellationToken);
     }
 
     private sealed class TestableHarness(ServiceBusAdministrationClient administrationClient)

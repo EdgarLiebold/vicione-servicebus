@@ -8934,6 +8934,7 @@ TYPE class public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarness [base=
   METHOD public System.Threading.Tasks.Task CleanAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public System.Threading.Tasks.Task RecreateVirtualHostAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings GetHostSettings()
+  PROPERTY System.Boolean AllowRootVirtualHostCleanup { public-get; public-set; }
   PROPERTY System.Boolean CleanVirtualHostOnStart { public-get; public-set; }
   PROPERTY System.Func<RabbitMQ.Client.IChannel,System.Threading.CancellationToken,System.Threading.Tasks.Task> CleanupVirtualHostAsync { public-get; public-set; }
   PROPERTY System.Int32 ManagementPort { public-get; public-set; }

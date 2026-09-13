@@ -65,7 +65,7 @@ public class AzureServiceBusTestHarness :
     }
 
     /// <summary>Deletes every topic and queue from the configured Azure Service Bus namespace.</summary>
-    /// <param name="cancellationToken">The token that cancels enumeration, deletion, or the retry delay.</param>
+    /// <param name="cancellationToken">The token that cancels entity enumeration and deletion.</param>
     /// <returns>A task that completes when the namespace contains no topics or queues.</returns>
     public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {

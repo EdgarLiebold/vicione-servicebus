@@ -2079,3 +2079,105 @@ The reviewed packed API diff is confined to the intended Testing redesign. The f
 `15a337639e0a3430a2e404fe15839c196b94a97e40835ecfa434f0a8dd5120dd`.
 The protected `review/` and `TestResults/` trees were neither changed nor staged. The complete A+
 source goal remains active for the next unreviewed owner.
+
+## Iteration 95 transport-provider Testing plan
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Preserve coherent source ownership | all three provider-testing assemblies stay under `src/Transports`; project references, namespaces, package IDs, filenames, and primary public types are checked together |
+| Prevent accidental destructive RabbitMQ root cleanup | direct-harness opt-in property plus pre-connection rejection tests; dependency-injection validation remains consistent |
+| Prevent an unowned bus when RabbitMQ startup cleanup fails | cleanup moves before factory construction; a failed-cleanup start test proves no provider configuration callback is reached |
+| Preserve RabbitMQ management and broker behavior | direct settings, UTF-8 authentication, dedicated-vhost recreation, real-broker cleanup, provider event, cluster, TLS, and cancellation tests |
+| Preserve Azure Service Bus cleanup and harness behavior | queue/topic deletion and disappearance races, exact cancellation, administration endpoint, bus/endpoint callbacks, scheduler toggle, and input-address lifecycle tests |
+| Cover every provider Testing public API and changed parameter | compile-time API contract plus direct assertions for defaults, setters, callbacks, null/boundary validation, cancellation, and return identity |
+| Demonstrate test strength rather than coverage touching | focused gap/assertion review and isolated counterchanges for each repaired safety or lifecycle invariant |
+| Complete the family-level quality gates | locked restore, warnings-as-errors builds, focused and full tests, architecture/async checks, format checks, coverage, package/API validation, mutation evidence, and manual final reread |
+
+## Iteration 95 completion
+
+All 15 production C# files and all 1,438 physical lines in the Azure Service Bus, Event Hubs, and
+RabbitMQ provider-testing assemblies were read manually in full before and after remediation,
+including every comment, public and protected member, internal execution path, project reference,
+filename, namespace, and directory owner. No generator or scripted source/comment rewrite was used.
+The three independent provider packages remain under `src/Transports`. The directory
+`src/ViciOne.ServiceBus` owns the Core assembly rather than all ServiceBus assemblies, so moving
+sibling projects beneath it would misstate dependency ownership and expose nested files to the
+Core SDK project's recursive source globs. First-party capability assemblies therefore remain
+siblings at `src`, while external integrations stay grouped by `Persistence`, `Scheduling`, and
+`Transports`; provider or integration is the precise term for these groups.
+
+RabbitMQ direct cleanup now refuses both literal and encoded root virtual hosts unless the caller
+sets the explicit `AllowRootVirtualHostCleanup` safety opt-in. Startup cleanup completes before bus
+construction, so a cleanup failure cannot leave a newly created bus outside lifecycle ownership.
+Direct connections now refresh effective host settings before connecting. Direct and hosted paths
+share one UTF-8 management-client, URI, virtual-host, entity-filter, and AMQP-close-reason
+implementation; malformed factory results fail causally, and failure cleanup preserves the primary
+exception. The hosted path has deterministic seams for full creation, cleanup, configuration,
+TLS, transport, cancellation, and failure-order testing. Azure Service Bus has the corresponding
+administration-client seam, exact null-factory handling, complete queue/topic race behavior, and a
+correct cancellation comment. Event Hubs required no production change.
+
+The Azure focused host grows from 66 to 78 runtime cases and passes 78/78. The RabbitMQ focused
+host grows from 197 to 236 and passes 236/236. The focused Event Hubs producer-resolution owner
+passes 3/3. A bounded assertion-quality and anti-pattern review covered every changed/direct test
+plus the complete three owning test projects: 242 source test methods contain 920 assertion-bearing
+lines, and no assertion-free behavioral case, trivial-only assertion, unawaited task, skip,
+wall-clock dependency, sleep, debug output, swallowed exception, or mutable shared test state was
+found. Every new public member and changed option is exercised by compile-time API projection and
+direct behavior assertions.
+
+Six isolated source counterchanges were compiled, executed one at a time, killed by their exact
+tests, and restored manually: cleanup after bus construction, failure to classify an encoded root
+virtual host, ASCII rather than UTF-8 management authentication, retention of `amq.*` system
+entities, inverted Azure scheduler selection, and rejection rather than tolerance of queue/topic
+404 disappearance races. The red outcomes observed the exact wrong callback count, missing root
+exception, credential bytes, returned entity set, scheduler probe state, and propagated Azure
+exceptions respectively.
+
+Real provider acceptance passes through the canonical pinned-fixture runner. Run
+`vicione-e49f15eb1361` creates a dedicated RabbitMQ virtual host, declares real queue and exchange
+entities, invokes custom cleanup with the exact cancellation token, and proves both entities are
+absent afterwards. Run `vicione-f83044ba0dd7` creates a real queue and topic in the local Azure
+Service Bus emulator namespace and proves both are absent after harness cleanup. Each runner used
+fresh run-scoped credentials and loopback ports and removed its fixture after the test.
+
+Fresh accepted instrumentation passes all focused cases. `ViciOne.ServiceBus.AzureServiceBus.Testing`
+records 100% line and 87.5% branch coverage with artifact SHA-256
+`96cf3858a23520995fb340443de2650ba05c63264abd48466a6ddf907bd1dc63`.
+`ViciOne.ServiceBus.RabbitMq.Testing` records 94.3262% line and 82.1839% branch coverage with
+artifact SHA-256 `4b0460d4a9781f991ae3c10d83f0646cad3182bcf792b8fc848c26d25963555d`.
+`ViciOne.ServiceBus.EventHubs.Testing` records 100% line and 100% branch coverage with artifact
+SHA-256 `664e7fc9547b325c0e367e2b3071f59a34528c3b26ceab4bfe8edbe45be7b88a`.
+The remaining RabbitMQ unit-host sequence points are thin default real-client connection and
+management seams; their shared decision logic is directly covered, and the public direct-client
+path is additionally executed against the real pinned broker. They are not missing public API or
+parameter tests.
+
+Product, Unit/Architecture, and Engineering locked restores pass. Both official Roslyn format
+gates pass. The complete serial Release Engineering build passes all 77 projects with zero warnings
+and zero errors under warnings-as-errors. The first parallel Unit run passed 6,171 cases and exposed
+one unrelated Quartz lifecycle timeout under competing load; the exact test then passed alone in
+2.2 seconds, and the authoritative serial full solution passed 6,172/6,172 with zero failures and
+zero skips. Its Architecture host passes 292/292, including repository-wide bidirectional async
+naming and source file/type/folder checks. `git diff --check`, provider-owner preprocessor and dummy
+scans, test-smell scan, and empty-directory scan pass.
+
+Fresh-package validation passes once while explicitly updating the intentional API contract and
+again strictly without update flags: 18 developer journeys, 31 freshly packed packages, three
+executed isolated provider-testing consumers, and all 30 runtime API assemblies. The reviewed
+packed API diff contains exactly one line,
+`RabbitMqTestHarness.AllowRootVirtualHostCleanup`. The final contract has 19,083 lines with SHA-256
+`1e8055f4700954d11ab7cadd4be01251e01fa17fef1702366df7b9d10eb8c843`.
+Final source SHA-256 values are
+`9650c4cb1623980252d2874a06dece22cceb723e7f6884bf7cbb689660d3965e` for
+`AzureServiceBusTestHarness.cs`,
+`431ca2a2c1ff298ba32102bcb4e48957af697a36bac6f9d63dc4b725876fe574` for
+`AzureServiceBusTestHarnessHostedService.cs`,
+`da2670b4150c7c9cca781351cde7e2d1c3bf88fa436a058e2f5ebc283b02be5b` for
+`RabbitMqTestHarness.cs`,
+`f1183fd20b5869d2e9494c19cbf2ae9bcbafb91d3507f9c532ae4091fe59bf47` for
+`RabbitMqTestHarnessHostedService.cs`, and
+`ea3f0f20708d1c4eedd07389ce1a25a0f923f464f6ed761ac4e1c9fe1b2f6c39` for
+`RabbitMqManagementApi.cs`.
+The protected `review/` and `TestResults/` trees were neither changed nor staged. The complete A+
+source goal remains active for the next unreviewed owner.

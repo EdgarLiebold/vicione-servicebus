@@ -52,6 +52,7 @@ public sealed class RabbitMqTestHarnessBoundaryTests
             ManagementPort = 15673,
             ClusterNodeAddress = "node.example:5673",
             CleanVirtualHostOnStart = false,
+            AllowRootVirtualHostCleanup = true,
         };
 
         Assert.Equal("orders", harness.InputQueueName);
@@ -61,6 +62,192 @@ public sealed class RabbitMqTestHarnessBoundaryTests
         Assert.Equal(15673, harness.ManagementPort);
         Assert.Equal("node.example:5673", harness.ClusterNodeAddress);
         Assert.False(harness.CleanVirtualHostOnStart);
+        Assert.True(harness.AllowRootVirtualHostCleanup);
+        Assert.Equal(new Uri("queue:orders"), harness.InputQueueAddress);
+        Assert.Null(harness.CleanupVirtualHostAsync);
+
+        harness.ClusterNodeAddress = null;
+        Assert.Null(harness.ClusterNodeAddress);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(65535)]
+    public void ManagementPort_AcceptsEveryInclusiveBoundary(int port)
+    {
+        var harness = new RabbitMqTestHarness { ManagementPort = port };
+
+        Assert.Equal(port, harness.ManagementPort);
+    }
+
+    [Fact]
+    public void EnvironmentVariableNames_AreStableAndProviderSpecific()
+    {
+        Assert.Equal("VICIONE_SERVICEBUS_RMQ_USER", RabbitMqTestHarness.UsernameVariable);
+        Assert.Equal("VICIONE_SERVICEBUS_RMQ_PASS", RabbitMqTestHarness.PasswordVariable);
+        Assert.Equal("VICIONE_SERVICEBUS_RMQ_HOST", RabbitMqTestHarness.HostVariable);
+        Assert.Equal("VICIONE_SERVICEBUS_RMQ_PORT", RabbitMqTestHarness.PortVariable);
+        Assert.Equal("VICIONE_SERVICEBUS_RMQ_MGMT_PORT", RabbitMqTestHarness.ManagementPortVariable);
+    }
+
+    [Fact]
+    public async Task CleanAsync_RefusesRootBeforeCreatingBrokerResourcesAsync()
+    {
+        var handler = new RecordingHandler(HttpStatusCode.OK);
+        var harness = new TestableHarness(handler)
+        {
+            HostAddress = new Uri("rabbitmq://localhost/"),
+        };
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            harness.CleanAsync(TestContext.Current.CancellationToken));
+
+        Assert.Contains("root virtual host", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(nameof(RabbitMqTestHarness.AllowRootVirtualHostCleanup), exception.Message, StringComparison.Ordinal);
+        Assert.Equal(0, harness.ClientCreationCount);
+        Assert.Empty(handler.Requests);
+    }
+
+    [Fact]
+    public async Task CleanAsync_RefreshesConnectionFactoryBeforeOpeningTheBrokerConnectionAsync()
+    {
+        var expected = new InvalidOperationException("refresh failed");
+        var harness = new RabbitMqTestHarness();
+        var refreshCalls = 0;
+        harness.RabbitMqHostConfiguring += configurator =>
+        {
+            configurator.OnRefreshConnectionFactory = _ =>
+            {
+                refreshCalls++;
+                return Task.FromException(expected);
+            };
+        };
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            harness.CleanAsync(TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+        Assert.Equal(1, refreshCalls);
+    }
+
+    [Fact]
+    public async Task CleanAsync_WithPreCanceledToken_DoesNotCreateBrokerResourcesAsync()
+    {
+        var handler = new RecordingHandler(HttpStatusCode.OK);
+        var harness = new TestableHarness(handler);
+        using var cancellationSource = new CancellationTokenSource();
+        cancellationSource.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            harness.CleanAsync(cancellationSource.Token));
+
+        Assert.Equal(cancellationSource.Token, exception.CancellationToken);
+        Assert.Equal(0, harness.ClientCreationCount);
+        Assert.Empty(handler.Requests);
+    }
+
+    [Fact]
+    public async Task StartAsync_CleansBeforeConstructingTheBusAsync()
+    {
+        var handler = new RecordingHandler(HttpStatusCode.OK);
+        await using var harness = new TestableHarness(handler)
+        {
+            HostAddress = new Uri("rabbitmq://localhost/"),
+        };
+        var providerConfigurationCalls = 0;
+        harness.RabbitMqConfiguring += _ => providerConfigurationCalls++;
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            harness.StartAsync(TestContext.Current.CancellationToken));
+
+        Assert.Equal(0, providerConfigurationCalls);
+        Assert.Equal(0, harness.ClientCreationCount);
+    }
+
+    [Fact]
+    public async Task GetHostSettings_AppliesCredentialsClusterSelectionAndHostCallbacksAsync()
+    {
+        var handler = new RecordingHandler(HttpStatusCode.OK);
+        var harness = new TestableHarness(handler)
+        {
+            HostAddress = new Uri("rabbitmqs://broker.example/team/"),
+            Username = "operator",
+            Password = "secret",
+            ClusterNodeAddress = "node.example:5673",
+        };
+        var callbackCalls = 0;
+        var refreshCalls = 0;
+        harness.RabbitMqHostConfiguring += configurator =>
+        {
+            callbackCalls++;
+            configurator.Heartbeat(TimeSpan.FromSeconds(17));
+            configurator.OnRefreshConnectionFactory = _ =>
+            {
+                refreshCalls++;
+                return Task.CompletedTask;
+            };
+        };
+
+        RabbitMqHostSettings settings = harness.GetHostSettings();
+        await settings.RefreshAsync(new RabbitMQ.Client.ConnectionFactory(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, callbackCalls);
+        Assert.Equal(1, refreshCalls);
+        Assert.Equal("broker.example", settings.Host);
+        Assert.Equal("team", settings.VirtualHost);
+        Assert.Equal("operator", settings.Username);
+        Assert.Equal("secret", settings.Password);
+        Assert.True(settings.Ssl);
+        Assert.Equal(TimeSpan.FromSeconds(17), settings.Heartbeat);
+        Assert.NotNull(settings.EndpointResolver);
+    }
+
+    [Fact]
+    public async Task CreateBusAsync_RaisesEveryConfigurationEventAndCapturesTheInputAddressAsync()
+    {
+        var handler = new RecordingHandler(HttpStatusCode.OK);
+        var harness = new TestableHarness(handler)
+        {
+            HostAddress = new Uri("rabbitmq://broker.example/team/"),
+            CleanVirtualHostOnStart = false,
+        };
+        var busCalls = 0;
+        var endpointCalls = 0;
+        var providerBusCalls = 0;
+        var providerEndpointCalls = 0;
+        var hostCalls = 0;
+        harness.BusConfiguring += _ => busCalls++;
+        harness.ReceiveEndpointConfiguring += _ => endpointCalls++;
+        harness.RabbitMqConfiguring += _ => providerBusCalls++;
+        harness.RabbitMqReceiveEndpointConfiguring += _ => providerEndpointCalls++;
+        harness.RabbitMqHostConfiguring += _ => hostCalls++;
+
+        IBusControl bus = await harness.CreateBusForTestAsync(TestContext.Current.CancellationToken);
+
+        Assert.NotNull(bus);
+        Assert.Equal(1, busCalls);
+        Assert.Equal(1, endpointCalls);
+        Assert.Equal(1, providerBusCalls);
+        Assert.Equal(1, providerEndpointCalls);
+        Assert.Equal(1, hostCalls);
+        Assert.Equal(new Uri("rabbitmq://broker.example/team/input_queue"), harness.InputQueueAddress);
+    }
+
+    [Fact]
+    public async Task CreateBusAsync_WithPreCanceledToken_DoesNotInvokeConfigurationAsync()
+    {
+        var handler = new RecordingHandler(HttpStatusCode.OK);
+        var harness = new TestableHarness(handler) { CleanVirtualHostOnStart = false };
+        var configurationCalls = 0;
+        harness.RabbitMqConfiguring += _ => configurationCalls++;
+        using var cancellationSource = new CancellationTokenSource();
+        cancellationSource.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            harness.CreateBusForTestAsync(cancellationSource.Token));
+
+        Assert.Equal(cancellationSource.Token, exception.CancellationToken);
+        Assert.Equal(0, configurationCalls);
     }
 
     [Fact]
@@ -117,16 +304,23 @@ public sealed class RabbitMqTestHarnessBoundaryTests
     [Fact]
     public async Task RecreateVirtualHostAsync_RefusesRootAndPreservesManagementFailuresAsync()
     {
-        var rootHandler = new RecordingHandler(HttpStatusCode.NoContent);
-        var rootHarness = new TestableHarness(rootHandler)
+        foreach (Uri rootAddress in new[]
         {
-            HostAddress = new Uri("rabbitmq://localhost/"),
-        };
+            new Uri("rabbitmq://localhost/"),
+            new Uri("rabbitmq://localhost/%2F/"),
+        })
+        {
+            var rootHandler = new RecordingHandler(HttpStatusCode.NoContent);
+            var rootHarness = new TestableHarness(rootHandler)
+            {
+                HostAddress = rootAddress,
+            };
 
-        InvalidOperationException rootFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            rootHarness.RecreateVirtualHostAsync(TestContext.Current.CancellationToken));
-        Assert.Contains("root virtual host", rootFailure.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Empty(rootHandler.Requests);
+            InvalidOperationException rootFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                rootHarness.RecreateVirtualHostAsync(TestContext.Current.CancellationToken));
+            Assert.Contains("root virtual host", rootFailure.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Empty(rootHandler.Requests);
+        }
 
         var deleteHandler = new RecordingHandler(HttpStatusCode.BadGateway);
         var deleteHarness = new TestableHarness(deleteHandler);
@@ -164,6 +358,9 @@ public sealed class RabbitMqTestHarnessBoundaryTests
         public int ClientCreationCount { get; private set; }
 
         public HttpClient CreateClientForTest() => base.CreateManagementHttpClient();
+
+        public Task<IBusControl> CreateBusForTestAsync(CancellationToken cancellationToken) =>
+            base.CreateBusAsync(cancellationToken);
 
         protected override HttpClient CreateManagementHttpClient()
         {

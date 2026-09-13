@@ -11,6 +11,28 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests.Configuration;
 public sealed class RabbitMqTestHarnessOptionsStartupTests
 {
     [Fact]
+    public void HarnessOptions_PreserveEveryConfiguredValue()
+    {
+        Func<RabbitMQ.Client.IChannel, CancellationToken, Task> configure = (_, _) => Task.CompletedTask;
+        using ServiceProvider provider = new ServiceCollection()
+            .AddRabbitMqTestHarness(options =>
+            {
+                options.CreateVirtualHostIfMissing = true;
+                options.CleanVirtualHostOnStart = true;
+                options.AllowRootVirtualHostCleanup = true;
+                options.ConfigureVirtualHostAsync = configure;
+            })
+            .BuildServiceProvider();
+
+        provider.GetRequiredService<IStartupValidator>().Validate();
+        RabbitMqTestHarnessOptions options = provider.GetRequiredService<IOptions<RabbitMqTestHarnessOptions>>().Value;
+        Assert.True(options.CreateVirtualHostIfMissing);
+        Assert.True(options.CleanVirtualHostOnStart);
+        Assert.True(options.AllowRootVirtualHostCleanup);
+        Assert.Same(configure, options.ConfigureVirtualHostAsync);
+    }
+
+    [Fact]
     public void ForceCleaningRootWithoutCleaning_FailsAtStartup()
     {
         using ServiceProvider provider = new ServiceCollection()
@@ -39,6 +61,9 @@ public sealed class RabbitMqTestHarnessOptionsStartupTests
             .BuildServiceProvider();
 
         provider.GetRequiredService<IStartupValidator>().Validate();
+        RabbitMqTestHarnessOptions options = provider.GetRequiredService<IOptions<RabbitMqTestHarnessOptions>>().Value;
+        Assert.True(options.CleanVirtualHostOnStart);
+        Assert.True(options.AllowRootVirtualHostCleanup);
     }
 
     [Fact]
@@ -78,5 +103,50 @@ public sealed class RabbitMqTestHarnessOptionsStartupTests
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => stopTask);
         Assert.True(stopTask.IsCanceled);
+    }
+
+    [Fact]
+    public async Task HostedService_StartWithNoPreparation_CompletesWithoutBrokerAccessAsync()
+    {
+        using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(typeof(ILogger<>), typeof(NullLogger<>))
+            .AddRabbitMqTestHarness(_ => { })
+            .BuildServiceProvider();
+        IHostedService hostedService = Assert.Single(provider.GetServices<IHostedService>());
+
+        Task startTask = hostedService.StartAsync(TestContext.Current.CancellationToken);
+        await startTask;
+
+        Assert.True(startTask.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task HostedService_CreateRootVirtualHostRequest_IsANoOpAsync()
+    {
+        using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(typeof(ILogger<>), typeof(NullLogger<>))
+            .AddRabbitMqTestHarness(options => options.CreateVirtualHostIfMissing = true)
+            .BuildServiceProvider();
+        IHostedService hostedService = Assert.Single(provider.GetServices<IHostedService>());
+
+        Task startTask = hostedService.StartAsync(TestContext.Current.CancellationToken);
+        await startTask;
+
+        Assert.True(startTask.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task HostedService_RootCleanupRequiresExplicitOptInBeforeBrokerAccessAsync()
+    {
+        using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(typeof(ILogger<>), typeof(NullLogger<>))
+            .AddRabbitMqTestHarness(options => options.CleanVirtualHostOnStart = true)
+            .BuildServiceProvider();
+        IHostedService hostedService = Assert.Single(provider.GetServices<IHostedService>());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            hostedService.StartAsync(TestContext.Current.CancellationToken));
+
+        Assert.Contains(nameof(RabbitMqTestHarnessOptions.AllowRootVirtualHostCleanup), exception.Message, StringComparison.Ordinal);
     }
 }

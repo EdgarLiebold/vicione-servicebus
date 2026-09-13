@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
-using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Transports;
 
@@ -21,6 +17,7 @@ namespace ViciOne.ServiceBus.RabbitMq.Testing;
 public class RabbitMqTestHarness :
     BusTestHarness
 {
+    readonly Func<RabbitMqHostSettings, CancellationToken, Task<IConnection>> _createConnection;
     Uri? _hostAddress;
     Uri? _inputQueueAddress;
     string? _clusterNodeAddress;
@@ -103,6 +100,19 @@ public class RabbitMqTestHarness :
         InputQueueName = effectiveInputQueueName;
 
         HostAddress = ReadHostAddress();
+        _createConnection = CreateConnectionAsync;
+    }
+
+    /// <summary>Creates a harness with an explicit AMQP connection factory.</summary>
+    /// <param name="inputQueueName">The receive queue name, or <c>input_queue</c> when omitted.</param>
+    /// <param name="createConnection">Creates the AMQP connection used for virtual-host cleanup.</param>
+    internal RabbitMqTestHarness(
+        string? inputQueueName,
+        Func<RabbitMqHostSettings, CancellationToken, Task<IConnection>> createConnection)
+        : this(inputQueueName)
+    {
+        ArgumentNullException.ThrowIfNull(createConnection);
+        _createConnection = createConnection;
     }
 
     /// <summary>Gets or sets the RabbitMQ host and virtual-host address.</summary>
@@ -151,6 +161,8 @@ public class RabbitMqTestHarness :
     }
     /// <summary>Gets or sets whether the virtual host is cleaned before the test bus is created.</summary>
     public bool CleanVirtualHostOnStart { get; set; } = true;
+    /// <summary>Gets or sets whether cleanup may delete entities from the root virtual host.</summary>
+    public bool AllowRootVirtualHostCleanup { get; set; }
     /// <summary>Gets the receive queue name used by the test bus.</summary>
     public override string InputQueueName { get; }
     /// <summary>Gets or sets the optional RabbitMQ cluster node as a host or host-and-port authority.</summary>
@@ -195,7 +207,7 @@ public class RabbitMqTestHarness :
         RabbitMqHostConfiguring?.Invoke(configurator);
     }
 
-    /// <summary>Removes test resources from the RabbitMQ virtual host.</summary>
+    /// <summary>Runs the configured custom cleanup with an open RabbitMQ channel.</summary>
     /// <param name="channel">The open channel used by custom cleanup.</param>
     /// <param name="cancellationToken">The token that cancels custom cleanup.</param>
     /// <returns>A task that completes when custom cleanup completes.</returns>
@@ -232,13 +244,18 @@ public class RabbitMqTestHarness :
     /// <returns>A task that completes after the listed broker entities have been deleted.</returns>
     public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (IsRootVirtualHost(HostAddress) && !AllowRootVirtualHostCleanup)
+        {
+            throw new InvalidOperationException(
+                "Refusing to clean the root virtual host. Set AllowRootVirtualHostCleanup to true only for an isolated broker.");
+        }
+
         var settings = GetHostSettings();
 
-        var connectionFactory = settings.GetConnectionFactory();
-
-        await using var connection = settings.EndpointResolver != null
-            ? await connectionFactory.CreateConnectionAsync(settings.EndpointResolver, settings.Host, cancellationToken: cancellationToken)
-            : await connectionFactory.CreateConnectionAsync(cancellationToken: cancellationToken);
+        await using IConnection connection = await _createConnection(settings, cancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The RabbitMQ connection factory returned null.");
 
         await using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
@@ -273,8 +290,8 @@ public class RabbitMqTestHarness :
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        string virtualHost = Uri.UnescapeDataString(HostAddress.AbsolutePath.Trim('/'));
-        if (string.IsNullOrWhiteSpace(virtualHost))
+        string virtualHost = GetVirtualHostName(HostAddress);
+        if (IsRootVirtualHost(HostAddress))
         {
             throw new InvalidOperationException(
                 "Refusing to recreate the root virtual host. The test fixture must run against a dedicated virtual host.");
@@ -310,24 +327,20 @@ public class RabbitMqTestHarness :
         using HttpClient client = CreateManagementHttpClient();
         string virtualHost = EncodeVirtualHost(HostAddress);
         Uri requestUri = BuildManagementUri($"api/{element}/{virtualHost}");
-        byte[] bytes = await client.GetByteArrayAsync(requestUri, cancellationToken).ConfigureAwait(false);
-
-        var rootElement = JsonSerializer.Deserialize<JsonElement>(bytes, ServiceBusMetadataJson.Options);
-
-        var entities = rootElement.EnumerateArray().Select(x => x.GetProperty("name").GetString()).ToArray();
-
-        return entities
-            .OfType<string>()
-            .Where(static name => !string.IsNullOrWhiteSpace(name) && !name.StartsWith("amq.", StringComparison.Ordinal))
-            .ToList();
+        return await RabbitMqManagementApi
+            .GetEntityNamesAsync(client, requestUri, cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    /// <summary>Creates the RabbitMQ test bus and optionally cleans its virtual host before returning it.</summary>
-    /// <param name="cancellationToken">The token that cancels virtual-host cleanup.</param>
+    /// <summary>Optionally cleans the virtual host and then creates the RabbitMQ test bus.</summary>
+    /// <param name="cancellationToken">The token that cancels cleanup and is checked before bus construction.</param>
     /// <returns>The configured bus control.</returns>
     protected override async Task<IBusControl> CreateBusAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
+        if (CleanVirtualHostOnStart)
+            await CleanAsync(cancellationToken).ConfigureAwait(false);
 
         var busControl = ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingRabbitMq(x =>
         {
@@ -350,9 +363,6 @@ public class RabbitMqTestHarness :
             });
         });
 
-        if (CleanVirtualHostOnStart)
-            await CleanAsync(cancellationToken).ConfigureAwait(false);
-
         return busControl;
     }
 
@@ -371,11 +381,7 @@ public class RabbitMqTestHarness :
     /// <returns>An HTTP client configured with the harness credentials.</returns>
     protected virtual HttpClient CreateManagementHttpClient()
     {
-        var client = new HttpClient();
-        byte[] credentials = Encoding.UTF8.GetBytes($"{Username}:{Password}");
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(credentials));
-        return client;
+        return RabbitMqManagementApi.CreateClient(Username, Password);
     }
 
     Uri BuildManagementUri(string path)
@@ -388,15 +394,41 @@ public class RabbitMqTestHarness :
             host = nodeUri.Host;
         }
 
-        string scheme = HostAddress.Scheme == "rabbitmqs" ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
-        return new UriBuilder(scheme, host, ManagementPort, path).Uri;
+        return RabbitMqManagementApi.BuildUri(
+            host,
+            ManagementPort,
+            HostAddress.Scheme == "rabbitmqs",
+            path);
     }
 
     static string EncodeVirtualHost(Uri hostAddress)
     {
-        string path = Uri.UnescapeDataString(hostAddress.AbsolutePath.Trim('/'));
-        string name = string.IsNullOrWhiteSpace(path) ? "/" : path;
-        return Uri.EscapeDataString(name);
+        string path = GetVirtualHostName(hostAddress);
+        return RabbitMqManagementApi.EncodeVirtualHost(path);
+    }
+
+    static string GetVirtualHostName(Uri hostAddress) =>
+        Uri.UnescapeDataString(hostAddress.AbsolutePath.Trim('/'));
+
+    static bool IsRootVirtualHost(Uri hostAddress) =>
+        RabbitMqManagementApi.IsRootVirtualHost(GetVirtualHostName(hostAddress));
+
+    static async Task<IConnection> CreateConnectionAsync(
+        RabbitMqHostSettings settings,
+        CancellationToken cancellationToken)
+    {
+        ConnectionFactory connectionFactory = settings.GetConnectionFactory();
+        await settings.RefreshAsync(connectionFactory, cancellationToken).ConfigureAwait(false);
+        return settings.EndpointResolver != null
+            ? await connectionFactory
+                .CreateConnectionAsync(
+                    settings.EndpointResolver,
+                    settings.Host,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false)
+            : await connectionFactory
+                .CreateConnectionAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
     }
 
     static string? NormalizeClusterNodeAddress(string? value)

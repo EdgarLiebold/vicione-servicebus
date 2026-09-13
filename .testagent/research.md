@@ -864,3 +864,38 @@ centrally pinned Microsoft 10.0 package to 10.0.12 resolved the graph. The fresh
 identified three isolated consumer projects with explicit 10.0.11 pins; these were aligned and
 their locks regenerated. The final inventory contains no outdated direct, vulnerable direct or
 transitive, or deprecated direct or transitive package.
+
+## Iteration 95 transport-provider Testing research
+
+The bounded owner is the provider-testing family under
+`src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing`,
+`src/Transports/ViciOne.ServiceBus.EventHubs.Testing`, and
+`src/Transports/ViciOne.ServiceBus.RabbitMq.Testing`. All 14 original production C# files and all
+1,278 physical lines were read manually in full, including every comment, together with all three
+project files and their directly owning unit and local-integration tests. These are independent
+provider assemblies and therefore remain grouped under `src/Transports`; they are not children of
+the Core assembly directory `src/ViciOne.ServiceBus`.
+
+The native MTP baselines pass 66/66 Azure Service Bus unit tests, 197/197 RabbitMQ unit tests, and
+3/3 focused Event Hubs producer-resolution tests. The three owning test hosts lacked the repository
+coverage extension. After adding the standard locked Microsoft code-coverage dependency, direct
+instrumentation measures Azure Service Bus Testing at 64.97% line and 63.04% branch, RabbitMQ
+Testing at 36.39% line and 40.00% branch, and Event Hubs Testing at 100% line and 100% branch.
+
+The mandatory Roslyn source-pairing heuristic reports the public harness and registration files as
+paired. It cannot credit internal types reached indirectly through the public harness or dependency
+injection; instrumentation confirms those indirect paths but also identifies real hosted-service
+and provider-configuration gaps. This static pairing result is not line- or branch-coverage proof.
+
+The RabbitMQ direct harness currently permits destructive cleanup of the root virtual host without
+the explicit opt-in required by its dependency-injection counterpart. It also constructs a bus
+before startup cleanup, so a cleanup failure can leave a newly created bus outside the base
+harness's failed-start rollback. The hosted path encodes management credentials as ASCII while the
+direct path correctly uses UTF-8. These are production defects, not coverage-only concerns.
+
+The Azure Service Bus cleanup cancellation comment mentions a nonexistent retry delay. Its direct
+harness configuration and input-address lifecycle are not behavior-tested, and the hosted-service
+cleanup branch has no isolated test seam. Both provider harnesses intentionally inherit the
+template-method model of `BusTestHarness`; their provider events and protected extension points are
+real customization capabilities rather than legacy aliases, so they remain unless a complete
+replacement can preserve those capabilities.

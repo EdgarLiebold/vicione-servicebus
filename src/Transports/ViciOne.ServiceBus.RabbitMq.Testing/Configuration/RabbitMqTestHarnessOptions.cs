@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.RabbitMq.Testing;
 public sealed class RabbitMqTestHarnessOptions
 {
     /// <summary>
-    /// Creates a missing non-root virtual host through the RabbitMQ management API before tests start.
+    /// Gets or sets whether a missing non-root virtual host is created through the RabbitMQ management API before tests start.
     /// Connection and management settings come from <see cref="RabbitMqTransportOptions" />.
     /// </summary>
     public bool CreateVirtualHostIfMissing { get; set; }

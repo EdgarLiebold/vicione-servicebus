@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
-using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.RabbitMq.Testing;
 
@@ -22,6 +18,8 @@ namespace ViciOne.ServiceBus.RabbitMq.Testing;
 internal sealed class RabbitMqTestHarnessHostedService :
     IHostedService
 {
+    readonly Func<CancellationToken, Task<IConnection>> _createConnection;
+    readonly Func<HttpClient> _createManagementHttpClient;
     readonly ILogger<RabbitMqTestHarnessHostedService> _logger;
     readonly RabbitMqSslOptions _sslOptions;
     readonly RabbitMqTestHarnessOptions _testOptions;
@@ -47,6 +45,38 @@ internal sealed class RabbitMqTestHarnessHostedService :
         _transportOptions = transportOptions.Value;
         _sslOptions = sslOptions.Value;
         _testOptions = testOptions.Value;
+        _createConnection = CreateConnectionAsync;
+        _createManagementHttpClient = CreateDefaultManagementHttpClient;
+    }
+
+    /// <summary>Creates the hosted service with explicit broker-resource factories.</summary>
+    /// <param name="transportOptions">The effective RabbitMQ transport options.</param>
+    /// <param name="sslOptions">The effective RabbitMQ TLS options.</param>
+    /// <param name="testOptions">The effective test-harness options.</param>
+    /// <param name="logger">The logger used for preparation and cleanup diagnostics.</param>
+    /// <param name="createManagementHttpClient">Creates a management API client for each request group.</param>
+    /// <param name="createConnection">Creates the AMQP connection used for channel operations.</param>
+    internal RabbitMqTestHarnessHostedService(
+        RabbitMqTransportOptions transportOptions,
+        RabbitMqSslOptions sslOptions,
+        RabbitMqTestHarnessOptions testOptions,
+        ILogger<RabbitMqTestHarnessHostedService> logger,
+        Func<HttpClient> createManagementHttpClient,
+        Func<CancellationToken, Task<IConnection>> createConnection)
+    {
+        ArgumentNullException.ThrowIfNull(transportOptions);
+        ArgumentNullException.ThrowIfNull(sslOptions);
+        ArgumentNullException.ThrowIfNull(testOptions);
+        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(createManagementHttpClient);
+        ArgumentNullException.ThrowIfNull(createConnection);
+
+        _transportOptions = transportOptions;
+        _sslOptions = sslOptions;
+        _testOptions = testOptions;
+        _logger = logger;
+        _createManagementHttpClient = createManagementHttpClient;
+        _createConnection = createConnection;
     }
 
     /// <summary>Performs the configured virtual-host creation, cleanup, and configuration sequence.</summary>
@@ -80,7 +110,7 @@ internal sealed class RabbitMqTestHarnessHostedService :
     {
         var name = _transportOptions.VHost;
 
-        if (string.IsNullOrWhiteSpace(name) || name == "/")
+        if (RabbitMqManagementApi.IsRootVirtualHost(name))
             return;
 
         using HttpClient client = CreateManagementHttpClient();
@@ -100,15 +130,13 @@ internal sealed class RabbitMqTestHarnessHostedService :
     {
         string virtualHost = _transportOptions.VHost;
 
-        if (string.IsNullOrWhiteSpace(virtualHost) || virtualHost == "/")
+        if (RabbitMqManagementApi.IsRootVirtualHost(virtualHost)
+            && !_testOptions.AllowRootVirtualHostCleanup)
         {
-            if (!_testOptions.AllowRootVirtualHostCleanup)
-            {
-                const string message =
-                    "CleanVirtualHostOnStart requires AllowRootVirtualHostCleanup when the configured virtual host is root.";
-                _logger.LogError(message);
-                throw new InvalidOperationException(message);
-            }
+            const string message =
+                "CleanVirtualHostOnStart requires AllowRootVirtualHostCleanup when the configured virtual host is root.";
+            _logger.LogError(message);
+            throw new InvalidOperationException(message);
         }
 
         var exchangeCount = 0;
@@ -143,35 +171,6 @@ internal sealed class RabbitMqTestHarnessHostedService :
         }
     }
 
-    /// <summary>
-    /// Fits a connection close reason into what AMQP can carry.
-    /// <para>
-    /// RabbitMQ encodes a close reason as a short string containing at most 255 bytes. The returned
-    /// value always fits that protocol field so connection cleanup cannot replace the primary failure.
-    /// </para>
-    /// <para>
-    /// Trimming preserves complete UTF-16 surrogate pairs and therefore complete UTF-8 scalar values.
-    /// </para>
-    /// </summary>
-    /// <param name="text">The proposed AMQP close reason.</param>
-    /// <returns>A UTF-8 prefix no longer than 255 bytes.</returns>
-    static string CloseReason(string text)
-    {
-        const int maximumBytes = 255;
-
-        if (Encoding.UTF8.GetByteCount(text) <= maximumBytes)
-            return text;
-
-        var length = Math.Min(text.Length, maximumBytes);
-        while (length > 0 && Encoding.UTF8.GetByteCount(text.AsSpan(0, length)) > maximumBytes)
-            length--;
-
-        if (length > 0 && char.IsHighSurrogate(text[length - 1]))
-            length--;
-
-        return text[..length];
-    }
-
     Task ConfigureVirtualHostAsync(
         Func<IChannel, CancellationToken, Task> configureVirtualHost,
         CancellationToken cancellationToken)
@@ -183,13 +182,8 @@ internal sealed class RabbitMqTestHarnessHostedService :
         Func<IChannel, CancellationToken, Task> operation,
         CancellationToken cancellationToken)
     {
-        RabbitMqHostSettings settings = CreateHostSettings();
-        ConnectionFactory factory = settings.GetConnectionFactory();
-        await settings.RefreshAsync(factory, cancellationToken).ConfigureAwait(false);
-
-        await using IConnection connection = await factory
-            .CreateConnectionAsync(cancellationToken)
-            .ConfigureAwait(false);
+        await using IConnection connection = await _createConnection(cancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The RabbitMQ connection factory returned null.");
         try
         {
             await using IChannel channel = await connection
@@ -214,7 +208,8 @@ internal sealed class RabbitMqTestHarnessHostedService :
                     await connection
                         .CloseAsync(
                             500,
-                            CloseReason($"Completed (not OK): {exception.Message}"),
+                            RabbitMqManagementApi.CreateConnectionCloseReason(
+                                $"Completed (not OK): {exception.Message}"),
                             CancellationToken.None)
                         .ConfigureAwait(false);
                 }
@@ -228,7 +223,17 @@ internal sealed class RabbitMqTestHarnessHostedService :
         }
     }
 
-    RabbitMqHostSettings CreateHostSettings()
+    async Task<IConnection> CreateConnectionAsync(CancellationToken cancellationToken)
+    {
+        RabbitMqHostSettings settings = CreateHostSettings();
+        ConnectionFactory factory = settings.GetConnectionFactory();
+        await settings.RefreshAsync(factory, cancellationToken).ConfigureAwait(false);
+        return await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Builds the RabbitMQ connection settings used for startup preparation.</summary>
+    /// <returns>The effective connection settings.</returns>
+    internal RabbitMqHostSettings CreateHostSettings()
     {
         var configurator = new RabbitMqHostConfigurator(
             _transportOptions.Host,
@@ -272,44 +277,32 @@ internal sealed class RabbitMqTestHarnessHostedService :
         string virtualHost = EncodeVirtualHost(_transportOptions.VHost);
         Uri requestUri = BuildManagementUri($"api/{element}/{virtualHost}");
 
-        byte[] bytes = await client.GetByteArrayAsync(requestUri, cancellationToken).ConfigureAwait(false);
-
-        JsonElement rootElement = JsonSerializer.Deserialize<JsonElement>(bytes, ServiceBusMetadataJson.Options);
-
-        string?[] entities = rootElement
-            .EnumerateArray()
-            .Select(static item => item.GetProperty("name").GetString())
-            .ToArray();
-
-        return entities
-            .OfType<string>()
-            .Where(static name => !string.IsNullOrWhiteSpace(name) && !name.StartsWith("amq.", StringComparison.Ordinal))
-            .ToList();
+        return await RabbitMqManagementApi
+            .GetEntityNamesAsync(client, requestUri, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     HttpClient CreateManagementHttpClient()
     {
-        var client = new HttpClient();
-        byte[] credentials = Encoding.ASCII.GetBytes($"{_transportOptions.User}:{_transportOptions.Pass}");
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(credentials));
-        return client;
+        HttpClient client = _createManagementHttpClient();
+        return client ?? throw new InvalidOperationException(
+            "The RabbitMQ management-client factory returned null.");
     }
+
+    HttpClient CreateDefaultManagementHttpClient() =>
+        RabbitMqManagementApi.CreateClient(_transportOptions.User, _transportOptions.Pass);
 
     Uri BuildManagementUri(string path)
     {
-        return new UriBuilder(
-            _transportOptions.UseSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp,
+        return RabbitMqManagementApi.BuildUri(
             _transportOptions.Host,
             _transportOptions.ManagementPort,
-            path).Uri;
+            _transportOptions.UseSsl,
+            path);
     }
 
     static string EncodeVirtualHost(string? virtualHost)
     {
-        string name = string.IsNullOrWhiteSpace(virtualHost) || virtualHost == "/"
-            ? "/"
-            : virtualHost.Trim('/');
-        return Uri.EscapeDataString(name);
+        return RabbitMqManagementApi.EncodeVirtualHost(virtualHost);
     }
 }
