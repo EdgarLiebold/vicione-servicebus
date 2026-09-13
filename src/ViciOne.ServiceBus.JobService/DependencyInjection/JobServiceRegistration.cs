@@ -48,7 +48,8 @@ internal sealed class JobServiceRegistration :
     public IEndpointDefinition EndpointDefinition => new JobServiceEndpointDefinition(_endpointConfigurator.Settings, _settings.Value);
 
     /// <summary>Adds a callback that configures job-consumer runtime options before they are materialized.</summary>
-    /// <param name="configure">The optional configuration callback; <see langword="null" /> is ignored.</param>
+    /// <param name="configure">The configuration callback to append.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="configure" /> is <see langword="null" />.</exception>
     public void AddConfigureAction(Action<JobConsumerOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
@@ -99,6 +100,9 @@ internal sealed class JobServiceRegistration :
         var options = new JobConsumerOptions();
         foreach (Action<JobConsumerOptions> configure in _configureActions)
             configure(options);
+
+        ((ISpecification)options).Validate()
+            .ThrowIfContainsFailure("The job consumer options are invalid:");
 
         return new InstanceJobServiceSettings(options);
     }

@@ -7,6 +7,7 @@ using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+using RuntimeJobService = ViciOne.ServiceBus.JobService.JobService;
 
 namespace ViciOne.ServiceBus.Tests.JobService.JobService;
 
@@ -133,6 +134,45 @@ public sealed class ConsumeJobContextCancellationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "admission-snapshots-cancellation-deadline-before-consumer-execution")]
+    public async Task StartJobAsync_SnapshotsTheCancellationDeadlineBeforeInvokingTheConsumerPipeAsync()
+    {
+        var clock = new FakeTimeProvider();
+        var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
+        var message = new StartJobMessage();
+        ConsumeContext<StartJob> consumeContext = CreateContext(provider, clock, message);
+        var options = new JobOptions<TestJob>
+        {
+            JobCancellationTimeout = TimeSpan.FromMinutes(1),
+            JobTimeout = TimeSpan.FromDays(2),
+        };
+        var execution = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        IPipe<ConsumeContext<TestJob>> pipe = Pipe.ExecuteAwaited<ConsumeContext<TestJob>>(_ =>
+        {
+            options.JobCancellationTimeout = TimeSpan.FromDays(1);
+            return execution.Task;
+        });
+        var service = new RuntimeJobService(new StubJobServiceSettings(clock));
+
+        await service.StartJobAsync(
+            consumeContext,
+            new TestJob(),
+            pipe,
+            options,
+            TestContext.Current.CancellationToken);
+        Assert.True(service.TryGetJob(message.JobId, out JobHandle? handle));
+        Assert.NotNull(handle);
+
+        Task cancellation = handle.CancelAsync("shutdown", TestContext.Current.CancellationToken);
+        Assert.False(cancellation.IsCompleted);
+        clock.Advance(TimeSpan.FromMinutes(1));
+
+        await cancellation;
+        await handle.Completion;
+        execution.TrySetResult();
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-JOB-METADATA", "missing-job-properties-produce-empty-collection")]
     public async Task Constructor_AcceptsAStartCommandWithoutJobPropertiesAsync()
     {
@@ -148,6 +188,77 @@ public sealed class ConsumeJobContextCancellationTests
             new JobOptions<TestJob>());
 
         Assert.Empty(context.JobProperties);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-METADATA", "execution-context-exposes-isolated-read-only-snapshots")]
+    public async Task Constructor_SnapshotsAllMetadataWithoutExposingMutationCapabilitiesAsync()
+    {
+        var options = new JobOptions<TestJob>();
+        options.JobTypeProperties.Set("tier", "gold");
+        options.InstanceProperties.Set("region", "west");
+        var messageProperties = new Dictionary<string, object> { ["tenant"] = "one" };
+        var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
+        await using var context = new ConsumeJobContext<TestJob>(
+            CreateContext(provider, message: new StartJobMessage { JobProperties = messageProperties }),
+            new Uri("loopback://localhost/job-instance"),
+            new TestJob(),
+            options);
+
+        options.JobTypeProperties.Set("tier", "silver");
+        options.InstanceProperties.Set("region", "east");
+        messageProperties["tenant"] = "two";
+
+        Assert.Equal("gold", context.JobTypeProperties.Get<string>("tier"));
+        Assert.Equal("west", context.InstanceProperties.Get<string>("region"));
+        Assert.Equal("one", context.JobProperties.Get<string>("tenant"));
+        Assert.IsNotAssignableFrom<ISetPropertyCollection>(context.JobTypeProperties);
+        Assert.IsNotAssignableFrom<ISetPropertyCollection>(context.InstanceProperties);
+        Assert.IsNotAssignableFrom<ISetPropertyCollection>(context.JobProperties);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS", "concurrent-first-reports-share-one-ordered-buffer")]
+    public async Task ConcurrentFirstProgressReports_UseOneOrderedBufferAsync()
+    {
+        const int UpdateCount = 64;
+        var endpoint = new RecordingSendEndpoint();
+        var options = new JobOptions<TestJob>();
+        options.ProgressBuffer.UpdateLimit = 1;
+        options.ProgressBuffer.TimeLimit = TimeSpan.FromDays(1);
+        var context = new ConsumeJobContext<TestJob>(
+            CreateContext(new RecordingPublishEndpointProvider(endpoint)),
+            new Uri("loopback://localhost/job-instance"),
+            new TestJob(),
+            options);
+        var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        try
+        {
+            Task[] reports = Enumerable.Range(1, UpdateCount)
+                .Select(async value =>
+                {
+                    await start.Task;
+                    await context.ReportProgressAsync(value, UpdateCount, TestContext.Current.CancellationToken);
+                })
+                .ToArray();
+
+            start.SetResult();
+            await Task.WhenAll(reports);
+        }
+        finally
+        {
+            await context.DisposeAsync();
+        }
+
+        SetJobProgress[] progress = endpoint.Messages.OfType<SetJobProgress>().ToArray();
+        Assert.Equal(UpdateCount, progress.Length);
+        Assert.Equal(
+            Enumerable.Range(1, UpdateCount).Select(static value => (long)value),
+            progress.Select(static update => update.SequenceNumber));
+        Assert.Equal(
+            Enumerable.Range(1, UpdateCount).Select(static value => (long)value).Order(),
+            progress.Select(static update => update.Value).Order());
     }
 
     [Fact]
@@ -324,6 +435,21 @@ public sealed class ConsumeJobContextCancellationTests
     }
 
     private sealed record TestJob;
+
+    private sealed class StubJobServiceSettings(TimeProvider timeProvider) : JobServiceSettings
+    {
+        public IJobService Runtime => throw new NotSupportedException("The test drives the job service directly.");
+        public TimeSpan HeartbeatInterval => TimeSpan.FromDays(1);
+        public TimeSpan RejectedJobDelay => TimeSpan.FromSeconds(1);
+        public TimeProvider TimeProvider { get; } = timeProvider;
+        public Uri InstanceAddress { get; } = new("loopback://localhost/job-instance");
+        public IReceiveEndpointConfigurator InstanceEndpoint => throw new NotSupportedException();
+
+        public IEnumerable<ValidationResult> Validate()
+        {
+            yield break;
+        }
+    }
 
     public enum JobOperation
     {

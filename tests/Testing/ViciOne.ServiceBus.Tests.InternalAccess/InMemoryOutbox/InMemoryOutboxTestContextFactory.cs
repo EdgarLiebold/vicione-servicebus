@@ -2,6 +2,8 @@ using System.Reflection;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 /// <summary>
@@ -23,7 +25,8 @@ public static class InMemoryOutboxTestContextFactory
         SerializerContext? serializerContext = null,
         Uri? responseAddress = null,
         Guid? requestId = null,
-        IServiceProvider? serviceProvider = null)
+        IServiceProvider? serviceProvider = null,
+        Uri? sourceAddress = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -47,7 +50,8 @@ public static class InMemoryOutboxTestContextFactory
             messageId,
             responseAddress,
             requestId,
-            serviceProvider);
+            serviceProvider,
+            sourceAddress);
         return consumeContext;
     }
 
@@ -65,6 +69,7 @@ public static class InMemoryOutboxTestContextFactory
         private Guid _messageId;
         private ReceiveContext _receiveContext = null!;
         private Uri? _responseAddress;
+        private Uri? _sourceAddress;
         private Guid? _requestId;
         private SerializerContext _serializerContext = null!;
         private DateTimeOffset _sentTime;
@@ -79,7 +84,8 @@ public static class InMemoryOutboxTestContextFactory
             Guid? messageId,
             Uri? responseAddress,
             Guid? requestId,
-            IServiceProvider? serviceProvider)
+            IServiceProvider? serviceProvider,
+            Uri? sourceAddress)
             where T : class
         {
             _message = message;
@@ -90,6 +96,7 @@ public static class InMemoryOutboxTestContextFactory
             _sentTime = sentTime;
             _responseAddress = responseAddress;
             _requestId = requestId;
+            _sourceAddress = sourceAddress;
             if (serviceProvider is not null)
                 _payloads.Add(typeof(IServiceProvider), serviceProvider);
 
@@ -115,6 +122,8 @@ public static class InMemoryOutboxTestContextFactory
                     return _sentTime;
                 case "get_ResponseAddress":
                     return _responseAddress;
+                case "get_SourceAddress":
+                    return _sourceAddress;
                 case "get_RequestId":
                     return _requestId;
                 case "get_ReceiveContext":
@@ -123,6 +132,8 @@ public static class InMemoryOutboxTestContextFactory
                     return _serializerContext;
                 case "get_CancellationToken":
                     return _cancellationToken;
+                case "get_Headers":
+                    return EmptyHeaders.Instance;
                 case "get_Host":
                     return HostMetadataCache.Host;
                 case "get_ConsumeCompleted":
@@ -280,14 +291,14 @@ public static class InMemoryOutboxTestContextFactory
             where T : class
         {
             ArgumentNullException.ThrowIfNull(pipe);
-            return RecordAsync(message, cancellationToken);
+            return RecordAsync(message, pipe, cancellationToken);
         }
 
         public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
             ArgumentNullException.ThrowIfNull(pipe);
-            return RecordAsync(message, cancellationToken);
+            return RecordAsync(message, pipe, cancellationToken);
         }
 
         public Task SendAsync(object message, CancellationToken cancellationToken = default) =>
@@ -346,6 +357,30 @@ public static class InMemoryOutboxTestContextFactory
             recorder.Add(message);
             return Task.CompletedTask;
         }
+
+        private async Task RecordAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+            where T : class
+        {
+            ArgumentNullException.ThrowIfNull(message);
+            cancellationToken.ThrowIfCancellationRequested();
+            var context = new MessageSendContext<T>(message, cancellationToken);
+
+            await pipe.SendAsync(context).ConfigureAwait(false);
+
+            recorder.Add(message, context);
+        }
+
+        private async Task RecordAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+            where T : class
+        {
+            ArgumentNullException.ThrowIfNull(message);
+            cancellationToken.ThrowIfCancellationRequested();
+            var context = new MessageSendContext<T>(message, cancellationToken);
+
+            await pipe.SendAsync(context).ConfigureAwait(false);
+
+            recorder.Add(message, context);
+        }
     }
 
     private class UnsupportedInvocationProxy : DispatchProxy
@@ -359,6 +394,7 @@ public static class InMemoryOutboxTestContextFactory
 public sealed class OutgoingMessageRecorder
 {
     private readonly List<object> _messages = [];
+    private readonly List<SendObservation> _sendObservations = [];
     private readonly Action<object>? _beforeAdd;
 
     public OutgoingMessageRecorder(Action<object>? beforeAdd = null)
@@ -369,9 +405,29 @@ public sealed class OutgoingMessageRecorder
     /// <summary>Gets recorded messages in emission order.</summary>
     public IReadOnlyList<object> Messages => _messages;
 
+    /// <summary>Gets metadata captured after typed send pipes have been applied.</summary>
+    public IReadOnlyList<SendObservation> SendObservations => _sendObservations;
+
     internal void Add(object message)
     {
         _beforeAdd?.Invoke(message);
         _messages.Add(message);
     }
+
+    internal void Add(object message, SendContext context)
+    {
+        Add(message);
+        _sendObservations.Add(new SendObservation(
+            message,
+            context.RequestId,
+            context.ResponseAddress,
+            context.FaultAddress));
+    }
+
+    /// <summary>Captures request, response, and fault routing metadata applied by a send pipe.</summary>
+    public sealed record SendObservation(
+        object Message,
+        Guid? RequestId,
+        Uri? ResponseAddress,
+        Uri? FaultAddress);
 }

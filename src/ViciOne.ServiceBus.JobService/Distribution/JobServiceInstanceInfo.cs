@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
@@ -13,7 +14,7 @@ public sealed class JobServiceInstanceInfo
 
         LastHeartbeatAt = instance.LastHeartbeatAt;
         LastAllocationAt = instance.LastAllocationAt;
-        InstanceProperties = new ReadOnlyDictionary<string, object>(JobTypeCapacity.CopyProperties(instance.Properties));
+        InstanceProperties = new ReadOnlyDictionary<string, object>(JobPropertySnapshot.Create(instance.Properties));
     }
 
     /// <summary>Gets the instant of the latest availability heartbeat.</summary>

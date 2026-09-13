@@ -1,4 +1,5 @@
 using System.Reflection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -155,8 +156,49 @@ public sealed class SpecificationOptionsValidationTests
         var options = new JobOptions<TestJob>();
 
         Assert.Throws<ArgumentNullException>(() => options.ConfigureRetry(null!));
-        Assert.Throws<ConfigurationException>(() => options.ConfigureRetry(_ => { }));
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() => options.ConfigureRetry(_ => { }));
+        Assert.Contains($"JobOptions<{TypeCache<TestJob>.ShortName}>", exception.Message, StringComparison.Ordinal);
         Assert.Same(Retry.None, options.RetryPolicy);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-OPTIONS", "retry-configuration-builds-policy-and-rejects-invalid-factories")]
+    public void JobOptions_RetryConfigurationBuildsPolicyAndRejectsInvalidFactories()
+    {
+        var options = new JobOptions<TestJob>();
+
+        Assert.Same(options, options.ConfigureRetry(retry => retry.Immediate(2)));
+        Assert.NotSame(Retry.None, options.RetryPolicy);
+        Assert.Contains("Immediate", options.RetryPolicy.GetType().Name, StringComparison.Ordinal);
+
+        Assert.Equal("factory", Assert.Throws<ArgumentNullException>(() =>
+            options.ConfigureRetry(retry => retry.SetRetryPolicy(null!))).ParamName);
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            options.ConfigureRetry(retry => retry.SetRetryPolicy(_ => null!)));
+        Assert.Contains("factory returned null", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains($"JobOptions<{TypeCache<TestJob>.ShortName}>", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(InvalidJobConsumerOption.HeartbeatInterval, "HeartbeatInterval")]
+    [InlineData(InvalidJobConsumerOption.RejectedJobDelay, "RejectedJobDelay")]
+    [InlineData(InvalidJobConsumerOption.TimeProvider, "TimeProvider")]
+    [RequirementCoverage("REQ-VSB-JOB-OPTIONS", "runtime-consumer-options-reject-each-invalid-invariant-in-isolation")]
+    public void JobConsumerOptions_RejectEachInvalidInvariantInIsolation(
+        InvalidJobConsumerOption invalid,
+        string property)
+    {
+        var options = new JobConsumerOptions();
+        switch (invalid)
+        {
+            case InvalidJobConsumerOption.HeartbeatInterval: options.HeartbeatInterval = TimeSpan.Zero; break;
+            case InvalidJobConsumerOption.RejectedJobDelay: options.RejectedJobDelay = TimeSpan.Zero; break;
+            case InvalidJobConsumerOption.TimeProvider: options.TimeProvider = null!; break;
+        }
+
+        ValidationResult failure = Assert.Single(((ISpecification)options).Validate());
+
+        Assert.True(Identifies(failure, property));
     }
 
     [Theory]
@@ -273,6 +315,8 @@ public sealed class SpecificationOptionsValidationTests
     public sealed record TestBatchMessage;
 
     public enum InvalidJobOption { Concurrency, Timeout, CancellationTimeout, GlobalConcurrency, Name, ProgressCount, ProgressTime }
+
+    public enum InvalidJobConsumerOption { HeartbeatInterval, RejectedJobDelay, TimeProvider }
 
     public enum InvalidJobServiceOption
     {

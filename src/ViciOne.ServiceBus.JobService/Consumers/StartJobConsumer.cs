@@ -16,11 +16,11 @@ internal sealed class StartJobConsumer<TJob> :
     readonly Guid _jobTypeId;
     readonly JobOptions<TJob> _options;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="jobService">The job service.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="jobTypeId">The job type id.</param>
-    /// <param name="jobPipe">The job pipe.</param>
+    /// <summary>Creates an execution consumer for one registered job type and user-consumer pipeline.</summary>
+    /// <param name="jobService">The local runtime that owns admitted attempts.</param>
+    /// <param name="options">The validated execution and retry options for the job type.</param>
+    /// <param name="jobTypeId">The registered job-type identifier accepted by this consumer.</param>
+    /// <param name="jobPipe">The pipeline that invokes the user job consumer.</param>
     public StartJobConsumer(IJobService jobService, JobOptions<TJob> options, Guid jobTypeId, IPipe<ConsumeContext<TJob>> jobPipe)
     {
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));

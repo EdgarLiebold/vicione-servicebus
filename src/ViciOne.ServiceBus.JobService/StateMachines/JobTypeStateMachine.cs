@@ -8,6 +8,7 @@ using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
+using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
@@ -15,7 +16,7 @@ namespace ViciOne.ServiceBus.JobService;
 internal sealed class JobTypeStateMachine :
     ViciOneServiceBusStateMachine<JobTypeSaga>
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Defines capacity allocation, release, heartbeat, and concurrency-update behavior.</summary>
     public JobTypeStateMachine()
     {
         Event(() => JobSlotRequested, x =>
@@ -147,7 +148,7 @@ static class JobTypeStateMachineBehaviorExtensions
             JobId = jobId,
             InstanceAddress = selectedInstanceAddress,
             ExpiresAt = timestamp + context.Message.JobTimeout,
-            Properties = JobTypeCapacity.CopyProperties(context.Message.JobProperties),
+            Properties = JobPropertySnapshot.Create(context.Message.JobProperties),
         };
 
         context.Saga.ActiveAllocations.Add(allocation);
@@ -206,14 +207,14 @@ static class JobTypeStateMachineBehaviorExtensions
             }
 
             if (context.Message.UpdateKind != JobConcurrencyUpdateKind.InstanceStopped && instance != null)
-                instance.Properties = JobTypeCapacity.CopyProperties(context.Message.InstanceProperties);
+                instance.Properties = JobPropertySnapshot.Create(context.Message.InstanceProperties);
 
             if (context.Message.UpdateKind == JobConcurrencyUpdateKind.Configuration)
             {
                 context.Saga.ConcurrentJobLimit = context.Message.ConcurrentJobLimit;
                 context.Saga.GlobalConcurrentJobLimit = context.Message.GlobalConcurrentJobLimit;
                 context.Saga.Name = context.Message.JobTypeName!;
-                context.Saga.JobTypeProperties = JobTypeCapacity.CopyProperties(context.Message.JobTypeProperties);
+                context.Saga.JobTypeProperties = JobPropertySnapshot.Create(context.Message.JobTypeProperties);
 
                 LogContext.Debug?.Log("Concurrent Job Limit: {ConcurrencyLimit} {JobTypeName}", context.Saga.ConcurrentJobLimit,
                     context.Message.JobTypeName);

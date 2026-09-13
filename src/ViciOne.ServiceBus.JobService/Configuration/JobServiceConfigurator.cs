@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures job-service coordination endpoints for a service instance.</summary>
 /// <typeparam name="TReceiveEndpointConfigurator">The receive endpoint configurator type.</typeparam>
-public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
+internal sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
     IJobServiceConfigurator,
     ISpecification
     where TReceiveEndpointConfigurator : IReceiveEndpointConfigurator
@@ -24,9 +24,9 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
     ISagaRepository<JobTypeSaga>? _jobTypeRepository;
     IReceiveEndpointConfigurator? _jobTypeSagaEndpointConfigurator;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="instanceConfigurator">The instance configurator.</param>
-    /// <param name="options">The options that control the operation.</param>
+    /// <summary>Binds job coordination, supervision, and repository configuration to one service instance.</summary>
+    /// <param name="instanceConfigurator">The service instance that owns the job endpoints.</param>
+    /// <param name="options">Explicit endpoint and supervision options, or <see langword="null" /> to use the instance-owned options.</param>
     public JobServiceConfigurator(IServiceInstanceConfigurator<TReceiveEndpointConfigurator> instanceConfigurator, JobServiceOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(instanceConfigurator);
@@ -125,25 +125,25 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         set => _options.TimeProvider = value;
     }
 
-    /// <summary>Gets or sets the slot wait time.</summary>
+    /// <inheritdoc />
     public TimeSpan SlotWaitTime
     {
         set => _options.SlotWaitTime = value;
     }
 
-    /// <summary>Gets or sets the status check interval.</summary>
+    /// <inheritdoc />
     public TimeSpan StatusCheckInterval
     {
         set => _options.StatusCheckInterval = value;
     }
 
-    /// <summary>Gets or sets the suspect job retry count.</summary>
+    /// <inheritdoc />
     public int SuspectJobRetryCount
     {
         set => _options.SuspectJobRetryCount = value;
     }
 
-    /// <summary>Gets or sets the suspect job retry delay.</summary>
+    /// <inheritdoc />
     public TimeSpan? SuspectJobRetryDelay
     {
         set => _options.SuspectJobRetryDelay = value;
@@ -155,7 +155,7 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         set => _options.ConcurrentMessageLimit = value;
     }
 
-    /// <summary>Gets or sets the finalize completed.</summary>
+    /// <inheritdoc />
     public bool FinalizeCompleted
     {
         set => _options.FinalizeCompleted = value;
@@ -176,8 +176,8 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         return options.Validate();
     }
 
-    /// <summary>Configures job service endpoints.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates the three coordination endpoints once and optionally enables scoped middleware.</summary>
+    /// <param name="context">The registration context used for message scopes, or <see langword="null" /> for containerless configuration.</param>
     public void ConfigureJobServiceEndpoints(IRegistrationContext? context = null)
     {
         if (_endpointsConfigured)

@@ -9,32 +9,32 @@ internal sealed class JobServiceBusObserver :
 {
     readonly IJobService _jobService;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="jobService">The job service.</param>
+    /// <summary>Creates a bus-lifecycle observer for the supplied local job runtime.</summary>
+    /// <param name="jobService">The runtime to start and stop with the bus.</param>
     public JobServiceBusObserver(IJobService jobService)
     {
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
     }
 
     /// <summary>Requires no action after bus creation.</summary>
-    /// <param name="bus">The bus.</param>
+    /// <param name="bus">The created bus.</param>
     public void PostCreate(IBus bus) => ArgumentNullException.ThrowIfNull(bus);
 
     /// <summary>Requires no cleanup when bus creation fails.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The bus-creation failure.</param>
     public void CreateFaulted(Exception exception) => ArgumentNullException.ThrowIfNull(exception);
 
     /// <summary>Requires no action before bus startup.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="bus">The bus about to start.</param>
+    /// <returns>A completed task after argument validation.</returns>
     public Task PreStartAsync(IBus bus) => bus is null
         ? Task.FromException(new ArgumentNullException(nameof(bus)))
         : Task.CompletedTask;
 
-    /// <summary>Runs after start.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="busReady">The bus ready.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Starts the local job runtime after all bus endpoints report readiness.</summary>
+    /// <param name="bus">The running bus used to publish job-service availability.</param>
+    /// <param name="busReady">The readiness task for the bus endpoints.</param>
+    /// <returns>A task that completes after the runtime has announced every registered job type.</returns>
     public async Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -49,18 +49,18 @@ internal sealed class JobServiceBusObserver :
     }
 
     /// <summary>Requires no additional cleanup when bus startup fails.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="bus">The bus whose startup failed.</param>
+    /// <param name="exception">The startup failure.</param>
+    /// <returns>A completed task after argument validation.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception) => bus is null
         ? Task.FromException(new ArgumentNullException(nameof(bus)))
         : exception is null
             ? Task.FromException(new ArgumentNullException(nameof(exception)))
             : Task.CompletedTask;
 
-    /// <summary>Runs before stop.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops job admission, heartbeats, and local executions before the bus stops.</summary>
+    /// <param name="bus">The bus used to publish the instance-stopped notifications.</param>
+    /// <returns>A task that completes after the local job runtime has drained.</returns>
     public async Task PreStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -72,16 +72,16 @@ internal sealed class JobServiceBusObserver :
     }
 
     /// <summary>Requires no action after the bus has stopped.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="bus">The stopped bus.</param>
+    /// <returns>A completed task after argument validation.</returns>
     public Task PostStopAsync(IBus bus) => bus is null
         ? Task.FromException(new ArgumentNullException(nameof(bus)))
         : Task.CompletedTask;
 
     /// <summary>Requires no additional cleanup when bus shutdown fails.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="bus">The bus whose shutdown failed.</param>
+    /// <param name="exception">The shutdown failure.</param>
+    /// <returns>A completed task after argument validation.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception) => bus is null
         ? Task.FromException(new ArgumentNullException(nameof(bus)))
         : exception is null

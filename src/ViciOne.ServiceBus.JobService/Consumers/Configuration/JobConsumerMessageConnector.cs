@@ -18,7 +18,7 @@ internal sealed class JobConsumerMessageConnector<TConsumer, TJob> :
     readonly IConsumerConnector _startJobConsumerConnector;
     readonly IConsumerConnector _submitJobConsumerConnector;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Resolves the cached submission, execution, and finalization connectors for the job type.</summary>
     public JobConsumerMessageConnector()
     {
         _submitJobConsumerConnector = ConsumerConnectorCache<SubmitJobConsumer<TJob>>.Connector;
@@ -26,21 +26,21 @@ internal sealed class JobConsumerMessageConnector<TConsumer, TJob> :
         _finalizeJobConsumerConnector = ConsumerConnectorCache<FinalizeJobConsumer<TJob>>.Connector;
     }
 
-    /// <summary>Gets the message type.</summary>
+    /// <summary>Gets the job contract type connected by this instance.</summary>
     public Type MessageType => typeof(TJob);
 
-    /// <summary>Creates consumer message specification.</summary>
-    /// <returns>The created consumer message specification.</returns>
+    /// <summary>Creates the middleware and auxiliary-consumer specification for the job contract.</summary>
+    /// <returns>A new job-consumer message specification.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new JobConsumerMessageSpecification<TConsumer, TJob>();
     }
 
-    /// <summary>Connects consumer.</summary>
-    /// <param name="consumePipe">The consume pipe.</param>
-    /// <param name="consumerFactory">The consumer factory.</param>
-    /// <param name="specification">The specification.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects submission, execution, finalization, and user-consumer pipelines for the job contract.</summary>
+    /// <param name="consumePipe">The receive pipeline to connect.</param>
+    /// <param name="consumerFactory">The factory that creates the user job consumer.</param>
+    /// <param name="specification">The consumer registration and job options.</param>
+    /// <returns>A handle that disconnects all job-related consumers.</returns>
     public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
         IConsumerSpecification<TConsumer> specification)
     {

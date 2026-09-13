@@ -8,6 +8,7 @@ using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.JobService.Scheduling;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
@@ -15,7 +16,7 @@ namespace ViciOne.ServiceBus.JobService;
 internal sealed class JobStateMachine :
     ViciOneServiceBusStateMachine<JobSaga>
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Defines job submission, scheduling, execution, retry, cancellation, and finalization behavior.</summary>
     public JobStateMachine()
     {
         Event(() => JobSubmitted, x => x.CorrelateById(m => m.Message.JobId));
@@ -425,10 +426,7 @@ internal sealed class JobStateMachine :
 
     static void ReplaceCheckpoint(JobSaga saga, IReadOnlyDictionary<string, object>? checkpoint)
     {
-        saga.Checkpoint = checkpoint?.ToDictionary(
-            static pair => pair.Key,
-            static pair => pair.Value,
-            StringComparer.OrdinalIgnoreCase);
+        saga.Checkpoint = checkpoint is null ? null : JobPropertySnapshot.Create(checkpoint);
     }
 
     /// <summary>Maps an internal state-machine state to the stable lifecycle contract returned to callers.</summary>
@@ -627,10 +625,7 @@ static class JobStateMachineBehaviorExtensions
         {
             context.Saga.Submitted = context.Message.Timestamp;
 
-            context.Saga.Job = context.Message.Job.ToDictionary(
-                static pair => pair.Key,
-                static pair => pair.Value,
-                StringComparer.OrdinalIgnoreCase);
+            context.Saga.Job = JobPropertySnapshot.Create(context.Message.Job);
             context.Saga.ServiceAddress = context.SourceAddress
                 ?? throw new InvalidOperationException("A source address is required when a job is submitted.");
             context.Saga.JobTimeout = context.Message.JobTimeout;
@@ -654,10 +649,7 @@ static class JobStateMachineBehaviorExtensions
     {
         return binder.Then(context =>
         {
-            context.Saga.Job = context.Message.Job.ToDictionary(
-                static pair => pair.Key,
-                static pair => pair.Value,
-                StringComparer.OrdinalIgnoreCase);
+            context.Saga.Job = JobPropertySnapshot.Create(context.Message.Job);
 
             if (context.Message.Schedule != null)
             {
@@ -682,11 +674,9 @@ static class JobStateMachineBehaviorExtensions
 
     static void SetJobProperties(BehaviorContext<JobSaga, JobSubmitted> context)
     {
-        context.Saga.JobProperties = context.Message.JobProperties?.ToDictionary(
-            static pair => pair.Key,
-            static pair => pair.Value,
-            StringComparer.OrdinalIgnoreCase)
-            ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        context.Saga.JobProperties = context.Message.JobProperties is { } properties
+            ? JobPropertySnapshot.Create(properties)
+            : new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }
 
     public static EventActivityBinder<JobSaga, T> RequestJobSlot<T>(this EventActivityBinder<JobSaga, T> binder, JobStateMachine machine)

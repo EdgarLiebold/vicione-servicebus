@@ -224,6 +224,7 @@ public sealed class JobAttemptGenerationTests
 
         Assert.Equal(JobLifecycleStatus.Submitted, machine.GetLifecycleStatus(machine.Initial));
         Assert.Equal(JobLifecycleStatus.Unknown, machine.GetLifecycleStatus(null));
+        Assert.Equal(JobLifecycleStatus.Unknown, machine.GetLifecycleStatus(machine.Final));
     }
 
     private static JobSaga CreateStartedSaga(long lastProgressSequenceNumber) =>

@@ -8380,7 +8380,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.JobConsumerOptions [sealed,in
   PROPERTY System.TimeSpan RejectedJobDelay { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Configuration.JobOptions<TJob> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IOptions&ViciOne.ServiceBus.Configuration.ISpecification]
   CTOR public ViciOne.ServiceBus.Configuration.JobOptions<TJob>()
-  METHOD public ViciOne.ServiceBus.Configuration.JobOptions<TJob> ConfigureRetry(System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
+  METHOD public ViciOne.ServiceBus.Configuration.JobOptions<TJob> ConfigureRetry(System.Action<ViciOne.ServiceBus.Configuration.IRetryPolicyConfigurator> configure)
   PROPERTY System.Int32 ConcurrentJobLimit { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> GlobalConcurrentJobLimit { public-get; public-set; }
   PROPERTY System.String JobTypeName { public-get; public-set; }
@@ -8410,27 +8410,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.JobSagaOptions [sealed,interf
 TYPE class public ViciOne.ServiceBus.Configuration.JobServiceConfigurationExtensions [static]
   METHOD public static ViciOne.ServiceBus.Configuration.IServiceInstanceConfigurator<TConfigurator> ConfigureJobServiceEndpoints<TConfigurator>(ViciOne.ServiceBus.Configuration.IServiceInstanceConfigurator<TConfigurator> configurator, System.Action<ViciOne.ServiceBus.Configuration.IJobServiceConfigurator> configure = null)
   METHOD public static ViciOne.ServiceBus.Configuration.IServiceInstanceConfigurator<TConfigurator> ConfigureJobServiceEndpoints<TConfigurator>(ViciOne.ServiceBus.Configuration.IServiceInstanceConfigurator<TConfigurator> configurator, ViciOne.ServiceBus.Configuration.JobServiceOptions options, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IJobServiceConfigurator> configure = null)
-TYPE class public ViciOne.ServiceBus.Configuration.JobServiceConfigurator<TReceiveEndpointConfigurator> [sealed,interfaces=ViciOne.ServiceBus.Configuration.IJobServiceConfigurator&ViciOne.ServiceBus.Configuration.ISpecification]
-  CTOR public ViciOne.ServiceBus.Configuration.JobServiceConfigurator<TReceiveEndpointConfigurator>(ViciOne.ServiceBus.Configuration.IServiceInstanceConfigurator<TReceiveEndpointConfigurator> instanceConfigurator, ViciOne.ServiceBus.Configuration.JobServiceOptions options = null)
-  METHOD public System.Void ConfigureJobServiceEndpoints(ViciOne.ServiceBus.Configuration.IRegistrationContext context = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  PROPERTY System.Boolean FinalizeCompleted {  public-set; }
-  PROPERTY System.Func<System.String,System.TimeZoneInfo> TimeZoneResolver {  public-set; }
-  PROPERTY System.Int32 SuspectJobRetryCount {  public-set; }
-  PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit {  public-set; }
-  PROPERTY System.Nullable<System.TimeSpan> SuspectJobRetryDelay {  public-set; }
-  PROPERTY System.String JobAttemptEndpointName {  public-set; }
-  PROPERTY System.String JobEndpointName {  public-set; }
-  PROPERTY System.String JobTypeEndpointName {  public-set; }
-  PROPERTY System.TimeProvider TimeProvider {  public-set; }
-  PROPERTY System.TimeSpan HeartbeatInterval {  public-set; }
-  PROPERTY System.TimeSpan HeartbeatTimeout {  public-set; }
-  PROPERTY System.TimeSpan RejectedJobDelay {  public-set; }
-  PROPERTY System.TimeSpan SlotWaitTime {  public-set; }
-  PROPERTY System.TimeSpan StatusCheckInterval {  public-set; }
-  PROPERTY ViciOne.ServiceBus.Sagas.ISagaRepository<ViciOne.ServiceBus.JobService.JobAttemptSaga> JobAttemptRepository {  public-set; }
-  PROPERTY ViciOne.ServiceBus.Sagas.ISagaRepository<ViciOne.ServiceBus.JobService.JobSaga> JobRepository {  public-set; }
-  PROPERTY ViciOne.ServiceBus.Sagas.ISagaRepository<ViciOne.ServiceBus.JobService.JobTypeSaga> JobTypeRepository {  public-set; }
 TYPE class public ViciOne.ServiceBus.Configuration.JobServiceContainerConfigurationExtensions [static]
   METHOD public static ViciOne.ServiceBus.Configuration.IJobServiceConfigurator ConfigureSagaRepositories(ViciOne.ServiceBus.Configuration.IJobServiceConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
 TYPE class public ViciOne.ServiceBus.Configuration.JobServiceInstanceOptionsExtensions [static]

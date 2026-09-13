@@ -44,10 +44,10 @@ public interface IJobServiceConfigurator
     /// <summary>Sets the clock used for local job execution and lifecycle timestamps.</summary>
     TimeProvider TimeProvider { set; }
 
-    /// <summary>The time to wait before attempting to allocate a job slot when no slots are available.</summary>
+    /// <summary>Sets the delay before capacity allocation is attempted again.</summary>
     TimeSpan SlotWaitTime { set; }
 
-    /// <summary>Time to wait before checking the status of a job to ensure it is still running (not dead).</summary>
+    /// <summary>Sets the interval between liveness checks for an active job attempt.</summary>
     TimeSpan StatusCheckInterval { set; }
 
     /// <summary>Sets the number of supervision timeouts tolerated before an attempt is faulted.</summary>

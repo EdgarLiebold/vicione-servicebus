@@ -1,3 +1,4 @@
+using System.Reflection;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
@@ -76,6 +77,87 @@ public sealed class JobServiceExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SUBMISSION-API", "every-generated-id-property-and-values-overload-forwards-complete-state")]
+    public async Task GeneratedSubmissionOverloads_ForwardJobsValuesPropertiesAndAcceptedIdentityAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+
+        var typedPublish = new RecordingPublishEndpoint();
+        Guid typedPublishId = await typedPublish.SubmitJobAsync(
+            new ApiJob { Label = "typed-publish" },
+            properties => properties.Set("tenant", "north"),
+            cancellation.Token);
+        SubmitJob<ApiJob> typedPublishCommand = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(typedPublish.Message);
+        Assert.NotEqual(Guid.Empty, typedPublishId);
+        Assert.Equal(typedPublishId, typedPublishCommand.JobId);
+        Assert.Equal("north", typedPublishCommand.JobProperties?["tenant"]);
+
+        var valuesPublish = new RecordingPublishEndpoint();
+        Guid valuesPublishId = await valuesPublish.SubmitJobFromValuesAsync<ApiJob>(
+            new { Label = "values-publish" },
+            cancellation.Token);
+        SubmitJob<ApiJob> valuesPublishCommand = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(valuesPublish.Message);
+        Assert.Equal(valuesPublishId, valuesPublishCommand.JobId);
+        Assert.Equal("values-publish", valuesPublishCommand.Job.Label);
+
+        var valuesPropertiesPublish = new RecordingPublishEndpoint();
+        Guid valuesPropertiesPublishId = await valuesPropertiesPublish.SubmitJobFromValuesAsync<ApiJob>(
+            new { Label = "values-properties-publish" },
+            properties => properties.Set("priority", 7),
+            cancellation.Token);
+        SubmitJob<ApiJob> valuesPropertiesPublishCommand =
+            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(valuesPropertiesPublish.Message);
+        Assert.Equal(valuesPropertiesPublishId, valuesPropertiesPublishCommand.JobId);
+        Assert.Equal(7, valuesPropertiesPublishCommand.JobProperties?["priority"]);
+
+        var typedRequest = new RecordingSubmitJobClient<ApiJob>();
+        Guid typedRequestId = await typedRequest.SubmitJobAsync(
+            new ApiJob { Label = "typed-request" },
+            cancellation.Token);
+        Assert.Equal(typedRequest.Request?.JobId, typedRequestId);
+
+        var typedPropertiesRequest = new RecordingSubmitJobClient<ApiJob>();
+        Guid typedPropertiesRequestId = await typedPropertiesRequest.SubmitJobAsync(
+            new ApiJob { Label = "typed-properties-request" },
+            properties => properties.Set("tenant", "south"),
+            cancellation.Token);
+        Assert.Equal(typedPropertiesRequest.Request?.JobId, typedPropertiesRequestId);
+        Assert.Equal("south", typedPropertiesRequest.Request?.JobProperties?["tenant"]);
+
+        var valuesRequest = new RecordingSubmitJobClient<ApiJob>();
+        Guid valuesRequestId = await valuesRequest.SubmitJobFromValuesAsync<ApiJob>(
+            new { Label = "values-request" },
+            cancellation.Token);
+        Assert.Equal(valuesRequest.Request?.JobId, valuesRequestId);
+        Assert.Equal("values-request", valuesRequest.Request?.Job.Label);
+
+        var valuesPropertiesRequest = new RecordingSubmitJobClient<ApiJob>();
+        Guid valuesPropertiesRequestId = await valuesPropertiesRequest.SubmitJobFromValuesAsync<ApiJob>(
+            new { Label = "values-properties-request" },
+            properties => properties.Set("priority", 11),
+            cancellation.Token);
+        Assert.Equal(valuesPropertiesRequest.Request?.JobId, valuesPropertiesRequestId);
+        Assert.Equal(11, valuesPropertiesRequest.Request?.JobProperties?["priority"]);
+
+        IRecordingDirectJobClient direct = DispatchProxy.Create<IRecordingDirectJobClient, DirectJobClientProxy>();
+        var directProxy = (DirectJobClientProxy)(object)direct;
+        Guid acceptedTypedId = NewId.NextGuid();
+        directProxy.AcceptedJobId = acceptedTypedId;
+        var directJob = new ApiJob { Label = "direct-typed" };
+
+        Assert.Equal(acceptedTypedId, await direct.SubmitJobAsync(directJob, cancellation.Token));
+        Assert.Same(directJob, directProxy.Request);
+        Assert.Equal(cancellation.Token, directProxy.CancellationToken);
+
+        Guid acceptedValuesId = NewId.NextGuid();
+        directProxy.AcceptedJobId = acceptedValuesId;
+        var directValues = new { Label = "direct-values" };
+        Assert.Equal(acceptedValuesId, await direct.SubmitJobFromValuesAsync<ApiJob>(directValues, cancellation.Token));
+        Assert.Same(directValues, directProxy.Request);
+        Assert.Equal(cancellation.Token, directProxy.CancellationToken);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SUBMISSION-API", "null-job-and-values-boundaries")]
     public async Task SubmissionApis_RejectNullJobsAndInitializerValuesAsync()
     {
@@ -96,6 +178,20 @@ public sealed class JobServiceExtensionsTests
                 jobId: Guid.NewGuid(),
                 values: null!,
                 cancellationToken: TestContext.Current.CancellationToken))).ParamName);
+        Assert.Equal("setJobProperties", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            endpoint.SubmitJobAsync(new ApiJob(), null!, TestContext.Current.CancellationToken))).ParamName);
+        Assert.Equal("setJobProperties", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            endpoint.SubmitJobFromValuesAsync<ApiJob>(new { Label = "job" }, null!, TestContext.Current.CancellationToken))).ParamName);
+        Assert.Equal("setJobProperties", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            client.SubmitJobAsync(new ApiJob(), null!, TestContext.Current.CancellationToken))).ParamName);
+        Assert.Equal("setJobProperties", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            client.SubmitJobFromValuesAsync<ApiJob>(new { Label = "job" }, null!, TestContext.Current.CancellationToken))).ParamName);
+
+        IRecordingDirectJobClient direct = DispatchProxy.Create<IRecordingDirectJobClient, DirectJobClientProxy>();
+        Assert.Equal("job", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            direct.SubmitJobAsync<ApiJob>(null!, TestContext.Current.CancellationToken))).ParamName);
+        Assert.Equal("values", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            direct.SubmitJobFromValuesAsync<ApiJob>(null!, TestContext.Current.CancellationToken))).ParamName);
     }
 
     [Fact]
@@ -156,5 +252,30 @@ public sealed class JobServiceExtensionsTests
         CancelJob command = Assert.IsAssignableFrom<CancelJob>(endpoint.Message);
         Assert.Equal(jobId, command.JobId);
         Assert.Equal(JobCancellationReasons.CancellationRequested, command.Reason);
+    }
+
+    private interface IRecordingDirectJobClient : IRequestClient<ApiJob>, IAdvancedRequestClient<ApiJob>;
+
+    private class DirectJobClientProxy : DispatchProxy
+    {
+        public Guid AcceptedJobId { get; set; }
+
+        public object? Request { get; private set; }
+
+        public CancellationToken CancellationToken { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            if (targetMethod.Name != nameof(IRequestClient<ApiJob>.GetResponseAsync)
+                || targetMethod.GetGenericArguments() is not [Type responseType]
+                || responseType != typeof(JobSubmissionAccepted))
+                throw new NotSupportedException(targetMethod.Name);
+
+            Request = args![0];
+            CancellationToken = args.OfType<CancellationToken>().Single();
+            var accepted = new JobSubmissionAcceptedResponse { JobId = AcceptedJobId };
+            return Task.FromResult(ResponseFactory.Create<JobSubmissionAccepted>(accepted));
+        }
     }
 }

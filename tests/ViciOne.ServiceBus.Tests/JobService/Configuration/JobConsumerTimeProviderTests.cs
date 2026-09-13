@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -47,5 +48,21 @@ public sealed class JobConsumerTimeProviderTests
             new InstanceJobServiceSettings((JobServiceOptions)null!));
 
         Assert.Equal("options", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-OPTIONS", "registration-validates-materialized-runtime-options")]
+    public void JobServiceRegistration_RejectsInvalidMaterializedRuntimeOptions()
+    {
+        var registration = new JobServiceRegistration();
+        registration.AddConfigureAction(options => options.HeartbeatInterval = TimeSpan.Zero);
+
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            _ = registration.EndpointDefinition);
+
+        Assert.Contains(exception.Results, result =>
+            result.Disposition == ValidationResultDisposition.Failure
+            && result.Key == nameof(JobConsumerOptions)
+            && result.Value == nameof(JobConsumerOptions.HeartbeatInterval));
     }
 }

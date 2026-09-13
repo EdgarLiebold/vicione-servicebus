@@ -2,9 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService;
+using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
 using RuntimeJobService = ViciOne.ServiceBus.JobService.JobService;
 
@@ -71,8 +73,8 @@ public sealed class JobServiceLifecycleTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "stop-drains-heartbeat-and-leaves-no-generation")]
-    public async Task Stop_DrainsTheExactHeartbeatGenerationBeforeReturningAsync()
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "stop-cancels-inflight-heartbeat-and-leaves-no-generation")]
+    public async Task Stop_CancelsAndDrainsTheExactHeartbeatGenerationBeforeReturningAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -84,12 +86,14 @@ public sealed class JobServiceLifecycleTests
         await heartbeat.Entered.WaitAsync(timeout, cancellationToken);
 
         Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
-
-        Assert.False(stopping.IsCompleted);
-        Assert.Equal(0, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
-
-        heartbeat.Release();
-        await stopping.WaitAsync(timeout, cancellationToken);
+        try
+        {
+            await stopping.WaitAsync(timeout, cancellationToken);
+        }
+        finally
+        {
+            heartbeat.Release();
+        }
 
         Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
         Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
@@ -99,7 +103,7 @@ public sealed class JobServiceLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "repeated-start-replaces-heartbeat-generation")]
-    public async Task RepeatedStarts_ReplaceRatherThanOverlapHeartbeatGenerationsAsync()
+    public async Task RepeatedStarts_CancelAndReplaceHeartbeatGenerationsWithoutOverlapAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -111,29 +115,43 @@ public sealed class JobServiceLifecycleTests
         await first.Entered.WaitAsync(timeout, cancellationToken);
 
         PublicationGate second = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
-        Task secondStart = service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
-        Assert.False(secondStart.IsCompleted);
-        first.Release();
-        await secondStart.WaitAsync(timeout, cancellationToken);
+        await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await second.Entered.WaitAsync(timeout, cancellationToken);
+        Assert.Equal(1, endpoint.ActiveHeartbeatPublications);
 
         PublicationGate third = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
-        Task thirdStart = service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
-        Assert.False(thirdStart.IsCompleted);
-        second.Release();
-        await thirdStart.WaitAsync(timeout, cancellationToken);
+        await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await third.Entered.WaitAsync(timeout, cancellationToken);
+        Assert.Equal(1, endpoint.ActiveHeartbeatPublications);
 
-        Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
-        Assert.False(stopping.IsCompleted);
-        third.Release();
-        await stopping.WaitAsync(timeout, cancellationToken);
+        await service.StopAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(3, endpoint.Count(JobConcurrencyUpdateKind.Configuration));
         Assert.Equal(3, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
         Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
         Assert.Equal(1, endpoint.MaximumConcurrentHeartbeatPublications);
         Assert.Equal(0, endpoint.ActiveHeartbeatPublications);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "heartbeat-publication-failure-does-not-stop-the-generation")]
+    public async Task HeartbeatPublicationFailure_DoesNotStopTheActiveGenerationAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var endpoint = new ControlledPublishEndpoint();
+        endpoint.FailNext(JobConcurrencyUpdateKind.Heartbeat, new InvalidOperationException("heartbeat refused"));
+        PublicationGate recoveredHeartbeat = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
+        RuntimeJobService service = NewService(TimeSpan.Zero);
+
+        await service.BusStartedAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await recoveredHeartbeat.Entered.WaitAsync(timeout, cancellationToken);
+        await service.StopAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        Assert.Equal(2, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
+        Assert.Equal(0, endpoint.ActiveHeartbeatPublications);
+        Assert.Equal(1, endpoint.MaximumConcurrentHeartbeatPublications);
     }
 
     [Fact]
@@ -162,6 +180,59 @@ public sealed class JobServiceLifecycleTests
         Assert.Equal(2, endpoint.Count(JobConcurrencyUpdateKind.Configuration));
         Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
         Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-CONFIGURATION", "registered-job-type-uses-an-isolated-snapshot")]
+    public async Task RegisteredJobType_SnapshotsConcurrencyAndMetadataBeforeRuntimeStartsAsync()
+    {
+        var options = new JobOptions<LifecycleJob>
+        {
+            ConcurrentJobLimit = 2,
+            GlobalConcurrentJobLimit = 5,
+        };
+        options.JobTypeProperties.Set("tier", "gold");
+        options.InstanceProperties.Set("region", "west");
+        var service = new RuntimeJobService(new StubJobServiceSettings(TimeSpan.FromDays(1)));
+        service.RegisterJobType(options, NewId.NextGuid(), "lifecycle-job");
+
+        options.ConcurrentJobLimit = 7;
+        options.GlobalConcurrentJobLimit = 11;
+        options.JobTypeProperties.Set("tier", "silver");
+        options.InstanceProperties.Set("region", "east");
+
+        var endpoint = new ControlledPublishEndpoint();
+        await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
+        SetConcurrentJobLimit announcement = endpoint.Single(JobConcurrencyUpdateKind.Configuration);
+        await service.StopAsync(endpoint, TestContext.Current.CancellationToken);
+
+        Assert.Equal(2, announcement.ConcurrentJobLimit);
+        Assert.Equal(5, announcement.GlobalConcurrentJobLimit);
+        Assert.Equal("gold", announcement.JobTypeProperties?["tier"]);
+        Assert.Equal("west", announcement.InstanceProperties?["region"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-CONFIGURATION", "registration-enforces-identity-and-single-ownership")]
+    public void JobTypeRegistration_EnforcesRequiredInputsIdentityAndSingleOwnership()
+    {
+        var service = new RuntimeJobService(new StubJobServiceSettings(TimeSpan.FromDays(1)));
+        var options = new JobOptions<LifecycleJob>();
+        Guid jobTypeId = NewId.NextGuid();
+
+        Assert.Equal("options", Assert.Throws<ArgumentNullException>(() =>
+            service.RegisterJobType<LifecycleJob>(null!, jobTypeId, "lifecycle-job")).ParamName);
+        Assert.Equal("jobTypeId", Assert.Throws<ArgumentException>(() =>
+            service.RegisterJobType(options, Guid.Empty, "lifecycle-job")).ParamName);
+        Assert.Equal("jobTypeName", Assert.Throws<ArgumentException>(() =>
+            service.RegisterJobType(options, jobTypeId, " ")).ParamName);
+
+        service.RegisterJobType(options, jobTypeId, "lifecycle-job");
+
+        Assert.Equal(jobTypeId, service.GetJobTypeId<LifecycleJob>());
+        Assert.Throws<ConfigurationException>(() =>
+            service.RegisterJobType(new JobOptions<LifecycleJob>(), NewId.NextGuid(), "second-registration"));
+        Assert.Throws<ConfigurationException>(() => service.GetJobTypeId<UnregisteredLifecycleJob>());
     }
 
     [Fact]
@@ -225,6 +296,124 @@ public sealed class JobServiceLifecycleTests
         await stopping.WaitAsync(timeout, cancellationToken);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "stop-cancels-and-removes-an-active-local-execution")]
+    public async Task Stop_CancelsAndRemovesAnActiveLocalExecutionAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        RuntimeJobService service = NewService(TimeSpan.FromDays(1));
+        var endpoint = new ControlledPublishEndpoint();
+        await service.BusStartedAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        var command = new StartJobCommand
+        {
+            JobId = NewId.NextGuid(),
+            AttemptId = NewId.NextGuid(),
+            JobTypeId = service.GetJobTypeId<LifecycleJob>(),
+            Job = new Dictionary<string, object>(),
+        };
+        ConsumeContext<StartJob> context = InMemoryOutboxTestContextFactory.Create<StartJob>(
+            command,
+            cancellationToken);
+        var pipe = new CancellationObservingJobPipe();
+
+        await service.StartJobAsync(
+            context,
+            new LifecycleJob(),
+            pipe,
+            new JobOptions<LifecycleJob> { JobCancellationTimeout = timeout },
+            cancellationToken);
+        Assert.True(service.TryGetJob(command.JobId, out JobHandle? active));
+        Assert.NotNull(active);
+
+        await service.StopAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        await pipe.CancellationObserved.WaitAsync(timeout, cancellationToken);
+        Assert.False(service.TryGetJob(command.JobId, out JobHandle? removed));
+        Assert.Null(removed);
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-ADMISSION", "active-job-identities-are-unique")]
+    public async Task ActiveJobIdentity_CannotBeAdmittedTwiceAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        RuntimeJobService service = NewService(TimeSpan.FromDays(1));
+        var endpoint = new ControlledPublishEndpoint();
+        await service.BusStartedAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        var command = CreateStartCommand(service);
+        var pipe = new CancellationObservingJobPipe();
+        await service.StartJobAsync(
+            CreateStartContext(command, cancellationToken),
+            new LifecycleJob(),
+            pipe,
+            new JobOptions<LifecycleJob> { JobCancellationTimeout = timeout },
+            cancellationToken);
+
+        JobAlreadyExistsException exception = await Assert.ThrowsAsync<JobAlreadyExistsException>(() => service.StartJobAsync(
+            CreateStartContext(command, cancellationToken),
+            new LifecycleJob(),
+            new CountingJobPipe(),
+            new JobOptions<LifecycleJob>(),
+            cancellationToken));
+
+        Assert.Equal(command.JobId, exception.JobId);
+        Assert.True(service.TryGetJob(command.JobId, out _));
+
+        await service.StopAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await pipe.CancellationObserved.WaitAsync(timeout, cancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-ADMISSION", "synchronous-pipeline-failure-releases-reservation")]
+    public async Task SynchronousPipelineFailure_ReleasesTheReservedIdentityAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        RuntimeJobService service = NewService(TimeSpan.FromDays(1));
+        var endpoint = new ControlledPublishEndpoint();
+        await service.BusStartedAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        var command = CreateStartCommand(service);
+        var expected = new InvalidOperationException("consumer pipe refused the job");
+        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartJobAsync(
+            CreateStartContext(command, cancellationToken),
+            new LifecycleJob(),
+            new SynchronouslyThrowingJobPipe(expected),
+            new JobOptions<LifecycleJob>(),
+            cancellationToken));
+
+        Assert.Same(expected, actual);
+        Assert.False(service.TryGetJob(command.JobId, out _));
+
+        var replacement = new CancellationObservingJobPipe();
+        await service.StartJobAsync(
+            CreateStartContext(command, cancellationToken),
+            new LifecycleJob(),
+            replacement,
+            new JobOptions<LifecycleJob> { JobCancellationTimeout = timeout },
+            cancellationToken);
+        Assert.True(service.TryGetJob(command.JobId, out _));
+
+        await service.StopAsync(endpoint, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await replacement.CancellationObserved.WaitAsync(timeout, cancellationToken);
+    }
+
+    private static StartJobCommand CreateStartCommand(RuntimeJobService service) => new()
+    {
+        JobId = NewId.NextGuid(),
+        AttemptId = NewId.NextGuid(),
+        JobTypeId = service.GetJobTypeId<LifecycleJob>(),
+        Job = new Dictionary<string, object>(),
+    };
+
+    private static ConsumeContext<StartJob> CreateStartContext(StartJobCommand command, CancellationToken cancellationToken) =>
+        InMemoryOutboxTestContextFactory.Create<StartJob>(command, cancellationToken);
+
     private static RuntimeJobService NewService(TimeSpan heartbeatInterval)
     {
         var service = new RuntimeJobService(new StubJobServiceSettings(heartbeatInterval));
@@ -252,6 +441,8 @@ public sealed class JobServiceLifecycleTests
     }
 
     private sealed record LifecycleJob;
+
+    private sealed record UnregisteredLifecycleJob;
 
     private sealed class AdmissionFixture : IAsyncDisposable
     {
@@ -408,10 +599,45 @@ public sealed class JobServiceLifecycleTests
         }
     }
 
+    private sealed class CancellationObservingJobPipe : IPipe<ConsumeContext<LifecycleJob>>
+    {
+        private readonly TaskCompletionSource _cancellationObserved =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task CancellationObserved => _cancellationObserved.Task;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        public async Task SendAsync(ConsumeContext<LifecycleJob> context)
+        {
+            try
+            {
+                await Task.Delay(Timeout.InfiniteTimeSpan, context.CancellationToken);
+            }
+            catch (OperationCanceledException exception) when (exception.CancellationToken == context.CancellationToken)
+            {
+                _cancellationObserved.TrySetResult();
+                throw;
+            }
+        }
+    }
+
+    private sealed class SynchronouslyThrowingJobPipe(Exception exception) : IPipe<ConsumeContext<LifecycleJob>>
+    {
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        public Task SendAsync(ConsumeContext<LifecycleJob> context) => throw exception;
+    }
+
     private sealed class ControlledPublishEndpoint : IPublishEndpoint
     {
         private readonly Dictionary<JobConcurrencyUpdateKind, Queue<PublicationControl>> _controls = [];
         private readonly Dictionary<JobConcurrencyUpdateKind, int> _counts = [];
+        private readonly List<SetConcurrentJobLimit> _messages = [];
         private readonly object _lock = new();
         private int _activeHeartbeatPublications;
         private int _maximumConcurrentHeartbeatPublications;
@@ -435,6 +661,12 @@ public sealed class JobServiceLifecycleTests
                 return _counts.GetValueOrDefault(updateKind);
         }
 
+        public SetConcurrentJobLimit Single(JobConcurrencyUpdateKind updateKind)
+        {
+            lock (_lock)
+                return Assert.Single(_messages, message => message.UpdateKind == updateKind);
+        }
+
         public async Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
             where T : class
         {
@@ -445,6 +677,7 @@ public sealed class JobServiceLifecycleTests
             lock (_lock)
             {
                 _counts[limit.UpdateKind] = _counts.GetValueOrDefault(limit.UpdateKind) + 1;
+                _messages.Add(limit);
                 control = _controls.TryGetValue(limit.UpdateKind, out Queue<PublicationControl>? queue) && queue.Count > 0
                     ? queue.Dequeue()
                     : null;

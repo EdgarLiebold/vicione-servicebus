@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
@@ -14,7 +15,7 @@ public sealed class JobAllocationInfo
         JobId = allocation.JobId;
         ExpiresAt = allocation.ExpiresAt;
         InstanceAddress = allocation.InstanceAddress;
-        JobProperties = new ReadOnlyDictionary<string, object>(JobTypeCapacity.CopyProperties(allocation.Properties));
+        JobProperties = new ReadOnlyDictionary<string, object>(JobPropertySnapshot.Create(allocation.Properties));
     }
 
     /// <summary>Gets the identifier of the allocated job.</summary>

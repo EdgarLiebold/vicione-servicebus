@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class JobServiceInstanceOptionsExtensions
 {
     /// <summary>Enables job-consumer discovery and local execution endpoints for the service instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
-    /// <returns>The service instance options produced by the operation.</returns>
+    /// <param name="options">The service-instance options to update.</param>
+    /// <returns>The supplied options for fluent configuration.</returns>
     public static ServiceInstanceOptions EnableJobServiceEndpoints(this ServiceInstanceOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);

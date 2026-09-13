@@ -16,7 +16,7 @@ internal sealed class JobConsumerMessageSpecification<TConsumer, TJob> :
 {
     readonly ConsumerMessageSpecification<TConsumer, TJob> _consumerSpecification;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates user-consumer middleware and the four job lifecycle consumer specifications.</summary>
     public JobConsumerMessageSpecification()
     {
         SubmitJobSpecification = ConsumerConnectorCache<SubmitJobConsumer<TJob>>.Connector.CreateConsumerSpecification<SubmitJobConsumer<TJob>>();
@@ -27,24 +27,24 @@ internal sealed class JobConsumerMessageSpecification<TConsumer, TJob> :
         _consumerSpecification = new ConsumerMessageSpecification<TConsumer, TJob>();
     }
 
-    /// <summary>Gets the submit job specification.</summary>
+    /// <summary>Gets the specification that validates and acknowledges job submissions.</summary>
     public IConsumerSpecification<SubmitJobConsumer<TJob>> SubmitJobSpecification { get; }
-    /// <summary>Gets the start job specification.</summary>
+    /// <summary>Gets the specification that starts a locally assigned job attempt.</summary>
     public IConsumerSpecification<StartJobConsumer<TJob>> StartJobSpecification { get; }
-    /// <summary>Gets the finalize job specification.</summary>
+    /// <summary>Gets the specification that acknowledges terminal job delivery.</summary>
     public IConsumerSpecification<FinalizeJobConsumer<TJob>> FinalizeJobSpecification { get; }
-    /// <summary>Gets the supervise job specification.</summary>
+    /// <summary>Gets the specification that handles attempt cancellation and liveness requests.</summary>
     public IConsumerSpecification<SuperviseJobConsumer> SuperviseJobSpecification { get; }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware around the resolved user consumer and job message.</summary>
+    /// <param name="specification">The consumer-message pipeline specification to append.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer, TJob>> specification)
     {
         _consumerSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>Applies the message configuration.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Applies configuration to the job message pipeline.</summary>
+    /// <param name="configure">The job-message configuration callback.</param>
     public void Message(Action<IConsumerMessageConfigurator<TJob>> configure)
     {
         _consumerSpecification.Message(configure);
@@ -61,14 +61,14 @@ internal sealed class JobConsumerMessageSpecification<TConsumer, TJob> :
             .Concat(SubmitJobSpecification.Validate());
     }
 
-    /// <summary>Gets the message type.</summary>
+    /// <summary>Gets the configured job contract type.</summary>
     public Type MessageType => typeof(TJob);
 
-    /// <summary>Attempts to get message specification.</summary>
-    /// <typeparam name="TC">The c type.</typeparam>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Returns this specification when both requested generic types match its consumer and job types.</summary>
+    /// <typeparam name="TC">The requested consumer type.</typeparam>
+    /// <typeparam name="T">The requested job contract type.</typeparam>
     /// <param name="specification">Receives the specification produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <returns><see langword="true" /> when both generic types match; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSpecification<TC, T>([NotNullWhen(true)] out IConsumerMessageSpecification<TC, T>? specification)
         where T : class
         where TC : class
@@ -77,37 +77,37 @@ internal sealed class JobConsumerMessageSpecification<TConsumer, TJob> :
         return specification != null;
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware around the job message before consumer resolution.</summary>
+    /// <param name="specification">The message pipeline specification to append.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TJob>> specification)
     {
         _consumerSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <param name="consumeFilter">The consume filter.</param>
-    /// <returns>The configured component.</returns>
+    /// <summary>Builds the user-consumer pipeline with the job lifecycle filter as its terminal stage.</summary>
+    /// <param name="consumeFilter">The filter that executes and reports the job attempt.</param>
+    /// <returns>The configured consumer pipeline.</returns>
     public IPipe<ConsumerConsumeContext<TConsumer, TJob>> Build(IFilter<ConsumerConsumeContext<TConsumer, TJob>> consumeFilter)
     {
         return _consumerSpecification.Build(consumeFilter);
     }
 
-    /// <summary>Builds message pipe.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Builds the job message pipeline used before resolving the user consumer.</summary>
+    /// <param name="configure">The callback that adds registration-level middleware.</param>
     /// <returns>The configured message pipe.</returns>
     public IPipe<ConsumeContext<TJob>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<TJob>>> configure)
     {
         return _consumerSpecification.BuildMessagePipe(configure);
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adapts consumer-only middleware to the consumer-and-job pipeline.</summary>
+    /// <param name="specification">The consumer pipeline specification to adapt.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
     {
         _consumerSpecification.AddPipeSpecification(new ConsumerPipeSpecificationProxy<TConsumer, TJob>(specification));
     }
 
-    /// <summary>Connects consumer configuration observer.</summary>
+    /// <summary>Connects an observer to the user consumer and every auxiliary job consumer.</summary>
     /// <param name="observer">The observer to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)

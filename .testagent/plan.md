@@ -1779,3 +1779,150 @@ remains exactly 19,104 lines with SHA-256
 `34c7a90ef04451531e03134e0891e752a410996742627d4648941427f04aee27`.
 Protected `review/` and `TestResults/` contents were neither changed nor staged. The repository-wide
 source goal remains active for the next unreviewed owner.
+
+## Iteration 93 outcome
+
+Review the complete `ViciOne.ServiceBus.JobService` feature assembly as one coherent owner: public
+registration and submission APIs, endpoint composition, local execution admission and shutdown,
+heartbeat ownership, retry policy configuration, job metadata, consumer dispatch and supervision,
+capacity allocation, the three coordinating state machines, recurring scheduling, and cron
+parsing. Preserve every Job Service feature while removing public implementation details,
+disconnected retry surface, mutable metadata aliases, and lifecycle races.
+
+`src/ViciOne.ServiceBus.JobService` remains a direct child of `src` because it is an independent
+first-party feature assembly, just as `ViciOne.ServiceBus` is the Core assembly rather than an
+umbrella directory. Interchangeable external integrations remain grouped by architectural axis
+under `Persistence`, `Scheduling`, and `Transports`; independent feature and tooling assemblies do
+not acquire a false provider identity. Nesting sibling projects inside the Core project directory
+would also expose them to the Core SDK project's recursive default compile globs.
+
+## Iteration 93 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-JOB-REGISTRATION-API` | public composition, options, facade forwarding, saga state-machine registration, distribution strategy, and endpoint identity | public configuration API tests | complete successful registration, first-registration ownership, fluent returns, null boundaries, and no public configurator implementation |
+| `REQ-VSB-JOB-DIRECT-CONFIGURATION` | explicit instance/options/context configuration | endpoint configuration tests | every option copied, all three endpoints configured, scopes and outbox attached once, addresses unavailable before composition, and every required input rejected |
+| `REQ-VSB-JOB-SERVICE-LIFECYCLE` | start, restart, failed start, heartbeat generation, stop, admission drain, and recovery after heartbeat failure | lifecycle tests | exact publication order and count, one generation, no in-flight publication after stop, restart replacement, retry after publication fault, and causal cancellation |
+| `REQ-VSB-JOB-SERVICE-ADMISSION` | concurrent identity reservation and pipeline handoff | lifecycle tests | active duplicate rejection, synchronous pipe-failure rollback, successful replacement, stopping rejection, and deterministic cleanup |
+| `REQ-VSB-JOB-CANCELLATION` | immutable cancellation deadline and shutdown behavior | execution-context and state-machine tests | timeout snapshot before user code, external cancellation propagation, stopping fault, capacity release, and complete local drain |
+| `REQ-VSB-JOB-METADATA` | case-insensitive last-write-wins immutable snapshots | serialization, execution-context, capacity, and state-machine tests | source isolation, replacement semantics, dictionary contract, no mutation capability, and preservation across every runtime/state boundary |
+| `REQ-VSB-JOB-PROGRESS` | concurrent lazy progress buffering | execution-context tests | exactly one buffer, ordered publications, and safe concurrent first use |
+| `REQ-VSB-JOB-CONSUMER-PIPELINE` | execution, cancellation, retry, terminal fault, and probe contract | consumer-filter tests | exact lifecycle message order, current retry attempt, next delay, terminal exception, required inputs, and probe identity |
+| `REQ-VSB-JOB-START-CONSUMER` | command ownership and deserialization | start-consumer tests | matching type forwards all values, foreign type has no side effect, null payload fails before admission, and every required input is validated |
+| `REQ-VSB-JOB-SUPERVISION` | local attempt status and cancellation | supervisor tests | every local task state maps to its exact wire status, stale/missing attempts remain unanswered, and required contexts are rejected |
+| `REQ-VSB-JOB-CAPACITY` | per-type/global limits, allocation identity, reconciliation, and updates | capacity and type-state-machine tests | exact inclusive limits, idempotency, deterministic duplicate handling, expired/dead/orphan removal, and every update invariant |
+| `REQ-VSB-JOB-ATTEMPT-SUPERVISION` | attempt start, liveness, escalation, status, fault, cancellation, and finalization | attempt-state-machine tests | every state transition, schedule identity, retry boundary, late acknowledgement, exception preservation, and terminal cleanup |
+| `REQ-VSB-JOB-STATE-MACHINE` | immediate, one-time, recurring, retry, cancellation, and finalization flows | job-state-machine tests | complete state and message effects, capacity release, attempt draining, recurrence, late events, and finalization policy |
+| `REQ-VSB-JOB-TYPE-STATE` | configuration, heartbeat, allocation, distribution, suspect removal, and stop | type-state-machine tests | exact persisted state, all strategy scopes, correct partition identities, global limit, and release behavior |
+| `REQ-VSB-JOB-OPTIONS` | runtime options and effective retry policy | options tests | each invariant fails causally in isolation, null/invalid factories fail clearly, and configured policy is the policy executed |
+| `REQ-VSB-JOB-SUBMISSION-API` | generated/explicit identity and job/value/property overloads | submission API tests | every overload forwards complete state and returns the accepted job identity |
+| `REQ-VSB-RECURRING-JOB-API` / `REQ-VSB-SCHEDULED-JOB-API` | recurring and scheduled overload matrices | recurring API tests | every cron/configurator/property/value/identity form forwards exactly once with complete state |
+| `REQ-VSB-CRON-*` | named values, ranges, increments, validation, matching, calendar boundaries, and daylight-saving transitions | cron parsing, calendar, scheduling, and DST tests | all twelve months, all weekdays, exact malformed-name diagnostics, named steps/ranges/last weekday, complete calendars, and both DST transitions |
+| `REQ-VSB-SOURCE-NAVIGATION` | all 168 original JobService source files | architecture tests and manual ledger | final 170-file owner, matching type/file/folder responsibility, direct independent project placement, and no empty directory |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in all 11,444 original source lines and all replacement code | manual review plus documentation gates | current code and behavior only; no history, migration narrative, filler, generator rewrite, or stale contract |
+
+## Iteration 93 mutation obligations
+
+- Expose `JobServiceConfigurator<T>` publicly and weaken the retry diagnostic: the public-contract
+  and exact validation tests must fail.
+- Change metadata snapshots from last-write-wins to first-write-wins or make progress-buffer lazy
+  initialization non-thread-safe: the snapshot and concurrent-progress regressions must fail.
+- Read the cancellation timeout after the user pipeline starts, admit work during shutdown, or stop
+  without canceling the in-flight heartbeat generation: each precise lifecycle regression must fail
+  or deterministically remain blocked until the bounded mutation host is terminated.
+- Invert completed-job finalization, weaken the global capacity boundary, weaken the retry-attempt
+  boundary, or ignore the current consumer retry attempt: the owning state-machine/filter test must
+  fail.
+- Partition attempts by job identity, invert the start-consumer type match, invert the direct
+  `TimeProvider` invariant, or stop a heartbeat generation after one publication failure: each exact
+  behavioral or causal-validation test must fail.
+- Mis-map a named month or accept an unexpected suffix after a named month: the exhaustive month
+  table or exact malformed-field theory must fail.
+
+## Iteration 93 baseline
+
+The first bounded review profile exposed four real failures: the concrete configurator leaked into
+the public API, materialized runtime options could bypass validation, a retry diagnostic omitted its
+closing generic delimiter, and shutdown could wait indefinitely for an in-flight heartbeat that it
+did not own a cancellation path for. Coverage review then isolated two meaningful parser gaps:
+`GetMonthNumber` had 50% line coverage and `StoreExpressionGeneralValue` had 77.27%. Those findings,
+rather than aggregate percentage chasing, defined the final Cron test additions.
+
+## Iteration 93 completion
+
+All 168 original JobService C# files and all 11,444 physical lines were read manually in full along
+with every comment, every direct test, the project file, the requirements manifest, and the packed
+public API. No generator or scripted source/comment rewrite was used. The final assembly contains
+170 C# files and 11,546 physical lines. Every filename, type, namespace, visibility, responsibility,
+XML comment, and implementation comment was checked again after remediation.
+
+The local runtime now owns one exact cancellable heartbeat generation, replaces and drains it on
+restart, and leaves no publication in flight after stop. Admission is closed and drained before
+shutdown, active job identities are reserved atomically, synchronous pipeline failures release the
+reservation, and cancellation deadlines and registered options are immutable snapshots. Concurrent
+progress initialization is thread-safe. Metadata has one case-insensitive, last-write-wins snapshot
+implementation and read-only projection used consistently by execution, distribution, and state
+coordination.
+
+The retry API now exposes only the effective `IRetryPolicyConfigurator`; disconnected observer
+storage and the public concrete configurator are gone. Null factories and null policy results fail
+causally. Endpoint composition, registration, consumer-kind ownership, partition topology,
+submission/recurring/scheduled overloads, event access, state response projection, start dispatch,
+supervision, filter behavior, all three state machines, capacity reconciliation, and every new or
+changed parameter have direct behavioral coverage in the requirement ledger.
+
+Sixteen isolated counterchanges were compiled and executed. Public configurator leakage, malformed
+retry diagnostics, first-write metadata, unsafe lazy initialization, late timeout reads, shutdown
+admission, inverted finalization, weakened capacity/retry boundaries, ignored consumer retry state,
+wrong attempt partitioning, inverted job-type matching, inverted clock validation, terminated
+heartbeat recovery, a wrong February ordinal, and accepted `JANX` syntax all made their precise
+regressions fail or made the bounded mutation host hang as predicted. Every counterchange was
+restored manually. One outer cancellation catch-filter mutation was correctly classified as
+equivalent because the owned heartbeat loop already normalizes cancellation, and the redundant
+catch was removed instead of counted as evidence.
+
+The final complete Core host coverage run passes 3,209/3,209 tests with no failures or skips.
+`ViciOne.ServiceBus.JobService` records 95.4369% line and 89.0917% branch coverage. Both previously
+risky Cron methods now have 100% line coverage; named-value parsing records 98.4848% branch
+coverage, while the remaining switch-expression branch artifacts do not represent omitted month or
+weekday values. The coverage artifact SHA-256 is
+`5598866fd4fefca002fba6d50db26ad61436f582821b76ba4784395363dd188f`. The same Core host's
+cross-package measurement is 74.1057% line and 67.0712% branch across 83,667 instrumented lines; it
+is not presented as a falsely merged whole-repository percentage.
+
+The final serial Engineering Release build completes with zero warnings and errors under CI
+determinism and warnings-as-errors. The complete Unit/Architecture solution passes 6,074/6,074
+tests across 23 hosts with zero failures and zero skips; the Architecture owner separately passes
+292/292. Both repository format gates, requirement JSON, `git diff --check`, repository-wide C#
+preprocessor scan, JobService dummy-marker scan, test skip/smell scan, bidirectional async naming,
+source layout, comments, documentation, and empty-directory checks pass. A transient Debug failure
+was traced to a stale pre-remediation dependency DLL created by an inappropriate
+`--no-dependencies` test-only build; rebuilding the complete Debug dependency graph made the same
+lifecycle class pass 14/14 and the subsequent coverage run pass 3,209/3,209. Coverage validation
+must therefore refresh the full configuration-specific dependency graph whenever product source
+changed.
+
+Fresh-package verification passes with 18 developer journeys, 31 freshly packed ViciOne packages,
+three executed isolated provider-testing consumers, and all 30 runtime package APIs matching the
+committed baseline. The intended Greenfield API diff replaces the overly broad retry configurator
+with `IRetryPolicyConfigurator` and removes the 21-line concrete configurator implementation
+surface. The packed public API contains 19,083 lines with SHA-256
+`5f3b41a65267feac9831887029dbb3bcdec8f4f1ce270df060dd139d7d4eb1da`.
+
+Final SHA-256 values are
+`d9add9edef630bedcc687be82d3e9ae3d3d99a9b24b369282b906985e40e2b93` for `JobService.cs`,
+`f7889e988492bd4a6143e80a2c23d5051047593ca337eb4536ed29dea27e90b2` for
+`ConsumeJobContext.cs`, `5e745e40d4c743d4583e8c4b39a1e77e69ac94273dadb383b60749cb4710875b`
+for `JobPropertySnapshot.cs`,
+`17df39d478bc6ee8554195ca3e55654716d95b0f0421aace12f8e69b6b6d67a9` for
+`ReadOnlyJobPropertyCollection.cs`,
+`02d2267572242387203864f524d949835b553c1245002a64943782eaacc3b299` for
+`JobStateMachine.cs`, `4df4cdfd840ea49128403dc54d823f9df23bf560d3a8808ae1b456c162f116b2`
+for `JobTypeStateMachine.cs`,
+`0971695fb6f30b1c670c4a568996e0b12175f98c2268fdfdb70981a7e9ee8a81` for
+`JobAttemptStateMachine.cs`, and
+`59ddb8f6ec21908dc980f0cf7cc6f0625b185b484a4153d5aff7ae8e12797dca` for
+`JobConsumerMessageFilter.cs`.
+
+The protected `review/` and `TestResults/` trees were neither changed nor staged. The complete A+
+source goal remains active for the next unreviewed owner.

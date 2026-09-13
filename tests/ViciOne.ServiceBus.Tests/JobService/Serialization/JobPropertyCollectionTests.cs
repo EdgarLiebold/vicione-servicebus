@@ -61,6 +61,40 @@ public sealed class JobPropertyCollectionTests
         Assert.False(((IPropertyCollection)properties).ContainsKey("valid"));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-METADATA", "mutable-collection-preserves-complete-dictionary-and-bulk-contract")]
+    public void MutableCollection_PreservesTheCompleteDictionaryAndBulkContract()
+    {
+        var properties = new JobPropertyCollection();
+        properties.SetMany(
+        [
+            new("Tenant", "north"),
+            new("attempts", 3),
+        ]);
+        properties.SetMany(
+        [
+            new("TENANT", "south"),
+            new("attempts", null),
+        ], overwrite: false);
+        properties.Set("missing", null, overwrite: false);
+        IReadOnlyDictionary<string, object> dictionary = properties;
+
+        Assert.Equal(2, ((IReadOnlyCollection<KeyValuePair<string, object>>)properties).Count);
+        Assert.Equal("north", dictionary["tenant"]);
+        Assert.True(dictionary.TryGetValue("ATTEMPTS", out object? attempts));
+        Assert.Equal(3, attempts);
+        Assert.Equal(["attempts", "Tenant"], dictionary.Keys.Order(StringComparer.OrdinalIgnoreCase));
+        Assert.Equal([3, "north"], dictionary.Values.OrderBy(static value => value.ToString(), StringComparer.Ordinal));
+        Assert.Equal(2, properties.Count());
+        Assert.Equal(2, ((System.Collections.IEnumerable)properties).Cast<object>().Count());
+
+        properties.SetMany([new("ATTEMPTS", null)]);
+        Assert.False(dictionary.ContainsKey("attempts"));
+        Assert.Equal("properties", Assert.Throws<ArgumentNullException>(() => properties.SetMany(null!)).ParamName);
+        Assert.Throws<ArgumentException>(() => _ = dictionary[" "]);
+        Assert.Throws<ArgumentException>(() => dictionary.TryGetValue(" ", out _));
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -87,6 +121,36 @@ public sealed class JobPropertyCollectionTests
         Assert.Equal(typeof(ISetPropertyCollection), typeof(JobOptions<TestJob>).GetProperty(nameof(JobOptions<TestJob>.JobTypeProperties))!.PropertyType);
         Assert.Equal(typeof(ISetPropertyCollection), typeof(JobOptions<TestJob>).GetProperty(nameof(JobOptions<TestJob>.InstanceProperties))!.PropertyType);
         Assert.False(typeof(JobPropertyCollection).IsPublic);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-METADATA", "read-only-snapshot-preserves-complete-dictionary-contract")]
+    public void ReadOnlySnapshot_IsCaseInsensitiveCompleteAndNotMutationCapable()
+    {
+        KeyValuePair<string, object>[] source =
+        [
+            new("Tenant", "north"),
+            new("TENANT", "south"),
+            new("attempts", 3),
+        ];
+
+        var snapshot = new ReadOnlyJobPropertyCollection(source);
+
+        Assert.Equal(2, snapshot.Count);
+        Assert.Equal("south", snapshot["tenant"]);
+        Assert.True(snapshot.ContainsKey("TENANT"));
+        Assert.True(snapshot.TryGet("tenant", out object? tenant));
+        Assert.Equal("south", tenant);
+        Assert.True(snapshot.TryGetValue("ATTEMPTS", out object? attempts));
+        Assert.Equal(3, attempts);
+        Assert.Equal(3, snapshot.Get<int>("attempts"));
+        Assert.Equal("fallback", snapshot.Get<string>("missing", "fallback"));
+        Assert.Equal(["attempts", "Tenant"], snapshot.Keys.Order(StringComparer.OrdinalIgnoreCase));
+        Assert.Equal([3, "south"], snapshot.Values.OrderBy(static value => value.ToString(), StringComparer.Ordinal));
+        Assert.Equal(2, snapshot.Count());
+        Assert.IsNotAssignableFrom<ISetPropertyCollection>(snapshot);
+
+        Assert.Throws<ArgumentException>(() => new ReadOnlyJobPropertyCollection([new KeyValuePair<string, object>(" ", 1)]));
     }
 
     public sealed record TestJob;

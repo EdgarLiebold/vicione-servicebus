@@ -29,16 +29,4 @@ internal static class JobTypeCapacity
             allocation.ExpiresAt <= timestamp || !saga.ServiceInstances.ContainsKey(allocation.InstanceAddress));
         saga.ActiveAllocationCount = saga.ActiveAllocations.Count;
     }
-
-    /// <summary>Creates a case-insensitive metadata snapshot and treats missing metadata as empty.</summary>
-    /// <param name="properties">The metadata supplied by a configuration update.</param>
-    /// <returns>An independent metadata dictionary.</returns>
-    public static Dictionary<string, object> CopyProperties(IReadOnlyDictionary<string, object>? properties)
-    {
-        return properties?.ToDictionary(
-            static pair => pair.Key,
-            static pair => pair.Value,
-            StringComparer.OrdinalIgnoreCase)
-            ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-    }
 }

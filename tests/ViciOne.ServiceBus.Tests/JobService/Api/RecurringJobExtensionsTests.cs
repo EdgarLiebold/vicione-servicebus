@@ -56,6 +56,57 @@ public sealed class RecurringJobExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-JOB-API", "every-cron-configurator-and-property-overload-forwards-complete-state")]
+    public async Task RecurringConfigurationOverloads_ForwardEveryScheduleAndPropertyVariantAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+
+        var requestConfigured = new RecordingSubmitJobClient<ApiJob>();
+        Guid requestConfiguredId = await requestConfigured.AddOrUpdateRecurringJobAsync(
+            "request-configured",
+            new ApiJob { Label = "request" },
+            schedule => schedule.DailyAt(4, 15),
+            cancellation.Token);
+        Assert.Equal(requestConfiguredId, requestConfigured.Request?.JobId);
+        Assert.Equal("0 15 4 ? * *", requestConfigured.Request?.Schedule?.CronExpression);
+
+        var requestWithProperties = new RecordingSubmitJobClient<ApiJob>();
+        Guid requestWithPropertiesId = await requestWithProperties.AddOrUpdateRecurringJobAsync(
+            "request-properties",
+            new ApiJob { Label = "request-properties" },
+            schedule => schedule.EveryMinutes(20),
+            properties => properties.Set("tenant", "east"),
+            cancellation.Token);
+        Assert.Equal(requestWithPropertiesId, requestWithProperties.Request?.JobId);
+        Assert.Equal("east", requestWithProperties.Request?.JobProperties?["tenant"]);
+
+        var publishedCron = new RecordingPublishEndpoint();
+        Guid publishedCronId = await publishedCron.AddOrUpdateRecurringJobAsync(
+            "published-cron",
+            new ApiJob { Label = "published-cron" },
+            "0 45 8 ? * 2-6",
+            cancellation.Token);
+        SubmitJob<ApiJob> publishedCronCommand = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(publishedCron.Message);
+        Assert.Equal(publishedCronId, publishedCronCommand.JobId);
+        Assert.Equal("0 45 8 ? * 2-6", publishedCronCommand.Schedule?.CronExpression);
+
+        var publishedConfigured = new RecordingPublishEndpoint();
+        Guid publishedConfiguredId = await publishedConfigured.AddOrUpdateRecurringJobAsync(
+            "published-configured",
+            new ApiJob { Label = "published-configured" },
+            schedule => schedule.WeeklyOn(DayOfWeek.Sunday, 3, 5),
+            cancellation.Token);
+        SubmitJob<ApiJob> publishedConfiguredCommand =
+            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(publishedConfigured.Message);
+        Assert.Equal(publishedConfiguredId, publishedConfiguredCommand.JobId);
+        Assert.Equal("0 5 3 ? * 1", publishedConfiguredCommand.Schedule?.CronExpression);
+        Assert.Equal(cancellation.Token, requestConfigured.CancellationToken);
+        Assert.Equal(cancellation.Token, requestWithProperties.CancellationToken);
+        Assert.Equal(cancellation.Token, publishedCron.CancellationToken);
+        Assert.Equal(cancellation.Token, publishedConfigured.CancellationToken);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULED-JOB-API", "typed-publish-preserves-explicit-id-utc-start-job-and-token")]
     public async Task ScheduleJobAsync_TypedPublishPreservesTheCompleteCommandAsync()
     {
@@ -93,6 +144,68 @@ public sealed class RecurringJobExtensionsTests
         SubmitJob<ApiJob> command = Assert.IsAssignableFrom<SubmitJob<ApiJob>>(client.Request);
         Assert.Equal("initialized-schedule", command.Job.Label);
         Assert.Equal(start, command.Schedule?.Start);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULED-JOB-API", "every-generated-explicit-typed-and-values-overload-forwards-state")]
+    public async Task ScheduledJobOverloads_ForwardEveryIdentityAndInitializerVariantAsync()
+    {
+        var start = new DateTimeOffset(2048, 5, 6, 7, 8, 9, TimeSpan.FromHours(-4));
+        using var cancellation = new CancellationTokenSource();
+
+        var generatedTypedPublish = new RecordingPublishEndpoint();
+        Guid generatedTypedId = await generatedTypedPublish.ScheduleJobAsync(
+            start,
+            new ApiJob { Label = "generated-typed" },
+            cancellation.Token);
+        SubmitJob<ApiJob> generatedTypedCommand =
+            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(generatedTypedPublish.Message);
+        Assert.NotEqual(Guid.Empty, generatedTypedId);
+        Assert.Equal(generatedTypedId, generatedTypedCommand.JobId);
+        Assert.Equal(start.UtcDateTime, generatedTypedCommand.Schedule?.Start?.UtcDateTime);
+
+        var generatedValuesPublish = new RecordingPublishEndpoint();
+        Guid generatedValuesId = await generatedValuesPublish.ScheduleJobFromValuesAsync<ApiJob>(
+            start,
+            new { Label = "generated-values" },
+            cancellation.Token);
+        SubmitJob<ApiJob> generatedValuesCommand =
+            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(generatedValuesPublish.Message);
+        Assert.Equal(generatedValuesId, generatedValuesCommand.JobId);
+        Assert.Equal("generated-values", generatedValuesCommand.Job.Label);
+
+        var explicitValuesPublish = new RecordingPublishEndpoint();
+        Guid explicitValuesId = NewId.NextGuid();
+        Assert.Equal(explicitValuesId, await explicitValuesPublish.ScheduleJobFromValuesAsync<ApiJob>(
+            explicitValuesId,
+            start,
+            new { Label = "explicit-values" },
+            cancellation.Token));
+        Assert.Equal(
+            "explicit-values",
+            Assert.IsAssignableFrom<SubmitJob<ApiJob>>(explicitValuesPublish.Message).Job.Label);
+
+        var explicitTypedRequest = new RecordingSubmitJobClient<ApiJob>();
+        Guid explicitTypedId = NewId.NextGuid();
+        Assert.Equal(explicitTypedId, await explicitTypedRequest.ScheduleJobAsync(
+            explicitTypedId,
+            start,
+            new ApiJob { Label = "explicit-request" },
+            cancellation.Token));
+        Assert.Equal(explicitTypedId, explicitTypedRequest.Request?.JobId);
+
+        var generatedValuesRequest = new RecordingSubmitJobClient<ApiJob>();
+        Guid generatedValuesRequestId = await generatedValuesRequest.ScheduleJobFromValuesAsync<ApiJob>(
+            start,
+            new { Label = "generated-values-request" },
+            cancellation.Token);
+        Assert.Equal(generatedValuesRequestId, generatedValuesRequest.Request?.JobId);
+        Assert.Equal("generated-values-request", generatedValuesRequest.Request?.Job.Label);
+        Assert.Equal(cancellation.Token, generatedTypedPublish.CancellationToken);
+        Assert.Equal(cancellation.Token, generatedValuesPublish.CancellationToken);
+        Assert.Equal(cancellation.Token, explicitValuesPublish.CancellationToken);
+        Assert.Equal(cancellation.Token, explicitTypedRequest.CancellationToken);
+        Assert.Equal(cancellation.Token, generatedValuesRequest.CancellationToken);
     }
 
     [Fact]

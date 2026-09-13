@@ -85,17 +85,24 @@ public sealed class CronExpressionCalendarTests
     }
 
     [Theory]
+    [InlineData("JAN", 1)]
+    [InlineData("FEB", 2)]
+    [InlineData("MAR", 3)]
+    [InlineData("APR", 4)]
+    [InlineData("MAY", 5)]
+    [InlineData("JUN", 6)]
+    [InlineData("JUL", 7)]
+    [InlineData("AUG", 8)]
+    [InlineData("SEP", 9)]
     [InlineData("OCT", 10)]
     [InlineData("NOV", 11)]
     [InlineData("DEC", 12)]
     [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "month-abbreviations")]
-    public void MonthAbbreviation_SelectsTheExpectedMonth(string abbreviation, int month)
+    public void MonthAbbreviation_MapsToTheExpectedCalendarField(string abbreviation, int month)
     {
-        var expression = UtcExpression($"0 0 0 1 {abbreviation} ? *");
+        var expression = new CronExpression($"0 0 0 1 {abbreviation} ? *");
 
-        Assert.Equal(
-            Utc(2024, month, 1, 0, 0),
-            expression.GetTimeAfter(Utc(2024, 7, 22, 12, 0)));
+        Assert.Equal([month], expression.GetSet(CronExpressionConstants.Month));
     }
 
     private static CronExpression UtcExpression(string text) =>

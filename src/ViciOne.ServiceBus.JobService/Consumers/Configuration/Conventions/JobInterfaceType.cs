@@ -2,13 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>A job consumer.</summary>
+/// <summary>Describes one closed job-consumer interface discovered on a consumer type.</summary>
 internal sealed class JobInterfaceType :
     IMessageInterfaceType
 {
     readonly Lazy<IMessageConnectorFactory> _consumeConnectorFactory;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a lazy connector factory for the discovered job and consumer types.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     public JobInterfaceType(Type messageType, Type consumerType)
@@ -19,11 +19,11 @@ internal sealed class JobInterfaceType :
             (Activator.CreateInstance(typeof(JobMessageConnectorFactory<,>).MakeGenericType(consumerType, messageType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated.")));
     }
 
-    /// <summary>Gets the message type.</summary>
+    /// <summary>Gets the discovered job contract type.</summary>
     public Type MessageType { get; }
 
-    /// <summary>Gets consumer connector.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Gets the connector for the requested consumer type.</summary>
+    /// <typeparam name="T">The requested consumer type.</typeparam>
     /// <returns>The consumer connector.</returns>
     public IConsumerMessageConnector<T> GetConsumerConnector<T>()
         where T : class
@@ -31,8 +31,8 @@ internal sealed class JobInterfaceType :
         return _consumeConnectorFactory.Value.CreateConsumerConnector<T>();
     }
 
-    /// <summary>Gets instance connector.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Delegates instance-connector creation, which job consumers do not support.</summary>
+    /// <typeparam name="T">The requested instance type.</typeparam>
     /// <returns>The instance connector.</returns>
     public IInstanceMessageConnector<T> GetInstanceConnector<T>()
         where T : class

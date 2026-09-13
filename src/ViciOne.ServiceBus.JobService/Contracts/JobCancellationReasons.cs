@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>Defines the canonical reason strings used when jobs are cancelled.</summary>
+/// <summary>Defines the canonical reason strings used when jobs are canceled.</summary>
 public static class JobCancellationReasons
 {
     /// <summary>Indicates that the owning service instance is shutting down.</summary>

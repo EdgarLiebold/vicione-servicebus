@@ -55,16 +55,36 @@ public sealed class JobTypeCapacityTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-JOB-METADATA", "coordinator-snapshots-replace-and-isolate-metadata")]
-    public void CopyProperties_CreatesAnIndependentCaseInsensitiveSnapshot()
+    [RequirementCoverage("REQ-VSB-JOB-CAPACITY", "allocation-equality-is-the-job-identity-contract")]
+    public void JobAllocationState_UsesOnlyJobIdentityForEqualityAndHashing()
     {
-        var source = new Dictionary<string, object> { ["Region"] = "west" };
+        Guid jobId = NewId.NextGuid();
+        var first = new JobAllocationState
+        {
+            JobId = jobId,
+            InstanceAddress = LiveInstance,
+            ExpiresAt = Now,
+        };
+        var equivalent = new JobAllocationState
+        {
+            JobId = jobId,
+            InstanceAddress = ExpiredInstance,
+            ExpiresAt = Now.AddDays(1),
+        };
+        var different = new JobAllocationState
+        {
+            JobId = NewId.NextGuid(),
+            InstanceAddress = LiveInstance,
+            ExpiresAt = Now,
+        };
 
-        Dictionary<string, object> copy = JobTypeCapacity.CopyProperties(source);
-        source["Region"] = "east";
-
-        Assert.Equal("west", copy["region"]);
-        Assert.Empty(JobTypeCapacity.CopyProperties(null));
+        Assert.True(first.Equals(first));
+        Assert.True(first.Equals(equivalent));
+        Assert.True(first.Equals((object)equivalent));
+        Assert.Equal(first.GetHashCode(), equivalent.GetHashCode());
+        Assert.False(first.Equals(different));
+        Assert.False(first.Equals((JobAllocationState?)null));
+        Assert.False(first.Equals(new object()));
     }
 
     [Fact]

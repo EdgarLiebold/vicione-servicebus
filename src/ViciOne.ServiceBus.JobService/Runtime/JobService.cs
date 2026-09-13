@@ -10,6 +10,7 @@ using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Partitioning;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.JobService;
@@ -134,9 +135,10 @@ internal sealed class JobService :
         var handleOwnsContext = false;
         try
         {
+            TimeSpan jobCancellationTimeout = jobOptions.JobCancellationTimeout;
             jobContext = new ConsumeJobContext<TJob>(context, InstanceAddress, job, jobOptions);
             var jobTask = jobPipe.SendAsync(jobContext);
-            var jobHandle = new ConsumerJobHandle<TJob>(jobContext, jobTask, jobOptions.JobCancellationTimeout);
+            var jobHandle = new ConsumerJobHandle<TJob>(jobContext, jobTask, jobCancellationTimeout);
 
             Add(jobHandle);
             handleOwnsContext = true;
@@ -282,9 +284,9 @@ internal sealed class JobService :
         }
     }
 
-    Task PublishHeartbeatsAsync(IPublishEndpoint publishEndpoint)
+    Task PublishHeartbeatsAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
     {
-        return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeatAsync(publishEndpoint, CancellationToken.None)));
+        return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeatAsync(publishEndpoint, cancellationToken)));
     }
 
     /// <inheritdoc />
@@ -363,10 +365,6 @@ internal sealed class JobService :
             {
                 await _publishing.ConfigureAwait(false);
             }
-            catch (OperationCanceledException exception) when (exception.CancellationToken == _stopping.Token)
-            {
-                // The loop ended because it was asked to.
-            }
             finally
             {
                 _stopping.Dispose();
@@ -392,7 +390,7 @@ internal sealed class JobService :
 
                 try
                 {
-                    await service.PublishHeartbeatsAsync(publishEndpoint).ConfigureAwait(false);
+                    await service.PublishHeartbeatsAsync(publishEndpoint, cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
@@ -417,12 +415,18 @@ internal sealed class JobService :
         where TJob : class
     {
         readonly Uri _instanceAddress;
-        readonly JobOptions<TJob> _options;
+        readonly int _concurrentJobLimit;
+        readonly int? _globalConcurrentJobLimit;
+        readonly IReadOnlyDictionary<string, object> _instanceProperties;
+        readonly IReadOnlyDictionary<string, object> _jobTypeProperties;
 
         public JobTypeRegistration(JobOptions<TJob> options, Uri instanceAddress, Guid jobTypeId, string jobTypeName)
         {
-            _options = options;
             _instanceAddress = instanceAddress;
+            _concurrentJobLimit = options.ConcurrentJobLimit;
+            _globalConcurrentJobLimit = options.GlobalConcurrentJobLimit;
+            _jobTypeProperties = JobPropertySnapshot.Create(options.JobTypePropertyValues);
+            _instanceProperties = JobPropertySnapshot.Create(options.InstancePropertyValues);
             JobTypeId = jobTypeId;
             JobTypeName = string.IsNullOrWhiteSpace(options.JobTypeName) ? jobTypeName : options.JobTypeName;
         }
@@ -458,11 +462,11 @@ internal sealed class JobService :
                 JobTypeId = JobTypeId,
                 JobTypeName = JobTypeName,
                 InstanceAddress = _instanceAddress,
-                ConcurrentJobLimit = _options.ConcurrentJobLimit,
+                ConcurrentJobLimit = _concurrentJobLimit,
                 UpdateKind = updateKind,
-                JobTypeProperties = _options.JobTypePropertyValues,
-                InstanceProperties = _options.InstancePropertyValues,
-                GlobalConcurrentJobLimit = _options.GlobalConcurrentJobLimit
+                JobTypeProperties = _jobTypeProperties,
+                InstanceProperties = _instanceProperties,
+                GlobalConcurrentJobLimit = _globalConcurrentJobLimit
             }, cancellationToken);
         }
     }

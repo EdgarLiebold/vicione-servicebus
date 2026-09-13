@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
@@ -14,7 +15,7 @@ public sealed class JobDistributionContext
 
         JobTypeName = source.Name ?? string.Empty;
         ConcurrentJobLimit = source.OverrideConcurrentJobLimit ?? source.ConcurrentJobLimit;
-        JobTypeProperties = new ReadOnlyDictionary<string, object>(JobTypeCapacity.CopyProperties(source.JobTypeProperties));
+        JobTypeProperties = new ReadOnlyDictionary<string, object>(JobPropertySnapshot.Create(source.JobTypeProperties));
         ActiveAllocations = Array.AsReadOnly(source.ActiveAllocations.Select(static allocation => new JobAllocationInfo(allocation)).ToArray());
         ServiceInstances = new ReadOnlyDictionary<Uri, JobServiceInstanceInfo>(source.ServiceInstances.ToDictionary(
             static pair => pair.Key,

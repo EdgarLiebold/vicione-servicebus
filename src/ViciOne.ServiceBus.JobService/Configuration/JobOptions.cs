@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -89,14 +88,14 @@ public sealed class JobOptions<TJob> :
     /// <summary>Configures the retry policy applied after a job attempt faults.</summary>
     /// <param name="configure">The callback that defines the retry intervals and exception filters.</param>
     /// <returns>This job-options instance.</returns>
-    public JobOptions<TJob> ConfigureRetry(Action<IRetryConfigurator> configure)
+    public JobOptions<TJob> ConfigureRetry(Action<IRetryPolicyConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
 
         var specification = new RetrySpecification();
         configure(specification);
 
-        specification.Validate().ThrowIfContainsFailure($"The retry policy was not properly configured: JobOptions<{TypeCache<TJob>.ShortName}");
+        specification.Validate().ThrowIfContainsFailure($"The retry policy was not properly configured: JobOptions<{TypeCache<TJob>.ShortName}>");
 
         RetryPolicy = specification.Build();
 
@@ -105,25 +104,14 @@ public sealed class JobOptions<TJob> :
 
     sealed class RetrySpecification :
         ExceptionSpecification,
-        IRetryConfigurator,
+        IRetryPolicyConfigurator,
         ISpecification
     {
-        readonly RetryObservable _observers;
         RetryPolicyFactory? _policyFactory;
-
-        public RetrySpecification()
-        {
-            _observers = new RetryObservable();
-        }
 
         public void SetRetryPolicy(RetryPolicyFactory factory)
         {
-            _policyFactory = factory;
-        }
-
-        ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
-        {
-            return _observers.Connect(observer);
+            _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         public IEnumerable<ValidationResult> Validate()
@@ -135,9 +123,14 @@ public sealed class JobOptions<TJob> :
         public IRetryPolicy Build()
         {
             if (_policyFactory == null)
-                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Retry", "unknown", $"The retry policy was not properly configured: JobOptions<{TypeCache<TJob>.ShortName}", "Correct the named configuration before starting the host"));
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Retry", "unknown", $"The retry policy was not properly configured: JobOptions<{TypeCache<TJob>.ShortName}>", "Correct the named configuration before starting the host"));
 
-            return _policyFactory(Filter);
+            return _policyFactory(Filter)
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Retry",
+                    "unknown",
+                    $"The retry policy factory returned null: JobOptions<{TypeCache<TJob>.ShortName}>",
+                    "Return a retry policy from the configured factory"));
         }
     }
 }

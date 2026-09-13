@@ -23,7 +23,7 @@ internal sealed class JobConsumerMessageFilter<TConsumer, TJob> :
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The probe node that receives the user-consumer invocation signature.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -42,12 +42,7 @@ internal sealed class JobConsumerMessageFilter<TConsumer, TJob> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
 
-        if (context.Consumer is IJobConsumer<TJob> jobConsumer)
-            return RunJobAsync(context, jobConsumer);
-
-        var message = $"Consumer type {TypeCache<TConsumer>.ShortName} is not a consumer of job type {TypeCache<TJob>.ShortName}";
-
-        throw new ConsumerMessageException(message);
+        return RunJobAsync(context, context.Consumer);
     }
 
     async Task RunJobAsync(PipeContext context, IJobConsumer<TJob> jobConsumer)

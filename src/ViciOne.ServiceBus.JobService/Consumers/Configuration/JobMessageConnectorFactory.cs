@@ -12,15 +12,15 @@ internal sealed class JobMessageConnectorFactory<TConsumer, TJob> :
 {
     readonly IConsumerMessageConnector<TConsumer> _jobConsumerConnector;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates the job connector for the configured consumer and job types.</summary>
     public JobMessageConnectorFactory()
     {
         _jobConsumerConnector = new JobConsumerMessageConnector<TConsumer, TJob>();
     }
 
-    /// <summary>Creates consumer connector.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The created consumer connector.</returns>
+    /// <summary>Returns the connector when the requested consumer type matches this factory.</summary>
+    /// <typeparam name="T">The requested consumer type.</typeparam>
+    /// <returns>The typed job-consumer connector.</returns>
     public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
         where T : class
     {

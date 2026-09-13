@@ -8,7 +8,7 @@ public sealed class JobTypeSaga :
     SagaStateMachineInstance,
     ISagaVersion
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates empty persisted collections and a single-slot per-instance concurrency default.</summary>
     public JobTypeSaga()
     {
         ConcurrentJobLimit = 1;

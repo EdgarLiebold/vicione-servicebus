@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.JobService;
 internal sealed class JobAttemptStateMachine :
     ViciOneServiceBusStateMachine<JobAttemptSaga>
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Defines attempt startup, liveness supervision, cancellation, and finalization behavior.</summary>
     public JobAttemptStateMachine()
     {
         Event(() => StartJobAttempt, x =>

@@ -23,14 +23,13 @@ internal sealed class ConsumeJobContext<TJob> :
 {
     readonly ConsumeContext<StartJob> _context;
     readonly Uri _instanceAddress;
-    readonly JobOptions<TJob> _jobOptions;
+    readonly Lazy<JobProgressBuffer> _progressBuffer;
     readonly CancellationTokenSource _source;
     readonly long _startedAt;
     readonly TimeProvider _timeProvider;
     string? _cancellationReason;
     IReadOnlyDictionary<string, object>? _checkpoint;
     bool _checkpointChanged;
-    JobProgressBuffer? _updateBuffer;
 
     /// <summary>Creates an execution context for one admitted job attempt.</summary>
     /// <param name="context">The start command and transport context.</param>
@@ -46,7 +45,6 @@ internal sealed class ConsumeJobContext<TJob> :
 
         _context = context;
         _instanceAddress = instanceAddress;
-        _jobOptions = jobOptions;
 
         JobId = context.Message.JobId;
         AttemptId = context.Message.AttemptId;
@@ -57,18 +55,21 @@ internal sealed class ConsumeJobContext<TJob> :
         LastProgressValue = context.Message.LastProgressValue;
         LastProgressLimit = context.Message.LastProgressLimit;
 
-        var jobProperties = new JobPropertyCollection();
-        if (context.Message.JobProperties is not null)
-        {
-            foreach (KeyValuePair<string, object> property in context.Message.JobProperties)
-                jobProperties.Set(property.Key, property.Value);
-        }
-
-        JobProperties = jobProperties;
+        JobProperties = new ReadOnlyJobPropertyCollection(context.Message.JobProperties);
+        JobTypeProperties = new ReadOnlyJobPropertyCollection(jobOptions.JobTypePropertyValues);
+        InstanceProperties = new ReadOnlyJobPropertyCollection(jobOptions.InstancePropertyValues);
 
         _timeProvider = context.GetTimeProvider();
         _source = new CancellationTokenSource(jobOptions.JobTimeout, _timeProvider);
         _startedAt = _timeProvider.GetTimestamp();
+        var progressBufferOptions = new JobProgressBufferOptions
+        {
+            TimeLimit = jobOptions.ProgressBuffer.TimeLimit,
+            UpdateLimit = jobOptions.ProgressBuffer.UpdateLimit,
+        };
+        _progressBuffer = new Lazy<JobProgressBuffer>(
+            () => new JobProgressBuffer(this, _timeProvider, progressBufferOptions),
+            LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     /// <summary>Gets the token canceled by the job timeout or an explicit attempt cancellation.</summary>
@@ -104,8 +105,8 @@ internal sealed class ConsumeJobContext<TJob> :
     {
         try
         {
-            if (_updateBuffer != null)
-                await _updateBuffer.FlushAsync().ConfigureAwait(false);
+            if (_progressBuffer.IsValueCreated)
+                await _progressBuffer.Value.FlushAsync().ConfigureAwait(false);
         }
         finally
         {
@@ -120,8 +121,8 @@ internal sealed class ConsumeJobContext<TJob> :
     {
         LogContext.Debug?.Log("Job Canceled: {JobId} {AttemptId} ({RetryAttempt}) {Reason}", JobId, AttemptId, RetryAttempt, _cancellationReason);
 
-        if (_updateBuffer != null)
-            await _updateBuffer.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (_progressBuffer.IsValueCreated)
+            await _progressBuffer.Value.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await NotifyAsync<JobAttemptCanceled>(new JobAttemptCanceledEvent
         {
@@ -136,7 +137,7 @@ internal sealed class ConsumeJobContext<TJob> :
 
     /// <summary>Publishes attempt and typed job-started events before consumer execution begins.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after both start notifications have been sent.</returns>
     public async Task NotifyStartedAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Started: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
@@ -166,13 +167,13 @@ internal sealed class ConsumeJobContext<TJob> :
 
     /// <summary>Flushes pending progress updates and publishes successful attempt completion.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after buffered progress and the completion event have been sent.</returns>
     public async Task NotifyCompletedAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Completed: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
 
-        if (_updateBuffer != null)
-            await _updateBuffer.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (_progressBuffer.IsValueCreated)
+            await _progressBuffer.Value.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await NotifyAsync<JobAttemptCompleted>(new JobAttemptCompletedEvent
         {
@@ -181,8 +182,8 @@ internal sealed class ConsumeJobContext<TJob> :
             RetryAttempt = RetryAttempt,
             Timestamp = UtcNow,
             Duration = ElapsedTime,
-            InstanceProperties = _jobOptions.InstancePropertyValues,
-            JobTypeProperties = _jobOptions.JobTypePropertyValues,
+            InstanceProperties = InstanceProperties,
+            JobTypeProperties = JobTypeProperties,
             CheckpointChanged = _checkpointChanged,
             Checkpoint = _checkpoint
         }, cancellationToken).ConfigureAwait(false);
@@ -209,8 +210,8 @@ internal sealed class ConsumeJobContext<TJob> :
 
         LogContext.Debug?.Log(exception, "Job Faulted: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
 
-        if (_updateBuffer != null)
-            await _updateBuffer.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (_progressBuffer.IsValueCreated)
+            await _progressBuffer.Value.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await NotifyAsync<JobAttemptFaulted>(new JobAttemptFaultedEvent
         {
@@ -248,9 +249,9 @@ internal sealed class ConsumeJobContext<TJob> :
     /// <returns>A task that completes when the progress value has entered the buffer.</returns>
     public Task ReportProgressAsync(long value, long? limit = null, CancellationToken cancellationToken = default)
     {
-        _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
-
-        return _updateBuffer.UpdateAsync(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), cancellationToken);
+        return _progressBuffer.Value.UpdateAsync(
+            new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit),
+            cancellationToken);
     }
 
     /// <summary>Publishes a durable checkpoint for recovery by a later attempt.</summary>
@@ -292,9 +293,9 @@ internal sealed class ConsumeJobContext<TJob> :
     /// <summary>Gets metadata supplied with the current job.</summary>
     public IPropertyCollection JobProperties { get; }
     /// <summary>Gets metadata shared by all consumers of this job type.</summary>
-    public IPropertyCollection JobTypeProperties => _jobOptions.JobTypeProperties;
+    public IPropertyCollection JobTypeProperties { get; }
     /// <summary>Gets metadata of the service instance executing this attempt.</summary>
-    public IPropertyCollection InstanceProperties => _jobOptions.InstanceProperties;
+    public IPropertyCollection InstanceProperties { get; }
 
     DateTimeOffset UtcNow => _timeProvider.GetUtcNow();
 

@@ -34,6 +34,28 @@ public sealed class JobServiceContractArchitectureTests
         Assert.Empty(exposedRepresentations);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-CONTRACT-BOUNDARY", "configurator-implementation-is-not-public")]
+    public void JobServiceConfiguratorImplementation_IsNotPartOfThePublicApi()
+    {
+        Type[] exportedTypes = typeof(JobOptions<>).Assembly.GetExportedTypes();
+
+        Assert.DoesNotContain(exportedTypes,
+            type => type.IsGenericTypeDefinition && type.Name == "JobServiceConfigurator`1");
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-CONTRACT-BOUNDARY", "retry-api-exposes-only-effective-policy-configuration")]
+    public void RetryConfiguration_DoesNotAdvertiseDisconnectedObservers()
+    {
+        MethodInfo method = Assert.Single(typeof(JobOptions<>).GetMethods(),
+            candidate => candidate.Name == nameof(JobOptions<object>.ConfigureRetry));
+        ParameterInfo parameter = Assert.Single(method.GetParameters());
+
+        Assert.Equal(typeof(Action<IRetryPolicyConfigurator>), parameter.ParameterType);
+        Assert.False(typeof(IRetryObserverConnector).IsAssignableFrom(typeof(IRetryPolicyConfigurator)));
+    }
+
     static bool IsMutableDictionary(Type type) =>
         type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>);
 }

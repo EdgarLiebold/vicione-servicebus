@@ -177,6 +177,56 @@ public sealed class CronExpressionParsingTests
         Assert.Equal(expected, new CronExpression(text).GetSet(fieldIndex));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-PARSING", "named-month-step")]
+    public void NamedMonthStep_StartsAtTheDeclaredMonth()
+    {
+        var expression = new CronExpression("0 5 21 ? JAN/2 FRI");
+
+        Assert.Equal([1, 3, 5, 7, 9, 11], expression.GetSet(CronExpressionConstants.Month));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "named-last-weekday")]
+    public void NamedLastWeekday_SelectsOnlyTheLastNamedWeekdayOfTheMonth()
+    {
+        var expression = UtcExpression("0 15 10 ? * FRIL 2010");
+
+        Assert.False(expression.IsSatisfiedBy(Utc(2010, 10, 22, 10, 15)));
+        Assert.True(expression.IsSatisfiedBy(Utc(2010, 10, 29, 10, 15)));
+    }
+
+    public static TheoryData<string, string> InvalidNamedFieldCases => new()
+    {
+        { "0 0 8 ? XYZ MON", "Invalid Month value: 'XYZ'" },
+        { "0 0 8 ? JAN-FE MON", "Incomplete named cron range: 'JAN-FE'." },
+        { "0 0 8 ? JAN-XYZ MON", "Invalid Month value: 'XYZ'" },
+        { "0 0 8 ? JANX MON", "Unexpected character 'X'." },
+        { "0 0 8 ? JAN-MARX MON", "Unexpected character 'X'." },
+        { "0 0 8 ? JAN XYZ", "Invalid Day-of-Week value: 'XYZ'" },
+        { "0 0 8 ? JAN MON-FR", "Incomplete named cron range: 'MON-FR'." },
+        { "0 0 8 ? JAN MON-XYZ", "Invalid Day-of-Week value: 'XYZ'" },
+        { "0 0 8 ? JAN MON-FRIX", "Unexpected character 'X'." },
+        { "0 0 8 ? JAN MON#0", "A numeric value between 1 and 5 must follow the '#' option" },
+        { "0 0 8 ? JAN MON#6", "A numeric value between 1 and 5 must follow the '#' option" },
+        { "0 0 8 ? JAN MON#X", "A numeric value between 1 and 5 must follow the '#' option" },
+        { "0 0 8 ? JAN MON/0", "A numeric value between 1 and 5 must follow the '/' option" },
+        { "0 0 8 ? JAN MON/6", "A numeric value between 1 and 5 must follow the '/' option" },
+        { "0 0 8 ? JAN MON/X", "A numeric value between 1 and 5 must follow the '/' option" },
+        { "0 0 8 ? JAN FRILX", "Unexpected character 'X'." },
+        { "JAN 0 8 ? * MON", "Illegal characters for this position: 'JAN'" },
+    };
+
+    [Theory]
+    [MemberData(nameof(InvalidNamedFieldCases))]
+    [RequirementCoverage("REQ-VSB-CRON-VALIDATION", "named-field-syntax")]
+    public void InvalidNamedField_IsRejectedWithItsExactReason(string text, string expectedMessage)
+    {
+        var exception = Assert.Throws<FormatException>(() => new CronExpression(text));
+
+        Assert.Equal(expectedMessage, exception.Message);
+    }
+
     public static TheoryData<string, string> InvalidIncrementCases => new()
     {
         { "0/0 0 8 ? * 2-6", "Increment must be greater than zero: 0" },
