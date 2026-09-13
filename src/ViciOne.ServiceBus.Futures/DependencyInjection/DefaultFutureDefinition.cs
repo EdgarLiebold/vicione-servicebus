@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Futures.DependencyInjection;
 /// <typeparam name="TFuture">The future state-machine type.</typeparam>
 internal sealed class DefaultFutureDefinition<TFuture> :
     FutureDefinition<TFuture>
-    where TFuture : class, SagaStateMachine<FutureState>
+    where TFuture : class, ISagaStateMachine<FutureState>
 {
     /// <summary>Applies the standard delayed-redelivery, retry, and volatile-outbox policies.</summary>
     /// <param name="endpointConfigurator">The future's receive endpoint.</param>

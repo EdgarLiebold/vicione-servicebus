@@ -31,7 +31,7 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
     /// <param name="asyncMethod">The async method.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the execute outcome.</returns>
-    public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T?> ExecuteAsync<T>(Func<ILoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         return ExecuteAsyncMethodAsync(asyncMethod, cancellationToken);
@@ -42,7 +42,7 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
     /// <param name="asyncMethod">The async method.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the execute outcome.</returns>
-    public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+    public Task<T> ExecuteAsync<T>(Func<IQuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
         where T : class
     {
         return ExecuteAsyncMethodAsync(asyncMethod, cancellationToken);
@@ -61,7 +61,7 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         await _sagas.MarkInUseAsync(context.CancellationToken).ConfigureAwait(false);
@@ -77,7 +77,7 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
     /// <param name="query">The query.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         await _sagas.MarkInUseAsync(context.CancellationToken).ConfigureAwait(false);

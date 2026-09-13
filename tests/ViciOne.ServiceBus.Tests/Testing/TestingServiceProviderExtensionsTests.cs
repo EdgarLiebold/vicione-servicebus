@@ -166,7 +166,7 @@ public sealed class TestingServiceProviderExtensionsTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record PublishedMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record PublishedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     private sealed class PendingEndpointHandle : IHostReceiveEndpointHandle
     {

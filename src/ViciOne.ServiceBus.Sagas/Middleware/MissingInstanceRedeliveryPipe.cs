@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Middleware;
 
 internal sealed class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
     IPipe<ConsumeContext<TMessage>>
-    where TSaga : SagaStateMachineInstance
+    where TSaga : ISagaStateMachineInstance
     where TMessage : class
 {
     readonly IPipe<ConsumeContext<TMessage>> _finalPipe;

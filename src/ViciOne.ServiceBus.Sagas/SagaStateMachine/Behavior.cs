@@ -10,7 +10,7 @@ public static class Behavior
     /// <typeparam name="TSaga">The context type.</typeparam>
     /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga> Empty<TSaga>()
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
     {
         return Cached<TSaga>.EmptyBehavior;
     }
@@ -20,7 +20,7 @@ public static class Behavior
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga, TMessage> Empty<TSaga, TMessage>()
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return Cached<TSaga, TMessage>.EmptyBehavior;
@@ -30,7 +30,7 @@ public static class Behavior
     /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
     /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga> Faulted<TSaga>()
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
     {
         return Cached<TSaga>.FaultedBehavior;
     }
@@ -40,7 +40,7 @@ public static class Behavior
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga, TMessage> Faulted<TSaga, TMessage>()
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return Cached<TSaga, TMessage>.FaultedBehavior;
@@ -48,7 +48,7 @@ public static class Behavior
 
 
     static class Cached<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
     {
         internal static readonly IBehavior<TSaga> EmptyBehavior = new EmptyBehavior<TSaga>();
         internal static readonly IBehavior<TSaga> FaultedBehavior = new FaultedBehavior<TSaga>();
@@ -56,7 +56,7 @@ public static class Behavior
 
 
     static class Cached<TSaga, TMessage>
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
         internal static readonly IBehavior<TSaga, TMessage> EmptyBehavior = new EmptyBehavior<TSaga, TMessage>();

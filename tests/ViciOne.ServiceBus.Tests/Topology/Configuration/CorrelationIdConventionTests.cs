@@ -198,7 +198,7 @@ public sealed class CorrelationIdConventionTests
         };
     }
 
-    private sealed record CorrelatedMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record CorrelatedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     private sealed record CorrelationEventCommandMessage(Guid CorrelationId, Guid EventId, Guid CommandId);
 

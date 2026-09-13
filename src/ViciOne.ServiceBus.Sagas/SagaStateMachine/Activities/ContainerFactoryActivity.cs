@@ -9,11 +9,11 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 public class ContainerFactoryActivity<TSaga, TActivity> :
     IStateMachineActivity<TSaga>
     where TActivity : class, IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -22,7 +22,7 @@ public class ContainerFactoryActivity<TSaga, TActivity> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         var activity = context.GetServiceOrCreateInstance<TActivity>();
 
@@ -34,7 +34,7 @@ public class ContainerFactoryActivity<TSaga, TActivity> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         var activity = context.GetServiceOrCreateInstance<TActivity>();
@@ -47,7 +47,7 @@ public class ContainerFactoryActivity<TSaga, TActivity> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         var activity = context.GetServiceOrCreateInstance<TActivity>();
@@ -61,7 +61,7 @@ public class ContainerFactoryActivity<TSaga, TActivity> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
@@ -86,7 +86,7 @@ public class ContainerFactoryActivity<TSaga, TActivity> :
 public class ContainerFactoryActivity<TSaga, TMessage, TActivity> :
     IStateMachineActivity<TSaga, TMessage>
     where TActivity : class, IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     void IProbeSite.Probe(ProbeContext context)
@@ -98,7 +98,7 @@ public class ContainerFactoryActivity<TSaga, TMessage, TActivity> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         var activity = context.GetServiceOrCreateInstance<TActivity>();
 
@@ -110,7 +110,7 @@ public class ContainerFactoryActivity<TSaga, TMessage, TActivity> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         var activity = context.GetServiceOrCreateInstance<TActivity>();
@@ -120,7 +120,7 @@ public class ContainerFactoryActivity<TSaga, TMessage, TActivity> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }

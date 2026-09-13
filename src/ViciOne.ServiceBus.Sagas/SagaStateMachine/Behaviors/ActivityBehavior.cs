@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class ActivityBehavior<TSaga> :
     IBehavior<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     readonly IStateMachineActivity<TSaga> _activity;
     readonly IBehavior<TSaga> _next;
@@ -23,7 +23,7 @@ internal sealed class ActivityBehavior<TSaga> :
 
     /// <summary>Visits this behavior and its complete activity chain.</summary>
     /// <param name="visitor">The state-machine visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this, x =>
@@ -45,7 +45,7 @@ internal sealed class ActivityBehavior<TSaga> :
     /// <summary>Executes the activity chain and routes non-cancellation failures through its fault chain.</summary>
     /// <param name="context">The saga behavior context.</param>
     /// <returns>A task that completes after execution or fault handling.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga> context)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         context.CancellationToken.ThrowIfCancellationRequested();
@@ -68,7 +68,7 @@ internal sealed class ActivityBehavior<TSaga> :
     /// <typeparam name="T">The event data type.</typeparam>
     /// <param name="context">The saga and event data.</param>
     /// <returns>A task that completes after execution or fault handling.</returns>
-    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+    public async Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -94,7 +94,7 @@ internal sealed class ActivityBehavior<TSaga> :
     /// <typeparam name="TException">The exception type.</typeparam>
     /// <param name="context">The faulted saga and event data.</param>
     /// <returns>A task that completes after fault handling.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context)
         where T : class
         where TException : Exception
     {
@@ -108,7 +108,7 @@ internal sealed class ActivityBehavior<TSaga> :
     /// <typeparam name="TException">The exception type.</typeparam>
     /// <param name="context">The faulted saga behavior context.</param>
     /// <returns>A task that completes after fault handling.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
         ArgumentNullException.ThrowIfNull(context);

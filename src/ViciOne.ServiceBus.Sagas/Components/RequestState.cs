@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Components;
 
 /// <summary>Carries state for request.</summary>
 public class RequestState :
-    SagaStateMachineInstance,
+    ISagaStateMachineInstance,
     ISagaVersion
 {
     /// <summary>Gets or sets the current state.</summary>

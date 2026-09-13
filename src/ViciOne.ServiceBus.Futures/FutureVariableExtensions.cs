@@ -15,7 +15,7 @@ public static class FutureVariableExtensions
     /// <param name="factory">The asynchronous value factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created value.</returns>
-    public static async Task<TValue> SetVariableAsync<T, TValue>(this BehaviorContext<FutureState, T> context, string key,
+    public static async Task<TValue> SetVariableAsync<T, TValue>(this IBehaviorContext<FutureState, T> context, string key,
         AsyncEventMessageFactory<FutureState, T, TValue> factory, CancellationToken cancellationToken = default)
         where T : class
         where TValue : class
@@ -39,7 +39,7 @@ public static class FutureVariableExtensions
     /// <param name="factory">The asynchronous value factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created value.</returns>
-    public static async Task<TValue> SetVariableAsync<TValue>(this BehaviorContext<FutureState> context, string key,
+    public static async Task<TValue> SetVariableAsync<TValue>(this IBehaviorContext<FutureState> context, string key,
         AsyncEventMessageFactory<FutureState, TValue> factory, CancellationToken cancellationToken = default)
         where TValue : class
     {
@@ -62,7 +62,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="factory">The synchronous value factory.</param>
     /// <returns>The created value.</returns>
-    public static TValue SetVariable<T, TValue>(this BehaviorContext<FutureState, T> context, string key,
+    public static TValue SetVariable<T, TValue>(this IBehaviorContext<FutureState, T> context, string key,
         EventMessageFactory<FutureState, T, TValue> factory)
         where T : class
         where TValue : class
@@ -84,7 +84,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="factory">The synchronous value factory.</param>
     /// <returns>The created value.</returns>
-    public static TValue SetVariable<TValue>(this BehaviorContext<FutureState> context, string key, EventMessageFactory<FutureState, TValue> factory)
+    public static TValue SetVariable<TValue>(this IBehaviorContext<FutureState> context, string key, EventMessageFactory<FutureState, TValue> factory)
         where TValue : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -105,7 +105,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="valueFactory">The synchronous value factory.</param>
     /// <returns>The same binder with the storage activity appended.</returns>
-    public static EventActivityBinder<FutureState, TData> SetVariable<TData, TValue>(this EventActivityBinder<FutureState, TData> binder, string key,
+    public static IEventActivityBinder<FutureState, TData> SetVariable<TData, TValue>(this IEventActivityBinder<FutureState, TData> binder, string key,
         EventMessageFactory<FutureState, TData, TValue> valueFactory)
         where TData : class
         where TValue : class
@@ -122,7 +122,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="valueFactory">The synchronous value factory.</param>
     /// <returns>The same binder with the storage activity appended.</returns>
-    public static EventActivityBinder<FutureState> SetVariable<TValue>(this EventActivityBinder<FutureState> binder, string key,
+    public static IEventActivityBinder<FutureState> SetVariable<TValue>(this IEventActivityBinder<FutureState> binder, string key,
         EventMessageFactory<FutureState, TValue> valueFactory)
         where TValue : class
     {
@@ -139,7 +139,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="valueFactory">The asynchronous value factory.</param>
     /// <returns>The same binder with the storage activity appended.</returns>
-    public static EventActivityBinder<FutureState, TData> SetVariableAwaited<TData, TValue>(this EventActivityBinder<FutureState, TData> binder, string key,
+    public static IEventActivityBinder<FutureState, TData> SetVariableAwaited<TData, TValue>(this IEventActivityBinder<FutureState, TData> binder, string key,
         AsyncEventMessageFactory<FutureState, TData, TValue> valueFactory)
         where TData : class
         where TValue : class
@@ -156,7 +156,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="valueFactory">The asynchronous value factory.</param>
     /// <returns>The same binder with the storage activity appended.</returns>
-    public static EventActivityBinder<FutureState> SetVariableAwaited<TValue>(this EventActivityBinder<FutureState> binder, string key,
+    public static IEventActivityBinder<FutureState> SetVariableAwaited<TValue>(this IEventActivityBinder<FutureState> binder, string key,
         AsyncEventMessageFactory<FutureState, TValue> valueFactory)
         where TValue : class
     {
@@ -171,7 +171,7 @@ public static class FutureVariableExtensions
     /// <param name="context">The future state context that receives the value.</param>
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="value">The value to store.</param>
-    public static void SetVariable<TValue>(this BehaviorContext<FutureState> context, string key, TValue value)
+    public static void SetVariable<TValue>(this IBehaviorContext<FutureState> context, string key, TValue value)
         where TValue : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -186,7 +186,7 @@ public static class FutureVariableExtensions
     /// <param name="key">The nonempty variable name.</param>
     /// <param name="result">Receives the converted value when found.</param>
     /// <returns><see langword="true" /> when the value exists and can be converted; otherwise, <see langword="false" />.</returns>
-    public static bool TryGetVariable<T>(this BehaviorContext<FutureState> context, string key, [NotNullWhen(true)] out T? result)
+    public static bool TryGetVariable<T>(this IBehaviorContext<FutureState> context, string key, [NotNullWhen(true)] out T? result)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);

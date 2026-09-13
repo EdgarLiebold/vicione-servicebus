@@ -269,13 +269,13 @@ public sealed class MediatorSendObserverTests
         SendContext Context,
         Exception? Exception);
 
-    private sealed record OneWayMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record OneWayMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record MediatorRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record MediatorRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record MediatorResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record MediatorResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record FaultingMediatorMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FaultingMediatorMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class FaultingSerializationMessage(Exception exception)
     {

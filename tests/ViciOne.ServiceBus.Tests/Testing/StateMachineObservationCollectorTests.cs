@@ -21,7 +21,7 @@ public sealed class StateMachineObservationCollectorTests
             TestContext.Current.CancellationToken);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<CollectorState, CollectorSignal>(consumeContext, sagaInstance);
-        BehaviorContext<CollectorState> context =
+        IBehaviorContext<CollectorState> context =
             new ViciOneServiceBusStateMachine<CollectorState>.BehaviorContextProxy(machine, sagaContext, machine.Initial.Enter);
         var collector = new StateMachineObservationCollector<CollectorState>(TestContextSaveMode.All, 8);
         var expected = new InvalidOperationException("untyped event failed");
@@ -56,7 +56,7 @@ public sealed class StateMachineObservationCollectorTests
 
     private sealed record CollectorSignal;
 
-    private sealed class CollectorState : SagaStateMachineInstance
+    private sealed class CollectorState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 

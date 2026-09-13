@@ -205,9 +205,9 @@ public sealed class ContainerConsumeContextTests
         DirectWithoutRegistrationContext,
     }
 
-    public sealed record ContextCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ContextCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record DeferredSideEffect(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record DeferredSideEffect(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ContextSnapshot(
         Guid CorrelationId,

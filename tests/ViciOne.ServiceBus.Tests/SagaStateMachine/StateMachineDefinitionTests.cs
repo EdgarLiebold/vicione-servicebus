@@ -18,7 +18,7 @@ public sealed class StateMachineDefinitionTests
 
         await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
-        Assert.Equal(typeof(DefinitionInstance), ((StateMachine)scenario.Machine).InstanceType);
+        Assert.Equal(typeof(DefinitionInstance), ((IStateMachine)scenario.Machine).InstanceType);
         Assert.Equal(
             ["Final", "Initial", "Loved", "Pissed", "Running"],
             scenario.Machine.States.Select(state => state.Name).Order().ToArray());
@@ -83,13 +83,13 @@ public sealed class StateMachineDefinitionTests
                 declarativeMachine.Ignored);
         }
 
-        State running = null!;
-        State loved = null!;
-        State pissed = null!;
-        Event start = null!;
-        Event finish = null!;
-        Event<HandshakeData> handshake = null!;
-        Event<IgnoredData> ignored = null!;
+        IState running = null!;
+        IState loved = null!;
+        IState pissed = null!;
+        IEvent start = null!;
+        IEvent finish = null!;
+        IEvent<HandshakeData> handshake = null!;
+        IEvent<IgnoredData> ignored = null!;
         ViciOneServiceBusStateMachine<DefinitionInstance> machine = ViciOneServiceBusStateMachine<DefinitionInstance>.New(builder => builder
             .State("Running", out running)
             .State("Loved", out loved)
@@ -125,8 +125,8 @@ public sealed class StateMachineDefinitionTests
                 declarativeBottomMachine.Start);
         }
 
-        State topRunning = null!;
-        Event topStart = null!;
+        IState topRunning = null!;
+        IEvent topStart = null!;
         ViciOneServiceBusStateMachine<IndependentStateInstance> topMachine =
             ViciOneServiceBusStateMachine<IndependentStateInstance>.New(builder => builder
                 .State("TopRunning", out topRunning)
@@ -135,8 +135,8 @@ public sealed class StateMachineDefinitionTests
                 .Initially()
                 .When(topStart, behavior => behavior.TransitionTo(topRunning)));
 
-        State bottomRunning = null!;
-        Event bottomStart = null!;
+        IState bottomRunning = null!;
+        IEvent bottomStart = null!;
         ViciOneServiceBusStateMachine<IndependentStateInstance> bottomMachine =
             ViciOneServiceBusStateMachine<IndependentStateInstance>.New(builder => builder
                 .State("BottomRunning", out bottomRunning)
@@ -150,40 +150,40 @@ public sealed class StateMachineDefinitionTests
 
     private sealed record DefinitionScenario(
         ViciOneServiceBusStateMachine<DefinitionInstance> Machine,
-        State Running,
-        State Loved,
-        State Pissed,
-        Event Start,
-        Event Finish,
-        Event<HandshakeData> Handshake,
-        Event<IgnoredData> Ignored);
+        IState Running,
+        IState Loved,
+        IState Pissed,
+        IEvent Start,
+        IEvent Finish,
+        IEvent<HandshakeData> Handshake,
+        IEvent<IgnoredData> Ignored);
 
     private sealed record IndependentStateScenario(
         ViciOneServiceBusStateMachine<IndependentStateInstance> TopMachine,
-        State TopRunning,
-        Event TopStart,
+        IState TopRunning,
+        IEvent TopStart,
         ViciOneServiceBusStateMachine<IndependentStateInstance> BottomMachine,
-        State BottomRunning,
-        Event BottomStart);
+        IState BottomRunning,
+        IEvent BottomStart);
 
     public sealed record HandshakeData;
 
     public sealed record IgnoredData;
 
-    private sealed class DefinitionInstance : SagaStateMachineInstance
+    private sealed class DefinitionInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
     }
 
-    private sealed class IndependentStateInstance : SagaStateMachineInstance
+    private sealed class IndependentStateInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? TopState { get; set; }
+        public IState? TopState { get; set; }
 
-        public State? BottomState { get; set; }
+        public IState? BottomState { get; set; }
     }
 
     private sealed class DeclarativeDefinitionMachine : ViciOneServiceBusStateMachine<DefinitionInstance>
@@ -196,19 +196,19 @@ public sealed class StateMachineDefinitionTests
             DuringAny(When(Finish).Finalize());
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State Loved { get; private set; } = null!;
+        public IState Loved { get; private set; } = null!;
 
-        public State Pissed { get; private set; } = null!;
+        public IState Pissed { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
 
-        public Event Finish { get; private set; } = null!;
+        public IEvent Finish { get; private set; } = null!;
 
-        public Event<HandshakeData> Handshake { get; private set; } = null!;
+        public IEvent<HandshakeData> Handshake { get; private set; } = null!;
 
-        public Event<IgnoredData> Ignored { get; private set; } = null!;
+        public IEvent<IgnoredData> Ignored { get; private set; } = null!;
     }
 
     private sealed class DeclarativeTopMachine : ViciOneServiceBusStateMachine<IndependentStateInstance>
@@ -219,9 +219,9 @@ public sealed class StateMachineDefinitionTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     private sealed class DeclarativeBottomMachine : ViciOneServiceBusStateMachine<IndependentStateInstance>
@@ -232,8 +232,8 @@ public sealed class StateMachineDefinitionTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 }

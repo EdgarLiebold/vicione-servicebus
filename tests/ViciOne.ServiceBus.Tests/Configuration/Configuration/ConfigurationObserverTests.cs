@@ -186,11 +186,11 @@ public sealed class ConfigurationObserverTests
 
     public sealed record HandlerMessage;
 
-    public sealed record SagaStarted(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SagaStarted(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record SagaContinued(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SagaContinued(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class ObservedSaga : ISaga, InitiatedBy<SagaStarted>, Orchestrates<SagaContinued>
+    public sealed class ObservedSaga : ISaga, IInitiatedBy<SagaStarted>, IOrchestrates<SagaContinued>
     {
         public ObservedSaga(Guid correlationId)
         {

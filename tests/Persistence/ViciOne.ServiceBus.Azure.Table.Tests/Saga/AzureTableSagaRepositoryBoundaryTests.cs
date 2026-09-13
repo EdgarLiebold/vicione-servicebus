@@ -374,8 +374,8 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             new BoundaryMessage(),
             CancellationToken.None);
         var query = new SagaQuery<BoundarySaga>(_ => true);
-        IPipe<SagaRepositoryQueryContext<BoundarySaga, BoundaryMessage>> queryPipe =
-            DispatchProxy.Create<IPipe<SagaRepositoryQueryContext<BoundarySaga, BoundaryMessage>>, UnsupportedInvocationProxy>();
+        IPipe<ISagaRepositoryQueryContext<BoundarySaga, BoundaryMessage>> queryPipe =
+            DispatchProxy.Create<IPipe<ISagaRepositoryQueryContext<BoundarySaga, BoundaryMessage>>, UnsupportedInvocationProxy>();
 
         Assert.Equal("asyncMethod", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
             factory.ExecuteAsync<BoundarySaga>(null!, TestContext.Current.CancellationToken))).ParamName);

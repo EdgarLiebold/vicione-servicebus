@@ -6,21 +6,21 @@ using ViciOne.ServiceBus.Initializers;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Forwards behavior context operations to an underlying context.</summary>
     public class BehaviorContextProxy :
         ConsumeContextProxy,
-        BehaviorContext<TInstance>
+        IBehaviorContext<TInstance>
     {
         readonly SagaConsumeContext<TInstance> _context;
-        readonly Event _event;
+        readonly IEvent _event;
 
         /// <summary>Initializes a new instance.</summary>
         /// <param name="machine">The machine.</param>
         /// <param name="context">The context associated with the operation.</param>
         /// <param name="event">The event.</param>
-        public BehaviorContextProxy(StateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, Event @event)
+        public BehaviorContextProxy(IStateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, IEvent @event)
             : base(context)
         {
             StateMachine = machine;
@@ -29,7 +29,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         /// <summary>Gets the state machine.</summary>
-        public StateMachine<TInstance> StateMachine { get; }
+        public IStateMachine<TInstance> StateMachine { get; }
 
         /// <summary>Gets the correlation id.</summary>
         public override Guid? CorrelationId => Saga.CorrelationId;
@@ -52,7 +52,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The event.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task RaiseAsync(Event @event, CancellationToken cancellationToken = default)
+        public Task RaiseAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
             return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
@@ -63,18 +63,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="data">The data.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task RaiseAsync<T>(Event<T> @event, T data, CancellationToken cancellationToken = default)
+        public Task RaiseAsync<T>(IEvent<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
             return StateMachine.RaiseEventAsync(CreateProxy(@event, data), cancellationToken: cancellationToken);
         }
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> BehaviorContext<TInstance>.InitAsync<T>(object values, CancellationToken cancellationToken)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> IBehaviorContext<TInstance>.InitAsync<T>(object values, CancellationToken cancellationToken)
         {
             return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
-        Event BehaviorContext<TInstance>.Event => _event;
+        IEvent IBehaviorContext<TInstance>.Event => _event;
 
         /// <summary>Gets the instance.</summary>
         public TInstance Instance => _context.Saga;
@@ -82,7 +82,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <summary>Creates proxy.</summary>
         /// <param name="event">The event.</param>
         /// <returns>The created proxy.</returns>
-        public BehaviorContext<TInstance> CreateProxy(Event @event)
+        public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
@@ -92,7 +92,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The event.</param>
         /// <param name="data">The data.</param>
         /// <returns>The created proxy.</returns>
-        public BehaviorContext<TInstance, T> CreateProxy<T>(Event<T> @event, T data)
+        public IBehaviorContext<TInstance, T> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {
             return new BehaviorContextProxy<T>(StateMachine, _context, new MessageConsumeContext<T>(_context, data), @event);
@@ -104,19 +104,19 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     public class BehaviorContextProxy<TMessage> :
         ConsumeContextProxy<TMessage>,
-        BehaviorContext<TInstance, TMessage>
+        IBehaviorContext<TInstance, TMessage>
         where TMessage : class
     {
         readonly SagaConsumeContext<TInstance> _context;
-        readonly Event<TMessage> _event;
+        readonly IEvent<TMessage> _event;
 
         /// <summary>Initializes a new instance.</summary>
         /// <param name="machine">The machine.</param>
         /// <param name="context">The context associated with the operation.</param>
         /// <param name="consumeContext">The consume context.</param>
         /// <param name="event">The event.</param>
-        public BehaviorContextProxy(StateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, ConsumeContext<TMessage> consumeContext,
-            Event<TMessage> @event)
+        public BehaviorContextProxy(IStateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, ConsumeContext<TMessage> consumeContext,
+            IEvent<TMessage> @event)
             : base(consumeContext)
         {
             StateMachine = machine;
@@ -125,7 +125,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         /// <summary>Gets the state machine.</summary>
-        public StateMachine<TInstance> StateMachine { get; }
+        public IStateMachine<TInstance> StateMachine { get; }
 
         /// <summary>Gets the correlation id.</summary>
         public override Guid? CorrelationId => Saga.CorrelationId;
@@ -148,7 +148,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The event.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task RaiseAsync(Event @event, CancellationToken cancellationToken = default)
+        public Task RaiseAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
             return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
@@ -159,26 +159,26 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="data">The data.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task RaiseAsync<T>(Event<T> @event, T data, CancellationToken cancellationToken = default)
+        public Task RaiseAsync<T>(IEvent<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
             return StateMachine.RaiseEventAsync(CreateProxy(@event, data), cancellationToken: cancellationToken);
         }
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> BehaviorContext<TInstance, TMessage>.InitAsync<T>(object values, CancellationToken cancellationToken)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> IBehaviorContext<TInstance, TMessage>.InitAsync<T>(object values, CancellationToken cancellationToken)
         {
             return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> BehaviorContext<TInstance>.InitAsync<T>(object values, CancellationToken cancellationToken)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> IBehaviorContext<TInstance>.InitAsync<T>(object values, CancellationToken cancellationToken)
         {
             return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
         /// <summary>Gets the data.</summary>
         public TMessage Data => Message;
-        Event BehaviorContext<TInstance>.Event => _event;
-        Event<TMessage> BehaviorContext<TInstance, TMessage>.Event => _event;
+        IEvent IBehaviorContext<TInstance>.Event => _event;
+        IEvent<TMessage> IBehaviorContext<TInstance, TMessage>.Event => _event;
 
         /// <summary>Gets the instance.</summary>
         public TInstance Instance => _context.Saga;
@@ -186,7 +186,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <summary>Creates proxy.</summary>
         /// <param name="event">The event.</param>
         /// <returns>The created proxy.</returns>
-        public BehaviorContext<TInstance> CreateProxy(Event @event)
+        public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
@@ -196,7 +196,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The event.</param>
         /// <param name="data">The data.</param>
         /// <returns>The created proxy.</returns>
-        public BehaviorContext<TInstance, T> CreateProxy<T>(Event<T> @event, T data)
+        public IBehaviorContext<TInstance, T> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {
             return new BehaviorContextProxy<T>(StateMachine, _context, new MessageConsumeContext<T>(_context, data), @event);

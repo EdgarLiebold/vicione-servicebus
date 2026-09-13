@@ -8,20 +8,20 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class ConditionalExceptionActivityBinder<TInstance, TException> :
     IActivityBinder<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TException : Exception
 {
     readonly StateMachineAsyncExceptionCondition<TInstance, TException> _condition;
-    readonly EventActivities<TInstance> _elseActivities;
-    readonly EventActivities<TInstance> _thenActivities;
+    readonly IEventActivities<TInstance> _elseActivities;
+    readonly IEventActivities<TInstance> _thenActivities;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="event">The event.</param>
     /// <param name="condition">The condition.</param>
     /// <param name="thenActivities">The then activities.</param>
     /// <param name="elseActivities">The else activities.</param>
-    public ConditionalExceptionActivityBinder(Event @event, StateMachineExceptionCondition<TInstance, TException> condition,
-        EventActivities<TInstance> thenActivities, EventActivities<TInstance> elseActivities)
+    public ConditionalExceptionActivityBinder(IEvent @event, StateMachineExceptionCondition<TInstance, TException> condition,
+        IEventActivities<TInstance> thenActivities, IEventActivities<TInstance> elseActivities)
         : this(@event, context => Task.FromResult(condition(context)), thenActivities, elseActivities)
     {
     }
@@ -31,8 +31,8 @@ public class ConditionalExceptionActivityBinder<TInstance, TException> :
     /// <param name="condition">The condition.</param>
     /// <param name="thenActivities">The then activities.</param>
     /// <param name="elseActivities">The else activities.</param>
-    public ConditionalExceptionActivityBinder(Event @event, StateMachineAsyncExceptionCondition<TInstance, TException> condition,
-        EventActivities<TInstance> thenActivities, EventActivities<TInstance> elseActivities)
+    public ConditionalExceptionActivityBinder(IEvent @event, StateMachineAsyncExceptionCondition<TInstance, TException> condition,
+        IEventActivities<TInstance> thenActivities, IEventActivities<TInstance> elseActivities)
     {
         _thenActivities = thenActivities;
         _elseActivities = elseActivities;
@@ -41,12 +41,12 @@ public class ConditionalExceptionActivityBinder<TInstance, TException> :
     }
 
     /// <summary>Gets the event.</summary>
-    public Event Event { get; }
+    public IEvent Event { get; }
 
     /// <summary>Determines whether state transition event.</summary>
     /// <param name="state">The state.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool IsStateTransitionEvent(State state)
+    public bool IsStateTransitionEvent(IState state)
     {
         return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
@@ -54,7 +54,7 @@ public class ConditionalExceptionActivityBinder<TInstance, TException> :
 
     /// <summary>Binds the configured entities.</summary>
     /// <param name="state">The state.</param>
-    public void Bind(State<TInstance> state)
+    public void Bind(IState<TInstance> state)
     {
         IBehavior<TInstance> thenBehavior = GetBehavior(_thenActivities);
         IBehavior<TInstance> elseBehavior = GetBehavior(_elseActivities);
@@ -76,7 +76,7 @@ public class ConditionalExceptionActivityBinder<TInstance, TException> :
         builder.Add(conditionActivity);
     }
 
-    static IBehavior<TInstance> GetBehavior(EventActivities<TInstance> activities)
+    static IBehavior<TInstance> GetBehavior(IEventActivities<TInstance> activities)
     {
         var builder = new CatchBehaviorBuilder<TInstance>();
 
@@ -94,21 +94,21 @@ public class ConditionalExceptionActivityBinder<TInstance, TException> :
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class ConditionalExceptionActivityBinder<TInstance, TData, TException> :
     IActivityBinder<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TException : Exception
     where TData : class
 {
     readonly StateMachineAsyncExceptionCondition<TInstance, TData, TException> _condition;
-    readonly EventActivities<TInstance> _elseActivities;
-    readonly EventActivities<TInstance> _thenActivities;
+    readonly IEventActivities<TInstance> _elseActivities;
+    readonly IEventActivities<TInstance> _thenActivities;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="event">The event.</param>
     /// <param name="condition">The condition.</param>
     /// <param name="thenActivities">The then activities.</param>
     /// <param name="elseActivities">The else activities.</param>
-    public ConditionalExceptionActivityBinder(Event @event, StateMachineExceptionCondition<TInstance, TData, TException> condition,
-        EventActivities<TInstance> thenActivities, EventActivities<TInstance> elseActivities)
+    public ConditionalExceptionActivityBinder(IEvent @event, StateMachineExceptionCondition<TInstance, TData, TException> condition,
+        IEventActivities<TInstance> thenActivities, IEventActivities<TInstance> elseActivities)
         : this(@event, context => Task.FromResult(condition(context)), thenActivities, elseActivities)
     {
     }
@@ -118,8 +118,8 @@ public class ConditionalExceptionActivityBinder<TInstance, TData, TException> :
     /// <param name="condition">The condition.</param>
     /// <param name="thenActivities">The then activities.</param>
     /// <param name="elseActivities">The else activities.</param>
-    public ConditionalExceptionActivityBinder(Event @event, StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
-        EventActivities<TInstance> thenActivities, EventActivities<TInstance> elseActivities)
+    public ConditionalExceptionActivityBinder(IEvent @event, StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
+        IEventActivities<TInstance> thenActivities, IEventActivities<TInstance> elseActivities)
     {
         _thenActivities = thenActivities;
         _elseActivities = elseActivities;
@@ -128,12 +128,12 @@ public class ConditionalExceptionActivityBinder<TInstance, TData, TException> :
     }
 
     /// <summary>Gets the event.</summary>
-    public Event Event { get; }
+    public IEvent Event { get; }
 
     /// <summary>Determines whether state transition event.</summary>
     /// <param name="state">The state.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool IsStateTransitionEvent(State state)
+    public bool IsStateTransitionEvent(IState state)
     {
         return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
@@ -141,7 +141,7 @@ public class ConditionalExceptionActivityBinder<TInstance, TData, TException> :
 
     /// <summary>Binds the configured entities.</summary>
     /// <param name="state">The state.</param>
-    public void Bind(State<TInstance> state)
+    public void Bind(IState<TInstance> state)
     {
         IBehavior<TInstance> thenBehavior = GetBehavior(_thenActivities);
         IBehavior<TInstance> elseBehavior = GetBehavior(_elseActivities);
@@ -163,7 +163,7 @@ public class ConditionalExceptionActivityBinder<TInstance, TData, TException> :
         builder.Add(conditionActivity);
     }
 
-    static IBehavior<TInstance> GetBehavior(EventActivities<TInstance> activities)
+    static IBehavior<TInstance> GetBehavior(IEventActivities<TInstance> activities)
     {
         var builder = new CatchBehaviorBuilder<TInstance>();
 

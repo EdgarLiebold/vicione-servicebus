@@ -119,11 +119,11 @@ public sealed class StateMachineNestedRequestIntegrationTests
 
     public sealed record CreateShortLink(Uri Link);
 
-    public sealed record RequestShortLink(Guid CorrelationId, Uri Link) : CorrelatedBy<Guid>;
+    public sealed record RequestShortLink(Guid CorrelationId, Uri Link) : ICorrelatedBy<Guid>;
 
-    public sealed record ShortLinkCreated(Guid CorrelationId, Uri Link, Uri ShortLink) : CorrelatedBy<Guid>;
+    public sealed record ShortLinkCreated(Guid CorrelationId, Uri Link, Uri ShortLink) : ICorrelatedBy<Guid>;
 
-    public sealed class CreateLinkState : SagaStateMachineInstance
+    public sealed class CreateLinkState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -177,13 +177,13 @@ public sealed class StateMachineNestedRequestIntegrationTests
                 context.Saga.ShortLink)));
         }
 
-        public State Valid { get; private set; } = null!;
+        public IState Valid { get; private set; } = null!;
 
-        public State Invalid { get; private set; } = null!;
+        public IState Invalid { get; private set; } = null!;
 
-        public Event<CreateShortLink> CreateRequested { get; private set; } = null!;
+        public IEvent<CreateShortLink> CreateRequested { get; private set; } = null!;
 
-        public Request<CreateLinkState, RequestShortLink, ShortLinkCreated> LinkRequest { get; private set; } = null!;
+        public IRequest<CreateLinkState, RequestShortLink, ShortLinkCreated> LinkRequest { get; private set; } = null!;
     }
 
     public sealed class ExpectedNestedRequestException(string message) : Exception(message);

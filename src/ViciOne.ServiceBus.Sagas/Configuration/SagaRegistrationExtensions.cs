@@ -102,7 +102,7 @@ public static class SagaRegistrationExtensions
     {
         filter ??= t => true;
 
-        IEnumerable<Type> sagaTypes = types.Where(x => x.ImplementsInterface<ISaga>() && !x.ImplementsInterface<SagaStateMachineInstance>());
+        IEnumerable<Type> sagaTypes = types.Where(x => x.ImplementsInterface<ISaga>() && !x.ImplementsInterface<ISagaStateMachineInstance>());
         IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaDefinition<>)));
 
         var sagas = from c in sagaTypes
@@ -131,8 +131,8 @@ public static class SagaRegistrationExtensions
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T, TDefinition>(this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where T : class, SagaStateMachineInstance
-        where TStateMachine : class, SagaStateMachine<T>
+        where T : class, ISagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<T>
         where TDefinition : class, ISagaDefinition<T>
     {
         return SagaRegistrationConfiguratorExtensions.AddSagaStateMachine<TStateMachine, T>(configurator, typeof(TDefinition), configure);
@@ -208,11 +208,11 @@ public static class SagaRegistrationExtensions
     {
         filter ??= t => true;
 
-        IEnumerable<Type> sagaTypes = types.Where(x => x.ImplementsInterface(typeof(SagaStateMachine<>)));
+        IEnumerable<Type> sagaTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaStateMachine<>)));
         IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaDefinition<>)));
 
         var sagas = from c in sagaTypes
-                    let it = c.GetSingleClosedGenericArgument(typeof(SagaStateMachine<>))
+                    let it = c.GetSingleClosedGenericArgument(typeof(ISagaStateMachine<>))
                     join d in sagaDefinitionTypes on it equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
                     from d in dc.DefaultIfEmpty()
                     where filter(c) || filter(it)

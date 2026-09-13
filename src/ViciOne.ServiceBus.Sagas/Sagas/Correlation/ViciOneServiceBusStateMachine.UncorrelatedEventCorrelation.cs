@@ -4,17 +4,17 @@ using System.Collections.Generic;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Defines correlation for uncorrelated event.</summary>
     /// <typeparam name="TData">The data type.</typeparam>
     public class UncorrelatedEventCorrelation<TData> :
-        EventCorrelation<TInstance, TData>
+        IEventCorrelation<TInstance, TData>
         where TData : class
     {
         /// <summary>Initializes a new instance.</summary>
         /// <param name="event">The event.</param>
-        public UncorrelatedEventCorrelation(Event<TData> @event)
+        public UncorrelatedEventCorrelation(IEvent<TData> @event)
         {
             Event = @event;
         }
@@ -23,9 +23,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public SagaFilterFactory<TInstance, TData>? FilterFactory => null;
 
         /// <summary>Gets the event.</summary>
-        public Event<TData> Event { get; }
+        public IEvent<TData> Event { get; }
 
-        Type EventCorrelation.DataType => typeof(TData);
+        Type IEventCorrelation.DataType => typeof(TData);
 
         /// <summary>Gets the configure consume topology.</summary>
         public bool ConfigureConsumeTopology => false;

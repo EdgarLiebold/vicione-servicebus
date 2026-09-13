@@ -282,11 +282,11 @@ public sealed class MessageContextFlowTests
             TestInactivityTimeout = timeout,
         };
 
-    private sealed record ContextMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ContextMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record RequestMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record RequestMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record AcceptedResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record AcceptedResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record RejectedResponse(Guid CorrelationId, string Reason) : CorrelatedBy<Guid>;
+    private sealed record RejectedResponse(Guid CorrelationId, string Reason) : ICorrelatedBy<Guid>;
 }

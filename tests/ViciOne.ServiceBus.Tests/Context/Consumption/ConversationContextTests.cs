@@ -154,9 +154,9 @@ public sealed class ConversationContextTests
         };
     }
 
-    private sealed record RootMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record RootMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record ParentMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ParentMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record ChildMessage(Guid ParentCorrelationId, string Value);
 }

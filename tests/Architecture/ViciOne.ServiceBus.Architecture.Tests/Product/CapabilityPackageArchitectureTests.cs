@@ -29,7 +29,7 @@ public sealed class CapabilityPackageArchitectureTests
     [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "dedicated-assemblies-own-capability-types")]
     public void CapabilityTypes_AreOwnedOnlyByTheirDedicatedAssemblies()
     {
-        AssertAssembly("ViciOne.ServiceBus.Sagas", typeof(ISaga), typeof(SagaStateMachine<>), typeof(CorrelatedBy<>));
+        AssertAssembly("ViciOne.ServiceBus.Sagas", typeof(ISaga), typeof(ISagaStateMachine<>), typeof(ICorrelatedBy<>));
         AssertAssembly("ViciOne.ServiceBus.Courier", typeof(IActivity<,>), typeof(IExecuteActivity<>), typeof(RoutingSlip));
         AssertAssembly("ViciOne.ServiceBus.Futures", typeof(FutureState));
         AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(JobContext<>));

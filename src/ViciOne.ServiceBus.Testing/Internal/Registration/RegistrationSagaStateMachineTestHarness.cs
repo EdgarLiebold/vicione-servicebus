@@ -14,8 +14,8 @@ internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TIn
     BaseSagaTestHarness<TInstance>,
     ISagaStateMachineTestHarness<TStateMachine, TInstance>,
     IContainerTestHarnessObservationRegistration
-    where TStateMachine : SagaStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TStateMachine : ISagaStateMachine<TInstance>
+    where TInstance : class, ISagaStateMachineInstance
 {
     readonly IDisposable _eventObserverHandle;
     readonly StateMachineObservationCollector<TInstance> _observations;
@@ -80,7 +80,7 @@ internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TIn
     }
 
     /// <inheritdoc />
-    public Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, Func<TStateMachine, State> stateSelector,
+    public Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, Func<TStateMachine, IState> stateSelector,
         TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(stateSelector);
@@ -88,7 +88,7 @@ internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TIn
     }
 
     /// <inheritdoc />
-    public async Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, State state, TimeSpan? timeout = default,
+    public async Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, IState state, TimeSpan? timeout = default,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(state);
@@ -109,7 +109,7 @@ internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TIn
 
     /// <inheritdoc />
     public Task<IReadOnlyList<Guid>> WaitForSagasInStateAsync(Expression<Func<TInstance, bool>> expression,
-        Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default,
+        Func<TStateMachine, IState> stateSelector, TimeSpan? timeout = default,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(stateSelector);
@@ -117,7 +117,7 @@ internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TIn
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<Guid>> WaitForSagasInStateAsync(Expression<Func<TInstance, bool>> expression, State state,
+    public async Task<IReadOnlyList<Guid>> WaitForSagasInStateAsync(Expression<Func<TInstance, bool>> expression, IState state,
         TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(expression);

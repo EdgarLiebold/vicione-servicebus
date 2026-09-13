@@ -376,7 +376,7 @@ public sealed class PartitionMessageConfigurationTests
         throw new InvalidOperationException($"No key mapped to partition {partitionIndex}.");
     }
 
-    private sealed record PartitionedMessage(Guid CorrelationId, int Sequence = 0) : CorrelatedBy<Guid>;
+    private sealed record PartitionedMessage(Guid CorrelationId, int Sequence = 0) : ICorrelatedBy<Guid>;
 
     private sealed class PartitionedConsumer(int expectedCount) : IConsumer<PartitionedMessage>
     {

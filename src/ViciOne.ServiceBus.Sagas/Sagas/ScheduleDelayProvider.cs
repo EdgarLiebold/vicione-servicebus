@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate TimeSpan ScheduleDelayProvider<TSaga>(BehaviorContext<TSaga> context)
-    where TSaga : class, SagaStateMachineInstance;
+public delegate TimeSpan ScheduleDelayProvider<TSaga>(IBehaviorContext<TSaga> context)
+    where TSaga : class, ISagaStateMachineInstance;
 
 
 /// <summary>Represents the method that handles schedule delay provider.</summary>
@@ -15,6 +15,6 @@ public delegate TimeSpan ScheduleDelayProvider<TSaga>(BehaviorContext<TSaga> con
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate TimeSpan ScheduleDelayProvider<TSaga, in TMessage>(BehaviorContext<TSaga, TMessage> context)
+public delegate TimeSpan ScheduleDelayProvider<TSaga, in TMessage>(IBehaviorContext<TSaga, TMessage> context)
     where TMessage : class
-    where TSaga : class, SagaStateMachineInstance;
+    where TSaga : class, ISagaStateMachineInstance;

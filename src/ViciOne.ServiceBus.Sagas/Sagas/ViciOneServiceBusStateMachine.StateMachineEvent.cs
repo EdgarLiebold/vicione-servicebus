@@ -1,17 +1,17 @@
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     class StateMachineEvent
     {
-        public StateMachineEvent(Event @event, bool isTransitionEvent)
+        public StateMachineEvent(IEvent @event, bool isTransitionEvent)
         {
             Event = @event;
             IsTransitionEvent = isTransitionEvent;
         }
 
         public bool IsTransitionEvent { get; }
-        public Event Event { get; }
+        public IEvent Event { get; }
     }
 }

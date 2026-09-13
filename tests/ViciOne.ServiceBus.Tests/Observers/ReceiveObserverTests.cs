@@ -271,11 +271,11 @@ public sealed class ReceiveObserverTests
         public ReceiveContext? DeliveryContext => ReceiveContext ?? ConsumeContext?.ReceiveContext;
     }
 
-    private sealed record HandledMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record HandledMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record ConsumedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ConsumedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record FaultingMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FaultingMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record PostPipelineMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record PostPipelineMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 }

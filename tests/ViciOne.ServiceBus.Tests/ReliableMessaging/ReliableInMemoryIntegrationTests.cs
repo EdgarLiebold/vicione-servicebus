@@ -392,11 +392,11 @@ public sealed class ReliableInMemoryIntegrationTests
         FirstDeliveryAttempt,
     }
 
-    public sealed record CreateReliableState(Guid CorrelationId, ReliableSagaFailure Failure) : CorrelatedBy<Guid>;
+    public sealed record CreateReliableState(Guid CorrelationId, ReliableSagaFailure Failure) : ICorrelatedBy<Guid>;
 
-    public sealed record ReliableStateVerified(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ReliableStateVerified(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class ReliableState : SagaStateMachineInstance
+    public sealed class ReliableState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -428,13 +428,13 @@ public sealed class ReliableInMemoryIntegrationTests
             During(Created, When(VerifiedEvent).TransitionTo(Verified));
         }
 
-        public State Created { get; private set; } = null!;
+        public IState Created { get; private set; } = null!;
 
-        public State Verified { get; private set; } = null!;
+        public IState Verified { get; private set; } = null!;
 
-        public Event<CreateReliableState> Create { get; private set; } = null!;
+        public IEvent<CreateReliableState> Create { get; private set; } = null!;
 
-        public Event<ReliableStateVerified> VerifiedEvent { get; private set; } = null!;
+        public IEvent<ReliableStateVerified> VerifiedEvent { get; private set; } = null!;
     }
 
     public sealed class ReliableStateDefinition : SagaDefinition<ReliableState>

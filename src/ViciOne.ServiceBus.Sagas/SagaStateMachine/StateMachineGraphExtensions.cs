@@ -13,8 +13,8 @@ public static class StateMachineGraphExtensions
     /// contributions, state inheritance, and disconnected declarations.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="machine" /> is <see langword="null" />.</exception>
-    public static StateMachineGraph GetGraph<TSaga>(this StateMachine<TSaga> machine)
-        where TSaga : class, SagaStateMachineInstance
+    public static StateMachineGraph GetGraph<TSaga>(this IStateMachine<TSaga> machine)
+        where TSaga : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(machine);
 

@@ -8,7 +8,7 @@ using ViciOne.ServiceBus.Internals;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Maps the saga's integer state index to the corresponding state-machine state.</summary>
     class IntStateAccessor :
@@ -31,14 +31,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _write = WritePropertyCache<TInstance>.GetProperty<int>(_propertyInfo);
         }
 
-        Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
+        Task<IState<TInstance>?> IStateAccessor<TInstance>.GetAsync(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
             var stateIndex = _read.Get(context.Saga);
 
             return Task.FromResult(_index[stateIndex]);
         }
 
-        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
+        Task IStateAccessor<TInstance>.SetAsync(IBehaviorContext<TInstance> context, IState<TInstance> state, CancellationToken cancellationToken)
         {
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
@@ -52,12 +52,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             _write.Set(context.Saga, stateIndex);
 
-            State<TInstance>? previousState = _index[previousIndex];
+            IState<TInstance>? previousState = _index[previousIndex];
 
             return _observer.StateChangedAsync(context, state, previousState);
         }
 
-        public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)
+        public Expression<Func<TInstance, bool>> GetStateExpression(params IState[] states)
         {
             if (states == null || states.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(states), "One or more states must be specified");

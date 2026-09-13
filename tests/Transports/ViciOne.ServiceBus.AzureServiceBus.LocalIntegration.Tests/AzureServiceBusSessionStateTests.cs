@@ -197,24 +197,24 @@ public sealed class AzureServiceBusSessionStateTests
 
     static readonly TimeSpan EmulatorEntityTimeToLive = TimeSpan.FromHours(1);
 
-    public sealed record SessionStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SessionStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record SessionPublished(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SessionPublished(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record SessionSent(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SessionSent(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record CreateSessionSaga(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record CreateSessionSaga(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record AdvanceSessionSaga(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record AdvanceSessionSaga(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record SagaCreated(Guid CorrelationId, string OriginalValue, int Revision) : CorrelatedBy<Guid>;
+    public sealed record SagaCreated(Guid CorrelationId, string OriginalValue, int Revision) : ICorrelatedBy<Guid>;
 
-    public sealed record SagaAdvanced(Guid CorrelationId, string OriginalValue, string NewValue, int Revision) : CorrelatedBy<Guid>;
+    public sealed record SagaAdvanced(Guid CorrelationId, string OriginalValue, string NewValue, int Revision) : ICorrelatedBy<Guid>;
 
     public sealed class SessionSaga :
         ISaga,
-        InitiatedBy<CreateSessionSaga>,
-        Orchestrates<AdvanceSessionSaga>
+        IInitiatedBy<CreateSessionSaga>,
+        IOrchestrates<AdvanceSessionSaga>
     {
         public Guid CorrelationId { get; set; }
 

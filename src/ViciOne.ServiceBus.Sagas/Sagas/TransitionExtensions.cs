@@ -11,10 +11,10 @@ public static class TransitionExtensions
     /// <param name="source">The source value.</param>
     /// <param name="toState">The to state.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> TransitionTo<TSaga>(this EventActivityBinder<TSaga> source, State toState)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> TransitionTo<TSaga>(this IEventActivityBinder<TSaga> source, IState toState)
+        where TSaga : class, ISagaStateMachineInstance
     {
-        State<TSaga> state = source.StateMachine.GetState(toState.Name);
+        IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -27,12 +27,12 @@ public static class TransitionExtensions
     /// <param name="source">The source value.</param>
     /// <param name="toState">The to state.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> TransitionTo<TSaga, TException>(this ExceptionActivityBinder<TSaga, TException> source,
-        State toState)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TException> TransitionTo<TSaga, TException>(this IExceptionActivityBinder<TSaga, TException> source,
+        IState toState)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
-        State<TSaga> state = source.StateMachine.GetState(toState.Name);
+        IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -47,11 +47,11 @@ public static class TransitionExtensions
     /// <param name="source">The source value.</param>
     /// <param name="toState">The to state.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TMessage> TransitionTo<TSaga, TMessage>(this EventActivityBinder<TSaga, TMessage> source, State toState)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TMessage> TransitionTo<TSaga, TMessage>(this IEventActivityBinder<TSaga, TMessage> source, IState toState)
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        State<TSaga> state = source.StateMachine.GetState(toState.Name);
+        IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -65,13 +65,13 @@ public static class TransitionExtensions
     /// <param name="source">The source value.</param>
     /// <param name="toState">The to state.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TMessage, TException> TransitionTo<TSaga, TMessage, TException>(
-        this ExceptionActivityBinder<TSaga, TMessage, TException> source, State toState)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TMessage, TException> TransitionTo<TSaga, TMessage, TException>(
+        this IExceptionActivityBinder<TSaga, TMessage, TException> source, IState toState)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        State<TSaga> state = source.StateMachine.GetState(toState.Name);
+        IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -85,11 +85,11 @@ public static class TransitionExtensions
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TMessage> Finalize<TSaga, TMessage>(this EventActivityBinder<TSaga, TMessage> source)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TMessage> Finalize<TSaga, TMessage>(this IEventActivityBinder<TSaga, TMessage> source)
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        State<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
+        IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -100,10 +100,10 @@ public static class TransitionExtensions
     /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
     /// <param name="source">The source value.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Finalize<TSaga>(this EventActivityBinder<TSaga> source)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Finalize<TSaga>(this IEventActivityBinder<TSaga> source)
+        where TSaga : class, ISagaStateMachineInstance
     {
-        State<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
+        IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -116,13 +116,13 @@ public static class TransitionExtensions
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="source">The source value.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TMessage, TException> Finalize<TSaga, TMessage, TException>(
-        this ExceptionActivityBinder<TSaga, TMessage, TException> source)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TMessage, TException> Finalize<TSaga, TMessage, TException>(
+        this IExceptionActivityBinder<TSaga, TMessage, TException> source)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        State<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
+        IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 
@@ -136,11 +136,11 @@ public static class TransitionExtensions
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="source">The source value.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Finalize<TSaga, TException>(this ExceptionActivityBinder<TSaga, TException> source)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TException> Finalize<TSaga, TException>(this IExceptionActivityBinder<TSaga, TException> source)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
-        State<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
+        IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
 

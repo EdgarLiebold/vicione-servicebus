@@ -18,7 +18,7 @@ internal sealed class DynamoDbSagaRepositoryContext<TSaga, TMessage>(
     ConsumeContext<TMessage> consumeContext,
     ISagaConsumeContextFactory<IDynamoDbSagaStore<TSaga>, TSaga> consumeContextFactory) :
     ConsumeContextScope<TMessage>(consumeContext ?? throw new ArgumentNullException(nameof(consumeContext))),
-    SagaRepositoryContext<TSaga, TMessage>,
+    ISagaRepositoryContext<TSaga, TMessage>,
     IDisposable
     where TSaga : class, ISagaVersion
     where TMessage : class
@@ -184,7 +184,7 @@ internal sealed class DynamoDbSagaLoadContext<TSaga>(
     IDynamoDbSagaStore<TSaga> store,
     CancellationToken cancellationToken) :
     BasePipeContext(cancellationToken),
-    LoadSagaRepositoryContext<TSaga>,
+    ILoadSagaRepositoryContext<TSaga>,
     IDisposable
     where TSaga : class, ISagaVersion
 {

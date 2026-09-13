@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Configuration;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     internal class StateMachineSagaConfigurator :
         ISagaConfigurator<TInstance>,
@@ -15,7 +15,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly ISagaRepository<TInstance> _repository;
         readonly ISagaSpecification<TInstance> _specification;
 
-        public StateMachineSagaConfigurator(SagaStateMachine<TInstance> stateMachine, ISagaRepository<TInstance> repository,
+        public StateMachineSagaConfigurator(ISagaStateMachine<TInstance> stateMachine, ISagaRepository<TInstance> repository,
             ISagaConfigurationObserver observer)
         {
             _repository = repository;

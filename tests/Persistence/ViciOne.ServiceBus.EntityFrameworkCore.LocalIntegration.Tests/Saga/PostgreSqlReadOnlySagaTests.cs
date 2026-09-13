@@ -75,15 +75,15 @@ public sealed class PostgreSqlReadOnlySagaTests
             .UseNpgsql(connectionString)
             .Options);
 
-    public sealed record StartReadOnlySaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StartReadOnlySaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record CheckReadOnlySaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CheckReadOnlySaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ReadOnlySagaStarted(Guid CorrelationId);
 
     public sealed record ReadOnlySagaStatus(Guid CorrelationId, string Status);
 
-    public sealed class ReadOnlyState : SagaStateMachineInstance
+    public sealed class ReadOnlyState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -117,11 +117,11 @@ public sealed class PostgreSqlReadOnlySagaTests
                     .Then(context => context.Saga.Status = "This mutation must not be persisted"));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event<StartReadOnlySaga> Started { get; private set; } = null!;
+        public IEvent<StartReadOnlySaga> Started { get; private set; } = null!;
 
-        public Event<CheckReadOnlySaga> StatusRequested { get; private set; } = null!;
+        public IEvent<CheckReadOnlySaga> StatusRequested { get; private set; } = null!;
     }
 
     private sealed class ReadOnlyStateDefinition : SagaDefinition<ReadOnlyState>

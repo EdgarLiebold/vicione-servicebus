@@ -11,8 +11,8 @@ public static class StateAccessorExtensions
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the requested value.</returns>
-    public static Task<State<TSaga>?> GetStateAsync<TSaga>(this IStateAccessor<TSaga> accessor, BehaviorContext<TSaga> context, CancellationToken cancellationToken = default)
-        where TSaga : class, SagaStateMachineInstance
+    public static Task<IState<TSaga>?> GetStateAsync<TSaga>(this IStateAccessor<TSaga> accessor, IBehaviorContext<TSaga> context, CancellationToken cancellationToken = default)
+        where TSaga : class, ISagaStateMachineInstance
     {
         return accessor.GetAsync(context, cancellationToken: cancellationToken);
     }
@@ -23,8 +23,8 @@ public static class StateAccessorExtensions
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the requested value.</returns>
-    public static Task<State<TSaga>?> GetStateAsync<TSaga>(this StateMachine<TSaga> accessor, BehaviorContext<TSaga> context, CancellationToken cancellationToken = default)
-        where TSaga : class, SagaStateMachineInstance
+    public static Task<IState<TSaga>?> GetStateAsync<TSaga>(this IStateMachine<TSaga> accessor, IBehaviorContext<TSaga> context, CancellationToken cancellationToken = default)
+        where TSaga : class, ISagaStateMachineInstance
     {
         return accessor.Accessor.GetAsync(context, cancellationToken: cancellationToken);
     }

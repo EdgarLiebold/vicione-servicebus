@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate TMessage EventExceptionMessageFactory<TSaga, in TException, out TMessage>(BehaviorExceptionContext<TSaga, TException> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate TMessage EventExceptionMessageFactory<TSaga, in TException, out TMessage>(IBehaviorExceptionContext<TSaga, TException> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception;
 
 
@@ -20,7 +20,7 @@ public delegate TMessage EventExceptionMessageFactory<TSaga, in TException, out 
 /// <typeparam name="T">The value type.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate T EventExceptionMessageFactory<TSaga, in TMessage, in TException, out T>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate T EventExceptionMessageFactory<TSaga, in TMessage, in TException, out T>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TException : Exception;

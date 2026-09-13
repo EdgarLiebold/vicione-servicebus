@@ -191,14 +191,14 @@ public sealed class MediatorRequestApiContractTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private sealed class ApiRequest : CorrelatedBy<Guid>
+    private sealed class ApiRequest : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
         public string Value { get; set; } = string.Empty;
     }
 
-    private sealed record ApiResponse(Guid CorrelationId, string Value, Uri? DestinationAddress) : CorrelatedBy<Guid>;
-    private sealed record ContextTrigger(Guid CorrelationId) : CorrelatedBy<Guid>;
-    private sealed record ContextResponse(Guid CorrelationId, int NestedResponseCount) : CorrelatedBy<Guid>;
+    private sealed record ApiResponse(Guid CorrelationId, string Value, Uri? DestinationAddress) : ICorrelatedBy<Guid>;
+    private sealed record ContextTrigger(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    private sealed record ContextResponse(Guid CorrelationId, int NestedResponseCount) : ICorrelatedBy<Guid>;
     private sealed record RequestSnapshot(ApiRequest Message, Uri? DestinationAddress, Guid? InitiatorId, Guid? ConversationId);
 }

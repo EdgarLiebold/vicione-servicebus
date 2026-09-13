@@ -17,8 +17,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     /// <param name="collection">The collection.</param>
     /// <returns>The saga registration produced by the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection)
-        where T : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         return RegisterSagaStateMachine<T, TSaga>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
@@ -30,8 +30,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     /// <param name="registrar">The registrar.</param>
     /// <returns>The saga registration produced by the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, IContainerRegistrar registrar)
-        where T : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         return new SagaRegistrar<T, TSaga>().Register(collection, registrar);
     }
@@ -43,8 +43,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     /// <param name="collection">The collection.</param>
     /// <returns>The saga registration produced by the operation.</returns>
     public static ISagaRegistration RegisterSaga<T, TSaga, TDefinition>(this IServiceCollection collection)
-        where T : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
         where TDefinition : class, ISagaDefinition<TSaga>
     {
         return RegisterSaga<T, TSaga, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
@@ -58,8 +58,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     /// <param name="registrar">The registrar.</param>
     /// <returns>The saga registration produced by the operation.</returns>
     public static ISagaRegistration RegisterSaga<T, TSaga, TDefinition>(this IServiceCollection collection, IContainerRegistrar registrar)
-        where T : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
         where TDefinition : class, ISagaDefinition<TSaga>
     {
         return new SagaDefinitionRegistrar<T, TSaga, TDefinition>().Register(collection, registrar);
@@ -72,8 +72,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     /// <param name="sagaDefinitionType">The runtime saga definition type used by the operation.</param>
     /// <returns>The saga registration produced by the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, Type sagaDefinitionType)
-        where T : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         return RegisterSagaStateMachine<T, TSaga>(collection, new DependencyInjectionContainerRegistrar(collection), sagaDefinitionType);
     }
@@ -87,8 +87,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     /// <returns>The saga registration produced by the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, IContainerRegistrar registrar,
         Type? sagaDefinitionType)
-        where T : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         if (sagaDefinitionType == null)
             return RegisterSagaStateMachine<T, TSaga>(collection, registrar);
@@ -114,10 +114,10 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     public static ISagaRegistration RegisterSagaStateMachine(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
         Type? sagaDefinitionType = null)
     {
-        if (!sagaType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] instanceTypes))
+        if (!sagaType.TryGetSingleClosedGenericArguments(typeof(ISagaStateMachine<>), out Type[] instanceTypes))
             throw new ArgumentException($"The saga type must be a saga state machine: {TypeCache.GetShortName(sagaType)}");
 
-        if (!instanceTypes[0].ImplementsInterface<SagaStateMachineInstance>())
+        if (!instanceTypes[0].ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"The instance type must be a saga state machine instance: {TypeCache.GetShortName(instanceTypes[0])}");
 
         if (sagaDefinitionType != null)
@@ -149,14 +149,14 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
 
     class SagaRegistrar<TStateMachine, TSaga> :
         ISagaRegistrar
-        where TStateMachine : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         public virtual ISagaRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
             collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, SagaConsumerKind>());
             collection.AddSingleton<TStateMachine>();
-            collection.AddSingleton<SagaStateMachine<TSaga>>(provider => provider.GetRequiredService<TStateMachine>());
+            collection.AddSingleton<ISagaStateMachine<TSaga>>(provider => provider.GetRequiredService<TStateMachine>());
 
             return registrar.GetOrAddRegistration<ISagaRegistration>(typeof(TSaga), _ => new SagaStateMachineRegistration<TStateMachine, TSaga>(registrar));
         }
@@ -165,8 +165,8 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
 
     class SagaDefinitionRegistrar<TStateMachine, TSaga, TDefinition> :
         SagaRegistrar<TStateMachine, TSaga>
-        where TStateMachine : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
         where TDefinition : class, ISagaDefinition<TSaga>
     {
         public override ISagaRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)

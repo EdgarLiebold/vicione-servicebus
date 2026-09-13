@@ -44,7 +44,7 @@ public sealed class JobAttemptGenerationTests
             Checkpoint = new Dictionary<string, object> { ["checkpoint"] = "retained" },
             JobProperties = new Dictionary<string, object> { ["owner"] = "native" },
         };
-        State expectedState = GetState(machine, sagaState);
+        IState expectedState = GetState(machine, sagaState);
         await SetStateAsync(machine, saga, expectedState);
         JobSagaSnapshot expected = Snapshot(saga);
 
@@ -187,7 +187,7 @@ public sealed class JobAttemptGenerationTests
                 throw new ArgumentOutOfRangeException(nameof(update), update, null);
         }
 
-        State expectedState = terminalEvent switch
+        IState expectedState = terminalEvent switch
         {
             TerminalAttemptEvent.Completed => machine.Completed,
             TerminalAttemptEvent.Faulted => machine.Faulted,
@@ -349,7 +349,7 @@ public sealed class JobAttemptGenerationTests
     private static async Task RaiseAsync<T>(
         JobStateMachine machine,
         JobSaga saga,
-        Event<T> @event,
+        IEvent<T> @event,
         T message,
         OutgoingMessageRecorder? outgoingMessages = null)
         where T : class
@@ -370,26 +370,26 @@ public sealed class JobAttemptGenerationTests
             };
             sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
         }
-        BehaviorContext<JobSaga, T> behaviorContext =
+        IBehaviorContext<JobSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await ((StateMachine<JobSaga>)machine).RaiseEventAsync(behaviorContext);
+        await ((IStateMachine<JobSaga>)machine).RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task SetStateAsync(JobStateMachine machine, JobSaga saga, State state)
+    private static async Task SetStateAsync(JobStateMachine machine, JobSaga saga, IState state)
     {
         var message = new StateSetupMessage();
         ConsumeContext<StateSetupMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var instance = new SagaInstance<JobSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, StateSetupMessage>(consumeContext, instance);
-        BehaviorContext<JobSaga> behaviorContext =
+        IBehaviorContext<JobSaga> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy(machine, sagaContext, machine.Initial.Enter);
 
         await machine.Accessor.SetAsync(behaviorContext, machine.GetState(state.Name));
     }
 
-    private static State GetState(JobStateMachine machine, JobSagaState state) =>
+    private static IState GetState(JobStateMachine machine, JobSagaState state) =>
         state switch
         {
             JobSagaState.WaitingToRetry => machine.WaitingToRetry,

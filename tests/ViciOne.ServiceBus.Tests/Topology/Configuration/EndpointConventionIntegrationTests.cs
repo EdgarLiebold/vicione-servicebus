@@ -330,19 +330,19 @@ public sealed class EndpointConventionIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record FullAddressMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FullAddressMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record ShortAddressMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ShortAddressMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private interface ConventionContract : CorrelatedBy<Guid>;
+    private interface ConventionContract : ICorrelatedBy<Guid>;
 
     private sealed record InterfaceConventionMessage(Guid CorrelationId) : ConventionContract;
 
-    private abstract record ConventionBase(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private abstract record ConventionBase(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record DerivedConventionMessage(Guid CorrelationId) : ConventionBase(CorrelationId);
 
-    private interface OverrideContract : CorrelatedBy<Guid>;
+    private interface OverrideContract : ICorrelatedBy<Guid>;
 
     private sealed record ConcreteOverrideMessage(Guid CorrelationId) : OverrideContract;
 

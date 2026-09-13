@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 
 /// <summary>Forwards a fault payload to the original response address.</summary>
 public class FaultRequestActivity :
-    IStateMachineActivity<RequestState, RequestFaulted>
+    IStateMachineActivity<RequestState, IRequestFaulted>
 {
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
@@ -18,7 +18,7 @@ public class FaultRequestActivity :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -27,7 +27,7 @@ public class FaultRequestActivity :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<RequestState, RequestFaulted> context, IBehavior<RequestState, RequestFaulted> next)
+    public async Task ExecuteAsync(IBehaviorContext<RequestState, IRequestFaulted> context, IBehavior<RequestState, IRequestFaulted> next)
     {
         if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
         {
@@ -47,8 +47,8 @@ public class FaultRequestActivity :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<RequestState, RequestFaulted, TException> context,
-        IBehavior<RequestState, RequestFaulted> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<RequestState, IRequestFaulted, TException> context,
+        IBehavior<RequestState, IRequestFaulted> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

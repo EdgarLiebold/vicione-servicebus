@@ -335,11 +335,11 @@ public sealed class MessageJournalIntegrationTests
         }
     }
 
-    private sealed record JournalMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    private sealed record SuccessfulMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
-    private sealed record FaultingMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
-    private sealed record OutboxRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    private sealed record DeferredMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record JournalMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    private sealed record SuccessfulMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    private sealed record FaultingMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    private sealed record OutboxRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    private sealed record DeferredMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
     private sealed class ExpectedConsumerException : Exception;
     private sealed class ExpectedStoreException : Exception;
 }

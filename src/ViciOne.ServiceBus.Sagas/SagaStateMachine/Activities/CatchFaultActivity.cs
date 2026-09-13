@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 public class CatchFaultActivity<TSaga, TException> :
     IStateMachineActivity<TSaga>,
     IStateMachineExceptionActivity
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception
 {
     readonly IBehavior<TSaga> _behavior;
@@ -28,7 +28,7 @@ public class CatchFaultActivity<TSaga, TException> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _behavior.Accept(visitor));
     }
@@ -48,7 +48,7 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         return next.ExecuteAsync(context);
     }
@@ -58,7 +58,7 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         return next.ExecuteAsync(context);
@@ -69,10 +69,10 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
-        if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
             await _behavior.FaultedAsync(exceptionContext).ConfigureAwait(false);
 
@@ -89,11 +89,11 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<TMessage, T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
+    public async Task FaultedAsync<TMessage, T>(IBehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
         where TMessage : class
         where T : Exception
     {
-        if (context is BehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
         {
             await _behavior.FaultedAsync(exceptionContext).ConfigureAwait(false);
 

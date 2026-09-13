@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="T">The produced message type.</typeparam>
 /// <param name="context">The behavior context used to create the message.</param>
 /// <returns>A task whose result is the message created from the behavior context.</returns>
-public delegate Task<T> AsyncEventMessageFactory<TSaga, in TMessage, T>(BehaviorContext<TSaga, TMessage> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate Task<T> AsyncEventMessageFactory<TSaga, in TMessage, T>(IBehaviorContext<TSaga, TMessage> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where T : class;
 
@@ -19,6 +19,6 @@ public delegate Task<T> AsyncEventMessageFactory<TSaga, in TMessage, T>(Behavior
 /// <typeparam name="T">The produced message type.</typeparam>
 /// <param name="context">The behavior context used to create the message.</param>
 /// <returns>A task whose result is the message created from the behavior context.</returns>
-public delegate Task<T> AsyncEventMessageFactory<TSaga, T>(BehaviorContext<TSaga> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate Task<T> AsyncEventMessageFactory<TSaga, T>(IBehaviorContext<TSaga> context)
+    where TSaga : class, ISagaStateMachineInstance
     where T : class;

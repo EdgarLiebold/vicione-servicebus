@@ -6,5 +6,5 @@ public interface IVisitable :
 {
     /// <summary>A visitable site can accept the visitor and pass control to internal elements.</summary>
     /// <param name="visitor">The visitor.</param>
-    void Accept(StateMachineVisitor visitor);
+    void Accept(IStateMachineVisitor visitor);
 }

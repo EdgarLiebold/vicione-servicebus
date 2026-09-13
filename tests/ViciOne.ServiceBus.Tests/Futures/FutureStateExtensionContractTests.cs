@@ -22,14 +22,14 @@ public sealed class FutureStateExtensionContractTests
             machine.SynchronousReceived,
             state,
             new Signal("sync"),
-            context => ((StateMachine<FutureState>)machine).RaiseEventAsync(context),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context),
             cancellationToken: TestContext.Current.CancellationToken);
         await FutureBehaviorContextFactory.UseAsync(
             machine,
             machine.AwaitedReceived,
             state,
             new Signal("async"),
-            context => ((StateMachine<FutureState>)machine).RaiseEventAsync(context),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context),
             cancellationToken: TestContext.Current.CancellationToken);
 
         await FutureBehaviorContextFactory.UseAsync(
@@ -39,7 +39,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("inspect"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 Assert.True(stateContext.TryGetResult(synchronousId, out StoredPayload? synchronous));
                 Assert.True(stateContext.TryGetResult(awaitedId, out StoredPayload? awaited));
                 Assert.Equal("sync-result", synchronous.Value);
@@ -56,7 +56,7 @@ public sealed class FutureStateExtensionContractTests
     [RequirementCoverage("REQ-VSB-FUTURE-RESULTS", "binder-result-dependencies-are-required")]
     public void ResultBinderExtensions_RejectMissingBinderSelectorsAndFactories()
     {
-        Func<BehaviorContext<FutureState, Signal>, Guid> idProvider = _ => Guid.NewGuid();
+        Func<IBehaviorContext<FutureState, Signal>, Guid> idProvider = _ => Guid.NewGuid();
         EventMessageFactory<FutureState, Signal, StoredPayload> synchronous = _ => new StoredPayload("value");
         AsyncEventMessageFactory<FutureState, Signal, StoredPayload> awaited = _ => Task.FromResult(new StoredPayload("value"));
 
@@ -86,7 +86,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("input"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 FutureMessage stored = stateContext.CreateFutureMessage(new StoredPayload("stored"));
                 state.Command = stored;
 
@@ -117,7 +117,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("input"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 stateContext.SetCompleted(first);
                 Assert.Null(state.Completed);
                 Assert.Equal([second], state.Pending);
@@ -153,7 +153,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("input"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 stateContext.SetFaulted(first, firstFault);
                 stateContext.SetFaulted(second, laterFault);
 
@@ -181,7 +181,7 @@ public sealed class FutureStateExtensionContractTests
             {
                 StoredPayload typedSync = context.SetResult<Signal, StoredPayload>(ids[0],
                     current => new StoredPayload(current.Message.Value + "-typed-sync"));
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 StoredPayload stateSync = stateContext.SetResult(ids[1], _ => new StoredPayload("state-sync"));
                 var direct = new StoredPayload("direct");
                 stateContext.SetResult(ids[2], direct);
@@ -225,7 +225,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("input"),
             async context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 var direct = new StoredFault("direct");
                 stateContext.SetFault(ids[0], direct);
                 StoredFault synchronous = context.SetFault<Signal, StoredFault>(ids[1],
@@ -295,7 +295,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("with-address"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 stateContext.AddSubscription();
                 stateContext.AddSubscription();
                 return Task.CompletedTask;
@@ -310,7 +310,7 @@ public sealed class FutureStateExtensionContractTests
             new Signal("without-address"),
             context =>
             {
-                ((BehaviorContext<FutureState>)context).AddSubscription();
+                ((IBehaviorContext<FutureState>)context).AddSubscription();
                 return Task.CompletedTask;
             },
             cancellationToken: TestContext.Current.CancellationToken);
@@ -327,7 +327,7 @@ public sealed class FutureStateExtensionContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<Signal> SignalReceived { get; private set; } = null!;
+        public IEvent<Signal> SignalReceived { get; private set; } = null!;
     }
 
     private sealed class ResultBinderMachine : ViciOneServiceBusStateMachine<FutureState>
@@ -346,9 +346,9 @@ public sealed class FutureStateExtensionContractTests
                     }));
         }
 
-        public Event<Signal> SynchronousReceived { get; private set; } = null!;
+        public IEvent<Signal> SynchronousReceived { get; private set; } = null!;
 
-        public Event<Signal> AwaitedReceived { get; private set; } = null!;
+        public IEvent<Signal> AwaitedReceived { get; private set; } = null!;
     }
 
     private sealed class ResultBinderBoundaryMachine : ViciOneServiceBusStateMachine<FutureState>
@@ -358,13 +358,13 @@ public sealed class FutureStateExtensionContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<Signal> SignalReceived { get; private set; } = null!;
+        public IEvent<Signal> SignalReceived { get; private set; } = null!;
 
-        public void AddSynchronous(Func<BehaviorContext<FutureState, Signal>, Guid> idProvider,
+        public void AddSynchronous(Func<IBehaviorContext<FutureState, Signal>, Guid> idProvider,
             EventMessageFactory<FutureState, Signal, StoredPayload> factory) =>
             When(SignalReceived).SetResult(idProvider, factory);
 
-        public void AddAwaited(Func<BehaviorContext<FutureState, Signal>, Guid> idProvider,
+        public void AddAwaited(Func<IBehaviorContext<FutureState, Signal>, Guid> idProvider,
             AsyncEventMessageFactory<FutureState, Signal, StoredPayload> factory) =>
             When(SignalReceived).SetResultAwaited(idProvider, factory);
     }

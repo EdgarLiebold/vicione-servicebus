@@ -35,7 +35,7 @@ public class DependencyInjectionQuerySagaRepository<TSaga> :
             context.Add("provider", "dependencyInjection");
         }
 
-        public async Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+        public async Task<T> ExecuteAsync<T>(Func<IQuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
             where T : class
         {
             var serviceScope = _serviceProvider.CreateScope();

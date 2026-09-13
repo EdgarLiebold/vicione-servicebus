@@ -14,17 +14,17 @@ namespace ViciOne.ServiceBus.Middleware;
 /// <typeparam name="TMessage">The correlated message type.</typeparam>
 internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
     ISagaMessageFilter<TInstance, TMessage>
-    where TInstance : class, ISaga, SagaStateMachineInstance
+    where TInstance : class, ISaga, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly string _activityName;
-    readonly Event<TMessage> _event;
-    readonly SagaStateMachine<TInstance> _machine;
+    readonly IEvent<TMessage> _event;
+    readonly ISagaStateMachine<TInstance> _machine;
 
     /// <summary>Creates a filter for one state machine and correlated event.</summary>
     /// <param name="machine">The state machine that owns the event.</param>
     /// <param name="event">The event raised for each consumed message.</param>
-    public StateMachineSagaMessageFilter(SagaStateMachine<TInstance> machine, Event<TMessage> @event)
+    public StateMachineSagaMessageFilter(ISagaStateMachine<TInstance> machine, IEvent<TMessage> @event)
     {
         _machine = machine ?? throw new ArgumentNullException(nameof(machine));
         _event = @event ?? throw new ArgumentNullException(nameof(@event));
@@ -44,7 +44,7 @@ internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
             InstanceType = TypeCache<TInstance>.ShortName
         });
 
-        List<State<TInstance>> states = _machine.States.Cast<State<TInstance>>().Where(x => x.Events.Contains(_event)).ToList();
+        List<IState<TInstance>> states = _machine.States.Cast<IState<TInstance>>().Where(x => x.Events.Contains(_event)).ToList();
         if (states.Any())
             scope.Add("states", states.Select(x => x.Name).ToArray());
 
@@ -61,7 +61,7 @@ internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
         ArgumentNullException.ThrowIfNull(next);
         context.CancellationToken.ThrowIfCancellationRequested();
 
-        BehaviorContext<TInstance, TMessage> behaviorContext =
+        IBehaviorContext<TInstance, TMessage> behaviorContext =
             new ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy<TMessage>(_machine, context, context, _event);
 
         StartedActivity? activity = LogContext.Current?.StartSagaStateMachineActivity(behaviorContext);
@@ -71,7 +71,7 @@ internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
         {
             if (activity is { Activity: { IsAllDataRequested: true } })
             {
-                State<TInstance>? beginState = await behaviorContext.StateMachine.Accessor
+                IState<TInstance>? beginState = await behaviorContext.StateMachine.Accessor
                     .GetAsync(behaviorContext, context.CancellationToken)
                     .ConfigureAwait(false);
                 if (beginState != null)
@@ -85,7 +85,7 @@ internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
         }
         catch (UnhandledEventException ex)
         {
-            State<TInstance>? currentState = await _machine.Accessor
+            IState<TInstance>? currentState = await _machine.Accessor
                 .GetAsync(behaviorContext, context.CancellationToken)
                 .ConfigureAwait(false);
 
@@ -114,7 +114,7 @@ internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
             {
                 if (startedActivity.Activity.IsAllDataRequested)
                 {
-                    State<TInstance>? endState = await behaviorContext.StateMachine.Accessor
+                    IState<TInstance>? endState = await behaviorContext.StateMachine.Accessor
                         .GetAsync(behaviorContext, CancellationToken.None)
                         .ConfigureAwait(false);
                     if (endState != null)

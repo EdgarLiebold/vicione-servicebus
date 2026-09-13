@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class InitiatedByOrOrchestratesSagaConnectorFactory<TSaga, TMessage> :
     ISagaConnectorFactory
-    where TSaga : class, ISaga, InitiatedByOrOrchestrates<TMessage>
-    where TMessage : class, CorrelatedBy<Guid>
+    where TSaga : class, ISaga, IInitiatedByOrOrchestrates<TMessage>
+    where TMessage : class, ICorrelatedBy<Guid>
 {
     readonly ISagaMessageConnector<TSaga> _connector;
 

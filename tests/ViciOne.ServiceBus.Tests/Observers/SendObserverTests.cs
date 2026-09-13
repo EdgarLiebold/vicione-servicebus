@@ -251,9 +251,9 @@ public sealed class SendObserverTests
         SendContext Context,
         Exception? Exception);
 
-    private sealed record ObservedSend(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedSend(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record ResponseRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ResponseRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record ResponseMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ResponseMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 }

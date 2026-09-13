@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Tests.JobService.Integration.ContainerJobDiscovery;
 
 public sealed class DiscoveryMarker;
 
-public sealed record CrunchNumbers(Guid CorrelationId, int Value) : CorrelatedBy<Guid>;
+public sealed record CrunchNumbers(Guid CorrelationId, int Value) : ICorrelatedBy<Guid>;
 
 public sealed record JobSnapshot(Guid CorrelationId, Guid JobId, int Value);
 

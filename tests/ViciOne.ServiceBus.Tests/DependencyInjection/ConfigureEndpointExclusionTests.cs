@@ -149,7 +149,7 @@ public sealed class ConfigureEndpointExclusionTests
 
     public sealed record ControlMessage(Guid CorrelationId);
 
-    public sealed record ExcludedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ExcludedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class ControlConsumer : IConsumer<ControlMessage>
     {
@@ -167,7 +167,7 @@ public sealed class ConfigureEndpointExclusionTests
         public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
     }
 
-    private sealed class ExplicitlyExcludedSaga : ISaga, InitiatedBy<ExcludedMessage>
+    private sealed class ExplicitlyExcludedSaga : ISaga, IInitiatedBy<ExcludedMessage>
     {
         public Guid CorrelationId { get; set; }
 
@@ -175,26 +175,26 @@ public sealed class ConfigureEndpointExclusionTests
     }
 
     [ExcludeFromConfigureEndpoints]
-    private sealed class AttributedExcludedSaga : ISaga, InitiatedBy<ExcludedMessage>
+    private sealed class AttributedExcludedSaga : ISaga, IInitiatedBy<ExcludedMessage>
     {
         public Guid CorrelationId { get; set; }
 
         public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
     }
 
-    private sealed class ExplicitlyExcludedState : SagaStateMachineInstance
+    private sealed class ExplicitlyExcludedState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
     }
 
     [ExcludeFromConfigureEndpoints]
-    private sealed class AttributedExcludedState : SagaStateMachineInstance
+    private sealed class AttributedExcludedState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
     }
 
     private sealed class ExplicitlyExcludedMachine :
@@ -207,7 +207,7 @@ public sealed class ConfigureEndpointExclusionTests
             SetCompletedWhenFinalized();
         }
 
-        public Event<ExcludedMessage> Started { get; private set; } = null!;
+        public IEvent<ExcludedMessage> Started { get; private set; } = null!;
     }
 
     private sealed class AttributedStateMachine :
@@ -220,6 +220,6 @@ public sealed class ConfigureEndpointExclusionTests
             SetCompletedWhenFinalized();
         }
 
-        public Event<ExcludedMessage> Started { get; private set; } = null!;
+        public IEvent<ExcludedMessage> Started { get; private set; } = null!;
     }
 }

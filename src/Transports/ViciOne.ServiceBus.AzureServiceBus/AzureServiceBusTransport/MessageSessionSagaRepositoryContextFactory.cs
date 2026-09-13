@@ -31,7 +31,7 @@ public class MessageSessionSagaRepositoryContextFactory<TSaga> :
     /// <param name="context">The typed consume context containing session metadata.</param>
     /// <param name="next">The repository pipeline stage to invoke.</param>
     /// <returns>The continuation task for the session-backed saga repository context.</returns>
-    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         var repositoryContext = new MessageSessionSagaRepositoryContext<TSaga, T>(context, _factory);
@@ -45,7 +45,7 @@ public class MessageSessionSagaRepositoryContextFactory<TSaga> :
     /// <param name="query">The predicate applied to the current session state.</param>
     /// <param name="next">The query pipeline stage receiving zero or one matching state.</param>
     /// <returns>The continuation task after the current session state has been filtered by <paramref name="query"/>.</returns>
-    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);

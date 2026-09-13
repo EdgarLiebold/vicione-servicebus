@@ -8,10 +8,10 @@ namespace ViciOne.ServiceBus.EventHubs;
 /// <typeparam name="TException">The handled exception type.</typeparam>
 /// <param name="context">The current exception behavior context.</param>
 /// <returns>The destination Event Hub entity name.</returns>
-public delegate string ExceptionEventHubNameProvider<TInstance, in TData, in TException>(BehaviorExceptionContext<TInstance, TData, TException> context)
+public delegate string ExceptionEventHubNameProvider<TInstance, in TData, in TException>(IBehaviorExceptionContext<TInstance, TData, TException> context)
     where TException : Exception
     where TData : class
-    where TInstance : class, SagaStateMachineInstance;
+    where TInstance : class, ISagaStateMachineInstance;
 
 
 /// <summary>Selects the destination Event Hub while handling a behavior exception.</summary>
@@ -19,6 +19,6 @@ public delegate string ExceptionEventHubNameProvider<TInstance, in TData, in TEx
 /// <typeparam name="TException">The handled exception type.</typeparam>
 /// <param name="context">The current exception behavior context.</param>
 /// <returns>The destination Event Hub entity name.</returns>
-public delegate string ExceptionEventHubNameProvider<TInstance, in TException>(BehaviorExceptionContext<TInstance, TException> context)
+public delegate string ExceptionEventHubNameProvider<TInstance, in TException>(IBehaviorExceptionContext<TInstance, TException> context)
     where TException : Exception
-    where TInstance : class, SagaStateMachineInstance;
+    where TInstance : class, ISagaStateMachineInstance;

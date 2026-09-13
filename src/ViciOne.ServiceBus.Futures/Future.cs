@@ -90,19 +90,19 @@ public abstract class Future<TCommand, TResult, TFault> :
     }
 
     /// <summary>Gets the state in which one or more operations are still pending.</summary>
-    public State WaitingForCompletion { get; protected set; } = null!;
+    public IState WaitingForCompletion { get; protected set; } = null!;
     /// <summary>Gets the terminal state for a successful future.</summary>
-    public State Completed { get; protected set; } = null!;
+    public IState Completed { get; protected set; } = null!;
     /// <summary>Gets the terminal state for a faulted future.</summary>
-    public State Faulted { get; protected set; } = null!;
+    public IState Faulted { get; protected set; } = null!;
 
     /// <summary>
     /// Initiates and correlates the command to the future. Subsequent commands received while waiting for completion
     /// are added as subscribers.
     /// </summary>
-    public Event<TCommand> CommandReceived { get; protected set; } = null!;
+    public IEvent<TCommand> CommandReceived { get; protected set; } = null!;
     /// <summary>Gets the event that requests the stored terminal outcome of an existing future.</summary>
-    public Event<Get<TCommand>> ResultRequested { get; protected set; } = null!;
+    public IEvent<Get<TCommand>> ResultRequested { get; protected set; } = null!;
     /// <summary>Configures correlation and topology behavior for the initiating command.</summary>
     /// <param name="configure">The callback that configures the command event.</param>
     protected void ConfigureCommand(Action<IEventCorrelationConfigurator<FutureState, TCommand>> configure)
@@ -198,7 +198,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         where TInput : class
         where TRequest : class
     {
-        Event<Fault<TRequest>> requestFaulted = Event<Fault<TRequest>>(FormatEventName<TRequest>() + "Faulted", x =>
+        IEvent<Fault<TRequest>> requestFaulted = Event<Fault<TRequest>>(FormatEventName<TRequest>() + "Faulted", x =>
         {
             x.CorrelateById(m => RequestIdOrFault(m));
             x.OnMissingInstance(m => m.Execute(context => throw new FutureNotFoundException(GetType(), RequestIdOrDefault(context))));
@@ -224,7 +224,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         where TInput : class
     {
         ArgumentNullException.ThrowIfNull(configure);
-        Event<RoutingSlipCompleted> routingSlipCompleted = Event<RoutingSlipCompleted>(FormatEventName<RoutingSlipCompleted>(), x =>
+        IEvent<RoutingSlipCompleted> routingSlipCompleted = Event<RoutingSlipCompleted>(FormatEventName<RoutingSlipCompleted>(), x =>
         {
             x.CorrelateById(m => FutureIdOrFault(m.Advanced(), m.Message.Variables));
             x.OnMissingInstance(m => m
@@ -232,7 +232,7 @@ public abstract class Future<TCommand, TResult, TFault> :
             x.ConfigureConsumeTopology = false;
         });
 
-        Event<RoutingSlipFaulted> routingSlipFaulted = Event<RoutingSlipFaulted>(FormatEventName<RoutingSlipFaulted>(), x =>
+        IEvent<RoutingSlipFaulted> routingSlipFaulted = Event<RoutingSlipFaulted>(FormatEventName<RoutingSlipFaulted>(), x =>
         {
             x.CorrelateById(m => FutureIdOrFault(m.Advanced(), m.Message.Variables));
             x.OnMissingInstance(m => m
@@ -264,10 +264,10 @@ public abstract class Future<TCommand, TResult, TFault> :
         return routingSlip;
     }
 
-    Event<T> IFutureStateMachineConfigurator.CreateResponseEvent<T>()
+    IEvent<T> IFutureStateMachineConfigurator.CreateResponseEvent<T>()
         where T : class
     {
-        Event<T> requestCompleted = Event<T>(FormatEventName<T>(), x =>
+        IEvent<T> requestCompleted = Event<T>(FormatEventName<T>(), x =>
         {
             x.CorrelateById(m => RequestIdOrFault(m));
             x.OnMissingInstance(m => m.Execute(context => throw new FutureNotFoundException(GetType(), RequestIdOrDefault(context))));
@@ -277,7 +277,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         return requestCompleted;
     }
 
-    void IFutureStateMachineConfigurator.CompletePendingRequest<T>(Event<T> requestCompleted, PendingFutureIdProvider<T> pendingIdProvider)
+    void IFutureStateMachineConfigurator.CompletePendingRequest<T>(IEvent<T> requestCompleted, PendingFutureIdProvider<T> pendingIdProvider)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(requestCompleted);
@@ -285,20 +285,20 @@ public abstract class Future<TCommand, TResult, TFault> :
         CompletePending(requestCompleted, pendingIdProvider);
     }
 
-    void IFutureStateMachineConfigurator.DuringAnyWhen<T>(Event<T> whenEvent, Func<EventActivityBinder<FutureState, T>,
-        EventActivityBinder<FutureState, T>> configure)
+    void IFutureStateMachineConfigurator.DuringAnyWhen<T>(IEvent<T> whenEvent, Func<IEventActivityBinder<FutureState, T>,
+        IEventActivityBinder<FutureState, T>> configure)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(whenEvent);
         ArgumentNullException.ThrowIfNull(configure);
-        EventActivityBinder<FutureState, T> binder = When(whenEvent);
+        IEventActivityBinder<FutureState, T> binder = When(whenEvent);
 
         binder = configure(binder) ?? throw new InvalidOperationException("The future event configuration callback returned null.");
 
         DuringAny(binder);
     }
 
-    void CompletePending<T>(Event<T> completedEvent, PendingFutureIdProvider<T> pendingIdProvider)
+    void CompletePending<T>(IEvent<T> completedEvent, PendingFutureIdProvider<T> pendingIdProvider)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(completedEvent);
@@ -321,7 +321,7 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <typeparam name="T">The failed request contract.</typeparam>
     /// <param name="requestFaulted">The request-fault event.</param>
     /// <param name="pendingIdProvider">The selector for the pending request identifier.</param>
-    void FaultPendingRequest<T>(Event<Fault<T>> requestFaulted, PendingFutureIdProvider<T> pendingIdProvider)
+    void FaultPendingRequest<T>(IEvent<Fault<T>> requestFaulted, PendingFutureIdProvider<T> pendingIdProvider)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(requestFaulted);
@@ -336,7 +336,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         );
     }
 
-    void FaultPendingRoutingSlip(Event<RoutingSlipFaulted> requestFaulted)
+    void FaultPendingRoutingSlip(IEvent<RoutingSlipFaulted> requestFaulted)
     {
         ArgumentNullException.ThrowIfNull(requestFaulted);
         DuringAny(
@@ -349,14 +349,14 @@ public abstract class Future<TCommand, TResult, TFault> :
         );
     }
 
-    void IFutureStateMachineConfigurator.SetResult<T>(Event<T> responseReceived,
-        Func<BehaviorContext<FutureState, T>, Task> callback)
+    void IFutureStateMachineConfigurator.SetResult<T>(IEvent<T> responseReceived,
+        Func<IBehaviorContext<FutureState, T>, Task> callback)
         where T : class
     {
         SetResult(responseReceived, callback);
     }
 
-    void SetResult<T>(Event<T> resultEvent, Func<BehaviorContext<FutureState, T>, Task> callback)
+    void SetResult<T>(IEvent<T> resultEvent, Func<IBehaviorContext<FutureState, T>, Task> callback)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(resultEvent);
@@ -368,8 +368,8 @@ public abstract class Future<TCommand, TResult, TFault> :
         );
     }
 
-    void IFutureStateMachineConfigurator.SetFaulted<T>(Event<T> requestCompleted,
-        Func<BehaviorContext<FutureState, T>, Task<bool>> callback)
+    void IFutureStateMachineConfigurator.SetFaulted<T>(IEvent<T> requestCompleted,
+        Func<IBehaviorContext<FutureState, T>, Task<bool>> callback)
     {
         SetFaulted(requestCompleted, callback);
     }
@@ -378,7 +378,7 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <typeparam name="T">The event contract that triggers the fault.</typeparam>
     /// <param name="faultEvent">The event to configure.</param>
     /// <param name="callback">The asynchronous callback that reports whether the terminal fault was emitted.</param>
-    void SetFaulted<T>(Event<T> faultEvent, Func<BehaviorContext<FutureState, T>, Task<bool>> callback)
+    void SetFaulted<T>(IEvent<T> faultEvent, Func<IBehaviorContext<FutureState, T>, Task<bool>> callback)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(faultEvent);
@@ -472,7 +472,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         configure(configurator);
     }
 
-    static Task<TResult> GetResultAsync(BehaviorContext<FutureState> context)
+    static Task<TResult> GetResultAsync(IBehaviorContext<FutureState> context)
     {
         if (context.TryGetResult(context.Saga.CorrelationId, out TResult? completed))
             return Task.FromResult(completed);
@@ -480,7 +480,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         throw new InvalidOperationException("The future is completed, but its result is not available.");
     }
 
-    static Task<TFault> GetFaultAsync(BehaviorContext<FutureState> context)
+    static Task<TFault> GetFaultAsync(IBehaviorContext<FutureState> context)
     {
         if (context.TryGetFault(context.Saga.CorrelationId, out TFault? faulted))
             return Task.FromResult(faulted);

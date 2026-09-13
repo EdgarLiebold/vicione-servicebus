@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate DateTimeOffset ScheduleTimeProvider<TSaga>(BehaviorContext<TSaga> context)
-    where TSaga : class, SagaStateMachineInstance;
+public delegate DateTimeOffset ScheduleTimeProvider<TSaga>(IBehaviorContext<TSaga> context)
+    where TSaga : class, ISagaStateMachineInstance;
 
 
 /// <summary>Represents the method that handles schedule time provider.</summary>
@@ -15,6 +15,6 @@ public delegate DateTimeOffset ScheduleTimeProvider<TSaga>(BehaviorContext<TSaga
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate DateTimeOffset ScheduleTimeProvider<TSaga, in TMessage>(BehaviorContext<TSaga, TMessage> context)
+public delegate DateTimeOffset ScheduleTimeProvider<TSaga, in TMessage>(IBehaviorContext<TSaga, TMessage> context)
     where TMessage : class
-    where TSaga : class, SagaStateMachineInstance;
+    where TSaga : class, ISagaStateMachineInstance;

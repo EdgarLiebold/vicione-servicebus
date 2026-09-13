@@ -125,7 +125,7 @@ public sealed class InMemoryFaultPublicationTests
             TestInactivityTimeout = timeout,
         };
 
-    private sealed record EventCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record EventCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private interface ConsumerEvent
     {

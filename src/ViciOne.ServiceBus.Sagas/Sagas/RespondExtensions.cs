@@ -15,9 +15,9 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Respond<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> Respond<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         TMessage message, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -32,9 +32,9 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -49,10 +49,10 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Respond<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> Respond<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         EventMessageFactory<TInstance, TData, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -67,10 +67,10 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -85,10 +85,10 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        Func<IBehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -103,10 +103,10 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Respond<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, TMessage message,
+    public static IExceptionActivityBinder<TInstance, TException> Respond<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, TMessage message,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -121,10 +121,10 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> RespondAwaited<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
+    public static IExceptionActivityBinder<TInstance, TException> RespondAwaited<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -139,11 +139,11 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Respond<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source,
+    public static IExceptionActivityBinder<TInstance, TException> Respond<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source,
         EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -158,11 +158,11 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> RespondAwaited<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source,
+    public static IExceptionActivityBinder<TInstance, TException> RespondAwaited<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -178,10 +178,10 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Respond<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Respond<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -198,10 +198,10 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> RespondAwaited<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
+    public static IExceptionActivityBinder<TInstance, TData, TException> RespondAwaited<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -218,11 +218,11 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Respond<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Respond<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source,
         EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -239,11 +239,11 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> RespondAwaited<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source,
+    public static IExceptionActivityBinder<TInstance, TData, TException> RespondAwaited<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception

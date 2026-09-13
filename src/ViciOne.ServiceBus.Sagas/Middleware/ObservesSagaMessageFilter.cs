@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Middleware;
 /// <typeparam name="TMessage">The message type.</typeparam>
 public class ObservesSagaMessageFilter<TSaga, TMessage> :
     ISagaMessageFilter<TSaga, TMessage>
-    where TSaga : class, ISaga, Observes<TMessage, TSaga>
+    where TSaga : class, ISaga, IObserves<TMessage, TSaga>
     where TMessage : class
 {
     void IProbeSite.Probe(ProbeContext context)

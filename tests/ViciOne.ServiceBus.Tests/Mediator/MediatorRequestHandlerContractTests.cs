@@ -130,7 +130,7 @@ public sealed class MediatorRequestHandlerContractTests
             Task.FromResult<ResponseMessage>(null!);
     }
 
-    private sealed record OneWayRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    private sealed record ResponseRequest(Guid CorrelationId, string Value) : IRequest<ResponseMessage>, CorrelatedBy<Guid>;
-    private sealed record ResponseMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record OneWayRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    private sealed record ResponseRequest(Guid CorrelationId, string Value) : IRequest<ResponseMessage>, ICorrelatedBy<Guid>;
+    private sealed record ResponseMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 }

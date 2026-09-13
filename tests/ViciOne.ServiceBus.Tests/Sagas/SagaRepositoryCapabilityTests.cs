@@ -176,12 +176,12 @@ public sealed class SagaRepositoryCapabilityTests
 
     private sealed class UnusedRepositoryContextFactory : ISagaRepositoryContextFactory<CapabilitySaga>
     {
-        public Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<CapabilitySaga, T>> next)
+        public Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<CapabilitySaga, T>> next)
             where T : class =>
             throw new NotSupportedException();
 
         public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<CapabilitySaga> query,
-            IPipe<SagaRepositoryQueryContext<CapabilitySaga, T>> next)
+            IPipe<ISagaRepositoryQueryContext<CapabilitySaga, T>> next)
             where T : class =>
             throw new NotSupportedException();
 
@@ -200,7 +200,7 @@ public sealed class SagaRepositoryCapabilityTests
         public CancellationToken OperationCancellationToken { get; private set; }
 
         public async Task<T?> ExecuteAsync<T>(
-            Func<LoadSagaRepositoryContext<CapabilitySaga>, Task<T?>> asyncMethod,
+            Func<ILoadSagaRepositoryContext<CapabilitySaga>, Task<T?>> asyncMethod,
             CancellationToken cancellationToken = default)
             where T : class
         {
@@ -227,7 +227,7 @@ public sealed class SagaRepositoryCapabilityTests
         public CancellationToken OperationCancellationToken { get; private set; }
 
         public async Task<T> ExecuteAsync<T>(
-            Func<QuerySagaRepositoryContext<CapabilitySaga>, Task<T>> asyncMethod,
+            Func<IQuerySagaRepositoryContext<CapabilitySaga>, Task<T>> asyncMethod,
             CancellationToken cancellationToken = default)
             where T : class
         {
@@ -246,7 +246,7 @@ public sealed class SagaRepositoryCapabilityTests
 
     private sealed class RecordingLoadContext(CapabilitySaga? saga, CancellationToken cancellationToken) :
         BasePipeContext(cancellationToken),
-        LoadSagaRepositoryContext<CapabilitySaga>
+        ILoadSagaRepositoryContext<CapabilitySaga>
     {
         public Guid? CorrelationId { get; private set; }
 
@@ -262,7 +262,7 @@ public sealed class SagaRepositoryCapabilityTests
 
     private sealed class RecordingQueryContext(IEnumerable<Guid> matches, CancellationToken cancellationToken) :
         BasePipeContext(cancellationToken),
-        SagaRepositoryQueryContext<CapabilitySaga>
+        ISagaRepositoryQueryContext<CapabilitySaga>
     {
         private readonly IReadOnlyList<Guid> _matches = matches.ToArray();
 
@@ -272,13 +272,13 @@ public sealed class SagaRepositoryCapabilityTests
 
         public CancellationToken OperationCancellationToken { get; private set; }
 
-        public Task<SagaRepositoryQueryContext<CapabilitySaga>> QueryAsync(
+        public Task<ISagaRepositoryQueryContext<CapabilitySaga>> QueryAsync(
             ISagaQuery<CapabilitySaga> query,
             CancellationToken cancellationToken = default)
         {
             Query = query;
             OperationCancellationToken = cancellationToken;
-            return Task.FromResult<SagaRepositoryQueryContext<CapabilitySaga>>(this);
+            return Task.FromResult<ISagaRepositoryQueryContext<CapabilitySaga>>(this);
         }
 
         public IEnumerator<Guid> GetEnumerator() => _matches.GetEnumerator();

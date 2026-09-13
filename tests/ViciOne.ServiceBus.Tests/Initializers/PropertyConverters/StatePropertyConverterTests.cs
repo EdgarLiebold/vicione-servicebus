@@ -78,7 +78,7 @@ public sealed class StatePropertyConverterTests
             : $"{exception.ExceptionType}: {exception.Message}{Environment.NewLine}{exception.StackTrace}{Environment.NewLine}---> {FormatException(exception.InnerException)}";
     }
 
-    private sealed class IntegerStateInstance : SagaStateMachineInstance
+    private sealed class IntegerStateInstance : ISagaStateMachineInstance
     {
         public int CurrentState { get; set; }
 
@@ -103,12 +103,12 @@ public sealed class StatePropertyConverterTests
                     })));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<StateTransitionStarted> Started { get; } = null!;
+        public IEvent<StateTransitionStarted> Started { get; } = null!;
     }
 
-    public sealed class StateTransitionStarted : CorrelatedBy<Guid>
+    public sealed class StateTransitionStarted : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; init; }
     }

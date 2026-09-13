@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.SagaStateMachine;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     class InitialIfNullStateAccessor :
         IStateAccessor<TInstance>
@@ -14,7 +14,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly IBehavior<TInstance> _initialBehavior;
         readonly IStateAccessor<TInstance> _stateAccessor;
 
-        public InitialIfNullStateAccessor(State<TInstance> initialState, IStateAccessor<TInstance> stateAccessor)
+        public InitialIfNullStateAccessor(IState<TInstance> initialState, IStateAccessor<TInstance> stateAccessor)
         {
             _stateAccessor = stateAccessor;
 
@@ -22,9 +22,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _initialBehavior = new LastBehavior<TInstance>(initialActivity);
         }
 
-        async Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
+        async Task<IState<TInstance>?> IStateAccessor<TInstance>.GetAsync(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
-            State<TInstance>? state = await _stateAccessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
+            IState<TInstance>? state = await _stateAccessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
             if (state == null)
             {
                 await _initialBehavior.ExecuteAsync(context).ConfigureAwait(false);
@@ -35,12 +35,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return state;
         }
 
-        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
+        Task IStateAccessor<TInstance>.SetAsync(IBehaviorContext<TInstance> context, IState<TInstance> state, CancellationToken cancellationToken)
         {
             return _stateAccessor.SetAsync(context, state, cancellationToken: cancellationToken);
         }
 
-        public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)
+        public Expression<Func<TInstance, bool>> GetStateExpression(params IState[] states)
         {
             return _stateAccessor.GetStateExpression(states);
         }

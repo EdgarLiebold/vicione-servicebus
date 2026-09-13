@@ -8,9 +8,9 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TException">The exception type available to the condition.</typeparam>
 /// <param name="context">The exception behavior context evaluated by the condition.</param>
 /// <returns>A task whose result indicates whether the exception behavior condition is satisfied.</returns>
-public delegate Task<bool> StateMachineAsyncExceptionCondition<TSaga, in TException>(BehaviorExceptionContext<TSaga, TException> context)
+public delegate Task<bool> StateMachineAsyncExceptionCondition<TSaga, in TException>(IBehaviorExceptionContext<TSaga, TException> context)
     where TException : Exception
-    where TSaga : class, SagaStateMachineInstance;
+    where TSaga : class, ISagaStateMachineInstance;
 
 
 /// <summary>Evaluates a message-specific exception behavior condition asynchronously.</summary>
@@ -20,7 +20,7 @@ public delegate Task<bool> StateMachineAsyncExceptionCondition<TSaga, in TExcept
 /// <param name="context">The exception behavior context evaluated by the condition.</param>
 /// <returns>A task whose result indicates whether the exception behavior condition is satisfied.</returns>
 public delegate Task<bool> StateMachineAsyncExceptionCondition<TSaga, in TMessage, in TException>(
-    BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     where TException : Exception
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class;

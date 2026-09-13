@@ -12,9 +12,9 @@ public static class SagaStateMachineReceiveEndpointExtensions
     /// <param name="stateMachine">The state machine.</param>
     /// <param name="repository">The saga repository for the instances.</param>
     /// <param name="configure">Optionally configure the saga.</param>
-    public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, SagaStateMachine<TInstance> stateMachine,
+    public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, ISagaStateMachine<TInstance> stateMachine,
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
     {
         if (stateMachine == null)
             throw new ArgumentNullException(nameof(stateMachine));
@@ -34,9 +34,9 @@ public static class SagaStateMachineReceiveEndpointExtensions
     /// <param name="repository">The repository.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     /// <returns>A handle that disconnects the registration.</returns>
-    public static ConnectHandle ConnectStateMachineSaga<TInstance>(this IConsumePipeConnector bus, SagaStateMachine<TInstance> stateMachine,
+    public static ConnectHandle ConnectStateMachineSaga<TInstance>(this IConsumePipeConnector bus, ISagaStateMachine<TInstance> stateMachine,
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
     {
         var connector = new ViciOneServiceBusStateMachine<TInstance>.StateMachineConnector(stateMachine);
 

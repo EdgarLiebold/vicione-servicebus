@@ -17,16 +17,16 @@ internal sealed class FutureFault<TCommand, TFault, TInput> :
     where TInput : class
 {
     static readonly object _defaultValues = new { };
-    ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault> _factory;
+    ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TFault> _factory;
 
     /// <summary>Creates a fault producer with the conventional fault-message mapping.</summary>
     public FutureFault()
     {
-        _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault>(DefaultFactoryAsync);
+        _factory = new ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TFault>(DefaultFactoryAsync);
     }
 
     /// <summary>Sets the factory that creates the terminal fault from the triggering event.</summary>
-    public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault> Factory
+    public ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TFault> Factory
     {
         set
         {
@@ -49,7 +49,7 @@ internal sealed class FutureFault<TCommand, TFault, TInput> :
     /// <param name="context">The future event context that supplies state and fault data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns><see langword="true" /> when the terminal fault was emitted; otherwise, <see langword="false" /> while operations remain pending.</returns>
-    public async Task<bool> TrySetFaultedAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    public async Task<bool> TrySetFaultedAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
@@ -78,7 +78,7 @@ internal sealed class FutureFault<TCommand, TFault, TInput> :
         }
     }
 
-    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> DefaultFactoryAsync(IBehaviorContext<FutureState, TInput> context)
     {
         if (context.Message is Fault fault)
         {
@@ -108,16 +108,16 @@ internal sealed class FutureFault<TFault> :
     where TFault : class
 {
     static readonly object _defaultValues = new { };
-    ContextMessageFactory<BehaviorContext<FutureState>, TFault> _factory;
+    ContextMessageFactory<IBehaviorContext<FutureState>, TFault> _factory;
 
     /// <summary>Creates a fault producer with an empty conventional initializer.</summary>
     public FutureFault()
     {
-        _factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)DefaultFactoryAsync);
+        _factory = MessageFactory<TFault>.Create((Func<IBehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)DefaultFactoryAsync);
     }
 
     /// <summary>Sets the factory that creates the terminal fault from future state.</summary>
-    public ContextMessageFactory<BehaviorContext<FutureState>, TFault> Factory
+    public ContextMessageFactory<IBehaviorContext<FutureState>, TFault> Factory
     {
         set
         {
@@ -140,7 +140,7 @@ internal sealed class FutureFault<TFault> :
     /// <param name="context">The future state context used to create the fault.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns><see langword="true" /> when the terminal fault was emitted; otherwise, <see langword="false" /> while operations remain pending.</returns>
-    public async Task<bool> TrySetFaultedAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
+    public async Task<bool> TrySetFaultedAsync(IBehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
@@ -169,7 +169,7 @@ internal sealed class FutureFault<TFault> :
         }
     }
 
-    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState> context)
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> DefaultFactoryAsync(IBehaviorContext<FutureState> context)
     {
         return context.InitAsync<TFault>(_defaultValues);
     }

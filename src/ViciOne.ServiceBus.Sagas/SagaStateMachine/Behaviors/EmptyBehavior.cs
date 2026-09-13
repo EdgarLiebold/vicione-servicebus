@@ -7,11 +7,11 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class EmptyBehavior<TSaga> :
     IBehavior<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -25,7 +25,7 @@ public class EmptyBehavior<TSaga> :
     /// <summary>Runs the configured action.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         return Task.CompletedTask;
     }
@@ -34,7 +34,7 @@ public class EmptyBehavior<TSaga> :
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
         return Task.CompletedTask;
@@ -45,7 +45,7 @@ public class EmptyBehavior<TSaga> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context)
         where T : class
         where TException : Exception
     {
@@ -56,7 +56,7 @@ public class EmptyBehavior<TSaga> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
         return Task.CompletedTask;
@@ -69,12 +69,12 @@ public class EmptyBehavior<TSaga> :
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class EmptyBehavior<TSaga, TMessage> :
     IBehavior<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -88,7 +88,7 @@ public class EmptyBehavior<TSaga, TMessage> :
     /// <summary>Runs the configured action.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context)
+    public Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context)
     {
         return Task.CompletedTask;
     }
@@ -97,7 +97,7 @@ public class EmptyBehavior<TSaga, TMessage> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         where TException : Exception
     {
         return Task.CompletedTask;

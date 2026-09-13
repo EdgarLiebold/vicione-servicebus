@@ -5,24 +5,24 @@ using ViciOne.ServiceBus.Internals;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Defines the schedule for state machine.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     public class StateMachineSchedule<TMessage> :
-        Schedule<TInstance, TMessage>
+        ISchedule<TInstance, TMessage>
         where TMessage : class
     {
         readonly string _name;
         readonly IReadProperty<TInstance, Guid?> _read;
-        readonly ScheduleSettings<TInstance, TMessage> _settings;
+        readonly IScheduleSettings<TInstance, TMessage> _settings;
         readonly IWriteProperty<TInstance, Guid?> _write;
 
         /// <summary>Initializes a new instance.</summary>
         /// <param name="name">The name.</param>
         /// <param name="tokenIdExpression">The token id expression.</param>
         /// <param name="settings">The settings that control the operation.</param>
-        public StateMachineSchedule(string name, Expression<Func<TInstance, Guid?>> tokenIdExpression, ScheduleSettings<TInstance, TMessage> settings)
+        public StateMachineSchedule(string name, Expression<Func<TInstance, Guid?>> tokenIdExpression, IScheduleSettings<TInstance, TMessage> settings)
         {
             _name = name;
             _settings = settings;
@@ -33,15 +33,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _write = WritePropertyCache<TInstance>.GetProperty<Guid?>(propertyInfo);
         }
 
-        string Schedule<TInstance>.Name => _name;
+        string ISchedule<TInstance>.Name => _name;
         /// <summary>Gets or sets the received.</summary>
-        public Event<TMessage> Received { get; set; } = null!;
+        public IEvent<TMessage> Received { get; set; } = null!;
         /// <summary>Gets or sets the any received.</summary>
-        public Event<TMessage> AnyReceived { get; set; } = null!;
+        public IEvent<TMessage> AnyReceived { get; set; } = null!;
         /// <summary>Gets delay.</summary>
         /// <param name="context">The context associated with the operation.</param>
         /// <returns>The delay.</returns>
-        public TimeSpan GetDelay(BehaviorContext<TInstance> context)
+        public TimeSpan GetDelay(IBehaviorContext<TInstance> context)
         {
             return _settings.DelayProvider(context);
         }

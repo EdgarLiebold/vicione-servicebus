@@ -7,18 +7,18 @@ namespace ViciOne.ServiceBus.Tests.InternalAccess.SagaStateMachine;
 public static class SagaStateMachineExecutionTestDriver
 {
     public static ISagaMessageFilter<TSaga, TMessage> CreateMessageFilter<TSaga, TMessage>(
-        SagaContracts.SagaStateMachine<TSaga> machine,
-        SagaContracts.Event<TMessage> @event)
-        where TSaga : class, ISaga, SagaContracts.SagaStateMachineInstance
+        SagaContracts.ISagaStateMachine<TSaga> machine,
+        SagaContracts.IEvent<TMessage> @event)
+        where TSaga : class, ISaga, SagaContracts.ISagaStateMachineInstance
         where TMessage : class
     {
         return new StateMachineSagaMessageFilter<TSaga, TMessage>(machine, @event);
     }
 
     public static SagaContracts.IStateMachineActivity<TSaga> CreateTransition<TSaga>(
-        SagaContracts.State<TSaga> toState,
+        SagaContracts.IState<TSaga> toState,
         SagaContracts.IStateAccessor<TSaga> currentStateAccessor)
-        where TSaga : class, SagaContracts.SagaStateMachineInstance
+        where TSaga : class, SagaContracts.ISagaStateMachineInstance
     {
         return new SagaRuntime.TransitionActivity<TSaga>(toState, currentStateAccessor);
     }

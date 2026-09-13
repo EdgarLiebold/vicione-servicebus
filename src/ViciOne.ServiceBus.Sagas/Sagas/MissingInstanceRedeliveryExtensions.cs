@@ -20,7 +20,7 @@ public static class MissingInstanceRedeliveryExtensions
     /// <returns>The configured missing-instance redelivery pipe.</returns>
     public static IPipe<ConsumeContext<TData>> Redeliver<TInstance, TData>(this IMissingInstanceConfigurator<TInstance, TData> configurator,
         Action<IMissingInstanceRedeliveryConfigurator<TInstance, TData>> configure)
-        where TInstance : SagaStateMachineInstance
+        where TInstance : ISagaStateMachineInstance
         where TData : class
     {
         ArgumentNullException.ThrowIfNull(configurator);

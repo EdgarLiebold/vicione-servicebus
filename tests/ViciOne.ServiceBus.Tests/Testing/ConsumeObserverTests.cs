@@ -201,15 +201,15 @@ public sealed class ConsumeObserverTests
             TestInactivityTimeout = timeout,
         };
 
-    private sealed record ObservedMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record FailingObservedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FailingObservedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record ObservedRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record ObservedResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record ConsumerObservedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ConsumerObservedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class ObservedConsumer(TaskCompletionSource<ConsumerObservedMessage> consumed)
         : IConsumer<ConsumerObservedMessage>

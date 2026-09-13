@@ -167,11 +167,11 @@ public sealed class DynamicReceiveEndpointConnectorTests
 
     private sealed class RegistrationMarker;
 
-    private sealed record NamedEndpointMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record NamedEndpointMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record DefinedEndpointMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record DefinedEndpointMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record NamedEndpointEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record NamedEndpointEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record DefinedEndpointEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record DefinedEndpointEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
 }

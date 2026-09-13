@@ -8,15 +8,15 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     internal class StateMachineConnector :
         ISagaConnector
     {
         readonly List<ISagaMessageConnector<TInstance>> _connectors;
-        readonly SagaStateMachine<TInstance> _stateMachine;
+        readonly ISagaStateMachine<TInstance> _stateMachine;
 
-        public StateMachineConnector(SagaStateMachine<TInstance> stateMachine)
+        public StateMachineConnector(ISagaStateMachine<TInstance> stateMachine)
         {
             _stateMachine = stateMachine;
 
@@ -69,7 +69,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         IEnumerable<ISagaMessageConnector<TInstance>> StateMachineEvents()
         {
-            EventCorrelation[] correlations = _stateMachine.Correlations.ToArray();
+            IEventCorrelation[] correlations = _stateMachine.Correlations.ToArray();
 
             correlations.SelectMany(x => x.Validate()).ThrowIfContainsFailure("The state machine was not properly configured:");
 
@@ -89,12 +89,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
 
     readonly struct Factory :
-        IActivationType<IStateMachineInterfaceType, SagaStateMachine<TInstance>, EventCorrelation>
+        IActivationType<IStateMachineInterfaceType, ISagaStateMachine<TInstance>, IEventCorrelation>
     {
-        public IStateMachineInterfaceType ActivateType<T>(SagaStateMachine<TInstance> machine, EventCorrelation correlation)
+        public IStateMachineInterfaceType ActivateType<T>(ISagaStateMachine<TInstance> machine, IEventCorrelation correlation)
             where T : class
         {
-            return new StateMachineInterfaceType<TInstance, T>(machine, (EventCorrelation<TInstance, T>)correlation);
+            return new StateMachineInterfaceType<TInstance, T>(machine, (IEventCorrelation<TInstance, T>)correlation);
         }
     }
 }

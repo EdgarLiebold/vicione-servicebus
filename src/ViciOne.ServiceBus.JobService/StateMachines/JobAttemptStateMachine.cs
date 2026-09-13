@@ -181,41 +181,41 @@ internal sealed class JobAttemptStateMachine :
     }
 
     /// <summary>Gets the state in which the execution command has been sent but the consumer has not acknowledged it.</summary>
-    public State Starting { get; } = null!;
+    public IState Starting { get; } = null!;
     /// <summary>Gets the state in which the consumer is executing the attempt.</summary>
-    public State Running { get; } = null!;
+    public IState Running { get; } = null!;
     /// <summary>Gets the state in which the first liveness request is awaiting a response.</summary>
-    public State CheckingStatus { get; } = null!;
+    public IState CheckingStatus { get; } = null!;
     /// <summary>Gets the state in which a second unanswered liveness request makes the attempt suspect.</summary>
-    public State Suspect { get; } = null!;
+    public IState Suspect { get; } = null!;
     /// <summary>Gets the state in which the attempt has failed and awaits explicit finalization.</summary>
-    public State Faulted { get; } = null!;
+    public IState Faulted { get; } = null!;
 
     /// <summary>Gets the command that creates and starts an execution attempt.</summary>
-    public Event<StartJobAttempt> StartJobAttempt { get; } = null!;
+    public IEvent<StartJobAttempt> StartJobAttempt { get; } = null!;
     /// <summary>Gets the fault emitted when the local execution command cannot be delivered or consumed.</summary>
-    public Event<Fault<StartJob>> StartJobFaulted { get; } = null!;
+    public IEvent<Fault<StartJob>> StartJobFaulted { get; } = null!;
     /// <summary>Gets the command that removes persisted attempt state.</summary>
-    public Event<FinalizeJobAttempt> FinalizeJobAttempt { get; } = null!;
+    public IEvent<FinalizeJobAttempt> FinalizeJobAttempt { get; } = null!;
     /// <summary>Gets the command that requests cancellation of the active local execution.</summary>
-    public Event<CancelJobAttempt> CancelJobAttempt { get; } = null!;
+    public IEvent<CancelJobAttempt> CancelJobAttempt { get; } = null!;
     /// <summary>Gets the consumer acknowledgement that execution has started.</summary>
-    public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
+    public IEvent<JobAttemptStarted> AttemptStarted { get; } = null!;
     /// <summary>Gets the notification that execution has faulted.</summary>
-    public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
+    public IEvent<JobAttemptFaulted> AttemptFaulted { get; } = null!;
     /// <summary>Gets the notification that execution has completed successfully.</summary>
-    public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
+    public IEvent<JobAttemptCompleted> AttemptCompleted { get; } = null!;
     /// <summary>Gets the notification that execution has been canceled.</summary>
-    public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
+    public IEvent<JobAttemptCanceled> AttemptCanceled { get; } = null!;
     /// <summary>Gets the response to an active liveness request.</summary>
-    public Event<JobAttemptStatus> AttemptStatus { get; } = null!;
+    public IEvent<JobAttemptStatus> AttemptStatus { get; } = null!;
     /// <summary>Gets the recurring liveness-check schedule.</summary>
-    public Schedule<JobAttemptSaga, JobStatusCheckRequested> StatusCheckRequested { get; } = null!;
+    public ISchedule<JobAttemptSaga, JobStatusCheckRequested> StatusCheckRequested { get; } = null!;
 }
 
 static class JobAttemptStateMachineBehaviorExtensions
 {
-    public static TimeSpan? GetRetryDelay<T>(this BehaviorContext<JobAttemptSaga, T> context)
+    public static TimeSpan? GetRetryDelay<T>(this IBehaviorContext<JobAttemptSaga, T> context)
         where T : class
     {
         var settings = context.GetPayload<JobSagaSettings>()
@@ -238,7 +238,7 @@ static class JobAttemptStateMachineBehaviorExtensions
             ?? throw new InvalidOperationException("The job saga settings payload is required.")).JobAttemptSagaEndpointAddress;
     }
 
-    public static EventActivityBinder<JobAttemptSaga, StartJobAttempt> SendStartJob(this EventActivityBinder<JobAttemptSaga, StartJobAttempt> binder)
+    public static IEventActivityBinder<JobAttemptSaga, StartJobAttempt> SendStartJob(this IEventActivityBinder<JobAttemptSaga, StartJobAttempt> binder)
     {
         return binder.Send<JobAttemptSaga, StartJobAttempt, StartJob>(context => context.Saga.InstanceAddress ?? context.Saga.ServiceAddress,
             context => new StartJobCommand
@@ -255,7 +255,7 @@ static class JobAttemptStateMachineBehaviorExtensions
             }, (behaviorContext, context) => context.FaultAddress = behaviorContext.GetJobAttemptSagaAddress());
     }
 
-    public static EventActivityBinder<JobAttemptSaga, JobStatusCheckRequested> SendCheckJobStatus(this EventActivityBinder<JobAttemptSaga,
+    public static IEventActivityBinder<JobAttemptSaga, JobStatusCheckRequested> SendCheckJobStatus(this IEventActivityBinder<JobAttemptSaga,
         JobStatusCheckRequested> binder)
     {
         return binder.Send<JobAttemptSaga, JobStatusCheckRequested, GetJobAttemptStatus>(
@@ -270,7 +270,7 @@ static class JobAttemptStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobAttemptSaga, CancelJobAttempt> SendCancelJobAttempt(this EventActivityBinder<JobAttemptSaga,
+    public static IEventActivityBinder<JobAttemptSaga, CancelJobAttempt> SendCancelJobAttempt(this IEventActivityBinder<JobAttemptSaga,
         CancelJobAttempt> binder)
     {
         return binder.Send(context => context.Saga.InstanceAddress ?? context.Saga.ServiceAddress,
@@ -282,7 +282,7 @@ static class JobAttemptStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobAttemptSaga, T> ScheduleJobStatusCheck<T>(this EventActivityBinder<JobAttemptSaga, T> binder,
+    public static IEventActivityBinder<JobAttemptSaga, T> ScheduleJobStatusCheck<T>(this IEventActivityBinder<JobAttemptSaga, T> binder,
         JobAttemptStateMachine machine)
         where T : class
     {
@@ -293,8 +293,8 @@ static class JobAttemptStateMachineBehaviorExtensions
         });
     }
 
-    public static EventActivityBinder<JobAttemptSaga, Fault<StartJob>> SendJobAttemptFaulted(
-        this EventActivityBinder<JobAttemptSaga, Fault<StartJob>> binder)
+    public static IEventActivityBinder<JobAttemptSaga, Fault<StartJob>> SendJobAttemptFaulted(
+        this IEventActivityBinder<JobAttemptSaga, Fault<StartJob>> binder)
     {
         return binder.Send<JobAttemptSaga, Fault<StartJob>, JobAttemptFaulted>(context => context.GetJobSagaAddress(),
             context => new JobAttemptFaultedEvent
@@ -308,7 +308,7 @@ static class JobAttemptStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobAttemptSaga, T> SendJobAttemptFaulted<T>(this EventActivityBinder<JobAttemptSaga, T> binder)
+    public static IEventActivityBinder<JobAttemptSaga, T> SendJobAttemptFaulted<T>(this IEventActivityBinder<JobAttemptSaga, T> binder)
         where T : class
     {
         return binder.Send<JobAttemptSaga, T, JobAttemptFaulted>(context => context.GetJobSagaAddress(),
@@ -323,7 +323,7 @@ static class JobAttemptStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobAttemptSaga, T> SendJobAttemptStartTimeout<T>(this EventActivityBinder<JobAttemptSaga, T> binder)
+    public static IEventActivityBinder<JobAttemptSaga, T> SendJobAttemptStartTimeout<T>(this IEventActivityBinder<JobAttemptSaga, T> binder)
         where T : class
     {
         return binder.Send<JobAttemptSaga, T, JobAttemptFaulted>(context => context.GetJobSagaAddress(),

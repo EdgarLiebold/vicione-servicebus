@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.AzureServiceBus;
 /// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
-    SagaRepositoryContext<TSaga, TMessage>
+    ISagaRepositoryContext<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {

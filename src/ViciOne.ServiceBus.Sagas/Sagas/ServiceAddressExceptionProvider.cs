@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate Uri ServiceAddressExceptionProvider<TSaga, in TException>(BehaviorExceptionContext<TSaga, TException> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate Uri ServiceAddressExceptionProvider<TSaga, in TException>(IBehaviorExceptionContext<TSaga, TException> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception;
 
 
@@ -18,7 +18,7 @@ public delegate Uri ServiceAddressExceptionProvider<TSaga, in TException>(Behavi
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate Uri ServiceAddressExceptionProvider<TSaga, in TMessage, in TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate Uri ServiceAddressExceptionProvider<TSaga, in TMessage, in TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TException : Exception;

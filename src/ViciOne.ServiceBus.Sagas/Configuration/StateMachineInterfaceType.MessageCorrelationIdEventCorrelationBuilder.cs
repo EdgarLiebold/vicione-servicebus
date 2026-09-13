@@ -14,7 +14,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         /// <param name="machine">The machine.</param>
         /// <param name="event">The event.</param>
         /// <param name="messageCorrelationId">The message correlation id.</param>
-        public MessageCorrelationIdEventCorrelationBuilder(SagaStateMachine<TInstance> machine, Event<TData> @event,
+        public MessageCorrelationIdEventCorrelationBuilder(ISagaStateMachine<TInstance> machine, IEvent<TData> @event,
             IMessageCorrelationId<TData> messageCorrelationId)
         {
             var configurator = new ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
@@ -28,7 +28,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
 
         /// <summary>Builds the configured component.</summary>
         /// <returns>The configured component.</returns>
-        public EventCorrelation Build()
+        public IEventCorrelation Build()
         {
             return _configurator.Build();
         }

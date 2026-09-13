@@ -15,8 +15,8 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 /// <typeparam name="TInstance">The instance type.</typeparam>
 public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     ISagaRegistration
-    where TStateMachine : class, SagaStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TStateMachine : class, ISagaStateMachine<TInstance>
+    where TInstance : class, ISagaStateMachineInstance
 {
     readonly IContainerSelector _selector;
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TInstance>>> _configureActions;
@@ -55,7 +55,7 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     /// <param name="context">The context associated with the operation.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
-        var stateMachine = context.GetRequiredService<SagaStateMachine<TInstance>>();
+        var stateMachine = context.GetRequiredService<ISagaStateMachine<TInstance>>();
         ISagaRepository<TInstance> repository = new DependencyInjectionSagaRepository<TInstance>(context);
 
         var decoratorRegistration = context.GetService<ISagaRepositoryDecoratorRegistration<TInstance>>();

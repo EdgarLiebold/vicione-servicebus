@@ -16,10 +16,10 @@ internal sealed class FutureResult<TCommand, TResult, TInput> :
     where TResult : class
     where TInput : class
 {
-    ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult>? _factory;
+    ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TResult>? _factory;
 
     /// <summary>Sets the factory that creates the successful result from the triggering event.</summary>
-    public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> Factory
+    public ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TResult> Factory
     {
         set
         {
@@ -40,10 +40,10 @@ internal sealed class FutureResult<TCommand, TResult, TInput> :
     /// <param name="context">The future event context that supplies state and result data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SetResultAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    public async Task SetResultAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-        ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> factory = _factory
+        ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TResult> factory = _factory
             ?? throw new InvalidOperationException("The future result factory has not been configured.");
         DateTimeOffset? previousCompleted = context.Saga.Completed;
         bool wasPending = context.Saga.Pending.Contains(context.Saga.CorrelationId);
@@ -76,10 +76,10 @@ internal sealed class FutureResult<TCommand, TResult> :
     where TCommand : class
     where TResult : class
 {
-    ContextMessageFactory<BehaviorContext<FutureState>, TResult>? _factory;
+    ContextMessageFactory<IBehaviorContext<FutureState>, TResult>? _factory;
 
     /// <summary>Sets the factory that creates the successful result from future state.</summary>
-    public ContextMessageFactory<BehaviorContext<FutureState>, TResult> Factory
+    public ContextMessageFactory<IBehaviorContext<FutureState>, TResult> Factory
     {
         set
         {
@@ -100,10 +100,10 @@ internal sealed class FutureResult<TCommand, TResult> :
     /// <param name="context">The future state context used to create the result.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SetResultAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
+    public async Task SetResultAsync(IBehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-        ContextMessageFactory<BehaviorContext<FutureState>, TResult> factory = _factory
+        ContextMessageFactory<IBehaviorContext<FutureState>, TResult> factory = _factory
             ?? throw new InvalidOperationException("The future result factory has not been configured.");
         DateTimeOffset? previousCompleted = context.Saga.Completed;
         bool wasPending = context.Saga.Pending.Contains(context.Saga.CorrelationId);

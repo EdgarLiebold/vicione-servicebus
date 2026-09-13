@@ -87,15 +87,15 @@ public sealed class StateMachineInputTests
     [RequirementCoverage("REQ-VSB-VISUALIZER-INPUT", "dynamic-state-machine")]
     public void DynamicStateMachineGraph_RendersStatesEventsAndEdges()
     {
-        StateMachine<Instance> machine = ViciOneServiceBusStateMachine<Instance>.New(builder => builder
-            .State("Running", out State running)
-            .State("Suspended", out State suspended)
-            .State("Failed", out State failed)
-            .Event("Initialized", out Event initialized)
-            .Event("Suspend", out Event suspend)
-            .Event("Resume", out Event resume)
-            .Event("Finished", out Event finished)
-            .Event("Restart", out Event<RestartData> restart)
+        IStateMachine<Instance> machine = ViciOneServiceBusStateMachine<Instance>.New(builder => builder
+            .State("Running", out IState running)
+            .State("Suspended", out IState suspended)
+            .State("Failed", out IState failed)
+            .Event("Initialized", out IEvent initialized)
+            .Event("Suspend", out IEvent suspend)
+            .Event("Resume", out IEvent resume)
+            .Event("Finished", out IEvent finished)
+            .Event("Restart", out IEvent<RestartData> restart)
             .During(builder.Initial)
             .When(initialized, binder => binder
                 .TransitionTo(running)
@@ -272,8 +272,8 @@ public sealed class StateMachineInputTests
     public void SubstateGraph_SeparatesDeclaredAndInheritedEventsAndRendersInheritance()
     {
         var machine = new SubstateMachine();
-        var parentState = Assert.IsAssignableFrom<State<Instance>>(machine.Parent);
-        var childState = Assert.IsAssignableFrom<State<Instance>>(machine.Child);
+        var parentState = Assert.IsAssignableFrom<IState<Instance>>(machine.Parent);
+        var childState = Assert.IsAssignableFrom<IState<Instance>>(machine.Child);
 
         Assert.Contains(machine.Advance, parentState.DeclaredEvents);
         Assert.DoesNotContain(machine.Advance, childState.DeclaredEvents);
@@ -315,7 +315,7 @@ public sealed class StateMachineInputTests
     public void LifecycleHooks_AreBoundToTheirStateAndKeepActionOnlyHooksVisible()
     {
         var machine = new LifecycleHookMachine();
-        var runningState = Assert.IsAssignableFrom<State<Instance>>(machine.Running);
+        var runningState = Assert.IsAssignableFrom<IState<Instance>>(machine.Running);
 
         Assert.Contains(machine.Running.Enter, runningState.DeclaredEvents);
         Assert.Contains(machine.Running.Leave, runningState.DeclaredEvents);
@@ -399,37 +399,37 @@ public sealed class StateMachineInputTests
             During(Failed, When(Restart, context => context.Message.Name != null).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State Suspended { get; private set; } = null!;
+        public IState Suspended { get; private set; } = null!;
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
 
-        public Event Suspend { get; private set; } = null!;
+        public IEvent Suspend { get; private set; } = null!;
 
-        public Event Resume { get; private set; } = null!;
+        public IEvent Resume { get; private set; } = null!;
 
-        public Event Finished { get; private set; } = null!;
+        public IEvent Finished { get; private set; } = null!;
 
-        public Event<RestartData> Restart { get; private set; } = null!;
+        public IEvent<RestartData> Restart { get; private set; } = null!;
     }
 
-    private sealed class Instance : SagaStateMachineInstance
+    private sealed class Instance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
 
         public int CompositeStatus { get; set; }
     }
 
     private sealed class UnboundDeclarationsMachine : ViciOneServiceBusStateMachine<Instance>
     {
-        public State Dormant { get; private set; } = null!;
+        public IState Dormant { get; private set; } = null!;
 
-        public Event Wake { get; private set; } = null!;
+        public IEvent Wake { get; private set; } = null!;
     }
 
     private sealed class CompositeMachine : ViciOneServiceBusStateMachine<CompositeInstance>
@@ -447,19 +447,19 @@ public sealed class StateMachineInputTests
             During(Completed, When(Restart).TransitionTo(Waiting));
         }
 
-        public State Waiting { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
 
-        public State Completed { get; private set; } = null!;
+        public IState Completed { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
 
-        public Event First { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
 
-        public Event Second { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
 
-        public Event AllReceived { get; private set; } = null!;
+        public IEvent AllReceived { get; private set; } = null!;
 
-        public Event Restart { get; private set; } = null!;
+        public IEvent Restart { get; private set; } = null!;
     }
 
     private sealed class ExceptionNameCollisionMachine : ViciOneServiceBusStateMachine<Instance>
@@ -472,11 +472,11 @@ public sealed class StateMachineInputTests
                     .Catch<CollisionException>(handler => handler.TransitionTo(Failed)));
         }
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
 
-        public Event<CollisionException> CollisionException { get; private set; } = null!;
+        public IEvent<CollisionException> CollisionException { get; private set; } = null!;
     }
 
     private sealed class BindingIdentityMachine : ViciOneServiceBusStateMachine<BindingInstance>
@@ -492,17 +492,17 @@ public sealed class StateMachineInputTests
             During(Third, When(Shared).Then(context => context.Saga.Handled = true));
         }
 
-        public State First { get; private set; } = null!;
+        public IState First { get; private set; } = null!;
 
-        public State Second { get; private set; } = null!;
+        public IState Second { get; private set; } = null!;
 
-        public State Third { get; private set; } = null!;
+        public IState Third { get; private set; } = null!;
 
-        public Event Begin { get; private set; } = null!;
+        public IEvent Begin { get; private set; } = null!;
 
-        public Event Shared { get; private set; } = null!;
+        public IEvent Shared { get; private set; } = null!;
 
-        public Event Ignored { get; private set; } = null!;
+        public IEvent Ignored { get; private set; } = null!;
     }
 
     private sealed class ReusedCatchMachine : ViciOneServiceBusStateMachine<Instance>
@@ -517,13 +517,13 @@ public sealed class StateMachineInputTests
                 When(Retry).Catch<CollisionException>(handler => handler.TransitionTo(Suspended)));
         }
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public State Suspended { get; private set; } = null!;
+        public IState Suspended { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
 
-        public Event Retry { get; private set; } = null!;
+        public IEvent Retry { get; private set; } = null!;
     }
 
     private sealed class SubstateMachine : ViciOneServiceBusStateMachine<Instance>
@@ -534,13 +534,13 @@ public sealed class StateMachineInputTests
             During(Parent, When(Advance).TransitionTo(Target));
         }
 
-        public State Parent { get; private set; } = null!;
+        public IState Parent { get; private set; } = null!;
 
-        public State Child { get; private set; } = null!;
+        public IState Child { get; private set; } = null!;
 
-        public State Target { get; private set; } = null!;
+        public IState Target { get; private set; } = null!;
 
-        public Event Advance { get; private set; } = null!;
+        public IEvent Advance { get; private set; } = null!;
     }
 
     private sealed class LifecycleHookMachine : ViciOneServiceBusStateMachine<Instance>
@@ -552,11 +552,11 @@ public sealed class StateMachineInputTests
             WhenLeave(Running, activity => activity.Then(_ => { }));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State Completed { get; private set; } = null!;
+        public IState Completed { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     private sealed class NestedCatchMachine : ViciOneServiceBusStateMachine<Instance>
@@ -578,29 +578,29 @@ public sealed class StateMachineInputTests
                         CompositeEventOptions.None))));
         }
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
 
-        public Event Contributor { get; private set; } = null!;
+        public IEvent Contributor { get; private set; } = null!;
 
-        public Event Composite { get; private set; } = null!;
+        public IEvent Composite { get; private set; } = null!;
     }
 
-    private sealed class CompositeInstance : SagaStateMachineInstance
+    private sealed class CompositeInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
 
         public int CompositeStatus { get; set; }
     }
 
-    private sealed class BindingInstance : SagaStateMachineInstance
+    private sealed class BindingInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
 
         public bool Handled { get; set; }
     }
@@ -627,18 +627,18 @@ public sealed class StateMachineInputTests
                 When(Process.TimeoutExpired).TransitionTo(TimedOut));
         }
 
-        public State Completed { get; private set; } = null!;
+        public IState Completed { get; private set; } = null!;
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public State TimedOut { get; private set; } = null!;
+        public IState TimedOut { get; private set; } = null!;
 
-        public Event<StartRequest> Start { get; private set; } = null!;
+        public IEvent<StartRequest> Start { get; private set; } = null!;
 
-        public Request<RequestInstance, RequestMessage, RequestResponse> Process { get; private set; } = null!;
+        public IRequest<RequestInstance, RequestMessage, RequestResponse> Process { get; private set; } = null!;
     }
 
-    private sealed class RequestInstance : SagaStateMachineInstance
+    private sealed class RequestInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 

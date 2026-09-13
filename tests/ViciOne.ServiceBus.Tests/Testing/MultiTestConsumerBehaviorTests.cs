@@ -148,11 +148,11 @@ public sealed class MultiTestConsumerBehaviorTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record FirstMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record FirstMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     private sealed record SecondMessage(string Value);
 
     private sealed record FaultMessage(string Value);
 
-    private sealed record DirectMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record DirectMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 }

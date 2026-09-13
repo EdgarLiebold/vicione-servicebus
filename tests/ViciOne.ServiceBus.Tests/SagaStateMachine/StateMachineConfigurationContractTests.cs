@@ -146,7 +146,7 @@ public sealed class StateMachineConfigurationContractTests
 
     public sealed record CorrelationMessage(Guid BusinessId);
 
-    public sealed class CorrelationState : SagaStateMachineInstance
+    public sealed class CorrelationState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -157,21 +157,21 @@ public sealed class StateMachineConfigurationContractTests
 
     public sealed record DerivedStop(string Value);
 
-    public sealed class InheritedState : SagaStateMachineInstance
+    public sealed class InheritedState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
         public string Value { get; set; } = string.Empty;
     }
 
     public abstract class BaseMachine<TInstance> : ViciOneServiceBusStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
     {
-        public State BaseRunning { get; protected set; } = null!;
+        public IState BaseRunning { get; protected set; } = null!;
 
-        public Event<BaseStart> BaseStarted { get; protected set; } = null!;
+        public IEvent<BaseStart> BaseStarted { get; protected set; } = null!;
     }
 
     public sealed class DerivedMachine : BaseMachine<InheritedState>
@@ -190,14 +190,14 @@ public sealed class StateMachineConfigurationContractTests
                     .Finalize());
         }
 
-        public Event<DerivedStop> DerivedStopped { get; } = null!;
+        public IEvent<DerivedStop> DerivedStopped { get; } = null!;
     }
 
-    public sealed record KnownCorrelationMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record KnownCorrelationMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record UnknownCorrelationMessage(string Value);
 
-    public sealed class UnknownCorrelationState : SagaStateMachineInstance
+    public sealed class UnknownCorrelationState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -213,18 +213,18 @@ public sealed class StateMachineConfigurationContractTests
             During(Running, When(Unknown).Then(_ => { }));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<KnownCorrelationMessage> Known { get; } = null!;
+        public IEvent<KnownCorrelationMessage> Known { get; } = null!;
 
-        public Event<UnknownCorrelationMessage> Unknown { get; } = null!;
+        public IEvent<UnknownCorrelationMessage> Unknown { get; } = null!;
     }
 
-    public sealed record CorrelatedFaultMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CorrelatedFaultMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record UncorrelatedFaultMessage(Guid CorrelationId);
 
-    public sealed class FaultConventionState : SagaStateMachineInstance
+    public sealed class FaultConventionState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -243,20 +243,20 @@ public sealed class StateMachineConfigurationContractTests
                 When(UncorrelatedFaulted).Then(_ => { }));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<CorrelatedFaultMessage> Start { get; } = null!;
+        public IEvent<CorrelatedFaultMessage> Start { get; } = null!;
 
-        public Event<Fault<CorrelatedFaultMessage>> CorrelatedFaulted { get; } = null!;
+        public IEvent<Fault<CorrelatedFaultMessage>> CorrelatedFaulted { get; } = null!;
 
-        public Event<Fault<UncorrelatedFaultMessage>> UncorrelatedFaulted { get; } = null!;
+        public IEvent<Fault<UncorrelatedFaultMessage>> UncorrelatedFaulted { get; } = null!;
     }
 
-    public sealed record ObservedStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ObservedStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ObservedStop(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ObservedStop(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class ObservedState : SagaStateMachineInstance
+    public sealed class ObservedState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -272,11 +272,11 @@ public sealed class StateMachineConfigurationContractTests
             During(Running, When(Stop).Finalize());
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<ObservedStart> Start { get; } = null!;
+        public IEvent<ObservedStart> Start { get; } = null!;
 
-        public Event<ObservedStop> Stop { get; } = null!;
+        public IEvent<ObservedStop> Stop { get; } = null!;
     }
 
     public sealed class StateMachineConfigurationRecorder : ISagaConfigurationObserver
@@ -301,11 +301,11 @@ public sealed class StateMachineConfigurationContractTests
             where TMessage : class => Messages.Add((typeof(TSaga), typeof(TMessage)));
     }
 
-    public sealed class InitialCompositeState : SagaStateMachineInstance
+    public sealed class InitialCompositeState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
         public int Status { get; set; }
 
@@ -335,10 +335,10 @@ public sealed class StateMachineConfigurationContractTests
                 }));
         }
 
-        public Event First { get; } = null!;
+        public IEvent First { get; } = null!;
 
-        public Event Second { get; } = null!;
+        public IEvent Second { get; } = null!;
 
-        public Event Both { get; } = null!;
+        public IEvent Both { get; } = null!;
     }
 }

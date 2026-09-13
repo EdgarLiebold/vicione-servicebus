@@ -178,7 +178,7 @@ public sealed class FutureTerminalConfiguratorContractTests
         await UseContextAsync(state, async context =>
         {
             await producer.SetResultAsync(context, context.CancellationToken);
-            Assert.True(((BehaviorContext<FutureState>)context).TryGetResult(state.CorrelationId, out stored));
+            Assert.True(((IBehaviorContext<FutureState>)context).TryGetResult(state.CorrelationId, out stored));
         });
 
         Assert.NotNull(stored);
@@ -198,7 +198,7 @@ public sealed class FutureTerminalConfiguratorContractTests
         TerminalMessage? stored = null;
         await UseContextAsync(state, async typedContext =>
         {
-            BehaviorContext<FutureState> context = typedContext;
+            IBehaviorContext<FutureState> context = typedContext;
             await producer.SetResultAsync(context, context.CancellationToken);
             Assert.True(context.TryGetResult(state.CorrelationId, out stored));
         });
@@ -220,7 +220,7 @@ public sealed class FutureTerminalConfiguratorContractTests
         await UseContextAsync(state, async context =>
         {
             Assert.True(await producer.TrySetFaultedAsync(context, context.CancellationToken));
-            Assert.True(((BehaviorContext<FutureState>)context).TryGetFault(state.CorrelationId, out stored));
+            Assert.True(((IBehaviorContext<FutureState>)context).TryGetFault(state.CorrelationId, out stored));
         });
 
         Assert.NotNull(stored);
@@ -239,7 +239,7 @@ public sealed class FutureTerminalConfiguratorContractTests
         TerminalMessage? stored = null;
         await UseContextAsync(state, async typedContext =>
         {
-            BehaviorContext<FutureState> context = typedContext;
+            IBehaviorContext<FutureState> context = typedContext;
             Assert.True(await producer.TrySetFaultedAsync(context, context.CancellationToken));
             Assert.True(context.TryGetFault(state.CorrelationId, out stored));
         });
@@ -260,7 +260,7 @@ public sealed class FutureTerminalConfiguratorContractTests
         };
     }
 
-    private static Task UseContextAsync(FutureState state, Func<BehaviorContext<FutureState, Signal>, Task> callback)
+    private static Task UseContextAsync(FutureState state, Func<IBehaviorContext<FutureState, Signal>, Task> callback)
     {
         var machine = new ContextMachine();
         return FutureBehaviorContextFactory.UseAsync(
@@ -279,7 +279,7 @@ public sealed class FutureTerminalConfiguratorContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<Signal> SignalReceived { get; private set; } = null!;
+        public IEvent<Signal> SignalReceived { get; private set; } = null!;
     }
 
     public sealed record Signal(string Value);

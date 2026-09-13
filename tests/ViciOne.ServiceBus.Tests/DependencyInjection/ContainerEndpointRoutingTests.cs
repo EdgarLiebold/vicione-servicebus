@@ -212,18 +212,18 @@ public sealed class ContainerEndpointRoutingTests
         .GetValidatedOptions().OperationTimeout!.Value;
 
 
-    public sealed record PlainCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record PlainEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record DefinitionNameCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record DefinitionNameEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record InlineEndpointCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record InlineEndpointEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record DefinitionEndpointCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record DefinitionEndpointEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record OverrideDefinitionNameCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record OverrideDefinitionNameEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record OverrideDefinitionEndpointCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record OverrideDefinitionEndpointEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record PlainCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record PlainEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record DefinitionNameCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record DefinitionNameEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record InlineEndpointCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record InlineEndpointEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record DefinitionEndpointCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record DefinitionEndpointEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record OverrideDefinitionNameCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record OverrideDefinitionNameEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record OverrideDefinitionEndpointCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record OverrideDefinitionEndpointEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class PlainConsumer : PublishingConsumer<PlainCommand, PlainEvent>;
     public sealed class DefinitionNameConsumer : PublishingConsumer<DefinitionNameCommand, DefinitionNameEvent>;
@@ -235,8 +235,8 @@ public sealed class ContainerEndpointRoutingTests
         PublishingConsumer<OverrideDefinitionEndpointCommand, OverrideDefinitionEndpointEvent>;
 
     public abstract class PublishingConsumer<TCommand, TEvent> : IConsumer<TCommand>
-        where TCommand : class, CorrelatedBy<Guid>
-        where TEvent : class, CorrelatedBy<Guid>
+        where TCommand : class, ICorrelatedBy<Guid>
+        where TEvent : class, ICorrelatedBy<Guid>
     {
         public Task ConsumeAsync(ConsumeContext<TCommand> context) => context.Advanced().PublishAsync(
             Activator.CreateInstance(typeof(TEvent), context.Message.CorrelationId)!,
@@ -264,12 +264,12 @@ public sealed class ContainerEndpointRoutingTests
             Endpoint(endpoint => endpoint.Name = "ignored_definition_endpoint");
     }
 
-    public sealed record CustomEndpointRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record CustomEndpointResult(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record SharedFirstRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record SharedFirstResult(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record SharedSecondRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record SharedSecondResult(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CustomEndpointRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record CustomEndpointResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record SharedFirstRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record SharedFirstResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record SharedSecondRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record SharedSecondResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class CustomEndpointConsumer : PublishingConsumer<CustomEndpointRequest, CustomEndpointResult>;
     public sealed class SharedFirstConsumer : PublishingConsumer<SharedFirstRequest, SharedFirstResult>;
@@ -285,12 +285,12 @@ public sealed class ContainerEndpointRoutingTests
         public SharedDefinition() => Endpoint(endpoint => endpoint.Name = "shared-container-endpoint");
     }
 
-    public sealed record SubmitOrder(Guid OrderId) : CorrelatedBy<Guid>
+    public sealed record SubmitOrder(Guid OrderId) : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId => OrderId;
     }
 
-    public sealed record AuthorizeOrder(Guid OrderId) : CorrelatedBy<Guid>
+    public sealed record AuthorizeOrder(Guid OrderId) : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId => OrderId;
     }
@@ -318,7 +318,7 @@ public sealed class ContainerEndpointRoutingTests
         }
     }
 
-    public sealed record MissingDependencyCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record MissingDependencyCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
     public interface IMissingDependency;
 
     public sealed class MissingDependencyConsumer(IMissingDependency dependency) : IConsumer<MissingDependencyCommand>

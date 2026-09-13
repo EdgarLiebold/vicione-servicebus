@@ -15,7 +15,7 @@ public static class FutureRegistrationConfiguratorExtensions
     /// <returns>A configurator for the registered future.</returns>
     public static IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(this IRegistrationConfigurator configurator,
         Type? futureDefinitionType = null)
-        where TFuture : class, SagaStateMachine<FutureState>
+        where TFuture : class, ISagaStateMachine<FutureState>
     {
         ArgumentNullException.ThrowIfNull(configurator);
         IAdvancedRegistrationConfigurator advanced = configurator.Advanced();

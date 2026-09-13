@@ -47,10 +47,10 @@ namespace ConsoleApplication1
 {
 
         class TestInstance :
-            SagaStateMachineInstance
+            ISagaStateMachineInstance
         {
             public Guid CorrelationId { get; set; }
-            public State CurrentState { get; set; }
+            public IState CurrentState { get; set; }
             public string Value { get; set; }
         }
 
@@ -58,19 +58,19 @@ namespace ConsoleApplication1
             IStateMachineActivity<TestInstance, SubmitOrder>
         {
 
-        Task IStateMachineActivity<TestInstance, SubmitOrder>.ExecuteAsync(BehaviorContext<TestInstance, SubmitOrder> context,
+        Task IStateMachineActivity<TestInstance, SubmitOrder>.ExecuteAsync(IBehaviorContext<TestInstance, SubmitOrder> context,
             IBehavior<TestInstance, SubmitOrder> next)
         {
             return Task.Delay(10);
         }
 
-        Task IStateMachineActivity<TestInstance, SubmitOrder>.FaultedAsync<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
+        Task IStateMachineActivity<TestInstance, SubmitOrder>.FaultedAsync<TException>(IBehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
             IBehavior<TestInstance, SubmitOrder> next)
         {
             return Task.Run(() => next.FaultedAsync(ctx));
         }
 
-        public void Accept(StateMachineVisitor visitor)
+        public void Accept(IStateMachineVisitor visitor)
         {
             visitor.Visit(this);
         }

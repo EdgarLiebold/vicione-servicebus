@@ -28,8 +28,8 @@ public sealed class StateMachineSchedulingIntegrationTests
             "state-event-faulted-schedule");
 
     private static async Task VerifyFaultedScheduleCancellationTokenAsync<TMachine, TState, TStart>(TStart start, string endpointPrefix)
-        where TMachine : class, SagaStateMachine<TState>
-        where TState : class, SagaStateMachineInstance
+        where TMachine : class, ISagaStateMachine<TState>
+        where TState : class, ISagaStateMachineInstance
         where TStart : class
     {
         TimeSpan timeout = OperationTimeout();
@@ -150,21 +150,21 @@ public sealed class StateMachineSchedulingIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record ScheduleStart(Guid CorrelationId, TimeSpan Delay) : CorrelatedBy<Guid>;
+    public sealed record ScheduleStart(Guid CorrelationId, TimeSpan Delay) : ICorrelatedBy<Guid>;
 
-    public sealed record TimeoutNotice(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record TimeoutNotice(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ScheduleCompleted(Guid CorrelationId, string Result);
 
-    public sealed record FaultedScheduleStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record FaultedScheduleStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record FaultedScheduleNotice(Guid CorrelationId, int Attempt) : CorrelatedBy<Guid>;
+    public sealed record FaultedScheduleNotice(Guid CorrelationId, int Attempt) : ICorrelatedBy<Guid>;
 
-    public sealed record StateEventFaultedScheduleStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StateEventFaultedScheduleStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record StateEventFaultedScheduleNotice(Guid CorrelationId, int Attempt) : CorrelatedBy<Guid>;
+    public sealed record StateEventFaultedScheduleNotice(Guid CorrelationId, int Attempt) : ICorrelatedBy<Guid>;
 
-    public sealed class FaultedScheduleState : SagaStateMachineInstance
+    public sealed class FaultedScheduleState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -191,16 +191,16 @@ public sealed class StateMachineSchedulingIntegrationTests
                         .TransitionTo(Waiting)));
         }
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public Event<FaultedScheduleStart> Start { get; } = null!;
+        public IEvent<FaultedScheduleStart> Start { get; } = null!;
 
-        public Schedule<FaultedScheduleState, FaultedScheduleNotice> Notice { get; } = null!;
+        public ISchedule<FaultedScheduleState, FaultedScheduleNotice> Notice { get; } = null!;
     }
 
     public sealed class ExpectedScheduleFailure : Exception;
 
-    public sealed class StateEventFaultedScheduleState : SagaStateMachineInstance
+    public sealed class StateEventFaultedScheduleState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -230,14 +230,14 @@ public sealed class StateMachineSchedulingIntegrationTests
                         .Schedule(Notice, context => new StateEventFaultedScheduleNotice(context.Saga.CorrelationId, 2))));
         }
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public Event<StateEventFaultedScheduleStart> Start { get; } = null!;
+        public IEvent<StateEventFaultedScheduleStart> Start { get; } = null!;
 
-        public Schedule<StateEventFaultedScheduleState, StateEventFaultedScheduleNotice> Notice { get; } = null!;
+        public ISchedule<StateEventFaultedScheduleState, StateEventFaultedScheduleNotice> Notice { get; } = null!;
     }
 
-    public sealed class ScheduledState : SagaStateMachineInstance
+    public sealed class ScheduledState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -274,11 +274,11 @@ public sealed class StateMachineSchedulingIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public Event<ScheduleStart> Start { get; } = null!;
+        public IEvent<ScheduleStart> Start { get; } = null!;
 
-        public Schedule<ScheduledState, TimeoutNotice> Timeout { get; } = null!;
+        public ISchedule<ScheduledState, TimeoutNotice> Timeout { get; } = null!;
     }
 
     public sealed class ScheduleObservation

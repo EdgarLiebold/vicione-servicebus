@@ -7,27 +7,27 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class CatchActivityBinder<TInstance, TException> :
     IActivityBinder<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TException : Exception
 {
-    readonly EventActivities<TInstance> _activities;
+    readonly IEventActivities<TInstance> _activities;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="event">The event.</param>
     /// <param name="activities">The activities.</param>
-    public CatchActivityBinder(Event @event, EventActivities<TInstance> activities)
+    public CatchActivityBinder(IEvent @event, IEventActivities<TInstance> activities)
     {
         Event = @event;
         _activities = activities;
     }
 
     /// <summary>Gets the event.</summary>
-    public Event Event { get; }
+    public IEvent Event { get; }
 
     /// <summary>Determines whether state transition event.</summary>
     /// <param name="state">The state.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool IsStateTransitionEvent(State state)
+    public bool IsStateTransitionEvent(IState state)
     {
         return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
@@ -35,7 +35,7 @@ public class CatchActivityBinder<TInstance, TException> :
 
     /// <summary>Binds the configured entities.</summary>
     /// <param name="state">The state.</param>
-    public void Bind(State<TInstance> state)
+    public void Bind(IState<TInstance> state)
     {
         var builder = new CatchBehaviorBuilder<TInstance>();
         foreach (IActivityBinder<TInstance> activity in _activities.GetStateActivityBinders())

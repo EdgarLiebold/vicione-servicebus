@@ -15,8 +15,8 @@ public static class SagaStateMachineTestHarnessExtensions
     /// <returns>The state-machine saga harness.</returns>
     public static ISagaStateMachineTestHarness<TStateMachine, TInstance> AddSagaStateMachine<TStateMachine, TInstance>(
         this BusTestHarness harness, TStateMachine stateMachine, string? queueName = null)
-        where TInstance : class, SagaStateMachineInstance
-        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
     {
         ArgumentNullException.ThrowIfNull(harness);
         ArgumentNullException.ThrowIfNull(stateMachine);
@@ -42,8 +42,8 @@ public static class SagaStateMachineTestHarnessExtensions
     public static ISagaStateMachineTestHarness<TStateMachine, TInstance> AddSagaStateMachine<TStateMachine, TInstance>(
         this BusTestHarness harness, TStateMachine stateMachine, ISagaRepository<TInstance> repository,
         string? queueName = null)
-        where TInstance : class, SagaStateMachineInstance
-        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
     {
         ArgumentNullException.ThrowIfNull(harness);
         ArgumentNullException.ThrowIfNull(stateMachine);

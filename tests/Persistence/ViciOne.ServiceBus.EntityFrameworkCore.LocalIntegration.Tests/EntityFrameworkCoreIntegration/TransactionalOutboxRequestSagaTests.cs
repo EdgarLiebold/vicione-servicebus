@@ -174,7 +174,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         Guid CorrelationId,
         bool Fail,
         TimeSpan? Delay = null,
-        string? LookupKey = null) : CorrelatedBy<Guid>;
+        string? LookupKey = null) : ICorrelatedBy<Guid>;
 
     public sealed record RequestSagaStarted(Guid CorrelationId);
 
@@ -182,7 +182,7 @@ public sealed class TransactionalOutboxRequestSagaTests
 
     public sealed record RequestSagaFound(Guid CorrelationId, string LookupKey);
 
-    public sealed record ResumeRequestSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ResumeRequestSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private static IEnumerable<ExceptionInfo> Flatten(ExceptionInfo exception)
     {
@@ -199,7 +199,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         }
     }
 
-    public sealed class RequestSagaState : SagaStateMachineInstance
+    public sealed class RequestSagaState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -271,15 +271,15 @@ public sealed class TransactionalOutboxRequestSagaTests
                     .TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State Delayed { get; private set; } = null!;
+        public IState Delayed { get; private set; } = null!;
 
-        public Event<StartRequestSaga> Started { get; private set; } = null!;
+        public IEvent<StartRequestSaga> Started { get; private set; } = null!;
 
-        public Event<QueryRequestSaga> Queried { get; private set; } = null!;
+        public IEvent<QueryRequestSaga> Queried { get; private set; } = null!;
 
-        public Schedule<RequestSagaState, ResumeRequestSaga> Resume { get; private set; } = null!;
+        public ISchedule<RequestSagaState, ResumeRequestSaga> Resume { get; private set; } = null!;
     }
 
     public sealed class ScopeProxyActivity(
@@ -288,7 +288,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         ScopeProxyProbe observations) : IStateMachineActivity<RequestSagaState, StartRequestSaga>
     {
         public Task ExecuteAsync(
-            BehaviorContext<RequestSagaState, StartRequestSaga> context,
+            IBehaviorContext<RequestSagaState, StartRequestSaga> context,
             IBehavior<RequestSagaState, StartRequestSaga> next)
         {
             observations.Record(new ScopeProxyObservation(
@@ -299,13 +299,13 @@ public sealed class TransactionalOutboxRequestSagaTests
         }
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<RequestSagaState, StartRequestSaga, TException> context,
+            IBehaviorExceptionContext<RequestSagaState, StartRequestSaga, TException> context,
             IBehavior<RequestSagaState, StartRequestSaga> next)
             where TException : Exception => next.FaultedAsync(context);
 
         public void Probe(ProbeContext context) => context.CreateScope("scopeProxyActivity");
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
     }
 
     private sealed class RequestSagaStateDefinition : SagaDefinition<RequestSagaState>

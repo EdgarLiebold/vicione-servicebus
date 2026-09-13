@@ -357,7 +357,7 @@ public sealed class InMemoryOutboxCheckpointTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record CheckpointCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record CheckpointCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record CheckpointOwnerCommand(int Sequence);
 

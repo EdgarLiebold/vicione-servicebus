@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SelectedStateEventFilter<TSaga, TMessage> :
     IStateEventFilter<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly StateMachineCondition<TSaga, TMessage> _filter;
@@ -21,10 +21,10 @@ public class SelectedStateEventFilter<TSaga, TMessage> :
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Filter<T>(BehaviorContext<TSaga, T> context)
+    public bool Filter<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
-        if (context is BehaviorContext<TSaga, TMessage> filterContext)
+        if (context is IBehaviorContext<TSaga, TMessage> filterContext)
             return _filter(filterContext);
 
         return false;
@@ -33,7 +33,7 @@ public class SelectedStateEventFilter<TSaga, TMessage> :
     /// <summary>Applies the configured filter.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Filter(BehaviorContext<TSaga> context)
+    public bool Filter(IBehaviorContext<TSaga> context)
     {
         return false;
     }

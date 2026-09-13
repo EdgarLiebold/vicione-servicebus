@@ -143,7 +143,7 @@ public sealed class MessageObserverTests
 
     private sealed class ObserverMarker;
 
-    private sealed record ObservedRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record ObservedResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 }

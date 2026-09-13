@@ -6,27 +6,27 @@ namespace ViciOne.ServiceBus.Configuration;
 
 class StateMachineEventActivitiesBuilder<TInstance> :
     IStateMachineEventActivitiesBuilder<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
-    readonly List<EventActivities<TInstance>> _activities;
-    readonly Action<EventActivities<TInstance>[]> _committer;
+    readonly List<IEventActivities<TInstance>> _activities;
+    readonly Action<IEventActivities<TInstance>[]> _committer;
     readonly ViciOneServiceBusStateMachine<TInstance> _machine;
     readonly IStateMachineModifier<TInstance> _modifier;
 
     public StateMachineEventActivitiesBuilder(ViciOneServiceBusStateMachine<TInstance> machine,
-        IStateMachineModifier<TInstance> modifier, Action<EventActivities<TInstance>[]> committer)
+        IStateMachineModifier<TInstance> modifier, Action<IEventActivities<TInstance>[]> committer)
     {
         _machine = machine ?? throw new ArgumentNullException(nameof(machine));
         _modifier = modifier ?? throw new ArgumentNullException(nameof(modifier));
         _committer = committer ?? throw new ArgumentNullException(nameof(committer));
-        _activities = new List<EventActivities<TInstance>>();
+        _activities = new List<IEventActivities<TInstance>>();
         IsCommitted = false;
     }
 
     public bool IsCommitted { get; private set; }
 
-    public State Initial => _modifier.Initial;
-    public State Final => _modifier.Final;
+    public IState Initial => _modifier.Initial;
+    public IState Final => _modifier.Final;
 
     public IStateMachineModifier<TInstance> CommitActivities()
     {
@@ -35,51 +35,51 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return _modifier;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> When(Event @event,
-        Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> configure)
+    public IStateMachineEventActivitiesBuilder<TInstance> When(IEvent @event,
+        Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> configure)
     {
         _activities.Add(configure(_machine.When(@event)));
         return this;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> When(Event @event, StateMachineCondition<TInstance> filter,
-        Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> configure)
+    public IStateMachineEventActivitiesBuilder<TInstance> When(IEvent @event, StateMachineCondition<TInstance> filter,
+        Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> configure)
     {
         _activities.Add(configure(_machine.When(@event, filter)));
         return this;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> When<TData>(Event<TData> @event,
-        Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> configure)
+    public IStateMachineEventActivitiesBuilder<TInstance> When<TData>(IEvent<TData> @event,
+        Func<IEventActivityBinder<TInstance, TData>, IEventActivityBinder<TInstance, TData>> configure)
         where TData : class
     {
         _activities.Add(configure(_machine.When(@event)));
         return this;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> When<TData>(Event<TData> @event,
+    public IStateMachineEventActivitiesBuilder<TInstance> When<TData>(IEvent<TData> @event,
         StateMachineCondition<TInstance, TData> filter,
-        Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> configure)
+        Func<IEventActivityBinder<TInstance, TData>, IEventActivityBinder<TInstance, TData>> configure)
         where TData : class
     {
         _activities.Add(configure(_machine.When(@event, filter)));
         return this;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> Ignore(Event @event)
+    public IStateMachineEventActivitiesBuilder<TInstance> Ignore(IEvent @event)
     {
         _activities.Add(_machine.Ignore(@event));
         return this;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> Ignore<TData>(Event<TData> @event)
+    public IStateMachineEventActivitiesBuilder<TInstance> Ignore<TData>(IEvent<TData> @event)
         where TData : class
     {
         _activities.Add(_machine.Ignore(@event));
         return this;
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> Ignore<TData>(Event<TData> @event,
+    public IStateMachineEventActivitiesBuilder<TInstance> Ignore<TData>(IEvent<TData> @event,
         StateMachineCondition<TInstance, TData> filter)
         where TData : class
     {
@@ -92,56 +92,56 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         CommitActivities().Apply();
     }
 
-    public IStateMachineModifier<TInstance> AfterLeave(State state,
-        Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
+    public IStateMachineModifier<TInstance> AfterLeave(IState state,
+        Func<IEventActivityBinder<TInstance, IState>, IEventActivityBinder<TInstance, IState>> activityCallback)
     {
         return CommitActivities().AfterLeave(state, activityCallback);
     }
 
     public IStateMachineModifier<TInstance> AfterLeaveAny(
-        Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
+        Func<IEventActivityBinder<TInstance, IState>, IEventActivityBinder<TInstance, IState>> activityCallback)
     {
         return CommitActivities().AfterLeaveAny(activityCallback);
     }
 
-    public IStateMachineModifier<TInstance> BeforeEnter(State state,
-        Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
+    public IStateMachineModifier<TInstance> BeforeEnter(IState state,
+        Func<IEventActivityBinder<TInstance, IState>, IEventActivityBinder<TInstance, IState>> activityCallback)
     {
         return CommitActivities().BeforeEnter(state, activityCallback);
     }
 
     public IStateMachineModifier<TInstance> BeforeEnterAny(
-        Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
+        Func<IEventActivityBinder<TInstance, IState>, IEventActivityBinder<TInstance, IState>> activityCallback)
     {
         return CommitActivities().BeforeEnterAny(activityCallback);
     }
 
-    public IStateMachineModifier<TInstance> CompositeEvent(string name, out Event @event,
-        Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression, params Event[] events)
+    public IStateMachineModifier<TInstance> CompositeEvent(string name, out IEvent @event,
+        Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression, params IEvent[] events)
     {
         return CommitActivities().CompositeEvent(name, out @event, trackingPropertyExpression, events);
     }
 
-    public IStateMachineModifier<TInstance> CompositeEvent(string name, out Event @event,
+    public IStateMachineModifier<TInstance> CompositeEvent(string name, out IEvent @event,
         Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression, CompositeEventOptions options,
-        params Event[] events)
+        params IEvent[] events)
     {
         return CommitActivities().CompositeEvent(name, out @event, trackingPropertyExpression, options, events);
     }
 
-    public IStateMachineModifier<TInstance> CompositeEvent(string name, out Event @event, Expression<Func<TInstance, int>> trackingPropertyExpression,
-        params Event[] events)
+    public IStateMachineModifier<TInstance> CompositeEvent(string name, out IEvent @event, Expression<Func<TInstance, int>> trackingPropertyExpression,
+        params IEvent[] events)
     {
         return CommitActivities().CompositeEvent(name, out @event, trackingPropertyExpression, events);
     }
 
-    public IStateMachineModifier<TInstance> CompositeEvent(string name, out Event @event, Expression<Func<TInstance, int>> trackingPropertyExpression,
-        CompositeEventOptions options, params Event[] events)
+    public IStateMachineModifier<TInstance> CompositeEvent(string name, out IEvent @event, Expression<Func<TInstance, int>> trackingPropertyExpression,
+        CompositeEventOptions options, params IEvent[] events)
     {
         return CommitActivities().CompositeEvent(name, out @event, trackingPropertyExpression, options, events);
     }
 
-    public IStateMachineEventActivitiesBuilder<TInstance> During(params State[] states)
+    public IStateMachineEventActivitiesBuilder<TInstance> During(params IState[] states)
     {
         return CommitActivities().During(states);
     }
@@ -151,32 +151,32 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return CommitActivities().DuringAny();
     }
 
-    public IStateMachineModifier<TInstance> Event(string name, out Event @event)
+    public IStateMachineModifier<TInstance> Event(string name, out IEvent @event)
     {
         return CommitActivities().Event(name, out @event);
     }
 
-    public IStateMachineModifier<TInstance> Event<T>(string name, out Event<T> @event)
+    public IStateMachineModifier<TInstance> Event<T>(string name, out IEvent<T> @event)
         where T : class
     {
         return CommitActivities().Event(name, out @event);
     }
 
-    public IStateMachineModifier<TInstance> Event<T>(string name, Action<IEventCorrelationConfigurator<TInstance, T>> configure, out Event<T> @event)
+    public IStateMachineModifier<TInstance> Event<T>(string name, Action<IEventCorrelationConfigurator<TInstance, T>> configure, out IEvent<T> @event)
         where T : class
     {
         return CommitActivities().Event(name, configure, out @event);
     }
 
     public IStateMachineModifier<TInstance> Event<TProperty, T>(Expression<Func<TProperty>> propertyExpression,
-        Expression<Func<TProperty, Event<T>>> eventPropertyExpression)
+        Expression<Func<TProperty, IEvent<T>>> eventPropertyExpression)
         where TProperty : class
         where T : class
     {
         return CommitActivities().Event(propertyExpression, eventPropertyExpression);
     }
 
-    public IStateMachineModifier<TInstance> Finally(Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
+    public IStateMachineModifier<TInstance> Finally(Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
         return CommitActivities().Finally(activityCallback);
     }
@@ -186,7 +186,7 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return CommitActivities().Initially();
     }
 
-    public IStateMachineModifier<TInstance> InstanceState(Expression<Func<TInstance, State?>> instanceStateProperty)
+    public IStateMachineModifier<TInstance> InstanceState(Expression<Func<TInstance, IState?>> instanceStateProperty)
     {
         return CommitActivities().InstanceState(instanceStateProperty);
     }
@@ -196,7 +196,7 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return CommitActivities().InstanceState(instanceStateProperty);
     }
 
-    public IStateMachineModifier<TInstance> InstanceState(Expression<Func<TInstance, int>> instanceStateProperty, params State[] states)
+    public IStateMachineModifier<TInstance> InstanceState(Expression<Func<TInstance, int>> instanceStateProperty, params IState[] states)
     {
         return CommitActivities().InstanceState(instanceStateProperty, states);
     }
@@ -211,53 +211,53 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return CommitActivities().OnUnhandledEvent(callback);
     }
 
-    public IStateMachineModifier<TInstance> State(string name, out State<TInstance> state)
+    public IStateMachineModifier<TInstance> State(string name, out IState<TInstance> state)
     {
         return CommitActivities().State(name, out state);
     }
 
-    public IStateMachineModifier<TInstance> State(string name, out State state)
+    public IStateMachineModifier<TInstance> State(string name, out IState state)
     {
         return CommitActivities().State(name, out state);
     }
 
     public IStateMachineModifier<TInstance> State<TProperty>(Expression<Func<TProperty>> propertyExpression,
-        Expression<Func<TProperty, State>> statePropertyExpression)
+        Expression<Func<TProperty, IState>> statePropertyExpression)
         where TProperty : class
     {
         return CommitActivities().State(propertyExpression, statePropertyExpression);
     }
 
-    public IStateMachineModifier<TInstance> SubState(string name, State superState, out State<TInstance> subState)
+    public IStateMachineModifier<TInstance> SubState(string name, IState superState, out IState<TInstance> subState)
     {
         return CommitActivities().SubState(name, superState, out subState);
     }
 
     public IStateMachineModifier<TInstance> SubState<TProperty>(Expression<Func<TProperty>> propertyExpression,
-        Expression<Func<TProperty, State>> statePropertyExpression, State superState)
+        Expression<Func<TProperty, IState>> statePropertyExpression, IState superState)
         where TProperty : class
     {
         return CommitActivities().SubState(propertyExpression, statePropertyExpression, superState);
     }
 
-    public IStateMachineModifier<TInstance> WhenEnter(State state,
-        Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
+    public IStateMachineModifier<TInstance> WhenEnter(IState state,
+        Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
         return CommitActivities().WhenEnter(state, activityCallback);
     }
 
-    public IStateMachineModifier<TInstance> WhenEnterAny(Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
+    public IStateMachineModifier<TInstance> WhenEnterAny(Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
         return CommitActivities().WhenEnterAny(activityCallback);
     }
 
-    public IStateMachineModifier<TInstance> WhenLeave(State state,
-        Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
+    public IStateMachineModifier<TInstance> WhenLeave(IState state,
+        Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
         return CommitActivities().WhenLeave(state, activityCallback);
     }
 
-    public IStateMachineModifier<TInstance> WhenLeaveAny(Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
+    public IStateMachineModifier<TInstance> WhenLeaveAny(Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
         return CommitActivities().WhenLeaveAny(activityCallback);
     }

@@ -82,21 +82,21 @@ internal sealed class JobTypeStateMachine :
     }
 
     /// <summary>Gets the state in which at least one execution slot is allocated.</summary>
-    public State Active { get; } = null!;
+    public IState Active { get; } = null!;
     /// <summary>Gets the state in which no execution slots are allocated.</summary>
-    public State Idle { get; } = null!;
+    public IState Idle { get; } = null!;
 
     /// <summary>Gets a request to reserve capacity for one job.</summary>
-    public Event<AllocateJobSlot> JobSlotRequested { get; } = null!;
+    public IEvent<AllocateJobSlot> JobSlotRequested { get; } = null!;
     /// <summary>Gets a notification that a previous allocation no longer consumes capacity.</summary>
-    public Event<JobSlotReleased> JobSlotReleased { get; } = null!;
+    public IEvent<JobSlotReleased> JobSlotReleased { get; } = null!;
     /// <summary>Gets a configuration, heartbeat, override, or shutdown update from a service instance.</summary>
-    public Event<SetConcurrentJobLimit> SetConcurrentJobLimit { get; } = null!;
+    public IEvent<SetConcurrentJobLimit> SetConcurrentJobLimit { get; } = null!;
 }
 
 static class JobTypeStateMachineBehaviorExtensions
 {
-    public static async Task<bool> IsSlotAvailableAsync(this BehaviorContext<JobTypeSaga, AllocateJobSlot> context, TimeSpan heartbeatTimeout)
+    public static async Task<bool> IsSlotAvailableAsync(this IBehaviorContext<JobTypeSaga, AllocateJobSlot> context, TimeSpan heartbeatTimeout)
     {
         if (context.Saga.OverrideExpiresAt.HasValue)
         {
@@ -179,8 +179,8 @@ static class JobTypeStateMachineBehaviorExtensions
         return strategy ?? DefaultJobDistributionStrategy.Instance;
     }
 
-    public static EventActivityBinder<JobTypeSaga, SetConcurrentJobLimit> SetConcurrentLimit(
-        this EventActivityBinder<JobTypeSaga, SetConcurrentJobLimit> binder)
+    public static IEventActivityBinder<JobTypeSaga, SetConcurrentJobLimit> SetConcurrentLimit(
+        this IEventActivityBinder<JobTypeSaga, SetConcurrentJobLimit> binder)
     {
         return binder.Then(context =>
         {

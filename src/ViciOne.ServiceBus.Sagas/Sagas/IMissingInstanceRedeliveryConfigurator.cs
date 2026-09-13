@@ -16,7 +16,7 @@ public interface IMissingInstanceRedeliveryConfigurator :
 /// <typeparam name="TData">The data type.</typeparam>
 public interface IMissingInstanceRedeliveryConfigurator<TInstance, TData> :
     IMissingInstanceRedeliveryConfigurator
-    where TInstance : SagaStateMachineInstance
+    where TInstance : ISagaStateMachineInstance
     where TData : class
 {
     /// <summary>Handles the notification for redelivery limit reached.</summary>

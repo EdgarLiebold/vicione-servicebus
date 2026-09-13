@@ -267,9 +267,9 @@ public sealed class StateMachinePolicyIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record ConfigurationScopeStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ConfigurationScopeStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class ConfigurationScopeState : SagaStateMachineInstance
+    public sealed class ConfigurationScopeState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -284,9 +284,9 @@ public sealed class StateMachinePolicyIntegrationTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<ConfigurationScopeStart> Start { get; } = null!;
+        public IEvent<ConfigurationScopeStart> Start { get; } = null!;
     }
 
     public sealed class ConfigurationScopeRecorder
@@ -331,7 +331,7 @@ public sealed class StateMachinePolicyIntegrationTests
 
     public sealed record RetryStatusResponse(Guid ServiceId, string ServiceName, string Status);
 
-    public sealed class RetryStatusState : SagaStateMachineInstance
+    public sealed class RetryStatusState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -363,11 +363,11 @@ public sealed class StateMachinePolicyIntegrationTests
                     "Running")));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<RetryStatusStart> Start { get; } = null!;
+        public IEvent<RetryStatusStart> Start { get; } = null!;
 
-        public Event<RetryStatusRequest> Status { get; } = null!;
+        public IEvent<RetryStatusRequest> Status { get; } = null!;
     }
 
     public sealed class GatedRetryObserver : IRetryObserver
@@ -401,9 +401,9 @@ public sealed class StateMachinePolicyIntegrationTests
         public Task RetryCompleteAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
     }
 
-    public sealed record IgnoreStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record IgnoreStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class IgnoreState : SagaStateMachineInstance
+    public sealed class IgnoreState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -424,16 +424,16 @@ public sealed class StateMachinePolicyIntegrationTests
             During(Running, Ignore(Start));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<IgnoreStart> Start { get; } = null!;
+        public IEvent<IgnoreStart> Start { get; } = null!;
     }
 
-    public sealed record RetryInitialize(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RetryInitialize(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RetryIgnoredStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RetryIgnoredStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class RetryIgnoreState : SagaStateMachineInstance
+    public sealed class RetryIgnoreState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -455,11 +455,11 @@ public sealed class StateMachinePolicyIntegrationTests
                 }));
         }
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public Event<RetryInitialize> Initialize { get; } = null!;
+        public IEvent<RetryInitialize> Initialize { get; } = null!;
 
-        public Event<RetryIgnoredStart> Start { get; } = null!;
+        public IEvent<RetryIgnoredStart> Start { get; } = null!;
     }
 
     public sealed class AttemptRecorder
@@ -494,9 +494,9 @@ public sealed class StateMachinePolicyIntegrationTests
 
     public sealed class ExpectedIgnoredFailure : Exception;
 
-    public sealed record ContainerCatchStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ContainerCatchStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class ContainerCatchState : SagaStateMachineInstance
+    public sealed class ContainerCatchState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -518,9 +518,9 @@ public sealed class StateMachinePolicyIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Active { get; } = null!;
+        public IState Active { get; } = null!;
 
-        public Event<ContainerCatchStart> Start { get; } = null!;
+        public IEvent<ContainerCatchStart> Start { get; } = null!;
     }
 
     public sealed class ContainerActivityRecorder
@@ -549,10 +549,10 @@ public sealed class StateMachinePolicyIntegrationTests
     {
         public void Probe(ProbeContext context) => context.CreateScope("containerFailure");
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
 
         public Task ExecuteAsync(
-            BehaviorContext<ContainerCatchState, ContainerCatchStart> context,
+            IBehaviorContext<ContainerCatchState, ContainerCatchStart> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next)
         {
             recorder.RecordFailure(context.Saga.CorrelationId);
@@ -560,7 +560,7 @@ public sealed class StateMachinePolicyIntegrationTests
         }
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<ContainerCatchState, ContainerCatchStart, TException> context,
+            IBehaviorExceptionContext<ContainerCatchState, ContainerCatchStart, TException> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next)
             where TException : Exception => next.FaultedAsync(context);
     }
@@ -570,14 +570,14 @@ public sealed class StateMachinePolicyIntegrationTests
     {
         public void Probe(ProbeContext context) => context.CreateScope("containerCatch");
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
 
         public Task ExecuteAsync(
-            BehaviorContext<ContainerCatchState, ContainerCatchStart> context,
+            IBehaviorContext<ContainerCatchState, ContainerCatchStart> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next) => next.ExecuteAsync(context);
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<ContainerCatchState, ContainerCatchStart, TException> context,
+            IBehaviorExceptionContext<ContainerCatchState, ContainerCatchStart, TException> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next)
             where TException : Exception
         {

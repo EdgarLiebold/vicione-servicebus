@@ -7,20 +7,20 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class AsyncActivity<TSaga> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
-    readonly Func<BehaviorContext<TSaga>, Task> _asyncAction = null!;
+    readonly Func<IBehaviorContext<TSaga>, Task> _asyncAction = null!;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="asyncAction">The async action.</param>
-    public AsyncActivity(Func<BehaviorContext<TSaga>, Task> asyncAction)
+    public AsyncActivity(Func<IBehaviorContext<TSaga>, Task> asyncAction)
     {
         _asyncAction = asyncAction;
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -36,7 +36,7 @@ public class AsyncActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await _asyncAction(context).ConfigureAwait(false);
 
@@ -48,7 +48,7 @@ public class AsyncActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync<TData>(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
         await _asyncAction(context).ConfigureAwait(false);
@@ -61,7 +61,7 @@ public class AsyncActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -73,7 +73,7 @@ public class AsyncActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
@@ -87,21 +87,21 @@ public class AsyncActivity<TSaga> :
 /// <typeparam name="TData">The data type.</typeparam>
 public class AsyncActivity<TInstance, TData> :
     IStateMachineActivity<TInstance, TData>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TData : class
 {
-    readonly Func<BehaviorContext<TInstance, TData>, Task> _asyncAction;
+    readonly Func<IBehaviorContext<TInstance, TData>, Task> _asyncAction;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="asyncAction">The async action.</param>
-    public AsyncActivity(Func<BehaviorContext<TInstance, TData>, Task> asyncAction)
+    public AsyncActivity(Func<IBehaviorContext<TInstance, TData>, Task> asyncAction)
     {
         _asyncAction = asyncAction ?? throw new ArgumentNullException(nameof(asyncAction));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -117,7 +117,7 @@ public class AsyncActivity<TInstance, TData> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
+    public async Task ExecuteAsync(IBehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
         await _asyncAction(context).ConfigureAwait(false);
 
@@ -129,7 +129,7 @@ public class AsyncActivity<TInstance, TData> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

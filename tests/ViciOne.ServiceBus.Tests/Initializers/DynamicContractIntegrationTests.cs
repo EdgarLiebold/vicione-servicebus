@@ -132,7 +132,7 @@ public sealed class DynamicContractIntegrationTests
             TestInactivityTimeout = timeout,
         };
 
-    public interface ProxyContract : CorrelatedBy<Guid>
+    public interface ProxyContract : ICorrelatedBy<Guid>
     {
         int Number { get; }
 

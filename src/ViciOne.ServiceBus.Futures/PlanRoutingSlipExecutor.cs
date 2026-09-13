@@ -14,7 +14,7 @@ internal sealed class PlanRoutingSlipExecutor<TInput> :
     /// <param name="context">The future event context used to resolve and invoke the planner.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();

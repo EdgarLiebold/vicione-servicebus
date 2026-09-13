@@ -15,9 +15,9 @@ public static class SagaStateMachineExtensions
     /// <param name="expression">The query expression.</param>
     /// <param name="states">The states that are valid for this query.</param>
     /// <returns>The created saga query.</returns>
-    public static ISagaQuery<TInstance> CreateSagaQuery<TInstance>(this StateMachine<TInstance> machine, Expression<Func<TInstance, bool>> expression,
-        params State[] states)
-        where TInstance : class, SagaStateMachineInstance
+    public static ISagaQuery<TInstance> CreateSagaQuery<TInstance>(this IStateMachine<TInstance> machine, Expression<Func<TInstance, bool>> expression,
+        params IState[] states)
+        where TInstance : class, ISagaStateMachineInstance
     {
         Expression<Func<TInstance, bool>> stateExpression = machine.Accessor.GetStateExpression(states);
 
@@ -30,9 +30,9 @@ public static class SagaStateMachineExtensions
     /// <param name="expression">The query expression.</param>
     /// <param name="states">The states that are valid for this query.</param>
     /// <returns>The created saga filter.</returns>
-    public static Func<TInstance, bool> CreateSagaFilter<TInstance>(this StateMachine<TInstance> machine, Expression<Func<TInstance, bool>> expression,
-        params State[] states)
-        where TInstance : class, SagaStateMachineInstance
+    public static Func<TInstance, bool> CreateSagaFilter<TInstance>(this IStateMachine<TInstance> machine, Expression<Func<TInstance, bool>> expression,
+        params IState[] states)
+        where TInstance : class, ISagaStateMachineInstance
     {
         Expression<Func<TInstance, bool>> stateExpression = machine.Accessor.GetStateExpression(states);
 

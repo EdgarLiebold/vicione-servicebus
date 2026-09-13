@@ -165,15 +165,15 @@ public sealed class PostgreSqlSagaConcurrencyTests
             .UseNpgsql(connectionString)
             .Options);
 
-    public sealed record BeginSerializedSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BeginSerializedSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record IncrementSerializedSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record IncrementSerializedSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record SerializedSagaStarted(Guid CorrelationId);
 
     public sealed record SerializedSagaIncremented(Guid CorrelationId, int Counter);
 
-    public sealed class SerializedState : SagaStateMachineInstance
+    public sealed class SerializedState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -201,11 +201,11 @@ public sealed class PostgreSqlSagaConcurrencyTests
                     .Publish(context => new SerializedSagaIncremented(context.Saga.CorrelationId, context.Saga.Counter)));
         }
 
-        public State Active { get; private set; } = null!;
+        public IState Active { get; private set; } = null!;
 
-        public Event<BeginSerializedSaga> Begin { get; private set; } = null!;
+        public IEvent<BeginSerializedSaga> Begin { get; private set; } = null!;
 
-        public Event<IncrementSerializedSaga> Increment { get; private set; } = null!;
+        public IEvent<IncrementSerializedSaga> Increment { get; private set; } = null!;
     }
 
     private sealed class SerializedStateDefinition : SagaDefinition<SerializedState>

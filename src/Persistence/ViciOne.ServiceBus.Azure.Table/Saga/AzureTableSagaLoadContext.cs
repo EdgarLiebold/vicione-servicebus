@@ -15,7 +15,7 @@ internal sealed class AzureTableSagaLoadContext<TSaga>(
     IAzureTableSagaStorageContext<TSaga> context,
     CancellationToken cancellationToken) :
     BasePipeContext(cancellationToken),
-    LoadSagaRepositoryContext<TSaga>
+    ILoadSagaRepositoryContext<TSaga>
     where TSaga : class, ISaga
 {
     readonly IAzureTableSagaStorageContext<TSaga> _context =

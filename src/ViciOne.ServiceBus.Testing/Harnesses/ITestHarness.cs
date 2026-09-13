@@ -43,8 +43,8 @@ public interface ITestHarness :
     /// <typeparam name="T">The saga state type.</typeparam>
     /// <returns>The saga state machine harness.</returns>
     ISagaStateMachineTestHarness<TStateMachine, T> GetSagaStateMachineHarness<TStateMachine, T>()
-        where TStateMachine : class, SagaStateMachine<T>
-        where T : class, SagaStateMachineInstance;
+        where TStateMachine : class, ISagaStateMachine<T>
+        where T : class, ISagaStateMachineInstance;
 
     /// <summary>Creates a request client for the registered request contract.</summary>
     /// <typeparam name="T">The request contract.</typeparam>

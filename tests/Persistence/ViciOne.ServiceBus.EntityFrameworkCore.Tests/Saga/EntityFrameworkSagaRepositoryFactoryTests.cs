@@ -168,7 +168,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         await contextFactory.SendQueryAsync(
             context,
             new SagaQuery<FactorySaga>(_ => true),
-            Pipe.Execute<SagaRepositoryQueryContext<FactorySaga, FactoryMessage>>(queryContext =>
+            Pipe.Execute<ISagaRepositoryQueryContext<FactorySaga, FactoryMessage>>(queryContext =>
             {
                 Assert.Equal(2, queryContext.Count);
                 Interlocked.Increment(ref delivered);

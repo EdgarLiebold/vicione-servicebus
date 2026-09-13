@@ -8,17 +8,17 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SendActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly DestinationAddressProvider<TSaga> _destinationAddressProvider;
-    readonly ContextMessageFactory<BehaviorContext<TSaga>, TMessage> _messageFactory;
+    readonly ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> _messageFactory;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="destinationAddressProvider">The destination address provider.</param>
     /// <param name="messageFactory">The message factory.</param>
     public SendActivity(DestinationAddressProvider<TSaga> destinationAddressProvider,
-        ContextMessageFactory<BehaviorContext<TSaga>, TMessage> messageFactory)
+        ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> messageFactory)
     {
         _destinationAddressProvider = destinationAddressProvider;
         _messageFactory = messageFactory;
@@ -26,7 +26,7 @@ public class SendActivity<TSaga, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="inspector">The inspector.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -42,7 +42,7 @@ public class SendActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await ExecuteAsync(context).ConfigureAwait(false);
 
@@ -54,7 +54,7 @@ public class SendActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public async Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         await ExecuteAsync(context).ConfigureAwait(false);
@@ -67,7 +67,7 @@ public class SendActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -79,14 +79,14 @@ public class SendActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    async Task ExecuteAsync(BehaviorContext<TSaga> context)
+    async Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         var destinationAddress = _destinationAddressProvider(context);
 
@@ -103,18 +103,18 @@ public class SendActivity<TSaga, TMessage> :
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SendActivity<TSaga, TData, TMessage> :
     IStateMachineActivity<TSaga, TData>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TData : class
     where TMessage : class
 {
     readonly DestinationAddressProvider<TSaga, TData> _destinationAddressProvider;
-    readonly ContextMessageFactory<BehaviorContext<TSaga, TData>, TMessage> _messageFactory;
+    readonly ContextMessageFactory<IBehaviorContext<TSaga, TData>, TMessage> _messageFactory;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="destinationAddressProvider">The destination address provider.</param>
     /// <param name="messageFactory">The message factory.</param>
     public SendActivity(DestinationAddressProvider<TSaga, TData> destinationAddressProvider,
-        ContextMessageFactory<BehaviorContext<TSaga, TData>, TMessage> messageFactory)
+        ContextMessageFactory<IBehaviorContext<TSaga, TData>, TMessage> messageFactory)
     {
         _destinationAddressProvider = destinationAddressProvider;
         _messageFactory = messageFactory;
@@ -122,7 +122,7 @@ public class SendActivity<TSaga, TData, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="inspector">The inspector.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -138,7 +138,7 @@ public class SendActivity<TSaga, TData, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
         var destinationAddress = _destinationAddressProvider(context);
 
@@ -154,7 +154,7 @@ public class SendActivity<TSaga, TData, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TData, TException> context, IBehavior<TSaga, TData> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TData, TException> context, IBehavior<TSaga, TData> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

@@ -5,41 +5,41 @@ using System.Linq;
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
 internal sealed class StateMachineGraphVisitor<TSaga> :
-    StateMachineVisitor
-    where TSaga : class, SagaStateMachineInstance
+    IStateMachineVisitor
+    where TSaga : class, ISagaStateMachineInstance
 {
     readonly HashSet<StateMachineGraphEdge> _edges;
-    readonly Dictionary<(StateMachineGraphNode State, Event Event), StateMachineGraphNode> _eventBindings;
-    readonly StateMachine<TSaga> _machine;
+    readonly Dictionary<(StateMachineGraphNode State, IEvent Event), StateMachineGraphNode> _eventBindings;
+    readonly IStateMachine<TSaga> _machine;
     readonly List<StateMachineGraphNode> _nonStateNodes;
     readonly List<StateMachineGraphEdge> _orderedEdges;
     readonly List<StateMachineGraphNode> _stateNodes;
     readonly Dictionary<string, StateMachineGraphNode> _states;
-    readonly HashSet<Event> _visitedEvents;
+    readonly HashSet<IEvent> _visitedEvents;
     StateMachineGraphNode? _currentEvent;
     StateMachineGraphNode? _currentState;
 
-    internal StateMachineGraphVisitor(StateMachine<TSaga> machine)
+    internal StateMachineGraphVisitor(IStateMachine<TSaga> machine)
     {
         _machine = machine;
 
         _edges = new HashSet<StateMachineGraphEdge>();
         _states = new Dictionary<string, StateMachineGraphNode>(StringComparer.Ordinal);
-        _eventBindings = new Dictionary<(StateMachineGraphNode, Event), StateMachineGraphNode>();
+        _eventBindings = new Dictionary<(StateMachineGraphNode, IEvent), StateMachineGraphNode>();
         _nonStateNodes = [];
         _orderedEdges = [];
         _stateNodes = [];
-        _visitedEvents = new HashSet<Event>();
+        _visitedEvents = new HashSet<IEvent>();
     }
 
     internal StateMachineGraph Graph
     {
         get
         {
-            foreach (State state in _machine.States)
+            foreach (IState state in _machine.States)
                 GetStateNode(state);
 
-            foreach (Event @event in _machine.Events)
+            foreach (IEvent @event in _machine.Events)
             {
                 if (_visitedEvents.Add(@event))
                     _nonStateNodes.Add(CreateEventNode(@event));
@@ -49,12 +49,12 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         }
     }
 
-    public void Visit(State state, Action<State> next)
+    public void Visit(IState state, Action<IState> next)
     {
         _currentState = GetStateNode(state);
-        State<TSaga> typedState = _machine.GetState(state.Name);
+        IState<TSaga> typedState = _machine.GetState(state.Name);
 
-        foreach (Event @event in typedState.DeclaredEvents)
+        foreach (IEvent @event in typedState.DeclaredEvents)
         {
             StateMachineGraphNode eventNode = GetEventNode(@event);
             AddEdge(new StateMachineGraphEdge(CurrentState, eventNode, StateMachineGraphEdgeKind.EventBinding));
@@ -69,7 +69,7 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         next(state);
     }
 
-    public void Visit(Event @event, Action<Event> next)
+    public void Visit(IEvent @event, Action<IEvent> next)
     {
         _currentEvent = GetEventNode(@event);
         AddEdge(new StateMachineGraphEdge(CurrentState, CurrentEvent, StateMachineGraphEdgeKind.EventBinding));
@@ -77,7 +77,7 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         next(@event);
     }
 
-    public void Visit<TData>(Event<TData> @event, Action<Event<TData>> next)
+    public void Visit<TData>(IEvent<TData> @event, Action<IEvent<TData>> next)
         where TData : class
     {
         _currentEvent = GetEventNode(@event);
@@ -106,7 +106,7 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
     }
 
     public void Visit<T>(IBehavior<T> behavior)
-        where T : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachineInstance
     {
         Visit(behavior, x =>
         {
@@ -114,13 +114,13 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
     }
 
     public void Visit<T>(IBehavior<T> behavior, Action<IBehavior<T>> next)
-        where T : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachineInstance
     {
         next(behavior);
     }
 
     public void Visit<T, TData>(IBehavior<T, TData> behavior)
-        where T : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachineInstance
         where TData : class
     {
         Visit(behavior, x =>
@@ -129,7 +129,7 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
     }
 
     public void Visit<T, TData>(IBehavior<T, TData> behavior, Action<IBehavior<T, TData>> next)
-        where T : class, SagaStateMachineInstance
+        where T : class, ISagaStateMachineInstance
         where TData : class
     {
         next(behavior);
@@ -168,7 +168,7 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         AddEdge(new StateMachineGraphEdge(CurrentEvent, compositeEvent, StateMachineGraphEdgeKind.CompositeContribution));
     }
 
-    StateMachineGraphNode GetStateNode(State state)
+    StateMachineGraphNode GetStateNode(IState state)
     {
         if (_states.TryGetValue(state.Name, out StateMachineGraphNode? node))
             return node;
@@ -180,7 +180,7 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         return node;
     }
 
-    StateMachineGraphNode GetEventNode(Event @event)
+    StateMachineGraphNode GetEventNode(IEvent @event)
     {
         var key = (CurrentState, @event);
         if (_eventBindings.TryGetValue(key, out StateMachineGraphNode? node))
@@ -214,20 +214,20 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
             _orderedEdges.Add(edge);
     }
 
-    static StateMachineGraphNode CreateStateNode(State state) => StateMachineGraphNode.CreateState(state.Name);
+    static StateMachineGraphNode CreateStateNode(IState state) => StateMachineGraphNode.CreateState(state.Name);
 
-    StateMachineGraphNode CreateEventNode(Event @event)
+    StateMachineGraphNode CreateEventNode(IEvent @event)
     {
         var targetType = @event
             .GetType()
             .GetInterfaces()
             .Where(x => x.IsGenericType)
-            .Where(x => x.GetGenericTypeDefinition() == typeof(Event<>))
+            .Where(x => x.GetGenericTypeDefinition() == typeof(IEvent<>))
             .Select(x => x.GetGenericArguments()[0])
-            .DefaultIfEmpty(typeof(Event))
+            .DefaultIfEmpty(typeof(IEvent))
             .Single();
 
-        Type? messageType = targetType == typeof(Event) ? null : targetType;
+        Type? messageType = targetType == typeof(IEvent) ? null : targetType;
         return StateMachineGraphNode.CreateEvent(@event.Name, messageType, _machine.IsCompositeEvent(@event));
     }
 

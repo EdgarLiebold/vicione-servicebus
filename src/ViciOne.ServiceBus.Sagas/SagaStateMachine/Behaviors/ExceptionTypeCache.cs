@@ -7,10 +7,10 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <summary>Caches strongly typed fault dispatchers for runtime exception types.</summary>
 internal static class ExceptionTypeCache
 {
-    static CachedConfigurator GetOrAdd(Type type)
+    static ICachedConfigurator GetOrAdd(Type type)
     {
         return Cached.Instance.GetOrAdd(type, _ =>
-            (CachedConfigurator)(Activator.CreateInstance(typeof(CachedConfigurator<>).MakeGenericType(type))
+            (ICachedConfigurator)(Activator.CreateInstance(typeof(CachedConfigurator<>).MakeGenericType(type))
                 ?? throw new InvalidOperationException($"Could not create an exception configurator for '{type}'.")));
     }
 
@@ -21,8 +21,8 @@ internal static class ExceptionTypeCache
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes after the typed fault behavior.</returns>
-    public static Task FaultedAsync<TSaga>(IBehavior<TSaga> behavior, BehaviorContext<TSaga> context, Exception exception, CancellationToken cancellationToken = default)
-        where TSaga : class, SagaStateMachineInstance
+    public static Task FaultedAsync<TSaga>(IBehavior<TSaga> behavior, IBehaviorContext<TSaga> context, Exception exception, CancellationToken cancellationToken = default)
+        where TSaga : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(behavior);
         ArgumentNullException.ThrowIfNull(context);
@@ -41,8 +41,8 @@ internal static class ExceptionTypeCache
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes after the typed fault behavior.</returns>
-    public static Task FaultedAsync<TSaga, TMessage>(IBehavior<TSaga, TMessage> behavior, BehaviorContext<TSaga, TMessage> context, Exception exception, CancellationToken cancellationToken = default)
-        where TSaga : class, SagaStateMachineInstance
+    public static Task FaultedAsync<TSaga, TMessage>(IBehavior<TSaga, TMessage> behavior, IBehaviorContext<TSaga, TMessage> context, Exception exception, CancellationToken cancellationToken = default)
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(behavior);
@@ -57,26 +57,26 @@ internal static class ExceptionTypeCache
 
     static class Cached
     {
-        internal static readonly ConcurrentDictionary<Type, CachedConfigurator> Instance = new ConcurrentDictionary<Type, CachedConfigurator>();
+        internal static readonly ConcurrentDictionary<Type, ICachedConfigurator> Instance = new ConcurrentDictionary<Type, ICachedConfigurator>();
     }
 
 
-    interface CachedConfigurator
+    interface ICachedConfigurator
     {
-        Task FaultedAsync<TSaga>(IBehavior<TSaga> behavior, BehaviorContext<TSaga> context, Exception exception)
-            where TSaga : class, SagaStateMachineInstance;
+        Task FaultedAsync<TSaga>(IBehavior<TSaga> behavior, IBehaviorContext<TSaga> context, Exception exception)
+            where TSaga : class, ISagaStateMachineInstance;
 
-        Task FaultedAsync<TSaga, TMessage>(IBehavior<TSaga, TMessage> behavior, BehaviorContext<TSaga, TMessage> context, Exception exception)
-            where TSaga : class, SagaStateMachineInstance
+        Task FaultedAsync<TSaga, TMessage>(IBehavior<TSaga, TMessage> behavior, IBehaviorContext<TSaga, TMessage> context, Exception exception)
+            where TSaga : class, ISagaStateMachineInstance
             where TMessage : class;
     }
 
 
     class CachedConfigurator<TException> :
-        CachedConfigurator
+        ICachedConfigurator
         where TException : Exception
     {
-        Task CachedConfigurator.FaultedAsync<TInstance>(IBehavior<TInstance> behavior, BehaviorContext<TInstance> context, Exception exception)
+        Task ICachedConfigurator.FaultedAsync<TInstance>(IBehavior<TInstance> behavior, IBehaviorContext<TInstance> context, Exception exception)
         {
             if (exception is TException typedException)
             {
@@ -88,7 +88,7 @@ internal static class ExceptionTypeCache
             throw new ArgumentException($"The exception type {exception.GetType().Name} did not match the expected type {typeof(TException).Name}");
         }
 
-        Task CachedConfigurator.FaultedAsync<TInstance, TData>(IBehavior<TInstance, TData> behavior, BehaviorContext<TInstance, TData> context,
+        Task ICachedConfigurator.FaultedAsync<TInstance, TData>(IBehavior<TInstance, TData> behavior, IBehaviorContext<TInstance, TData> context,
             Exception exception)
         {
             if (exception is TException typedException)

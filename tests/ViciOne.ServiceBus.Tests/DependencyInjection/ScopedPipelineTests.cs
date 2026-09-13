@@ -109,9 +109,9 @@ public sealed class ScopedPipelineTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record ScopedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScopedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ScopedResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScopedResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class ScopeMarker;
 
@@ -181,12 +181,12 @@ public sealed class ScopedPipelineTests
         }
     }
 
-    public sealed record FilteredRequest(Guid CorrelationId) : IFilteredRequest, CorrelatedBy<Guid>;
+    public sealed record FilteredRequest(Guid CorrelationId) : IFilteredRequest, ICorrelatedBy<Guid>;
 
     [ExcludeFromImplementedTypes]
     public interface IFilteredRequest;
 
-    public sealed record FilteredResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record FilteredResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record FilterResult(Guid CorrelationId, int FilterCount);
 

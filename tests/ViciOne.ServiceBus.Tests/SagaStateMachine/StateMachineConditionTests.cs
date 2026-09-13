@@ -85,11 +85,11 @@ public sealed class StateMachineConditionTests
                 declarativeMachine.Explicit);
         }
 
-        State running = null!;
-        State initialized = null!;
-        State shouldNotBeHere = null!;
-        Event<StartSignal> started = null!;
-        Event<ExplicitSignal> explicitEvent = null!;
+        IState running = null!;
+        IState initialized = null!;
+        IState shouldNotBeHere = null!;
+        IEvent<StartSignal> started = null!;
+        IEvent<ExplicitSignal> explicitEvent = null!;
         ViciOneServiceBusStateMachine<ConditionInstance> machine = ViciOneServiceBusStateMachine<ConditionInstance>.New(builder => builder
             .State("Running", out running)
             .State("Initialized", out initialized)
@@ -117,9 +117,9 @@ public sealed class StateMachineConditionTests
                 declarativeMachine.Filter);
         }
 
-        State trueState = null!;
-        State falseState = null!;
-        Event<FilterSignal> filter = null!;
+        IState trueState = null!;
+        IState falseState = null!;
+        IEvent<FilterSignal> filter = null!;
         ViciOneServiceBusStateMachine<ConditionInstance> machine = ViciOneServiceBusStateMachine<ConditionInstance>.New(builder => builder
             .State("True", out trueState)
             .State("False", out falseState)
@@ -136,9 +136,9 @@ public sealed class StateMachineConditionTests
         return new FilterScenario(machine, trueState, falseState, filter);
     }
 
-    private static EventActivityBinder<ConditionInstance, StartSignal> ConfigureStarted(
-        EventActivityBinder<ConditionInstance, StartSignal> behavior,
-        State initialized,
+    private static IEventActivityBinder<ConditionInstance, StartSignal> ConfigureStarted(
+        IEventActivityBinder<ConditionInstance, StartSignal> behavior,
+        IState initialized,
         bool useAsync)
     {
         behavior = behavior.Then(context => context.Saga.InitializeOnly = context.Message.InitializeOnly);
@@ -151,9 +151,9 @@ public sealed class StateMachineConditionTests
             .TransitionTo(initialized);
     }
 
-    private static EventActivityBinder<ConditionInstance, ExplicitSignal> ConfigureExplicit(
-        EventActivityBinder<ConditionInstance, ExplicitSignal> behavior,
-        State shouldNotBeHere,
+    private static IEventActivityBinder<ConditionInstance, ExplicitSignal> ConfigureExplicit(
+        IEventActivityBinder<ConditionInstance, ExplicitSignal> behavior,
+        IState shouldNotBeHere,
         bool useAsync)
     {
         if (useAsync)
@@ -174,57 +174,57 @@ public sealed class StateMachineConditionTests
             selected => selected.Then(context => context.Saga.ElseBranches++));
     }
 
-    private static EventActivityBinder<ConditionInstance> ConfigureEnter(
-        EventActivityBinder<ConditionInstance> behavior,
-        State running,
+    private static IEventActivityBinder<ConditionInstance> ConfigureEnter(
+        IEventActivityBinder<ConditionInstance> behavior,
+        IState running,
         bool useAsync) =>
         useAsync
             ? behavior.IfAwaited(EnterConditionAsync, selected => selected.TransitionTo(running))
             : behavior.If(EnterCondition, selected => selected.TransitionTo(running));
 
-    private static bool StartCondition(BehaviorContext<ConditionInstance, StartSignal> context)
+    private static bool StartCondition(IBehaviorContext<ConditionInstance, StartSignal> context)
     {
         context.Saga.StartConditionEvaluations++;
         return context.Message.InitializeOnly;
     }
 
-    private static Task<bool> StartConditionAsync(BehaviorContext<ConditionInstance, StartSignal> context) =>
+    private static Task<bool> StartConditionAsync(IBehaviorContext<ConditionInstance, StartSignal> context) =>
         Task.FromResult(StartCondition(context));
 
-    private static bool ExplicitCondition(BehaviorContext<ConditionInstance, ExplicitSignal> context)
+    private static bool ExplicitCondition(IBehaviorContext<ConditionInstance, ExplicitSignal> context)
     {
         context.Saga.ExplicitConditionEvaluations++;
         return context.Message.TakeThen;
     }
 
-    private static Task<bool> ExplicitConditionAsync(BehaviorContext<ConditionInstance, ExplicitSignal> context) =>
+    private static Task<bool> ExplicitConditionAsync(IBehaviorContext<ConditionInstance, ExplicitSignal> context) =>
         Task.FromResult(ExplicitCondition(context));
 
-    private static bool EnterCondition(BehaviorContext<ConditionInstance> context)
+    private static bool EnterCondition(IBehaviorContext<ConditionInstance> context)
     {
         context.Saga.EnterConditionEvaluations++;
         return !context.Saga.InitializeOnly;
     }
 
-    private static Task<bool> EnterConditionAsync(BehaviorContext<ConditionInstance> context) =>
+    private static Task<bool> EnterConditionAsync(IBehaviorContext<ConditionInstance> context) =>
         Task.FromResult(EnterCondition(context));
 
-    private static bool TruePredicate(BehaviorContext<ConditionInstance, FilterSignal> context)
+    private static bool TruePredicate(IBehaviorContext<ConditionInstance, FilterSignal> context)
     {
         context.Saga.TruePredicateEvaluations++;
         return context.Message.Condition;
     }
 
-    private static bool FalsePredicate(BehaviorContext<ConditionInstance, FilterSignal> context)
+    private static bool FalsePredicate(IBehaviorContext<ConditionInstance, FilterSignal> context)
     {
         context.Saga.FalsePredicateEvaluations++;
         return !context.Message.Condition;
     }
 
     private static async Task RaiseAsync<T>(
-        StateMachine<ConditionInstance> machine,
+        IStateMachine<ConditionInstance> machine,
         ConditionInstance instance,
-        Event<T> @event,
+        IEvent<T> @event,
         T message)
         where T : class
     {
@@ -232,7 +232,7 @@ public sealed class StateMachineConditionTests
         var sagaInstance = new SagaInstance<ConditionInstance>(instance);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ConditionInstance, T>(consumeContext, sagaInstance);
-        BehaviorContext<ConditionInstance, T> behaviorContext =
+        IBehaviorContext<ConditionInstance, T> behaviorContext =
             new ViciOneServiceBusStateMachine<ConditionInstance>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
         await machine.RaiseEventAsync(behaviorContext);
@@ -246,23 +246,23 @@ public sealed class StateMachineConditionTests
 
     private sealed record ConditionScenario(
         ViciOneServiceBusStateMachine<ConditionInstance> Machine,
-        State Running,
-        State Initialized,
-        State ShouldNotBeHere,
-        Event<StartSignal> Started,
-        Event<ExplicitSignal> Explicit);
+        IState Running,
+        IState Initialized,
+        IState ShouldNotBeHere,
+        IEvent<StartSignal> Started,
+        IEvent<ExplicitSignal> Explicit);
 
     private sealed record FilterScenario(
         ViciOneServiceBusStateMachine<ConditionInstance> Machine,
-        State True,
-        State False,
-        Event<FilterSignal> Event);
+        IState True,
+        IState False,
+        IEvent<FilterSignal> Event);
 
-    private sealed class ConditionInstance : SagaStateMachineInstance
+    private sealed class ConditionInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
         public bool InitializeOnly { get; set; }
 
@@ -309,15 +309,15 @@ public sealed class StateMachineConditionTests
             WhenEnter(Initialized, behavior => ConfigureEnter(behavior, Running, useAsync));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State Initialized { get; private set; } = null!;
+        public IState Initialized { get; private set; } = null!;
 
-        public State ShouldNotBeHere { get; private set; } = null!;
+        public IState ShouldNotBeHere { get; private set; } = null!;
 
-        public Event<StartSignal> Started { get; private set; } = null!;
+        public IEvent<StartSignal> Started { get; private set; } = null!;
 
-        public Event<ExplicitSignal> Explicit { get; private set; } = null!;
+        public IEvent<ExplicitSignal> Explicit { get; private set; } = null!;
     }
 
     private sealed class DeclarativeFilterMachine : ViciOneServiceBusStateMachine<ConditionInstance>
@@ -334,10 +334,10 @@ public sealed class StateMachineConditionTests
                     .TransitionTo(False));
         }
 
-        public State True { get; private set; } = null!;
+        public IState True { get; private set; } = null!;
 
-        public State False { get; private set; } = null!;
+        public IState False { get; private set; } = null!;
 
-        public Event<FilterSignal> Filter { get; private set; } = null!;
+        public IEvent<FilterSignal> Filter { get; private set; } = null!;
     }
 }

@@ -571,3 +571,31 @@ interface names as a separate Greenfield API decision; that bounded naming itera
 The physical project placement is accepted: Core owns only `src/ViciOne.ServiceBus`, independent
 capabilities are sibling assemblies, and external providers are grouped under `Persistence`,
 `Scheduling`, and `Transports`. The overall source-wide A+ goal remains active.
+
+## Iteration 98
+
+Iteration 98 completes the Saga interface and documentation normalization. All 47 Saga interfaces,
+including three nested internal contracts, now use the .NET `I` prefix; 30 top-level filenames
+match their primary types. Generic arity, variance, inheritance, members, attributes, concrete
+implementations, and behavior are preserved across source, providers, tests, samples, analyzers,
+reflection identities, and isolated consumers. A public API multiset audit found no unrelated
+contract delta. Every affected declaration comment was manually reread and corrected.
+
+The red-first `SagaInterfaces_UseTheDotNetInterfacePrefix` requirement originally reported exactly
+47 violations and now passes. A deliberate `ICorrelatedBy` mutation was killed and restored. The
+final Engineering Release build passes all 77 projects with zero warnings or errors. The complete
+Unit/Architecture solution passes 6,234/6,234 with no skips; the direct architecture host passes
+293/293, and the Core host passes 3,275/3,275. Both format gates, all requirements JSON, diff
+whitespace, source hygiene, 18 developer journeys, 31 fresh packages, three isolated provider
+consumers, and all 30 runtime API contracts pass.
+
+Fresh Core-host coverage is 75.3365% line and 68.0573% branch. Saga coverage remains 62.4669% line
+and 54.4440% branch; 15 of 2,523 methods exceed CRAP 30. These risks remain visible for subsequent
+test strengthening. The packed 19,029-line API contract has SHA-256
+`1a4fdef247c3b4ece1e5b8fed35dbe533f8409541a4aedf3be2dce9be8891be6`.
+
+The source layout is deliberately ownership-based: `src/ViciOne.ServiceBus` is Core, independent
+capabilities remain sibling packages, and cohesive external integrations are grouped below
+`Persistence`, `Scheduling`, and `Transports`. The protected `review/` and `TestResults/` trees were
+not changed or staged. The overall A+ goal remains active for the remaining source owners and final
+completion audit.

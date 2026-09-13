@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IMissingInstanceConfigurator<TSaga, TMessage>
-    where TSaga : SagaStateMachineInstance
+    where TSaga : ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>Discard the event, silently ignoring the missing instance for the event.</summary>

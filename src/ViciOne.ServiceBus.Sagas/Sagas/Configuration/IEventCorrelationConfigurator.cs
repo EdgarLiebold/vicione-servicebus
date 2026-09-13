@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IEventCorrelationConfigurator<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>

@@ -8,9 +8,9 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="T">The value type.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <param name="sendContext">The send context.</param>
-public delegate void SendExceptionContextCallback<TSaga, in TException, in T>(BehaviorExceptionContext<TSaga, TException> context,
+public delegate void SendExceptionContextCallback<TSaga, in TException, in T>(IBehaviorExceptionContext<TSaga, TException> context,
     SendContext<T> sendContext)
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception
     where T : class;
 
@@ -22,9 +22,9 @@ public delegate void SendExceptionContextCallback<TSaga, in TException, in T>(Be
 /// <typeparam name="T">The value type.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <param name="sendContext">The send context.</param>
-public delegate void SendExceptionContextCallback<TSaga, in TMessage, in TException, in T>(BehaviorExceptionContext<TSaga, TMessage, TException> context,
+public delegate void SendExceptionContextCallback<TSaga, in TMessage, in TException, in T>(IBehaviorExceptionContext<TSaga, TMessage, TException> context,
     SendContext<T> sendContext)
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TException : Exception
     where T : class;

@@ -101,8 +101,8 @@ public sealed class StateMachineStateStorageTests
     private static void AssertPredicateTruthTable<TInstance>(
         ViciOneServiceBusStateMachine<TInstance> machine,
         TInstance instance,
-        State running)
-        where TInstance : class, SagaStateMachineInstance
+        IState running)
+        where TInstance : class, ISagaStateMachineInstance
     {
         Expression<Func<TInstance, bool>> currentExpression = machine.Accessor.GetStateExpression(running);
         Expression<Func<TInstance, bool>> initialExpression = machine.Accessor.GetStateExpression(machine.Initial);
@@ -123,8 +123,8 @@ public sealed class StateMachineStateStorageTests
             return new RawScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Start);
         }
 
-        State running = null!;
-        Event start = null!;
+        IState running = null!;
+        IEvent start = null!;
         ViciOneServiceBusStateMachine<RawStateInstance> machine = ViciOneServiceBusStateMachine<RawStateInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Start", out start)
@@ -142,8 +142,8 @@ public sealed class StateMachineStateStorageTests
             return new StringScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Start);
         }
 
-        State running = null!;
-        Event start = null!;
+        IState running = null!;
+        IEvent start = null!;
         ViciOneServiceBusStateMachine<StringStateInstance> machine = ViciOneServiceBusStateMachine<StringStateInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Start", out start)
@@ -161,8 +161,8 @@ public sealed class StateMachineStateStorageTests
             return new IntegerScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Start);
         }
 
-        State running = null!;
-        Event start = null!;
+        IState running = null!;
+        IEvent start = null!;
         ViciOneServiceBusStateMachine<IntegerStateInstance> machine = ViciOneServiceBusStateMachine<IntegerStateInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Start", out start)
@@ -184,9 +184,9 @@ public sealed class StateMachineStateStorageTests
                 declarativeMachine.Decide);
         }
 
-        State @true = null!;
-        State @false = null!;
-        Event<Decision> decide = null!;
+        IState @true = null!;
+        IState @false = null!;
+        IEvent<Decision> decide = null!;
         ViciOneServiceBusStateMachine<JsonStateInstance> machine = ViciOneServiceBusStateMachine<JsonStateInstance>.New(builder => builder
             .State("True", out @true)
             .State("False", out @false)
@@ -200,24 +200,24 @@ public sealed class StateMachineStateStorageTests
 
     private sealed record RawScenario(
         ViciOneServiceBusStateMachine<RawStateInstance> Machine,
-        State Running,
-        Event Start);
+        IState Running,
+        IEvent Start);
 
     private sealed record StringScenario(
         ViciOneServiceBusStateMachine<StringStateInstance> Machine,
-        State Running,
-        Event Start);
+        IState Running,
+        IEvent Start);
 
     private sealed record IntegerScenario(
         ViciOneServiceBusStateMachine<IntegerStateInstance> Machine,
-        State Running,
-        Event Start);
+        IState Running,
+        IEvent Start);
 
     private sealed record JsonScenario(
         ViciOneServiceBusStateMachine<JsonStateInstance> Machine,
-        State True,
-        State False,
-        Event<Decision> Decide);
+        IState True,
+        IState False,
+        IEvent<Decision> Decide);
 
     public enum StateStorageKind
     {
@@ -228,32 +228,32 @@ public sealed class StateMachineStateStorageTests
 
     public sealed record Decision(bool Value);
 
-    private sealed class RawStateInstance : SagaStateMachineInstance
+    private sealed class RawStateInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
     }
 
-    private sealed class StringStateInstance : SagaStateMachineInstance
+    private sealed class StringStateInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
         public string CurrentState { get; private set; } = string.Empty;
     }
 
-    private sealed class IntegerStateInstance : SagaStateMachineInstance
+    private sealed class IntegerStateInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
         public int CurrentState { get; private set; }
     }
 
-    private sealed class JsonStateInstance : SagaStateMachineInstance
+    private sealed class JsonStateInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
     }
 
     private sealed class DeclarativeRawMachine : ViciOneServiceBusStateMachine<RawStateInstance>
@@ -264,9 +264,9 @@ public sealed class StateMachineStateStorageTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     private sealed class DeclarativeStringMachine : ViciOneServiceBusStateMachine<StringStateInstance>
@@ -277,9 +277,9 @@ public sealed class StateMachineStateStorageTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     private sealed class DeclarativeIntegerMachine : ViciOneServiceBusStateMachine<IntegerStateInstance>
@@ -290,9 +290,9 @@ public sealed class StateMachineStateStorageTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     private sealed class DeclarativeJsonMachine : ViciOneServiceBusStateMachine<JsonStateInstance>
@@ -305,29 +305,29 @@ public sealed class StateMachineStateStorageTests
                 When(Decide, context => !context.Message.Value).TransitionTo(False));
         }
 
-        public State True { get; private set; } = null!;
+        public IState True { get; private set; } = null!;
 
-        public State False { get; private set; } = null!;
+        public IState False { get; private set; } = null!;
 
-        public Event<Decision> Decide { get; private set; } = null!;
+        public IEvent<Decision> Decide { get; private set; } = null!;
     }
 
-    private sealed class MachineStateConverter : JsonConverter<State>
+    private sealed class MachineStateConverter : JsonConverter<IState>
     {
-        private readonly StateMachine _machine;
+        private readonly IStateMachine _machine;
 
-        public MachineStateConverter(StateMachine machine)
+        public MachineStateConverter(IStateMachine machine)
         {
             _machine = machine;
         }
 
-        public override State? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override IState? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             string? stateName = reader.GetString();
             return string.IsNullOrWhiteSpace(stateName) ? null : _machine.GetState(stateName);
         }
 
-        public override void Write(Utf8JsonWriter writer, State value, JsonSerializerOptions options) =>
+        public override void Write(Utf8JsonWriter writer, IState value, JsonSerializerOptions options) =>
             writer.WriteStringValue(value.Name);
     }
 }

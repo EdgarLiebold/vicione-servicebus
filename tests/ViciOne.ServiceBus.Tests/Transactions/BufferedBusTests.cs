@@ -691,7 +691,7 @@ public sealed class BufferedBusTests
             TestInactivityTimeout = timeout,
         };
 
-    public sealed record TransactionalMessage : CorrelatedBy<Guid>
+    public sealed record TransactionalMessage : ICorrelatedBy<Guid>
     {
         public TransactionalMessage()
         {
@@ -708,11 +708,11 @@ public sealed class BufferedBusTests
         public string Value { get; init; } = string.Empty;
     }
 
-    public sealed record BufferedConsumerTrigger(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BufferedConsumerTrigger(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record BufferedConsumerResult(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BufferedConsumerResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record BufferedConsumerSendResult(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BufferedConsumerSendResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class TransactionalMessageConsumer : IConsumer<TransactionalMessage>
     {

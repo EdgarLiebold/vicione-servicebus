@@ -20,9 +20,9 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="stateSelector">The selector for the expected state.</param>
     /// <returns>The matching recorded saga, or <see langword="null"/>.</returns>
     public static TInstance? FindByIdInState<TStateMachine, TInstance>(this ISagaList<TInstance> sagas,
-        Guid correlationId, TStateMachine stateMachine, Func<TStateMachine, State> stateSelector)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        Guid correlationId, TStateMachine stateMachine, Func<TStateMachine, IState> stateSelector)
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(sagas);
         ArgumentNullException.ThrowIfNull(stateMachine);
@@ -38,8 +38,8 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="state">The expected state.</param>
     /// <returns>The matching recorded saga, or <see langword="null"/>.</returns>
     public static TInstance? FindByIdInState<TInstance>(this ISagaList<TInstance> sagas, Guid correlationId,
-        SagaStateMachine<TInstance> stateMachine, State state)
-        where TInstance : class, SagaStateMachineInstance
+        ISagaStateMachine<TInstance> stateMachine, IState state)
+        where TInstance : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(sagas);
         ArgumentNullException.ThrowIfNull(stateMachine);
@@ -62,10 +62,10 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The correlation identifier when the saga reaches the state; otherwise, <see langword="null"/>.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-        Guid correlationId, TStateMachine stateMachine, Func<TStateMachine, State> stateSelector, TimeSpan timeout,
+        Guid correlationId, TStateMachine stateMachine, Func<TStateMachine, IState> stateSelector, TimeSpan timeout,
         CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         return repository.WaitForSagaInStateAsync(
             correlationId,
@@ -88,10 +88,10 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The correlation identifier when the saga reaches the state; otherwise, <see langword="null"/>.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-        Guid correlationId, TStateMachine stateMachine, Func<TStateMachine, State> stateSelector, TimeSpan timeout,
+        Guid correlationId, TStateMachine stateMachine, Func<TStateMachine, IState> stateSelector, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(stateMachine);
         ArgumentNullException.ThrowIfNull(stateSelector);
@@ -115,10 +115,10 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The correlation identifier when the saga reaches the state; otherwise, <see langword="null"/>.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-        Guid correlationId, TStateMachine stateMachine, State state, TimeSpan timeout,
+        Guid correlationId, TStateMachine stateMachine, IState state, TimeSpan timeout,
         CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         return repository.WaitForSagaInStateAsync(
             correlationId,
@@ -141,10 +141,10 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The correlation identifier when the saga reaches the state; otherwise, <see langword="null"/>.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-        Guid correlationId, TStateMachine stateMachine, State state, TimeSpan timeout, TimeProvider timeProvider,
+        Guid correlationId, TStateMachine stateMachine, IState state, TimeSpan timeout, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         return repository.WaitForSagaInStateAsync(
             instance => instance.CorrelationId == correlationId,
@@ -167,9 +167,9 @@ public static class SagaStateMachineObservationExtensions
     /// <returns>A matching correlation identifier, or <see langword="null"/> when the timeout expires.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
         Expression<Func<TInstance, bool>> filter, TStateMachine stateMachine,
-        Func<TStateMachine, State> stateSelector, TimeSpan timeout, CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        Func<TStateMachine, IState> stateSelector, TimeSpan timeout, CancellationToken cancellationToken = default)
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         return repository.WaitForSagaInStateAsync(
             filter,
@@ -193,10 +193,10 @@ public static class SagaStateMachineObservationExtensions
     /// <returns>A matching correlation identifier, or <see langword="null"/> when the timeout expires.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
         Expression<Func<TInstance, bool>> filter, TStateMachine stateMachine,
-        Func<TStateMachine, State> stateSelector, TimeSpan timeout, TimeProvider timeProvider,
+        Func<TStateMachine, IState> stateSelector, TimeSpan timeout, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(stateMachine);
         ArgumentNullException.ThrowIfNull(stateSelector);
@@ -220,10 +220,10 @@ public static class SagaStateMachineObservationExtensions
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>A matching correlation identifier, or <see langword="null"/> when the timeout expires.</returns>
     public static Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-        Expression<Func<TInstance, bool>> filter, TStateMachine stateMachine, State state, TimeSpan timeout,
+        Expression<Func<TInstance, bool>> filter, TStateMachine stateMachine, IState state, TimeSpan timeout,
         CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         return repository.WaitForSagaInStateAsync(
             filter,
@@ -247,10 +247,10 @@ public static class SagaStateMachineObservationExtensions
     /// <returns>A matching correlation identifier, or <see langword="null"/> when the timeout expires.</returns>
     public static async Task<Guid?> WaitForSagaInStateAsync<TStateMachine, TInstance>(
         this ISagaRepository<TInstance> repository, Expression<Func<TInstance, bool>> filter,
-        TStateMachine stateMachine, State state, TimeSpan timeout, TimeProvider timeProvider,
+        TStateMachine stateMachine, IState state, TimeSpan timeout, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
-        where TStateMachine : SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : ISagaStateMachine<TInstance>
+        where TInstance : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(filter);

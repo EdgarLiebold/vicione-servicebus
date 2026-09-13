@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class CatchBehaviorBuilder<TSaga> :
     IBehaviorBuilder<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     readonly List<IStateMachineActivity<TSaga>> _activities;
     readonly Lazy<IBehavior<TSaga>> _behavior;
@@ -57,7 +57,7 @@ public class CatchBehaviorBuilder<TSaga> :
             _activity = activity;
         }
 
-        public void Accept(StateMachineVisitor visitor)
+        public void Accept(IStateMachineVisitor visitor)
         {
             _activity.Accept(visitor);
         }
@@ -67,25 +67,25 @@ public class CatchBehaviorBuilder<TSaga> :
             _activity.Probe(context);
         }
 
-        public Task ExecuteAsync(BehaviorContext<TSaga> context)
+        public Task ExecuteAsync(IBehaviorContext<TSaga> context)
         {
             return _activity.ExecuteAsync(context, SagaStateMachine.Behavior.Empty<TSaga>());
         }
 
-        public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+        public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
             where T : class
         {
             return _activity.ExecuteAsync(context, SagaStateMachine.Behavior.Empty<TSaga, T>());
         }
 
-        public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
+        public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context)
             where T : class
             where TException : Exception
         {
             return _activity.FaultedAsync(context, SagaStateMachine.Behavior.Empty<TSaga, T>());
         }
 
-        public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
+        public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
             where TException : Exception
         {
             return _activity.FaultedAsync(context, SagaStateMachine.Behavior.Empty<TSaga>());

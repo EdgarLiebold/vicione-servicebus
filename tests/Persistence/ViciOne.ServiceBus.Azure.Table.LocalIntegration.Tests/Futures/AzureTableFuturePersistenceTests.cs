@@ -226,7 +226,7 @@ public sealed class AzureTableFuturePersistenceTests
         Assert.True(aggregation.Results[aggregationId].HasMessageType<ValuesAggregated>());
     }
 
-    public sealed class CalculateValue : CorrelatedBy<Guid>
+    public sealed class CalculateValue : ICorrelatedBy<Guid>
     {
         public CalculateValue()
         {
@@ -260,7 +260,7 @@ public sealed class AzureTableFuturePersistenceTests
         public int Value { get; init; }
     }
 
-    public sealed class AggregateValues : CorrelatedBy<Guid>
+    public sealed class AggregateValues : ICorrelatedBy<Guid>
     {
         public AggregateValues()
         {
@@ -314,7 +314,7 @@ public sealed class AzureTableFuturePersistenceTests
         public int ItemCount { get; init; }
     }
 
-    public sealed class ComposeValues : CorrelatedBy<Guid>
+    public sealed class ComposeValues : ICorrelatedBy<Guid>
     {
         public ComposeValues()
         {

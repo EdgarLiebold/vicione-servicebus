@@ -391,9 +391,9 @@ public sealed class DeferredBusRegistrationTests
         Assert.NotSame(bufferedOne, bufferedTwo);
     }
 
-    public sealed record CrossBusBufferedTrigger(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CrossBusBufferedTrigger(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record CrossBusBufferedResult(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CrossBusBufferedResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class CrossBusBufferedConsumer(
         Bind<ISecondaryBus, IPublishEndpoint> publishEndpoint,

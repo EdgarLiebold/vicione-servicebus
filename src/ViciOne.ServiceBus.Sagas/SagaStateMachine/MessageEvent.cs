@@ -6,12 +6,12 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageEvent<TMessage> :
     TriggerEvent,
-    Event<TMessage>,
+    IEvent<TMessage>,
     IEquatable<MessageEvent<TMessage>>
     where TMessage : class
 {
     /// <summary>Exposes the instance used by the containing type.</summary>
-    public static readonly Event<TMessage> Instance = new MessageEvent<TMessage>(TypeCache<TMessage>.ShortName);
+    public static readonly IEvent<TMessage> Instance = new MessageEvent<TMessage>(TypeCache<TMessage>.ShortName);
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="name">The name.</param>
@@ -22,7 +22,7 @@ public class MessageEvent<TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public override void Accept(StateMachineVisitor visitor)
+    public override void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x =>
         {

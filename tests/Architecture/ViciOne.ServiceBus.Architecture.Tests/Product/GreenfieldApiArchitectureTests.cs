@@ -35,6 +35,21 @@ public sealed class GreenfieldApiArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-SAGA-API", "interfaces-use-dotnet-prefix")]
+    public void SagaInterfaces_UseTheDotNetInterfacePrefix()
+    {
+        string sagaDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Sagas");
+        string[] violations = Directory.EnumerateFiles(sagaDirectory, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(FindUnprefixedInterfaces)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Saga interfaces must begin with I followed by an uppercase letter:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-CAPABILITIES", "standard-unsupported-capability-exceptions")]
     public void UnsupportedCapabilities_UseTheStandardBclContract()
     {
@@ -122,6 +137,22 @@ public sealed class GreenfieldApiArchitectureTests
             .OfType<AttributeSyntax>()
             .Any(attribute => attribute.Name.ToString() is "Serializable" or "SerializableAttribute"
                 or "System.Serializable" or "System.SerializableAttribute");
+    }
+
+    private static IEnumerable<string> FindUnprefixedInterfaces(string path)
+    {
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+            .GetCompilationUnitRoot();
+
+        foreach (InterfaceDeclarationSyntax declaration in root.DescendantNodes().OfType<InterfaceDeclarationSyntax>())
+        {
+            string name = declaration.Identifier.ValueText;
+            if (name.Length > 1 && name[0] == 'I' && char.IsUpper(name[1]))
+                continue;
+
+            int line = declaration.GetLocation().GetLineSpan().StartLinePosition.Line + 1;
+            yield return $"{RepositoryLayout.RelativeToRoot(path)}:{line}:{name}";
+        }
     }
 
     private static IEnumerable<string> FindSelfForwardingOverrides(string path)

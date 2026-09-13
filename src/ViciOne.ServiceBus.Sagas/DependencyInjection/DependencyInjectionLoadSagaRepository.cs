@@ -30,7 +30,7 @@ public class DependencyInjectionLoadSagaRepository<TSaga> :
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod,
+        public async Task<T?> ExecuteAsync<T>(Func<ILoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod,
             CancellationToken cancellationToken = default)
             where T : class
         {

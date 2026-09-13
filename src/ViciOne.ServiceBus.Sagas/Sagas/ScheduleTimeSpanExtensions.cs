@@ -15,12 +15,12 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>>? callback = null)
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -36,12 +36,12 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -58,13 +58,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message, ScheduleDelayProvider<TSaga> delayProvider,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, TMessage message, ScheduleDelayProvider<TSaga> delayProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -81,13 +81,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, ScheduleDelayProvider<TSaga> delayProvider,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, Task<TMessage> message, ScheduleDelayProvider<TSaga> delayProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -103,13 +103,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TMessage> messageFactory,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -125,13 +125,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TMessage> messageFactory,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -147,13 +147,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, Func<BehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, Func<IBehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -170,13 +170,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TMessage> messageFactory, ScheduleDelayProvider<TSaga> delayProvider,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TMessage> messageFactory, ScheduleDelayProvider<TSaga> delayProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -193,13 +193,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TMessage> messageFactory,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TMessage> messageFactory,
         ScheduleDelayProvider<TSaga> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -216,13 +216,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, Func<BehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this IEventActivityBinder<TSaga> source,
+        ISchedule<TSaga, TMessage> schedule, Func<IBehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleDelayProvider<TSaga> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -239,13 +239,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>>? callback = null)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -262,13 +262,13 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -286,14 +286,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message, ScheduleDelayProvider<TSaga, TData> delayProvider,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, TMessage message, ScheduleDelayProvider<TSaga, TData> delayProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -311,14 +311,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, ScheduleDelayProvider<TSaga, TData> delayProvider,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, Task<TMessage> message, ScheduleDelayProvider<TSaga, TData> delayProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -335,14 +335,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TData, TMessage> messageFactory,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TData, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -359,15 +359,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TData, TMessage> messageFactory,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TData, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback =
             null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -384,15 +384,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, Func<BehaviorContext<TSaga, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule, Func<IBehaviorContext<TSaga, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<SendContext<TMessage>>? callback =
             null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -410,15 +410,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule,
         EventMessageFactory<TSaga, TData, TMessage> messageFactory,
         ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -436,15 +436,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule,
         AsyncEventMessageFactory<TSaga, TData, TMessage> messageFactory,
         ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -462,15 +462,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorContext<TSaga, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga, TMessage> schedule,
+        Func<IBehaviorContext<TSaga, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -487,14 +487,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule, TMessage message,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -512,14 +512,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -538,14 +538,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule, TMessage message,
         ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -564,14 +564,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule, Task<TMessage> message,
         ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -589,14 +589,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule,
         EventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -614,14 +614,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -639,14 +639,14 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule,
+        Func<IBehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -665,15 +665,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule,
         EventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory,
         ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -692,15 +692,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory,
         ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -719,15 +719,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga, TMessage> schedule,
+        Func<IBehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -746,15 +746,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, TMessage message,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule, TMessage message,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -773,15 +773,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -801,15 +801,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, TMessage message,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule, TMessage message,
         ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -829,15 +829,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule, Task<TMessage> message,
         ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -856,15 +856,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule,
         EventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -883,15 +883,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -910,15 +910,15 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorExceptionContext<TSaga, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule,
+        Func<IBehaviorExceptionContext<TSaga, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
@@ -938,16 +938,16 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule,
         EventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory,
         ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -967,16 +967,16 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory,
         ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -996,16 +996,16 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="delayProvider">The delay provider.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorExceptionContext<TSaga, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga, TMessage> schedule,
+        Func<IBehaviorExceptionContext<TSaga, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
@@ -1020,9 +1020,9 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="source">The source value.</param>
     /// <param name="schedule">The schedule.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Unschedule<TSaga, TData>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga> schedule)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> Unschedule<TSaga, TData>(this IEventActivityBinder<TSaga, TData> source,
+        ISchedule<TSaga> schedule)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         return source.Add(new UnscheduleActivity<TSaga>(schedule));
@@ -1035,9 +1035,9 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="source">The source value.</param>
     /// <param name="schedule">The schedule.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Unschedule<TSaga, TData, TException>(
-        this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga> schedule)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TData, TException> Unschedule<TSaga, TData, TException>(
+        this IExceptionActivityBinder<TSaga, TData, TException> source, ISchedule<TSaga> schedule)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
     {
@@ -1049,8 +1049,8 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="source">The source value.</param>
     /// <param name="schedule">The schedule.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Unschedule<TSaga>(this EventActivityBinder<TSaga> source, Schedule<TSaga> schedule)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Unschedule<TSaga>(this IEventActivityBinder<TSaga> source, ISchedule<TSaga> schedule)
+        where TSaga : class, ISagaStateMachineInstance
     {
         return source.Add(new UnscheduleActivity<TSaga>(schedule));
     }
@@ -1061,9 +1061,9 @@ public static class ScheduleTimeSpanExtensions
     /// <param name="source">The source value.</param>
     /// <param name="schedule">The schedule.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Unschedule<TSaga, TException>(this ExceptionActivityBinder<TSaga, TException> source,
-        Schedule<TSaga> schedule)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TException> Unschedule<TSaga, TException>(this IExceptionActivityBinder<TSaga, TException> source,
+        ISchedule<TSaga> schedule)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
         return source.Add(new FaultedUnscheduleActivity<TSaga>(schedule));

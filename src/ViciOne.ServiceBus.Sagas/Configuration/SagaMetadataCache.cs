@@ -16,10 +16,10 @@ internal sealed class SagaMetadataCache<TSaga>
 
     SagaMetadataCache()
     {
-        _initiatedByTypes = GetMessageContracts(typeof(InitiatedBy<>));
-        _orchestratesTypes = GetMessageContracts(typeof(Orchestrates<>));
-        _initiatedByOrOrchestratesTypes = GetMessageContracts(typeof(InitiatedByOrOrchestrates<>));
-        _observesTypes = GetMessageContracts(typeof(Observes<,>));
+        _initiatedByTypes = GetMessageContracts(typeof(IInitiatedBy<>));
+        _orchestratesTypes = GetMessageContracts(typeof(IOrchestrates<>));
+        _initiatedByOrOrchestratesTypes = GetMessageContracts(typeof(IInitiatedByOrOrchestrates<>));
+        _observesTypes = GetMessageContracts(typeof(IObserves<,>));
 
         _factoryMethod = CreateSagaInstanceFactory();
     }

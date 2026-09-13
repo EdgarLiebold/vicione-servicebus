@@ -15,14 +15,14 @@ public static class StateMachineExtensions
     /// <param name="state">The target state.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public static Task TransitionToStateAsync<TSaga>(this BehaviorContext<TSaga> context, State state, CancellationToken cancellationToken = default)
-        where TSaga : class, SagaStateMachineInstance
+    public static Task TransitionToStateAsync<TSaga>(this IBehaviorContext<TSaga> context, IState state, CancellationToken cancellationToken = default)
+        where TSaga : class, ISagaStateMachineInstance
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
         IStateAccessor<TSaga> accessor = context.StateMachine.Accessor;
-        State<TSaga> toState = context.StateMachine.GetState(state.Name);
+        IState<TSaga> toState = context.StateMachine.GetState(state.Name);
 
         IStateMachineActivity<TSaga> activity = new TransitionActivity<TSaga>(toState, accessor);
         IBehavior<TSaga> behavior = new LastBehavior<TSaga>(activity);

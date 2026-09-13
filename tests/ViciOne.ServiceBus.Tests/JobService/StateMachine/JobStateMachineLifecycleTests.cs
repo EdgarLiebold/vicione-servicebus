@@ -492,7 +492,7 @@ public sealed class JobStateMachineLifecycleTests
     private static async Task RaiseAsync<T>(
         JobStateMachine machine,
         JobSaga saga,
-        Event<T> @event,
+        IEvent<T> @event,
         T message,
         OutgoingMessageRecorder outgoing,
         JobServiceOptions? settings = null,
@@ -513,13 +513,13 @@ public sealed class JobStateMachineLifecycleTests
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, T>(consumeContext, instance);
         sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
-        BehaviorContext<JobSaga, T> behaviorContext =
+        IBehaviorContext<JobSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await ((StateMachine<JobSaga>)machine).RaiseEventAsync(behaviorContext);
+        await ((IStateMachine<JobSaga>)machine).RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task SetStateAsync(JobStateMachine machine, JobSaga saga, State state)
+    private static async Task SetStateAsync(JobStateMachine machine, JobSaga saga, IState state)
     {
         ConsumeContext<StateSetupMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(
             new StateSetupMessage(),
@@ -527,13 +527,13 @@ public sealed class JobStateMachineLifecycleTests
         var instance = new SagaInstance<JobSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, StateSetupMessage>(consumeContext, instance);
-        BehaviorContext<JobSaga> behaviorContext =
+        IBehaviorContext<JobSaga> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy(machine, sagaContext, machine.Initial.Enter);
 
         await machine.Accessor.SetAsync(behaviorContext, machine.GetState(state.Name));
     }
 
-    private static void AssertState(JobStateMachine machine, JobSaga saga, State expected) =>
+    private static void AssertState(JobStateMachine machine, JobSaga saga, IState expected) =>
         Assert.True(machine.Accessor.GetStateExpression(expected).Compile()(saga), $"Expected state {expected.Name}.");
 
     public sealed record StateSetupMessage;

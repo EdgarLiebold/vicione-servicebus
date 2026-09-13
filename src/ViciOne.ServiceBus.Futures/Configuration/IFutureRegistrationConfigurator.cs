@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TFuture">The future state-machine type.</typeparam>
 public interface IFutureRegistrationConfigurator<TFuture> :
     IFutureRegistrationConfigurator
-    where TFuture : class, SagaStateMachine<FutureState>
+    where TFuture : class, ISagaStateMachine<FutureState>
 {
     /// <summary>Adds endpoint settings to the future registration.</summary>
     /// <param name="configure">The callback that configures the future's receive endpoint.</param>

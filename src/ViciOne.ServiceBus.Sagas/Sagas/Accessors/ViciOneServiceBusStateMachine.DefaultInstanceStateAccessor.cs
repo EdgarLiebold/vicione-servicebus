@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>
     /// The default state accessor will attempt to find and use a single State property on the
@@ -19,11 +19,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         IStateAccessor<TInstance>
     {
         readonly Lazy<IStateAccessor<TInstance>> _accessor;
-        readonly State<TInstance> _initialState;
-        readonly StateMachine<TInstance> _machine;
+        readonly IState<TInstance> _initialState;
+        readonly IStateMachine<TInstance> _machine;
         readonly IStateObserver<TInstance> _observer;
 
-        public DefaultInstanceStateAccessor(StateMachine<TInstance> machine, State<TInstance> initialState, IStateObserver<TInstance> observer)
+        public DefaultInstanceStateAccessor(IStateMachine<TInstance> machine, IState<TInstance> initialState, IStateObserver<TInstance> observer)
         {
             _machine = machine;
             _initialState = initialState;
@@ -31,17 +31,17 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _accessor = new Lazy<IStateAccessor<TInstance>>(CreateDefaultAccessor);
         }
 
-        Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
+        Task<IState<TInstance>?> IStateAccessor<TInstance>.GetAsync(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
             return _accessor.Value.GetAsync(context, cancellationToken: cancellationToken);
         }
 
-        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
+        Task IStateAccessor<TInstance>.SetAsync(IBehaviorContext<TInstance> context, IState<TInstance> state, CancellationToken cancellationToken)
         {
             return _accessor.Value.SetAsync(context, state, cancellationToken: cancellationToken);
         }
 
-        public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)
+        public Expression<Func<TInstance, bool>> GetStateExpression(params IState[] states)
         {
             return _accessor.Value.GetStateExpression(states);
         }
@@ -55,7 +55,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             List<PropertyInfo> states = typeof(TInstance)
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.PropertyType == typeof(State))
+                .Where(x => x.PropertyType == typeof(IState))
                 .Where(x => x.GetGetMethod(true) != null)
                 .Where(x => x.GetSetMethod(true) != null)
                 .ToList();
@@ -75,7 +75,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             var instance = Expression.Parameter(typeof(TInstance), "instance");
             var memberExpression = Expression.Property(instance, states[0]);
 
-            Expression<Func<TInstance, State?>> expression = Expression.Lambda<Func<TInstance, State?>>(memberExpression,
+            Expression<Func<TInstance, IState?>> expression = Expression.Lambda<Func<TInstance, IState?>>(memberExpression,
                 instance);
 
             return new InitialIfNullStateAccessor(_initialState, new RawStateAccessor(_machine, expression, _observer));

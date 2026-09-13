@@ -29,9 +29,9 @@ public static class DependencyInjectionSagaReceiveEndpointExtensions
     /// <param name="stateMachine">The state machine.</param>
     /// <param name="context">The Container reference to resolve the repository.</param>
     /// <param name="configure">Optionally configure the saga.</param>
-    public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, SagaStateMachine<TInstance> stateMachine,
+    public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, ISagaStateMachine<TInstance> stateMachine,
         IRegistrationContext context, Action<ISagaConfigurator<TInstance>>? configure = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
     {
         ISagaRepository<TInstance> repository = new DependencyInjectionSagaRepository<TInstance>(context);
 
@@ -46,9 +46,9 @@ public static class DependencyInjectionSagaReceiveEndpointExtensions
     /// <param name="configure">Optionally configure the saga.</param>
     public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<ISagaConfigurator<TInstance>>? configure = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
     {
-        var stateMachine = context.GetRequiredService<SagaStateMachine<TInstance>>();
+        var stateMachine = context.GetRequiredService<ISagaStateMachine<TInstance>>();
         ISagaRepository<TInstance> repository = new DependencyInjectionSagaRepository<TInstance>(context);
 
         configurator.StateMachineSaga(stateMachine, repository, configure);

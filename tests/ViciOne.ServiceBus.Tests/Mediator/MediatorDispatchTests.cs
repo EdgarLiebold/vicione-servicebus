@@ -451,23 +451,23 @@ public sealed class MediatorDispatchTests
         public DepthMessage? Child { get; init; }
     }
 
-    private sealed record SentMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record SentMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record PublishedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record PublishedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record RequestMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record RequestMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record ResponseMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ResponseMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record AddressedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record AddressedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record AddressedResponse(Uri? DestinationAddress);
 
     private sealed class MediatorDispatchException(string message) : Exception(message);
 
-    public sealed record ShortCircuitRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ShortCircuitRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ShortCircuitResponse(Guid CorrelationId, string Source) : CorrelatedBy<Guid>;
+    public sealed record ShortCircuitResponse(Guid CorrelationId, string Source) : ICorrelatedBy<Guid>;
 
     public sealed class ShortCircuitObservation
     {

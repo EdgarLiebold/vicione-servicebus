@@ -5,8 +5,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="T">The value type.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate T EventMessageFactory<TSaga, out T>(BehaviorContext<TSaga> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate T EventMessageFactory<TSaga, out T>(IBehaviorContext<TSaga> context)
+    where TSaga : class, ISagaStateMachineInstance
     where T : class;
 
 
@@ -16,7 +16,7 @@ public delegate T EventMessageFactory<TSaga, out T>(BehaviorContext<TSaga> conte
 /// <typeparam name="T">The value type.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns>The value produced by the operation.</returns>
-public delegate T EventMessageFactory<TInstance, in TMessage, out T>(BehaviorContext<TInstance, TMessage> context)
-    where TInstance : class, SagaStateMachineInstance
+public delegate T EventMessageFactory<TInstance, in TMessage, out T>(IBehaviorContext<TInstance, TMessage> context)
+    where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
     where T : class;

@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class StateMachineScheduleConfigurator<TInstance, TMessage> :
     IScheduleConfigurator<TInstance, TMessage>,
-    ScheduleSettings<TInstance, TMessage>
-    where TInstance : class, SagaStateMachineInstance
+    IScheduleSettings<TInstance, TMessage>
+    where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
 {
     Action<IEventCorrelationConfigurator<TInstance, TMessage>> _received = null!;
@@ -20,7 +20,7 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
     }
 
     /// <summary>Gets the settings.</summary>
-    public ScheduleSettings<TInstance, TMessage> Settings => this;
+    public IScheduleSettings<TInstance, TMessage> Settings => this;
 
     /// <summary>Gets or sets the delay.</summary>
     public TimeSpan Delay
@@ -35,5 +35,5 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
         set => _received = value;
     }
 
-    Action<IEventCorrelationConfigurator<TInstance, TMessage>> ScheduleSettings<TInstance, TMessage>.Received => _received;
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>> IScheduleSettings<TInstance, TMessage>.Received => _received;
 }

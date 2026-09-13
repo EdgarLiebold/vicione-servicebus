@@ -264,7 +264,7 @@ public sealed class MessageInitializerObjectGraphTests
         public string? City { get; set; }
     }
 
-    public interface PaymentGatewaySubmitted : CorrelatedBy<Guid>
+    public interface PaymentGatewaySubmitted : ICorrelatedBy<Guid>
     {
         DateTime TimeStamp { get; }
 

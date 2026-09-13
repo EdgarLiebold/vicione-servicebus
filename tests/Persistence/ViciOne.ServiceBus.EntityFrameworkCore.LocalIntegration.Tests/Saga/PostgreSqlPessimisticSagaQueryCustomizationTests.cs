@@ -142,9 +142,9 @@ public sealed class PostgreSqlPessimisticSagaQueryCustomizationTests
         }
     }
 
-    public sealed record CreateNavigationSaga(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record CreateNavigationSaga(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed record UpdateNavigationSaga(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record UpdateNavigationSaga(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
     public sealed record NavigationSagaCreated(Guid CorrelationId);
 
@@ -152,8 +152,8 @@ public sealed class PostgreSqlPessimisticSagaQueryCustomizationTests
 
     public sealed class NavigationSaga :
         ISaga,
-        InitiatedBy<CreateNavigationSaga>,
-        Orchestrates<UpdateNavigationSaga>
+        IInitiatedBy<CreateNavigationSaga>,
+        IOrchestrates<UpdateNavigationSaga>
     {
         public Guid CorrelationId { get; set; }
 

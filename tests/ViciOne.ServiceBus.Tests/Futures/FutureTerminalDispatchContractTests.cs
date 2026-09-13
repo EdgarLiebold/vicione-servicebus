@@ -24,7 +24,7 @@ public sealed class FutureTerminalDispatchContractTests
             machine.CommandReceived,
             state,
             new ProbeCommand(correlationId, requestId),
-            context => ((StateMachine<FutureState>)machine).RaiseEventAsync(context),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context),
             commandRecorder,
             cancellationToken: TestContext.Current.CancellationToken,
             responseAddress: new Uri("loopback://localhost/future-terminal-cancellation"),
@@ -39,7 +39,7 @@ public sealed class FutureTerminalDispatchContractTests
             machine.ResponseReceived,
             state,
             new ProbeResponse(requestId),
-            context => ((StateMachine<FutureState>)machine).RaiseEventAsync(context),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context),
             resultRecorder,
             source.Token));
 
@@ -113,7 +113,7 @@ public sealed class FutureTerminalDispatchContractTests
         var fault = new FutureFault<Command, FaultMessage, Signal>
         {
             WaitForPending = true,
-            Factory = new ContextMessageFactory<BehaviorContext<FutureState, Signal>, FaultMessage>(_ =>
+            Factory = new ContextMessageFactory<IBehaviorContext<FutureState, Signal>, FaultMessage>(_ =>
             {
                 factoryInvoked = true;
                 return Task.FromResult(new InitializedMessage<FaultMessage>(new FaultMessage("unexpected")));
@@ -150,15 +150,15 @@ public sealed class FutureTerminalDispatchContractTests
         };
     }
 
-    private static ContextMessageFactory<BehaviorContext<FutureState, Signal>, ResultMessage> CreateResultFactory()
+    private static ContextMessageFactory<IBehaviorContext<FutureState, Signal>, ResultMessage> CreateResultFactory()
     {
-        return new ContextMessageFactory<BehaviorContext<FutureState, Signal>, ResultMessage>(
+        return new ContextMessageFactory<IBehaviorContext<FutureState, Signal>, ResultMessage>(
             context => Task.FromResult(new InitializedMessage<ResultMessage>(new ResultMessage(context.Message.Value))));
     }
 
-    private static ContextMessageFactory<BehaviorContext<FutureState, Signal>, FaultMessage> CreateFaultFactory()
+    private static ContextMessageFactory<IBehaviorContext<FutureState, Signal>, FaultMessage> CreateFaultFactory()
     {
-        return new ContextMessageFactory<BehaviorContext<FutureState, Signal>, FaultMessage>(
+        return new ContextMessageFactory<IBehaviorContext<FutureState, Signal>, FaultMessage>(
             context => Task.FromResult(new InitializedMessage<FaultMessage>(new FaultMessage(context.Message.Value))));
     }
 
@@ -169,7 +169,7 @@ public sealed class FutureTerminalDispatchContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<Signal> SignalReceived { get; private set; } = null!;
+        public IEvent<Signal> SignalReceived { get; private set; } = null!;
     }
 
     private sealed class CancellationProbeFuture : Future<ProbeCommand, ResultMessage>
@@ -192,12 +192,12 @@ public sealed class FutureTerminalDispatchContractTests
             }));
         }
 
-        public Event<ProbeResponse> ResponseReceived { get; }
+        public IEvent<ProbeResponse> ResponseReceived { get; }
     }
 
     public sealed record Signal(string Value);
 
-    public sealed record ProbeCommand(Guid CorrelationId, Guid RequestId) : CorrelatedBy<Guid>;
+    public sealed record ProbeCommand(Guid CorrelationId, Guid RequestId) : ICorrelatedBy<Guid>;
 
     public sealed record ProbeRequest(Guid RequestId);
 

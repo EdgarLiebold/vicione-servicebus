@@ -134,26 +134,26 @@ public sealed class SagaConnectorTests
             TestInactivityTimeout = timeout,
         };
 
-    public sealed record AlphaInitiated(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record AlphaInitiated(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ZuluInitiated(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ZuluInitiated(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record AlphaOrchestrated(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record AlphaOrchestrated(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ZuluOrchestrated(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ZuluOrchestrated(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record CombinedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CombinedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ObservedMessage(string Key);
 
     public sealed class OrderedSaga :
         ISaga,
-        InitiatedBy<ZuluInitiated>,
-        InitiatedBy<AlphaInitiated>,
-        Orchestrates<ZuluOrchestrated>,
-        Orchestrates<AlphaOrchestrated>,
-        InitiatedByOrOrchestrates<CombinedMessage>,
-        Observes<ObservedMessage, OrderedSaga>
+        IInitiatedBy<ZuluInitiated>,
+        IInitiatedBy<AlphaInitiated>,
+        IOrchestrates<ZuluOrchestrated>,
+        IOrchestrates<AlphaOrchestrated>,
+        IInitiatedByOrOrchestrates<CombinedMessage>,
+        IObserves<ObservedMessage, OrderedSaga>
     {
         public OrderedSaga(Guid correlationId)
         {
@@ -184,12 +184,12 @@ public sealed class SagaConnectorTests
         }
     }
 
-    public sealed record DuplicateRoleMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record DuplicateRoleMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class DuplicateRoleSaga :
         ISaga,
-        InitiatedBy<DuplicateRoleMessage>,
-        Orchestrates<DuplicateRoleMessage>
+        IInitiatedBy<DuplicateRoleMessage>,
+        IOrchestrates<DuplicateRoleMessage>
     {
         public DuplicateRoleSaga(Guid correlationId)
         {
@@ -207,11 +207,11 @@ public sealed class SagaConnectorTests
         }
     }
 
-    public sealed record PropertySagaMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record PropertySagaMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class PropertySaga :
         ISaga,
-        InitiatedBy<PropertySagaMessage>
+        IInitiatedBy<PropertySagaMessage>
     {
         public Guid CorrelationId { get; set; }
 
@@ -229,7 +229,7 @@ public sealed class SagaConnectorTests
         public Guid CorrelationId { get; set; }
     }
 
-    public sealed class UnsupportedMessageSaga : ISaga, InitiatedBy<CorrelatedBy<Guid>>
+    public sealed class UnsupportedMessageSaga : ISaga, IInitiatedBy<ICorrelatedBy<Guid>>
     {
         public UnsupportedMessageSaga(Guid correlationId)
         {
@@ -238,10 +238,10 @@ public sealed class SagaConnectorTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task ConsumeAsync(ConsumeContext<CorrelatedBy<Guid>> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ICorrelatedBy<Guid>> context) => Task.CompletedTask;
     }
 
-    public sealed class UnsupportedConstructorSaga : ISaga, InitiatedBy<PropertySagaMessage>
+    public sealed class UnsupportedConstructorSaga : ISaga, IInitiatedBy<PropertySagaMessage>
     {
         public UnsupportedConstructorSaga(string correlationId)
         {

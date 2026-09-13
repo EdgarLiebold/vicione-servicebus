@@ -285,7 +285,7 @@ internal sealed class JobStateMachine :
             When(GetJobState)
                 .RespondAwaited(async context =>
                 {
-                    State? state = await Accessor.GetAsync(context).ConfigureAwait(false);
+                    IState? state = await Accessor.GetAsync(context).ConfigureAwait(false);
                     return new JobStateResponse
                     {
                         JobId = context.Message.JobId,
@@ -432,7 +432,7 @@ internal sealed class JobStateMachine :
     /// <summary>Maps an internal state-machine state to the stable lifecycle contract returned to callers.</summary>
     /// <param name="state">The current state-machine state.</param>
     /// <returns>The corresponding public lifecycle status.</returns>
-    internal JobLifecycleStatus GetLifecycleStatus(State? state)
+    internal JobLifecycleStatus GetLifecycleStatus(IState? state)
     {
         if (state == null)
             return JobLifecycleStatus.Unknown;
@@ -461,63 +461,63 @@ internal sealed class JobStateMachine :
     }
 
     /// <summary>Gets the state in which the job is waiting for a configured retry delay.</summary>
-    public State WaitingToRetry { get; } = null!;
+    public IState WaitingToRetry { get; } = null!;
     /// <summary>Gets the state in which the job is waiting for capacity or its scheduled start.</summary>
-    public State WaitingForSlot { get; } = null!;
+    public IState WaitingForSlot { get; } = null!;
     /// <summary>Gets the state in which a consumer is executing the current attempt.</summary>
-    public State Started { get; } = null!;
+    public IState Started { get; } = null!;
     /// <summary>Gets the state in which the most recent execution completed successfully.</summary>
-    public State Completed { get; } = null!;
+    public IState Completed { get; } = null!;
     /// <summary>Gets the state in which cancellation ended the job.</summary>
-    public State Canceled { get; } = null!;
+    public IState Canceled { get; } = null!;
     /// <summary>Gets the state in which an unrecoverable execution failure ended the job.</summary>
-    public State Faulted { get; } = null!;
+    public IState Faulted { get; } = null!;
     /// <summary>Gets the state in which a capacity request is outstanding.</summary>
-    public State AllocatingJobSlot { get; } = null!;
+    public IState AllocatingJobSlot { get; } = null!;
     /// <summary>Gets the state in which a slot is allocated and local execution is starting.</summary>
-    public State StartingJobAttempt { get; } = null!;
+    public IState StartingJobAttempt { get; } = null!;
     /// <summary>Gets the state in which cancellation waits for an outstanding capacity request.</summary>
-    public State CancellationPending { get; } = null!;
+    public IState CancellationPending { get; } = null!;
 
     /// <summary>Gets the response that identifies the service instance assigned to the job.</summary>
-    public Event<JobSlotAllocated> JobSlotAllocated { get; } = null!;
+    public IEvent<JobSlotAllocated> JobSlotAllocated { get; } = null!;
     /// <summary>Gets the response indicating that no service instance currently has capacity.</summary>
-    public Event<JobSlotUnavailable> JobSlotUnavailable { get; } = null!;
+    public IEvent<JobSlotUnavailable> JobSlotUnavailable { get; } = null!;
     /// <summary>Gets the fault emitted when capacity allocation fails.</summary>
-    public Event<Fault<AllocateJobSlot>> AllocateJobSlotFaulted { get; } = null!;
+    public IEvent<Fault<AllocateJobSlot>> AllocateJobSlotFaulted { get; } = null!;
     /// <summary>Gets the fault emitted when attempt coordination cannot start.</summary>
-    public Event<Fault<StartJobAttempt>> StartJobAttemptFaulted { get; } = null!;
+    public IEvent<Fault<StartJobAttempt>> StartJobAttemptFaulted { get; } = null!;
     /// <summary>Gets a new or updated job submission.</summary>
-    public Event<JobSubmitted> JobSubmitted { get; } = null!;
+    public IEvent<JobSubmitted> JobSubmitted { get; } = null!;
     /// <summary>Gets the notification that the current attempt started.</summary>
-    public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
+    public IEvent<JobAttemptStarted> AttemptStarted { get; } = null!;
     /// <summary>Gets the notification that the current attempt completed successfully.</summary>
-    public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
+    public IEvent<JobAttemptCompleted> AttemptCompleted { get; } = null!;
     /// <summary>Gets the notification that the current attempt was canceled.</summary>
-    public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
+    public IEvent<JobAttemptCanceled> AttemptCanceled { get; } = null!;
     /// <summary>Gets the notification that the current attempt faulted.</summary>
-    public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
+    public IEvent<JobAttemptFaulted> AttemptFaulted { get; } = null!;
     /// <summary>Gets the local-runtime acknowledgement that terminal completion was delivered.</summary>
-    public Event<JobCompleted> JobCompleted { get; } = null!;
+    public IEvent<JobCompleted> JobCompleted { get; } = null!;
     /// <summary>Gets a request to cancel the job.</summary>
-    public Event<CancelJob> CancelJob { get; } = null!;
+    public IEvent<CancelJob> CancelJob { get; } = null!;
     /// <summary>Gets a request to retry the job immediately.</summary>
-    public Event<RetryJob> RetryJob { get; } = null!;
+    public IEvent<RetryJob> RetryJob { get; } = null!;
     /// <summary>Gets a request to run a scheduled job immediately.</summary>
-    public Event<RunJob> RunJob { get; } = null!;
+    public IEvent<RunJob> RunJob { get; } = null!;
     /// <summary>Gets a request to remove terminal job state.</summary>
-    public Event<FinalizeJob> FinalizeJob { get; } = null!;
+    public IEvent<FinalizeJob> FinalizeJob { get; } = null!;
     /// <summary>Gets a sequenced progress update from the current attempt.</summary>
-    public Event<SetJobProgress> SetJobProgress { get; } = null!;
+    public IEvent<SetJobProgress> SetJobProgress { get; } = null!;
     /// <summary>Gets a durable application checkpoint from the current attempt.</summary>
-    public Event<SaveJobCheckpoint> SaveJobCheckpoint { get; } = null!;
+    public IEvent<SaveJobCheckpoint> SaveJobCheckpoint { get; } = null!;
     /// <summary>Gets a request for the current job lifecycle snapshot.</summary>
-    public Event<GetJobState> GetJobState { get; } = null!;
+    public IEvent<GetJobState> GetJobState { get; } = null!;
     /// <summary>Gets the schedule used for capacity waits and recurring occurrences.</summary>
-    public Schedule<JobSaga, JobSlotWaitElapsed> JobSlotWaitElapsed { get; } = null!;
+    public ISchedule<JobSaga, JobSlotWaitElapsed> JobSlotWaitElapsed { get; } = null!;
 
     /// <summary>Gets the schedule used for a configured attempt retry delay.</summary>
-    public Schedule<JobSaga, JobRetryDelayElapsed> JobRetryDelayElapsed { get; } = null!;
+    public ISchedule<JobSaga, JobRetryDelayElapsed> JobRetryDelayElapsed { get; } = null!;
 }
 
 static class JobStateMachineBehaviorExtensions
@@ -619,7 +619,7 @@ static class JobStateMachineBehaviorExtensions
         return true;
     }
 
-    public static EventActivityBinder<JobSaga, JobSubmitted> InitializeJob(this EventActivityBinder<JobSaga, JobSubmitted> binder)
+    public static IEventActivityBinder<JobSaga, JobSubmitted> InitializeJob(this IEventActivityBinder<JobSaga, JobSubmitted> binder)
     {
         return binder.Then(context =>
         {
@@ -645,7 +645,7 @@ static class JobStateMachineBehaviorExtensions
         });
     }
 
-    public static EventActivityBinder<JobSaga, JobSubmitted> UpdateRecurringJob(this EventActivityBinder<JobSaga, JobSubmitted> binder)
+    public static IEventActivityBinder<JobSaga, JobSubmitted> UpdateRecurringJob(this IEventActivityBinder<JobSaga, JobSubmitted> binder)
     {
         return binder.Then(context =>
         {
@@ -663,7 +663,7 @@ static class JobStateMachineBehaviorExtensions
         });
     }
 
-    public static EventActivityBinder<JobSaga, T> ClearNextStartDate<T>(this EventActivityBinder<JobSaga, T> binder)
+    public static IEventActivityBinder<JobSaga, T> ClearNextStartDate<T>(this IEventActivityBinder<JobSaga, T> binder)
         where T : class
     {
         return binder.Then(context =>
@@ -672,14 +672,14 @@ static class JobStateMachineBehaviorExtensions
         });
     }
 
-    static void SetJobProperties(BehaviorContext<JobSaga, JobSubmitted> context)
+    static void SetJobProperties(IBehaviorContext<JobSaga, JobSubmitted> context)
     {
         context.Saga.JobProperties = context.Message.JobProperties is { } properties
             ? JobPropertySnapshot.Create(properties)
             : new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }
 
-    public static EventActivityBinder<JobSaga, T> RequestJobSlot<T>(this EventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
+    public static IEventActivityBinder<JobSaga, T> RequestJobSlot<T>(this IEventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
         where T : class
     {
         return binder
@@ -695,7 +695,7 @@ static class JobStateMachineBehaviorExtensions
             .TransitionTo(machine.AllocatingJobSlot);
     }
 
-    public static EventActivityBinder<JobSaga, T> RequestRetryJobSlot<T>(this EventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
+    public static IEventActivityBinder<JobSaga, T> RequestRetryJobSlot<T>(this IEventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
         where T : class
     {
         return binder
@@ -707,7 +707,7 @@ static class JobStateMachineBehaviorExtensions
             .RequestJobSlot(machine);
     }
 
-    public static EventActivityBinder<JobSaga, T> ClearJobState<T>(this EventActivityBinder<JobSaga, T> binder)
+    public static IEventActivityBinder<JobSaga, T> ClearJobState<T>(this IEventActivityBinder<JobSaga, T> binder)
         where T : class
     {
         return binder
@@ -720,7 +720,7 @@ static class JobStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobSaga, JobSlotAllocated> RequestStartJob(this EventActivityBinder<JobSaga, JobSlotAllocated> binder,
+    public static IEventActivityBinder<JobSaga, JobSlotAllocated> RequestStartJob(this IEventActivityBinder<JobSaga, JobSlotAllocated> binder,
         JobStateMachine machine)
     {
         return binder
@@ -742,7 +742,7 @@ static class JobStateMachineBehaviorExtensions
             .TransitionTo(machine.StartingJobAttempt);
     }
 
-    public static EventActivityBinder<JobSaga, T> FinalizeJobAttempts<T>(this EventActivityBinder<JobSaga, T> binder)
+    public static IEventActivityBinder<JobSaga, T> FinalizeJobAttempts<T>(this IEventActivityBinder<JobSaga, T> binder)
         where T : class
     {
         return binder.ThenAwaited(async context =>
@@ -765,7 +765,7 @@ static class JobStateMachineBehaviorExtensions
         });
     }
 
-    public static EventActivityBinder<JobSaga, CancelJob> CancelCurrentJobAttempt(this EventActivityBinder<JobSaga, CancelJob> binder)
+    public static IEventActivityBinder<JobSaga, CancelJob> CancelCurrentJobAttempt(this IEventActivityBinder<JobSaga, CancelJob> binder)
     {
         return binder.Send<JobSaga, CancelJob, CancelJobAttempt>(context => context.GetJobAttemptSagaAddress(),
             context => new CancelJobAttemptCommand
@@ -776,14 +776,14 @@ static class JobStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobSaga, T> WaitForJobSlot<T>(this EventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
+    public static IEventActivityBinder<JobSaga, T> WaitForJobSlot<T>(this IEventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
         where T : class
     {
         return binder.Schedule(machine.JobSlotWaitElapsed, context => new JobSlotWaitElapsedEvent { JobId = context.Saga.CorrelationId })
             .TransitionTo(machine.WaitingForSlot);
     }
 
-    public static EventActivityBinder<JobSaga, T> WaitForNextScheduledTime<T>(this EventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
+    public static IEventActivityBinder<JobSaga, T> WaitForNextScheduledTime<T>(this IEventActivityBinder<JobSaga, T> binder, JobStateMachine machine)
         where T : class
     {
         return binder
@@ -795,7 +795,7 @@ static class JobStateMachineBehaviorExtensions
             .TransitionTo(machine.WaitingForSlot);
     }
 
-    public static EventActivityBinder<JobSaga, T> DetermineNextStartDate<T>(this EventActivityBinder<JobSaga, T> binder)
+    public static IEventActivityBinder<JobSaga, T> DetermineNextStartDate<T>(this IEventActivityBinder<JobSaga, T> binder)
         where T : class
     {
         return binder.Then(context =>
@@ -804,7 +804,7 @@ static class JobStateMachineBehaviorExtensions
         });
     }
 
-    public static EventActivityBinder<JobSaga> SendJobSlotReleased(this EventActivityBinder<JobSaga> binder, JobSlotDisposition disposition)
+    public static IEventActivityBinder<JobSaga> SendJobSlotReleased(this IEventActivityBinder<JobSaga> binder, JobSlotDisposition disposition)
     {
         return binder.Send<JobSaga, JobSlotReleased>(context => context.GetJobTypeSagaAddress(), context => new JobSlotReleasedEvent
         {
@@ -816,7 +816,7 @@ static class JobStateMachineBehaviorExtensions
         });
     }
 
-    public static EventActivityBinder<JobSaga, T> SendJobSlotReleased<T>(this EventActivityBinder<JobSaga, T> binder, JobSlotDisposition disposition)
+    public static IEventActivityBinder<JobSaga, T> SendJobSlotReleased<T>(this IEventActivityBinder<JobSaga, T> binder, JobSlotDisposition disposition)
         where T : class
     {
         return binder.Send<JobSaga, T, JobSlotReleased>(context => context.GetJobTypeSagaAddress(),
@@ -830,7 +830,7 @@ static class JobStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobSaga, JobAttemptCompleted> NotifyJobCompleted(this EventActivityBinder<JobSaga, JobAttemptCompleted> binder)
+    public static IEventActivityBinder<JobSaga, JobAttemptCompleted> NotifyJobCompleted(this IEventActivityBinder<JobSaga, JobAttemptCompleted> binder)
     {
         return binder
             .Send<JobSaga, JobAttemptCompleted, CompleteJob>(context => context.Saga.ServiceAddress,
@@ -857,7 +857,7 @@ static class JobStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobSaga, JobAttemptFaulted> NotifyJobFaulted(this EventActivityBinder<JobSaga, JobAttemptFaulted> binder)
+    public static IEventActivityBinder<JobSaga, JobAttemptFaulted> NotifyJobFaulted(this IEventActivityBinder<JobSaga, JobAttemptFaulted> binder)
     {
         return binder
             .Send<JobSaga, JobAttemptFaulted, FaultJob>(context => context.Saga.ServiceAddress,
@@ -881,9 +881,9 @@ static class JobStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobSaga, T> PublishJobCanceled<T>(
-        this EventActivityBinder<JobSaga, T> binder,
-        Func<BehaviorContext<JobSaga, T>, string> getReason)
+    public static IEventActivityBinder<JobSaga, T> PublishJobCanceled<T>(
+        this IEventActivityBinder<JobSaga, T> binder,
+        Func<IBehaviorContext<JobSaga, T>, string> getReason)
         where T : class
     {
         return binder
@@ -901,7 +901,7 @@ static class JobStateMachineBehaviorExtensions
             });
     }
 
-    public static EventActivityBinder<JobSaga, Fault<StartJobAttempt>> NotifyJobFaulted(this EventActivityBinder<JobSaga, Fault<StartJobAttempt>> binder)
+    public static IEventActivityBinder<JobSaga, Fault<StartJobAttempt>> NotifyJobFaulted(this IEventActivityBinder<JobSaga, Fault<StartJobAttempt>> binder)
     {
         return binder
             .Send<JobSaga, Fault<StartJobAttempt>, FaultJob>(context => context.Saga.ServiceAddress,

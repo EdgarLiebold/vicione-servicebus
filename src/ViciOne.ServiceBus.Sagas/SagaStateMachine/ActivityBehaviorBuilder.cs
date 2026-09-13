@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class ActivityBehaviorBuilder<TSaga> :
     IBehaviorBuilder<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     readonly List<IStateMachineActivity<TSaga>> _activities;
     readonly Lazy<IBehavior<TSaga>> _behavior;

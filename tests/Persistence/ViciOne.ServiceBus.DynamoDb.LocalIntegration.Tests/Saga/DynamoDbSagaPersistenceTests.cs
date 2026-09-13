@@ -122,9 +122,9 @@ public sealed class DynamoDbSagaPersistenceTests
         })
         .BuildServiceProvider(validateScopes: true);
 
-    public sealed record StartPersistentSaga(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record StartPersistentSaga(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed record MovePersistentSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record MovePersistentSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record PersistentSagaStarted(Guid CorrelationId);
 
@@ -132,8 +132,8 @@ public sealed class DynamoDbSagaPersistenceTests
 
     public sealed class PersistentSaga :
         ISagaVersion,
-        InitiatedBy<StartPersistentSaga>,
-        Orchestrates<MovePersistentSaga>
+        IInitiatedBy<StartPersistentSaga>,
+        IOrchestrates<MovePersistentSaga>
     {
         public Guid CorrelationId { get; set; }
 

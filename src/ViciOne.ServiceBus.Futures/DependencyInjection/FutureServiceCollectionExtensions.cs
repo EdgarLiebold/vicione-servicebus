@@ -15,7 +15,7 @@ internal static class FutureServiceCollectionExtensions
     /// <param name="collection">The service collection that receives the future services.</param>
     /// <returns>The internal future registration.</returns>
     internal static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection)
-        where T : class, SagaStateMachine<FutureState>
+        where T : class, ISagaStateMachine<FutureState>
     {
         ArgumentNullException.ThrowIfNull(collection);
         return RegisterFuture<T, DefaultFutureDefinition<T>>(collection, new DependencyInjectionContainerRegistrar(collection));
@@ -27,7 +27,7 @@ internal static class FutureServiceCollectionExtensions
     /// <param name="registrar">The container registrar that owns registration metadata.</param>
     /// <returns>The internal future registration.</returns>
     internal static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, IContainerRegistrar registrar)
-        where T : class, SagaStateMachine<FutureState>
+        where T : class, ISagaStateMachine<FutureState>
     {
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(registrar);
@@ -40,7 +40,7 @@ internal static class FutureServiceCollectionExtensions
     /// <param name="collection">The service collection that receives the future services.</param>
     /// <returns>The internal future registration.</returns>
     internal static IFutureRegistration RegisterFuture<T, TDefinition>(this IServiceCollection collection)
-        where T : class, SagaStateMachine<FutureState>
+        where T : class, ISagaStateMachine<FutureState>
         where TDefinition : class, IFutureDefinition<T>
     {
         ArgumentNullException.ThrowIfNull(collection);
@@ -54,7 +54,7 @@ internal static class FutureServiceCollectionExtensions
     /// <param name="registrar">The container registrar that owns registration metadata.</param>
     /// <returns>The internal future registration.</returns>
     internal static IFutureRegistration RegisterFuture<T, TDefinition>(this IServiceCollection collection, IContainerRegistrar registrar)
-        where T : class, SagaStateMachine<FutureState>
+        where T : class, ISagaStateMachine<FutureState>
         where TDefinition : class, IFutureDefinition<T>
     {
         ArgumentNullException.ThrowIfNull(collection);
@@ -70,7 +70,7 @@ internal static class FutureServiceCollectionExtensions
     /// <param name="futureDefinitionType">The runtime future definition type.</param>
     /// <returns>The internal future registration.</returns>
     internal static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, Type futureDefinitionType)
-        where T : class, SagaStateMachine<FutureState>
+        where T : class, ISagaStateMachine<FutureState>
     {
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(futureDefinitionType);
@@ -84,7 +84,7 @@ internal static class FutureServiceCollectionExtensions
     /// <param name="futureDefinitionType">The runtime future definition type, or <see langword="null" /> for the default.</param>
     /// <returns>The internal future registration.</returns>
     internal static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? futureDefinitionType)
-        where T : class, SagaStateMachine<FutureState>
+        where T : class, ISagaStateMachine<FutureState>
     {
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(registrar);
@@ -125,7 +125,7 @@ internal static class FutureServiceCollectionExtensions
 
     private abstract class FutureRegistrar<TFuture> :
         IFutureRegistrar
-        where TFuture : class, SagaStateMachine<FutureState>
+        where TFuture : class, ISagaStateMachine<FutureState>
     {
         public virtual IFutureRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
@@ -142,7 +142,7 @@ internal static class FutureServiceCollectionExtensions
     private sealed class FutureDefinitionRegistrar<TFuture, TDefinition> :
         FutureRegistrar<TFuture>
         where TDefinition : class, IFutureDefinition<TFuture>
-        where TFuture : class, SagaStateMachine<FutureState>
+        where TFuture : class, ISagaStateMachine<FutureState>
     {
         public override IFutureRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {

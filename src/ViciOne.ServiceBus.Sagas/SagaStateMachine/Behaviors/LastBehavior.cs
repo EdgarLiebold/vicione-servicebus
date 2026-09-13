@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class LastBehavior<TSaga> :
     IBehavior<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     readonly IStateMachineActivity<TSaga> _activity;
 
@@ -23,7 +23,7 @@ public class LastBehavior<TSaga> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         _activity.Accept(visitor);
     }
@@ -38,7 +38,7 @@ public class LastBehavior<TSaga> :
     /// <summary>Runs the configured action.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         return _activity.ExecuteAsync(context, Behavior.Empty<TSaga>());
     }
@@ -47,7 +47,7 @@ public class LastBehavior<TSaga> :
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
         return _activity.ExecuteAsync(context, Behavior.Empty<TSaga, T>());
@@ -58,7 +58,7 @@ public class LastBehavior<TSaga> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context)
         where T : class
         where TException : Exception
     {
@@ -69,7 +69,7 @@ public class LastBehavior<TSaga> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
         return _activity.FaultedAsync(context, Behavior.Faulted<TSaga>());

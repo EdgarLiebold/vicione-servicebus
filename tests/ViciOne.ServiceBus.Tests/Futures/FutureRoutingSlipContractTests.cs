@@ -100,7 +100,7 @@ public sealed class FutureRoutingSlipContractTests
             machine.CommandReceived,
             state,
             command,
-            context => ((StateMachine<FutureState>)machine).RaiseEventAsync(context),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context),
             recorder,
             TestContext.Current.CancellationToken,
             new Uri("loopback://localhost/future-result"),
@@ -133,7 +133,7 @@ public sealed class FutureRoutingSlipContractTests
             machine.CommandReceived,
             state,
             command,
-            context => ((StateMachine<FutureState>)machine).RaiseEventAsync(context),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context),
             recorder,
             source.Token,
             new Uri("loopback://localhost/future-result"),
@@ -262,7 +262,7 @@ public sealed class FutureRoutingSlipContractTests
             {
                 state.Command = context.CreateFutureMessage(command);
                 Assert.True(await producer.TrySetFaultedAsync(context, context.CancellationToken));
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 Assert.True(stateContext.TryGetFault(correlationId, out captured));
             },
             cancellationToken: TestContext.Current.CancellationToken,
@@ -286,11 +286,11 @@ public sealed class FutureRoutingSlipContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<InputMessage> InputReceived { get; private set; } = null!;
+        public IEvent<InputMessage> InputReceived { get; private set; } = null!;
 
-        public Event<RoutingSlipCompleted> RoutingSlipCompleted { get; private set; } = null!;
+        public IEvent<RoutingSlipCompleted> RoutingSlipCompleted { get; private set; } = null!;
 
-        public Event<RoutingSlipFaulted> RoutingSlipFaulted { get; private set; } = null!;
+        public IEvent<RoutingSlipFaulted> RoutingSlipFaulted { get; private set; } = null!;
     }
 
     private sealed class TrackThenBuildFuture : Future<InputMessage, ResultMessage>
@@ -330,7 +330,7 @@ public sealed class FutureRoutingSlipContractTests
 
         public CancellationToken ObservedToken { get; private set; }
 
-        public Task PlanItineraryAsync(BehaviorContext<FutureState, InputMessage> context, IItineraryBuilder builder,
+        public Task PlanItineraryAsync(IBehaviorContext<FutureState, InputMessage> context, IItineraryBuilder builder,
             CancellationToken cancellationToken = default)
         {
             ObservedInput = context.Message;
@@ -340,7 +340,7 @@ public sealed class FutureRoutingSlipContractTests
         }
     }
 
-    public sealed record InputMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record InputMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ResultMessage;
 
@@ -371,20 +371,20 @@ public sealed class FutureRoutingSlipContractTests
     {
         public List<object> Events { get; } = [];
 
-        public Event<T> CreateResponseEvent<T>()
+        public IEvent<T> CreateResponseEvent<T>()
             where T : class => throw new NotSupportedException();
 
-        public void SetResult<T>(Event<T> responseReceived, Func<BehaviorContext<FutureState, T>, Task> callback)
+        public void SetResult<T>(IEvent<T> responseReceived, Func<IBehaviorContext<FutureState, T>, Task> callback)
             where T : class => throw new NotSupportedException();
 
-        public void SetFaulted<T>(Event<T> requestCompleted, Func<BehaviorContext<FutureState, T>, Task<bool>> callback)
+        public void SetFaulted<T>(IEvent<T> requestCompleted, Func<IBehaviorContext<FutureState, T>, Task<bool>> callback)
             where T : class => throw new NotSupportedException();
 
-        public void CompletePendingRequest<T>(Event<T> requestCompleted, PendingFutureIdProvider<T> pendingIdProvider)
+        public void CompletePendingRequest<T>(IEvent<T> requestCompleted, PendingFutureIdProvider<T> pendingIdProvider)
             where T : class => throw new NotSupportedException();
 
-        public void DuringAnyWhen<T>(Event<T> whenEvent,
-            Func<EventActivityBinder<FutureState, T>, EventActivityBinder<FutureState, T>> configure)
+        public void DuringAnyWhen<T>(IEvent<T> whenEvent,
+            Func<IEventActivityBinder<FutureState, T>, IEventActivityBinder<FutureState, T>> configure)
             where T : class
         {
             Events.Add(whenEvent);

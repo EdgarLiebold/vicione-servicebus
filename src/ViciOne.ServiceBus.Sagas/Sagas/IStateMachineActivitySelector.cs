@@ -4,19 +4,19 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TInstance">The instance type.</typeparam>
 /// <typeparam name="TData">The data type.</typeparam>
 public interface IStateMachineActivitySelector<TInstance, TData>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TData : class
 {
     /// <summary>An activity which accepts the instance and data from the event.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TInstance, TData> OfType<TActivity>()
+    IEventActivityBinder<TInstance, TData> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TInstance, TData>;
 
     /// <summary>An activity that only accepts the instance, and does not require the event data.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TInstance, TData> OfInstanceType<TActivity>()
+    IEventActivityBinder<TInstance, TData> OfInstanceType<TActivity>()
         where TActivity : class, IStateMachineActivity<TInstance>;
 }
 
@@ -24,11 +24,11 @@ public interface IStateMachineActivitySelector<TInstance, TData>
 /// <summary>Defines the operations required by state machine activity selector.</summary>
 /// <typeparam name="TInstance">The instance type.</typeparam>
 public interface IStateMachineActivitySelector<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>An activity which accepts the instance and data from the event.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TInstance> OfType<TActivity>()
+    IEventActivityBinder<TInstance> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TInstance>;
 }

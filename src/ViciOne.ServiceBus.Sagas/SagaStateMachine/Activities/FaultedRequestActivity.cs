@@ -11,19 +11,19 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     RequestActivityImpl<TSaga, TRequest, TResponse>,
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception
     where TRequest : class
     where TResponse : class
 {
-    readonly ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TRequest> _messageFactory;
+    readonly ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TRequest> _messageFactory;
     readonly ServiceAddressExceptionProvider<TSaga, TException> _serviceAddressProvider;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="request">The request.</param>
     /// <param name="messageFactory">The message factory.</param>
-    public FaultedRequestActivity(Request<TSaga, TRequest, TResponse> request,
-        ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TRequest> messageFactory)
+    public FaultedRequestActivity(IRequest<TSaga, TRequest, TResponse> request,
+        ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TRequest> messageFactory)
         : base(request)
     {
         _messageFactory = messageFactory;
@@ -34,9 +34,9 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="request">The request.</param>
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The message factory.</param>
-    public FaultedRequestActivity(Request<TSaga, TRequest, TResponse> request,
+    public FaultedRequestActivity(IRequest<TSaga, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TSaga, TException> serviceAddressProvider,
-        ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TRequest> messageFactory)
+        ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TRequest> messageFactory)
         : base(request)
     {
         _messageFactory = messageFactory;
@@ -46,7 +46,7 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -55,7 +55,7 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         return next.ExecuteAsync(context);
     }
@@ -65,7 +65,7 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         return next.ExecuteAsync(context);
@@ -76,10 +76,10 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
-        if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
             var serviceAddress = _serviceAddressProvider(exceptionContext);
 
@@ -95,11 +95,11 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TOtherException>(IBehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
         where T : class
         where TOtherException : Exception
     {
-        if (context is BehaviorExceptionContext<TSaga, T, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, T, TException> exceptionContext)
         {
             var serviceAddress = _serviceAddressProvider(exceptionContext);
 
@@ -120,20 +120,20 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
 public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse> :
     RequestActivityImpl<TInstance, TRequest, TResponse>,
     IStateMachineActivity<TInstance, TData>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TData : class
     where TException : Exception
     where TRequest : class
     where TResponse : class
 {
-    readonly ContextMessageFactory<BehaviorExceptionContext<TInstance, TData, TException>, TRequest> _messageFactory;
+    readonly ContextMessageFactory<IBehaviorExceptionContext<TInstance, TData, TException>, TRequest> _messageFactory;
     readonly ServiceAddressExceptionProvider<TInstance, TData, TException> _serviceAddressProvider;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="request">The request.</param>
     /// <param name="messageFactory">The message factory.</param>
-    public FaultedRequestActivity(Request<TInstance, TRequest, TResponse> request,
-        ContextMessageFactory<BehaviorExceptionContext<TInstance, TData, TException>, TRequest> messageFactory)
+    public FaultedRequestActivity(IRequest<TInstance, TRequest, TResponse> request,
+        ContextMessageFactory<IBehaviorExceptionContext<TInstance, TData, TException>, TRequest> messageFactory)
         : base(request)
     {
         _messageFactory = messageFactory;
@@ -144,9 +144,9 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     /// <param name="request">The request.</param>
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The message factory.</param>
-    public FaultedRequestActivity(Request<TInstance, TRequest, TResponse> request,
+    public FaultedRequestActivity(IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
-        ContextMessageFactory<BehaviorExceptionContext<TInstance, TData, TException>, TRequest> messageFactory)
+        ContextMessageFactory<IBehaviorExceptionContext<TInstance, TData, TException>, TRequest> messageFactory)
         : base(request)
     {
         _messageFactory = messageFactory;
@@ -156,7 +156,7 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -165,7 +165,7 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
+    public Task ExecuteAsync(IBehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
         return next.ExecuteAsync(context);
     }
@@ -175,10 +175,10 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T>(BehaviorExceptionContext<TInstance, TData, T> context, IBehavior<TInstance, TData> next)
+    public async Task FaultedAsync<T>(IBehaviorExceptionContext<TInstance, TData, T> context, IBehavior<TInstance, TData> next)
         where T : Exception
     {
-        if (context is BehaviorExceptionContext<TInstance, TData, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TInstance, TData, TException> exceptionContext)
         {
             var serviceAddress = _serviceAddressProvider(exceptionContext);
 

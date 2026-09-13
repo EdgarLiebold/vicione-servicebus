@@ -136,9 +136,9 @@ public sealed class ConfigurationValidationTests
         public Task ConsumeAsync(ConsumeContext<ConsumedMessage> context) => Task.CompletedTask;
     }
 
-    public sealed record StartSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StartSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class RetrySaga : ISaga, InitiatedBy<StartSaga>
+    public sealed class RetrySaga : ISaga, IInitiatedBy<StartSaga>
     {
         public RetrySaga(Guid correlationId)
         {

@@ -22,7 +22,7 @@ public sealed class FutureVariableContractTests
             new Signal("input"),
             async context =>
             {
-                await ((StateMachine<FutureState>)machine).RaiseEventAsync(context);
+                await ((IStateMachine<FutureState>)machine).RaiseEventAsync(context);
                 await context.RaiseAsync(machine.StateSignal, context.CancellationToken);
             },
             cancellationToken: TestContext.Current.CancellationToken);
@@ -44,16 +44,16 @@ public sealed class FutureVariableContractTests
 
         Assert.Equal("binder", Assert.Throws<ArgumentNullException>(() =>
             FutureVariableExtensions.SetVariable<Signal, StoredValue>(
-                (EventActivityBinder<FutureState, Signal>)null!, "value", typedSync)).ParamName);
+                (IEventActivityBinder<FutureState, Signal>)null!, "value", typedSync)).ParamName);
         Assert.Equal("binder", Assert.Throws<ArgumentNullException>(() =>
             FutureVariableExtensions.SetVariableAwaited<Signal, StoredValue>(
-                (EventActivityBinder<FutureState, Signal>)null!, "value", typedAsync)).ParamName);
+                (IEventActivityBinder<FutureState, Signal>)null!, "value", typedAsync)).ParamName);
         Assert.Equal("binder", Assert.Throws<ArgumentNullException>(() =>
             FutureVariableExtensions.SetVariable<StoredValue>(
-                (EventActivityBinder<FutureState>)null!, "value", stateSync)).ParamName);
+                (IEventActivityBinder<FutureState>)null!, "value", stateSync)).ParamName);
         Assert.Equal("binder", Assert.Throws<ArgumentNullException>(() =>
             FutureVariableExtensions.SetVariableAwaited<StoredValue>(
-                (EventActivityBinder<FutureState>)null!, "value", stateAsync)).ParamName);
+                (IEventActivityBinder<FutureState>)null!, "value", stateAsync)).ParamName);
 
         var machine = new BinderBoundaryMachine();
         Assert.Equal("key", Assert.Throws<ArgumentException>(() => machine.AddTypedSync(" ", typedSync)).ParamName);
@@ -81,7 +81,7 @@ public sealed class FutureVariableContractTests
             context =>
             {
                 StoredValue typed = context.SetVariable("Result", current => new StoredValue(current.Message.Value));
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 StoredValue replaced = stateContext.SetVariable("result", _ => new StoredValue("replacement"));
                 stateContext.SetVariable("Direct", new StoredValue("direct"));
 
@@ -115,7 +115,7 @@ public sealed class FutureVariableContractTests
                     "typed",
                     current => Task.FromResult(new StoredValue(current.Message.Value)),
                     source.Token);
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 StoredValue untyped = await stateContext.SetVariableAsync(
                     "state",
                     _ => Task.FromResult(new StoredValue("state")),
@@ -172,7 +172,7 @@ public sealed class FutureVariableContractTests
             new Signal("input"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 Assert.Equal("key", Assert.Throws<ArgumentException>(() =>
                     stateContext.SetVariable(key, new StoredValue("value"))).ParamName);
                 Assert.Equal("key", Assert.Throws<ArgumentException>(() =>
@@ -224,7 +224,7 @@ public sealed class FutureVariableContractTests
             new Signal("input"),
             context =>
             {
-                BehaviorContext<FutureState> stateContext = context;
+                IBehaviorContext<FutureState> stateContext = context;
                 Assert.False(stateContext.TryGetVariable("missing", out StoredValue? missing));
                 Assert.Null(missing);
                 Assert.False(stateContext.TryGetVariable("value", out StoredValue? incompatible));
@@ -241,7 +241,7 @@ public sealed class FutureVariableContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<Signal> SignalReceived { get; private set; } = null!;
+        public IEvent<Signal> SignalReceived { get; private set; } = null!;
     }
 
     private sealed class VariableBinderMachine : ViciOneServiceBusStateMachine<FutureState>
@@ -266,9 +266,9 @@ public sealed class FutureVariableContractTests
                         }));
         }
 
-        public Event<Signal> SignalReceived { get; private set; } = null!;
+        public IEvent<Signal> SignalReceived { get; private set; } = null!;
 
-        public Event StateSignal { get; private set; } = null!;
+        public IEvent StateSignal { get; private set; } = null!;
     }
 
     private sealed class BinderBoundaryMachine : ViciOneServiceBusStateMachine<FutureState>
@@ -278,9 +278,9 @@ public sealed class FutureVariableContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<Signal> TypedEvent { get; private set; } = null!;
+        public IEvent<Signal> TypedEvent { get; private set; } = null!;
 
-        public Event StateEvent { get; private set; } = null!;
+        public IEvent StateEvent { get; private set; } = null!;
 
         public void AddTypedSync(string key, EventMessageFactory<FutureState, Signal, StoredValue> factory) =>
             When(TypedEvent).SetVariable(key, factory);

@@ -137,9 +137,9 @@ public sealed class AzureTableSagaConcurrencyTests
         }
     }
 
-    public sealed record BeginConcurrentSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BeginConcurrentSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record IncrementConcurrentSaga(Guid CorrelationId, Guid CommandId) : CorrelatedBy<Guid>;
+    public sealed record IncrementConcurrentSaga(Guid CorrelationId, Guid CommandId) : ICorrelatedBy<Guid>;
 
     public sealed record ConcurrentSagaStarted(Guid CorrelationId);
 
@@ -154,7 +154,7 @@ public sealed class AzureTableSagaConcurrencyTests
         public int Revision { get; set; }
     }
 
-    public sealed class ConcurrentState : SagaStateMachineInstance
+    public sealed class ConcurrentState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -186,11 +186,11 @@ public sealed class AzureTableSagaConcurrencyTests
                         context.Saga.Counter)));
         }
 
-        public State Active { get; private set; } = null!;
+        public IState Active { get; private set; } = null!;
 
-        public Event<BeginConcurrentSaga> Begin { get; private set; } = null!;
+        public IEvent<BeginConcurrentSaga> Begin { get; private set; } = null!;
 
-        public Event<IncrementConcurrentSaga> Increment { get; private set; } = null!;
+        public IEvent<IncrementConcurrentSaga> Increment { get; private set; } = null!;
     }
 
     private sealed class ConcurrentStateDefinition : SagaDefinition<ConcurrentState>

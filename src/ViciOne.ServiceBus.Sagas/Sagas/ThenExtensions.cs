@@ -12,8 +12,8 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="action">The synchronous delegate.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Then<TSaga>(this EventActivityBinder<TSaga> binder, Action<BehaviorContext<TSaga>> action)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Then<TSaga>(this IEventActivityBinder<TSaga> binder, Action<IBehaviorContext<TSaga>> action)
+        where TSaga : class, ISagaStateMachineInstance
     {
         return binder.Add(new ActionActivity<TSaga>(action));
     }
@@ -24,9 +24,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="action">The synchronous delegate.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> Then<TSaga, TException>(this ExceptionActivityBinder<TSaga, TException> binder,
-        Action<BehaviorExceptionContext<TSaga, TException>> action)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TException> Then<TSaga, TException>(this IExceptionActivityBinder<TSaga, TException> binder,
+        Action<IBehaviorExceptionContext<TSaga, TException>> action)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
         return binder.Add(new FaultedActionActivity<TSaga, TException>(action));
@@ -38,9 +38,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="asyncAction">The asynchronous delegate.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TException> ThenAwaited<TSaga, TException>(this ExceptionActivityBinder<TSaga, TException> binder,
-        Func<BehaviorExceptionContext<TSaga, TException>, Task> asyncAction)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TException> ThenAwaited<TSaga, TException>(this IExceptionActivityBinder<TSaga, TException> binder,
+        Func<IBehaviorExceptionContext<TSaga, TException>, Task> asyncAction)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
         return binder.Add(new AsyncFaultedActionActivity<TSaga, TException>(asyncAction));
@@ -51,8 +51,8 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="action">The asynchronous delegate.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> ThenAwaited<TSaga>(this EventActivityBinder<TSaga> binder, Func<BehaviorContext<TSaga>, Task> action)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> ThenAwaited<TSaga>(this IEventActivityBinder<TSaga> binder, Func<IBehaviorContext<TSaga>, Task> action)
+        where TSaga : class, ISagaStateMachineInstance
     {
         return binder.Add(new AsyncActivity<TSaga>(action));
     }
@@ -63,9 +63,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="action">The synchronous delegate.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Then<TSaga, TData>(this EventActivityBinder<TSaga, TData> binder,
-        Action<BehaviorContext<TSaga, TData>> action)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> Then<TSaga, TData>(this IEventActivityBinder<TSaga, TData> binder,
+        Action<IBehaviorContext<TSaga, TData>> action)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         ArgumentNullException.ThrowIfNull(action);
@@ -80,10 +80,10 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="action">The synchronous delegate.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> Then<TSaga, TData, TException>(
-        this ExceptionActivityBinder<TSaga, TData, TException> binder,
-        Action<BehaviorExceptionContext<TSaga, TData, TException>> action)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TData, TException> Then<TSaga, TData, TException>(
+        this IExceptionActivityBinder<TSaga, TData, TException> binder,
+        Action<IBehaviorExceptionContext<TSaga, TData, TException>> action)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TData : class
     {
@@ -97,10 +97,10 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="asyncAction">The asynchronous delegate.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TSaga, TData, TException> ThenAwaited<TSaga, TData, TException>(
-        this ExceptionActivityBinder<TSaga, TData, TException> binder,
-        Func<BehaviorExceptionContext<TSaga, TData, TException>, Task> asyncAction)
-        where TSaga : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TSaga, TData, TException> ThenAwaited<TSaga, TData, TException>(
+        this IExceptionActivityBinder<TSaga, TData, TException> binder,
+        Func<IBehaviorExceptionContext<TSaga, TData, TException>, Task> asyncAction)
+        where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
         where TData : class
     {
@@ -113,9 +113,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="action">The asynchronous delegate.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> ThenAwaited<TSaga, TData>(this EventActivityBinder<TSaga, TData> binder,
-        Func<BehaviorContext<TSaga, TData>, Task> action)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> ThenAwaited<TSaga, TData>(this IEventActivityBinder<TSaga, TData> binder,
+        Func<IBehaviorContext<TSaga, TData>, Task> action)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         ArgumentNullException.ThrowIfNull(action);
@@ -128,9 +128,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activityFactory">The factory method which returns the activity to execute.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Execute<TSaga>(this EventActivityBinder<TSaga> binder,
-        Func<BehaviorContext<TSaga>, IStateMachineActivity<TSaga>> activityFactory)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Execute<TSaga>(this IEventActivityBinder<TSaga> binder,
+        Func<IBehaviorContext<TSaga>, IStateMachineActivity<TSaga>> activityFactory)
+        where TSaga : class, ISagaStateMachineInstance
     {
         var activity = new FactoryActivity<TSaga>(activityFactory);
         return binder.Add(activity);
@@ -141,8 +141,8 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activity">An existing activity.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> Execute<TSaga>(this EventActivityBinder<TSaga> binder, IStateMachineActivity<TSaga> activity)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> Execute<TSaga>(this IEventActivityBinder<TSaga> binder, IStateMachineActivity<TSaga> activity)
+        where TSaga : class, ISagaStateMachineInstance
     {
         return binder.Add(activity);
     }
@@ -152,9 +152,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activityFactory">The factory method which returns the activity to execute.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga> ExecuteAwaited<TSaga>(this EventActivityBinder<TSaga> binder,
-        Func<BehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> activityFactory)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga> ExecuteAwaited<TSaga>(this IEventActivityBinder<TSaga> binder,
+        Func<IBehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> activityFactory)
+        where TSaga : class, ISagaStateMachineInstance
     {
         var activity = new AsyncFactoryActivity<TSaga>(activityFactory);
         return binder.Add(activity);
@@ -166,9 +166,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activityFactory">The factory method which returns the activity to execute.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Execute<TSaga, TData>(this EventActivityBinder<TSaga, TData> binder,
-        Func<BehaviorContext<TSaga, TData>, IStateMachineActivity<TSaga, TData>> activityFactory)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> Execute<TSaga, TData>(this IEventActivityBinder<TSaga, TData> binder,
+        Func<IBehaviorContext<TSaga, TData>, IStateMachineActivity<TSaga, TData>> activityFactory)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         var activity = new FactoryActivity<TSaga, TData>(activityFactory);
@@ -181,9 +181,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activityFactory">The factory method which returns the activity to execute.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> ExecuteAwaited<TSaga, TData>(this EventActivityBinder<TSaga, TData> binder,
-        Func<BehaviorContext<TSaga, TData>, Task<IStateMachineActivity<TSaga, TData>>> activityFactory)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> ExecuteAwaited<TSaga, TData>(this IEventActivityBinder<TSaga, TData> binder,
+        Func<IBehaviorContext<TSaga, TData>, Task<IStateMachineActivity<TSaga, TData>>> activityFactory)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         var activity = new AsyncFactoryActivity<TSaga, TData>(activityFactory);
@@ -196,9 +196,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activityFactory">The factory method which returns the activity to execute.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> Execute<TSaga, TData>(this EventActivityBinder<TSaga, TData> binder,
-        Func<BehaviorContext<TSaga, TData>, IStateMachineActivity<TSaga>> activityFactory)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> Execute<TSaga, TData>(this IEventActivityBinder<TSaga, TData> binder,
+        Func<IBehaviorContext<TSaga, TData>, IStateMachineActivity<TSaga>> activityFactory)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         var activity = new FactoryActivity<TSaga, TData>(context =>
@@ -217,9 +217,9 @@ public static class ThenExtensions
     /// <param name="binder">The event binder.</param>
     /// <param name="activityFactory">The factory method which returns the activity to execute.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TSaga, TData> ExecuteAwaited<TSaga, TData>(this EventActivityBinder<TSaga, TData> binder,
-        Func<BehaviorContext<TSaga, TData>, Task<IStateMachineActivity<TSaga>>> activityFactory)
-        where TSaga : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TSaga, TData> ExecuteAwaited<TSaga, TData>(this IEventActivityBinder<TSaga, TData> binder,
+        Func<IBehaviorContext<TSaga, TData>, Task<IStateMachineActivity<TSaga>>> activityFactory)
+        where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
         var activity = new AsyncFactoryActivity<TSaga, TData>(async context =>

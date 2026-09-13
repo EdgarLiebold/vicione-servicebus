@@ -294,12 +294,12 @@ public sealed class EventHubSagaAndLifecycleTests
             .WaitAsync(timeout, cancellationToken);
     }
 
-    public sealed record SagaStart(Guid CorrelationId, Guid RunId, string Key) : CorrelatedBy<Guid>;
-    public sealed record DataFaultStart(Guid CorrelationId, Guid RunId) : CorrelatedBy<Guid>;
-    public sealed record PlainFaultStart(Guid CorrelationId, Guid RunId) : CorrelatedBy<Guid>;
+    public sealed record SagaStart(Guid CorrelationId, Guid RunId, string Key) : ICorrelatedBy<Guid>;
+    public sealed record DataFaultStart(Guid CorrelationId, Guid RunId) : ICorrelatedBy<Guid>;
+    public sealed record PlainFaultStart(Guid CorrelationId, Guid RunId) : ICorrelatedBy<Guid>;
     public sealed record SagaProduced(Guid RunId, string Mode, string Text);
 
-    public sealed class ProducingSagaState : SagaStateMachineInstance
+    public sealed class ProducingSagaState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
         public string CurrentState { get; set; } = string.Empty;
@@ -328,11 +328,11 @@ public sealed class EventHubSagaAndLifecycleTests
                     .TransitionTo(Active));
         }
 
-        public State Active { get; } = null!;
-        public Event<SagaStart> Start { get; } = null!;
+        public IState Active { get; } = null!;
+        public IEvent<SagaStart> Start { get; } = null!;
     }
 
-    public sealed class DataFaultSagaState : SagaStateMachineInstance
+    public sealed class DataFaultSagaState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
         public string CurrentState { get; set; } = string.Empty;
@@ -361,11 +361,11 @@ public sealed class EventHubSagaAndLifecycleTests
                     .TransitionTo(Active));
         }
 
-        public State Active { get; } = null!;
-        public Event<DataFaultStart> Start { get; } = null!;
+        public IState Active { get; } = null!;
+        public IEvent<DataFaultStart> Start { get; } = null!;
     }
 
-    public sealed class PlainFaultSagaState : SagaStateMachineInstance
+    public sealed class PlainFaultSagaState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
         public string CurrentState { get; set; } = string.Empty;
@@ -394,8 +394,8 @@ public sealed class EventHubSagaAndLifecycleTests
                                 context.Exception.Message)))));
         }
 
-        public State Active { get; } = null!;
-        public Event<PlainFaultStart> Start { get; } = null!;
+        public IState Active { get; } = null!;
+        public IEvent<PlainFaultStart> Start { get; } = null!;
     }
 
     public sealed class ExpectedSagaFailure(string message) : Exception(message);

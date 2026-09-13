@@ -239,7 +239,7 @@ public sealed class MediatorObserverContractTests
     private sealed record ConsumeObservation(string Stage, Type MessageType, object Message, Exception? Exception);
     private sealed record SendObservation(string Stage, object Message, SendContext Context, Exception? Exception);
     private sealed record PublishObservation(string Stage, object Message, PublishContext Context, Exception? Exception);
-    private sealed record ObservedMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    private sealed record ObservedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    private sealed record ObservedResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ObservedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    private sealed record ObservedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    private sealed record ObservedResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 }

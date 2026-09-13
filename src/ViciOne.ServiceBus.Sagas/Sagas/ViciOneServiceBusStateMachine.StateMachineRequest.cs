@@ -7,13 +7,13 @@ using ViciOne.ServiceBus.Internals;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Carries the request for state machine.</summary>
     /// <typeparam name="TRequest">The request type.</typeparam>
     /// <typeparam name="TResponse">The response type.</typeparam>
     public class StateMachineRequest<TRequest, TResponse> :
-        Request<TInstance, TRequest, TResponse>
+        IRequest<TInstance, TRequest, TResponse>
         where TRequest : class
         where TResponse : class
     {
@@ -25,7 +25,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="name">The name.</param>
         /// <param name="settings">The settings that control the operation.</param>
         /// <param name="requestIdExpression">The request id expression.</param>
-        public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse> settings,
+        public StateMachineRequest(string name, IRequestSettings<TInstance, TRequest, TResponse> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
         {
             Name = name;
@@ -47,15 +47,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <summary>Gets the name.</summary>
         public string Name { get; }
         /// <summary>Gets the settings.</summary>
-        public RequestSettings<TInstance, TRequest, TResponse> Settings { get; }
+        public IRequestSettings<TInstance, TRequest, TResponse> Settings { get; }
         /// <summary>Gets or sets the completed.</summary>
-        public Event<TResponse> Completed { get; set; } = null!;
+        public IEvent<TResponse> Completed { get; set; } = null!;
         /// <summary>Gets or sets the faulted.</summary>
-        public Event<Fault<TRequest>> Faulted { get; set; } = null!;
+        public IEvent<Fault<TRequest>> Faulted { get; set; } = null!;
         /// <summary>Gets or sets the timeout expired.</summary>
-        public Event<RequestTimeoutExpired<TRequest>> TimeoutExpired { get; set; } = null!;
+        public IEvent<IRequestTimeoutExpired<TRequest>> TimeoutExpired { get; set; } = null!;
         /// <summary>Gets or sets the pending.</summary>
-        public State Pending { get; set; } = null!;
+        public IState Pending { get; set; } = null!;
         /// <summary>Sets request id.</summary>
         /// <param name="instance">The instance.</param>
         /// <param name="requestId">The request id.</param>
@@ -103,7 +103,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <summary>Filters events using the supplied predicate.</summary>
         /// <param name="context">The context associated with the operation.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-        public bool EventFilter(BehaviorContext<TInstance, RequestTimeoutExpired<TRequest>> context)
+        public bool EventFilter(IBehaviorContext<TInstance, IRequestTimeoutExpired<TRequest>> context)
         {
             if (!context.RequestId.HasValue)
                 return false;
@@ -129,7 +129,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     /// <typeparam name="TResponse2">The response2 type.</typeparam>
     public class StateMachineRequest<TRequest, TResponse, TResponse2> :
         StateMachineRequest<TRequest, TResponse>,
-        Request<TInstance, TRequest, TResponse, TResponse2>
+        IRequest<TInstance, TRequest, TResponse, TResponse2>
         where TRequest : class
         where TResponse : class
         where TResponse2 : class
@@ -138,7 +138,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="name">The name.</param>
         /// <param name="settings">The settings that control the operation.</param>
         /// <param name="requestIdExpression">The request id expression.</param>
-        public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse, TResponse2> settings,
+        public StateMachineRequest(string name, IRequestSettings<TInstance, TRequest, TResponse, TResponse2> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
             : base(name, settings, requestIdExpression)
         {
@@ -148,10 +148,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         /// <summary>Gets the settings.</summary>
-        public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings { get; }
+        public new IRequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings { get; }
 
         /// <summary>Gets or sets the completed2.</summary>
-        public Event<TResponse2> Completed2 { get; set; } = null!;
+        public IEvent<TResponse2> Completed2 { get; set; } = null!;
     }
 
 
@@ -162,7 +162,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     /// <typeparam name="TResponse3">The response3 type.</typeparam>
     public class StateMachineRequest<TRequest, TResponse, TResponse2, TResponse3> :
         StateMachineRequest<TRequest, TResponse, TResponse2>,
-        Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>
+        IRequest<TInstance, TRequest, TResponse, TResponse2, TResponse3>
         where TRequest : class
         where TResponse : class
         where TResponse2 : class
@@ -172,7 +172,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="name">The name.</param>
         /// <param name="settings">The settings that control the operation.</param>
         /// <param name="requestIdExpression">The request id expression.</param>
-        public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> settings,
+        public StateMachineRequest(string name, IRequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
             : base(name, settings, requestIdExpression)
         {
@@ -182,9 +182,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         /// <summary>Gets the settings.</summary>
-        public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings { get; }
+        public new IRequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings { get; }
 
         /// <summary>Gets or sets the completed3.</summary>
-        public Event<TResponse3> Completed3 { get; set; } = null!;
+        public IEvent<TResponse3> Completed3 { get; set; } = null!;
     }
 }

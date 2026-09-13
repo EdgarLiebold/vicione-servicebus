@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DataConverterActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly IStateMachineActivity<TSaga, TMessage> _activity;
@@ -22,7 +22,7 @@ public class DataConverterActivity<TSaga, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, _ => _activity.Accept(visitor));
     }
@@ -38,7 +38,7 @@ public class DataConverterActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
@@ -48,10 +48,10 @@ public class DataConverterActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        if (context is not BehaviorContext<TSaga, TMessage> dataContext)
+        if (context is not IBehaviorContext<TSaga, TMessage> dataContext)
             throw new SagaStateMachineException("Expected Type " + typeof(TMessage).Name + " but was " + context.Message.GetType().Name);
 
         if (next is not IBehavior<TSaga, TMessage> dataNext)
@@ -65,7 +65,7 @@ public class DataConverterActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -77,11 +77,11 @@ public class DataConverterActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        if (context is not BehaviorExceptionContext<TSaga, TMessage, TException> dataContext)
+        if (context is not IBehaviorExceptionContext<TSaga, TMessage, TException> dataContext)
             throw new SagaStateMachineException("Expected Type " + typeof(TMessage).Name + " but was " + context.Message.GetType().Name);
 
         if (next is not IBehavior<TSaga, TMessage> dataNext)

@@ -188,10 +188,10 @@ public sealed class StateMachineRuntimeContractTests
                 declarativeMachine.CompleteWithData);
         }
 
-        State ready = null!;
-        Event initialize = null!;
-        Event complete = null!;
-        Event<RuntimeData> completeWithData = null!;
+        IState ready = null!;
+        IEvent initialize = null!;
+        IEvent complete = null!;
+        IEvent<RuntimeData> completeWithData = null!;
         ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder => builder
             .State("Ready", out ready)
             .Event("Initialize", out initialize)
@@ -221,8 +221,8 @@ public sealed class StateMachineRuntimeContractTests
                 declarativeMachine.Initialize);
         }
 
-        State running = null!;
-        Event initialize = null!;
+        IState running = null!;
+        IEvent initialize = null!;
         ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Initialize", out initialize)
@@ -255,10 +255,10 @@ public sealed class StateMachineRuntimeContractTests
                 declarativeMachine.Nested);
         }
 
-        State @true = null!;
-        State @false = null!;
-        Event<RuntimeDecision> decide = null!;
-        Event nested = null!;
+        IState @true = null!;
+        IState @false = null!;
+        IEvent<RuntimeDecision> decide = null!;
+        IEvent nested = null!;
         ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder => builder
             .State("True", out @true)
             .State("False", out @false)
@@ -298,9 +298,9 @@ public sealed class StateMachineRuntimeContractTests
                 declarativeMachine.Charge);
         }
 
-        State running = null!;
-        Event start = null!;
-        Event<ChargeData> charge = null!;
+        IState running = null!;
+        IEvent start = null!;
+        IEvent<ChargeData> charge = null!;
         ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder =>
         {
             builder
@@ -330,7 +330,7 @@ public sealed class StateMachineRuntimeContractTests
             return new DirectTransitionScenario(declarativeMachine, declarativeMachine.Running);
         }
 
-        State running = null!;
+        IState running = null!;
         ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder => builder
             .State("Running", out running)
             .InstanceState(instance => instance.CurrentState!)
@@ -349,9 +349,9 @@ public sealed class StateMachineRuntimeContractTests
                 declarativeMachine.Start);
         }
 
-        State running = null!;
-        State runningFaster = null!;
-        Event start = null!;
+        IState running = null!;
+        IState runningFaster = null!;
+        IEvent start = null!;
         ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder => builder
             .State("Running", out running)
             .State("RunningFaster", out runningFaster)
@@ -373,37 +373,37 @@ public sealed class StateMachineRuntimeContractTests
 
     private sealed record AnytimeScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
-        State Ready,
-        Event Initialize,
-        Event Complete,
-        Event<RuntimeData> CompleteWithData);
+        IState Ready,
+        IEvent Initialize,
+        IEvent Complete,
+        IEvent<RuntimeData> CompleteWithData);
 
     private sealed record TransitionHookScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
-        State Running,
-        Event Initialize);
+        IState Running,
+        IEvent Initialize);
 
     private sealed record NestedRaiseScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
-        State True,
-        State False,
-        Event<RuntimeDecision> Decide,
-        Event Nested);
+        IState True,
+        IState False,
+        IEvent<RuntimeDecision> Decide,
+        IEvent Nested);
 
     private sealed record UnhandledScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
-        State Running,
-        Event Start,
-        Event<ChargeData> Charge);
+        IState Running,
+        IEvent Start,
+        IEvent<ChargeData> Charge);
 
     private sealed record DirectTransitionScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
-        State Running);
+        IState Running);
 
     private sealed record ChainedEnterScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
-        State RunningFaster,
-        Event Start);
+        IState RunningFaster,
+        IEvent Start);
 
     public sealed record RuntimeData(string Value);
 
@@ -419,15 +419,15 @@ public sealed class StateMachineRuntimeContractTests
         GlobalIgnore,
     }
 
-    private sealed class RuntimeInstance : SagaStateMachineInstance
+    private sealed class RuntimeInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
-        public State? LastEntered { get; set; }
+        public IState? LastEntered { get; set; }
 
-        public State? LastLeft { get; set; }
+        public IState? LastLeft { get; set; }
 
         public int SignalCount { get; set; }
 
@@ -453,13 +453,13 @@ public sealed class StateMachineRuntimeContractTests
                 When(CompleteWithData).Then(context => context.Saga.Value = context.Message.Value).Finalize());
         }
 
-        public State Ready { get; private set; } = null!;
+        public IState Ready { get; private set; } = null!;
 
-        public Event Initialize { get; private set; } = null!;
+        public IEvent Initialize { get; private set; } = null!;
 
-        public Event Complete { get; private set; } = null!;
+        public IEvent Complete { get; private set; } = null!;
 
-        public Event<RuntimeData> CompleteWithData { get; private set; } = null!;
+        public IEvent<RuntimeData> CompleteWithData { get; private set; } = null!;
     }
 
     private sealed class DeclarativeTransitionHookMachine : ViciOneServiceBusStateMachine<RuntimeInstance>
@@ -480,9 +480,9 @@ public sealed class StateMachineRuntimeContractTests
             }));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Initialize { get; private set; } = null!;
+        public IEvent Initialize { get; private set; } = null!;
     }
 
     private sealed class DeclarativeNestedRaiseMachine : ViciOneServiceBusStateMachine<RuntimeInstance>
@@ -507,13 +507,13 @@ public sealed class StateMachineRuntimeContractTests
             }));
         }
 
-        public State True { get; private set; } = null!;
+        public IState True { get; private set; } = null!;
 
-        public State False { get; private set; } = null!;
+        public IState False { get; private set; } = null!;
 
-        public Event<RuntimeDecision> Decide { get; private set; } = null!;
+        public IEvent<RuntimeDecision> Decide { get; private set; } = null!;
 
-        public Event Nested { get; private set; } = null!;
+        public IEvent Nested { get; private set; } = null!;
     }
 
     private sealed class DeclarativeUnhandledMachine : ViciOneServiceBusStateMachine<RuntimeInstance>
@@ -532,11 +532,11 @@ public sealed class StateMachineRuntimeContractTests
                 During(Running, Ignore(Start), Ignore(Charge, context => context.Message.Volts == 9));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
 
-        public Event<ChargeData> Charge { get; private set; } = null!;
+        public IEvent<ChargeData> Charge { get; private set; } = null!;
     }
 
     private sealed class DeclarativeDirectTransitionMachine : ViciOneServiceBusStateMachine<RuntimeInstance>
@@ -547,7 +547,7 @@ public sealed class StateMachineRuntimeContractTests
             WhenEnter(Running, behavior => behavior.Then(context => context.Saga.Markers.Add("enter:Running")));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
     }
 
     private sealed class DeclarativeChainedEnterMachine : ViciOneServiceBusStateMachine<RuntimeInstance>
@@ -570,23 +570,23 @@ public sealed class StateMachineRuntimeContractTests
                     .TransitionTo(RunningFaster));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State RunningFaster { get; private set; } = null!;
+        public IState RunningFaster { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     private sealed class StateRecorder : IStateObserver<RuntimeInstance>
     {
         public List<StateChange> Changes { get; } = [];
 
-        public Task StateChangedAsync(BehaviorContext<RuntimeInstance> context, State currentState, State? previousState)
+        public Task StateChangedAsync(IBehaviorContext<RuntimeInstance> context, IState currentState, IState? previousState)
         {
             Changes.Add(new StateChange(context.Saga, previousState, currentState));
             return Task.CompletedTask;
         }
     }
 
-    private sealed record StateChange(RuntimeInstance Instance, State? Previous, State Current);
+    private sealed record StateChange(RuntimeInstance Instance, IState? Previous, IState Current);
 }

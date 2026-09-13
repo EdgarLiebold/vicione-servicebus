@@ -31,7 +31,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     /// <summary>Creates request, response, and fault configuration for a future event.</summary>
     /// <param name="configurator">The future state-machine configurator.</param>
     /// <param name="faulted">The event raised when the outbound request faults.</param>
-    public FutureRequestConfigurator(IFutureStateMachineConfigurator configurator, Event<Fault<TRequest>> faulted)
+    public FutureRequestConfigurator(IFutureStateMachineConfigurator configurator, IEvent<Fault<TRequest>> faulted)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(faulted);
@@ -51,7 +51,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     }
 
     /// <summary>Gets the event raised when the outbound request faults.</summary>
-    public Event<Fault<TRequest>> Faulted { get; }
+    public IEvent<Fault<TRequest>> Faulted { get; }
 
     /// <summary>Adds an accepted response contract and configures how it advances the future.</summary>
     /// <typeparam name="TResponse">The accepted response contract.</typeparam>
@@ -117,12 +117,12 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     {
         ArgumentNullException.ThrowIfNull(valueProvider);
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> FactoryAsync(IBehaviorContext<FutureState, TInput> context)
         {
             return MessageInitializerCache<TRequest>.InitializeMessageAsync(context, valueProvider(context), new object[] { context.Message });
         }
 
-        _request.Factory = MessageFactory<TRequest>.Create((Func<BehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>>)FactoryAsync);
+        _request.Factory = MessageFactory<TRequest>.Create((Func<IBehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>>)FactoryAsync);
     }
 
     /// <summary>Records each outbound request as pending until a response supplies the same identifier.</summary>
@@ -145,7 +145,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
 
     /// <summary>Adds state-machine activities executed when the request faults.</summary>
     /// <param name="configure">The callback that adds activities to the request-fault event.</param>
-    public void WhenFaulted(Func<EventActivityBinder<FutureState, Fault<TRequest>>, EventActivityBinder<FutureState, Fault<TRequest>>> configure)
+    public void WhenFaulted(Func<IEventActivityBinder<FutureState, Fault<TRequest>>, IEventActivityBinder<FutureState, Fault<TRequest>>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configurator.DuringAnyWhen(Faulted, configure);
@@ -162,7 +162,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     /// <param name="context">The future event context used to create the request.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    public Task SendAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         return _request.SendRequestAsync(context, cancellationToken: cancellationToken);
@@ -173,7 +173,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     /// <param name="data">The selected value exposed as the request's input event.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendAsync(BehaviorContext<FutureState, TCommand> context, TInput data, CancellationToken cancellationToken = default)
+    public Task SendAsync(IBehaviorContext<FutureState, TCommand> context, TInput data, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(data);
@@ -187,7 +187,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     /// <param name="inputs">The selected values exposed as individual request input events.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SendRangeAsync(BehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs,
+    public async Task SendRangeAsync(IBehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -205,7 +205,7 @@ internal sealed class FutureRequestConfigurator<TCommand, TResult, TFault, TInpu
     /// <param name="context">The request-fault event context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns><see langword="true" /> when the terminal fault was emitted; otherwise, <see langword="false" /> while operations remain pending.</returns>
-    public Task<bool> TrySetFaultedAsync(BehaviorContext<FutureState, Fault<TRequest>> context, CancellationToken cancellationToken = default)
+    public Task<bool> TrySetFaultedAsync(IBehaviorContext<FutureState, Fault<TRequest>> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         return _fault.TrySetFaultedAsync(context, cancellationToken: cancellationToken);

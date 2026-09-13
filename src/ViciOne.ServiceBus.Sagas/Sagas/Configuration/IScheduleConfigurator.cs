@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TInstance">The instance type.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IScheduleConfigurator<TInstance, TMessage>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>Sets a fixed message delay that applies unless an individual schedule operation overrides it.</summary>

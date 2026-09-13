@@ -73,7 +73,7 @@ public sealed class ReceiveEndpointDependencyTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record DependentMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record DependentMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class ControlledDependency : IReceiveEndpointDependency
     {

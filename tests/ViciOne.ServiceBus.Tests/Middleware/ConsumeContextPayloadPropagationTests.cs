@@ -142,13 +142,13 @@ public sealed class ConsumeContextPayloadPropagationTests
 
     private sealed record PayloadMarker(string Value);
 
-    private sealed record InboundSend(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record InboundSend(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record OutboundSend(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record OutboundSend(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record InboundPublish(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record InboundPublish(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record OutboundPublish(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record OutboundPublish(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class SendPayloadSpecificationObserver : ISendPipeSpecificationObserver
     {

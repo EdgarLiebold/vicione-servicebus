@@ -13,5 +13,5 @@ internal interface IRoutingSlipExecutor<in TInput>
     /// <param name="context">The future event context used to build and execute the routing slip.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default);
 }

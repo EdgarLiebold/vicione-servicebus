@@ -277,7 +277,7 @@ public sealed class StateMachineGraphContractTests
         Assert.Null(assembly.GetType("ViciOne.ServiceBus.SagaStateMachine.Edge", throwOnError: false));
         Assert.Null(assembly.GetType("ViciOne.ServiceBus.SagaStateMachine.GraphStateMachineExtensions", throwOnError: false));
 
-        StateMachine<GraphState> missingMachine = null!;
+        IStateMachine<GraphState> missingMachine = null!;
         Assert.Equal("machine", Assert.Throws<ArgumentNullException>(() => missingMachine.GetGraph()).ParamName);
     }
 
@@ -293,11 +293,11 @@ public sealed class StateMachineGraphContractTests
     {
     }
 
-    sealed class GraphState : SagaStateMachineInstance
+    sealed class GraphState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
     }
 
     sealed class GraphMachine : ViciOneServiceBusStateMachine<GraphState>
@@ -308,9 +308,9 @@ public sealed class StateMachineGraphContractTests
             Initially(When(Start).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event<Start> Start { get; private set; } = null!;
+        public IEvent<Start> Start { get; private set; } = null!;
     }
 
     sealed class DerivedCatchMachine : ViciOneServiceBusStateMachine<GraphState>
@@ -321,9 +321,9 @@ public sealed class StateMachineGraphContractTests
             Initially(When(Start).Execute(new DerivedCatchActivity()).TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 
     sealed class DerivedCatchActivity : CatchFaultActivity<GraphState, DerivedGraphException>
@@ -338,10 +338,10 @@ public sealed class StateMachineGraphContractTests
     {
     }
 
-    sealed class ForeignStateMachine : StateMachine<GraphState>
+    sealed class ForeignStateMachine : IStateMachine<GraphState>
     {
         readonly GraphMachine _inner = new();
-        readonly State _visitedState;
+        readonly IState _visitedState;
 
         public ForeignStateMachine()
         {
@@ -350,68 +350,68 @@ public sealed class StateMachineGraphContractTests
 
         public IStateAccessor<GraphState> Accessor => _inner.Accessor;
 
-        public string Name => ((StateMachine)_inner).Name;
+        public string Name => ((IStateMachine)_inner).Name;
 
-        public IEnumerable<Event> Events => _inner.Events;
+        public IEnumerable<IEvent> Events => _inner.Events;
 
-        public IEnumerable<State> States => [_visitedState];
+        public IEnumerable<IState> States => [_visitedState];
 
         public Type InstanceType => typeof(GraphState);
 
-        public State Initial => _visitedState;
+        public IState Initial => _visitedState;
 
-        public State Final => _visitedState;
+        public IState Final => _visitedState;
 
-        public Event GetEvent(string name) => ((StateMachine)_inner).GetEvent(name);
+        public IEvent GetEvent(string name) => ((IStateMachine)_inner).GetEvent(name);
 
-        State StateMachine.GetState(string name) => GetState(name);
+        IState IStateMachine.GetState(string name) => GetState(name);
 
-        public State<GraphState> GetState(string name) => _inner.GetState(name);
+        public IState<GraphState> GetState(string name) => _inner.GetState(name);
 
-        public IEnumerable<Event> NextEvents(State state) => _inner.NextEvents(_inner.GetState(state.Name));
+        public IEnumerable<IEvent> NextEvents(IState state) => _inner.NextEvents(_inner.GetState(state.Name));
 
-        public bool IsCompositeEvent(Event @event) => _inner.IsCompositeEvent(@event);
+        public bool IsCompositeEvent(IEvent @event) => _inner.IsCompositeEvent(@event);
 
-        public Task RaiseEventAsync(BehaviorContext<GraphState> context, CancellationToken cancellationToken = default) =>
-            ((StateMachine<GraphState>)_inner).RaiseEventAsync(context, cancellationToken);
+        public Task RaiseEventAsync(IBehaviorContext<GraphState> context, CancellationToken cancellationToken = default) =>
+            ((IStateMachine<GraphState>)_inner).RaiseEventAsync(context, cancellationToken);
 
-        public Task RaiseEventAsync<T>(BehaviorContext<GraphState, T> context, CancellationToken cancellationToken = default)
-            where T : class => ((StateMachine<GraphState>)_inner).RaiseEventAsync(context, cancellationToken);
+        public Task RaiseEventAsync<T>(IBehaviorContext<GraphState, T> context, CancellationToken cancellationToken = default)
+            where T : class => ((IStateMachine<GraphState>)_inner).RaiseEventAsync(context, cancellationToken);
 
         public IDisposable ConnectEventObserver(IEventObserver<GraphState> observer) => _inner.ConnectEventObserver(observer);
 
-        public IDisposable ConnectEventObserver(Event @event, IEventObserver<GraphState> observer) =>
+        public IDisposable ConnectEventObserver(IEvent @event, IEventObserver<GraphState> observer) =>
             _inner.ConnectEventObserver(@event, observer);
 
         public IDisposable ConnectStateObserver(IStateObserver<GraphState> observer) => _inner.ConnectStateObserver(observer);
 
-        public void Accept(StateMachineVisitor visitor) => _visitedState.Accept(visitor);
+        public void Accept(IStateMachineVisitor visitor) => _visitedState.Accept(visitor);
 
         public void Probe(ProbeContext context) => _inner.Probe(context);
     }
 
-    sealed class ForeignState : State
+    sealed class ForeignState : IState
     {
-        readonly State _inner;
+        readonly IState _inner;
 
-        public ForeignState(State inner)
+        public ForeignState(IState inner)
         {
             _inner = inner;
         }
 
         public string Name => _inner.Name;
 
-        public Event Enter => _inner.Enter;
+        public IEvent Enter => _inner.Enter;
 
-        public Event Leave => _inner.Leave;
+        public IEvent Leave => _inner.Leave;
 
-        public Event<State> BeforeEnter => _inner.BeforeEnter;
+        public IEvent<IState> BeforeEnter => _inner.BeforeEnter;
 
-        public Event<State> AfterLeave => _inner.AfterLeave;
+        public IEvent<IState> AfterLeave => _inner.AfterLeave;
 
-        public int CompareTo(State? other) => _inner.CompareTo(other);
+        public int CompareTo(IState? other) => _inner.CompareTo(other);
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this, _ => { });
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this, _ => { });
 
         public void Probe(ProbeContext context) => _inner.Probe(context);
     }

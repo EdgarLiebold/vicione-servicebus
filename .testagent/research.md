@@ -1059,3 +1059,48 @@ findings expose a real Greenfield API decision inherited from the former DSL (`S
 naming iteration rather than bulk-renamed without consumer, comment, and package evidence. The
 strict build and final complete Unit/Architecture results are recorded in the iteration completion
 evidence.
+
+## Iteration 98 Saga interface and documentation research
+
+The remotely secured Iteration 97 state passes its complete gates, but the explicit info-level
+style audit exposes 47 unprefixed interface declarations across the Saga owner. The red-first
+`SagaInterfaces_UseTheDotNetInterfacePrefix` architecture test independently parses every Saga
+source file and reports the same 47 identities, including three nested internal interfaces. It is
+requirement-mapped and fails before remediation with the exact path, line, and type name.
+
+Microsoft's current C# identifier guidance states that interface names start with a capital `I`,
+and the Framework Design Guidelines use the stronger `DO` language. CA1715 identifies an
+unprefixed externally visible interface as the precise cause and classifies renaming as a breaking
+fix. This repository is a Greenfield fork with no old API compatibility obligation, so retaining
+the names solely because the former state-machine and messaging DSL used them would contradict the
+goal. Message contracts, fluent descriptors, contexts, settings, visitors, binders, repository
+contexts, and nested strategy interfaces are all interfaces to a C# consumer and use the same rule.
+
+A repository-wide syntax inventory finds 369 unprefixed interface declarations, confirming that
+the Saga result is part of a broader inherited API pattern rather than an isolated formatter quirk.
+Iteration 98 is deliberately bounded to all 47 Saga declarations and their complete cross-project
+consumer closure. Subsequent owner iterations and the final source-wide audit must apply or
+explicitly redesign the remaining contracts; a Saga-only fix is not represented as repository-wide
+completion.
+
+The Saga interfaces are spread across 33 identities and approximately 6,000 source/test/sample
+references. The high-volume identities (`Event`, `State`, `SagaStateMachineInstance`,
+`BehaviorContext`, and `CorrelatedBy`) cannot be safely changed by textual replacement because they
+collide with ordinary vocabulary and framework concepts. A symbol-aware rename is acceptable only
+as a reference-preserving refactoring after manual type review. It is not permitted to generate or
+rewrite documentation: comments are reread and authored manually, and the complete diff is reviewed
+before compilation.
+
+The completed rename closes all 47 Saga violations without an unrelated public-contract delta.
+The permanent architecture test passes and kills a deliberate `ICorrelatedBy` prefix mutation. All
+final builds, 6,234 Unit/Architecture tests, 293 direct architecture cases, package journeys,
+formatting, and hygiene checks pass. The packed API has 19,029 lines and SHA-256
+`1a4fdef247c3b4ece1e5b8fed35dbe533f8409541a4aedf3be2dce9be8891be6`.
+
+The user's source-tree question exposes a documentation concern but not a structural defect.
+`src/ViciOne.ServiceBus` is the Core SDK project and recursively compiles its own subtree. Moving
+independently packaged Sagas, Courier, Mediator, Futures, JobService, or Testing below it would
+misstate ownership and risk compile-item overlap. Persistence, scheduling, and transport projects
+are different: they are cohesive external provider/integration families and therefore benefit from
+family directories. This is consistent with the project graph, package surface, architecture
+requirements, and `PO-2026-09-08-01`'s cohesion-and-owner rule.

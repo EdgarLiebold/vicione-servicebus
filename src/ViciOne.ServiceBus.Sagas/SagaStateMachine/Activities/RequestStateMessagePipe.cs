@@ -8,13 +8,13 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 internal sealed class RequestStateMessagePipe :
     IPipe<SendContext>
 {
-    readonly BehaviorContext<RequestState> _context;
+    readonly IBehaviorContext<RequestState> _context;
     readonly ForwardedRequestOutcome _outcome;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="outcome">The request outcome being forwarded.</param>
-    public RequestStateMessagePipe(BehaviorContext<RequestState> context, ForwardedRequestOutcome outcome)
+    public RequestStateMessagePipe(IBehaviorContext<RequestState> context, ForwardedRequestOutcome outcome)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _outcome = outcome ?? throw new ArgumentNullException(nameof(outcome));

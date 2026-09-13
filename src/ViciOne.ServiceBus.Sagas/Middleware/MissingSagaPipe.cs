@@ -14,12 +14,12 @@ public class MissingSagaPipe<TSaga, TMessage> :
     where TMessage : class
 {
     readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _next;
-    readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
+    readonly ISagaRepositoryContext<TSaga, TMessage> _repositoryContext;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="repositoryContext">The repository context.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
-    public MissingSagaPipe(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    public MissingSagaPipe(ISagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         _repositoryContext = repositoryContext;
         _next = next;

@@ -341,11 +341,11 @@ public sealed class ResponseMatchingTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record MatchingRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record MatchingRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record AcceptedResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record AcceptedResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record UnsupportedResponse(Guid CorrelationId, string Reason) : CorrelatedBy<Guid>;
+    private sealed record UnsupportedResponse(Guid CorrelationId, string Reason) : ICorrelatedBy<Guid>;
 
-    private sealed record ThirdResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ThirdResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 }

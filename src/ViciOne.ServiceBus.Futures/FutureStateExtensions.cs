@@ -12,7 +12,7 @@ public static class FutureStateExtensions
     /// <typeparam name="T">The requested command contract.</typeparam>
     /// <param name="context">The future state context that provides the stored command and serializer.</param>
     /// <returns>The stored command, or <see langword="null" /> when it does not implement the requested contract.</returns>
-    public static T? GetCommand<T>(this BehaviorContext<FutureState> context)
+    public static T? GetCommand<T>(this IBehaviorContext<FutureState> context)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -26,7 +26,7 @@ public static class FutureStateExtensions
     /// <param name="context">The future state context that provides the serializer.</param>
     /// <param name="message">The stored future message.</param>
     /// <returns>The deserialized message, or <see langword="null" /> when the contract is not supported.</returns>
-    public static T? ToObject<T>(this BehaviorContext<FutureState> context, FutureMessage message)
+    public static T? ToObject<T>(this IBehaviorContext<FutureState> context, FutureMessage message)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -41,7 +41,7 @@ public static class FutureStateExtensions
     /// <param name="context">The future state context that provides the serializer.</param>
     /// <param name="message">The message to serialize.</param>
     /// <returns>The serialized message and its supported contract URNs.</returns>
-    public static FutureMessage CreateFutureMessage<T>(this BehaviorContext<FutureState> context, T message)
+    public static FutureMessage CreateFutureMessage<T>(this IBehaviorContext<FutureState> context, T message)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -55,7 +55,7 @@ public static class FutureStateExtensions
     /// <typeparam name="T">The requested result contract.</typeparam>
     /// <param name="context">The future state context that contains the stored results.</param>
     /// <returns>The matching successful results.</returns>
-    public static IEnumerable<T> SelectResults<T>(this BehaviorContext<FutureState> context)
+    public static IEnumerable<T> SelectResults<T>(this IBehaviorContext<FutureState> context)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -66,7 +66,7 @@ public static class FutureStateExtensions
 
     /// <summary>Adds the response endpoint and optional request identifier as a future subscriber.</summary>
     /// <param name="context">The request context whose response address is subscribed.</param>
-    public static void AddSubscription(this BehaviorContext<FutureState> context)
+    public static void AddSubscription(this IBehaviorContext<FutureState> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         if (context.ResponseAddress == null)
@@ -83,7 +83,7 @@ public static class FutureStateExtensions
     /// <param name="factory">The asynchronous result factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created result.</returns>
-    public static async Task<TResult> SetResultAsync<T, TResult>(this BehaviorContext<FutureState, T> context, Guid id,
+    public static async Task<TResult> SetResultAsync<T, TResult>(this IBehaviorContext<FutureState, T> context, Guid id,
         AsyncEventMessageFactory<FutureState, T, TResult> factory, CancellationToken cancellationToken = default)
         where T : class
         where TResult : class
@@ -110,7 +110,7 @@ public static class FutureStateExtensions
     /// <param name="factory">The asynchronous result factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created result.</returns>
-    public static async Task<TResult> SetResultAsync<TResult>(this BehaviorContext<FutureState> context, Guid id,
+    public static async Task<TResult> SetResultAsync<TResult>(this IBehaviorContext<FutureState> context, Guid id,
         AsyncEventMessageFactory<FutureState, TResult> factory, CancellationToken cancellationToken = default)
         where TResult : class
     {
@@ -136,7 +136,7 @@ public static class FutureStateExtensions
     /// <param name="id">The completed operation identifier.</param>
     /// <param name="factory">The synchronous result factory.</param>
     /// <returns>The created result.</returns>
-    public static TResult SetResult<T, TResult>(this BehaviorContext<FutureState, T> context, Guid id,
+    public static TResult SetResult<T, TResult>(this IBehaviorContext<FutureState, T> context, Guid id,
         EventMessageFactory<FutureState, T, TResult> factory)
         where T : class
         where TResult : class
@@ -160,7 +160,7 @@ public static class FutureStateExtensions
     /// <param name="id">The completed operation identifier.</param>
     /// <param name="factory">The synchronous result factory.</param>
     /// <returns>The created result.</returns>
-    public static TResult SetResult<TResult>(this BehaviorContext<FutureState> context, Guid id, EventMessageFactory<FutureState, TResult> factory)
+    public static TResult SetResult<TResult>(this IBehaviorContext<FutureState> context, Guid id, EventMessageFactory<FutureState, TResult> factory)
         where TResult : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -182,7 +182,7 @@ public static class FutureStateExtensions
     /// <param name="context">The future state context used to serialize the result.</param>
     /// <param name="id">The completed operation identifier.</param>
     /// <param name="result">The result to store.</param>
-    public static void SetResult<TResult>(this BehaviorContext<FutureState> context, Guid id, TResult result)
+    public static void SetResult<TResult>(this IBehaviorContext<FutureState> context, Guid id, TResult result)
         where TResult : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -198,7 +198,7 @@ public static class FutureStateExtensions
     /// <summary>Marks one operation complete and completes the future when no work or fault remains.</summary>
     /// <param name="context">The future state context to update.</param>
     /// <param name="id">The completed operation identifier.</param>
-    public static void SetCompleted(this BehaviorContext<FutureState> context, Guid id)
+    public static void SetCompleted(this IBehaviorContext<FutureState> context, Guid id)
     {
         ArgumentNullException.ThrowIfNull(context);
         var timestamp = context.SentTime ?? context.GetUtcNow();
@@ -220,7 +220,7 @@ public static class FutureStateExtensions
     /// <param name="context">The future state context to update.</param>
     /// <param name="id">The faulted operation identifier.</param>
     /// <param name="timestamp">The fault timestamp, or <see langword="null" /> to use the message or current time.</param>
-    public static void SetFaulted(this BehaviorContext<FutureState> context, Guid id, DateTimeOffset? timestamp = default)
+    public static void SetFaulted(this IBehaviorContext<FutureState> context, Guid id, DateTimeOffset? timestamp = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         timestamp ??= context.SentTime ?? context.GetUtcNow();
@@ -239,7 +239,7 @@ public static class FutureStateExtensions
     /// <param name="id">The faulted operation identifier.</param>
     /// <param name="fault">The fault to store.</param>
     /// <param name="timestamp">The fault timestamp, or <see langword="null" /> to use the message or current time.</param>
-    public static void SetFault<TFault>(this BehaviorContext<FutureState> context, Guid id, TFault fault, DateTimeOffset? timestamp = default)
+    public static void SetFault<TFault>(this IBehaviorContext<FutureState> context, Guid id, TFault fault, DateTimeOffset? timestamp = default)
         where TFault : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -258,7 +258,7 @@ public static class FutureStateExtensions
     /// <param name="id">The faulted operation identifier.</param>
     /// <param name="factory">The synchronous fault factory.</param>
     /// <returns>The created fault.</returns>
-    public static TFault SetFault<T, TFault>(this BehaviorContext<FutureState, T> context, Guid id,
+    public static TFault SetFault<T, TFault>(this IBehaviorContext<FutureState, T> context, Guid id,
         EventMessageFactory<FutureState, T, TFault> factory)
         where T : class
         where TFault : class
@@ -282,7 +282,7 @@ public static class FutureStateExtensions
     /// <param name="factory">The asynchronous fault factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created fault.</returns>
-    public static async Task<TFault> SetFaultAsync<T, TFault>(this BehaviorContext<FutureState, T> context, Guid id,
+    public static async Task<TFault> SetFaultAsync<T, TFault>(this IBehaviorContext<FutureState, T> context, Guid id,
         AsyncEventMessageFactory<FutureState, T, TFault> factory, CancellationToken cancellationToken = default)
         where T : class
         where TFault : class
@@ -306,7 +306,7 @@ public static class FutureStateExtensions
     /// <param name="id">The operation identifier.</param>
     /// <param name="result">Receives the matching result when found and deserializable.</param>
     /// <returns><see langword="true" /> when a matching result was deserialized; otherwise, <see langword="false" />.</returns>
-    public static bool TryGetResult<T>(this BehaviorContext<FutureState> context, Guid id, [NotNullWhen(true)] out T? result)
+    public static bool TryGetResult<T>(this IBehaviorContext<FutureState> context, Guid id, [NotNullWhen(true)] out T? result)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -326,7 +326,7 @@ public static class FutureStateExtensions
     /// <param name="id">The operation identifier.</param>
     /// <param name="fault">Receives the matching fault when found and deserializable.</param>
     /// <returns><see langword="true" /> when a matching fault was deserialized; otherwise, <see langword="false" />.</returns>
-    public static bool TryGetFault<T>(this BehaviorContext<FutureState> context, Guid id, [NotNullWhen(true)] out T? fault)
+    public static bool TryGetFault<T>(this IBehaviorContext<FutureState> context, Guid id, [NotNullWhen(true)] out T? fault)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);

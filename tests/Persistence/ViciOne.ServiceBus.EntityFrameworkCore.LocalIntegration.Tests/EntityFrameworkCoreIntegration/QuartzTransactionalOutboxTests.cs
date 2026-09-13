@@ -72,9 +72,9 @@ public sealed class QuartzTransactionalOutboxTests
         Assert.Equal(1, fixture.Deliveries.DeliveryCount);
     }
 
-    public sealed record ScheduleThroughOutbox(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScheduleThroughOutbox(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ScheduledOutboxPayload(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScheduledOutboxPayload(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class QuartzOutboxDbContext(DbContextOptions<QuartzOutboxDbContext> options) : DbContext(options)
     {

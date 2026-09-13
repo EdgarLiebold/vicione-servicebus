@@ -110,8 +110,8 @@ public sealed class StateMachineRecoveryTests
             return new RecoveryScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Create);
         }
 
-        State running = null!;
-        Event<CalculationData> create = null!;
+        IState running = null!;
+        IEvent<CalculationData> create = null!;
         ViciOneServiceBusStateMachine<RecoveryInstance> machine = ViciOneServiceBusStateMachine<RecoveryInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Create", out create)
@@ -135,8 +135,8 @@ public sealed class StateMachineRecoveryTests
             return new RecoveryScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Create);
         }
 
-        State running = null!;
-        Event<CalculationData> create = null!;
+        IState running = null!;
+        IEvent<CalculationData> create = null!;
         ViciOneServiceBusStateMachine<RecoveryInstance> machine = ViciOneServiceBusStateMachine<RecoveryInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Create", out create)
@@ -181,8 +181,8 @@ public sealed class StateMachineRecoveryTests
                 .TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
-        public Event<CalculationData> Create { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
+        public IEvent<CalculationData> Create { get; private set; } = null!;
     }
 
     private sealed class DeclarativeCompensationMachine : ViciOneServiceBusStateMachine<RecoveryInstance>
@@ -197,8 +197,8 @@ public sealed class StateMachineRecoveryTests
                 .TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
-        public Event<CalculationData> Create { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
+        public IEvent<CalculationData> Create { get; private set; } = null!;
     }
 
     private sealed class DeclarativeRetryMachine : ViciOneServiceBusStateMachine<RetryInstance>
@@ -209,7 +209,7 @@ public sealed class StateMachineRecoveryTests
 
             if (dataEvent)
             {
-                EventActivityBinder<RetryInstance, RetryData> binder = When(Data)
+                IEventActivityBinder<RetryInstance, RetryData> binder = When(Data)
                     .Retry(
                         configurator => configurator.Intervals(TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero),
                         retry => retry
@@ -223,7 +223,7 @@ public sealed class StateMachineRecoveryTests
             }
             else
             {
-                EventActivityBinder<RetryInstance> binder = When(Trigger)
+                IEventActivityBinder<RetryInstance> binder = When(Trigger)
                     .Retry(
                         configurator => configurator.Intervals(TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero),
                         retry => retry
@@ -237,8 +237,8 @@ public sealed class StateMachineRecoveryTests
             }
         }
 
-        public Event Trigger { get; private set; } = null!;
-        public Event<RetryData> Data { get; private set; } = null!;
+        public IEvent Trigger { get; private set; } = null!;
+        public IEvent<RetryData> Data { get; private set; } = null!;
     }
 
     private static void Attempt(RetryInstance instance)
@@ -265,7 +265,7 @@ public sealed class StateMachineRecoveryTests
         bool compensate) : IStateMachineActivity<RecoveryInstance, CalculationData>
     {
         public async Task ExecuteAsync(
-            BehaviorContext<RecoveryInstance, CalculationData> context,
+            IBehaviorContext<RecoveryInstance, CalculationData> context,
             IBehavior<RecoveryInstance, CalculationData> next)
         {
             string? original = context.Saga.Value;
@@ -288,11 +288,11 @@ public sealed class StateMachineRecoveryTests
         }
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<RecoveryInstance, CalculationData, TException> context,
+            IBehaviorExceptionContext<RecoveryInstance, CalculationData, TException> context,
             IBehavior<RecoveryInstance, CalculationData> next)
             where TException : Exception => next.FaultedAsync(context);
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
 
         public void Probe(ProbeContext context) => context.CreateScope("calculateValue");
     }
@@ -307,10 +307,10 @@ public sealed class StateMachineRecoveryTests
         public string Add(int x, int y) => (x + y).ToString();
     }
 
-    private sealed class RecoveryInstance : SagaStateMachineInstance
+    private sealed class RecoveryInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
         public string? Value { get; set; }
         public int FactoryCount { get; set; }
         public int ActivityCount { get; set; }
@@ -320,10 +320,10 @@ public sealed class StateMachineRecoveryTests
         public List<string> Markers { get; } = [];
     }
 
-    private sealed class RetryInstance : SagaStateMachineInstance
+    private sealed class RetryInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
         public ExpectedRetryFailureException Failure { get; } = new("retry failed");
         public ExpectedRetryFailureException? CaughtFailure { get; set; }
         public int AttemptCount { get; set; }
@@ -338,8 +338,8 @@ public sealed class StateMachineRecoveryTests
 
     private sealed record RecoveryScenario(
         ViciOneServiceBusStateMachine<RecoveryInstance> Machine,
-        State Running,
-        Event<CalculationData> Create);
+        IState Running,
+        IEvent<CalculationData> Create);
 
     private sealed class ExpectedActivityFailureException(string message) : Exception(message);
 

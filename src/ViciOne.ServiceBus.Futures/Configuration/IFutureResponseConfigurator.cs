@@ -19,5 +19,5 @@ public interface IFutureResponseConfigurator<TResult, TResponse> :
 
     /// <summary>Adds state-machine activities executed when the response is received.</summary>
     /// <param name="configure">The callback that adds activities to the response event.</param>
-    void WhenReceived(Func<EventActivityBinder<FutureState, TResponse>, EventActivityBinder<FutureState, TResponse>> configure);
+    void WhenReceived(Func<IEventActivityBinder<FutureState, TResponse>, IEventActivityBinder<FutureState, TResponse>> configure);
 }

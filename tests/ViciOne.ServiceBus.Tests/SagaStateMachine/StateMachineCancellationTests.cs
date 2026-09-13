@@ -56,7 +56,7 @@ public sealed class StateMachineCancellationTests
     public void Configuration_RejectsEveryNullRequiredArgument()
     {
         var machine = new CancellationMachine();
-        State<CancellationState> initial = Assert.IsAssignableFrom<State<CancellationState>>(machine.Initial);
+        IState<CancellationState> initial = Assert.IsAssignableFrom<IState<CancellationState>>(machine.Initial);
 
         Assert.Equal("completed", Assert.Throws<ArgumentNullException>(() => machine.SetCompletionPredicate(null!)).ParamName);
         Assert.Equal("machine", Assert.Throws<ArgumentNullException>(() =>
@@ -88,7 +88,7 @@ public sealed class StateMachineCancellationTests
     private static async Task RaiseWithCancellationAsync(
         ViciOneServiceBusStateMachine<CancellationState> machine,
         CancellationState instance,
-        Event @event,
+        IEvent @event,
         CancellationToken cancellationToken)
     {
         ConsumeContext<StateMachineSignal> consumeContext = InMemoryOutboxTestContextFactory.Create(
@@ -97,19 +97,19 @@ public sealed class StateMachineCancellationTests
         var sagaInstance = new SagaInstance<CancellationState>(instance);
         await sagaInstance.MarkInUseAsync(TestContext.Current.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<CancellationState, StateMachineSignal>(consumeContext, sagaInstance);
-        BehaviorContext<CancellationState> behaviorContext =
+        IBehaviorContext<CancellationState> behaviorContext =
             new ViciOneServiceBusStateMachine<CancellationState>.BehaviorContextProxy(machine, sagaContext, @event);
 
-        await ((StateMachine<CancellationState>)machine).RaiseEventAsync(behaviorContext, cancellationToken);
+        await ((IStateMachine<CancellationState>)machine).RaiseEventAsync(behaviorContext, cancellationToken);
     }
 
-    public sealed record StartMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StartMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed class CancellationState : SagaStateMachineInstance
+    private sealed class CancellationState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
         public int BehaviorInvocationCount { get; set; }
     }
@@ -120,18 +120,18 @@ public sealed class StateMachineCancellationTests
         {
             InstanceState(instance => instance.CurrentState!);
             Initially(When(Start).Then(context => context.Saga.BehaviorInvocationCount++));
-            SetCompleted((BehaviorContext<CancellationState> _) =>
+            SetCompleted((IBehaviorContext<CancellationState> _) =>
             {
                 CompletionCheckCount++;
                 return Task.FromResult(false);
             });
         }
 
-        public Event<StartMessage> Start { get; private set; } = null!;
+        public IEvent<StartMessage> Start { get; private set; } = null!;
 
         public int CompletionCheckCount { get; private set; }
 
-        public void SetCompletionPredicate(Func<BehaviorContext<CancellationState>, Task<bool>> completed) =>
+        public void SetCompletionPredicate(Func<IBehaviorContext<CancellationState>, Task<bool>> completed) =>
             SetCompleted(completed);
     }
 
@@ -148,8 +148,8 @@ public sealed class StateMachineCancellationTests
                     .Then(context => context.Saga.BehaviorInvocationCount++));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Start { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
     }
 }

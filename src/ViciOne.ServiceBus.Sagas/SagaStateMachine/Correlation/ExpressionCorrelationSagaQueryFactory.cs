@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TData">The data type.</typeparam>
 public class ExpressionCorrelationSagaQueryFactory<TInstance, TData> :
     ISagaQueryFactory<TInstance, TData>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TData : class
 {
     readonly Expression<Func<TInstance, ConsumeContext<TData>, bool>> _correlationExpression;

@@ -7,20 +7,20 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class FaultedUnscheduleActivity<TSaga> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
-    readonly Schedule<TSaga> _schedule;
+    readonly ISchedule<TSaga> _schedule;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="schedule">The schedule.</param>
-    public FaultedUnscheduleActivity(Schedule<TSaga> schedule)
+    public FaultedUnscheduleActivity(ISchedule<TSaga> schedule)
     {
         _schedule = schedule;
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="inspector">The inspector.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -36,7 +36,7 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         return next.ExecuteAsync(context);
     }
@@ -46,7 +46,7 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         return next.ExecuteAsync(context);
@@ -57,7 +57,7 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         await FaultedAsync(context).ConfigureAwait(false);
@@ -71,7 +71,7 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {

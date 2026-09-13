@@ -44,7 +44,7 @@ public class DependencyInjectionSagaRepositoryContextFactory<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         return SendAsync(context, (consumeContext, factory) => factory.SendAsync(consumeContext, next));
@@ -56,7 +56,7 @@ public class DependencyInjectionSagaRepositoryContextFactory<TSaga> :
     /// <param name="query">The query.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         return SendAsync(context, (consumeContext, factory) => factory.SendQueryAsync(consumeContext, query, next));

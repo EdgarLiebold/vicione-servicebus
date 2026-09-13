@@ -298,7 +298,7 @@ public static class SagaPipelineConfigurationExtensions
     /// <param name="services">The dependency-injection service collection.</param>
     /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddEventObserver<TInstance, TObserver>(this IServiceCollection services)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TObserver : class, IEventObserver<TInstance>
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -315,7 +315,7 @@ public static class SagaPipelineConfigurationExtensions
     /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddEventObserver<TInstance, TObserver>(this IServiceCollection services,
         Func<IServiceProvider, TObserver> factory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TObserver : class, IEventObserver<TInstance>
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -331,7 +331,7 @@ public static class SagaPipelineConfigurationExtensions
     /// <param name="services">The dependency-injection service collection.</param>
     /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddStateObserver<TInstance, TObserver>(this IServiceCollection services)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TObserver : class, IStateObserver<TInstance>
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -348,7 +348,7 @@ public static class SagaPipelineConfigurationExtensions
     /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddStateObserver<TInstance, TObserver>(this IServiceCollection services,
         Func<IServiceProvider, TObserver> factory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TObserver : class, IStateObserver<TInstance>
     {
         ArgumentNullException.ThrowIfNull(services);

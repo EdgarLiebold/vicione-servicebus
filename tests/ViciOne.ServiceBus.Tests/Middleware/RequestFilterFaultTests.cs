@@ -65,9 +65,9 @@ public sealed class RequestFilterFaultTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record ValidatedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ValidatedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ValidatedResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ValidatedResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record FilterObservation(Type MessageType, Guid CorrelationId);
 

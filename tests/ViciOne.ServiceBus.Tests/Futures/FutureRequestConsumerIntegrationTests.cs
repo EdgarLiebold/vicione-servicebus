@@ -49,7 +49,7 @@ public sealed class FutureRequestConsumerIntegrationTests
     }
 
 
-    public interface CalculatePrice : CorrelatedBy<Guid>
+    public interface CalculatePrice : ICorrelatedBy<Guid>
     {
         string Sku { get; }
     }

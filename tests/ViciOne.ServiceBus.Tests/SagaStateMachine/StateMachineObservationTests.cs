@@ -131,9 +131,9 @@ public sealed class StateMachineObservationTests
             return new ObservationScenario(machine, machine.Running, null, machine.Initialized, null, null, machine.Finish);
         }
 
-        State running = null!;
-        Event initialized = null!;
-        Event finish = null!;
+        IState running = null!;
+        IEvent initialized = null!;
+        IEvent finish = null!;
         ViciOneServiceBusStateMachine<ObservationInstance> dynamicMachine = ViciOneServiceBusStateMachine<ObservationInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Initialized", out initialized)
@@ -161,12 +161,12 @@ public sealed class StateMachineObservationTests
                 machine.Finish);
         }
 
-        State<ObservationInstance> running = null!;
-        State<ObservationInstance> resting = null!;
-        Event initialized = null!;
-        Event legCramped = null!;
-        Event recovered = null!;
-        Event finish = null!;
+        IState<ObservationInstance> running = null!;
+        IState<ObservationInstance> resting = null!;
+        IEvent initialized = null!;
+        IEvent legCramped = null!;
+        IEvent recovered = null!;
+        IEvent finish = null!;
         ViciOneServiceBusStateMachine<ObservationInstance> dynamicMachine = ViciOneServiceBusStateMachine<ObservationInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Initialized", out initialized)
@@ -187,14 +187,14 @@ public sealed class StateMachineObservationTests
         return new ObservationScenario(dynamicMachine, running, resting, initialized, legCramped, recovered, finish);
     }
 
-    private static async Task RaiseAsync(StateMachine<ObservationInstance> machine, ObservationInstance instance, Event @event)
+    private static async Task RaiseAsync(IStateMachine<ObservationInstance> machine, ObservationInstance instance, IEvent @event)
     {
         var message = new ObservationSignal();
         ConsumeContext<ObservationSignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ObservationInstance>(instance);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ObservationInstance, ObservationSignal>(consumeContext, sagaInstance);
-        BehaviorContext<ObservationInstance> behaviorContext =
+        IBehaviorContext<ObservationInstance> behaviorContext =
             new ViciOneServiceBusStateMachine<ObservationInstance>.BehaviorContextProxy(machine, sagaContext, @event);
 
         await machine.RaiseEventAsync(behaviorContext);
@@ -214,20 +214,20 @@ public sealed class StateMachineObservationTests
 
     private sealed record ObservationScenario(
         ViciOneServiceBusStateMachine<ObservationInstance> Machine,
-        State Running,
-        State? Resting,
-        Event Initialized,
-        Event? LegCramped,
-        Event? Recovered,
-        Event Finish);
+        IState Running,
+        IState? Resting,
+        IEvent Initialized,
+        IEvent? LegCramped,
+        IEvent? Recovered,
+        IEvent Finish);
 
     public sealed record ObservationSignal;
 
-    private sealed class ObservationInstance : SagaStateMachineInstance
+    private sealed class ObservationInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
     }
 
     private sealed class DeclarativeSimpleMachine : ViciOneServiceBusStateMachine<ObservationInstance>
@@ -238,11 +238,11 @@ public sealed class StateMachineObservationTests
             During(Running, When(Finish).Finalize());
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
 
-        public Event Finish { get; private set; } = null!;
+        public IEvent Finish { get; private set; } = null!;
     }
 
     private sealed class DeclarativeSubstateMachine : ViciOneServiceBusStateMachine<ObservationInstance>
@@ -257,24 +257,24 @@ public sealed class StateMachineObservationTests
             AfterLeave(Running, behavior => behavior.Then(_ => { }));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public State Resting { get; private set; } = null!;
+        public IState Resting { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
 
-        public Event LegCramped { get; private set; } = null!;
+        public IEvent LegCramped { get; private set; } = null!;
 
-        public Event Recovered { get; private set; } = null!;
+        public IEvent Recovered { get; private set; } = null!;
 
-        public Event Finish { get; private set; } = null!;
+        public IEvent Finish { get; private set; } = null!;
     }
 
     private sealed class StateRecorder : IStateObserver<ObservationInstance>
     {
         public List<StateChange> Changes { get; } = [];
 
-        public Task StateChangedAsync(BehaviorContext<ObservationInstance> context, State currentState, State? previousState)
+        public Task StateChangedAsync(IBehaviorContext<ObservationInstance> context, IState currentState, IState? previousState)
         {
             Changes.Add(new StateChange(context.Saga, previousState, currentState));
             return Task.CompletedTask;
@@ -285,41 +285,41 @@ public sealed class StateMachineObservationTests
     {
         public List<EventObservation> Events { get; } = [];
 
-        public Task PreExecuteAsync(BehaviorContext<ObservationInstance> context)
+        public Task PreExecuteAsync(IBehaviorContext<ObservationInstance> context)
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Pre));
             return Task.CompletedTask;
         }
 
-        public Task PreExecuteAsync<T>(BehaviorContext<ObservationInstance, T> context)
+        public Task PreExecuteAsync<T>(IBehaviorContext<ObservationInstance, T> context)
             where T : class
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Pre));
             return Task.CompletedTask;
         }
 
-        public Task PostExecuteAsync(BehaviorContext<ObservationInstance> context)
+        public Task PostExecuteAsync(IBehaviorContext<ObservationInstance> context)
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Post));
             return Task.CompletedTask;
         }
 
-        public Task PostExecuteAsync<T>(BehaviorContext<ObservationInstance, T> context)
+        public Task PostExecuteAsync<T>(IBehaviorContext<ObservationInstance, T> context)
             where T : class
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Post));
             return Task.CompletedTask;
         }
 
-        public Task ExecuteFaultAsync(BehaviorContext<ObservationInstance> context, Exception exception) =>
+        public Task ExecuteFaultAsync(IBehaviorContext<ObservationInstance> context, Exception exception) =>
             Task.FromException(new InvalidOperationException("The observation scenario did not expect an event fault.", exception));
 
-        public Task ExecuteFaultAsync<T>(BehaviorContext<ObservationInstance, T> context, Exception exception)
+        public Task ExecuteFaultAsync<T>(IBehaviorContext<ObservationInstance, T> context, Exception exception)
             where T : class =>
             Task.FromException(new InvalidOperationException("The observation scenario did not expect an event fault.", exception));
     }
 
-    private sealed record StateChange(ObservationInstance Instance, State? Previous, State Current);
+    private sealed record StateChange(ObservationInstance Instance, IState? Previous, IState Current);
 
-    private sealed record EventObservation(ObservationInstance Instance, Event Event, ObservationPhase Phase);
+    private sealed record EventObservation(ObservationInstance Instance, IEvent Event, ObservationPhase Phase);
 }

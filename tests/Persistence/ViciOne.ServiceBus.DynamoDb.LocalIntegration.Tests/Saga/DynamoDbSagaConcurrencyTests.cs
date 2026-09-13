@@ -202,15 +202,15 @@ public sealed class DynamoDbSagaConcurrencyTests
         public string Value { get; set; } = string.Empty;
     }
 
-    public sealed record BeginChoir(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BeginChoir(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record AddChoirVoice(Guid CorrelationId, string Voice) : CorrelatedBy<Guid>;
+    public sealed record AddChoirVoice(Guid CorrelationId, string Voice) : ICorrelatedBy<Guid>;
 
     public sealed record ChoirStarted(Guid CorrelationId);
 
     public sealed record ChoirVoiceRecorded(Guid CorrelationId, string Voice);
 
-    public sealed class ChoirSaga : SagaStateMachineInstance, ISagaVersion
+    public sealed class ChoirSaga : ISagaStateMachineInstance, ISagaVersion
     {
         public Guid CorrelationId { get; set; }
 
@@ -247,11 +247,11 @@ public sealed class DynamoDbSagaConcurrencyTests
                     .Publish(context => new ChoirVoiceRecorded(context.Saga.CorrelationId, context.Message.Voice)));
         }
 
-        public State Active { get; private set; } = null!;
+        public IState Active { get; private set; } = null!;
 
-        public Event<BeginChoir> Begin { get; private set; } = null!;
+        public IEvent<BeginChoir> Begin { get; private set; } = null!;
 
-        public Event<AddChoirVoice> AddVoice { get; private set; } = null!;
+        public IEvent<AddChoirVoice> AddVoice { get; private set; } = null!;
     }
 
     private sealed class ChoirSagaDefinition : SagaDefinition<ChoirSaga>

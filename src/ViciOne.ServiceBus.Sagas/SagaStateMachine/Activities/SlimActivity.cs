@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SlimActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly IStateMachineActivity<TSaga> _activity;
@@ -22,7 +22,7 @@ public class SlimActivity<TSaga, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         _activity.Accept(visitor);
     }
@@ -38,7 +38,7 @@ public class SlimActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         return _activity.ExecuteAsync(context, next);
     }
@@ -48,7 +48,7 @@ public class SlimActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         return _activity.FaultedAsync(context, next);

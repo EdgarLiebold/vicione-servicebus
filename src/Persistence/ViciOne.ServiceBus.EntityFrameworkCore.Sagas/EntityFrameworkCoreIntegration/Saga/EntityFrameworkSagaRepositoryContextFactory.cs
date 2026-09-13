@@ -38,7 +38,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     /// <param name="asyncMethod">The operation to execute against a load context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The value returned by <paramref name="asyncMethod" />, which may be <see langword="null"/>.</returns>
-    public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T?> ExecuteAsync<T>(Func<ILoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(asyncMethod);
@@ -52,7 +52,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     /// <param name="asyncMethod">The operation to execute against a query context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The value returned by <paramref name="asyncMethod" />.</returns>
-    public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteAsync<T>(Func<IQuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(asyncMethod);
@@ -84,7 +84,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     /// <param name="context">The active consumption context.</param>
     /// <param name="next">The saga repository pipeline to execute.</param>
     /// <returns>A task that completes after the consume pipeline and its transaction have finished.</returns>
-    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -126,7 +126,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     /// <param name="query">The saga filter to execute.</param>
     /// <param name="next">The loaded-saga query pipeline to execute.</param>
     /// <returns>A task that completes after every selected saga has passed through the query pipeline.</returns>
-    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -137,7 +137,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         var dbContext = _dbContextFactory.CreateScopedDbContext(context);
         try
         {
-            async Task SendQueryCallbackAsync(SagaLockContext<TSaga> lockContext, SagaRepositoryContext<TSaga, T> repositoryContext)
+            async Task SendQueryCallbackAsync(SagaLockContext<TSaga> lockContext, ISagaRepositoryContext<TSaga, T> repositoryContext)
             {
                 IList<TSaga> instances = await lockContext.LoadAsync().ConfigureAwait(false);
 

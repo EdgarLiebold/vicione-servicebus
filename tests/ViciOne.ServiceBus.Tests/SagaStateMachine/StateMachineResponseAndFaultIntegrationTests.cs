@@ -266,15 +266,15 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record ResponseStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ResponseStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ResponseStarted(Guid CorrelationId, string Mode);
 
-    public sealed record ResponseStatusRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ResponseStatusRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ResponseStatus(Guid CorrelationId, string Status, string Mode);
 
-    public sealed class ResponseState : SagaStateMachineInstance
+    public sealed class ResponseState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -305,18 +305,18 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
                         "async"))));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<ResponseStart> Started { get; } = null!;
+        public IEvent<ResponseStart> Started { get; } = null!;
 
-        public Event<ResponseStatusRequest> StatusRequested { get; } = null!;
+        public IEvent<ResponseStatusRequest> StatusRequested { get; } = null!;
     }
 
-    public sealed record OutboxStart(Guid CorrelationId, bool Fail) : CorrelatedBy<Guid>;
+    public sealed record OutboxStart(Guid CorrelationId, bool Fail) : ICorrelatedBy<Guid>;
 
     public sealed record OutboxStarted(Guid CorrelationId, string Result);
 
-    public sealed class OutboxState : SagaStateMachineInstance
+    public sealed class OutboxState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -341,9 +341,9 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
                     .TransitionTo(Running));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<OutboxStart> Started { get; } = null!;
+        public IEvent<OutboxStart> Started { get; } = null!;
     }
 
     public sealed class AttemptRecorder
@@ -371,7 +371,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
 
     public sealed record InstanceMissing(string ServiceName, string Result);
 
-    public sealed class MissingResponseState : SagaStateMachineInstance
+    public sealed class MissingResponseState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -394,20 +394,20 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
                 When(Status).Respond(context => new ExistingStatus(context.Saga.ServiceName, "running")));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<MissingStatusRequest> Status { get; } = null!;
+        public IEvent<MissingStatusRequest> Status { get; } = null!;
     }
 
-    public sealed record RetainedCatchStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RetainedCatchStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RemovedCatchStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RemovedCatchStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record CatchResponse(Guid CorrelationId, string Mode);
 
     public sealed record CatchPublished(Guid CorrelationId, string Mode);
 
-    public sealed class CatchState : SagaStateMachineInstance
+    public sealed class CatchState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -441,24 +441,24 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public State Failed { get; } = null!;
+        public IState Failed { get; } = null!;
 
-        public Event<RetainedCatchStart> Retained { get; } = null!;
+        public IEvent<RetainedCatchStart> Retained { get; } = null!;
 
-        public Event<RemovedCatchStart> Removed { get; } = null!;
+        public IEvent<RemovedCatchStart> Removed { get; } = null!;
     }
 
     public sealed class ExpectedCatchFailure : Exception;
 
-    public sealed record FaultBegin(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record FaultBegin(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ThrowingSignal(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ThrowingSignal(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record MissingFaultSignal(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record MissingFaultSignal(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class SelfFaultState : SagaStateMachineInstance
+    public sealed class SelfFaultState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -482,17 +482,17 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
                     .TransitionTo(Failed));
         }
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public State Failed { get; } = null!;
+        public IState Failed { get; } = null!;
 
-        public Event<FaultBegin> Begin { get; } = null!;
+        public IEvent<FaultBegin> Begin { get; } = null!;
 
-        public Event<ThrowingSignal> Throwing { get; } = null!;
+        public IEvent<ThrowingSignal> Throwing { get; } = null!;
 
-        public Event<Fault<ThrowingSignal>> ThrowingFaulted { get; } = null!;
+        public IEvent<Fault<ThrowingSignal>> ThrowingFaulted { get; } = null!;
 
-        public Event<MissingFaultSignal> Missing { get; } = null!;
+        public IEvent<MissingFaultSignal> Missing { get; } = null!;
     }
 
     public sealed class ExpectedStateMachineFailure : Exception;

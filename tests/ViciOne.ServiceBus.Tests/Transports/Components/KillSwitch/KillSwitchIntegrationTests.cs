@@ -142,8 +142,8 @@ public sealed class KillSwitchIntegrationTests
     private static TimeSpan OperationTimeout() =>
         TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
 
-    private sealed record FailingMessage(Guid CorrelationId, int Index) : CorrelatedBy<Guid>;
-    private sealed record HealthyMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record FailingMessage(Guid CorrelationId, int Index) : ICorrelatedBy<Guid>;
+    private sealed record HealthyMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     private sealed class FailingAndHealthyConsumer(HealthyDeliveryProbe delivery) :
         IConsumer<FailingMessage>,

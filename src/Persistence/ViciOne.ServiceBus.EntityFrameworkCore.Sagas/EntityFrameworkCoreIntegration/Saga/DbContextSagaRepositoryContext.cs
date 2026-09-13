@@ -18,7 +18,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 /// <typeparam name="TMessage">The consumed message contract.</typeparam>
 internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
-    SagaRepositoryContext<TSaga, TMessage>,
+    ISagaRepositoryContext<TSaga, TMessage>,
     IDisposable
     where TSaga : class, ISaga
     where TMessage : class
@@ -269,8 +269,8 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
 /// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class DbContextSagaRepositoryContext<TSaga> :
     BasePipeContext,
-    QuerySagaRepositoryContext<TSaga>,
-    LoadSagaRepositoryContext<TSaga>
+    IQuerySagaRepositoryContext<TSaga>,
+    ILoadSagaRepositoryContext<TSaga>
     where TSaga : class, ISaga
 {
     readonly DbContext _dbContext;
@@ -304,7 +304,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga> :
     /// <param name="query">The saga filter to execute.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A query context containing the matching correlation identifiers.</returns>
-    public async Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public async Task<ISagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(query);
 

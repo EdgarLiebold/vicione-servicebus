@@ -115,15 +115,15 @@ public sealed class ContainerSagaIntegrationTests
         .GetValidatedOptions().OperationTimeout!.Value;
 
 
-    public sealed record SagaFirst(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record SagaSecond(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record SagaFirst(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record SagaSecond(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
     public sealed record SagaThird(Guid CorrelationId, string Value);
 
     public sealed class ContainerLifecycleSaga :
         ISaga,
-        InitiatedBy<SagaFirst>,
-        Orchestrates<SagaSecond>,
-        Observes<SagaThird, ContainerLifecycleSaga>
+        IInitiatedBy<SagaFirst>,
+        IOrchestrates<SagaSecond>,
+        IObserves<SagaThird, ContainerLifecycleSaga>
     {
         public ContainerLifecycleSaga(Guid correlationId) => CorrelationId = correlationId;
 
@@ -154,22 +154,22 @@ public sealed class ContainerSagaIntegrationTests
         }
 
         Expression<Func<ContainerLifecycleSaga, SagaThird, bool>>
-            Observes<SagaThird, ContainerLifecycleSaga>.CorrelationExpression =>
+            IObserves<SagaThird, ContainerLifecycleSaga>.CorrelationExpression =>
             (saga, message) => saga.CorrelationId == message.CorrelationId;
     }
 
-    public sealed record InlineSagaStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record InlineSagaStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class InlineEndpointSaga(Guid correlationId) : ISaga, InitiatedBy<InlineSagaStart>
+    public sealed class InlineEndpointSaga(Guid correlationId) : ISaga, IInitiatedBy<InlineSagaStart>
     {
         public Guid CorrelationId { get; set; } = correlationId;
 
         public Task ConsumeAsync(ConsumeContext<InlineSagaStart> context) => Task.CompletedTask;
     }
 
-    public sealed record DefinitionSagaStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record DefinitionSagaStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class DefinitionEndpointSaga(Guid correlationId) : ISaga, InitiatedBy<DefinitionSagaStart>
+    public sealed class DefinitionEndpointSaga(Guid correlationId) : ISaga, IInitiatedBy<DefinitionSagaStart>
     {
         public Guid CorrelationId { get; set; } = correlationId;
 

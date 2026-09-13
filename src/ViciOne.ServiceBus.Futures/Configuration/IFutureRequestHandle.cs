@@ -14,7 +14,7 @@ public interface IFutureRequestHandle<out TCommand, TResult, TFault, TRequest>
     where TRequest : class
 {
     /// <summary>Gets the event raised when the request faults.</summary>
-    Event<Fault<TRequest>> Faulted { get; }
+    IEvent<Fault<TRequest>> Faulted { get; }
 
     /// <summary>Adds an accepted response contract and configures how it advances the future.</summary>
     /// <typeparam name="T">The accepted response contract.</typeparam>

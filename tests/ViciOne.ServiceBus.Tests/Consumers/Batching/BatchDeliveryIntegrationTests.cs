@@ -571,7 +571,7 @@ public sealed class BatchDeliveryIntegrationTests
         String,
     }
 
-    private sealed record BatchItem(Guid CorrelationId, int Index) : CorrelatedBy<Guid>;
+    private sealed record BatchItem(Guid CorrelationId, int Index) : ICorrelatedBy<Guid>;
 
     private sealed record BatchResult(Guid[] ItemIds, int Count, BatchCompletionMode Mode, bool HasOutbox);
 
@@ -641,7 +641,7 @@ public sealed class BatchDeliveryIntegrationTests
             context.Message.Mode,
             context.TryGetPayload<InMemoryOutboxConsumeContext>(out _));
 
-    private sealed record ErrorBatchItem(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ErrorBatchItem(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class ErrorBatchConsumer : IConsumer<IMessageBatch<ErrorBatchItem>>
     {
@@ -649,7 +649,7 @@ public sealed class BatchDeliveryIntegrationTests
             throw new BatchFailureException("Move this batch to the error transport.");
     }
 
-    private sealed record GroupedItem(Guid CorrelationId, Guid GuidGroup, string? StringGroup) : CorrelatedBy<Guid>;
+    private sealed record GroupedItem(Guid CorrelationId, Guid GuidGroup, string? StringGroup) : ICorrelatedBy<Guid>;
 
     private sealed record GroupBatchResult(Guid[] ItemIds, int Count, BatchCompletionMode Mode, Guid GuidKey, string? StringKey);
 
@@ -673,7 +673,7 @@ public sealed class BatchDeliveryIntegrationTests
             context.Message[0].Message.StringGroup), context.CancellationToken);
     }
 
-    private sealed record MediatorBatchItem(Guid CorrelationId, int Index) : CorrelatedBy<Guid>;
+    private sealed record MediatorBatchItem(Guid CorrelationId, int Index) : ICorrelatedBy<Guid>;
 
     private sealed class MediatorBatchConsumer(TaskCompletionSource<IMessageBatch<MediatorBatchItem>> delivered) :
         IConsumer<IMessageBatch<MediatorBatchItem>>
@@ -685,7 +685,7 @@ public sealed class BatchDeliveryIntegrationTests
         }
     }
 
-    private sealed record ExactlyOnceItem(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ExactlyOnceItem(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class ExactlyOnceBatchConsumer(ExactlyOnceProbe probe) : IConsumer<IMessageBatch<ExactlyOnceItem>>
     {

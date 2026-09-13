@@ -10,18 +10,18 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TResponse">The response type.</typeparam>
 public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TRequest : class
     where TResponse : class
     where TMessage : class
 {
     readonly bool _completed;
-    readonly Request<TSaga, TRequest, TResponse> _request;
+    readonly IRequest<TSaga, TRequest, TResponse> _request;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="request">The request.</param>
     /// <param name="completed">The completed.</param>
-    public CancelRequestTimeoutActivity(Request<TSaga, TRequest, TResponse> request, bool completed)
+    public CancelRequestTimeoutActivity(IRequest<TSaga, TRequest, TResponse> request, bool completed)
     {
         _request = request;
         _completed = completed;
@@ -29,7 +29,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -45,7 +45,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         Guid? requestId = _request.GetRequestId(context.Saga);
         if (requestId.HasValue && _request.Settings.Timeout > TimeSpan.Zero)
@@ -70,7 +70,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

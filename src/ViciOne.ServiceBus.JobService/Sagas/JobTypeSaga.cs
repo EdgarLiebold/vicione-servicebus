@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>Persists distributed capacity, instance health, and active allocations for one job type.</summary>
 public sealed class JobTypeSaga :
-    SagaStateMachineInstance,
+    ISagaStateMachineInstance,
     ISagaVersion
 {
     /// <summary>Creates empty persisted collections and a single-slot per-instance concurrency default.</summary>

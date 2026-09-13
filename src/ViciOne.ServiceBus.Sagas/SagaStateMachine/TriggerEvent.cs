@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 
 /// <summary>Carries the trigger event data.</summary>
 public class TriggerEvent :
-    Event
+    IEvent
 {
     readonly string _name;
 
@@ -20,7 +20,7 @@ public class TriggerEvent :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public virtual void Accept(StateMachineVisitor visitor)
+    public virtual void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x =>
         {
@@ -37,7 +37,7 @@ public class TriggerEvent :
     /// <summary>Compares this instance with the supplied value.</summary>
     /// <param name="other">The other.</param>
     /// <returns>The int produced by the operation.</returns>
-    public int CompareTo(Event? other)
+    public int CompareTo(IEvent? other)
     {
         return other == null ? 1 : string.Compare(_name, other.Name, StringComparison.Ordinal);
     }

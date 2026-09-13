@@ -10,7 +10,7 @@ public static class FutureExtensions
     /// <typeparam name="T">The initiating command contract.</typeparam>
     /// <param name="binder">The command event binder to extend.</param>
     /// <returns>The same binder with future initialization appended.</returns>
-    public static EventActivityBinder<FutureState, T> InitializeFuture<T>(this EventActivityBinder<FutureState, T> binder)
+    public static IEventActivityBinder<FutureState, T> InitializeFuture<T>(this IEventActivityBinder<FutureState, T> binder)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(binder);
@@ -29,7 +29,7 @@ public static class FutureExtensions
     /// <typeparam name="T">The request contract.</typeparam>
     /// <param name="binder">The request event binder to extend.</param>
     /// <returns>The same binder with subscription registration appended.</returns>
-    public static EventActivityBinder<FutureState, T> AddSubscription<T>(this EventActivityBinder<FutureState, T> binder)
+    public static IEventActivityBinder<FutureState, T> AddSubscription<T>(this IEventActivityBinder<FutureState, T> binder)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(binder);
@@ -46,8 +46,8 @@ public static class FutureExtensions
     /// <param name="getResultId">The selector for the completed operation identifier.</param>
     /// <param name="messageFactory">The asynchronous result factory.</param>
     /// <returns>The same binder with result storage appended.</returns>
-    public static EventActivityBinder<FutureState, T> SetResultAwaited<T, TResult>(this EventActivityBinder<FutureState, T> binder,
-        Func<BehaviorContext<FutureState, T>, Guid> getResultId, AsyncEventMessageFactory<FutureState, T, TResult> messageFactory)
+    public static IEventActivityBinder<FutureState, T> SetResultAwaited<T, TResult>(this IEventActivityBinder<FutureState, T> binder,
+        Func<IBehaviorContext<FutureState, T>, Guid> getResultId, AsyncEventMessageFactory<FutureState, T, TResult> messageFactory)
         where T : class
         where TResult : class
     {
@@ -69,8 +69,8 @@ public static class FutureExtensions
     /// <param name="getResultId">The selector for the completed operation identifier.</param>
     /// <param name="messageFactory">The synchronous result factory.</param>
     /// <returns>The same binder with result storage appended.</returns>
-    public static EventActivityBinder<FutureState, T> SetResult<T, TResult>(this EventActivityBinder<FutureState, T> binder,
-        Func<BehaviorContext<FutureState, T>, Guid> getResultId, EventMessageFactory<FutureState, T, TResult> messageFactory)
+    public static IEventActivityBinder<FutureState, T> SetResult<T, TResult>(this IEventActivityBinder<FutureState, T> binder,
+        Func<IBehaviorContext<FutureState, T>, Guid> getResultId, EventMessageFactory<FutureState, T, TResult> messageFactory)
         where T : class
         where TResult : class
     {
@@ -92,8 +92,8 @@ public static class FutureExtensions
     /// <param name="getResultId">The selector for the failed operation identifier.</param>
     /// <param name="messageFactory">The synchronous fault factory.</param>
     /// <returns>The same binder with fault storage appended.</returns>
-    public static EventActivityBinder<FutureState, Fault<T>> SetFault<T, TResult>(this EventActivityBinder<FutureState, Fault<T>> binder,
-        Func<BehaviorContext<FutureState, Fault<T>>, Guid> getResultId, EventMessageFactory<FutureState, Fault<T>, TResult> messageFactory)
+    public static IEventActivityBinder<FutureState, Fault<T>> SetFault<T, TResult>(this IEventActivityBinder<FutureState, Fault<T>> binder,
+        Func<IBehaviorContext<FutureState, Fault<T>>, Guid> getResultId, EventMessageFactory<FutureState, Fault<T>, TResult> messageFactory)
         where T : class
         where TResult : class
     {
@@ -113,7 +113,7 @@ public static class FutureExtensions
     /// <param name="binder">The routing-slip fault event binder to extend.</param>
     /// <param name="messageFactory">The synchronous fault factory.</param>
     /// <returns>The same binder with fault storage appended.</returns>
-    public static EventActivityBinder<FutureState, RoutingSlipFaulted> SetFault<TResult>(this EventActivityBinder<FutureState, RoutingSlipFaulted> binder,
+    public static IEventActivityBinder<FutureState, RoutingSlipFaulted> SetFault<TResult>(this IEventActivityBinder<FutureState, RoutingSlipFaulted> binder,
         EventMessageFactory<FutureState, RoutingSlipFaulted, TResult> messageFactory)
         where TResult : class
     {

@@ -121,9 +121,9 @@ public sealed class TenantScopeIntegrationTests
         ExecuteActivity,
     }
 
-    public sealed record TenantRequest(Guid CorrelationId, int FailureCount) : CorrelatedBy<Guid>;
+    public sealed record TenantRequest(Guid CorrelationId, int FailureCount) : ICorrelatedBy<Guid>;
 
-    public sealed record TenantResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record TenantResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record TenantArguments(Guid CorrelationId);
 

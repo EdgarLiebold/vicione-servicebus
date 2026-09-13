@@ -95,7 +95,7 @@ public sealed class ContainerStateMachineScopeTests
         .GetValidatedOptions().OperationTimeout!.Value;
 
 
-    public sealed record ContainerScopeStart(Guid CorrelationId, string Key) : CorrelatedBy<Guid>;
+    public sealed record ContainerScopeStart(Guid CorrelationId, string Key) : ICorrelatedBy<Guid>;
 
     public sealed record ContainerScopeUpdate(string Key);
 
@@ -105,7 +105,7 @@ public sealed class ContainerStateMachineScopeTests
 
     public sealed class ScopeMarker;
 
-    public sealed class ContainerScopeState : SagaStateMachineInstance
+    public sealed class ContainerScopeState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -137,11 +137,11 @@ public sealed class ContainerStateMachineScopeTests
             SetCompletedWhenFinalized();
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<ContainerScopeStart> Started { get; } = null!;
+        public IEvent<ContainerScopeStart> Started { get; } = null!;
 
-        public Event<ContainerScopeUpdate> Updated { get; } = null!;
+        public IEvent<ContainerScopeUpdate> Updated { get; } = null!;
     }
 
     public sealed class StateMachineScopeObservation
@@ -265,7 +265,7 @@ public sealed class ContainerStateMachineScopeTests
         IStateMachineActivity<ContainerScopeState, ContainerScopeStart>
     {
         public async Task ExecuteAsync(
-            BehaviorContext<ContainerScopeState, ContainerScopeStart> context,
+            IBehaviorContext<ContainerScopeState, ContainerScopeStart> context,
             IBehavior<ContainerScopeState, ContainerScopeStart> next)
         {
             observation.RecordActivity(marker);
@@ -276,13 +276,13 @@ public sealed class ContainerStateMachineScopeTests
         }
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<ContainerScopeState, ContainerScopeStart, TException> context,
+            IBehaviorExceptionContext<ContainerScopeState, ContainerScopeStart, TException> context,
             IBehavior<ContainerScopeState, ContainerScopeStart> next)
             where TException : Exception => next.FaultedAsync(context);
 
         public void Probe(ProbeContext context) => context.CreateScope("publishContainerScopeStarted");
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
     }
 
     private sealed class MessageLayerFilter(StateMachineScopeObservation observation) :

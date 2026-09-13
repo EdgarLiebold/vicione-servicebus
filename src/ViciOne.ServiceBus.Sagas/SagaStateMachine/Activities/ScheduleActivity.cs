@@ -8,19 +8,19 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ScheduleActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
-    readonly ContextMessageFactory<BehaviorContext<TSaga>, TMessage> _messageFactory;
-    readonly Schedule<TSaga> _schedule = null!;
+    readonly ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> _messageFactory;
+    readonly ISchedule<TSaga> _schedule = null!;
     readonly ScheduleTimeProvider<TSaga> _timeProvider;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="schedule">The schedule.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="messageFactory">The message factory.</param>
-    public ScheduleActivity(Schedule<TSaga> schedule,
-        ScheduleTimeProvider<TSaga> timeProvider, ContextMessageFactory<BehaviorContext<TSaga>, TMessage> messageFactory)
+    public ScheduleActivity(ISchedule<TSaga> schedule,
+        ScheduleTimeProvider<TSaga> timeProvider, ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> messageFactory)
     {
         _messageFactory = messageFactory;
         _schedule = schedule;
@@ -29,7 +29,7 @@ public class ScheduleActivity<TSaga, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="inspector">The inspector.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -45,7 +45,7 @@ public class ScheduleActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await ExecuteAsync(context).ConfigureAwait(false);
 
@@ -57,7 +57,7 @@ public class ScheduleActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public async Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         await ExecuteAsync(context).ConfigureAwait(false);
@@ -70,7 +70,7 @@ public class ScheduleActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -82,14 +82,14 @@ public class ScheduleActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    async Task ExecuteAsync(BehaviorContext<TSaga> context)
+    async Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
@@ -119,20 +119,20 @@ public class ScheduleActivity<TSaga, TMessage> :
 /// <typeparam name="T">The value type.</typeparam>
 public class ScheduleActivity<TSaga, TMessage, T> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where T : class
 {
-    readonly ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> _messageFactory;
-    readonly Schedule<TSaga, T> _schedule;
+    readonly ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> _messageFactory;
+    readonly ISchedule<TSaga, T> _schedule;
     readonly ScheduleTimeProvider<TSaga, TMessage> _timeProvider;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="schedule">The schedule.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="messageFactory">The message factory.</param>
-    public ScheduleActivity(Schedule<TSaga, T> schedule,
-        ScheduleTimeProvider<TSaga, TMessage> timeProvider, ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> messageFactory)
+    public ScheduleActivity(ISchedule<TSaga, T> schedule,
+        ScheduleTimeProvider<TSaga, TMessage> timeProvider, ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> messageFactory)
     {
         _messageFactory = messageFactory;
         _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
@@ -141,7 +141,7 @@ public class ScheduleActivity<TSaga, TMessage, T> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="inspector">The inspector.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -157,7 +157,7 @@ public class ScheduleActivity<TSaga, TMessage, T> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
@@ -186,7 +186,7 @@ public class ScheduleActivity<TSaga, TMessage, T> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

@@ -36,7 +36,7 @@ public sealed class MessageSessionSagaRepositoryTests
             new SagaQuery<SessionSaga>(candidate => candidate.Name == expectedName),
             next);
 
-        SagaRepositoryQueryContext<SessionSaga, QueryMessage> queryContext = Assert.IsAssignableFrom<SagaRepositoryQueryContext<SessionSaga, QueryMessage>>(
+        ISagaRepositoryQueryContext<SessionSaga, QueryMessage> queryContext = Assert.IsAssignableFrom<ISagaRepositoryQueryContext<SessionSaga, QueryMessage>>(
             next.Context);
         Assert.Equal(expectedCount, queryContext.Count);
         Assert.Equal(expectedCount == 1 ? [saga.CorrelationId] : [], queryContext.ToArray());
@@ -220,11 +220,11 @@ public sealed class MessageSessionSagaRepositoryTests
             throw new NotSupportedException();
     }
 
-    private sealed class QueryContextCapturePipe : IPipe<SagaRepositoryQueryContext<SessionSaga, QueryMessage>>
+    private sealed class QueryContextCapturePipe : IPipe<ISagaRepositoryQueryContext<SessionSaga, QueryMessage>>
     {
         public PipeContext? Context { get; private set; }
 
-        public Task SendAsync(SagaRepositoryQueryContext<SessionSaga, QueryMessage> context)
+        public Task SendAsync(ISagaRepositoryQueryContext<SessionSaga, QueryMessage> context)
         {
             Context = context;
             return Task.CompletedTask;

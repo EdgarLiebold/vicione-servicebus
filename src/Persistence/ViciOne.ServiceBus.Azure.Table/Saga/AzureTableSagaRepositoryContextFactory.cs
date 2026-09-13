@@ -52,7 +52,7 @@ internal sealed class AzureTableSagaRepositoryContextFactory<TSaga> :
     /// <param name="asyncMethod">The operation to invoke with the load context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The task returned by <paramref name="asyncMethod"/>.</returns>
-    public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T?> ExecuteAsync<T>(Func<ILoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(asyncMethod);
@@ -79,7 +79,7 @@ internal sealed class AzureTableSagaRepositoryContextFactory<TSaga> :
     /// <param name="context">The message consume context.</param>
     /// <param name="next">The saga repository pipeline to invoke.</param>
     /// <returns>A task that completes when the downstream repository pipeline completes.</returns>
-    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -104,7 +104,7 @@ internal sealed class AzureTableSagaRepositoryContextFactory<TSaga> :
     public Task SendQueryAsync<T>(
         ConsumeContext<T> context,
         ISagaQuery<TSaga> query,
-        IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+        IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);

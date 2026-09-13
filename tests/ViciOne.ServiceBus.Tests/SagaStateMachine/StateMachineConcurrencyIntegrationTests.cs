@@ -266,9 +266,9 @@ public sealed class StateMachineConcurrencyIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record AwaitedFinalizeStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record AwaitedFinalizeStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class AwaitedFinalizeState : SagaStateMachineInstance
+    public sealed class AwaitedFinalizeState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -300,18 +300,18 @@ public sealed class StateMachineConcurrencyIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State PendingDecision { get; } = null!;
+        public IState PendingDecision { get; } = null!;
 
-        public Event<AwaitedFinalizeStart> Start { get; } = null!;
+        public IEvent<AwaitedFinalizeStart> Start { get; } = null!;
     }
 
-    public sealed record RepositoryCreate(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryCreate(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RepositoryComplete(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryComplete(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RepositoryCancel(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryCancel(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class RepositoryProgressState : SagaStateMachineInstance
+    public sealed class RepositoryProgressState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -339,18 +339,18 @@ public sealed class StateMachineConcurrencyIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Active { get; } = null!;
+        public IState Active { get; } = null!;
 
-        public Event<RepositoryCreate> Create { get; } = null!;
+        public IEvent<RepositoryCreate> Create { get; } = null!;
 
-        public Event<RepositoryComplete> Complete { get; } = null!;
+        public IEvent<RepositoryComplete> Complete { get; } = null!;
 
-        public Event<RepositoryCancel> Cancel { get; } = null!;
+        public IEvent<RepositoryCancel> Cancel { get; } = null!;
     }
 
-    public sealed record PartitionStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record PartitionStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class PartitionState : SagaStateMachineInstance
+    public sealed class PartitionState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -365,9 +365,9 @@ public sealed class StateMachineConcurrencyIntegrationTests
             Initially(When(Start).TransitionTo(Waiting));
         }
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public Event<PartitionStart> Start { get; } = null!;
+        public IEvent<PartitionStart> Start { get; } = null!;
     }
 
     public sealed class PartitionPipeRecorder
@@ -383,17 +383,17 @@ public sealed class StateMachineConcurrencyIntegrationTests
         public int Occurrences(Guid correlationId) => _occurrences.GetValueOrDefault(correlationId);
     }
 
-    public sealed record RehearsalBegins(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RehearsalBegins(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record Bass(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record Bass(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed record Baritone(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record Baritone(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed record Tenor(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record Tenor(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed record Countertenor(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record Countertenor(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed class ChoirState : SagaStateMachineInstance
+    public sealed class ChoirState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -439,20 +439,20 @@ public sealed class StateMachineConcurrencyIntegrationTests
                     .TransitionTo(Harmony));
         }
 
-        public State Warmup { get; } = null!;
+        public IState Warmup { get; } = null!;
 
-        public State Harmony { get; } = null!;
+        public IState Harmony { get; } = null!;
 
-        public Event<RehearsalBegins> Begin { get; } = null!;
+        public IEvent<RehearsalBegins> Begin { get; } = null!;
 
-        public Event<Bass> BassArrived { get; } = null!;
+        public IEvent<Bass> BassArrived { get; } = null!;
 
-        public Event<Baritone> BaritoneArrived { get; } = null!;
+        public IEvent<Baritone> BaritoneArrived { get; } = null!;
 
-        public Event<Tenor> TenorArrived { get; } = null!;
+        public IEvent<Tenor> TenorArrived { get; } = null!;
 
-        public Event<Countertenor> CountertenorArrived { get; } = null!;
+        public IEvent<Countertenor> CountertenorArrived { get; } = null!;
 
-        public Event AllVoices { get; } = null!;
+        public IEvent AllVoices { get; } = null!;
     }
 }

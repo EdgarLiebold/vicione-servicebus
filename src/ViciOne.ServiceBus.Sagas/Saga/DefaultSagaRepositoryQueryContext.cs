@@ -13,17 +13,17 @@ namespace ViciOne.ServiceBus.Saga;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
     ConsumeContextProxy<TMessage>,
-    SagaRepositoryQueryContext<TSaga, TMessage>
+    ISagaRepositoryQueryContext<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    readonly SagaRepositoryContext<TSaga, TMessage> _context;
+    readonly ISagaRepositoryContext<TSaga, TMessage> _context;
     readonly IList<Guid> _results;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="results">The results.</param>
-    public DefaultSagaRepositoryQueryContext(SagaRepositoryContext<TSaga, TMessage> context, IList<Guid> results)
+    public DefaultSagaRepositoryQueryContext(ISagaRepositoryContext<TSaga, TMessage> context, IList<Guid> results)
         : base(context)
     {
         _context = context;
@@ -135,16 +135,16 @@ public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class DefaultSagaRepositoryQueryContext<TSaga> :
     ProxyPipeContext,
-    SagaRepositoryQueryContext<TSaga>
+    ISagaRepositoryQueryContext<TSaga>
     where TSaga : class, ISaga
 {
-    readonly QuerySagaRepositoryContext<TSaga> _queryContext;
+    readonly IQuerySagaRepositoryContext<TSaga> _queryContext;
     readonly IList<Guid> _results;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="queryContext">The query context.</param>
     /// <param name="results">The results.</param>
-    public DefaultSagaRepositoryQueryContext(QuerySagaRepositoryContext<TSaga> queryContext, IList<Guid> results)
+    public DefaultSagaRepositoryQueryContext(IQuerySagaRepositoryContext<TSaga> queryContext, IList<Guid> results)
         : base(queryContext)
     {
         _queryContext = queryContext;
@@ -158,7 +158,7 @@ public class DefaultSagaRepositoryQueryContext<TSaga> :
     /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the query outcome.</returns>
-    public Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public Task<ISagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         return _queryContext.QueryAsync(query, cancellationToken);
     }

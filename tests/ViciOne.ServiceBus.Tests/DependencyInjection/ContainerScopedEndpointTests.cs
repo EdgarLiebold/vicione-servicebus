@@ -235,13 +235,13 @@ public sealed class ContainerScopedEndpointTests
 
     public enum BusScopeOperation { Root, Publish, Send, Request, ExplicitRequest }
 
-    public sealed record RootPublished(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record RootSent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record ScopedPublished(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record ScopedSent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record BusScopeRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record ExplicitBusScopeRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record BusScopeResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RootPublished(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record RootSent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record ScopedPublished(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record ScopedSent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record BusScopeRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record ExplicitBusScopeRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record BusScopeResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record BusScopeCapture(
         Guid CorrelationId,
@@ -345,10 +345,10 @@ public sealed class ContainerScopedEndpointTests
 
     public enum MediatorScopeOperation { Send, Publish, Request }
 
-    public sealed record MediatorSent(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record MediatorPublished(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record MediatorScopeRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record MediatorScopeResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record MediatorSent(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record MediatorPublished(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record MediatorScopeRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record MediatorScopeResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record MediatorScopeCapture(
         Guid CorrelationId,
@@ -437,8 +437,8 @@ public sealed class ContainerScopedEndpointTests
         }
     }
 
-    public sealed record CascadeMessage(Guid CorrelationId, bool Publish) : CorrelatedBy<Guid>;
-    public sealed record CascadeLeaf(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CascadeMessage(Guid CorrelationId, bool Publish) : ICorrelatedBy<Guid>;
+    public sealed record CascadeLeaf(Guid CorrelationId) : ICorrelatedBy<Guid>;
     public sealed record CascadeResult(
         Guid CorrelationId,
         ScopeMarker ParentMarker,

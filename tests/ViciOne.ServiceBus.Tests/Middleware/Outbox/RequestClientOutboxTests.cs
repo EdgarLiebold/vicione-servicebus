@@ -121,15 +121,15 @@ public sealed class RequestClientOutboxTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record OuterRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record OuterRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record InnerRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record InnerRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record InnerResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record InnerResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record OuterResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record OuterResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record DeferredSideEffect(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record DeferredSideEffect(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class FixedRequestSendEndpoint(ISendEndpoint endpoint) :
         RequestSendEndpoint<InnerRequest>(consumeContext: null)

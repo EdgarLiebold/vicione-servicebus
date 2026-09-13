@@ -62,7 +62,7 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
         Assert.True(storedFault.HasMessageType<Fault<TransformValue>>());
     }
 
-    public sealed class TransformValue : CorrelatedBy<Guid>
+    public sealed class TransformValue : ICorrelatedBy<Guid>
     {
         public TransformValue()
         {

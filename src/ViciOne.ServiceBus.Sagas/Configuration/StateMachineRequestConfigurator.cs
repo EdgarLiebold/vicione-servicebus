@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TResponse">The response type.</typeparam>
 public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse> :
     IRequestConfigurator<TInstance, TRequest, TResponse>,
-    RequestSettings<TInstance, TRequest, TResponse>
-    where TInstance : class, SagaStateMachineInstance
+    IRequestSettings<TInstance, TRequest, TResponse>
+    where TInstance : class, ISagaStateMachineInstance
     where TRequest : class
     where TResponse : class
 {
@@ -21,7 +21,7 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse> :
     }
 
     /// <summary>Gets the settings.</summary>
-    public RequestSettings<TInstance, TRequest, TResponse> Settings => this;
+    public IRequestSettings<TInstance, TRequest, TResponse> Settings => this;
 
     /// <summary>Gets or sets the service address.</summary>
     public Uri ServiceAddress { get; set; } = null!;
@@ -37,7 +37,7 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse> :
     /// <summary>Gets or sets the faulted.</summary>
     public Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { get; set; } = null!;
     /// <summary>Gets or sets the timeout expired.</summary>
-    public Action<IEventCorrelationConfigurator<TInstance, RequestTimeoutExpired<TRequest>>> TimeoutExpired { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, IRequestTimeoutExpired<TRequest>>> TimeoutExpired { get; set; } = null!;
 }
 
 
@@ -49,8 +49,8 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse> :
 public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TResponse2> :
     StateMachineRequestConfigurator<TInstance, TRequest, TResponse>,
     IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>,
-    RequestSettings<TInstance, TRequest, TResponse, TResponse2>
-    where TInstance : class, SagaStateMachineInstance
+    IRequestSettings<TInstance, TRequest, TResponse, TResponse2>
+    where TInstance : class, ISagaStateMachineInstance
     where TRequest : class
     where TResponse : class
     where TResponse2 : class
@@ -62,7 +62,7 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
     }
 
     /// <summary>Gets the settings.</summary>
-    public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings => this;
+    public new IRequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings => this;
 
     /// <summary>Gets or sets the completed2.</summary>
     public Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { get; set; } = null!;
@@ -78,8 +78,8 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
 public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3> :
     StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>,
     IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3>,
-    RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3>
-    where TInstance : class, SagaStateMachineInstance
+    IRequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3>
+    where TInstance : class, ISagaStateMachineInstance
     where TRequest : class
     where TResponse : class
     where TResponse2 : class
@@ -92,7 +92,7 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
     }
 
     /// <summary>Gets the settings.</summary>
-    public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings => this;
+    public new IRequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings => this;
 
     /// <summary>Gets or sets the completed3.</summary>
     public Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { get; set; } = null!;

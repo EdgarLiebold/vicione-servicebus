@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TFuture">The future state-machine type.</typeparam>
 public abstract class FutureDefinition<TFuture> :
     IFutureDefinition<TFuture>
-    where TFuture : class, SagaStateMachine<FutureState>
+    where TFuture : class, ISagaStateMachine<FutureState>
 {
     int? _concurrentMessageLimit;
     string? _endpointName;

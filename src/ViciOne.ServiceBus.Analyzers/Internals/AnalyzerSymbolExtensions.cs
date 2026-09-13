@@ -11,7 +11,7 @@ internal static class AnalyzerSymbolExtensions
 {
     private static readonly HashSet<string> s_producerMethods = new(StringComparer.Ordinal)
     {
-        "ViciOne.ServiceBus.Sagas.BehaviorContext.InitAsync",
+        "ViciOne.ServiceBus.Sagas.IBehaviorContext.InitAsync",
         "ViciOne.ServiceBus.ConsumeContext.RespondAsync",
         "ViciOne.ServiceBus.Advanced.ConsumeContextSelfSchedulerExtensions.ScheduleSendAsync",
         "ViciOne.ServiceBus.Advanced.ConsumeContextSchedulerExtensions.ScheduleSendAsync",

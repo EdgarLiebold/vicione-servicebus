@@ -282,9 +282,9 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
             .BuildServiceProvider(validateScopes: true);
     }
 
-    public sealed record StartPersistentSaga(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record StartPersistentSaga(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record CompletePersistentSaga(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record CompletePersistentSaga(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed record PersistentSagaStarted(Guid CorrelationId, string Value);
 
@@ -292,8 +292,8 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
 
     public sealed class PersistentSaga :
         ISaga,
-        InitiatedBy<StartPersistentSaga>,
-        Orchestrates<CompletePersistentSaga>
+        IInitiatedBy<StartPersistentSaga>,
+        IOrchestrates<CompletePersistentSaga>
     {
         public Guid CorrelationId { get; set; }
 

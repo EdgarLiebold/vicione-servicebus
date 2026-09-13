@@ -14,10 +14,10 @@ static class SagaRegistrationMetadata
 
         Type[] interfaces = type.GetInterfaces();
         return interfaces.Contains(typeof(ISaga))
-            || interfaces.Any(candidate => candidate.ImplementsInterface(typeof(InitiatedBy<>))
-                || candidate.ImplementsInterface(typeof(Orchestrates<>))
-                || candidate.ImplementsInterface(typeof(InitiatedByOrOrchestrates<>))
-                || candidate.ImplementsInterface(typeof(Observes<,>))
+            || interfaces.Any(candidate => candidate.ImplementsInterface(typeof(IInitiatedBy<>))
+                || candidate.ImplementsInterface(typeof(IOrchestrates<>))
+                || candidate.ImplementsInterface(typeof(IInitiatedByOrOrchestrates<>))
+                || candidate.ImplementsInterface(typeof(IObserves<,>))
                 || candidate.ImplementsInterface(typeof(ISagaDefinition<>)));
     }
 
@@ -38,13 +38,13 @@ static class SagaRegistrationMetadata
         Type[] interfaces = type.GetInterfaces();
         return interfaces.Any(candidate => candidate.IsDefined(typeof(ConsumerRegistrationExclusionAttribute), inherit: false))
             || interfaces.Any(candidate => candidate.IsGenericType
-                && candidate.GetGenericTypeDefinition() == typeof(SagaStateMachine<>)
+                && candidate.GetGenericTypeDefinition() == typeof(ISagaStateMachine<>)
                 && typeof(IConsumerKindOwnedState).IsAssignableFrom(candidate.GetGenericArguments()[0]));
     }
 
     static bool IsOwnedStateMachine(Type candidate)
     {
-        if (!candidate.IsGenericType || candidate.GetGenericTypeDefinition() != typeof(SagaStateMachine<>))
+        if (!candidate.IsGenericType || candidate.GetGenericTypeDefinition() != typeof(ISagaStateMachine<>))
             return false;
 
         return !typeof(IConsumerKindOwnedState).IsAssignableFrom(candidate.GetGenericArguments()[0]);

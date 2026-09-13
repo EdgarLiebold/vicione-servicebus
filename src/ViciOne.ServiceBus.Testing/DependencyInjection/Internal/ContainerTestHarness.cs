@@ -251,8 +251,8 @@ internal sealed class ContainerTestHarness :
 
     /// <inheritdoc />
     public ISagaStateMachineTestHarness<TStateMachine, T> GetSagaStateMachineHarness<TStateMachine, T>()
-        where TStateMachine : class, SagaStateMachine<T>
-        where T : class, SagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<T>
+        where T : class, ISagaStateMachineInstance
     {
         return _provider.GetRequiredService<ISagaStateMachineTestHarness<TStateMachine, T>>();
     }

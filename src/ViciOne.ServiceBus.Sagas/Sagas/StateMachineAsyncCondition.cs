@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TMessage">The message contract available to the condition.</typeparam>
 /// <param name="context">The behavior context evaluated by the condition.</param>
 /// <returns>A task whose result indicates whether the behavior condition is satisfied.</returns>
-public delegate Task<bool> StateMachineAsyncCondition<TSaga, in TMessage>(BehaviorContext<TSaga, TMessage> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate Task<bool> StateMachineAsyncCondition<TSaga, in TMessage>(IBehaviorContext<TSaga, TMessage> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class;
 
 
@@ -16,5 +16,5 @@ public delegate Task<bool> StateMachineAsyncCondition<TSaga, in TMessage>(Behavi
 /// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
 /// <param name="context">The behavior context evaluated by the condition.</param>
 /// <returns>A task whose result indicates whether the behavior condition is satisfied.</returns>
-public delegate Task<bool> StateMachineAsyncCondition<TSaga>(BehaviorContext<TSaga> context)
-    where TSaga : class, SagaStateMachineInstance;
+public delegate Task<bool> StateMachineAsyncCondition<TSaga>(IBehaviorContext<TSaga> context)
+    where TSaga : class, ISagaStateMachineInstance;

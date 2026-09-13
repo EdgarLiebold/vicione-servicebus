@@ -9,20 +9,20 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The scheduled message type.</typeparam>
 internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception
     where TMessage : class
 {
-    readonly ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TMessage> _messageFactory;
-    readonly Schedule<TSaga, TMessage> _schedule;
+    readonly ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TMessage> _messageFactory;
+    readonly ISchedule<TSaga, TMessage> _schedule;
     readonly ScheduleTimeExceptionProvider<TSaga, TException> _timeProvider;
 
     /// <summary>Creates a fault activity for one saga schedule.</summary>
     /// <param name="schedule">The schedule whose token is stored on the saga.</param>
     /// <param name="timeProvider">The function that selects the due time from the fault context.</param>
     /// <param name="messageFactory">The factory that creates the scheduled message and send pipe.</param>
-    public FaultedScheduleActivity(Schedule<TSaga, TMessage> schedule, ScheduleTimeExceptionProvider<TSaga, TException> timeProvider,
-        ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TMessage> messageFactory)
+    public FaultedScheduleActivity(ISchedule<TSaga, TMessage> schedule, ScheduleTimeExceptionProvider<TSaga, TException> timeProvider,
+        ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TMessage> messageFactory)
     {
         _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -31,7 +31,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
 
     /// <summary>Exposes this activity to a state-machine visitor.</summary>
     /// <param name="inspector">The visitor receiving the activity.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         ArgumentNullException.ThrowIfNull(inspector);
         inspector.Visit(this);
@@ -49,7 +49,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
     /// <param name="context">The successful saga behavior context.</param>
     /// <param name="next">The remaining behavior.</param>
     /// <returns>A task that completes after the remaining behavior.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -61,7 +61,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
     /// <param name="context">The successful saga and event data.</param>
     /// <param name="next">The remaining data-event behavior.</param>
     /// <returns>A task that completes after the remaining behavior.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -74,12 +74,12 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
     /// <param name="context">The faulted saga behavior.</param>
     /// <param name="next">The remaining fault behavior.</param>
     /// <returns>A task that completes after scheduling and fault propagation.</returns>
-    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
-        if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
             await ScheduleAsync(context, exceptionContext).ConfigureAwait(false);
 
         await next.FaultedAsync(context).ConfigureAwait(false);
@@ -91,19 +91,19 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
     /// <param name="context">The faulted saga and event data.</param>
     /// <param name="next">The remaining data-event fault behavior.</param>
     /// <returns>A task that completes after scheduling and fault propagation.</returns>
-    public async Task FaultedAsync<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TOtherException>(IBehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
         where T : class
         where TOtherException : Exception
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
-        if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
             await ScheduleAsync(context, exceptionContext).ConfigureAwait(false);
 
         await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    async Task ScheduleAsync<T>(BehaviorExceptionContext<TSaga, T> context, BehaviorExceptionContext<TSaga, TException> exceptionContext)
+    async Task ScheduleAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehaviorExceptionContext<TSaga, TException> exceptionContext)
         where T : Exception
     {
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
@@ -137,21 +137,21 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
 /// <typeparam name="TMessage">The scheduled message type.</typeparam>
 internal sealed class FaultedScheduleActivity<TSaga, TData, TException, TMessage> :
     IStateMachineActivity<TSaga, TData>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TData : class
     where TException : Exception
     where TMessage : class
 {
-    readonly ContextMessageFactory<BehaviorExceptionContext<TSaga, TData, TException>, TMessage> _messageFactory;
-    readonly Schedule<TSaga, TMessage> _schedule;
+    readonly ContextMessageFactory<IBehaviorExceptionContext<TSaga, TData, TException>, TMessage> _messageFactory;
+    readonly ISchedule<TSaga, TMessage> _schedule;
     readonly ScheduleTimeExceptionProvider<TSaga, TData, TException> _timeProvider;
 
     /// <summary>Creates a data-event fault activity for one saga schedule.</summary>
     /// <param name="schedule">The schedule whose token is stored on the saga.</param>
     /// <param name="timeProvider">The function that selects the due time from the fault context.</param>
     /// <param name="messageFactory">The factory that creates the scheduled message and send pipe.</param>
-    public FaultedScheduleActivity(Schedule<TSaga, TMessage> schedule, ScheduleTimeExceptionProvider<TSaga, TData, TException> timeProvider,
-        ContextMessageFactory<BehaviorExceptionContext<TSaga, TData, TException>, TMessage> messageFactory)
+    public FaultedScheduleActivity(ISchedule<TSaga, TMessage> schedule, ScheduleTimeExceptionProvider<TSaga, TData, TException> timeProvider,
+        ContextMessageFactory<IBehaviorExceptionContext<TSaga, TData, TException>, TMessage> messageFactory)
     {
         _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -160,7 +160,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TData, TException, TMessage
 
     /// <summary>Exposes this activity to a state-machine visitor.</summary>
     /// <param name="inspector">The visitor receiving the activity.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         ArgumentNullException.ThrowIfNull(inspector);
         inspector.Visit(this);
@@ -178,7 +178,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TData, TException, TMessage
     /// <param name="context">The successful saga and event data.</param>
     /// <param name="next">The remaining data-event behavior.</param>
     /// <returns>A task that completes after the remaining behavior.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -190,12 +190,12 @@ internal sealed class FaultedScheduleActivity<TSaga, TData, TException, TMessage
     /// <param name="context">The faulted saga and event data.</param>
     /// <param name="next">The remaining data-event fault behavior.</param>
     /// <returns>A task that completes after scheduling and fault propagation.</returns>
-    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
+    public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
         where T : Exception
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
-        if (context is BehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
+        if (context is IBehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
         {
             Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 

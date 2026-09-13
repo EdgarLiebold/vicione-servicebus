@@ -9,13 +9,13 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageEventCorrelation<TSaga, TMessage> :
-    EventCorrelation<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    IEventCorrelation<TSaga, TMessage>
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly Lazy<bool> _includesInitial;
     readonly bool _insertOnInitial;
-    readonly SagaStateMachine<TSaga> _machine;
+    readonly ISagaStateMachine<TSaga> _machine;
     readonly IPipe<ConsumeContext<TMessage>> _missingPipe;
     readonly Lazy<ISagaPolicy<TSaga, TMessage>> _policy;
     readonly bool _readOnly;
@@ -31,7 +31,7 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     /// <param name="insertOnInitial">The insert on initial.</param>
     /// <param name="readOnly">The read only.</param>
     /// <param name="configureConsumeTopology">The configure consume topology.</param>
-    public MessageEventCorrelation(SagaStateMachine<TSaga> machine, Event<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
+    public MessageEventCorrelation(ISagaStateMachine<TSaga> machine, IEvent<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
         IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
         bool insertOnInitial, bool readOnly, bool configureConsumeTopology)
     {
@@ -56,7 +56,7 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     public SagaFilterFactory<TSaga, TMessage>? FilterFactory { get; }
 
     /// <summary>Gets the event.</summary>
-    public Event<TMessage> Event { get; }
+    public IEvent<TMessage> Event { get; }
 
     /// <summary>Gets the data type.</summary>
     public Type DataType => typeof(TMessage);

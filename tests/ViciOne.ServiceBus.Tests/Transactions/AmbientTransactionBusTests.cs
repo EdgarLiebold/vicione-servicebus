@@ -506,13 +506,13 @@ public sealed class AmbientTransactionBusTests
             },
             TransactionScopeAsyncFlowOption.Enabled);
 
-    public sealed record TransactionalMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record TransactionalMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record AmbientConsumerTrigger(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record AmbientConsumerTrigger(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record AmbientConsumerResult(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record AmbientConsumerResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record AmbientConsumerSendResult(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record AmbientConsumerSendResult(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class TransactionalMessageConsumer : IConsumer<TransactionalMessage>
     {

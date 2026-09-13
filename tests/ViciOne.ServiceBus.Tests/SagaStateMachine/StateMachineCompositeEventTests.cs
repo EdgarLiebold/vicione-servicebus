@@ -169,12 +169,12 @@ public sealed class StateMachineCompositeEventTests
 
     private static void AssertEventSurface<TInstance>(
         ViciOneServiceBusStateMachine<TInstance> machine,
-        State waiting,
-        Event start,
-        Event first,
-        Event second,
-        Event third)
-        where TInstance : class, SagaStateMachineInstance
+        IState waiting,
+        IEvent start,
+        IEvent first,
+        IEvent second,
+        IEvent third)
+        where TInstance : class, ISagaStateMachineInstance
     {
         Assert.Equal([start.Name], machine.NextEvents(machine.Initial).Select(x => x.Name).Order().ToArray());
         Assert.Equal([start.Name], machine.NextEvents(machine.GetState("Initial")).Select(x => x.Name).Order().ToArray());
@@ -199,11 +199,11 @@ public sealed class StateMachineCompositeEventTests
                 declarativeMachine.First, declarativeMachine.Second, declarativeMachine.Third);
         }
 
-        State waiting = null!;
-        Event start = null!;
-        Event first = null!;
-        Event second = null!;
-        Event third = null!;
+        IState waiting = null!;
+        IEvent start = null!;
+        IEvent first = null!;
+        IEvent second = null!;
+        IEvent third = null!;
         ViciOneServiceBusStateMachine<CompositeInstance> machine = ViciOneServiceBusStateMachine<CompositeInstance>.New(builder => builder
             .State("Waiting", out waiting)
             .Event("Start", out start)
@@ -232,11 +232,11 @@ public sealed class StateMachineCompositeEventTests
                 declarativeMachine.First, declarativeMachine.Second, declarativeMachine.Third);
         }
 
-        State waiting = null!;
-        Event start = null!;
-        Event first = null!;
-        Event second = null!;
-        Event third = null!;
+        IState waiting = null!;
+        IEvent start = null!;
+        IEvent first = null!;
+        IEvent second = null!;
+        IEvent third = null!;
         ViciOneServiceBusStateMachine<CompositeInstance> machine = ViciOneServiceBusStateMachine<CompositeInstance>.New(builder => builder
             .State("Waiting", out waiting)
             .Event("Start", out start)
@@ -272,11 +272,11 @@ public sealed class StateMachineCompositeEventTests
                 declarativeMachine.First, declarativeMachine.Second, declarativeMachine.Third);
         }
 
-        State waiting = null!;
-        Event start = null!;
-        Event first = null!;
-        Event second = null!;
-        Event third = null!;
+        IState waiting = null!;
+        IEvent start = null!;
+        IEvent first = null!;
+        IEvent second = null!;
+        IEvent third = null!;
         ViciOneServiceBusStateMachine<CompositeInstance> machine = ViciOneServiceBusStateMachine<CompositeInstance>.New(builder => builder
             .State("Waiting", out waiting)
             .Event("Start", out start)
@@ -303,11 +303,11 @@ public sealed class StateMachineCompositeEventTests
                 declarativeMachine.First, declarativeMachine.Second, declarativeMachine.Third);
         }
 
-        State waiting = null!;
-        Event start = null!;
-        Event first = null!;
-        Event second = null!;
-        Event third = null!;
+        IState waiting = null!;
+        IEvent start = null!;
+        IEvent first = null!;
+        IEvent second = null!;
+        IEvent third = null!;
         ViciOneServiceBusStateMachine<IntCompositeInstance> machine = ViciOneServiceBusStateMachine<IntCompositeInstance>.New(builder => builder
             .State("Waiting", out waiting)
             .Event("Start", out start)
@@ -337,12 +337,12 @@ public sealed class StateMachineCompositeEventTests
                 declarativeMachine.Start, declarativeMachine.First, declarativeMachine.Second);
         }
 
-        State waiting = null!;
-        State waitingForSecond = null!;
-        Event start = null!;
-        Event first = null!;
-        Event second = null!;
-        Event third = null!;
+        IState waiting = null!;
+        IState waitingForSecond = null!;
+        IEvent start = null!;
+        IEvent first = null!;
+        IEvent second = null!;
+        IEvent third = null!;
         ViciOneServiceBusStateMachine<CrossStateInstance> machine = ViciOneServiceBusStateMachine<CrossStateInstance>.New(builder =>
         {
             builder
@@ -413,11 +413,11 @@ public sealed class StateMachineCompositeEventTests
                 When(Third).Then(context => MarkComposite(context.Saga)).Finalize());
         }
 
-        public State Waiting { get; private set; } = null!;
-        public Event Start { get; private set; } = null!;
-        public Event First { get; private set; } = null!;
-        public Event Second { get; private set; } = null!;
-        public Event Third { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
+        public IEvent Third { get; private set; } = null!;
     }
 
     private sealed class DeclarativeOrderedCompositeMachine : ViciOneServiceBusStateMachine<CompositeInstance>
@@ -435,11 +435,11 @@ public sealed class StateMachineCompositeEventTests
                 .Finalize());
         }
 
-        public State Waiting { get; private set; } = null!;
-        public Event Start { get; private set; } = null!;
-        public Event First { get; private set; } = null!;
-        public Event Second { get; private set; } = null!;
-        public Event Third { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
+        public IEvent Third { get; private set; } = null!;
     }
 
     private sealed class DeclarativeDuplicateCompositeMachine : ViciOneServiceBusStateMachine<IntCompositeInstance>
@@ -452,11 +452,11 @@ public sealed class StateMachineCompositeEventTests
             During(Waiting, When(Third).Then(context => context.Saga.CompositeCount++));
         }
 
-        public State Waiting { get; private set; } = null!;
-        public Event Start { get; private set; } = null!;
-        public Event First { get; private set; } = null!;
-        public Event Second { get; private set; } = null!;
-        public Event Third { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
+        public IEvent Third { get; private set; } = null!;
     }
 
     private sealed class DeclarativeStructAssignedMachine : ViciOneServiceBusStateMachine<CompositeInstance>
@@ -469,11 +469,11 @@ public sealed class StateMachineCompositeEventTests
             During(Waiting, When(Third).Then(context => MarkComposite(context.Saga)).Finalize());
         }
 
-        public State Waiting { get; private set; } = null!;
-        public Event Start { get; private set; } = null!;
-        public Event First { get; private set; } = null!;
-        public Event Second { get; private set; } = null!;
-        public Event Third { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
+        public IEvent Third { get; private set; } = null!;
     }
 
     private sealed class DeclarativeIntAssignedMachine : ViciOneServiceBusStateMachine<IntCompositeInstance>
@@ -488,11 +488,11 @@ public sealed class StateMachineCompositeEventTests
                 When(Third).Then(context => MarkIntComposite(context.Saga)).Finalize());
         }
 
-        public State Waiting { get; private set; } = null!;
-        public Event Start { get; private set; } = null!;
-        public Event First { get; private set; } = null!;
-        public Event Second { get; private set; } = null!;
-        public Event Third { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
+        public IEvent Third { get; private set; } = null!;
     }
 
     private sealed class DeclarativeCrossStateMachine : ViciOneServiceBusStateMachine<CrossStateInstance>
@@ -522,18 +522,18 @@ public sealed class StateMachineCompositeEventTests
                 .Finalize());
         }
 
-        public State Waiting { get; private set; } = null!;
-        public State WaitingForSecond { get; private set; } = null!;
-        public Event Start { get; private set; } = null!;
-        public Event First { get; private set; } = null!;
-        public Event Second { get; private set; } = null!;
-        public Event Third { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IState WaitingForSecond { get; private set; } = null!;
+        public IEvent Start { get; private set; } = null!;
+        public IEvent First { get; private set; } = null!;
+        public IEvent Second { get; private set; } = null!;
+        public IEvent Third { get; private set; } = null!;
     }
 
-    private sealed class CompositeInstance : SagaStateMachineInstance
+    private sealed class CompositeInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
         public CompositeEventStatus Status { get; set; }
         public int CompositeCount { get; set; }
         public bool FirstSeen { get; set; }
@@ -541,7 +541,7 @@ public sealed class StateMachineCompositeEventTests
         public List<string> Markers { get; } = [];
     }
 
-    private sealed class IntCompositeInstance : SagaStateMachineInstance
+    private sealed class IntCompositeInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
         public int CurrentState { get; set; }
@@ -551,7 +551,7 @@ public sealed class StateMachineCompositeEventTests
         public bool FirstHandledBeforeComposite { get; set; }
     }
 
-    private sealed class CrossStateInstance : SagaStateMachineInstance
+    private sealed class CrossStateInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
         public int CurrentState { get; set; }
@@ -562,40 +562,40 @@ public sealed class StateMachineCompositeEventTests
 
     private sealed record CompositeScenario(
         ViciOneServiceBusStateMachine<CompositeInstance> Machine,
-        State Waiting,
-        Event Start,
-        Event First,
-        Event Second,
-        Event Third);
+        IState Waiting,
+        IEvent Start,
+        IEvent First,
+        IEvent Second,
+        IEvent Third);
 
     private sealed record DuplicateScenario(
         ViciOneServiceBusStateMachine<IntCompositeInstance> Machine,
-        State Waiting,
-        Event Start,
-        Event First,
-        Event Second);
+        IState Waiting,
+        IEvent Start,
+        IEvent First,
+        IEvent Second);
 
     private sealed record StructAssignedScenario(
         ViciOneServiceBusStateMachine<CompositeInstance> Machine,
-        State Waiting,
-        Event Start,
-        Event First,
-        Event Second,
-        Event Third);
+        IState Waiting,
+        IEvent Start,
+        IEvent First,
+        IEvent Second,
+        IEvent Third);
 
     private sealed record IntAssignedScenario(
         ViciOneServiceBusStateMachine<IntCompositeInstance> Machine,
-        State Waiting,
-        Event Start,
-        Event First,
-        Event Second,
-        Event Third);
+        IState Waiting,
+        IEvent Start,
+        IEvent First,
+        IEvent Second,
+        IEvent Third);
 
     private sealed record CrossStateScenario(
         ViciOneServiceBusStateMachine<CrossStateInstance> Machine,
-        State Waiting,
-        State WaitingForSecond,
-        Event Start,
-        Event First,
-        Event Second);
+        IState Waiting,
+        IState WaitingForSecond,
+        IEvent Start,
+        IEvent First,
+        IEvent Second);
 }

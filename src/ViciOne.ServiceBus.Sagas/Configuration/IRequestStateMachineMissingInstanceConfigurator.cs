@@ -9,6 +9,6 @@ public interface IRequestStateMachineMissingInstanceConfigurator
     /// <param name="configurator">The configurator to update.</param>
     /// <returns>The pipe produced by the operation.</returns>
     IPipe<ConsumeContext<TMessage>> Apply<TInstance, TMessage>(IMissingInstanceConfigurator<TInstance, TMessage> configurator)
-        where TInstance : SagaStateMachineInstance
+        where TInstance : ISagaStateMachineInstance
         where TMessage : class;
 }

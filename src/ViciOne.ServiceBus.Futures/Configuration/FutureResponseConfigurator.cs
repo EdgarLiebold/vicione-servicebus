@@ -41,10 +41,10 @@ internal sealed class FutureResponseConfigurator<TCommand, TResult, TFault, TReq
     /// <summary>Gets the selector for the pending identifier completed by this response.</summary>
     public PendingFutureIdProvider<TResponse>? PendingResponseIdProvider { get; private set; }
     /// <summary>Gets the event raised when this response is received.</summary>
-    public Event<TResponse> Completed { get; }
+    public IEvent<TResponse> Completed { get; }
 
     /// <summary>Gets the event raised when the corresponding request faults.</summary>
-    public Event<Fault<TRequest>> Faulted => _request.Faulted;
+    public IEvent<Fault<TRequest>> Faulted => _request.Faulted;
 
     /// <summary>Adds another accepted response contract to the same request.</summary>
     /// <typeparam name="T">The additional response contract.</typeparam>
@@ -67,7 +67,7 @@ internal sealed class FutureResponseConfigurator<TCommand, TResult, TFault, TReq
 
     /// <summary>Adds state-machine activities executed when the response is received.</summary>
     /// <param name="configure">The callback that adds activities to the response event.</param>
-    public void WhenReceived(Func<EventActivityBinder<FutureState, TResponse>, EventActivityBinder<FutureState, TResponse>> configure)
+    public void WhenReceived(Func<IEventActivityBinder<FutureState, TResponse>, IEventActivityBinder<FutureState, TResponse>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configurator.DuringAnyWhen(Completed, configure);
@@ -117,7 +117,7 @@ internal sealed class FutureResponseConfigurator<TCommand, TResult, TFault, TReq
     /// <param name="context">The response event context used to create the result.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SetResultAsync(BehaviorContext<FutureState, TResponse> context, CancellationToken cancellationToken = default)
+    public Task SetResultAsync(IBehaviorContext<FutureState, TResponse> context, CancellationToken cancellationToken = default)
     {
         return (_result ?? throw new InvalidOperationException("The response has no configured future result."))
             .SetResultAsync(context, cancellationToken: cancellationToken);

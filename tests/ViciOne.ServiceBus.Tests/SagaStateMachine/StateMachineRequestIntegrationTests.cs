@@ -71,7 +71,7 @@ public sealed class StateMachineRequestIntegrationTests
                 outcome is CompositeOutcome.SurnameRejected or CompositeOutcome.BothRejected,
                 $"surname:{surname}");
             MemberRegistrationResult result = (await published.WaitAsync(timeout, cancellationToken)).Context.Message;
-            State expectedState = outcome == CompositeOutcome.Success ? machine.Registered : machine.Rejected;
+            IState expectedState = outcome == CompositeOutcome.Success ? machine.Registered : machine.Rejected;
             Guid? located = await sagaHarness.WaitForSagaInStateAsync(memberId, expectedState, timeout, TestContext.Current.CancellationToken);
             CompositeRequestState? instance = sagaHarness.Sagas.FindById(memberId);
 
@@ -219,33 +219,33 @@ public sealed class StateMachineRequestIntegrationTests
         Third,
     }
 
-    public sealed record RegisterMember(Guid CorrelationId, string Name, string Surname) : CorrelatedBy<Guid>;
+    public sealed record RegisterMember(Guid CorrelationId, string Name, string Surname) : ICorrelatedBy<Guid>;
 
-    public sealed class ValidateName : CorrelatedBy<Guid>
+    public sealed class ValidateName : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
 
         public string Name { get; set; } = string.Empty;
     }
 
-    public sealed class ValidateSurname : CorrelatedBy<Guid>
+    public sealed class ValidateSurname : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
 
         public string Surname { get; set; } = string.Empty;
     }
 
-    public sealed record NameValidated(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+    public sealed record NameValidated(Guid CorrelationId, string Name) : ICorrelatedBy<Guid>;
 
-    public sealed record SurnameValidated(Guid CorrelationId, string Surname) : CorrelatedBy<Guid>;
+    public sealed record SurnameValidated(Guid CorrelationId, string Surname) : ICorrelatedBy<Guid>;
 
     public sealed record MemberRegistrationResult(
         Guid CorrelationId,
         string Result,
         string Name,
-        string Surname) : CorrelatedBy<Guid>;
+        string Surname) : ICorrelatedBy<Guid>;
 
-    public sealed class CompositeRequestState : SagaStateMachineInstance
+    public sealed class CompositeRequestState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -349,50 +349,50 @@ public sealed class StateMachineRequestIntegrationTests
                 }).Then(RecordOutcome).Publish(Outcome).TransitionTo(Rejected));
         }
 
-        private static void RecordOutcome(BehaviorContext<CompositeRequestState> context) =>
+        private static void RecordOutcome(IBehaviorContext<CompositeRequestState> context) =>
             context.Saga.TerminalOutcomeCount++;
 
-        private static MemberRegistrationResult Outcome(BehaviorContext<CompositeRequestState> context) =>
+        private static MemberRegistrationResult Outcome(IBehaviorContext<CompositeRequestState> context) =>
             new(context.Saga.CorrelationId, context.Saga.Result, context.Saga.Name, context.Saga.Surname);
 
-        public State Registering { get; } = null!;
+        public IState Registering { get; } = null!;
 
-        public State Registered { get; } = null!;
+        public IState Registered { get; } = null!;
 
-        public State Rejected { get; } = null!;
+        public IState Rejected { get; } = null!;
 
-        public Event<RegisterMember> Register { get; } = null!;
+        public IEvent<RegisterMember> Register { get; } = null!;
 
-        public Request<CompositeRequestState, ValidateName, NameValidated> NameRequest { get; } = null!;
+        public IRequest<CompositeRequestState, ValidateName, NameValidated> NameRequest { get; } = null!;
 
-        public Request<CompositeRequestState, ValidateSurname, SurnameValidated> SurnameRequest { get; } = null!;
+        public IRequest<CompositeRequestState, ValidateSurname, SurnameValidated> SurnameRequest { get; } = null!;
 
-        public Event BothCompleted { get; } = null!;
+        public IEvent BothCompleted { get; } = null!;
 
-        public Event BothFaulted { get; } = null!;
+        public IEvent BothFaulted { get; } = null!;
 
-        public Event NameFaulted { get; } = null!;
+        public IEvent NameFaulted { get; } = null!;
 
-        public Event SurnameFaulted { get; } = null!;
+        public IEvent SurnameFaulted { get; } = null!;
     }
 
-    public sealed record BeginMemberValidation(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BeginMemberValidation(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class ValidateMember : CorrelatedBy<Guid>
+    public sealed class ValidateMember : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
     }
 
-    public sealed record MemberValid(Guid CorrelationId, string Reason) : CorrelatedBy<Guid>;
+    public sealed record MemberValid(Guid CorrelationId, string Reason) : ICorrelatedBy<Guid>;
 
-    public sealed record MemberInvalid(Guid CorrelationId, string Reason) : CorrelatedBy<Guid>;
+    public sealed record MemberInvalid(Guid CorrelationId, string Reason) : ICorrelatedBy<Guid>;
 
-    public sealed record MemberDuplicate(Guid CorrelationId, string Reason) : CorrelatedBy<Guid>;
+    public sealed record MemberDuplicate(Guid CorrelationId, string Reason) : ICorrelatedBy<Guid>;
 
     public sealed record MemberRejected(Guid CorrelationId, MultiResponseKind ResponseKind, string Reason)
-        : CorrelatedBy<Guid>;
+        : ICorrelatedBy<Guid>;
 
-    public sealed class MultiResponseState : SagaStateMachineInstance
+    public sealed class MultiResponseState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -460,11 +460,11 @@ public sealed class StateMachineRequestIntegrationTests
                     .TransitionTo(Registered));
         }
 
-        public State Registered { get; } = null!;
+        public IState Registered { get; } = null!;
 
-        public Event<BeginMemberValidation> Begin { get; } = null!;
+        public IEvent<BeginMemberValidation> Begin { get; } = null!;
 
-        public Request<MultiResponseState, ValidateMember, MemberValid, MemberInvalid, MemberDuplicate> Validation { get; }
+        public IRequest<MultiResponseState, ValidateMember, MemberValid, MemberInvalid, MemberDuplicate> Validation { get; }
             = null!;
     }
 

@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Sagas;
 
 public sealed class OrderDeliverySaga :
     ISaga,
-    InitiatedByOrOrchestrates<OrderSubmitted>
+    IInitiatedByOrOrchestrates<OrderSubmitted>
 {
     public Guid CorrelationId { get; set; }
     public DateTime SubmitTimestamp { get; set; }

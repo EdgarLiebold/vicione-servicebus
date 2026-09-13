@@ -24,7 +24,7 @@ internal sealed class DynamoDbSagaRepositoryContextFactory<TSaga>(
     readonly DynamoDbSagaRepositoryOptions<TSaga> _options =
         options ?? throw new ArgumentNullException(nameof(options));
 
-    public async Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
+    public async Task<T?> ExecuteAsync<T>(Func<ILoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(asyncMethod);
@@ -49,7 +49,7 @@ internal sealed class DynamoDbSagaRepositoryContextFactory<TSaga>(
         context.Add("persistence", "dynamodb");
     }
 
-    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ISagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -72,7 +72,7 @@ internal sealed class DynamoDbSagaRepositoryContextFactory<TSaga>(
     public Task SendQueryAsync<T>(
         ConsumeContext<T> context,
         ISagaQuery<TSaga> query,
-        IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+        IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);

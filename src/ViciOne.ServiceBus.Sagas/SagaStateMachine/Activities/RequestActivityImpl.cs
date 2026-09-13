@@ -9,15 +9,15 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TRequest">The request type.</typeparam>
 /// <typeparam name="TResponse">The response type.</typeparam>
 public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TRequest : class
     where TResponse : class
 {
-    readonly Request<TInstance, TRequest, TResponse> _request;
+    readonly IRequest<TInstance, TRequest, TResponse> _request;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="request">The request.</param>
-    protected RequestActivityImpl(Request<TInstance, TRequest, TResponse> request)
+    protected RequestActivityImpl(IRequest<TInstance, TRequest, TResponse> request)
     {
         _request = request;
     }
@@ -27,7 +27,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     /// <param name="sendTuple">The send tuple.</param>
     /// <param name="serviceAddress">The service address.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected async Task SendRequestAsync(BehaviorContext<TInstance> context, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest> sendTuple, Uri serviceAddress)
+    protected async Task SendRequestAsync(IBehaviorContext<TInstance> context, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest> sendTuple, Uri serviceAddress)
     {
         var requestId = _request.GenerateRequestId(context.Saga);
 
@@ -46,7 +46,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
             var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
             var expirationTime = now + _request.Settings.Timeout;
 
-            RequestTimeoutExpired<TRequest> message =
+            IRequestTimeoutExpired<TRequest> message =
                 new TimeoutExpired<TRequest>(now, expirationTime, context.Saga.CorrelationId, pipe.RequestId, sendTuple.Message);
 
             if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
@@ -72,10 +72,10 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         IPipe<SendContext<TRequest>>
     {
         readonly IPipe<SendContext<TRequest>> _pipe = null!;
-        readonly Request<TInstance, TRequest, TResponse> _request;
+        readonly IRequest<TInstance, TRequest, TResponse> _request;
         readonly Uri _responseAddress;
 
-        public SendRequestPipe(Request<TInstance, TRequest, TResponse> request, Uri responseAddress, Guid requestId, IPipe<SendContext<TRequest>> pipe)
+        public SendRequestPipe(IRequest<TInstance, TRequest, TResponse> request, Uri responseAddress, Guid requestId, IPipe<SendContext<TRequest>> pipe)
         {
             _request = request;
             _responseAddress = responseAddress;
@@ -107,7 +107,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
 
 
     class TimeoutExpired<T> :
-        RequestTimeoutExpired<T>
+        IRequestTimeoutExpired<T>
         where T : class
     {
         public TimeoutExpired(DateTimeOffset timestamp, DateTimeOffset expirationTime, Guid correlationId, Guid requestId, T message)

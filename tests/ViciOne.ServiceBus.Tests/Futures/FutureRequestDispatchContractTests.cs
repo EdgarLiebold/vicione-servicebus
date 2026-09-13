@@ -151,7 +151,7 @@ public sealed class FutureRequestDispatchContractTests
         {
             AddressProvider = _ => DestinationAddress,
             PendingRequestIdProvider = message => message.RequestId,
-            Factory = new ContextMessageFactory<BehaviorContext<FutureState, InputMessage>, RequestMessage>(
+            Factory = new ContextMessageFactory<IBehaviorContext<FutureState, InputMessage>, RequestMessage>(
                 _ => Task.FromResult(new InitializedMessage<RequestMessage>(new RequestMessage(requestId)))),
         };
         return request;
@@ -164,7 +164,7 @@ public sealed class FutureRequestDispatchContractTests
             InstanceState(instance => instance.CurrentState);
         }
 
-        public Event<InputMessage> InputReceived { get; private set; } = null!;
+        public IEvent<InputMessage> InputReceived { get; private set; } = null!;
     }
 
     public sealed record InputMessage(string Value);

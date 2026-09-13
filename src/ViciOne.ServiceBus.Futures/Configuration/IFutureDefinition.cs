@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TFuture">The future state-machine type.</typeparam>
 public interface IFutureDefinition<TFuture> :
     IFutureDefinition
-    where TFuture : class, SagaStateMachine<FutureState>
+    where TFuture : class, ISagaStateMachine<FutureState>
 {
     /// <summary>Gets or sets the endpoint definition used to host the future.</summary>
     new IEndpointDefinition<TFuture>? EndpointDefinition { get; set; }

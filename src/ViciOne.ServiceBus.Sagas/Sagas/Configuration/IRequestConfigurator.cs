@@ -29,7 +29,7 @@ public interface IRequestConfigurator
 /// <typeparam name="TResponse">The response type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
     IRequestConfigurator
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TRequest : class
     where TResponse : class
 {
@@ -40,7 +40,7 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
     Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { set; }
 
     /// <summary>Sets the correlation configuration applied to the request-timeout event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, RequestTimeoutExpired<TRequest>>> TimeoutExpired { set; }
+    Action<IEventCorrelationConfigurator<TInstance, IRequestTimeoutExpired<TRequest>>> TimeoutExpired { set; }
 }
 
 
@@ -51,7 +51,7 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
 /// <typeparam name="TResponse2">The response2 type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2> :
     IRequestConfigurator<TInstance, TRequest, TResponse>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TResponse : class
     where TResponse2 : class
     where TRequest : class
@@ -69,7 +69,7 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2
 /// <typeparam name="TResponse3">The response3 type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3> :
     IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TResponse : class
     where TResponse2 : class
     where TResponse3 : class

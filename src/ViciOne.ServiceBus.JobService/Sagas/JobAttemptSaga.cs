@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>Persists supervision state for one execution attempt.</summary>
 public sealed class JobAttemptSaga :
-    SagaStateMachineInstance,
+    ISagaStateMachineInstance,
     ISagaVersion
 {
     /// <summary>Gets or sets the persisted state-machine ordinal.</summary>

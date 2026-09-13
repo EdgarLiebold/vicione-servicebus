@@ -68,9 +68,9 @@ public sealed class InMemoryOutboxFaultTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record OutboxRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record OutboxRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record OutboxResponse(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record OutboxResponse(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class ExpectedHandlerException : Exception;
 }

@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="T">The produced message type.</typeparam>
 /// <param name="context">The exception behavior context used to create the message.</param>
 /// <returns>A task whose result is the message created from the exception behavior context.</returns>
-public delegate Task<T> AsyncEventExceptionMessageFactory<TSaga, in TException, T>(BehaviorExceptionContext<TSaga, TException> context)
-    where TSaga : class, SagaStateMachineInstance
+public delegate Task<T> AsyncEventExceptionMessageFactory<TSaga, in TException, T>(IBehaviorExceptionContext<TSaga, TException> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception;
 
 
@@ -22,8 +22,8 @@ public delegate Task<T> AsyncEventExceptionMessageFactory<TSaga, in TException, 
 /// <param name="context">The exception behavior context used to create the message.</param>
 /// <returns>A task whose result is the message created from the exception behavior context.</returns>
 public delegate Task<T> AsyncEventExceptionMessageFactory<TSaga, in TMessage, in TException, T>(
-    BehaviorExceptionContext<TSaga, TMessage, TException> context)
-    where TSaga : class, SagaStateMachineInstance
+    IBehaviorExceptionContext<TSaga, TMessage, TException> context)
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TException : Exception
     where T : class;

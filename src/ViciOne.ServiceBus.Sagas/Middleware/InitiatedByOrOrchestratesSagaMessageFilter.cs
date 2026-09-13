@@ -10,8 +10,8 @@ namespace ViciOne.ServiceBus.Middleware;
 /// <typeparam name="TMessage">The message type.</typeparam>
 public class InitiatedByOrOrchestratesSagaMessageFilter<TSaga, TMessage> :
     ISagaMessageFilter<TSaga, TMessage>
-    where TSaga : class, ISaga, InitiatedByOrOrchestrates<TMessage>
-    where TMessage : class, CorrelatedBy<Guid>
+    where TSaga : class, ISaga, IInitiatedByOrOrchestrates<TMessage>
+    where TMessage : class, ICorrelatedBy<Guid>
 {
     void IProbeSite.Probe(ProbeContext context)
     {

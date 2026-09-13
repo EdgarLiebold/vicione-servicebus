@@ -306,13 +306,13 @@ public sealed class ScopedMediatorContractTests
         public string Value { get; set; } = string.Empty;
     }
 
-    private sealed class ScopedRequest : CorrelatedBy<Guid>
+    private sealed class ScopedRequest : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
         public string Value { get; set; } = string.Empty;
     }
 
-    private sealed record ScopedResponse(Guid CorrelationId, string Value, Uri? DestinationAddress) : CorrelatedBy<Guid>;
+    private sealed record ScopedResponse(Guid CorrelationId, string Value, Uri? DestinationAddress) : ICorrelatedBy<Guid>;
     private sealed record ScopedObservation(string Value, ScopeMarker Marker);
     private sealed record ScopedContextTrigger;
     private sealed class ScopedContextRequest

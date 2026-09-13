@@ -7,18 +7,18 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TInstance">The state type.</typeparam>
 public interface IBehavior<TInstance> :
     IVisitable
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Execute the activity with the given behavior context.</summary>
     /// <param name="context">The behavior context.</param>
     /// <returns>An awaitable task.</returns>
-    Task ExecuteAsync(BehaviorContext<TInstance> context);
+    Task ExecuteAsync(IBehaviorContext<TInstance> context);
 
     /// <summary>Execute the activity with the given behavior context.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The behavior context.</param>
     /// <returns>An awaitable task.</returns>
-    Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context)
+    Task ExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
         where T : class;
 
     /// <summary>The exception path through the behavior allows activities to catch and handle exceptions.</summary>
@@ -26,7 +26,7 @@ public interface IBehavior<TInstance> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context)
+    Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TInstance, T, TException> context)
         where T : class
         where TException : Exception;
 
@@ -34,7 +34,7 @@ public interface IBehavior<TInstance> :
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context)
+    Task FaultedAsync<TException>(IBehaviorExceptionContext<TInstance, TException> context)
         where TException : Exception;
 }
 
@@ -44,18 +44,18 @@ public interface IBehavior<TInstance> :
 /// <typeparam name="TMessage">The data type of the behavior.</typeparam>
 public interface IBehavior<TSaga, in TMessage> :
     IVisitable
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>Execute the activity with the given behavior context.</summary>
     /// <param name="context">The behavior context.</param>
     /// <returns>An awaitable task.</returns>
-    Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context);
+    Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context);
 
     /// <summary>The exception path through the behavior allows activities to catch and handle exceptions.</summary>
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         where TException : Exception;
 }

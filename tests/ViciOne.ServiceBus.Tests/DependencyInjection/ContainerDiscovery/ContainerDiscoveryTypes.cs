@@ -2,11 +2,11 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery;
 
 public sealed class DiscoveryMarker;
 
-public sealed record DiscoveryPing(Guid CorrelationId) : CorrelatedBy<Guid>;
-public sealed record DiscoveryPong(Guid CorrelationId) : CorrelatedBy<Guid>;
-public sealed record PingReceived(Guid CorrelationId) : CorrelatedBy<Guid>;
-public sealed record PingAcknowledged(Guid CorrelationId) : CorrelatedBy<Guid>;
-public sealed record PingCompleted(Guid CorrelationId) : CorrelatedBy<Guid>;
+public sealed record DiscoveryPing(Guid CorrelationId) : ICorrelatedBy<Guid>;
+public sealed record DiscoveryPong(Guid CorrelationId) : ICorrelatedBy<Guid>;
+public sealed record PingReceived(Guid CorrelationId) : ICorrelatedBy<Guid>;
+public sealed record PingAcknowledged(Guid CorrelationId) : ICorrelatedBy<Guid>;
+public sealed record PingCompleted(Guid CorrelationId) : ICorrelatedBy<Guid>;
 public sealed record PingArguments(Guid CorrelationId);
 public sealed record PingLog(Guid CorrelationId);
 
@@ -35,8 +35,8 @@ public sealed class DiscoveryExcludedConsumer : IConsumer<DiscoveryPong>
 
 public sealed class DiscoveryPingSaga :
     ISaga,
-    InitiatedBy<PingReceived>,
-    Orchestrates<PingAcknowledged>
+    IInitiatedBy<PingReceived>,
+    IOrchestrates<PingAcknowledged>
 {
     public Guid CorrelationId { get; set; }
 
@@ -45,7 +45,7 @@ public sealed class DiscoveryPingSaga :
     public Task ConsumeAsync(ConsumeContext<PingAcknowledged> context) => Task.CompletedTask;
 }
 
-public sealed class DiscoveryPingState : SagaStateMachineInstance
+public sealed class DiscoveryPingState : ISagaStateMachineInstance
 {
     public Guid CorrelationId { get; set; }
     public string CurrentState { get; set; } = string.Empty;
@@ -72,10 +72,10 @@ public sealed class DiscoveryPingStateMachine : ViciOneServiceBusStateMachine<Di
                 .TransitionTo(Ponged));
     }
 
-    public State Pinged { get; } = null!;
-    public State Ponged { get; } = null!;
-    public Event<PingReceived> Received { get; } = null!;
-    public Event<PingAcknowledged> Acknowledged { get; } = null!;
+    public IState Pinged { get; } = null!;
+    public IState Ponged { get; } = null!;
+    public IEvent<PingReceived> Received { get; } = null!;
+    public IEvent<PingAcknowledged> Acknowledged { get; } = null!;
 }
 
 public sealed class DiscoveryPingStateDefinition : SagaDefinition<DiscoveryPingState>

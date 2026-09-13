@@ -14,9 +14,9 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Publish<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
+    public static IEventActivityBinder<TInstance> Publish<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         TMessage message, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
@@ -29,9 +29,9 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> PublishAwaited<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
+    public static IEventActivityBinder<TInstance> PublishAwaited<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         Task<TMessage> message, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
@@ -44,9 +44,9 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Publish<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
+    public static IEventActivityBinder<TInstance> Publish<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         EventMessageFactory<TInstance, TMessage> messageFactory, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
@@ -59,9 +59,9 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> PublishAwaited<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
+    public static IEventActivityBinder<TInstance> PublishAwaited<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         AsyncEventMessageFactory<TInstance, TMessage> messageFactory, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
@@ -74,9 +74,9 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> PublishAwaited<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance> PublishAwaited<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
+        Func<IBehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<PublishContext<TMessage>>? callback = null)
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
@@ -90,9 +90,9 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Publish<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> Publish<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         TMessage message, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -107,9 +107,9 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> PublishAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> PublishAwaited<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         Task<TMessage> message, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -124,9 +124,9 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Publish<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> Publish<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         EventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -141,9 +141,9 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> PublishAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static IEventActivityBinder<TInstance, TData> PublishAwaited<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -158,10 +158,10 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> PublishAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TInstance, TData> PublishAwaited<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        Func<IBehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -176,10 +176,10 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Publish<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, TMessage message,
+    public static IExceptionActivityBinder<TInstance, TException> Publish<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, TMessage message,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -194,10 +194,10 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> PublishAwaited<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
+    public static IExceptionActivityBinder<TInstance, TException> PublishAwaited<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -212,11 +212,11 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Publish<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source,
+    public static IExceptionActivityBinder<TInstance, TException> Publish<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source,
         EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -231,11 +231,11 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> PublishAwaited<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source,
+    public static IExceptionActivityBinder<TInstance, TException> PublishAwaited<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -250,11 +250,11 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> PublishAwaited<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source,
-        Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IExceptionActivityBinder<TInstance, TException> PublishAwaited<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source,
+        Func<IBehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
@@ -270,10 +270,10 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Publish<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Publish<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -290,10 +290,10 @@ public static class PublishExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> PublishAwaited<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
+    public static IExceptionActivityBinder<TInstance, TData, TException> PublishAwaited<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -310,11 +310,11 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Publish<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Publish<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source,
         EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -332,11 +332,11 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> PublishAwaited<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source,
+    public static IExceptionActivityBinder<TInstance, TData, TException> PublishAwaited<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception
@@ -354,11 +354,11 @@ public static class PublishExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> PublishAwaited<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source,
-        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IExceptionActivityBinder<TInstance, TData, TException> PublishAwaited<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source,
+        Func<IBehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<PublishContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
         where TException : Exception

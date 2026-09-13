@@ -60,15 +60,15 @@ public class RequestStateMachine :
     }
 
     /// <summary>Gets the pending.</summary>
-    public State Pending { get; } = null!;
+    public IState Pending { get; } = null!;
 
     /// <summary>Gets the started.</summary>
-    public Event<RequestStarted> Started { get; } = null!;
+    public IEvent<IRequestStarted> Started { get; } = null!;
     /// <summary>Gets the completed.</summary>
-    public Event<RequestCompleted> Completed { get; } = null!;
+    public IEvent<IRequestCompleted> Completed { get; } = null!;
     /// <summary>Gets the faulted.</summary>
-    public Event<RequestFaulted> Faulted { get; } = null!;
-    static void InitializeInstance(BehaviorContext<RequestState, RequestStarted> context)
+    public IEvent<IRequestFaulted> Faulted { get; } = null!;
+    static void InitializeInstance(IBehaviorContext<RequestState, IRequestStarted> context)
     {
         context.Saga.ConversationId = context.ConversationId;
         context.Saga.ResponseAddress = context.Message.ResponseAddress;

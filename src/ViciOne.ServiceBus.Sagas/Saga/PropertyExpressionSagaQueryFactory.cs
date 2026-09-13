@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Saga;
 /// <typeparam name="TProperty">The property type.</typeparam>
 public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     ISagaQueryFactory<TInstance, TData>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TData : class
 {
     readonly Expression<Func<TInstance, TProperty>> _propertyExpression;

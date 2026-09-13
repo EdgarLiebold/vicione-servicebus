@@ -126,9 +126,9 @@ public sealed class StateMachineActivityTests
                 declarativeMachine.Initialized);
         }
 
-        State initializing = null!;
-        State running = null!;
-        Event initialized = null!;
+        IState initializing = null!;
+        IState running = null!;
+        IEvent initialized = null!;
         ViciOneServiceBusStateMachine<ActivityInstance> machine = ViciOneServiceBusStateMachine<ActivityInstance>.New(builder => builder
             .State("Initializing", out initializing)
             .State("Running", out running)
@@ -177,8 +177,8 @@ public sealed class StateMachineActivityTests
                 declarativeMachine.Initialized);
         }
 
-        State running = null!;
-        Event initialized = null!;
+        IState running = null!;
+        IEvent initialized = null!;
         ViciOneServiceBusStateMachine<ActivityInstance> machine = ViciOneServiceBusStateMachine<ActivityInstance>.New(builder =>
         {
             builder
@@ -211,7 +211,7 @@ public sealed class StateMachineActivityTests
             return new FinalizeScenario(declarativeMachine, declarativeMachine.Finish);
         }
 
-        Event finish = null!;
+        IEvent finish = null!;
         ViciOneServiceBusStateMachine<ActivityInstance> machine = ViciOneServiceBusStateMachine<ActivityInstance>.New(builder => builder
             .Event("Finish", out finish)
             .InstanceState(instance => instance.CurrentState!)
@@ -236,8 +236,8 @@ public sealed class StateMachineActivityTests
             return new DataScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Create);
         }
 
-        State running = null!;
-        Event<ActivityData> create = null!;
+        IState running = null!;
+        IEvent<ActivityData> create = null!;
         ViciOneServiceBusStateMachine<ActivityInstance> machine = ViciOneServiceBusStateMachine<ActivityInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Create", out create)
@@ -259,8 +259,8 @@ public sealed class StateMachineActivityTests
             return new DataScenario(declarativeMachine, declarativeMachine.Running, declarativeMachine.Initialize);
         }
 
-        State running = null!;
-        Event<ActivityData> initialize = null!;
+        IState running = null!;
+        IEvent<ActivityData> initialize = null!;
         ViciOneServiceBusStateMachine<ActivityInstance> machine = ViciOneServiceBusStateMachine<ActivityInstance>.New(builder => builder
             .State("Running", out running)
             .Event("Initialize", out initialize)
@@ -271,9 +271,9 @@ public sealed class StateMachineActivityTests
         return new DataScenario(machine, running, initialize);
     }
 
-    private static EventActivityBinder<ActivityInstance, ActivityData> ConfigureDataAction(
-        EventActivityBinder<ActivityInstance, ActivityData> behavior,
-        State running) =>
+    private static IEventActivityBinder<ActivityInstance, ActivityData> ConfigureDataAction(
+        IEventActivityBinder<ActivityInstance, ActivityData> behavior,
+        IState running) =>
         behavior
             .Then(context =>
             {
@@ -285,25 +285,25 @@ public sealed class StateMachineActivityTests
             .TransitionTo(running);
 
     private static async Task RaiseAsync(
-        StateMachine<ActivityInstance> machine,
+        IStateMachine<ActivityInstance> machine,
         ActivityInstance instance,
-        Event @event)
+        IEvent @event)
     {
         var message = new ActivitySignal();
         ConsumeContext<ActivitySignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ActivityInstance>(instance);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ActivityInstance, ActivitySignal>(consumeContext, sagaInstance);
-        BehaviorContext<ActivityInstance> behaviorContext =
+        IBehaviorContext<ActivityInstance> behaviorContext =
             new ViciOneServiceBusStateMachine<ActivityInstance>.BehaviorContextProxy(machine, sagaContext, @event);
 
         await machine.RaiseEventAsync(behaviorContext);
     }
 
     private static async Task RaiseAsync<T>(
-        StateMachine<ActivityInstance> machine,
+        IStateMachine<ActivityInstance> machine,
         ActivityInstance instance,
-        Event<T> @event,
+        IEvent<T> @event,
         T message)
         where T : class
     {
@@ -311,7 +311,7 @@ public sealed class StateMachineActivityTests
         var sagaInstance = new SagaInstance<ActivityInstance>(instance);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ActivityInstance, T>(consumeContext, sagaInstance);
-        BehaviorContext<ActivityInstance, T> behaviorContext =
+        IBehaviorContext<ActivityInstance, T> behaviorContext =
             new ViciOneServiceBusStateMachine<ActivityInstance>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
         await machine.RaiseEventAsync(behaviorContext);
@@ -323,35 +323,35 @@ public sealed class StateMachineActivityTests
 
     private sealed record LifecycleScenario(
         ViciOneServiceBusStateMachine<ActivityInstance> Machine,
-        State Initializing,
-        State Running,
-        Event Initialized);
+        IState Initializing,
+        IState Running,
+        IEvent Initialized);
 
     private sealed record TransitionScenario(
         ViciOneServiceBusStateMachine<ActivityInstance> Machine,
-        State Running,
-        Event Event);
+        IState Running,
+        IEvent Event);
 
     private sealed record FinalizeScenario(
         ViciOneServiceBusStateMachine<ActivityInstance> Machine,
-        Event Event);
+        IEvent Event);
 
     private sealed record DataScenario(
         ViciOneServiceBusStateMachine<ActivityInstance> Machine,
-        State Running,
-        Event<ActivityData> Event);
+        IState Running,
+        IEvent<ActivityData> Event);
 
-    private sealed class ActivityInstance : SagaStateMachineInstance
+    private sealed class ActivityInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
-        public State? EnteredState { get; set; }
+        public IState? EnteredState { get; set; }
 
-        public State? LeftState { get; set; }
+        public IState? LeftState { get; set; }
 
-        public State? StateBeforeFinal { get; set; }
+        public IState? StateBeforeFinal { get; set; }
 
         public string? Value { get; set; }
 
@@ -363,7 +363,7 @@ public sealed class StateMachineActivityTests
     private sealed class SetValueActivity : IStateMachineActivity<ActivityInstance, ActivityData>
     {
         public Task ExecuteAsync(
-            BehaviorContext<ActivityInstance, ActivityData> context,
+            IBehaviorContext<ActivityInstance, ActivityData> context,
             IBehavior<ActivityInstance, ActivityData> next)
         {
             context.Saga.Value = context.Message.Value;
@@ -372,12 +372,12 @@ public sealed class StateMachineActivityTests
         }
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<ActivityInstance, ActivityData, TException> context,
+            IBehaviorExceptionContext<ActivityInstance, ActivityData, TException> context,
             IBehavior<ActivityInstance, ActivityData> next)
             where TException : Exception =>
             next.FaultedAsync(context);
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
 
         public void Probe(ProbeContext context) => context.CreateScope("setValue");
     }
@@ -412,18 +412,18 @@ public sealed class StateMachineActivityTests
                 }));
         }
 
-        public State Initializing { get; private set; } = null!;
+        public IState Initializing { get; private set; } = null!;
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
     }
 
     private abstract class DeclarativeInitialTransitionMachine : ViciOneServiceBusStateMachine<ActivityInstance>
     {
-        public State Running { get; protected set; } = null!;
+        public IState Running { get; protected set; } = null!;
 
-        public Event Initialized { get; protected set; } = null!;
+        public IEvent Initialized { get; protected set; } = null!;
     }
 
     private sealed class DeclarativeDuringInitialMachine : DeclarativeInitialTransitionMachine
@@ -467,7 +467,7 @@ public sealed class StateMachineActivityTests
             }));
         }
 
-        public Event Finish { get; private set; } = null!;
+        public IEvent Finish { get; private set; } = null!;
     }
 
     private sealed class DeclarativeCustomActivityMachine : ViciOneServiceBusStateMachine<ActivityInstance>
@@ -482,9 +482,9 @@ public sealed class StateMachineActivityTests
                     .TransitionTo(Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event<ActivityData> Create { get; private set; } = null!;
+        public IEvent<ActivityData> Create { get; private set; } = null!;
     }
 
     private sealed class DeclarativeDataActionMachine : ViciOneServiceBusStateMachine<ActivityInstance>
@@ -495,8 +495,8 @@ public sealed class StateMachineActivityTests
             Initially(ConfigureDataAction(When(Initialize), Running));
         }
 
-        public State Running { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
 
-        public Event<ActivityData> Initialize { get; private set; } = null!;
+        public IEvent<ActivityData> Initialize { get; private set; } = null!;
     }
 }

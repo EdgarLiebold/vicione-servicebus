@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The event data type.</typeparam>
 public class DataBehavior<TSaga, TMessage> :
     IBehavior<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly IBehavior<TSaga> _behavior;
@@ -21,7 +21,7 @@ public class DataBehavior<TSaga, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         _behavior.Accept(visitor);
     }
@@ -33,12 +33,12 @@ public class DataBehavior<TSaga, TMessage> :
         _behavior.Probe(context);
     }
 
-    Task IBehavior<TSaga, TMessage>.ExecuteAsync(BehaviorContext<TSaga, TMessage> context)
+    Task IBehavior<TSaga, TMessage>.ExecuteAsync(IBehaviorContext<TSaga, TMessage> context)
     {
         return _behavior.ExecuteAsync(context);
     }
 
-    Task IBehavior<TSaga, TMessage>.FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    Task IBehavior<TSaga, TMessage>.FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     {
         return _behavior.FaultedAsync(context);
     }

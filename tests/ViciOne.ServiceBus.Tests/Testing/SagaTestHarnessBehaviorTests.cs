@@ -560,13 +560,13 @@ public sealed class SagaTestHarnessBehaviorTests
 
     public sealed record SagaValue(string Value);
 
-    public sealed record StartSaga(Guid CorrelationId, string Value, IReadOnlyList<SagaValue> Values) : CorrelatedBy<Guid>;
+    public sealed record StartSaga(Guid CorrelationId, string Value, IReadOnlyList<SagaValue> Values) : ICorrelatedBy<Guid>;
 
-    public sealed record SagaStarted(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record SagaStarted(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed class ClassicSaga :
         ISaga,
-        InitiatedBy<StartSaga>
+        IInitiatedBy<StartSaga>
     {
         public ClassicSaga(Guid correlationId)
         {
@@ -587,21 +587,21 @@ public sealed class SagaTestHarnessBehaviorTests
         }
     }
 
-    public sealed record StartRequest(Guid CorrelationId, string Key) : CorrelatedBy<Guid>;
+    public sealed record StartRequest(Guid CorrelationId, string Key) : ICorrelatedBy<Guid>;
 
-    public sealed class ExecuteRequest : CorrelatedBy<Guid>
+    public sealed class ExecuteRequest : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
 
         public string Key { get; set; } = string.Empty;
     }
 
-    public sealed class ExecuteResponse : CorrelatedBy<Guid>
+    public sealed class ExecuteResponse : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
     }
 
-    public sealed class RequestState : SagaStateMachineInstance
+    public sealed class RequestState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -648,20 +648,20 @@ public sealed class SagaTestHarnessBehaviorTests
                     .TransitionTo(Failed));
         }
 
-        public State Failed { get; } = null!;
+        public IState Failed { get; } = null!;
 
-        public Event<StartRequest> Start { get; } = null!;
+        public IEvent<StartRequest> Start { get; } = null!;
 
-        public Request<RequestState, ExecuteRequest, ExecuteResponse> Execute { get; } = null!;
+        public IRequest<RequestState, ExecuteRequest, ExecuteResponse> Execute { get; } = null!;
     }
 
-    public sealed record ResponsiveRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record ResponsiveRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record ResponsiveResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record ResponsiveResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record FaultingRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record FaultingRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class FaultingState : SagaStateMachineInstance
+    public sealed class FaultingState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -684,10 +684,10 @@ public sealed class SagaTestHarnessBehaviorTests
             Initially(When(Fail).Then(_ => throw failure));
         }
 
-        public Event<FaultingRequest> Fail { get; } = null!;
+        public IEvent<FaultingRequest> Fail { get; } = null!;
     }
 
-    public sealed class ResponsiveState : SagaStateMachineInstance
+    public sealed class ResponsiveState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -718,9 +718,9 @@ public sealed class SagaTestHarnessBehaviorTests
                     .TransitionTo(Responded));
         }
 
-        public State Responded { get; } = null!;
+        public IState Responded { get; } = null!;
 
-        public Event<ResponsiveRequest> Request { get; } = null!;
+        public IEvent<ResponsiveRequest> Request { get; } = null!;
     }
 
     public sealed record StartQuerySaga(Guid CorrelationId, string Key);
@@ -731,7 +731,7 @@ public sealed class SagaTestHarnessBehaviorTests
 
     public sealed record QuerySagaMissing(string Key);
 
-    public sealed class QueryCorrelationState : SagaStateMachineInstance
+    public sealed class QueryCorrelationState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -771,11 +771,11 @@ public sealed class SagaTestHarnessBehaviorTests
                         context.Saga.CheckCount))));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<StartQuerySaga> Start { get; } = null!;
+        public IEvent<StartQuerySaga> Start { get; } = null!;
 
-        public Event<CheckQuerySaga> Check { get; } = null!;
+        public IEvent<CheckQuerySaga> Check { get; } = null!;
     }
 
     private sealed class ExpectedRequestException(string message) : Exception(message);

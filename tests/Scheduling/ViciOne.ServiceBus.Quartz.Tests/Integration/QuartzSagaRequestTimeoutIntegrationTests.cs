@@ -196,10 +196,10 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
         }
     }
 
-    public sealed class RequestSagaState : SagaStateMachineInstance
+    public sealed class RequestSagaState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
         public Guid? ValidationRequestId { get; set; }
     }
 
@@ -225,10 +225,10 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
                     .TransitionTo(TimedOut));
         }
 
-        public State Completed { get; private set; } = null!;
-        public State TimedOut { get; private set; } = null!;
-        public Event<StartRequest> Started { get; private set; } = null!;
-        public Request<RequestSagaState, ValidationRequest, ValidationResponse> Validation { get; private set; } = null!;
+        public IState Completed { get; private set; } = null!;
+        public IState TimedOut { get; private set; } = null!;
+        public IEvent<StartRequest> Started { get; private set; } = null!;
+        public IRequest<RequestSagaState, ValidationRequest, ValidationResponse> Validation { get; private set; } = null!;
     }
 
     public sealed record StartRequest(Guid CorrelationId);

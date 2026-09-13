@@ -285,8 +285,8 @@ public sealed class ConsumerAndSagaConcurrencyTests
     }
 
     private sealed class LimitedSaga :
-        InitiatedByOrOrchestrates<SagaMessageA>,
-        InitiatedByOrOrchestrates<SagaMessageB>,
+        IInitiatedByOrOrchestrates<SagaMessageA>,
+        IInitiatedByOrOrchestrates<SagaMessageB>,
         ISaga
     {
         public static ConcurrencyProbe? Probe { get; set; }
@@ -302,7 +302,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
             .ConsumeAsync(context.CancellationToken);
     }
 
-    private sealed record SagaMessageA(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record SagaMessageA(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record SagaMessageB(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record SagaMessageB(Guid CorrelationId) : ICorrelatedBy<Guid>;
 }

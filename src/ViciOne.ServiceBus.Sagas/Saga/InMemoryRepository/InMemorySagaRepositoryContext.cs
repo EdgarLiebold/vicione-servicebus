@@ -13,7 +13,7 @@ namespace ViciOne.ServiceBus.Saga;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
-    SagaRepositoryContext<TSaga, TMessage>,
+    ISagaRepositoryContext<TSaga, TMessage>,
     IDisposable
     where TSaga : class, ISaga
     where TMessage : class
@@ -272,8 +272,8 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class InMemorySagaRepositoryContext<TSaga> :
     BasePipeContext,
-    QuerySagaRepositoryContext<TSaga>,
-    LoadSagaRepositoryContext<TSaga>
+    IQuerySagaRepositoryContext<TSaga>,
+    ILoadSagaRepositoryContext<TSaga>
     where TSaga : class, ISaga
 {
     readonly IndexedSagaDictionary<TSaga> _sagas;
@@ -321,7 +321,7 @@ public class InMemorySagaRepositoryContext<TSaga> :
     /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the query outcome.</returns>
-    public async Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public async Task<ISagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();

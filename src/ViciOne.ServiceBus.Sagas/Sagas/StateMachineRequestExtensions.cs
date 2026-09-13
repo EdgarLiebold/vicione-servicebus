@@ -18,14 +18,14 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, EventMessageFactory<TInstance, TData, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this IEventActivityBinder<TInstance, TData> binder,
+        IRequest<TInstance, TRequest, TResponse> request, EventMessageFactory<TInstance, TData, TRequest> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TData, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -40,14 +40,14 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, AsyncEventMessageFactory<TInstance, TData, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this IEventActivityBinder<TInstance, TData> binder,
+        IRequest<TInstance, TRequest, TResponse> request, AsyncEventMessageFactory<TInstance, TData, TRequest> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TData, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -62,14 +62,14 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this IEventActivityBinder<TInstance, TData> binder,
+        IRequest<TInstance, TRequest, TResponse> request, Func<IBehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TData, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -85,15 +85,15 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">A provider for the address used for the request.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
+    public static IEventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this IEventActivityBinder<TInstance, TData> binder,
+        IRequest<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
         EventMessageFactory<TInstance, TData, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TData, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -110,15 +110,15 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">A provider for the address used for the request.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
+    public static IEventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this IEventActivityBinder<TInstance, TData> binder,
+        IRequest<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
         AsyncEventMessageFactory<TInstance, TData, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TData, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -135,15 +135,15 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">A provider for the address used for the request.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
-        Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this IEventActivityBinder<TInstance, TData> binder,
+        IRequest<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
+        Func<IBehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TData, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -159,15 +159,15 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         EventExceptionMessageFactory<TInstance, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TException, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -182,15 +182,15 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         AsyncEventExceptionMessageFactory<TInstance, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TException, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -205,15 +205,15 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
-        Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
+        Func<IBehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TException, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -229,16 +229,16 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
         EventExceptionMessageFactory<TInstance, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TException, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -255,16 +255,16 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
         AsyncEventExceptionMessageFactory<TInstance, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TException, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -281,16 +281,16 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
-        Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        Func<IBehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TException, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -307,16 +307,16 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TData, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         EventExceptionMessageFactory<TInstance, TData, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse>(request,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -333,16 +333,16 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TData, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse>(request,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -359,16 +359,16 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
-        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TData, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
+        Func<IBehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse>(request,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -386,17 +386,17 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TData, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
         EventExceptionMessageFactory<TInstance, TData, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -414,17 +414,17 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TData, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -442,17 +442,17 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
-        this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
+        this IExceptionActivityBinder<TInstance, TData, TException> binder, IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
-        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        Func<IBehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TRequest : class
         where TResponse : class
         where TException : Exception
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new FaultedRequestActivity<TInstance, TData, TException, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -467,13 +467,13 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, EventMessageFactory<TInstance, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this IEventActivityBinder<TInstance> binder,
+        IRequest<TInstance, TRequest, TResponse> request, EventMessageFactory<TInstance, TRequest> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -487,13 +487,13 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, AsyncEventMessageFactory<TInstance, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this IEventActivityBinder<TInstance> binder,
+        IRequest<TInstance, TRequest, TResponse> request, AsyncEventMessageFactory<TInstance, TRequest> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -507,13 +507,13 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The configured request to use.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this IEventActivityBinder<TInstance> binder,
+        IRequest<TInstance, TRequest, TResponse> request, Func<IBehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TRequest, TResponse>(request, MessageFactory<TRequest>.Create(messageFactory));
 
         return binder.Add(activity);
@@ -528,14 +528,14 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
+    public static IEventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this IEventActivityBinder<TInstance> binder,
+        IRequest<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
         EventMessageFactory<TInstance, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity = new RequestActivity<TInstance, TRequest, TResponse>(request, serviceAddressProvider,
             MessageFactory<TRequest>.Create(messageFactory));
 
@@ -551,14 +551,14 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
+    public static IEventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this IEventActivityBinder<TInstance> binder,
+        IRequest<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
         AsyncEventMessageFactory<TInstance, TRequest> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity =
             new RequestActivity<TInstance, TRequest, TResponse>(request, serviceAddressProvider, MessageFactory<TRequest>.Create(messageFactory));
 
@@ -574,14 +574,14 @@ public static class StateMachineRequestExtensions
     /// <param name="serviceAddressProvider">The service address provider.</param>
     /// <param name="messageFactory">The request message factory.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
-        Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this IEventActivityBinder<TInstance> binder,
+        IRequest<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
+        Func<IBehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
     {
-        ScheduleTokenId.UseTokenId<RequestTimeoutExpired<TRequest>>(x => x.RequestId);
+        ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<TRequest>>(x => x.RequestId);
         var activity =
             new RequestActivity<TInstance, TRequest, TResponse>(request, serviceAddressProvider, MessageFactory<TRequest>.Create(messageFactory));
 
@@ -597,9 +597,9 @@ public static class StateMachineRequestExtensions
     /// <param name="request">The request.</param>
     /// <param name="completed">The completed.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> CancelRequestTimeout<TInstance, TData, TRequest, TResponse>(
-        this EventActivityBinder<TInstance, TData> binder, Request<TInstance, TRequest, TResponse> request, bool completed = true)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance, TData> CancelRequestTimeout<TInstance, TData, TRequest, TResponse>(
+        this IEventActivityBinder<TInstance, TData> binder, IRequest<TInstance, TRequest, TResponse> request, bool completed = true)
+        where TInstance : class, ISagaStateMachineInstance
         where TRequest : class
         where TResponse : class
         where TData : class

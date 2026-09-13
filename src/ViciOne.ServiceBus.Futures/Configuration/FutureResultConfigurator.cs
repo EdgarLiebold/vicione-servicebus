@@ -50,7 +50,7 @@ internal sealed class FutureResultConfigurator<TCommand, TResult, TInput> :
     {
         ArgumentNullException.ThrowIfNull(valueProvider);
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(IBehaviorContext<FutureState, TInput> context)
         {
             return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
             {
@@ -66,7 +66,7 @@ internal sealed class FutureResultConfigurator<TCommand, TResult, TInput> :
             });
         }
 
-        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
+        _result.Factory = MessageFactory<TResult>.Create((Func<IBehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
     }
 }
 
@@ -113,7 +113,7 @@ internal sealed class FutureResultConfigurator<TCommand, TResult> :
     {
         ArgumentNullException.ThrowIfNull(valueProvider);
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(BehaviorContext<FutureState> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(IBehaviorContext<FutureState> context)
         {
             return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
             {
@@ -128,6 +128,6 @@ internal sealed class FutureResultConfigurator<TCommand, TResult> :
             });
         }
 
-        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
+        _result.Factory = MessageFactory<TResult>.Create((Func<IBehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
     }
 }

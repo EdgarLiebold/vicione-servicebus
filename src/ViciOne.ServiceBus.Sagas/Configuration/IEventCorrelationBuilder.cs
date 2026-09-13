@@ -5,5 +5,5 @@ public interface IEventCorrelationBuilder
 {
     /// <summary>Builds the configured component.</summary>
     /// <returns>The configured component.</returns>
-    EventCorrelation Build();
+    IEventCorrelation Build();
 }

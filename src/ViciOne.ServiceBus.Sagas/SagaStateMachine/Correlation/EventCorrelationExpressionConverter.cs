@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class EventCorrelationExpressionConverter<TInstance, TMessage> :
     ExpressionVisitor
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly ConsumeContext<TMessage> _context;

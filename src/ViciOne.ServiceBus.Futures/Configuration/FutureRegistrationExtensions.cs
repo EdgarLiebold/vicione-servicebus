@@ -134,7 +134,7 @@ public static class FutureRegistrationExtensions
 
         filter ??= static _ => true;
 
-        IEnumerable<Type> futureTypes = types.Where(x => x.ImplementsInterface(typeof(SagaStateMachine<FutureState>)));
+        IEnumerable<Type> futureTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaStateMachine<FutureState>)));
         IEnumerable<Type> futureDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IFutureDefinition<>)));
 
         var futures = from c in futureTypes

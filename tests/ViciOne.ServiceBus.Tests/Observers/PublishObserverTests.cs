@@ -187,9 +187,9 @@ public sealed class PublishObserverTests
 
     private sealed record SendObservation(string Stage, Type MessageType, object Message);
 
-    private sealed record PublishedEvent(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record PublishedEvent(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record PublishedRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record PublishedRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record PublishedResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record PublishedResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 }

@@ -117,9 +117,9 @@ public sealed class ContainerOutboxScopeTests
 
     public sealed class ScopeMarker;
 
-    public sealed record OutboxProduce(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record OutboxProduce(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record OutboxPublished(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record OutboxPublished(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record OutboxScopeSnapshot(
         Guid CorrelationId,
@@ -223,7 +223,7 @@ public sealed class ContainerOutboxScopeTests
         public void Probe(ProbeContext context) => context.CreateFilterScope("outboxScopePublish");
     }
 
-    public sealed record FaultingCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record FaultingCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class FaultingConsumer :
         IConsumer<FaultingCommand>,

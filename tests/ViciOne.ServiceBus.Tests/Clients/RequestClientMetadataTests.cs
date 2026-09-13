@@ -452,15 +452,15 @@ public sealed class RequestClientMetadataTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record MetadataRequest(Guid CorrelationId, bool Fail) : CorrelatedBy<Guid>;
+    private sealed record MetadataRequest(Guid CorrelationId, bool Fail) : ICorrelatedBy<Guid>;
 
-    private sealed record MetadataResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record MetadataResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record AlternateResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record AlternateResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record PublishedSideEffect(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record PublishedSideEffect(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record SentSideEffect(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record SentSideEffect(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class ExpectedRequestFailure(string message) : Exception(message);
 

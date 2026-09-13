@@ -11,8 +11,8 @@ public static class StateMachineIntrospectionExtensions
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the next events outcome.</returns>
-    public static async Task<IEnumerable<Event>> NextEventsAsync<TInstance>(this BehaviorContext<TInstance> context, CancellationToken cancellationToken = default)
-        where TInstance : class, SagaStateMachineInstance
+    public static async Task<IEnumerable<IEvent>> NextEventsAsync<TInstance>(this IBehaviorContext<TInstance> context, CancellationToken cancellationToken = default)
+        where TInstance : class, ISagaStateMachineInstance
     {
         var state = await context.StateMachine.Accessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException("The state machine accessor did not resolve a current state.");

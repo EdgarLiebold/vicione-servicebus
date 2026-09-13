@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Topology;
 /// <typeparam name="T">The value type.</typeparam>
 public class CorrelatedByMessageCorrelationId<T> :
     IMessageCorrelationId<T>
-    where T : class, CorrelatedBy<Guid>
+    where T : class, ICorrelatedBy<Guid>
 {
     /// <summary>Attempts to get correlation id.</summary>
     /// <param name="message">The message to process.</param>

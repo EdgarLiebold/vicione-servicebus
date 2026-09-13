@@ -6,5 +6,5 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TSaga">The state machine instance type.</typeparam>
 /// <param name="context">The event context.</param>
 /// <returns>A task that completes when the unhandled event has been processed.</returns>
-public delegate Task UnhandledEventCallback<TSaga>(UnhandledEventContext<TSaga> context)
-    where TSaga : class, SagaStateMachineInstance;
+public delegate Task UnhandledEventCallback<TSaga>(IUnhandledEventContext<TSaga> context)
+    where TSaga : class, ISagaStateMachineInstance;

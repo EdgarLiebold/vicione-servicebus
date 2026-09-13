@@ -32,8 +32,8 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <param name="configurator">The future state-machine configurator.</param>
     /// <param name="routingSlipCompleted">The routing-slip completion event.</param>
     /// <param name="routingSlipFaulted">The routing-slip fault event.</param>
-    public FutureRoutingSlipConfigurator(IFutureStateMachineConfigurator configurator, Event<RoutingSlipCompleted> routingSlipCompleted,
-        Event<RoutingSlipFaulted> routingSlipFaulted)
+    public FutureRoutingSlipConfigurator(IFutureStateMachineConfigurator configurator, IEvent<RoutingSlipCompleted> routingSlipCompleted,
+        IEvent<RoutingSlipFaulted> routingSlipFaulted)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(routingSlipCompleted);
@@ -52,9 +52,9 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Gets the selector that faults the pending routing-slip identifier.</summary>
     public PendingFutureIdProvider<RoutingSlipFaulted>? FaultedIdProvider { get; private set; }
     /// <summary>Gets the routing-slip completion event.</summary>
-    public Event<RoutingSlipCompleted> Completed { get; }
+    public IEvent<RoutingSlipCompleted> Completed { get; }
     /// <summary>Gets the routing-slip fault event.</summary>
-    public Event<RoutingSlipFaulted> Faulted { get; }
+    public IEvent<RoutingSlipFaulted> Faulted { get; }
 
     /// <summary>Configures how routing-slip completion creates the successful future result.</summary>
     /// <param name="configure">The callback that configures the future result message.</param>
@@ -83,7 +83,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Adds state-machine activities executed when the routing slip completes.</summary>
     /// <param name="configure">The callback that adds activities to the completion event.</param>
     public void WhenRoutingSlipCompleted(
-        Func<EventActivityBinder<FutureState, RoutingSlipCompleted>, EventActivityBinder<FutureState, RoutingSlipCompleted>> configure)
+        Func<IEventActivityBinder<FutureState, RoutingSlipCompleted>, IEventActivityBinder<FutureState, RoutingSlipCompleted>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configurator.DuringAnyWhen(Completed, configure);
@@ -92,7 +92,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <summary>Adds state-machine activities executed when the routing slip faults.</summary>
     /// <param name="configure">The callback that adds activities to the fault event.</param>
     public void WhenRoutingSlipFaulted(
-        Func<EventActivityBinder<FutureState, RoutingSlipFaulted>, EventActivityBinder<FutureState, RoutingSlipFaulted>> configure)
+        Func<IEventActivityBinder<FutureState, RoutingSlipFaulted>, IEventActivityBinder<FutureState, RoutingSlipFaulted>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configurator.DuringAnyWhen(Faulted, configure);
@@ -147,7 +147,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
 
     }
 
-    static object RoutingSlipFaultedValueProvider(BehaviorContext<FutureState, RoutingSlipFaulted> context)
+    static object RoutingSlipFaultedValueProvider(IBehaviorContext<FutureState, RoutingSlipFaulted> context)
     {
         var message = context.GetCommand<TCommand>();
 
@@ -187,7 +187,7 @@ internal sealed class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, T
     /// <param name="context">The future event context used to build and execute the routing slip.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    public Task ExecuteAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         return _executor.ExecuteAsync(context, cancellationToken: cancellationToken);

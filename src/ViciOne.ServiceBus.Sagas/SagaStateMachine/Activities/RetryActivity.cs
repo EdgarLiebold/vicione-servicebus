@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TInstance">The instance type.</typeparam>
 public class RetryActivity<TInstance> :
     IStateMachineActivity<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     readonly IBehavior<TInstance> _retryBehavior;
     readonly IRetryPolicy _retryPolicy;
@@ -34,7 +34,7 @@ public class RetryActivity<TInstance> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _retryBehavior.Accept(visitor));
     }
@@ -43,7 +43,7 @@ public class RetryActivity<TInstance> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
+    public async Task ExecuteAsync(IBehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
         await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(context), context.CancellationToken);
 
@@ -55,7 +55,7 @@ public class RetryActivity<TInstance> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
+    public async Task ExecuteAsync<T>(IBehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
         await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(context), context.CancellationToken);
@@ -68,7 +68,7 @@ public class RetryActivity<TInstance> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -80,14 +80,14 @@ public class RetryActivity<TInstance> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    async Task ExecuteRetryBehaviorAsync(BehaviorContext<TInstance> context)
+    async Task ExecuteRetryBehaviorAsync(IBehaviorContext<TInstance> context)
     {
         try
         {
@@ -100,7 +100,7 @@ public class RetryActivity<TInstance> :
         }
     }
 
-    async Task ExecuteRetryBehaviorAsync<T>(BehaviorContext<TInstance, T> context)
+    async Task ExecuteRetryBehaviorAsync<T>(IBehaviorContext<TInstance, T> context)
         where T : class
     {
         try
@@ -121,7 +121,7 @@ public class RetryActivity<TInstance> :
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RetryActivity<TInstance, TMessage> :
     IStateMachineActivity<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
 {
     readonly IBehavior<TInstance> _retryBehavior;
@@ -147,7 +147,7 @@ public class RetryActivity<TInstance, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _retryBehavior.Accept(visitor));
     }
@@ -156,7 +156,7 @@ public class RetryActivity<TInstance, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
+    public Task ExecuteAsync(IBehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
@@ -166,10 +166,10 @@ public class RetryActivity<TInstance, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
+    public async Task ExecuteAsync<T>(IBehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
-        if (context is BehaviorContext<TInstance, TMessage> behaviorContext)
+        if (context is IBehaviorContext<TInstance, TMessage> behaviorContext)
             await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(behaviorContext), context.CancellationToken);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
@@ -180,7 +180,7 @@ public class RetryActivity<TInstance, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -192,14 +192,14 @@ public class RetryActivity<TInstance, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    async Task ExecuteRetryBehaviorAsync(BehaviorContext<TInstance, TMessage> context)
+    async Task ExecuteRetryBehaviorAsync(IBehaviorContext<TInstance, TMessage> context)
     {
         try
         {

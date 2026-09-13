@@ -210,15 +210,15 @@ public sealed class DiagnosticOutputTests
             context.Advanced().PublishAsync(new FlowD(context.Message.CorrelationId));
     }
 
-    private sealed record FlowA(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FlowA(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record FlowB(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FlowB(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record FlowC(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FlowC(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record FlowD(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FlowD(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record FlowE(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record FlowE(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record CyclicTimelineMessage(string Value);
 

@@ -16,10 +16,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Schedule<TInstance, TMessage> schedule, TMessage message, ScheduleTimeProvider<TInstance> timeProvider,
+    public static IEventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
+        ISchedule<TInstance, TMessage> schedule, TMessage message, ScheduleTimeProvider<TInstance> timeProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -34,10 +34,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Schedule<TInstance, TMessage> schedule, Task<TMessage> message, ScheduleTimeProvider<TInstance> timeProvider,
+    public static IEventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
+        ISchedule<TInstance, TMessage> schedule, Task<TMessage> message, ScheduleTimeProvider<TInstance> timeProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -52,10 +52,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Schedule<TInstance, TMessage> schedule, EventMessageFactory<TInstance, TMessage> messageFactory, ScheduleTimeProvider<TInstance> timeProvider,
+    public static IEventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
+        ISchedule<TInstance, TMessage> schedule, EventMessageFactory<TInstance, TMessage> messageFactory, ScheduleTimeProvider<TInstance> timeProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -70,10 +70,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Schedule<TInstance, TMessage> schedule, AsyncEventMessageFactory<TInstance, TMessage> messageFactory, ScheduleTimeProvider<TInstance> timeProvider,
+    public static IEventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
+        ISchedule<TInstance, TMessage> schedule, AsyncEventMessageFactory<TInstance, TMessage> messageFactory, ScheduleTimeProvider<TInstance> timeProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -88,10 +88,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Schedule<TInstance, TMessage> schedule, Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TInstance> Schedule<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
+        ISchedule<TInstance, TMessage> schedule, Func<IBehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleTimeProvider<TInstance> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -107,10 +107,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Schedule<TInstance, TMessage> schedule, TMessage message, ScheduleTimeProvider<TInstance, TData> timeProvider,
+    public static IEventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        ISchedule<TInstance, TMessage> schedule, TMessage message, ScheduleTimeProvider<TInstance, TData> timeProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -127,10 +127,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Schedule<TInstance, TMessage> schedule, Task<TMessage> message, ScheduleTimeProvider<TInstance, TData> timeProvider,
+    public static IEventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        ISchedule<TInstance, TMessage> schedule, Task<TMessage> message, ScheduleTimeProvider<TInstance, TData> timeProvider,
         Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -147,11 +147,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Schedule<TInstance, TMessage> schedule,
+    public static IEventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        ISchedule<TInstance, TMessage> schedule,
         EventMessageFactory<TInstance, TData, TMessage> messageFactory,
         ScheduleTimeProvider<TInstance, TData> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -169,11 +169,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Schedule<TInstance, TMessage> schedule,
+    public static IEventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        ISchedule<TInstance, TMessage> schedule,
         AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory,
         ScheduleTimeProvider<TInstance, TData> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -191,11 +191,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Schedule<TInstance, TMessage> schedule,
-        Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IEventActivityBinder<TInstance, TData> Schedule<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
+        ISchedule<TInstance, TMessage> schedule,
+        Func<IBehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleTimeProvider<TInstance, TData> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
@@ -213,10 +213,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Schedule<TInstance, TMessage> schedule, TMessage message,
+    public static IExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, ISchedule<TInstance, TMessage> schedule, TMessage message,
         ScheduleTimeExceptionProvider<TInstance, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
@@ -234,10 +234,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Schedule<TInstance, TMessage> schedule, Task<TMessage> message,
+    public static IExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, ISchedule<TInstance, TMessage> schedule, Task<TMessage> message,
         ScheduleTimeExceptionProvider<TInstance, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
@@ -255,11 +255,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Schedule<TInstance, TMessage> schedule,
+    public static IExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, ISchedule<TInstance, TMessage> schedule,
         EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         ScheduleTimeExceptionProvider<TInstance, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
@@ -277,11 +277,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Schedule<TInstance, TMessage> schedule,
+    public static IExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, ISchedule<TInstance, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         ScheduleTimeExceptionProvider<TInstance, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
@@ -299,11 +299,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TException> source, Schedule<TInstance, TMessage> schedule,
-        Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IExceptionActivityBinder<TInstance, TException> Schedule<TInstance, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TException> source, ISchedule<TInstance, TMessage> schedule,
+        Func<IBehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleTimeExceptionProvider<TInstance, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
@@ -322,10 +322,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Schedule<TInstance, TMessage> schedule, TMessage message,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, ISchedule<TInstance, TMessage> schedule, TMessage message,
         ScheduleTimeExceptionProvider<TInstance, TData, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
@@ -345,10 +345,10 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Schedule<TInstance, TMessage> schedule, Task<TMessage> message,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, ISchedule<TInstance, TMessage> schedule, Task<TMessage> message,
         ScheduleTimeExceptionProvider<TInstance, TData, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
@@ -368,11 +368,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Schedule<TInstance, TMessage> schedule,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, ISchedule<TInstance, TMessage> schedule,
         EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         ScheduleTimeExceptionProvider<TInstance, TData, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
@@ -392,11 +392,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Schedule<TInstance, TMessage> schedule,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, ISchedule<TInstance, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         ScheduleTimeExceptionProvider<TInstance, TData, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
@@ -416,11 +416,11 @@ public static class ScheduleDateTimeExtensions
     /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
-        this ExceptionActivityBinder<TInstance, TData, TException> source, Schedule<TInstance, TMessage> schedule,
-        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
+    public static IExceptionActivityBinder<TInstance, TData, TException> Schedule<TInstance, TData, TException, TMessage>(
+        this IExceptionActivityBinder<TInstance, TData, TException> source, ISchedule<TInstance, TMessage> schedule,
+        Func<IBehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         ScheduleTimeExceptionProvider<TInstance, TData, TException> timeProvider, Action<SendContext<TMessage>>? callback = null)
-        where TInstance : class, SagaStateMachineInstance
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class

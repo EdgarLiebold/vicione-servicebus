@@ -120,15 +120,15 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
             isTransactionEnabled: true);
     }
 
-    public sealed record StartOptimisticSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
-    public sealed record UpdateOptimisticSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StartOptimisticSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record UpdateOptimisticSaga(Guid CorrelationId) : ICorrelatedBy<Guid>;
     public sealed record OptimisticSagaStarted(Guid CorrelationId);
     public sealed record OptimisticSagaUpdated(Guid CorrelationId, int Value);
 
     public sealed class OptimisticSaga :
         ISaga,
-        InitiatedBy<StartOptimisticSaga>,
-        Orchestrates<UpdateOptimisticSaga>
+        IInitiatedBy<StartOptimisticSaga>,
+        IOrchestrates<UpdateOptimisticSaga>
     {
         public Guid CorrelationId { get; set; }
         public int Value { get; set; }

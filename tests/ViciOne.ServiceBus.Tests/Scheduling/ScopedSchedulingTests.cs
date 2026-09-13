@@ -68,9 +68,9 @@ public sealed class ScopedSchedulingTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record ScheduleCommand(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScheduleCommand(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ScheduledMessage(Guid CorrelationId, Guid InitiatingScopeId) : CorrelatedBy<Guid>;
+    public sealed record ScheduledMessage(Guid CorrelationId, Guid InitiatingScopeId) : ICorrelatedBy<Guid>;
 
     public sealed class ScheduleScope
     {

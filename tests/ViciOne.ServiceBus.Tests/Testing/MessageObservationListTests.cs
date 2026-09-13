@@ -481,13 +481,13 @@ public sealed class MessageObservationListTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record ObservedMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ObservedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record OtherMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record OtherMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record EndpointRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record EndpointRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record EndpointEvent(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record EndpointEvent(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record TestElement(Guid? ElementId, string Value) : IAsyncListElement;
 

@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Middleware;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="T">The value type.</typeparam>
 public class SendSagaPipe<TSaga, T> :
-    IPipe<SagaRepositoryContext<TSaga, T>>
+    IPipe<ISagaRepositoryContext<TSaga, T>>
     where TSaga : class, ISaga
     where T : class
 {
@@ -37,7 +37,7 @@ public class SendSagaPipe<TSaga, T> :
     /// <summary>Sends a message to the configured destination.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SendAsync(SagaRepositoryContext<TSaga, T> context)
+    public async Task SendAsync(ISagaRepositoryContext<TSaga, T> context)
     {
         SagaConsumeContext<TSaga, T>? sagaConsumeContext = null;
 

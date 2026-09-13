@@ -17,8 +17,8 @@ public static class FutureSubscriptionExtensions
     /// <param name="subscriptions">The subscriber destinations and optional request identifiers.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The message delivered to all subscribers.</returns>
-    public static async Task<T> SendMessageToSubscriptionsAsync<T>(this BehaviorContext<FutureState> context,
-        ContextMessageFactory<BehaviorContext<FutureState>, T> factory, IEnumerable<FutureSubscription> subscriptions, CancellationToken cancellationToken = default)
+    public static async Task<T> SendMessageToSubscriptionsAsync<T>(this IBehaviorContext<FutureState> context,
+        ContextMessageFactory<IBehaviorContext<FutureState>, T> factory, IEnumerable<FutureSubscription> subscriptions, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -59,8 +59,8 @@ public static class FutureSubscriptionExtensions
     /// <param name="subscriptions">The subscriber destinations and optional request identifiers.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The message delivered to all subscribers.</returns>
-    public static async Task<T> SendMessageToSubscriptionsAsync<TInput, T>(this BehaviorContext<FutureState, TInput> context,
-        ContextMessageFactory<BehaviorContext<FutureState, TInput>, T> factory, IEnumerable<FutureSubscription> subscriptions, CancellationToken cancellationToken = default)
+    public static async Task<T> SendMessageToSubscriptionsAsync<TInput, T>(this IBehaviorContext<FutureState, TInput> context,
+        ContextMessageFactory<IBehaviorContext<FutureState, TInput>, T> factory, IEnumerable<FutureSubscription> subscriptions, CancellationToken cancellationToken = default)
         where TInput : class
         where T : class
     {

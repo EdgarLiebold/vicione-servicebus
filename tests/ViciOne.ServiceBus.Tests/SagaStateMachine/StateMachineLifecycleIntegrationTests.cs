@@ -173,9 +173,9 @@ public sealed class StateMachineLifecycleIntegrationTests
         PropertyConvention,
     }
 
-    public sealed record CorrelatedStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CorrelatedStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record CorrelatedStop(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CorrelatedStop(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record MappedStart(Guid ServiceId);
 
@@ -185,7 +185,7 @@ public sealed class StateMachineLifecycleIntegrationTests
 
     public sealed record ConventionalStop(Guid CorrelationId);
 
-    public sealed class ConventionState : SagaStateMachineInstance
+    public sealed class ConventionState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -220,26 +220,26 @@ public sealed class StateMachineLifecycleIntegrationTests
             state.StartCount++;
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<CorrelatedStart> CorrelatedStarted { get; } = null!;
+        public IEvent<CorrelatedStart> CorrelatedStarted { get; } = null!;
 
-        public Event<CorrelatedStop> CorrelatedStopped { get; } = null!;
+        public IEvent<CorrelatedStop> CorrelatedStopped { get; } = null!;
 
-        public Event<MappedStart> MappedStarted { get; } = null!;
+        public IEvent<MappedStart> MappedStarted { get; } = null!;
 
-        public Event<MappedStop> MappedStopped { get; } = null!;
+        public IEvent<MappedStop> MappedStopped { get; } = null!;
 
-        public Event<ConventionalStart> ConventionalStarted { get; } = null!;
+        public IEvent<ConventionalStart> ConventionalStarted { get; } = null!;
 
-        public Event<ConventionalStop> ConventionalStopped { get; } = null!;
+        public IEvent<ConventionalStop> ConventionalStopped { get; } = null!;
     }
 
     public sealed record BeginTransaction(Guid TransactionId);
 
     public sealed record CommitTransaction(Guid TransactionId);
 
-    public sealed class BusinessKeyState : SagaStateMachineInstance
+    public sealed class BusinessKeyState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -277,22 +277,22 @@ public sealed class StateMachineLifecycleIntegrationTests
             During(Active, When(Commit).Then(context => context.Saga.CommitCount++).Finalize());
         }
 
-        public State Active { get; } = null!;
+        public IState Active { get; } = null!;
 
-        public Event<BeginTransaction> Begin { get; } = null!;
+        public IEvent<BeginTransaction> Begin { get; } = null!;
 
-        public Event<CommitTransaction> Commit { get; } = null!;
+        public IEvent<CommitTransaction> Commit { get; } = null!;
     }
 
-    public sealed record RemovalStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RemovalStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RemovalStop(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RemovalStop(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ImmediateRemovalRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ImmediateRemovalRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ImmediateRemovalResponse(Guid CorrelationId, string Result) : CorrelatedBy<Guid>;
+    public sealed record ImmediateRemovalResponse(Guid CorrelationId, string Result) : ICorrelatedBy<Guid>;
 
-    public sealed class RemovingState : SagaStateMachineInstance
+    public sealed class RemovingState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -315,12 +315,12 @@ public sealed class StateMachineLifecycleIntegrationTests
             During(Running, When(Stop).Finalize());
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<RemovalStart> Start { get; } = null!;
+        public IEvent<RemovalStart> Start { get; } = null!;
 
-        public Event<RemovalStop> Stop { get; } = null!;
+        public IEvent<RemovalStop> Stop { get; } = null!;
 
-        public Event<ImmediateRemovalRequest> Immediate { get; } = null!;
+        public IEvent<ImmediateRemovalRequest> Immediate { get; } = null!;
     }
 }

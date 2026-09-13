@@ -181,8 +181,8 @@ public sealed class ContainerMediatorIntegrationTests
         Send,
     }
 
-    public sealed record MediatorBridgeCommand(Guid CorrelationId, MediatorBusRoute Route) : CorrelatedBy<Guid>;
-    public sealed record MediatorBridgeMessage(Guid CorrelationId, MediatorBusRoute Route) : CorrelatedBy<Guid>;
+    public sealed record MediatorBridgeCommand(Guid CorrelationId, MediatorBusRoute Route) : ICorrelatedBy<Guid>;
+    public sealed record MediatorBridgeMessage(Guid CorrelationId, MediatorBusRoute Route) : ICorrelatedBy<Guid>;
 
     public sealed class MediatorPublishingBridgeConsumer(IPublishEndpoint publishEndpoint) :
         IConsumer<MediatorBridgeCommand>
@@ -210,8 +210,8 @@ public sealed class ContainerMediatorIntegrationTests
         public Task ConsumeAsync(ConsumeContext<MediatorBridgeMessage> context) => Task.CompletedTask;
     }
 
-    public sealed record MediatorBusCommand(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record MediatorBusEvent(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record MediatorBusCommand(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record MediatorBusEvent(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed class BusPublishingMediatorConsumer(IBus bus) : IConsumer<MediatorBusCommand>
     {
@@ -220,13 +220,13 @@ public sealed class ContainerMediatorIntegrationTests
             context.CancellationToken);
     }
 
-    public sealed record OuterMediatorRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record InnerMediatorRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record OuterMediatorRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record InnerMediatorRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
     public sealed class InnerMediatorResponse(
         Guid correlationId,
         Guid originalConversationId,
         Guid originalInitiatorId,
-        string value) : CorrelatedBy<Guid>
+        string value) : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; } = correlationId;
         public Guid OriginalConversationId { get; } = originalConversationId;
@@ -237,7 +237,7 @@ public sealed class ContainerMediatorIntegrationTests
         Guid CorrelationId,
         Guid OriginalConversationId,
         Guid OriginalInitiatorId,
-        string Value) : CorrelatedBy<Guid>;
+        string Value) : ICorrelatedBy<Guid>;
 
     public sealed class OuterMediatorRequestConsumer(IRequestClient<InnerMediatorRequest> client) :
         IConsumer<OuterMediatorRequest>
@@ -277,8 +277,8 @@ public sealed class ContainerMediatorIntegrationTests
         public void Probe(ProbeContext context) => context.CreateFilterScope("uppercaseMediatorResponse");
     }
 
-    public sealed record StartMediatorOrder(Guid CorrelationId, string OrderNumber) : CorrelatedBy<Guid>;
-    public sealed record MediatorOrderSubmitted(Guid CorrelationId, string OrderNumber) : CorrelatedBy<Guid>;
+    public sealed record StartMediatorOrder(Guid CorrelationId, string OrderNumber) : ICorrelatedBy<Guid>;
+    public sealed record MediatorOrderSubmitted(Guid CorrelationId, string OrderNumber) : ICorrelatedBy<Guid>;
 
     public sealed class SagaStartingMediatorConsumer : IConsumer<StartMediatorOrder>
     {
@@ -287,7 +287,7 @@ public sealed class ContainerMediatorIntegrationTests
             context.CancellationToken);
     }
 
-    public sealed class MediatorOrderSaga : ISaga, InitiatedBy<MediatorOrderSubmitted>
+    public sealed class MediatorOrderSaga : ISaga, IInitiatedBy<MediatorOrderSubmitted>
     {
         public Guid CorrelationId { get; set; }
         public string? OrderNumber { get; set; }

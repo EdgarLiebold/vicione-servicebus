@@ -300,7 +300,7 @@ public sealed class FutureRegistrationBoundaryTests
     private sealed class OpenFutureDefinition<T> : FutureDefinition<RegisteredFuture>
         where T : class;
 
-    private sealed class WrongState : SagaStateMachineInstance
+    private sealed class WrongState : ISagaStateMachineInstance
     {
         public int CurrentState { get; set; }
 

@@ -321,31 +321,31 @@ public sealed class MultiBusRequestTests
 
     public sealed class CustomBusB(IBusControl busControl) : BusInstance<IBusB>(busControl), IBusB;
 
-    public sealed record DefaultRequest(Guid CorrelationId, string Key) : CorrelatedBy<Guid>;
+    public sealed record DefaultRequest(Guid CorrelationId, string Key) : ICorrelatedBy<Guid>;
 
-    public sealed record DefaultResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record DefaultResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record SecondaryRequest(Guid CorrelationId, string Key) : CorrelatedBy<Guid>;
+    public sealed record SecondaryRequest(Guid CorrelationId, string Key) : ICorrelatedBy<Guid>;
 
-    public sealed record SecondaryResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record SecondaryResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed record DefinitionMessage(string Value);
 
-    public sealed record DefaultOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record DefaultOwnedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record BusBOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BusBOwnedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record BusCOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record BusCOwnedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record OwnedResponse(Guid CorrelationId, string Owner) : CorrelatedBy<Guid>;
+    public sealed record OwnedResponse(Guid CorrelationId, string Owner) : ICorrelatedBy<Guid>;
 
-    public sealed record CrossBusOrigin(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CrossBusOrigin(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record CrossBusDelivered(Guid CorrelationId, Uri SourceBus, Uri DestinationBus) : CorrelatedBy<Guid>;
+    public sealed record CrossBusDelivered(Guid CorrelationId, Uri SourceBus, Uri DestinationBus) : ICorrelatedBy<Guid>;
 
-    public sealed record SharedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SharedMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record SharedOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record SharedOwnedRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class SharedConsumer : IConsumer<SharedMessage>
     {

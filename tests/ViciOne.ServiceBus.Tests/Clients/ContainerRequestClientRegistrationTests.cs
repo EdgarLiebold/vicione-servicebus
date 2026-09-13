@@ -158,10 +158,10 @@ public sealed class ContainerRequestClientRegistrationTests
         .GetValidatedOptions().OperationTimeout!.Value;
 
 
-    public sealed record InitialRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record InitialResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record SubsequentRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record SubsequentResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record InitialRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record InitialResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record SubsequentRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record SubsequentResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed record NestedRequestSnapshot(
         Guid CorrelationId,
@@ -204,8 +204,8 @@ public sealed class ContainerRequestClientRegistrationTests
         }
     }
 
-    public sealed record OpenGenericRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record OpenGenericResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record OpenGenericRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record OpenGenericResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed class OpenGenericConsumer : IConsumer<OpenGenericRequest>
     {
@@ -213,10 +213,10 @@ public sealed class ContainerRequestClientRegistrationTests
             new OpenGenericResponse(context.Message.CorrelationId, context.Message.Value.ToUpperInvariant()));
     }
 
-    public sealed record ScopedFactoryOuterRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record ScopedFactoryOuterResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record ScopedFactoryInnerRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
-    public sealed record ScopedFactoryInnerResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record ScopedFactoryOuterRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record ScopedFactoryOuterResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record ScopedFactoryInnerRequest(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+    public sealed record ScopedFactoryInnerResponse(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed class ScopeMarker;
 

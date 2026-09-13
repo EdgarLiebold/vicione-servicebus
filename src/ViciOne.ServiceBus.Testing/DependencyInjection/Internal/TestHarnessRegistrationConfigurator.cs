@@ -233,7 +233,7 @@ internal sealed class TestHarnessRegistrationConfigurator :
         void ObserveCustomKind(Type registrationType, Type[] supportingTypes)
         {
             if (supportingTypes.Length == 1
-                && typeof(SagaStateMachineInstance).IsAssignableFrom(registrationType))
+                && typeof(ISagaStateMachineInstance).IsAssignableFrom(registrationType))
             {
                 Invoke(AddSagaStateMachineMethod, supportingTypes[0], registrationType);
                 return;
@@ -303,8 +303,8 @@ internal sealed class TestHarnessRegistrationConfigurator :
             services.AddSagaContainerTestHarness<T>();
 
         static void AddSagaStateMachine<TStateMachine, TInstance>(IServiceCollection services)
-            where TStateMachine : class, SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance =>
+            where TStateMachine : class, ISagaStateMachine<TInstance>
+            where TInstance : class, ISagaStateMachineInstance =>
             services.AddSagaStateMachineContainerTestHarness<TStateMachine, TInstance>();
     }
 }

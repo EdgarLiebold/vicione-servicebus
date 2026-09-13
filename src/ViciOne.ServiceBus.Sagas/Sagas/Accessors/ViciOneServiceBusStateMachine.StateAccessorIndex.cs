@@ -4,21 +4,21 @@ using System.Linq;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     class StateAccessorIndex
     {
-        readonly State<TInstance>?[] _assignedStates;
-        readonly StateMachine<TInstance> _stateMachine;
-        readonly Lazy<State<TInstance>?[]> _states;
+        readonly IState<TInstance>?[] _assignedStates;
+        readonly IStateMachine<TInstance> _stateMachine;
+        readonly Lazy<IState<TInstance>?[]> _states;
 
-        public StateAccessorIndex(StateMachine<TInstance> stateMachine, State<TInstance> initial, State<TInstance> final, State[] states)
+        public StateAccessorIndex(IStateMachine<TInstance> stateMachine, IState<TInstance> initial, IState<TInstance> final, IState[] states)
         {
             _stateMachine = stateMachine;
 
-            _assignedStates = new[] { null, initial, final }.Concat(states.Cast<State<TInstance>>()).ToArray();
+            _assignedStates = new[] { null, initial, final }.Concat(states.Cast<IState<TInstance>>()).ToArray();
 
-            _states = new Lazy<State<TInstance>?[]>(CreateStateArray);
+            _states = new Lazy<IState<TInstance>?[]>(CreateStateArray);
         }
 
         public int this[string name]
@@ -38,7 +38,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        public State<TInstance>? this[int index]
+        public IState<TInstance>? this[int index]
         {
             get
             {
@@ -49,9 +49,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        State<TInstance>?[] CreateStateArray()
+        IState<TInstance>?[] CreateStateArray()
         {
-            return _assignedStates.Concat(_stateMachine.States.Cast<State<TInstance>>()).Distinct().ToArray();
+            return _assignedStates.Concat(_stateMachine.States.Cast<IState<TInstance>>()).Distinct().ToArray();
         }
     }
 }

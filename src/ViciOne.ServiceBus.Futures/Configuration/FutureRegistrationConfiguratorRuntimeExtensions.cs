@@ -19,7 +19,7 @@ public static class FutureRegistrationConfiguratorRuntimeExtensions
         ArgumentNullException.ThrowIfNull(futureType);
 
         if (!futureType.IsClass || futureType.IsAbstract || futureType.ContainsGenericParameters
-            || !futureType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types)
+            || !futureType.TryGetSingleClosedGenericArguments(typeof(ISagaStateMachine<>), out Type[] types)
             || types.Length != 1
             || types[0] != typeof(FutureState))
         {
@@ -42,7 +42,7 @@ public static class FutureRegistrationConfiguratorRuntimeExtensions
 
     sealed class RegisterFuture<TFuture> :
         IRegisterFuture
-        where TFuture : class, SagaStateMachine<FutureState>
+        where TFuture : class, ISagaStateMachine<FutureState>
     {
         public IFutureRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? futureDefinitionType)
         {

@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Contracts;
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
 /// <summary>
-/// Publishes the <see cref="RequestFaulted" /> event used by the request state machine to complete
+/// Publishes the <see cref="IRequestFaulted" /> event used by the request state machine to complete
 /// a pending request with its structured fault details.
 /// </summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
@@ -13,7 +13,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TRequest">The request type.</typeparam>
 public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TRequest : class
 {
@@ -26,7 +26,7 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -35,12 +35,12 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         var payload = context.Message as Fault
             ?? throw new InvalidOperationException($"The message type {TypeCache<TMessage>.ShortName} must implement {nameof(Fault)}.");
 
-        await context.PublishAsync<RequestFaulted>(new
+        await context.PublishAsync<IRequestFaulted>(new
         {
             context.Saga.CorrelationId,
             PayloadType = MessageTypeCache<Fault<TRequest>>.MessageTypeNames.ToArray(),
@@ -62,7 +62,7 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

@@ -29,7 +29,7 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, ISaga
     {
-        if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
+        if (typeof(T).ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
 
         return new SagaRegistrar<T>().Register(collection, registrar);
@@ -57,7 +57,7 @@ public static class DependencyInjectionSagaRegistrationExtensions
         where T : class, ISaga
         where TDefinition : class, ISagaDefinition<T>
     {
-        if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
+        if (typeof(T).ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
 
         return new SagaDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
@@ -86,7 +86,7 @@ public static class DependencyInjectionSagaRegistrationExtensions
         if (sagaDefinitionType == null)
             return RegisterSaga<T>(collection, registrar);
 
-        if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
+        if (typeof(T).ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
 
         if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != typeof(T))
@@ -109,7 +109,7 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
         Type? sagaDefinitionType = null)
     {
-        if (sagaType.ImplementsInterface<SagaStateMachineInstance>())
+        if (sagaType.ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
 
         if (sagaDefinitionType != null)

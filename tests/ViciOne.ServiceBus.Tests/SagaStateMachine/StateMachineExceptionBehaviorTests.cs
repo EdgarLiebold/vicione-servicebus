@@ -127,8 +127,8 @@ public sealed class StateMachineExceptionBehaviorTests
             return new ExceptionScenario(declarativeMachine, declarativeMachine.Initialized, declarativeMachine.Failed);
         }
 
-        State failed = null!;
-        Event initialized = null!;
+        IState failed = null!;
+        IEvent initialized = null!;
         ViciOneServiceBusStateMachine<ExceptionInstance> machine = ViciOneServiceBusStateMachine<ExceptionInstance>.New(builder => builder
             .State("Failed", out failed)
             .Event("Initialized", out initialized)
@@ -146,8 +146,8 @@ public sealed class StateMachineExceptionBehaviorTests
             return new ExceptionScenario(declarativeMachine, declarativeMachine.Initialized, declarativeMachine.Failed);
         }
 
-        State failed = null!;
-        Event initialized = null!;
+        IState failed = null!;
+        IEvent initialized = null!;
         ViciOneServiceBusStateMachine<ExceptionInstance> machine = ViciOneServiceBusStateMachine<ExceptionInstance>.New(builder => builder
             .State("Failed", out failed)
             .Event("Initialized", out initialized)
@@ -166,7 +166,7 @@ public sealed class StateMachineExceptionBehaviorTests
             return new ExceptionScenario(declarativeMachine, declarativeMachine.Initialized, declarativeMachine.Initial);
         }
 
-        Event initialized = null!;
+        IEvent initialized = null!;
         ViciOneServiceBusStateMachine<ExceptionInstance> machine = ViciOneServiceBusStateMachine<ExceptionInstance>.New(builder => builder
             .Event("Initialized", out initialized)
             .InstanceState(instance => instance.CurrentState)
@@ -184,8 +184,8 @@ public sealed class StateMachineExceptionBehaviorTests
             return new DataExceptionScenario(declarativeMachine, declarativeMachine.Initialized, declarativeMachine.Failed);
         }
 
-        State failed = null!;
-        Event<ExceptionData> initialized = null!;
+        IState failed = null!;
+        IEvent<ExceptionData> initialized = null!;
         ViciOneServiceBusStateMachine<ExceptionInstance> machine = ViciOneServiceBusStateMachine<ExceptionInstance>.New(builder => builder
             .State("Failed", out failed)
             .Event("Initialized", out initialized)
@@ -196,9 +196,9 @@ public sealed class StateMachineExceptionBehaviorTests
         return new DataExceptionScenario(machine, initialized, failed);
     }
 
-    private static EventActivityBinder<ExceptionInstance> ConfigureTypedCatch(
-        EventActivityBinder<ExceptionInstance> behavior,
-        State failed) =>
+    private static IEventActivityBinder<ExceptionInstance> ConfigureTypedCatch(
+        IEventActivityBinder<ExceptionInstance> behavior,
+        IState failed) =>
         behavior
             .Then(context => context.Saga.Markers.Add("before"))
             .Then(context => Throw(context.Saga, "throw"))
@@ -223,9 +223,9 @@ public sealed class StateMachineExceptionBehaviorTests
                 .TransitionTo(failed))
             .Catch<Exception>(caught => caught.Then(context => context.Saga.Markers.Add("broad-catch")));
 
-    private static EventActivityBinder<ExceptionInstance> ConfigureBaseCatch(
-        EventActivityBinder<ExceptionInstance> behavior,
-        State failed) =>
+    private static IEventActivityBinder<ExceptionInstance> ConfigureBaseCatch(
+        IEventActivityBinder<ExceptionInstance> behavior,
+        IState failed) =>
         behavior
             .Then(context => context.Saga.Markers.Add("before"))
             .Then(context => Throw(context.Saga, "throw"))
@@ -236,15 +236,15 @@ public sealed class StateMachineExceptionBehaviorTests
                 .Then(context => Capture(context.Saga, context.Exception, "base-catch"))
                 .TransitionTo(failed));
 
-    private static EventActivityBinder<ExceptionInstance> ConfigureEmptyCatch(EventActivityBinder<ExceptionInstance> behavior) =>
+    private static IEventActivityBinder<ExceptionInstance> ConfigureEmptyCatch(IEventActivityBinder<ExceptionInstance> behavior) =>
         behavior
             .Then(context => Throw(context.Saga, "throw"))
             .Catch<Exception>(caught => caught)
             .Then(context => context.Saga.Markers.Add("after-catch"));
 
-    private static EventActivityBinder<ExceptionInstance, ExceptionData> ConfigureDataCatch(
-        EventActivityBinder<ExceptionInstance, ExceptionData> behavior,
-        State failed) =>
+    private static IEventActivityBinder<ExceptionInstance, ExceptionData> ConfigureDataCatch(
+        IEventActivityBinder<ExceptionInstance, ExceptionData> behavior,
+        IState failed) =>
         behavior
             .Then(context => context.Saga.Markers.Add($"before:{context.Message.Value}"))
             .Then(context => Throw(context.Saga, "throw"))
@@ -277,27 +277,27 @@ public sealed class StateMachineExceptionBehaviorTests
         instance.CaughtException = exception;
     }
 
-    private static async Task RaiseAsync(StateMachine<ExceptionInstance> machine, ExceptionInstance instance, Event @event)
+    private static async Task RaiseAsync(IStateMachine<ExceptionInstance> machine, ExceptionInstance instance, IEvent @event)
     {
         var message = new ExceptionSignal();
         ConsumeContext<ExceptionSignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ExceptionInstance>(instance);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ExceptionInstance, ExceptionSignal>(consumeContext, sagaInstance);
-        BehaviorContext<ExceptionInstance> behaviorContext =
+        IBehaviorContext<ExceptionInstance> behaviorContext =
             new ViciOneServiceBusStateMachine<ExceptionInstance>.BehaviorContextProxy(machine, sagaContext, @event);
 
         await machine.RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task RaiseAsync<T>(StateMachine<ExceptionInstance> machine, ExceptionInstance instance, Event<T> @event, T message)
+    private static async Task RaiseAsync<T>(IStateMachine<ExceptionInstance> machine, ExceptionInstance instance, IEvent<T> @event, T message)
         where T : class
     {
         ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ExceptionInstance>(instance);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ExceptionInstance, T>(consumeContext, sagaInstance);
-        BehaviorContext<ExceptionInstance, T> behaviorContext =
+        IBehaviorContext<ExceptionInstance, T> behaviorContext =
             new ViciOneServiceBusStateMachine<ExceptionInstance>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
         await machine.RaiseEventAsync(behaviorContext);
@@ -315,19 +315,19 @@ public sealed class StateMachineExceptionBehaviorTests
 
     private sealed record ExceptionScenario(
         ViciOneServiceBusStateMachine<ExceptionInstance> Machine,
-        Event Event,
-        State Failed);
+        IEvent Event,
+        IState Failed);
 
     private sealed record DataExceptionScenario(
         ViciOneServiceBusStateMachine<ExceptionInstance> Machine,
-        Event<ExceptionData> Event,
-        State Failed);
+        IEvent<ExceptionData> Event,
+        IState Failed);
 
-    private sealed class ExceptionInstance : SagaStateMachineInstance
+    private sealed class ExceptionInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
 
-        public State? CurrentState { get; set; }
+        public IState? CurrentState { get; set; }
 
         public List<string> Markers { get; } = [];
 
@@ -343,9 +343,9 @@ public sealed class StateMachineExceptionBehaviorTests
             During(Initial, ConfigureTypedCatch(When(Initialized), Failed));
         }
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
     }
 
     private sealed class DeclarativeBaseCatchMachine : ViciOneServiceBusStateMachine<ExceptionInstance>
@@ -356,9 +356,9 @@ public sealed class StateMachineExceptionBehaviorTests
             During(Initial, ConfigureBaseCatch(When(Initialized), Failed));
         }
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
     }
 
     private sealed class DeclarativeEmptyCatchMachine : ViciOneServiceBusStateMachine<ExceptionInstance>
@@ -369,7 +369,7 @@ public sealed class StateMachineExceptionBehaviorTests
             During(Initial, ConfigureEmptyCatch(When(Initialized)));
         }
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
     }
 
     private sealed class DeclarativeDataCatchMachine : ViciOneServiceBusStateMachine<ExceptionInstance>
@@ -380,9 +380,9 @@ public sealed class StateMachineExceptionBehaviorTests
             During(Initial, ConfigureDataCatch(When(Initialized), Failed));
         }
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event<ExceptionData> Initialized { get; private set; } = null!;
+        public IEvent<ExceptionData> Initialized { get; private set; } = null!;
     }
 
     private sealed class DeclarativeNestedElseCatchMachine : ViciOneServiceBusStateMachine<ExceptionInstance>
@@ -405,13 +405,13 @@ public sealed class StateMachineExceptionBehaviorTests
                                 .TransitionTo(Failed))));
         }
 
-        public State Completed { get; private set; } = null!;
+        public IState Completed { get; private set; } = null!;
 
-        public State NotCompleted { get; private set; } = null!;
+        public IState NotCompleted { get; private set; } = null!;
 
-        public State Failed { get; private set; } = null!;
+        public IState Failed { get; private set; } = null!;
 
-        public Event Initialized { get; private set; } = null!;
+        public IEvent Initialized { get; private set; } = null!;
     }
 
     private sealed class DeclarativeFinalizeCatchMachine : ViciOneServiceBusStateMachine<ExceptionInstance>
@@ -428,6 +428,6 @@ public sealed class StateMachineExceptionBehaviorTests
                         .Finalize()));
         }
 
-        public Event<ExceptionData> Initialized { get; private set; } = null!;
+        public IEvent<ExceptionData> Initialized { get; private set; } = null!;
     }
 }

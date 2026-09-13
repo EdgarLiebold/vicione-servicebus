@@ -14,12 +14,12 @@ internal sealed class FutureRequest<TInput, TRequest> :
     where TRequest : class
     where TInput : class
 {
-    ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest> _factory;
+    ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TRequest> _factory;
 
     /// <summary>Creates a request dispatcher that publishes a request initialized from the input by default.</summary>
     public FutureRequest()
     {
-        _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest>(DefaultFactoryAsync);
+        _factory = new ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TRequest>(DefaultFactoryAsync);
 
         AddressProvider = PublishAddressProvider;
     }
@@ -30,7 +30,7 @@ internal sealed class FutureRequest<TInput, TRequest> :
     /// <summary>Gets or sets the selector for an identifier that remains pending until a matching response arrives.</summary>
     public PendingFutureIdProvider<TRequest>? PendingRequestIdProvider { get; set; }
     /// <summary>Sets the factory that creates the outbound request from the future event.</summary>
-    public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest> Factory
+    public ContextMessageFactory<IBehaviorContext<FutureState, TInput>, TRequest> Factory
     {
         set
         {
@@ -47,7 +47,7 @@ internal sealed class FutureRequest<TInput, TRequest> :
             yield return this.Failure("RequestAddressProvider", "must not be null");
     }
 
-    static Uri? PublishAddressProvider<T>(BehaviorContext<FutureState, T> context)
+    static Uri? PublishAddressProvider<T>(IBehaviorContext<FutureState, T> context)
         where T : class
     {
         return default;
@@ -57,7 +57,7 @@ internal sealed class FutureRequest<TInput, TRequest> :
     /// <param name="context">The future event context used to create and dispatch the request.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SendRequestAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
+    public async Task SendRequestAsync(IBehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         cancellationToken.ThrowIfCancellationRequested();
@@ -99,7 +99,7 @@ internal sealed class FutureRequest<TInput, TRequest> :
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> DefaultFactoryAsync(IBehaviorContext<FutureState, TInput> context)
     {
         return context.InitAsync<TRequest>(context.Message);
     }

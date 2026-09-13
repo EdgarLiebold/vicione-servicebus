@@ -43,5 +43,5 @@ public interface IFutureRequestConfigurator<TFault, out TInput, TRequest>
 
     /// <summary>Adds state-machine activities executed when the request faults.</summary>
     /// <param name="configure">The callback that adds activities to the request-fault event.</param>
-    void WhenFaulted(Func<EventActivityBinder<FutureState, Fault<TRequest>>, EventActivityBinder<FutureState, Fault<TRequest>>> configure);
+    void WhenFaulted(Func<IEventActivityBinder<FutureState, Fault<TRequest>>, IEventActivityBinder<FutureState, Fault<TRequest>>> configure);
 }

@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class CompositeEventActivity<TSaga> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     readonly ICompositeEventStatusAccessor<TSaga> _accessor;
     readonly CompositeEventStatus _complete;
@@ -20,7 +20,7 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="complete">The complete.</param>
     /// <param name="event">The event.</param>
     /// <param name="options">The options that control the operation.</param>
-    public CompositeEventActivity(ICompositeEventStatusAccessor<TSaga> accessor, int flag, CompositeEventStatus complete, Event @event,
+    public CompositeEventActivity(ICompositeEventStatusAccessor<TSaga> accessor, int flag, CompositeEventStatus complete, IEvent @event,
         CompositeEventOptions options)
     {
         _accessor = accessor;
@@ -31,11 +31,11 @@ public class CompositeEventActivity<TSaga> :
     }
 
     /// <summary>Gets the event.</summary>
-    public Event Event { get; }
+    public IEvent Event { get; }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -54,7 +54,7 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await ExecuteAsync(context).ConfigureAwait(false);
 
@@ -66,7 +66,7 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync<TData>(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
         await ExecuteAsync(context).ConfigureAwait(false);
@@ -79,7 +79,7 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -91,14 +91,14 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    Task ExecuteAsync(BehaviorContext<TSaga> context)
+    Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         var value = _accessor.Get(context.Saga);
 
@@ -114,7 +114,7 @@ public class CompositeEventActivity<TSaga> :
             : Task.CompletedTask;
     }
 
-    Task RaiseCompositeEventAsync(BehaviorContext<TSaga> context)
+    Task RaiseCompositeEventAsync(IBehaviorContext<TSaga> context)
     {
         return context.RaiseAsync(Event);
     }

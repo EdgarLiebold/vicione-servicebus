@@ -57,7 +57,7 @@ public sealed class StateMachineTelephoneTests
     private static async Task RaiseAndRecordAsync(
         TelephoneScenario scenario,
         TelephoneInstance phone,
-        Event @event,
+        IEvent @event,
         List<string> states)
     {
         await StateMachineTestExecution.RaiseAsync(scenario.Machine, phone, @event);
@@ -67,7 +67,7 @@ public sealed class StateMachineTelephoneTests
     private static async Task RaiseAndRecordAsync(
         TelephoneScenario scenario,
         TelephoneInstance phone,
-        Event<ServiceEstablished> @event,
+        IEvent<ServiceEstablished> @event,
         ServiceEstablished message,
         List<string> states)
     {
@@ -91,19 +91,19 @@ public sealed class StateMachineTelephoneTests
                 declarativeMachine.TakenOffHold);
         }
 
-        State offHook = null!;
-        State ringing = null!;
-        State<TelephoneInstance> connected = null!;
-        State<TelephoneInstance> onHold = null!;
-        State phoneDestroyed = null!;
-        Event<ServiceEstablished> serviceEstablished = null!;
-        Event callDialed = null!;
-        Event hungUp = null!;
-        Event callConnected = null!;
-        Event leftMessage = null!;
-        Event placedOnHold = null!;
-        Event takenOffHold = null!;
-        Event phoneHurledAgainstWall = null!;
+        IState offHook = null!;
+        IState ringing = null!;
+        IState<TelephoneInstance> connected = null!;
+        IState<TelephoneInstance> onHold = null!;
+        IState phoneDestroyed = null!;
+        IEvent<ServiceEstablished> serviceEstablished = null!;
+        IEvent callDialed = null!;
+        IEvent hungUp = null!;
+        IEvent callConnected = null!;
+        IEvent leftMessage = null!;
+        IEvent placedOnHold = null!;
+        IEvent takenOffHold = null!;
+        IEvent phoneHurledAgainstWall = null!;
         ViciOneServiceBusStateMachine<TelephoneInstance> machine = ViciOneServiceBusStateMachine<TelephoneInstance>.New(builder => builder
             .State("OffHook", out offHook)
             .State("Ringing", out ringing)
@@ -181,19 +181,19 @@ public sealed class StateMachineTelephoneTests
                 When(Connected.Leave).Then(context => MarkConnectedLeave(context.Saga)));
         }
 
-        public State OffHook { get; private set; } = null!;
-        public State Ringing { get; private set; } = null!;
-        public State Connected { get; private set; } = null!;
-        public State OnHold { get; private set; } = null!;
-        public State PhoneDestroyed { get; private set; } = null!;
-        public Event<ServiceEstablished> ServiceEstablished { get; private set; } = null!;
-        public Event CallDialed { get; private set; } = null!;
-        public Event HungUp { get; private set; } = null!;
-        public Event CallConnected { get; private set; } = null!;
-        public Event LeftMessage { get; private set; } = null!;
-        public Event PlacedOnHold { get; private set; } = null!;
-        public Event TakenOffHold { get; private set; } = null!;
-        public Event PhoneHurledAgainstWall { get; private set; } = null!;
+        public IState OffHook { get; private set; } = null!;
+        public IState Ringing { get; private set; } = null!;
+        public IState Connected { get; private set; } = null!;
+        public IState OnHold { get; private set; } = null!;
+        public IState PhoneDestroyed { get; private set; } = null!;
+        public IEvent<ServiceEstablished> ServiceEstablished { get; private set; } = null!;
+        public IEvent CallDialed { get; private set; } = null!;
+        public IEvent HungUp { get; private set; } = null!;
+        public IEvent CallConnected { get; private set; } = null!;
+        public IEvent LeftMessage { get; private set; } = null!;
+        public IEvent PlacedOnHold { get; private set; } = null!;
+        public IEvent TakenOffHold { get; private set; } = null!;
+        public IEvent PhoneHurledAgainstWall { get; private set; } = null!;
     }
 
     public enum TelephonePath
@@ -203,7 +203,7 @@ public sealed class StateMachineTelephoneTests
         HoldHangUp,
     }
 
-    private sealed class TelephoneInstance : SagaStateMachineInstance
+    private sealed class TelephoneInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; } = NewId.NextGuid();
         public string? CurrentState { get; set; }
@@ -217,11 +217,11 @@ public sealed class StateMachineTelephoneTests
 
     private sealed record TelephoneScenario(
         ViciOneServiceBusStateMachine<TelephoneInstance> Machine,
-        State OffHook,
-        Event<ServiceEstablished> ServiceEstablished,
-        Event CallDialed,
-        Event CallConnected,
-        Event HungUp,
-        Event PlacedOnHold,
-        Event TakenOffHold);
+        IState OffHook,
+        IEvent<ServiceEstablished> ServiceEstablished,
+        IEvent CallDialed,
+        IEvent CallConnected,
+        IEvent HungUp,
+        IEvent PlacedOnHold,
+        IEvent TakenOffHold);
 }

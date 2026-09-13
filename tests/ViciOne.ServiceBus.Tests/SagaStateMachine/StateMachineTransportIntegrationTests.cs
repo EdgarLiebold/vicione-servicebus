@@ -209,13 +209,13 @@ public sealed class StateMachineTransportIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record TransportStart(Guid CorrelationId, string Name, DateTime Timestamp) : CorrelatedBy<Guid>;
+    public sealed record TransportStart(Guid CorrelationId, string Name, DateTime Timestamp) : ICorrelatedBy<Guid>;
 
     public sealed record PublishedNotice(Guid CorrelationId, string Name);
 
     public sealed record SentNotice(Guid CorrelationId, string Name);
 
-    public sealed class TransportState : SagaStateMachineInstance
+    public sealed class TransportState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -248,9 +248,9 @@ public sealed class StateMachineTransportIntegrationTests
                     .TransitionTo(Running));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<TransportStart> Started { get; } = null!;
+        public IEvent<TransportStart> Started { get; } = null!;
     }
 
     private sealed class TransportRecorder
@@ -278,7 +278,7 @@ public sealed class StateMachineTransportIntegrationTests
 
     public sealed record DynamicStop(Guid ServiceId);
 
-    public sealed class DynamicEventState : SagaStateMachineInstance
+    public sealed class DynamicEventState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -294,8 +294,8 @@ public sealed class StateMachineTransportIntegrationTests
         public DynamicEventMachine()
         {
             InstanceState(instance => instance.CurrentState);
-            Event<DynamicStart> started = Event<DynamicStart>(nameof(DynamicStart));
-            Event<DynamicStop> stopped = Event<DynamicStop>(nameof(DynamicStop));
+            IEvent<DynamicStart> started = Event<DynamicStart>(nameof(DynamicStart));
+            IEvent<DynamicStop> stopped = Event<DynamicStop>(nameof(DynamicStop));
             Initially(
                 When(started)
                     .Then(context => context.Saga.StartCount++)
@@ -307,16 +307,16 @@ public sealed class StateMachineTransportIntegrationTests
                     .Finalize());
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
     }
 
-    public sealed record NoTopologyStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record NoTopologyStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record NoTopologySuspend(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record NoTopologySuspend(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record NoTopologyStop(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record NoTopologyStop(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class NoTopologyState : SagaStateMachineInstance
+    public sealed class NoTopologyState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -340,24 +340,24 @@ public sealed class StateMachineTransportIntegrationTests
                 When(Stopped).Finalize());
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public State SuspendedState { get; } = null!;
+        public IState SuspendedState { get; } = null!;
 
-        public Event<NoTopologyStart> Started { get; } = null!;
+        public IEvent<NoTopologyStart> Started { get; } = null!;
 
-        public Event<NoTopologySuspend> Suspended { get; } = null!;
+        public IEvent<NoTopologySuspend> Suspended { get; } = null!;
 
-        public Event<NoTopologyStop> Stopped { get; } = null!;
+        public IEvent<NoTopologyStop> Stopped { get; } = null!;
     }
 
-    public sealed record StartRule(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StartRule(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed record ExecuteRule(Guid CorrelationId);
 
     public sealed record ExecuteRuleResponse(Guid CorrelationId, string Result);
 
-    public sealed class EnterRequestState : SagaStateMachineInstance
+    public sealed class EnterRequestState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -400,14 +400,14 @@ public sealed class StateMachineTransportIntegrationTests
                     .TransitionTo(Waiting));
         }
 
-        public State Starting { get; } = null!;
+        public IState Starting { get; } = null!;
 
-        public State Executing { get; } = null!;
+        public IState Executing { get; } = null!;
 
-        public State Waiting { get; } = null!;
+        public IState Waiting { get; } = null!;
 
-        public Event<StartRule> Start { get; } = null!;
+        public IEvent<StartRule> Start { get; } = null!;
 
-        public Request<EnterRequestState, ExecuteRule, ExecuteRuleResponse> Execute { get; } = null!;
+        public IRequest<EnterRequestState, ExecuteRule, ExecuteRuleResponse> Execute { get; } = null!;
     }
 }

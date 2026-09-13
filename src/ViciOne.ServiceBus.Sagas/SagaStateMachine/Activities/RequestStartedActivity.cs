@@ -5,14 +5,14 @@ using ViciOne.ServiceBus.Contracts;
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
 /// <summary>
-/// Publishes the <see cref="RequestStarted" /> event, used by the request state machine to track
+/// Publishes the <see cref="IRequestStarted" /> event, used by the request state machine to track
 /// pending requests for a saga instance.
 /// </summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RequestStartedActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>Writes diagnostic information to the probe context.</summary>
@@ -24,7 +24,7 @@ public class RequestStartedActivity<TSaga, TMessage> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -33,9 +33,9 @@ public class RequestStartedActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await context.PublishAsync<RequestStarted>(new
+        await context.PublishAsync<IRequestStarted>(new
         {
             context.Saga.CorrelationId,
             context.RequestId,
@@ -54,7 +54,7 @@ public class RequestStartedActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);

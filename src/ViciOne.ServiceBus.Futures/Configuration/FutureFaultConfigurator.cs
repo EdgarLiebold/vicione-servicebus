@@ -49,12 +49,12 @@ internal sealed class FutureFaultConfigurator<TCommand, TFault, TInput> :
     {
         ArgumentNullException.ThrowIfNull(valueProvider);
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> FactoryAsync(IBehaviorContext<FutureState, TInput> context)
         {
             return context.InitAsync<TFault>(valueProvider(context));
         }
 
-        _fault.Factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)FactoryAsync);
+        _fault.Factory = MessageFactory<TFault>.Create((Func<IBehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)FactoryAsync);
     }
 }
 
@@ -99,11 +99,11 @@ internal sealed class FutureFaultConfigurator<TFault> :
     {
         ArgumentNullException.ThrowIfNull(valueProvider);
 
-        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> FactoryAsync(BehaviorContext<FutureState> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> FactoryAsync(IBehaviorContext<FutureState> context)
         {
             return context.InitAsync<TFault>(valueProvider(context));
         }
 
-        _fault.Factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)FactoryAsync);
+        _fault.Factory = MessageFactory<TFault>.Create((Func<IBehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)FactoryAsync);
     }
 }

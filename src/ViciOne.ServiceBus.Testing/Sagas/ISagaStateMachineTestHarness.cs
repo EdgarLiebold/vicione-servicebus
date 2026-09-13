@@ -11,8 +11,8 @@ namespace ViciOne.ServiceBus.Testing;
 public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     ISagaTestHarness<TInstance>,
     IDisposable
-    where TStateMachine : SagaStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TStateMachine : ISagaStateMachine<TInstance>
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Gets the observed state machine.</summary>
     TStateMachine StateMachine { get; }
@@ -29,7 +29,7 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="timeout">The polling timeout, or <see langword="null"/> to use the harness default.</param>
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The correlation identifier when the saga reaches the state; otherwise, <see langword="null"/>.</returns>
-    Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, Func<TStateMachine, State> stateSelector,
+    Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, Func<TStateMachine, IState> stateSelector,
         TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>Waits until the identified saga reaches a specified state.</summary>
@@ -38,7 +38,7 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="timeout">The polling timeout, or <see langword="null"/> to use the harness default.</param>
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The correlation identifier when the saga reaches the state; otherwise, <see langword="null"/>.</returns>
-    Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, State state, TimeSpan? timeout = default,
+    Task<Guid?> WaitForSagaInStateAsync(Guid correlationId, IState state, TimeSpan? timeout = default,
         CancellationToken cancellationToken = default);
 
     /// <summary>Waits until at least one saga matching a predicate reaches a selected state.</summary>
@@ -48,7 +48,7 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The matching correlation identifiers, or an empty list when the timeout expires.</returns>
     Task<IReadOnlyList<Guid>> WaitForSagasInStateAsync(Expression<Func<TInstance, bool>> expression,
-        Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default,
+        Func<TStateMachine, IState> stateSelector, TimeSpan? timeout = default,
         CancellationToken cancellationToken = default);
 
     /// <summary>Waits until at least one saga matching a predicate reaches a specified state.</summary>
@@ -57,6 +57,6 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="timeout">The polling timeout, or <see langword="null"/> to use the harness default.</param>
     /// <param name="cancellationToken">The token that cancels repository reads and polling delays.</param>
     /// <returns>The matching correlation identifiers, or an empty list when the timeout expires.</returns>
-    Task<IReadOnlyList<Guid>> WaitForSagasInStateAsync(Expression<Func<TInstance, bool>> expression, State state,
+    Task<IReadOnlyList<Guid>> WaitForSagasInStateAsync(Expression<Func<TInstance, bool>> expression, IState state,
         TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 }

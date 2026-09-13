@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ObservesSagaConnectorFactory<TSaga, TMessage> :
     ISagaConnectorFactory
-    where TSaga : class, ISaga, Observes<TMessage, TSaga>
+    where TSaga : class, ISaga, IObserves<TMessage, TSaga>
     where TMessage : class
 {
     readonly ISagaMessageConnector<TSaga> _connector;

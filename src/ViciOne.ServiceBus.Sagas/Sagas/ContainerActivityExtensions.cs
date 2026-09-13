@@ -12,9 +12,9 @@ public static class ContainerActivityExtensions
     /// <param name="binder">The binder.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> Activity<TInstance, TData>(this EventActivityBinder<TInstance, TData> binder,
-        Func<IStateMachineActivitySelector<TInstance, TData>, EventActivityBinder<TInstance, TData>> configure)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance, TData> Activity<TInstance, TData>(this IEventActivityBinder<TInstance, TData> binder,
+        Func<IStateMachineActivitySelector<TInstance, TData>, IEventActivityBinder<TInstance, TData>> configure)
+        where TInstance : class, ISagaStateMachineInstance
         where TData : class
     {
         var selector = new StateMachineActivitySelector<TInstance, TData>(binder);
@@ -27,9 +27,9 @@ public static class ContainerActivityExtensions
     /// <param name="binder">The binder.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance> Activity<TInstance>(this EventActivityBinder<TInstance> binder,
-        Func<IStateMachineActivitySelector<TInstance>, EventActivityBinder<TInstance>> configure)
-        where TInstance : class, SagaStateMachineInstance
+    public static IEventActivityBinder<TInstance> Activity<TInstance>(this IEventActivityBinder<TInstance> binder,
+        Func<IStateMachineActivitySelector<TInstance>, IEventActivityBinder<TInstance>> configure)
+        where TInstance : class, ISagaStateMachineInstance
     {
         var selector = new StateMachineActivitySelector<TInstance>(binder);
 
@@ -42,9 +42,9 @@ public static class ContainerActivityExtensions
     /// <param name="binder">The binder.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> Activity<TInstance, TException>(this ExceptionActivityBinder<TInstance, TException> binder,
-        Func<IStateMachineFaultedActivitySelector<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> configure)
-        where TInstance : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TInstance, TException> Activity<TInstance, TException>(this IExceptionActivityBinder<TInstance, TException> binder,
+        Func<IStateMachineFaultedActivitySelector<TInstance, TException>, IExceptionActivityBinder<TInstance, TException>> configure)
+        where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
     {
         var selector = new StateMachineFaultedActivitySelector<TInstance, TException>(binder);
@@ -59,10 +59,10 @@ public static class ContainerActivityExtensions
     /// <param name="binder">The binder.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TMessage, TException> Activity<TInstance, TMessage, TException>(
-        this ExceptionActivityBinder<TInstance, TMessage, TException> binder,
-        Func<IStateMachineFaultedActivitySelector<TInstance, TMessage, TException>, ExceptionActivityBinder<TInstance, TMessage, TException>> configure)
-        where TInstance : class, SagaStateMachineInstance
+    public static IExceptionActivityBinder<TInstance, TMessage, TException> Activity<TInstance, TMessage, TException>(
+        this IExceptionActivityBinder<TInstance, TMessage, TException> binder,
+        Func<IStateMachineFaultedActivitySelector<TInstance, TMessage, TException>, IExceptionActivityBinder<TInstance, TMessage, TException>> configure)
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {

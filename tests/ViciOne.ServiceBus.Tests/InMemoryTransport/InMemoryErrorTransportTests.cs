@@ -140,9 +140,9 @@ public sealed class InMemoryErrorTransportTests
             TestInactivityTimeout = timeout,
         };
 
-    private sealed record ErrorMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record ErrorMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed record DisabledFaultMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    private sealed record DisabledFaultMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed class DisabledFaultException : Exception;
 }

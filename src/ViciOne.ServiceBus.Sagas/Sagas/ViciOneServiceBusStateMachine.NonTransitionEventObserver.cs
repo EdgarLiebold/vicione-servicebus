@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     class NonTransitionEventObserver<TSaga> :
         IEventObserver<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TSaga : class, ISagaStateMachineInstance
     {
         readonly IReadOnlyDictionary<string, StateMachineEvent> _eventCache;
         readonly IEventObserver<TSaga> _observer;
@@ -20,7 +20,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _observer = observer;
         }
 
-        public Task PreExecuteAsync(BehaviorContext<TSaga> context)
+        public Task PreExecuteAsync(IBehaviorContext<TSaga> context)
         {
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
                 return _observer.PreExecuteAsync(context);
@@ -28,7 +28,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return Task.CompletedTask;
         }
 
-        public Task PreExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+        public Task PreExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
             where T : class
         {
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
@@ -37,7 +37,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return Task.CompletedTask;
         }
 
-        public Task PostExecuteAsync(BehaviorContext<TSaga> context)
+        public Task PostExecuteAsync(IBehaviorContext<TSaga> context)
         {
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
                 return _observer.PostExecuteAsync(context);
@@ -45,7 +45,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return Task.CompletedTask;
         }
 
-        public Task PostExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+        public Task PostExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
             where T : class
         {
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
@@ -54,7 +54,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return Task.CompletedTask;
         }
 
-        public Task ExecuteFaultAsync(BehaviorContext<TSaga> context, Exception exception)
+        public Task ExecuteFaultAsync(IBehaviorContext<TSaga> context, Exception exception)
         {
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
                 return _observer.ExecuteFaultAsync(context, exception);
@@ -62,7 +62,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return Task.CompletedTask;
         }
 
-        public Task ExecuteFaultAsync<T>(BehaviorContext<TSaga, T> context, Exception exception)
+        public Task ExecuteFaultAsync<T>(IBehaviorContext<TSaga, T> context, Exception exception)
             where T : class
         {
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)

@@ -665,9 +665,9 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed record UnexpectedSagaPublication(Guid CorrelationId);
 
-    private sealed record SubmitThroughDependency(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record SubmitThroughDependency(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    private sealed record SubmittedThroughDependency(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record SubmittedThroughDependency(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     private sealed class ScopedConsumerDependency(IPublishEndpoint publishEndpoint)
     {
@@ -711,7 +711,7 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed class ExpectedRetryException(string message) : Exception(message);
 
-    private sealed record ContainerHandlerMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    private sealed record ContainerHandlerMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed record ContainerExecuteArguments(string Value);
 
@@ -792,11 +792,11 @@ public sealed class DependencyInjectionTestHarnessTests
         public string Value { get; set; } = string.Empty;
     }
 
-    public sealed record ContainerStart(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record ContainerStart(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed record ContainerStarted(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record ContainerStarted(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
-    public sealed class ContainerMetadataState : SagaStateMachineInstance
+    public sealed class ContainerMetadataState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -825,9 +825,9 @@ public sealed class DependencyInjectionTestHarnessTests
                     .TransitionTo(Running));
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public Event<ContainerStart> Start { get; } = null!;
+        public IEvent<ContainerStart> Start { get; } = null!;
     }
 
     public sealed class PublishContainerStartedActivity(IPublishEndpoint publishEndpoint) :
@@ -837,10 +837,10 @@ public sealed class DependencyInjectionTestHarnessTests
         {
         }
 
-        public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
+        public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
 
         public async Task ExecuteAsync(
-            BehaviorContext<ContainerMetadataState, ContainerStart> context,
+            IBehaviorContext<ContainerMetadataState, ContainerStart> context,
             IBehavior<ContainerMetadataState, ContainerStart> next)
         {
             await publishEndpoint.PublishAsync(
@@ -850,7 +850,7 @@ public sealed class DependencyInjectionTestHarnessTests
         }
 
         public Task FaultedAsync<TException>(
-            BehaviorExceptionContext<ContainerMetadataState, ContainerStart, TException> context,
+            IBehaviorExceptionContext<ContainerMetadataState, ContainerStart, TException> context,
             IBehavior<ContainerMetadataState, ContainerStart> next)
             where TException : Exception =>
             next.FaultedAsync(context);

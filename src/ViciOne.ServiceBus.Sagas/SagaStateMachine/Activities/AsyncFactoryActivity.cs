@@ -7,20 +7,20 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class AsyncFactoryActivity<TSaga> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
-    readonly Func<BehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> _activityFactory;
+    readonly Func<IBehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> _activityFactory;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="activityFactory">The activity factory.</param>
-    public AsyncFactoryActivity(Func<BehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> activityFactory)
+    public AsyncFactoryActivity(Func<IBehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> activityFactory)
     {
         _activityFactory = activityFactory;
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -32,28 +32,28 @@ public class AsyncFactoryActivity<TSaga> :
         context.CreateScope("activityFactory");
     }
 
-    async Task IStateMachineActivity<TSaga>.ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    async Task IStateMachineActivity<TSaga>.ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
         await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
-    async Task IStateMachineActivity<TSaga>.ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    async Task IStateMachineActivity<TSaga>.ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
         await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
-    async Task IStateMachineActivity<TSaga>.FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    async Task IStateMachineActivity<TSaga>.FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
         await activity.FaultedAsync(context, next).ConfigureAwait(false);
     }
 
-    async Task IStateMachineActivity<TSaga>.FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context,
+    async Task IStateMachineActivity<TSaga>.FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context,
         IBehavior<TSaga, T> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
@@ -68,21 +68,21 @@ public class AsyncFactoryActivity<TSaga> :
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class AsyncFactoryActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
-    readonly Func<BehaviorContext<TSaga, TMessage>, Task<IStateMachineActivity<TSaga, TMessage>>> _activityFactory;
+    readonly Func<IBehaviorContext<TSaga, TMessage>, Task<IStateMachineActivity<TSaga, TMessage>>> _activityFactory;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="activityFactory">The activity factory.</param>
-    public AsyncFactoryActivity(Func<BehaviorContext<TSaga, TMessage>, Task<IStateMachineActivity<TSaga, TMessage>>> activityFactory)
+    public AsyncFactoryActivity(Func<IBehaviorContext<TSaga, TMessage>, Task<IStateMachineActivity<TSaga, TMessage>>> activityFactory)
     {
         _activityFactory = activityFactory;
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
@@ -98,7 +98,7 @@ public class AsyncFactoryActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         IStateMachineActivity<TSaga, TMessage> activity = await _activityFactory(context).ConfigureAwait(false);
 
@@ -110,7 +110,7 @@ public class AsyncFactoryActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public async Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         IStateMachineActivity<TSaga, TMessage> activity = await _activityFactory(context).ConfigureAwait(false);

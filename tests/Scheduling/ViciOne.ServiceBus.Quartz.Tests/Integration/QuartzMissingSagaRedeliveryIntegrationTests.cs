@@ -60,10 +60,10 @@ public sealed class QuartzMissingSagaRedeliveryIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed class ServiceInstance : SagaStateMachineInstance
+    public sealed class ServiceInstance : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
         public string ServiceName { get; set; } = string.Empty;
     }
 
@@ -102,9 +102,9 @@ public sealed class QuartzMissingSagaRedeliveryIntegrationTests
         }
 
         public Task Started => _started.Task;
-        public State Running { get; private set; } = null!;
-        public Event<StartService> ServiceStarted { get; private set; } = null!;
-        public Event<CheckServiceStatus> StatusRequested { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
+        public IEvent<StartService> ServiceStarted { get; private set; } = null!;
+        public IEvent<CheckServiceStatus> StatusRequested { get; private set; } = null!;
     }
 
     public sealed record StartService(string ServiceName, Guid ServiceId);

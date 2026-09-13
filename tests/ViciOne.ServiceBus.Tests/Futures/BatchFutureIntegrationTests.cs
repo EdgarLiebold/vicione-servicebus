@@ -161,7 +161,7 @@ public sealed class BatchFutureIntegrationTests
             $"Expected {expectedCount} sent {typeof(T).Name} message(s), but observed {observedCount}.");
     }
 
-    public interface BatchRequest : CorrelatedBy<Guid>
+    public interface BatchRequest : ICorrelatedBy<Guid>
     {
         DateTime? BatchExpiry { get; }
 
@@ -187,12 +187,12 @@ public sealed class BatchFutureIntegrationTests
         IReadOnlyList<string> ProcessedJobsNumbers { get; }
     }
 
-    public interface ProcessBatchItem : CorrelatedBy<Guid>
+    public interface ProcessBatchItem : ICorrelatedBy<Guid>
     {
         string JobNumber { get; }
     }
 
-    public interface ProcessBatchItemCompleted : CorrelatedBy<Guid>
+    public interface ProcessBatchItemCompleted : ICorrelatedBy<Guid>
     {
         string JobNumber { get; }
     }
@@ -218,7 +218,7 @@ public sealed class BatchFutureIntegrationTests
             WhenAllCompletedOrFaulted(response => response.SetFaultInitializer(MapResponse));
         }
 
-        private static object MapResponse(BehaviorContext<FutureState> context)
+        private static object MapResponse(IBehaviorContext<FutureState> context)
         {
             BatchRequest command = context.GetCommand<BatchRequest>()
                 ?? throw new Xunit.Sdk.XunitException("Expected the future batch command to be available.");

@@ -286,8 +286,8 @@ public static class ViciOneServiceBusTestingServiceCollectionExtensions
     /// <typeparam name="TSaga">The saga state type.</typeparam>
     /// <param name="services">The dependency-injection service collection.</param>
     internal static void AddSagaStateMachineContainerTestHarness<TStateMachine, TSaga>(this IServiceCollection services)
-        where TStateMachine : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         services.TryAddSingleton<SagaContainerTestHarnessRegistration<TSaga>>();
         services.TryAddSingleton<ISagaRepositoryDecoratorRegistration<TSaga>>(provider =>

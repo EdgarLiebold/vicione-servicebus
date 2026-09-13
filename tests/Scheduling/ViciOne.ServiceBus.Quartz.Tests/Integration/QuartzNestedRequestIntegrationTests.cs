@@ -157,10 +157,10 @@ public sealed class QuartzNestedRequestIntegrationTests
         }
     }
 
-    public sealed class CreateLinkState : SagaStateMachineInstance
+    public sealed class CreateLinkState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
         public Uri Link { get; set; } = null!;
         public Guid? LinkRequestId { get; set; }
     }
@@ -196,8 +196,8 @@ public sealed class QuartzNestedRequestIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public Event<CreateShortLink> CreateRequested { get; private set; } = null!;
-        public Request<CreateLinkState, RequestShortLink, ShortLinkCreated> LinkRequest { get; private set; } = null!;
+        public IEvent<CreateShortLink> CreateRequested { get; private set; } = null!;
+        public IRequest<CreateLinkState, RequestShortLink, ShortLinkCreated> LinkRequest { get; private set; } = null!;
     }
 
     public sealed record CreateShortLink(Uri Link);

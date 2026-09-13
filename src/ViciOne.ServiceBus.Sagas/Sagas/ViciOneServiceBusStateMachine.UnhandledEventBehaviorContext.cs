@@ -3,16 +3,16 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     class UnhandledEventBehaviorContext :
         BehaviorContextProxy,
-        UnhandledEventContext<TInstance>
+        IUnhandledEventContext<TInstance>
     {
-        readonly BehaviorContext<TInstance> _context;
-        readonly StateMachine<TInstance> _machine;
+        readonly IBehaviorContext<TInstance> _context;
+        readonly IStateMachine<TInstance> _machine;
 
-        public UnhandledEventBehaviorContext(StateMachine<TInstance> machine, BehaviorContext<TInstance> context, State state)
+        public UnhandledEventBehaviorContext(IStateMachine<TInstance> machine, IBehaviorContext<TInstance> context, IState state)
             : base(machine, context, context.Event)
         {
             _context = context;
@@ -20,9 +20,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _machine = machine;
         }
 
-        public State CurrentState { get; }
+        public IState CurrentState { get; }
 
-        public Event Event => _context.Event;
+        public IEvent Event => _context.Event;
 
         public Task IgnoreAsync(CancellationToken cancellationToken = default)
         {

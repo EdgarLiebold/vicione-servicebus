@@ -9,10 +9,10 @@ internal static class FutureBehaviorContextFactory
 {
     public static async Task UseAsync<T>(
         ViciOneServiceBusStateMachine<FutureState> machine,
-        Event<T> @event,
+        IEvent<T> @event,
         FutureState state,
         T message,
-        Func<BehaviorContext<FutureState, T>, Task> callback,
+        Func<IBehaviorContext<FutureState, T>, Task> callback,
         OutgoingMessageRecorder? outgoingMessages = null,
         CancellationToken cancellationToken = default,
         Uri? responseAddress = null,
@@ -40,7 +40,7 @@ internal static class FutureBehaviorContextFactory
         var sagaInstance = new SagaInstance<FutureState>(state);
         await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<FutureState, T>(consumeContext, sagaInstance);
-        BehaviorContext<FutureState, T> behaviorContext =
+        IBehaviorContext<FutureState, T> behaviorContext =
             new ViciOneServiceBusStateMachine<FutureState>.BehaviorContextProxy<T>(
                 machine,
                 sagaContext,

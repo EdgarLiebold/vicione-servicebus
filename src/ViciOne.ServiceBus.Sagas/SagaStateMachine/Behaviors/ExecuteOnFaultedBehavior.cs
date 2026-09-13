@@ -9,15 +9,15 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 public class ExecuteOnFaultedBehavior<TSaga, TException> :
     IBehavior<TSaga>
     where TException : Exception
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
-    readonly BehaviorExceptionContext<TSaga, TException> _context;
+    readonly IBehaviorExceptionContext<TSaga, TException> _context;
     readonly IBehavior<TSaga> _next;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <param name="context">The context associated with the operation.</param>
-    public ExecuteOnFaultedBehavior(IBehavior<TSaga> next, BehaviorExceptionContext<TSaga, TException> context)
+    public ExecuteOnFaultedBehavior(IBehavior<TSaga> next, IBehaviorExceptionContext<TSaga, TException> context)
     {
         _next = next;
         _context = context;
@@ -25,7 +25,7 @@ public class ExecuteOnFaultedBehavior<TSaga, TException> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         _next.Accept(visitor);
     }
@@ -37,22 +37,22 @@ public class ExecuteOnFaultedBehavior<TSaga, TException> :
         _next.Probe(context);
     }
 
-    Task IBehavior<TSaga>.ExecuteAsync(BehaviorContext<TSaga> context)
+    Task IBehavior<TSaga>.ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+    Task IBehavior<TSaga>.ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
     {
         return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.FaultedAsync<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<TData, T>(IBehaviorExceptionContext<TSaga, TData, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }
 
-    Task IBehavior<TSaga>.FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }
@@ -66,16 +66,16 @@ public class ExecuteOnFaultedBehavior<TSaga, TException> :
 public class ExecuteOnFaultedBehavior<TSaga, TMessage, TException> :
     IBehavior<TSaga>
     where TException : Exception
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
-    readonly BehaviorExceptionContext<TSaga, TMessage, TException> _context;
+    readonly IBehaviorExceptionContext<TSaga, TMessage, TException> _context;
     readonly IBehavior<TSaga, TMessage> _next;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <param name="context">The context associated with the operation.</param>
-    public ExecuteOnFaultedBehavior(IBehavior<TSaga, TMessage> next, BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    public ExecuteOnFaultedBehavior(IBehavior<TSaga, TMessage> next, IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     {
         _next = next;
         _context = context;
@@ -83,7 +83,7 @@ public class ExecuteOnFaultedBehavior<TSaga, TMessage, TException> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         _next.Accept(visitor);
     }
@@ -95,22 +95,22 @@ public class ExecuteOnFaultedBehavior<TSaga, TMessage, TException> :
         _next.Probe(context);
     }
 
-    Task IBehavior<TSaga>.ExecuteAsync(BehaviorContext<TSaga> context)
+    Task IBehavior<TSaga>.ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
+    Task IBehavior<TSaga>.ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
     {
         return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.FaultedAsync<TD, T>(BehaviorExceptionContext<TSaga, TD, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<TD, T>(IBehaviorExceptionContext<TSaga, TD, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }
 
-    Task IBehavior<TSaga>.FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }

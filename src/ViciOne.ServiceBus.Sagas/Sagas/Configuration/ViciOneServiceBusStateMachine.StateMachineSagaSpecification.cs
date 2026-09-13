@@ -5,15 +5,15 @@ using ViciOne.ServiceBus.Configuration;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     class StateMachineSagaSpecification :
         SagaSpecification<TInstance>
     {
-        readonly SagaStateMachine<TInstance> _stateMachine;
+        readonly ISagaStateMachine<TInstance> _stateMachine;
         readonly ConfigurationObserverNotification _stateMachineConfigurationNotification = new ConfigurationObserverNotification();
 
-        public StateMachineSagaSpecification(SagaStateMachine<TInstance> stateMachine,
+        public StateMachineSagaSpecification(ISagaStateMachine<TInstance> stateMachine,
             IEnumerable<ISagaMessageSpecification<TInstance>> messageSpecifications)
             : base(messageSpecifications)
         {

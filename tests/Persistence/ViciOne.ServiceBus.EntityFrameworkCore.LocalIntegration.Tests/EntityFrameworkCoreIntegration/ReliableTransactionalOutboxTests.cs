@@ -131,13 +131,13 @@ public sealed class ReliableTransactionalOutboxTests
         Assert.Equal("beta", Assert.Single(events, item => item.Message.Text == "Second").RoutingKey);
     }
 
-    public sealed record ReliableCommand(Guid CorrelationId, bool FailFirstAttempt) : CorrelatedBy<Guid>;
+    public sealed record ReliableCommand(Guid CorrelationId, bool FailFirstAttempt) : ICorrelatedBy<Guid>;
 
-    public sealed record ReliableEvent(Guid CorrelationId, string Text) : CorrelatedBy<Guid>;
+    public sealed record ReliableEvent(Guid CorrelationId, string Text) : ICorrelatedBy<Guid>;
 
-    public sealed record CreateReliableState(Guid CorrelationId, bool FailFirstAttempt) : CorrelatedBy<Guid>;
+    public sealed record CreateReliableState(Guid CorrelationId, bool FailFirstAttempt) : ICorrelatedBy<Guid>;
 
-    public sealed record StateVerified(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StateVerified(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class ExpectedConsumerFailure : Exception;
 
@@ -175,7 +175,7 @@ public sealed class ReliableTransactionalOutboxTests
         }
     }
 
-    public sealed class ReliableState : SagaStateMachineInstance
+    public sealed class ReliableState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -207,13 +207,13 @@ public sealed class ReliableTransactionalOutboxTests
             During(Created, When(VerifyState).TransitionTo(Verified));
         }
 
-        public State Created { get; private set; } = null!;
+        public IState Created { get; private set; } = null!;
 
-        public State Verified { get; private set; } = null!;
+        public IState Verified { get; private set; } = null!;
 
-        public Event<CreateReliableState> CreateState { get; private set; } = null!;
+        public IEvent<CreateReliableState> CreateState { get; private set; } = null!;
 
-        public Event<StateVerified> VerifyState { get; private set; } = null!;
+        public IEvent<StateVerified> VerifyState { get; private set; } = null!;
     }
 
     public sealed class ReliableStateMap : SagaClassMap<ReliableState>

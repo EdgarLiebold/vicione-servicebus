@@ -10,7 +10,7 @@ internal sealed class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
     ExceptionSpecification,
     IMissingInstanceRedeliveryConfigurator<TSaga, TMessage>,
     ISpecification
-    where TSaga : SagaStateMachineInstance
+    where TSaga : ISagaStateMachineInstance
     where TMessage : class
 {
     readonly IMissingInstanceConfigurator<TSaga, TMessage> _configurator;

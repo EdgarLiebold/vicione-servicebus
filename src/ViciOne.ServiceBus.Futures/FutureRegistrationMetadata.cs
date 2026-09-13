@@ -13,7 +13,7 @@ internal static class FutureRegistrationMetadata
         ArgumentNullException.ThrowIfNull(type);
 
         return type.GetInterfaces().Any(candidate =>
-            candidate.ImplementsInterface(typeof(SagaStateMachine<FutureState>))
+            candidate.ImplementsInterface(typeof(ISagaStateMachine<FutureState>))
             || candidate.ImplementsInterface(typeof(IFutureDefinition<>)));
     }
 }

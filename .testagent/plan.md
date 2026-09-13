@@ -2373,3 +2373,42 @@ SHA-256 `6870002dc25251fe785d4e0bbd51a0f66c15ce533a3be92beb78224a2fa28486`.
 The protected `review/` and `TestResults/` trees were not changed or staged. Iteration 97 is ready
 for its commit, annotated tag, normal remote push, and verification; the overall A+ goal remains
 active for the explicit Saga interface-naming decision and subsequent unreviewed source owners.
+
+## Iteration 98 Saga interface and documentation plan
+
+Iteration 98 starts from remotely verified commit
+`2234d03407d2ad2570c12e823e4fe0a01087be9d` and annotated tag
+`servicebus-a-plus-remediation-iteration-97-2026-09-13`. It resolves the 47 unprefixed interface
+declarations identified by the Saga-only style audit and rechecks every affected comment against
+the already manually read implementation. The Microsoft .NET library naming guidance and CA1715
+both require interface names to begin with `I`; the old fluent/message-contract naming pattern is
+therefore not retained merely for compatibility.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Apply one .NET naming rule | all Saga interfaces, including nested internal contracts, begin with `I` followed by an uppercase letter |
+| Preserve meaning and features | each rename retains generic arity, variance, inheritance, members, attributes, and all concrete implementations |
+| Preserve consumer usability | every source, test, sample, benchmark, provider, reflection identity, expression, and isolated package consumer uses the new identities |
+| Align navigation | a top-level interface's filename matches its renamed primary type; multi-arity families remain in one canonical file |
+| Make comments current | manually rewrite every affected generic, stale, or implementation-history comment after rereading its declaration and implementation |
+| Reject regressions | a red-first architecture rule reports all 47 exact violations and becomes a permanent repository requirement |
+| Demonstrate API safety | strict builds, focused behavior/API tests, complete Unit/Architecture run, packed API diff, developer journeys, coverage, mutations, and hygiene gates |
+
+No generator will author behavior or documentation. A symbol-aware rename may mechanically update
+references only after each target identity has been classified; every resulting declaration,
+filename, public signature, XML reference, and consumer diff is manually inspected. Any semantic
+change is implemented and tested separately.
+
+### Iteration 98 completion
+
+The 47 Saga interfaces and 30 corresponding top-level filenames are normalized, their complete
+consumer closure is updated, and every affected declaration comment has been reread and corrected.
+The permanent red-first naming rule and an isolated killed mutation protect the result. The final
+Release build, 6,234-test Unit/Architecture solution, 293-test architecture host, package journeys,
+format checks, and hygiene gates pass. Fresh Saga coverage remains 62.4669% line and 54.4440%
+branch; its 15 methods above CRAP 30 remain explicit risk inputs rather than hidden completion.
+
+The reviewed layout decision is retained: `src/ViciOne.ServiceBus` is the Core project directory,
+independent capability projects are direct `src` siblings, and only cohesive external provider
+families are grouped below `Persistence`, `Scheduling`, and `Transports`. Iteration 99 will inventory
+and select the next complete source owner while preserving that ownership model.

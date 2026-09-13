@@ -4,12 +4,12 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class AllStateEventFilter<TSaga> :
     IStateEventFilter<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
 {
     /// <summary>Applies the configured filter.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Filter(BehaviorContext<TSaga> context)
+    public bool Filter(IBehaviorContext<TSaga> context)
     {
         return true;
     }
@@ -18,7 +18,7 @@ public class AllStateEventFilter<TSaga> :
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Filter<T>(BehaviorContext<TSaga, T> context)
+    public bool Filter<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
         return true;

@@ -13,8 +13,8 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         IEventCorrelationConfigurator<TInstance, TData>,
         IEventCorrelationBuilder
     {
-        readonly Event<TData> _event;
-        readonly SagaStateMachine<TInstance> _machine;
+        readonly IEvent<TData> _event;
+        readonly ISagaStateMachine<TInstance> _machine;
         IFilter<ConsumeContext<TData>>? _messageFilter = null!;
         IPipe<ConsumeContext<TData>> _missingPipe = null!;
         ISagaFactory<TInstance, TData> _sagaFactory;
@@ -24,7 +24,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         /// <param name="machine">The machine.</param>
         /// <param name="event">The event.</param>
         /// <param name="existingCorrelation">The existing correlation.</param>
-        public ViciOneServiceBusEventCorrelationConfigurator(SagaStateMachine<TInstance> machine, Event<TData> @event, EventCorrelation? existingCorrelation)
+        public ViciOneServiceBusEventCorrelationConfigurator(ISagaStateMachine<TInstance> machine, IEvent<TData> @event, IEventCorrelation? existingCorrelation)
         {
             _event = @event;
             _machine = machine;
@@ -35,7 +35,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
 
             _sagaFactory = new DefaultSagaFactory<TInstance, TData>();
 
-            var correlation = existingCorrelation as EventCorrelation<TInstance, TData>;
+            var correlation = existingCorrelation as IEventCorrelation<TInstance, TData>;
             if (correlation != null)
             {
                 _sagaFilterFactory = correlation.FilterFactory;
@@ -45,7 +45,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
 
         /// <summary>Builds the configured component.</summary>
         /// <returns>The configured component.</returns>
-        public EventCorrelation Build()
+        public IEventCorrelation Build()
         {
             return new MessageEventCorrelation<TInstance, TData>(_machine, _event, _sagaFilterFactory, _messageFilter, _missingPipe, _sagaFactory,
                 InsertOnInitial, ReadOnly, ConfigureConsumeTopology);

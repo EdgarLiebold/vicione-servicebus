@@ -427,7 +427,7 @@ public sealed class BuiltPipelineConfigurationTests
             .Where(property => property.Value is not null)
             .Select(property => new KeyValuePair<string, JsonNode>(property.Key, property.Value!));
 
-    public sealed class PipelineMessage : CorrelatedBy<Guid>
+    public sealed class PipelineMessage : ICorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
     }
@@ -437,7 +437,7 @@ public sealed class BuiltPipelineConfigurationTests
         public Task ConsumeAsync(ConsumeContext<PipelineMessage> context) => Task.CompletedTask;
     }
 
-    private sealed class PipelineSaga : ISaga, InitiatedBy<PipelineMessage>
+    private sealed class PipelineSaga : ISaga, IInitiatedBy<PipelineMessage>
     {
         public PipelineSaga(Guid correlationId)
         {
@@ -458,7 +458,7 @@ public sealed class BuiltPipelineConfigurationTests
         Saga,
     }
 
-    private sealed record ManagedPipelineMessage(Guid CorrelationId, Guid ProbeId) : CorrelatedBy<Guid>;
+    private sealed record ManagedPipelineMessage(Guid CorrelationId, Guid ProbeId) : ICorrelatedBy<Guid>;
 
     private sealed record ManagedConcurrencyLimitCommand(
         int ConcurrencyLimit,
@@ -476,7 +476,7 @@ public sealed class BuiltPipelineConfigurationTests
         public Task ConsumeAsync(ConsumeContext<SetConcurrencyLimit> context) => Task.CompletedTask;
     }
 
-    private sealed class ManagedPipelineSaga : ISaga, InitiatedBy<ManagedPipelineMessage>
+    private sealed class ManagedPipelineSaga : ISaga, IInitiatedBy<ManagedPipelineMessage>
     {
         public ManagedPipelineSaga(Guid correlationId)
         {

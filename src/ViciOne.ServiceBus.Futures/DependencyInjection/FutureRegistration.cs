@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Futures.DependencyInjection;
 /// <typeparam name="TFuture">The future state-machine type.</typeparam>
 internal sealed class FutureRegistration<TFuture> :
     IFutureRegistration
-    where TFuture : class, SagaStateMachine<FutureState>
+    where TFuture : class, ISagaStateMachine<FutureState>
 {
     readonly IContainerSelector _selector;
     IFutureDefinition<TFuture>? _definition;

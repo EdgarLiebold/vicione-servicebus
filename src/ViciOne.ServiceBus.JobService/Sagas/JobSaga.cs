@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>Persists the lifecycle, schedule, progress, and checkpoint of one submitted job.</summary>
 public sealed class JobSaga :
-    SagaStateMachineInstance,
+    ISagaStateMachineInstance,
     ISagaVersion
 {
     /// <summary>Gets or sets the persisted state-machine ordinal.</summary>

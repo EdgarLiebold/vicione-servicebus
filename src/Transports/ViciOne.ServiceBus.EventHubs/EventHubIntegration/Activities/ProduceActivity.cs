@@ -9,16 +9,16 @@ namespace ViciOne.ServiceBus.EventHubs.Activities;
 /// <typeparam name="TMessage">The produced message type.</typeparam>
 public class ProduceActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
 {
-    readonly ContextMessageFactory<BehaviorContext<TSaga>, TMessage> _messageFactory;
+    readonly ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> _messageFactory;
     readonly EventHubNameProvider<TSaga> _nameProvider;
 
     /// <summary>Creates the activity from destination and message factories.</summary>
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="messageFactory">Creates the outbound message and initializer pipe.</param>
-    public ProduceActivity(EventHubNameProvider<TSaga> nameProvider, ContextMessageFactory<BehaviorContext<TSaga>, TMessage> messageFactory)
+    public ProduceActivity(EventHubNameProvider<TSaga> nameProvider, ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> messageFactory)
     {
         _nameProvider = nameProvider;
         _messageFactory = messageFactory;
@@ -26,7 +26,7 @@ public class ProduceActivity<TSaga, TMessage> :
 
     /// <summary>Reports this activity to a state-machine visitor.</summary>
     /// <param name="inspector">The visitor receiving this activity.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -42,7 +42,7 @@ public class ProduceActivity<TSaga, TMessage> :
     /// <param name="context">The current saga behavior context.</param>
     /// <param name="next">The next behavior stage.</param>
     /// <returns>A task that completes after production and the remaining behavior finish.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await ExecuteAsync(context).ConfigureAwait(false);
 
@@ -54,7 +54,7 @@ public class ProduceActivity<TSaga, TMessage> :
     /// <param name="context">The current saga behavior context and data.</param>
     /// <param name="next">The next behavior stage.</param>
     /// <returns>A task that completes after production and the remaining behavior finish.</returns>
-    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public async Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         await ExecuteAsync(context).ConfigureAwait(false);
@@ -67,7 +67,7 @@ public class ProduceActivity<TSaga, TMessage> :
     /// <param name="context">The current exception behavior context.</param>
     /// <param name="next">The next fault-handling stage.</param>
     /// <returns>The task returned by the next fault-handling stage.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
@@ -79,14 +79,14 @@ public class ProduceActivity<TSaga, TMessage> :
     /// <param name="context">The current exception behavior context and data.</param>
     /// <param name="next">The next fault-handling stage.</param>
     /// <returns>The task returned by the next fault-handling stage.</returns>
-    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    Task ExecuteAsync(BehaviorContext<TSaga> context)
+    Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
         return _messageFactory.UseAsync(context, async (ctx, s) =>
         {
@@ -104,17 +104,17 @@ public class ProduceActivity<TSaga, TMessage> :
 /// <typeparam name="T">The produced message type.</typeparam>
 public class ProduceActivity<TSaga, TMessage, T> :
     IStateMachineActivity<TSaga, TMessage>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where T : class
 {
-    readonly ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> _messageFactory;
+    readonly ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> _messageFactory;
     readonly EventHubNameProvider<TSaga, TMessage> _nameProvider;
 
     /// <summary>Creates the activity from destination and message factories.</summary>
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="messageFactory">Creates the outbound message and initializer pipe.</param>
-    public ProduceActivity(EventHubNameProvider<TSaga, TMessage> nameProvider, ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> messageFactory)
+    public ProduceActivity(EventHubNameProvider<TSaga, TMessage> nameProvider, ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> messageFactory)
     {
         _nameProvider = nameProvider;
         _messageFactory = messageFactory;
@@ -122,7 +122,7 @@ public class ProduceActivity<TSaga, TMessage, T> :
 
     /// <summary>Reports this activity to a state-machine visitor.</summary>
     /// <param name="inspector">The visitor receiving this activity.</param>
-    public void Accept(StateMachineVisitor inspector)
+    public void Accept(IStateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
@@ -138,7 +138,7 @@ public class ProduceActivity<TSaga, TMessage, T> :
     /// <param name="context">The current saga behavior context and message.</param>
     /// <param name="next">The next behavior stage.</param>
     /// <returns>A task that completes after production and the remaining behavior finish.</returns>
-    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         await _messageFactory.UseAsync(context, async (ctx, s) =>
         {
@@ -155,7 +155,7 @@ public class ProduceActivity<TSaga, TMessage, T> :
     /// <param name="context">The current exception behavior context and message.</param>
     /// <param name="next">The next fault-handling stage.</param>
     /// <returns>The task returned by the next fault-handling stage.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context,
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context,
         IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {

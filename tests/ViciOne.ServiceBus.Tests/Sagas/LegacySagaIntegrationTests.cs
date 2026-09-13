@@ -327,23 +327,23 @@ public sealed class LegacySagaIntegrationTests
         .GetValidatedOptions().OperationTimeout!.Value;
 
 
-    public sealed record FilteredStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record FilteredStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class FilteredSaga : ISaga, InitiatedBy<FilteredStart>
+    public sealed class FilteredSaga : ISaga, IInitiatedBy<FilteredStart>
     {
         public Guid CorrelationId { get; set; }
 
         public Task ConsumeAsync(ConsumeContext<FilteredStart> context) => Task.CompletedTask;
     }
 
-    public sealed record CreateMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record CreateMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record EitherMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record EitherMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class NewOrExistingSaga :
         ISaga,
-        InitiatedBy<CreateMessage>,
-        InitiatedByOrOrchestrates<EitherMessage>
+        IInitiatedBy<CreateMessage>,
+        IInitiatedByOrOrchestrates<EitherMessage>
     {
         public NewOrExistingSaga(Guid correlationId) => CorrelationId = correlationId;
 
@@ -368,9 +368,9 @@ public sealed class LegacySagaIntegrationTests
 
     public sealed record SagaDependency(Guid Id);
 
-    public sealed record InjectedStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record InjectedStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class InjectedSaga : ISaga, InitiatedBy<InjectedStart>
+    public sealed class InjectedSaga : ISaga, IInitiatedBy<InjectedStart>
     {
         public Guid CorrelationId { get; set; }
 
@@ -387,24 +387,24 @@ public sealed class LegacySagaIntegrationTests
 
     public sealed record QueryMessage(Guid CorrelationId, string Name);
 
-    public sealed class QuerySaga : SagaStateMachineInstance
+    public sealed class QuerySaga : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
         public string Name { get; set; } = string.Empty;
     }
 
-    public sealed record RepositoryCreate(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryCreate(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RepositoryDestroy(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryDestroy(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RepositoryCreated(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryCreated(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RepositoryDestroyed(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryDestroyed(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record RepositoryFinally(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record RepositoryFinally(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class RepositoryState : SagaStateMachineInstance
+    public sealed class RepositoryState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -425,11 +425,11 @@ public sealed class LegacySagaIntegrationTests
                 .Finalize());
         }
 
-        public State Active { get; private set; } = null!;
+        public IState Active { get; private set; } = null!;
 
-        public Event<RepositoryCreate> Created { get; private set; } = null!;
+        public IEvent<RepositoryCreate> Created { get; private set; } = null!;
 
-        public Event<RepositoryDestroy> Destroyed { get; private set; } = null!;
+        public IEvent<RepositoryDestroy> Destroyed { get; private set; } = null!;
     }
 
     public sealed class InsertOnInitialMachine : ViciOneServiceBusStateMachine<RepositoryState>
@@ -454,16 +454,16 @@ public sealed class LegacySagaIntegrationTests
             Finally(binder => binder.Publish(context => new RepositoryFinally(context.Saga.CorrelationId)));
         }
 
-        public State Active { get; private set; } = null!;
+        public IState Active { get; private set; } = null!;
 
-        public Event<RepositoryCreate> Created { get; private set; } = null!;
+        public IEvent<RepositoryCreate> Created { get; private set; } = null!;
 
-        public Event Destroyed { get; private set; } = null!;
+        public IEvent Destroyed { get; private set; } = null!;
     }
 
-    public sealed record DuplicateStart(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record DuplicateStart(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed class DuplicateSaga : ISaga, InitiatedBy<DuplicateStart>
+    public sealed class DuplicateSaga : ISaga, IInitiatedBy<DuplicateStart>
     {
         public Guid CorrelationId { get; set; }
 

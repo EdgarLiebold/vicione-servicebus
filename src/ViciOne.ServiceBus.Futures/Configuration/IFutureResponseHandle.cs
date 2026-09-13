@@ -15,5 +15,5 @@ public interface IFutureResponseHandle<out TCommand, TResult, TFault, TRequest, 
     where TResponse : class
 {
     /// <summary>Gets the event raised when the response is received.</summary>
-    Event<TResponse> Completed { get; }
+    IEvent<TResponse> Completed { get; }
 }

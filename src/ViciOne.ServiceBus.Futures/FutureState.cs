@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Futures;
 
 /// <summary>Represents the durable lifecycle, messages, variables, and subscribers of one future instance.</summary>
 public sealed class FutureState :
-    SagaStateMachineInstance,
+    ISagaStateMachineInstance,
     IConsumerKindOwnedState,
     ISagaVersion
 {

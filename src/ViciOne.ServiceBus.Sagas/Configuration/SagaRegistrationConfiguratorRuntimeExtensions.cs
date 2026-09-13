@@ -14,7 +14,7 @@ public static class SagaRegistrationConfiguratorRuntimeExtensions
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator AddSaga(this IRegistrationConfigurator configurator, Type sagaType, Type? sagaDefinitionType = null)
     {
-        if (sagaType.ImplementsInterface<SagaStateMachineInstance>())
+        if (sagaType.ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
 
         var register = (IRegisterSaga)(Activator.CreateInstance(typeof(RegisterSaga<>).MakeGenericType(sagaType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
@@ -30,7 +30,7 @@ public static class SagaRegistrationConfiguratorRuntimeExtensions
     public static ISagaRegistrationConfigurator AddSagaStateMachine(this IRegistrationConfigurator configurator, Type sagaType,
         Type? sagaDefinitionType = null)
     {
-        if (!sagaType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types))
+        if (!sagaType.TryGetSingleClosedGenericArguments(typeof(ISagaStateMachine<>), out Type[] types))
             throw new ArgumentException($"The type is not a saga state machine: {TypeCache.GetShortName(sagaType)}", nameof(sagaType));
 
         var register = (IRegisterSaga)(Activator.CreateInstance(typeof(RegisterSagaStateMachine<,>).MakeGenericType(sagaType, types[0])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
@@ -58,8 +58,8 @@ public static class SagaRegistrationConfiguratorRuntimeExtensions
 
     class RegisterSagaStateMachine<TStateMachine, TSaga> :
         IRegisterSaga
-        where TStateMachine : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         public ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? sagaDefinitionType)
         {

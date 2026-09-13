@@ -97,9 +97,9 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record StartLoop(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record StartLoop(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ScheduledLoopEvent(Guid CorrelationId, int Count) : CorrelatedBy<Guid>;
+    public sealed record ScheduledLoopEvent(Guid CorrelationId, int Count) : ICorrelatedBy<Guid>;
 
     public sealed record LoopRequest(int Count);
 
@@ -107,7 +107,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
 
     public sealed record LoopCompleted(Guid CorrelationId, string Result);
 
-    public sealed class ScheduledOutboxState : SagaStateMachineInstance
+    public sealed class ScheduledOutboxState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 
@@ -193,19 +193,19 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Running { get; } = null!;
+        public IState Running { get; } = null!;
 
-        public State Checking { get; } = null!;
+        public IState Checking { get; } = null!;
 
-        public State Suspect { get; } = null!;
+        public IState Suspect { get; } = null!;
 
-        public State Failed { get; } = null!;
+        public IState Failed { get; } = null!;
 
-        public Event<StartLoop> Started { get; } = null!;
+        public IEvent<StartLoop> Started { get; } = null!;
 
-        public Schedule<ScheduledOutboxState, ScheduledLoopEvent> Scheduled { get; } = null!;
+        public ISchedule<ScheduledOutboxState, ScheduledLoopEvent> Scheduled { get; } = null!;
 
-        public Request<ScheduledOutboxState, LoopRequest, LoopResponse> HandlerRequest { get; } = null!;
+        public IRequest<ScheduledOutboxState, LoopRequest, LoopResponse> HandlerRequest { get; } = null!;
     }
 
     public sealed class ScheduledOutboxDefinition : SagaDefinition<ScheduledOutboxState>

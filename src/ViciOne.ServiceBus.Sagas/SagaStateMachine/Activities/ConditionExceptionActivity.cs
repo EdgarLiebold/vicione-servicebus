@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TConditionException">The condition exception type.</typeparam>
 public class ConditionExceptionActivity<TSaga, TConditionException> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TConditionException : Exception
 {
     readonly StateMachineAsyncExceptionCondition<TSaga, TConditionException> _condition;
@@ -37,7 +37,7 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _thenBehavior.Accept(visitor));
         visitor.Visit(this, x => _elseBehavior.Accept(visitor));
@@ -47,7 +47,7 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         return next.ExecuteAsync(context);
     }
@@ -57,7 +57,7 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         return next.ExecuteAsync(context);
@@ -68,10 +68,10 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        var behaviorContext = context as BehaviorExceptionContext<TSaga, TConditionException>;
+        var behaviorContext = context as IBehaviorExceptionContext<TSaga, TConditionException>;
         if (behaviorContext != null)
         {
             if (await _condition(behaviorContext).ConfigureAwait(false))
@@ -89,11 +89,11 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        var behaviorContext = context as BehaviorExceptionContext<TSaga, T, TConditionException>;
+        var behaviorContext = context as IBehaviorExceptionContext<TSaga, T, TConditionException>;
         if (behaviorContext != null)
         {
             if (await _condition(behaviorContext).ConfigureAwait(false))
@@ -113,7 +113,7 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
 /// <typeparam name="TConditionException">The condition exception type.</typeparam>
 public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
     IStateMachineActivity<TSaga>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TConditionException : Exception
 {
@@ -143,7 +143,7 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
-    public void Accept(StateMachineVisitor visitor)
+    public void Accept(IStateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _thenBehavior.Accept(visitor));
         visitor.Visit(this, x => _elseBehavior.Accept(visitor));
@@ -153,7 +153,7 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
@@ -163,7 +163,7 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         return next.ExecuteAsync(context);
@@ -174,7 +174,7 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
@@ -186,11 +186,11 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        var behaviorContext = context as BehaviorExceptionContext<TSaga, TMessage, TConditionException>;
+        var behaviorContext = context as IBehaviorExceptionContext<TSaga, TMessage, TConditionException>;
         if (behaviorContext != null)
         {
             if (await _condition(behaviorContext).ConfigureAwait(false))

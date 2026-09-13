@@ -418,13 +418,13 @@ public sealed class JobAttemptStateMachineTests
         Assert.Equal(CreateSettings().JobAttemptSagaEndpointAddress, observation.ResponseAddress);
     }
 
-    private static void AssertState(JobAttemptStateMachine machine, JobAttemptSaga saga, State expected) =>
+    private static void AssertState(JobAttemptStateMachine machine, JobAttemptSaga saga, IState expected) =>
         Assert.True(machine.Accessor.GetStateExpression(expected).Compile()(saga), $"Expected state {expected.Name}.");
 
     private static async Task RaiseAsync<T>(
         JobAttemptStateMachine machine,
         JobAttemptSaga saga,
-        Event<T> @event,
+        IEvent<T> @event,
         T message,
         JobServiceOptions settings,
         StateMachineTestScheduler scheduler,
@@ -443,13 +443,13 @@ public sealed class JobAttemptStateMachineTests
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobAttemptSaga, T>(consumeContext, instance);
         sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
-        BehaviorContext<JobAttemptSaga, T> behaviorContext =
+        IBehaviorContext<JobAttemptSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobAttemptSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await ((StateMachine<JobAttemptSaga>)machine).RaiseEventAsync(behaviorContext);
+        await ((IStateMachine<JobAttemptSaga>)machine).RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task SetStateAsync(JobAttemptStateMachine machine, JobAttemptSaga saga, State state)
+    private static async Task SetStateAsync(JobAttemptStateMachine machine, JobAttemptSaga saga, IState state)
     {
         ConsumeContext<StateSetupMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(
             new StateSetupMessage(),
@@ -457,7 +457,7 @@ public sealed class JobAttemptStateMachineTests
         var instance = new SagaInstance<JobAttemptSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobAttemptSaga, StateSetupMessage>(consumeContext, instance);
-        BehaviorContext<JobAttemptSaga> behaviorContext =
+        IBehaviorContext<JobAttemptSaga> behaviorContext =
             new ViciOneServiceBusStateMachine<JobAttemptSaga>.BehaviorContextProxy(machine, sagaContext, machine.Initial.Enter);
 
         await machine.Accessor.SetAsync(behaviorContext, machine.GetState(state.Name));

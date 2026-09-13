@@ -34,8 +34,8 @@ internal static class SagaLogContextExtensions
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>The started activity, or <see langword="null" /> when tracing is disabled.</returns>
     public static StartedActivity? StartSagaStateMachineActivity<TInstance, TMessage>(this ILogContext logContext,
-        BehaviorContext<TInstance, TMessage> context)
-        where TInstance : class, SagaStateMachineInstance
+        IBehaviorContext<TInstance, TMessage> context)
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
         return LogContextActivityExtensions.StartActivity(context, activity =>
@@ -65,8 +65,8 @@ internal static class SagaLogContextExtensions
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>The active metric operation, or <see langword="null" /> when metrics are disabled.</returns>
     public static MetricOperation? StartSagaStateMachineInstrument<TInstance, TMessage>(this ILogContext logContext,
-        BehaviorContext<TInstance, TMessage> context)
-        where TInstance : class, SagaStateMachineInstance
+        IBehaviorContext<TInstance, TMessage> context)
+        where TInstance : class, ISagaStateMachineInstance
         where TMessage : class =>
         LogContextInstrumentationExtensions.StartProcess(logContext, context, "saga", "saga_state_machine");
 }

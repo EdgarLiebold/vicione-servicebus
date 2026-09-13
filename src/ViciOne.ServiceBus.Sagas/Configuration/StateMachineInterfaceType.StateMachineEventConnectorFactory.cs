@@ -14,7 +14,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         /// <summary>Initializes a new instance.</summary>
         /// <param name="stateMachine">The state machine.</param>
         /// <param name="correlation">The correlation.</param>
-        public StateMachineEventConnectorFactory(SagaStateMachine<TInstance> stateMachine, EventCorrelation<TInstance, TData> correlation)
+        public StateMachineEventConnectorFactory(ISagaStateMachine<TInstance> stateMachine, IEventCorrelation<TInstance, TData> correlation)
         {
             var consumeFilter = new StateMachineSagaMessageFilter<TInstance, TData>(stateMachine, correlation.Event);
 

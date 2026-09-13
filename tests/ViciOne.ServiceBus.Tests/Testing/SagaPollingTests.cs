@@ -324,7 +324,7 @@ public sealed class SagaPollingTests
         }
     }
 
-    private sealed class PollingState : SagaStateMachineInstance
+    private sealed class PollingState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
 

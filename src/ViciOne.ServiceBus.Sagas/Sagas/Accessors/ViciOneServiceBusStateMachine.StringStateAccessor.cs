@@ -8,19 +8,19 @@ using ViciOne.ServiceBus.Internals;
 namespace ViciOne.ServiceBus.Sagas;
 
 public partial class ViciOneServiceBusStateMachine<TInstance>
-    where TInstance : class, SagaStateMachineInstance
+    where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>Accesses the current state as a string property.</summary>
     class StringStateAccessor :
         IStateAccessor<TInstance>
     {
-        readonly StateMachine<TInstance> _machine;
+        readonly IStateMachine<TInstance> _machine;
         readonly IStateObserver<TInstance> _observer;
         readonly PropertyInfo _propertyInfo;
         readonly IReadProperty<TInstance, string> _read;
         readonly IWriteProperty<TInstance, string> _write;
 
-        public StringStateAccessor(StateMachine<TInstance> machine, Expression<Func<TInstance, string>> currentStateExpression,
+        public StringStateAccessor(IStateMachine<TInstance> machine, Expression<Func<TInstance, string>> currentStateExpression,
             IStateObserver<TInstance> observer)
         {
             _machine = machine;
@@ -32,16 +32,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _write = WritePropertyCache<TInstance>.GetProperty<string>(_propertyInfo);
         }
 
-        Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
+        Task<IState<TInstance>?> IStateAccessor<TInstance>.GetAsync(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
             var stateName = _read.Get(context.Saga);
             if (string.IsNullOrWhiteSpace(stateName))
-                return Task.FromResult<State<TInstance>?>(null);
+                return Task.FromResult<IState<TInstance>?>(null);
 
-            return Task.FromResult<State<TInstance>?>(_machine.GetState(stateName));
+            return Task.FromResult<IState<TInstance>?>(_machine.GetState(stateName));
         }
 
-        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
+        Task IStateAccessor<TInstance>.SetAsync(IBehaviorContext<TInstance> context, IState<TInstance> state, CancellationToken cancellationToken)
         {
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
@@ -52,14 +52,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             _write.Set(context.Saga, state.Name);
 
-            State<TInstance>? previousState = null;
+            IState<TInstance>? previousState = null;
             if (!string.IsNullOrWhiteSpace(previous))
                 previousState = _machine.GetState(previous);
 
             return _observer.StateChangedAsync(context, state, previousState);
         }
 
-        public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)
+        public Expression<Func<TInstance, bool>> GetStateExpression(params IState[] states)
         {
             if (states == null || states.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(states), "One or more states must be specified");

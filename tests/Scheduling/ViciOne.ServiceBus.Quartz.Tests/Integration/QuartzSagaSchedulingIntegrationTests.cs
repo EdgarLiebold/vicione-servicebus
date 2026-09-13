@@ -253,10 +253,10 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed class RescheduleState : SagaStateMachineInstance
+    public sealed class RescheduleState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
         public Guid? ScheduleTokenId { get; set; }
     }
 
@@ -291,17 +291,17 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Active { get; private set; } = null!;
-        public Event<StartReschedule> Started { get; private set; } = null!;
-        public Event<RefreshSchedule> Refreshed { get; private set; } = null!;
-        public Event<StopReschedule> Stopped { get; private set; } = null!;
-        public Schedule<RescheduleState, ScheduleDue> Due { get; private set; } = null!;
+        public IState Active { get; private set; } = null!;
+        public IEvent<StartReschedule> Started { get; private set; } = null!;
+        public IEvent<RefreshSchedule> Refreshed { get; private set; } = null!;
+        public IEvent<StopReschedule> Stopped { get; private set; } = null!;
+        public ISchedule<RescheduleState, ScheduleDue> Due { get; private set; } = null!;
     }
 
-    public sealed class MultipleScheduleState : SagaStateMachineInstance
+    public sealed class MultipleScheduleState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
         public Guid? FirstTokenId { get; set; }
         public Guid? SecondTokenId { get; set; }
     }
@@ -339,17 +339,17 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Waiting { get; private set; } = null!;
-        public State FirstCompleted { get; private set; } = null!;
-        public Event<StartMultipleSchedules> Started { get; private set; } = null!;
-        public Schedule<MultipleScheduleState, FirstDue> First { get; private set; } = null!;
-        public Schedule<MultipleScheduleState, SecondDue> Second { get; private set; } = null!;
+        public IState Waiting { get; private set; } = null!;
+        public IState FirstCompleted { get; private set; } = null!;
+        public IEvent<StartMultipleSchedules> Started { get; private set; } = null!;
+        public ISchedule<MultipleScheduleState, FirstDue> First { get; private set; } = null!;
+        public ISchedule<MultipleScheduleState, SecondDue> Second { get; private set; } = null!;
     }
 
-    public sealed class LoadState : SagaStateMachineInstance
+    public sealed class LoadState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; } = null!;
+        public IState CurrentState { get; set; } = null!;
         public Guid? StopTokenId { get; set; }
     }
 
@@ -376,9 +376,9 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             SetCompletedWhenFinalized();
         }
 
-        public State Running { get; private set; } = null!;
-        public Event<StartLoad> Started { get; private set; } = null!;
-        public Schedule<LoadState, LoadDue> Stop { get; private set; } = null!;
+        public IState Running { get; private set; } = null!;
+        public IEvent<StartLoad> Started { get; private set; } = null!;
+        public ISchedule<LoadState, LoadDue> Stop { get; private set; } = null!;
     }
 
     public sealed record StartReschedule(Guid CorrelationId);

@@ -30,7 +30,7 @@ public static class SagaRegistrationConfiguratorExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
-        if (typeof(TSaga).ImplementsInterface<SagaStateMachineInstance>())
+        if (typeof(TSaga).ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache<TSaga>.ShortName}");
 
         IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
@@ -49,8 +49,8 @@ public static class SagaRegistrationConfiguratorExtensions
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator<TSaga> AddSagaStateMachine<TStateMachine, TSaga>(this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, ISagaConfigurator<TSaga>>? configure = null)
-        where TStateMachine : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance =>
+        where TStateMachine : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance =>
         configurator.AddSagaStateMachine<TStateMachine, TSaga>(null, configure);
 
     /// <summary>Adds a saga state machine with an optional definition and allows it to be configured when attached to an endpoint.</summary>
@@ -62,8 +62,8 @@ public static class SagaRegistrationConfiguratorExtensions
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator<TSaga> AddSagaStateMachine<TStateMachine, TSaga>(this IRegistrationConfigurator configurator,
         Type? sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<TSaga>>? configure = null)
-        where TStateMachine : class, SagaStateMachine<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+        where TStateMachine : class, ISagaStateMachine<TSaga>
+        where TSaga : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(configurator);
 

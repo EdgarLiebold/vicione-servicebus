@@ -7,9 +7,9 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-public delegate bool StateMachineExceptionCondition<TSaga, in TException>(BehaviorExceptionContext<TSaga, TException> context)
+public delegate bool StateMachineExceptionCondition<TSaga, in TException>(IBehaviorExceptionContext<TSaga, TException> context)
     where TException : Exception
-    where TSaga : class, SagaStateMachineInstance;
+    where TSaga : class, ISagaStateMachineInstance;
 
 
 /// <summary>Filters activities based on the conditional statement.</summary>
@@ -18,7 +18,7 @@ public delegate bool StateMachineExceptionCondition<TSaga, in TException>(Behavi
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 /// <param name="context">The context associated with the operation.</param>
 /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-public delegate bool StateMachineExceptionCondition<TSaga, in TMessage, in TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+public delegate bool StateMachineExceptionCondition<TSaga, in TMessage, in TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     where TException : Exception
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class;

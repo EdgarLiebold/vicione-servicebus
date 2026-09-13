@@ -7,14 +7,14 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class StateMachineFaultedActivitySelector<TSaga, TException> :
     IStateMachineFaultedActivitySelector<TSaga, TException>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TException : Exception
 {
-    readonly ExceptionActivityBinder<TSaga, TException> _binder;
+    readonly IExceptionActivityBinder<TSaga, TException> _binder;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="binder">The binder.</param>
-    public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TException> binder)
+    public StateMachineFaultedActivitySelector(IExceptionActivityBinder<TSaga, TException> binder)
     {
         _binder = binder;
     }
@@ -22,7 +22,7 @@ public class StateMachineFaultedActivitySelector<TSaga, TException> :
     /// <summary>Restricts the operation to the specified type.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TSaga, TException> OfType<TActivity>()
+    public IExceptionActivityBinder<TSaga, TException> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga>
     {
         var activity = new FaultedContainerFactoryActivity<TSaga, TException, TActivity>();
@@ -38,15 +38,15 @@ public class StateMachineFaultedActivitySelector<TSaga, TException> :
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
     IStateMachineFaultedActivitySelector<TSaga, TMessage, TException>
-    where TSaga : class, SagaStateMachineInstance
+    where TSaga : class, ISagaStateMachineInstance
     where TMessage : class
     where TException : Exception
 {
-    readonly ExceptionActivityBinder<TSaga, TMessage, TException> _binder;
+    readonly IExceptionActivityBinder<TSaga, TMessage, TException> _binder;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="binder">The binder.</param>
-    public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TMessage, TException> binder)
+    public StateMachineFaultedActivitySelector(IExceptionActivityBinder<TSaga, TMessage, TException> binder)
     {
         _binder = binder;
     }
@@ -54,7 +54,7 @@ public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
     /// <summary>Restricts the operation to the specified type.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TSaga, TMessage, TException> OfType<TActivity>()
+    public IExceptionActivityBinder<TSaga, TMessage, TException> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga, TMessage>
     {
         var activity = new FaultedContainerFactoryActivity<TSaga, TMessage, TException, TActivity>();
@@ -65,7 +65,7 @@ public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
     /// <summary>Restricts the operation to the saga instance type.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TSaga, TMessage, TException> OfInstanceType<TActivity>()
+    public IExceptionActivityBinder<TSaga, TMessage, TException> OfInstanceType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga>
     {
         var activity = new FaultedContainerFactoryActivity<TSaga, TException, TActivity>();

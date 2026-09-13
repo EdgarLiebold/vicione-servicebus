@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class EventMissingInstanceConfigurator<TSaga, TMessage> :
     IMissingInstanceConfigurator<TSaga, TMessage>
-    where TSaga : SagaStateMachineInstance
+    where TSaga : ISagaStateMachineInstance
     where TMessage : class
 {
     /// <summary>Discards the current value.</summary>

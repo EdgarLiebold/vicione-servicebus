@@ -20,7 +20,7 @@ public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
 
     /// <summary>
     /// Builds the routing slip itinerary when the command is received. The routing slip builder
-    /// is passed, along with the <see cref="BehaviorContext{FutureState,TInput}" />. The tracking numbers,
+    /// is passed, along with the <see cref="IBehaviorContext{FutureState,TInput}" />. The tracking numbers,
     /// subscriptions, and FutureId variables are already initialized.
     /// </summary>
     /// <param name="buildItinerary">The callback that populates the routing-slip itinerary.</param>
@@ -43,9 +43,9 @@ public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
     /// <summary>Adds state-machine activities executed when the routing slip completes.</summary>
     /// <param name="configure">The callback that adds activities to the completion event.</param>
     void WhenRoutingSlipCompleted(
-        Func<EventActivityBinder<FutureState, RoutingSlipCompleted>, EventActivityBinder<FutureState, RoutingSlipCompleted>> configure);
+        Func<IEventActivityBinder<FutureState, RoutingSlipCompleted>, IEventActivityBinder<FutureState, RoutingSlipCompleted>> configure);
 
     /// <summary>Adds state-machine activities executed when the routing slip faults.</summary>
     /// <param name="configure">The callback that adds activities to the fault event.</param>
-    void WhenRoutingSlipFaulted(Func<EventActivityBinder<FutureState, RoutingSlipFaulted>, EventActivityBinder<FutureState, RoutingSlipFaulted>> configure);
+    void WhenRoutingSlipFaulted(Func<IEventActivityBinder<FutureState, RoutingSlipFaulted>, IEventActivityBinder<FutureState, RoutingSlipFaulted>> configure);
 }

@@ -297,7 +297,7 @@ public sealed class ContainerConsumerRegistrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    public sealed record RegistrationMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+    public sealed record RegistrationMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
     public sealed class LifecycleObservation(int expectedConsumers)
     {
@@ -402,9 +402,9 @@ public sealed class ContainerConsumerRegistrationTests
         }
     }
 
-    public sealed record GlobalFaultMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record GlobalFaultMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record GlobalControlMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record GlobalControlMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class DisableFaultPublicationConfiguration : IConfigureReceiveEndpoint
     {
@@ -432,9 +432,9 @@ public sealed class ContainerConsumerRegistrationTests
 
     public sealed class ExpectedGlobalFailure : Exception;
 
-    public sealed record ScopeAMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScopeAMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    public sealed record ScopeBMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record ScopeBMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class FilterScopeMarker;
 
@@ -576,7 +576,7 @@ public sealed class ContainerConsumerRegistrationTests
         }
     }
 
-    public sealed record LayerScopeMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record LayerScopeMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     public sealed class LayerScopeMarker;
 

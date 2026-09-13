@@ -155,9 +155,9 @@ public sealed class MissingInstanceRedeliveryTests
             outgoingMessages: outgoingMessages,
             correlationId: correlationId);
 
-    public sealed record MissingMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+    public sealed record MissingMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
-    private sealed class MissingState : SagaStateMachineInstance
+    private sealed class MissingState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
     }

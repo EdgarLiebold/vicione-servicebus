@@ -18,7 +18,7 @@ namespace ViciOne.ServiceBus.Azure.Table.Saga;
 /// <typeparam name="TMessage">The consumed message contract.</typeparam>
 internal sealed class AzureTableSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
-    SagaRepositoryContext<TSaga, TMessage>
+    ISagaRepositoryContext<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {

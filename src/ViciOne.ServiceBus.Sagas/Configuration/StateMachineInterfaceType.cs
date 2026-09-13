@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TData">The data type.</typeparam>
 public partial class StateMachineInterfaceType<TInstance, TData> :
     IStateMachineInterfaceType
-    where TInstance : class, ISaga, SagaStateMachineInstance
+    where TInstance : class, ISaga, ISagaStateMachineInstance
     where TData : class
 {
     readonly ISagaConnectorFactory _connectorFactory;
@@ -13,7 +13,7 @@ public partial class StateMachineInterfaceType<TInstance, TData> :
     /// <summary>Initializes a new instance.</summary>
     /// <param name="machine">The machine.</param>
     /// <param name="correlation">The correlation.</param>
-    public StateMachineInterfaceType(SagaStateMachine<TInstance> machine, EventCorrelation<TInstance, TData> correlation)
+    public StateMachineInterfaceType(ISagaStateMachine<TInstance> machine, IEventCorrelation<TInstance, TData> correlation)
     {
         _connectorFactory = new StateMachineEventConnectorFactory(machine, correlation);
     }
