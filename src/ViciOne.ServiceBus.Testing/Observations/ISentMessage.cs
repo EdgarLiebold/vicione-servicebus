@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.Testing;
 
 /// <summary>Describes a recorded send of a strongly typed message.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The sent message contract.</typeparam>
 public interface ISentMessage<out TMessage> :
     ISentMessage
     where TMessage : class

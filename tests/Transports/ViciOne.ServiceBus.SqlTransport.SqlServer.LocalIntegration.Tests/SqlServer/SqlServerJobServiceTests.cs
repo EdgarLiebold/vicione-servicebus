@@ -347,7 +347,7 @@ public sealed class SqlServerJobServiceTests
 
         public Task<Guid> SubmitAsync(Guid jobId, SqlServerJob job)
         {
-            IRequestClient<SubmitJob<SqlServerJob>> client = Harness.GetRequestClient<SubmitJob<SqlServerJob>>();
+            IRequestClient<SubmitJob<SqlServerJob>> client = Harness.CreateRequestClient<SubmitJob<SqlServerJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -374,7 +374,7 @@ public sealed class SqlServerJobServiceTests
 
         public Task<JobState> GetStateAsync(Guid jobId)
         {
-            IRequestClient<GetJobState> client = Harness.GetRequestClient<GetJobState>();
+            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
             return client.GetJobStateAsync(jobId).WaitAsync(OperationTimeout, CancellationToken);
         }
 

@@ -21,7 +21,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         var observed = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-message-data");
         harness.InMemoryBusConfiguring += configurator => configurator.UseMessageData(repository);
-        ExecuteActivityTestHarness<MessageDataActivity, MessageDataArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<MessageDataActivity, MessageDataArguments> activity = harness.AddExecuteActivity<
             MessageDataActivity,
             MessageDataArguments>(_ => new MessageDataActivity(observed));
         using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
@@ -63,7 +63,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observed = new TaskCompletionSource<ObjectGraphSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-object-graph");
-        ExecuteActivityTestHarness<ObjectGraphActivity, ObjectGraphArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<ObjectGraphActivity, ObjectGraphArguments> activity = harness.AddExecuteActivity<
             ObjectGraphActivity,
             ObjectGraphArguments>(_ => new ObjectGraphActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
@@ -127,7 +127,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
             options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             return options;
         });
-        ExecuteActivityTestHarness<NullableEnumActivity, NullableEnumArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<NullableEnumActivity, NullableEnumArguments> activity = harness.AddExecuteActivity<
             NullableEnumActivity,
             NullableEnumArguments>(_ => new NullableEnumActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
@@ -162,11 +162,11 @@ public sealed class RoutingSlipPayloadIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-uri");
-        ActivityTestHarness<UriActivity, UriArguments, UriLog> activity = harness.Activity<
+        ActivityTestHarness<UriActivity, UriArguments, UriLog> activity = harness.AddActivity<
             UriActivity,
             UriArguments,
             UriLog>();
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
@@ -227,7 +227,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
             options.Converters.Add(new OpaquePointConverter());
             return options;
         });
-        ExecuteActivityTestHarness<OpaquePointActivity, OpaquePointArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<OpaquePointActivity, OpaquePointArguments> activity = harness.AddExecuteActivity<
             OpaquePointActivity,
             OpaquePointArguments>(_ => new OpaquePointActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);

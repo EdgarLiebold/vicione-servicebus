@@ -233,7 +233,7 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
 
         public Task<Response<ValueTransformed>> RequestAsync(TransformValue command)
         {
-            IRequestClient<TransformValue> client = Harness.GetRequestClient<TransformValue>();
+            IRequestClient<TransformValue> client = Harness.CreateRequestClient<TransformValue>();
             return client.GetResponseAsync<ValueTransformed>(command, TestContext.Current.CancellationToken)
                 .WaitAsync(_database.OperationTimeout, TestContext.Current.CancellationToken);
         }

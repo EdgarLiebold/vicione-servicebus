@@ -88,7 +88,7 @@ public sealed class TenantScopeIntegrationTests
             }
             else
             {
-                IRequestClient<TenantRequest> client = harness.GetRequestClient<TenantRequest>();
+                IRequestClient<TenantRequest> client = harness.CreateRequestClient<TenantRequest>();
                 Response<TenantResponse> response = await client.GetResponseAsync<TenantResponse>(
                     new TenantRequest(correlationId, pipeline == TenantPipeline.RetrySendOpenConsume ? 2 : 0),
                     cancellationToken);

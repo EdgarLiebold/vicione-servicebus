@@ -17,13 +17,13 @@ public sealed class ActivityTestHarnessTests
         var executed = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         var compensated = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness(timeout);
-        ActivityTestHarness<RecordingActivity, RecordingArguments, RecordingLog> activity = harness.Activity<
+        ActivityTestHarness<RecordingActivity, RecordingArguments, RecordingLog> activity = harness.AddActivity<
             RecordingActivity,
             RecordingArguments,
             RecordingLog>(
             _ => new RecordingActivity(executed, compensated),
             _ => new RecordingActivity(executed, compensated));
-        ExecuteActivityTestHarness<FailingActivity, FailingArguments> failure = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FailingActivity, FailingArguments> failure = harness.AddExecuteActivity<
             FailingActivity,
             FailingArguments>();
         var executeConfigured = 0;
@@ -34,9 +34,9 @@ public sealed class ActivityTestHarnessTests
         await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<RoutingSlipFaulted>> faulted = harness.SubscribeHandlerAsync<RoutingSlipFaulted>(TestContext.Current.CancellationToken);
+            Task<ConsumeContext<RoutingSlipFaulted>> faulted = harness.WaitForMessageAsync<RoutingSlipFaulted>(TestContext.Current.CancellationToken);
             Task<ConsumeContext<RoutingSlipActivityCompensated>> activityCompensated =
-                harness.SubscribeHandlerAsync<RoutingSlipActivityCompensated>(TestContext.Current.CancellationToken);
+                harness.WaitForMessageAsync<RoutingSlipActivityCompensated>(TestContext.Current.CancellationToken);
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddSubscription(harness.BusAddress, RoutingSlipEvents.All);
@@ -82,7 +82,7 @@ public sealed class ActivityTestHarnessTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var executed = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness(timeout);
-        ExecuteActivityTestHarness<ExecuteOnlyActivity, ExecuteOnlyArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<ExecuteOnlyActivity, ExecuteOnlyArguments> activity = harness.AddExecuteActivity<
             ExecuteOnlyActivity,
             ExecuteOnlyArguments>(_ => new ExecuteOnlyActivity(executed));
         var executeConfigured = 0;
@@ -91,7 +91,7 @@ public sealed class ActivityTestHarnessTests
         await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<RoutingSlipCompleted>> completed = harness.SubscribeHandlerAsync<RoutingSlipCompleted>(TestContext.Current.CancellationToken);
+            Task<ConsumeContext<RoutingSlipCompleted>> completed = harness.WaitForMessageAsync<RoutingSlipCompleted>(TestContext.Current.CancellationToken);
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddSubscription(harness.BusAddress, RoutingSlipEvents.All);

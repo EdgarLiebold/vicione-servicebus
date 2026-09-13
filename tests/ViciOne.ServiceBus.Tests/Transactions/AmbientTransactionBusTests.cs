@@ -181,7 +181,7 @@ public sealed class AmbientTransactionBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "ambient-commit-publish");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
@@ -223,7 +223,7 @@ public sealed class AmbientTransactionBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "ambient-commit-send");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {

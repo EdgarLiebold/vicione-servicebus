@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,12 +42,17 @@ sealed class ActiveTestObservationScope :
             publishHandle = harness.ConnectPublishObserver(this);
             sendHandle = harness.ConnectSendObserver(this);
         }
-        catch
+        catch (Exception startupException)
         {
-            sendHandle?.Dispose();
-            publishHandle?.Dispose();
-            consumeHandle?.Dispose();
-            throw;
+            var failures = new List<Exception> { startupException };
+            DisposeHandle(sendHandle, failures);
+            DisposeHandle(publishHandle, failures);
+            DisposeHandle(consumeHandle, failures);
+
+            if (failures.Count == 1)
+                ExceptionDispatchInfo.Capture(startupException).Throw();
+
+            throw new AggregateException("Active test observation setup and cleanup both failed.", failures);
         }
 
         _consumeHandle = consumeHandle;
@@ -65,9 +71,15 @@ sealed class ActiveTestObservationScope :
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
             return;
 
-        _sendHandle.Dispose();
-        _publishHandle.Dispose();
-        _consumeHandle.Dispose();
+        var failures = new List<Exception>();
+        DisposeHandle(_sendHandle, failures);
+        DisposeHandle(_publishHandle, failures);
+        DisposeHandle(_consumeHandle, failures);
+
+        if (failures.Count == 1)
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures.Count > 1)
+            throw new AggregateException("One or more active test observation connections could not be released.", failures);
     }
 
     public Task PreConsumeAsync<TMessage>(ConsumeContext<TMessage> context)
@@ -169,6 +181,21 @@ sealed class ActiveTestObservationScope :
     bool IsTrackedTrace()
     {
         return Activity.Current?.TraceId == _traceId;
+    }
+
+    static void DisposeHandle(ConnectHandle? handle, ICollection<Exception> failures)
+    {
+        if (handle == null)
+            return;
+
+        try
+        {
+            handle.Dispose();
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
     }
 
 }

@@ -15,9 +15,9 @@ public sealed class TopologyConventionIntegrationTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CreateHarness(timeout, "correlation");
-        HandlerTestHarness<NewUserEvent> interfaceHandler = harness.Handler<NewUserEvent>();
-        HandlerTestHarness<OtherMessage> propertyHandler = harness.Handler<OtherMessage>();
-        HandlerTestHarness<ExplicitCorrelationMessage> globalHandler = harness.Handler<ExplicitCorrelationMessage>();
+        HandlerTestHarness<NewUserEvent> interfaceHandler = harness.AddHandler<NewUserEvent>();
+        HandlerTestHarness<OtherMessage> propertyHandler = harness.AddHandler<OtherMessage>();
+        HandlerTestHarness<ExplicitCorrelationMessage> globalHandler = harness.AddHandler<ExplicitCorrelationMessage>();
         harness.InMemoryBusConfiguring += configurator =>
         {
             configurator.Send<NewUserEvent>(topology =>
@@ -72,7 +72,7 @@ public sealed class TopologyConventionIntegrationTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CreateHarness(timeout, "serializer");
-        HandlerTestHarness<JsonMessage> handler = harness.Handler<JsonMessage>();
+        HandlerTestHarness<JsonMessage> handler = harness.AddHandler<JsonMessage>();
         harness.InMemoryBusConfiguring += configurator =>
         {
             configurator.AddRawJsonSerializer();

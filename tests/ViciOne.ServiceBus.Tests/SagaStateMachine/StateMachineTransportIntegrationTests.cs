@@ -26,7 +26,7 @@ public sealed class StateMachineTransportIntegrationTests
                 endpoint.Handler<SentNotice>(context => recorder.RecordAsync(context));
             });
         ISagaStateMachineTestHarness<TransportMachine, TransportState> sagaHarness =
-            harness.StateMachineSaga<TransportState, TransportMachine>(machine);
+            harness.AddSagaStateMachine<TransportMachine, TransportState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -73,7 +73,7 @@ public sealed class StateMachineTransportIntegrationTests
         using var harness = CreateHarness("dynamic-events", timeout);
         var machine = new DynamicEventMachine();
         ISagaStateMachineTestHarness<DynamicEventMachine, DynamicEventState> sagaHarness =
-            harness.StateMachineSaga<DynamicEventState, DynamicEventMachine>(machine);
+            harness.AddSagaStateMachine<DynamicEventMachine, DynamicEventState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -118,7 +118,7 @@ public sealed class StateMachineTransportIntegrationTests
                 return Task.CompletedTask;
             }));
         ISagaStateMachineTestHarness<NoTopologyMachine, NoTopologyState> sagaHarness =
-            harness.StateMachineSaga<NoTopologyState, NoTopologyMachine>(machine);
+            harness.AddSagaStateMachine<NoTopologyMachine, NoTopologyState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -162,7 +162,7 @@ public sealed class StateMachineTransportIntegrationTests
             endpoint => endpoint.Handler<ExecuteRule>(context =>
                 context.RespondAsync(new ExecuteRuleResponse(context.Message.CorrelationId, "executed"))));
         ISagaStateMachineTestHarness<EnterRequestMachine, EnterRequestState> sagaHarness =
-            harness.StateMachineSaga<EnterRequestState, EnterRequestMachine>(machine);
+            harness.AddSagaStateMachine<EnterRequestMachine, EnterRequestState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

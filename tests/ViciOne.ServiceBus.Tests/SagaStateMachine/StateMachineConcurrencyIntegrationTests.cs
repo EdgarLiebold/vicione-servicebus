@@ -22,7 +22,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         var machine = new AwaitedFinalizeMachine(decision.Task, entered);
         var repository = new InMemorySagaRepository<AwaitedFinalizeState>();
         ISagaStateMachineTestHarness<AwaitedFinalizeMachine, AwaitedFinalizeState> sagaHarness =
-            harness.StateMachineSaga<AwaitedFinalizeState, AwaitedFinalizeMachine>(machine, repository);
+            harness.AddSagaStateMachine<AwaitedFinalizeMachine, AwaitedFinalizeState>(machine, repository);
 
         Guid correlationId = NewId.NextGuid();
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -68,7 +68,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         var repository = new InMemorySagaRepository<RepositoryProgressState>();
         var signalingRepository = new SignalingSagaRepository<RepositoryProgressState, RepositoryCancel>(repository, cancelDispatched);
         ISagaStateMachineTestHarness<RepositoryProgressMachine, RepositoryProgressState> sagaHarness =
-            harness.StateMachineSaga<RepositoryProgressState, RepositoryProgressMachine>(machine, signalingRepository);
+            harness.AddSagaStateMachine<RepositoryProgressMachine, RepositoryProgressState>(machine, signalingRepository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -214,7 +214,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         };
         var machine = new ChoirMachine();
         ISagaStateMachineTestHarness<ChoirMachine, ChoirState> sagaHarness =
-            harness.StateMachineSaga<ChoirState, ChoirMachine>(machine);
+            harness.AddSagaStateMachine<ChoirMachine, ChoirState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

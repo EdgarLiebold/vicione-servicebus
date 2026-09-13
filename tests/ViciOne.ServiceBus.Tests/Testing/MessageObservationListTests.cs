@@ -42,9 +42,17 @@ public sealed class MessageObservationListTests
                 Assert.Single(harness.Sent.Snapshot().OfType<ISentMessage<ObservedMessage>>()).Context.Message);
             Assert.Equal(
                 expected,
+                Assert.Single(harness.Sent.Snapshot<ObservedMessage>()).Context.Message);
+            Assert.Equal(
+                expected,
                 Assert.Single(
                     harness.Sent.Snapshot().OfType<ISentMessage<ObservedMessage>>(),
                     message => message.Context.Message.Value == "expected").Context.Message);
+            Assert.Equal(
+                expected,
+                Assert.Single(
+                    harness.Sent.Snapshot<ObservedMessage>(message => message.Context.Message.Value == "expected"))
+                    .Context.Message);
             Assert.Equal(expected, (await harness.Sent.SelectAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
@@ -89,9 +97,17 @@ public sealed class MessageObservationListTests
                 Assert.Single(harness.Published.Snapshot().OfType<IPublishedMessage<ObservedMessage>>()).Context.Message);
             Assert.Equal(
                 expected,
+                Assert.Single(harness.Published.Snapshot<ObservedMessage>()).Context.Message);
+            Assert.Equal(
+                expected,
                 Assert.Single(
                     harness.Published.Snapshot().OfType<IPublishedMessage<ObservedMessage>>(),
                     message => message.Context.Message.Value == "expected").Context.Message);
+            Assert.Equal(
+                expected,
+                Assert.Single(
+                    harness.Published.Snapshot<ObservedMessage>(message => message.Context.Message.Value == "expected"))
+                    .Context.Message);
             Assert.Equal(expected, (await harness.Published.SelectAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
@@ -145,14 +161,27 @@ public sealed class MessageObservationListTests
             Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(cancellationToken));
             Assert.True(await harness.Consumed.AnyAsync<OtherMessage>(cancellationToken));
 
+            var systemRecorded = new ConsumedMessage<ObservedMessage>(expectedContext);
+            Assert.Same(expectedContext, ((IConsumedMessage<ObservedMessage>)systemRecorded).Context);
+            Assert.True(systemRecorded.ElapsedTime >= TimeSpan.Zero);
+            Assert.True(systemRecorded.StartTime <= TimeProvider.System.GetUtcNow());
+
             Assert.Same(
                 expectedContext,
                 Assert.Single(harness.Consumed.Snapshot().OfType<IConsumedMessage<ObservedMessage>>()).Context);
             Assert.Same(
                 expectedContext,
+                Assert.Single(harness.Consumed.Snapshot<ObservedMessage>()).Context);
+            Assert.Same(
+                expectedContext,
                 Assert.Single(
                     harness.Consumed.Snapshot().OfType<IConsumedMessage<ObservedMessage>>(),
                     message => message.Context.Message.Value == "expected").Context);
+            Assert.Same(
+                expectedContext,
+                Assert.Single(
+                    harness.Consumed.Snapshot<ObservedMessage>(message => message.Context.Message.Value == "expected"))
+                    .Context);
             Assert.Same(expectedContext, (await harness.Consumed.SelectAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
@@ -239,7 +268,7 @@ public sealed class MessageObservationListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "missing-and-duplicate-identifiers")]
-    public void AsyncElementList_DropsMissingIdentifiersAndKeepsTheFirstDuplicate()
+    public void AsyncElementList_PreservesMissingIdentifiersAndKeepsTheFirstDuplicate()
     {
         Guid duplicateId = NewId.NextGuid();
         var list = new TestElementList(new CancellationToken(canceled: true));
@@ -248,9 +277,18 @@ public sealed class MessageObservationListTests
         list.Record(new TestElement(duplicateId, "first"));
         list.Record(new TestElement(duplicateId, "duplicate"));
 
-        TestElement element = Assert.Single(list.Snapshot());
-        Assert.Equal(duplicateId, element.ElementId);
-        Assert.Equal("first", element.Value);
+        Assert.Collection(
+            list.Snapshot(),
+            missing =>
+            {
+                Assert.Null(missing.ElementId);
+                Assert.Equal("missing", missing.Value);
+            },
+            identified =>
+            {
+                Assert.Equal(duplicateId, identified.ElementId);
+                Assert.Equal("first", identified.Value);
+            });
     }
 
     [Fact]
@@ -372,6 +410,43 @@ public sealed class MessageObservationListTests
             new ConsumedMessageList<ObservedMessage>(timeout, CancellationToken.None, null!)).ParamName);
         Assert.Equal("publishObserver", Assert.Throws<ArgumentNullException>(() =>
             new TestReceiveEndpointObserver(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVATION-LIST", "typed-filter-boundaries")]
+    public void ObservationLists_RejectEveryMissingTypedFilter()
+    {
+        TimeSpan timeout = OperationTimeout();
+        var sent = new SentMessageList(timeout);
+        var published = new PublishedMessageList(timeout);
+        var consumed = new ConsumedMessageList(timeout);
+        var typedConsumed = new ConsumedMessageList<ObservedMessage>(timeout);
+
+        Assert.Empty(typedConsumed.Snapshot());
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            sent.Snapshot<ObservedMessage>(null!)).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            sent.SelectAsync<ObservedMessage>(null!, TestContext.Current.CancellationToken)).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = sent.AnyAsync<ObservedMessage>(null!, TestContext.Current.CancellationToken);
+        }).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            published.Snapshot<ObservedMessage>(null!)).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            published.SelectAsync<ObservedMessage>(null!, TestContext.Current.CancellationToken)).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = published.AnyAsync<ObservedMessage>(null!, TestContext.Current.CancellationToken);
+        }).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            consumed.Snapshot<ObservedMessage>(null!)).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            consumed.SelectAsync<ObservedMessage>(null!, TestContext.Current.CancellationToken)).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = consumed.AnyAsync<ObservedMessage>(null!, TestContext.Current.CancellationToken);
+        }).ParamName);
     }
 
     private static InMemoryTestHarness CreateHarness(TimeSpan timeout) =>

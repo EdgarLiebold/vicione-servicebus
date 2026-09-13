@@ -81,7 +81,7 @@ internal sealed class HubLifetimeManagerTestEnvironment<THub> : IAsyncDisposable
     }
 
     public Task<ConsumeContext<GroupCommandAcknowledgement<THub>>> ObserveNextAcknowledgementAsync() =>
-        _harness.SubscribeHandlerAsync<GroupCommandAcknowledgement<THub>>();
+        _harness.WaitForMessageAsync<GroupCommandAcknowledgement<THub>>();
 
     public Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken)
         where TMessage : class

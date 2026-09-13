@@ -99,7 +99,7 @@ public sealed class FutureRequestConsumerIntegrationTests
             _provider = provider;
             Harness = harness;
             Timeout = timeout;
-            Client = harness.GetRequestClient<CalculatePrice>();
+            Client = harness.CreateRequestClient<CalculatePrice>();
         }
 
         public CancellationToken CancellationToken => TestContext.Current.CancellationToken;

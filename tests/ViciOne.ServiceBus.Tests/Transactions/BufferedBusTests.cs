@@ -115,7 +115,7 @@ public sealed class BufferedBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-publish");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -149,7 +149,7 @@ public sealed class BufferedBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-publish-send-endpoint");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -184,7 +184,7 @@ public sealed class BufferedBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-publish-overloads");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
@@ -231,7 +231,7 @@ public sealed class BufferedBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-send");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -266,7 +266,7 @@ public sealed class BufferedBusTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-send-overloads");
-        HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
+        HandlerTestHarness<TransactionalMessage> handler = harness.AddHandler<TransactionalMessage>();
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {

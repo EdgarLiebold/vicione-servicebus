@@ -18,8 +18,8 @@ public sealed class InterfaceMessageDispatchTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        HandlerTestHarness<FirstMessageContract> first = harness.Handler<FirstMessageContract>();
-        HandlerTestHarness<SecondMessageContract> second = harness.Handler<SecondMessageContract>();
+        HandlerTestHarness<FirstMessageContract> first = harness.AddHandler<FirstMessageContract>();
+        HandlerTestHarness<SecondMessageContract> second = harness.AddHandler<SecondMessageContract>();
         var message = new ConcreteMessage("Joe", 27);
         var stopped = false;
 

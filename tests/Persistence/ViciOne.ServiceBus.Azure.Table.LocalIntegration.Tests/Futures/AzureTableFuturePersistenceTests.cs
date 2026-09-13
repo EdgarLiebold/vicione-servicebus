@@ -642,7 +642,7 @@ public sealed class AzureTableFuturePersistenceTests
             where TRequest : class
             where TResponse : class
         {
-            IRequestClient<TRequest> client = Harness.GetRequestClient<TRequest>();
+            IRequestClient<TRequest> client = Harness.CreateRequestClient<TRequest>();
             return client.GetResponseAsync<TResponse>(command, TestContext.Current.CancellationToken)
                 .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         }

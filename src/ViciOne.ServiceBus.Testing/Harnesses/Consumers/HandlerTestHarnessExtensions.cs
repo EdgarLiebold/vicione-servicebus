@@ -10,7 +10,7 @@ public static class HandlerTestHarnessExtensions
     /// <param name="harness">The harness that hosts the handler.</param>
     /// <param name="handler">The handler invoked for each matching message.</param>
     /// <returns>A harness that records successful and faulted deliveries.</returns>
-    public static HandlerTestHarness<TMessage> Handler<TMessage>(this BusTestHarness harness, MessageHandler<TMessage> handler)
+    public static HandlerTestHarness<TMessage> AddHandler<TMessage>(this BusTestHarness harness, MessageHandler<TMessage> handler)
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(harness);
@@ -22,7 +22,7 @@ public static class HandlerTestHarnessExtensions
     /// <typeparam name="TMessage">The handled message contract.</typeparam>
     /// <param name="harness">The harness that hosts the handler.</param>
     /// <returns>A harness that records matching deliveries.</returns>
-    public static HandlerTestHarness<TMessage> Handler<TMessage>(this BusTestHarness harness)
+    public static HandlerTestHarness<TMessage> AddHandler<TMessage>(this BusTestHarness harness)
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(harness);

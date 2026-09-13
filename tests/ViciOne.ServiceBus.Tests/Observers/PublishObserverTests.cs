@@ -17,8 +17,8 @@ public sealed class PublishObserverTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<PublishedEvent> eventHandler = harness.Handler<PublishedEvent>();
-        harness.Handler<PublishedRequest>(context =>
+        HandlerTestHarness<PublishedEvent> eventHandler = harness.AddHandler<PublishedEvent>();
+        harness.AddHandler<PublishedRequest>(context =>
             context.RespondAsync(new PublishedResponse(context.Message.CorrelationId, $"reply:{context.Message.Value}")));
 
         await harness.StartAsync(cancellationToken);
@@ -76,7 +76,7 @@ public sealed class PublishObserverTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        harness.Handler<PublishedEvent>();
+        harness.AddHandler<PublishedEvent>();
 
         await harness.StartAsync(cancellationToken);
         try

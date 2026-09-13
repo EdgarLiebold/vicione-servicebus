@@ -22,11 +22,6 @@ class TrackedActivity :
     readonly TraceInfo _traceInfo;
     int _disposed;
 
-    public TrackedActivity(string? methodName, TimeSpan? timeout, TimeSpan? idleTimeout)
-        : this(methodName, timeout, idleTimeout, TimeProvider.System)
-    {
-    }
-
     public TrackedActivity(string? methodName, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);

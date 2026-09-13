@@ -12,7 +12,7 @@ public sealed class CorrelationIdConventionTests
     public async Task CorrelatedByGuid_DrivesBothSendAndPublishAsync()
     {
         using var harness = CreateHarness();
-        HandlerTestHarness<CorrelatedMessage> handler = harness.Handler<CorrelatedMessage>();
+        HandlerTestHarness<CorrelatedMessage> handler = harness.AddHandler<CorrelatedMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var sent = new CorrelatedMessage(NewId.NextGuid(), "sent");
         var published = new CorrelatedMessage(NewId.NextGuid(), "published");
@@ -46,9 +46,9 @@ public sealed class CorrelationIdConventionTests
     {
         using var harness = CreateHarness();
         HandlerTestHarness<CorrelationEventCommandMessage> correlationHandler =
-            harness.Handler<CorrelationEventCommandMessage>();
-        HandlerTestHarness<EventCommandMessage> eventHandler = harness.Handler<EventCommandMessage>();
-        HandlerTestHarness<CommandMessage> commandHandler = harness.Handler<CommandMessage>();
+            harness.AddHandler<CorrelationEventCommandMessage>();
+        HandlerTestHarness<EventCommandMessage> eventHandler = harness.AddHandler<EventCommandMessage>();
+        HandlerTestHarness<CommandMessage> commandHandler = harness.AddHandler<CommandMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var correlationMessage = new CorrelationEventCommandMessage(
             NewId.NextGuid(), NewId.NextGuid(), NewId.NextGuid());
@@ -80,8 +80,8 @@ public sealed class CorrelationIdConventionTests
     public async Task NullableCorrelationProperty_IsReadFromAClassAndAnImplementedInterfaceAsync()
     {
         using var harness = CreateHarness();
-        HandlerTestHarness<NullableCorrelationMessage> classHandler = harness.Handler<NullableCorrelationMessage>();
-        HandlerTestHarness<InterfaceCorrelationMessage> interfaceHandler = harness.Handler<InterfaceCorrelationMessage>();
+        HandlerTestHarness<NullableCorrelationMessage> classHandler = harness.AddHandler<NullableCorrelationMessage>();
+        HandlerTestHarness<InterfaceCorrelationMessage> interfaceHandler = harness.AddHandler<InterfaceCorrelationMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var classMessage = new NullableCorrelationMessage(NewId.NextGuid());
         var interfaceMessage = new InterfaceCorrelationMessage(NewId.NextGuid());
@@ -108,7 +108,7 @@ public sealed class CorrelationIdConventionTests
     public async Task EmptySelectedCorrelationContract_DoesNotSwitchIdentityKindsPerMessageInstanceAsync()
     {
         using var harness = CreateHarness();
-        HandlerTestHarness<CorrelationEventCommandMessage> handler = harness.Handler<CorrelationEventCommandMessage>();
+        HandlerTestHarness<CorrelationEventCommandMessage> handler = harness.AddHandler<CorrelationEventCommandMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var message = new CorrelationEventCommandMessage(Guid.Empty, NewId.NextGuid(), NewId.NextGuid());
 
@@ -137,7 +137,7 @@ public sealed class CorrelationIdConventionTests
         harness.InMemoryBusConfiguring += configurator =>
             configurator.Send<ExplicitSelectorMessage>(topology =>
                 topology.UseCorrelationId(message => message.TransactionId));
-        HandlerTestHarness<ExplicitSelectorMessage> handler = harness.Handler<ExplicitSelectorMessage>();
+        HandlerTestHarness<ExplicitSelectorMessage> handler = harness.AddHandler<ExplicitSelectorMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var message = new ExplicitSelectorMessage(NewId.NextGuid(), NewId.NextGuid());
 
@@ -162,7 +162,7 @@ public sealed class CorrelationIdConventionTests
     public async Task ExplicitSendContextValue_IsAppliedAfterTheMessageConventionAsync()
     {
         using var harness = CreateHarness();
-        HandlerTestHarness<CommandMessage> handler = harness.Handler<CommandMessage>();
+        HandlerTestHarness<CommandMessage> handler = harness.AddHandler<CommandMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var message = new CommandMessage(NewId.NextGuid());
         Guid explicitCorrelationId = NewId.NextGuid();

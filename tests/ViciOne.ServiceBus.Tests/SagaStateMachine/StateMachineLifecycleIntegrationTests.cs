@@ -16,7 +16,7 @@ public sealed class StateMachineLifecycleIntegrationTests
         using var harness = CreateHarness("correlation-matrix", timeout);
         var machine = new ConventionMachine();
         ISagaStateMachineTestHarness<ConventionMachine, ConventionState> sagaHarness =
-            harness.StateMachineSaga<ConventionState, ConventionMachine>(machine);
+            harness.AddSagaStateMachine<ConventionMachine, ConventionState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -67,7 +67,7 @@ public sealed class StateMachineLifecycleIntegrationTests
         using var harness = CreateHarness("business-key", timeout);
         var machine = new BusinessKeyMachine();
         ISagaStateMachineTestHarness<BusinessKeyMachine, BusinessKeyState> sagaHarness =
-            harness.StateMachineSaga<BusinessKeyState, BusinessKeyMachine>(machine);
+            harness.AddSagaStateMachine<BusinessKeyMachine, BusinessKeyState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -107,7 +107,7 @@ public sealed class StateMachineLifecycleIntegrationTests
         var machine = new RemovingMachine();
         var repository = new InMemorySagaRepository<RemovingState>();
         ISagaStateMachineTestHarness<RemovingMachine, RemovingState> sagaHarness =
-            harness.StateMachineSaga<RemovingState, RemovingMachine>(machine, repository);
+            harness.AddSagaStateMachine<RemovingMachine, RemovingState>(machine, repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

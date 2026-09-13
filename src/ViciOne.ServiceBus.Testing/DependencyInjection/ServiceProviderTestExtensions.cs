@@ -9,12 +9,12 @@ namespace ViciOne.ServiceBus.Testing;
 /// <summary>Resolves test-owned completion tasks from a dependency-injection service provider.</summary>
 public static class ServiceProviderTestExtensions
 {
-    /// <summary>Gets the last registered harness task and makes the wait cancellable by the caller.</summary>
+    /// <summary>Waits for the last registered harness completion without canceling its shared source.</summary>
     /// <typeparam name="T">The task result type.</typeparam>
     /// <param name="provider">The service provider that owns the task registration.</param>
     /// <param name="cancellationToken">The token used to cancel this caller's wait without canceling the shared task.</param>
     /// <returns>The last registered task for <typeparamref name="T"/>.</returns>
-    public static Task<T> GetTaskAsync<T>(this IServiceProvider provider, CancellationToken cancellationToken = default)
+    public static Task<T> WaitForCompletionAsync<T>(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(provider);
 
@@ -24,11 +24,11 @@ public static class ServiceProviderTestExtensions
             : task;
     }
 
-    /// <summary>Gets every registered harness task in dependency-injection registration order.</summary>
+    /// <summary>Gets every registered harness completion task in dependency-injection registration order.</summary>
     /// <typeparam name="T">The task result type.</typeparam>
     /// <param name="provider">The service provider that owns the task registrations.</param>
     /// <returns>The registered tasks in resolution order.</returns>
-    public static Task<T>[] GetTasks<T>(this IServiceProvider provider)
+    public static Task<T>[] GetCompletionTasks<T>(this IServiceProvider provider)
     {
         ArgumentNullException.ThrowIfNull(provider);
 

@@ -13,14 +13,6 @@ internal sealed class SagaList<TSaga> :
     ISagaList<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>Creates a saga observation list that uses the system time provider.</summary>
-    /// <param name="timeout">The maximum wait for a matching observation.</param>
-    /// <param name="cancellationToken">The token that cancels pending observation.</param>
-    public SagaList(TimeSpan timeout, CancellationToken cancellationToken = default)
-        : base(timeout, cancellationToken)
-    {
-    }
-
     /// <summary>Creates a saga observation list.</summary>
     /// <param name="timeout">The maximum wait for a matching observation.</param>
     /// <param name="cancellationToken">The token that cancels pending observation.</param>

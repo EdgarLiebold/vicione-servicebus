@@ -21,8 +21,8 @@ internal sealed class TestConsumerFactoryDecorator<TConsumer> :
         _consumed = consumed ?? throw new ArgumentNullException(nameof(consumed));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <summary>Invokes the decorated consumer factory and records its consume outcome.</summary>
+    /// <typeparam name="TMessage">The message contract consumed by the factory.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

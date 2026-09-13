@@ -11,15 +11,11 @@ internal abstract class InactivityTestObserver :
     IDisposable,
     IInactivityObservationSource
 {
+    readonly object _timerLock = new();
     int _activityDetected;
     int _disposed;
     RollingTimer? _inactivityTimer;
-    TimeProvider _timeProvider = TimeProvider.System;
-
-    /// <summary>Creates an observer that uses the system clock.</summary>
-    protected InactivityTestObserver()
-    {
-    }
+    readonly TimeProvider _timeProvider;
 
     /// <summary>Creates an observer.</summary>
     /// <param name="timeProvider">The clock used by the rolling inactivity timer.</param>
@@ -31,11 +27,16 @@ internal abstract class InactivityTestObserver :
     /// <summary>Releases the rolling inactivity timer.</summary>
     public void Dispose()
     {
-        if (Interlocked.Exchange(ref _disposed, 1) != 0)
-            return;
+        lock (_timerLock)
+        {
+            if (Volatile.Read(ref _disposed) != 0)
+                return;
 
-        _inactivityTimer?.Dispose();
-        _inactivityTimer = null;
+            Volatile.Write(ref _disposed, 1);
+            RollingTimer? timer = _inactivityTimer;
+            _inactivityTimer = null;
+            timer?.Dispose();
+        }
     }
 
     /// <summary>Connects an inactivity observer and registers this instance as its source.</summary>
@@ -44,28 +45,41 @@ internal abstract class InactivityTestObserver :
     public ConnectHandle ConnectInactivityObserver(IInactivityObserver observer)
     {
         ArgumentNullException.ThrowIfNull(observer);
-        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+        lock (_timerLock)
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
-        var handle = Connect(observer);
+            var handle = Connect(observer);
 
-        observer.RegisterSource(this);
+            observer.RegisterSource(this);
 
-        return handle;
+            return handle;
+        }
     }
 
     /// <summary>Gets whether the timer has elapsed with no activity still in progress.</summary>
-    public virtual bool IsInactive => _inactivityTimer?.Triggered == true && Volatile.Read(ref _activityDetected) == 0;
+    public virtual bool IsInactive
+    {
+        get
+        {
+            lock (_timerLock)
+                return _inactivityTimer?.Triggered == true && Volatile.Read(ref _activityDetected) == 0;
+        }
+    }
 
     /// <summary>Starts the rolling timer used to detect inactivity.</summary>
     /// <param name="inactivityTimeout">The interval without activity that triggers notification.</param>
     protected void StartTimer(TimeSpan inactivityTimeout)
     {
-        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(inactivityTimeout, TimeSpan.Zero);
 
-        _inactivityTimer?.Dispose();
-        _inactivityTimer = new RollingTimer(OnActivityTimeout, inactivityTimeout, null, _timeProvider);
-        _inactivityTimer.Start();
+        lock (_timerLock)
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            _inactivityTimer?.Dispose();
+            _inactivityTimer = new RollingTimer(OnActivityTimeout, inactivityTimeout, null, _timeProvider);
+            _inactivityTimer.Start();
+        }
     }
 
     /// <summary>Restarts the inactivity interval and optionally marks activity as in progress.</summary>
@@ -76,13 +90,17 @@ internal abstract class InactivityTestObserver :
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
-        if (Volatile.Read(ref _disposed) != 0)
-            return Task.CompletedTask;
 
-        if (activityDetected)
-            Interlocked.CompareExchange(ref _activityDetected, 1, 0);
+        lock (_timerLock)
+        {
+            if (Volatile.Read(ref _disposed) != 0)
+                return Task.CompletedTask;
 
-        (_inactivityTimer ?? throw new InvalidOperationException("The inactivity timer has not been started.")).Restart();
+            if (activityDetected)
+                Interlocked.CompareExchange(ref _activityDetected, 1, 0);
+
+            (_inactivityTimer ?? throw new InvalidOperationException("The inactivity timer has not been started.")).Restart();
+        }
 
         return Task.CompletedTask;
     }
@@ -96,8 +114,14 @@ internal abstract class InactivityTestObserver :
 
     void OnActivityTimeout(object? state)
     {
-        _inactivityTimer?.Stop();
-        Interlocked.CompareExchange(ref _activityDetected, 0, 1);
+        lock (_timerLock)
+        {
+            if (Volatile.Read(ref _disposed) != 0 || _inactivityTimer == null)
+                return;
+
+            _inactivityTimer.Stop();
+            Interlocked.CompareExchange(ref _activityDetected, 0, 1);
+        }
 
         try
         {

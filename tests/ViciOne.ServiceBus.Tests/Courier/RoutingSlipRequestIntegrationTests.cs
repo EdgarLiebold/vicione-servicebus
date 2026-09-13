@@ -15,7 +15,7 @@ public sealed class RoutingSlipRequestIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-request-success");
-        ExecuteActivityTestHarness<RequestSuccessActivity, RequestActivityArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RequestSuccessActivity, RequestActivityArguments> activity = harness.AddExecuteActivity<
             RequestSuccessActivity,
             RequestActivityArguments>();
         var requestProxy = new SuccessfulRequestProxy(() => activity.ExecuteAddress);
@@ -57,7 +57,7 @@ public sealed class RoutingSlipRequestIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-request-fault");
-        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.AddExecuteActivity<
             RequestFaultActivity,
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
@@ -99,7 +99,7 @@ public sealed class RoutingSlipRequestIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-request-retry-fault");
-        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.AddExecuteActivity<
             RequestFaultActivity,
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
@@ -143,7 +143,7 @@ public sealed class RoutingSlipRequestIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-request-declared-fault");
-        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.AddExecuteActivity<
             RequestFaultActivity,
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);

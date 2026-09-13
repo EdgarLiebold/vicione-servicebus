@@ -73,8 +73,10 @@ public sealed class DynamicReceiveEndpointConnectorTests
             .BuildServiceProvider(validateScopes: true);
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         IReceiveEndpointConnector connector = provider.GetRequiredService<IReceiveEndpointConnector>();
-        TaskCompletionSource<ConsumeContext<NamedEndpointMessage>> namedConsumed = harness.GetTask<ConsumeContext<NamedEndpointMessage>>();
-        TaskCompletionSource<ConsumeContext<DefinedEndpointMessage>> definedConsumed = harness.GetTask<ConsumeContext<DefinedEndpointMessage>>();
+        TaskCompletionSource<ConsumeContext<NamedEndpointMessage>> namedConsumed =
+            harness.CreateTaskCompletionSource<ConsumeContext<NamedEndpointMessage>>(TestContext.Current.CancellationToken);
+        TaskCompletionSource<ConsumeContext<DefinedEndpointMessage>> definedConsumed =
+            harness.CreateTaskCompletionSource<ConsumeContext<DefinedEndpointMessage>>(TestContext.Current.CancellationToken);
         IBusRegistrationContext? namedRegistration = null;
         IBusRegistrationContext? definedRegistration = null;
         IHostReceiveEndpointHandle? namedEndpoint = null;

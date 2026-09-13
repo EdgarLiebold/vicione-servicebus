@@ -16,7 +16,7 @@ public sealed class SagaTestHarnessBehaviorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid sagaId = NewId.NextGuid();
         using var harness = CreateHarness(timeout);
-        SagaTestHarness<ClassicSaga> sagaHarness = harness.Saga<ClassicSaga>();
+        SagaTestHarness<ClassicSaga> sagaHarness = harness.AddSaga<ClassicSaga>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -57,7 +57,7 @@ public sealed class SagaTestHarnessBehaviorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid sagaId = NewId.NextGuid();
         using var harness = CreateHarness(timeout);
-        SagaTestHarness<ClassicSaga> sagaHarness = harness.Saga<ClassicSaga>();
+        SagaTestHarness<ClassicSaga> sagaHarness = harness.AddSaga<ClassicSaga>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -97,7 +97,7 @@ public sealed class SagaTestHarnessBehaviorTests
                 return Task.FromException(new ExpectedRequestException("request failed"));
             }));
         ISagaStateMachineTestHarness<RequestStateMachine, RequestState> sagaHarness =
-            harness.StateMachineSaga<RequestState, RequestStateMachine>(machine);
+            harness.AddSagaStateMachine<RequestStateMachine, RequestState>(machine);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -152,7 +152,7 @@ public sealed class SagaTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         var machine = new ResponsiveStateMachine();
         ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
-            harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(machine);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -189,7 +189,7 @@ public sealed class SagaTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         var machine = new ResponsiveStateMachine();
         ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
-            harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(machine);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -241,6 +241,57 @@ public sealed class SagaTestHarnessBehaviorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE-OBSERVATION", "typed-event-fault-lifecycle")]
+    public async Task StateMachineObservations_RecordTheExactTypedEventFailureAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Guid sagaId = NewId.NextGuid();
+        var expected = new InvalidOperationException("state-machine event failed");
+        using var harness = CreateHarness(timeout);
+        var machine = new FaultingStateMachine(expected);
+        ISagaStateMachineTestHarness<FaultingStateMachine, FaultingState> sagaHarness =
+            harness.AddSagaStateMachine<FaultingStateMachine, FaultingState>(machine);
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            Task<IPublishedMessage<Fault<FaultingRequest>>> faulted = harness.Published
+                .SelectAsync<Fault<FaultingRequest>>(cancellationToken)
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+            await harness.InputQueueSendEndpoint.SendAsync(new FaultingRequest(sagaId), cancellationToken);
+            IPublishedMessage<Fault<FaultingRequest>> fault = await faulted.WaitAsync(timeout, cancellationToken);
+            IConsumedMessage<FaultingRequest> consumed = await sagaHarness.Consumed
+                .SelectAsync<FaultingRequest>(cancellationToken)
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+            Assert.Same(expected, consumed.Exception);
+            Assert.Equal("state-machine event failed", Assert.Single(fault.Context.Message.Exceptions).Message);
+            Assert.Collection(
+                sagaHarness.Events.Where(observation => observation.SagaId == sagaId),
+                started =>
+                {
+                    Assert.Equal(machine.Fail.Name, started.EventName);
+                    Assert.Equal(typeof(FaultingRequest), started.DataType);
+                    Assert.Equal(StateMachineEventExecutionStatus.Started, started.Status);
+                    Assert.Null(started.Exception);
+                },
+                eventFault =>
+                {
+                    Assert.Equal(machine.Fail.Name, eventFault.EventName);
+                    Assert.Equal(typeof(FaultingRequest), eventFault.DataType);
+                    Assert.Equal(StateMachineEventExecutionStatus.Faulted, eventFault.Status);
+                    Assert.Same(expected, eventFault.Exception);
+                });
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-RETENTION", "bounded-saga-event-and-state-histories")]
     public async Task BoundedRetention_AppliesToSagaAndStateMachineHistoriesAsync()
     {
@@ -252,7 +303,7 @@ public sealed class SagaTestHarnessBehaviorTests
         harness.MaximumSavedContexts = 2;
         var machine = new ResponsiveStateMachine();
         ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
-            harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(machine);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -318,7 +369,7 @@ public sealed class SagaTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         var machine = new QueryCorrelationStateMachine();
         ISagaStateMachineTestHarness<QueryCorrelationStateMachine, QueryCorrelationState> sagaHarness =
-            harness.StateMachineSaga<QueryCorrelationState, QueryCorrelationStateMachine>(machine);
+            harness.AddSagaStateMachine<QueryCorrelationStateMachine, QueryCorrelationState>(machine);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -362,6 +413,138 @@ public sealed class SagaTestHarnessBehaviorTests
         {
             await harness.StopAsync(TestContext.Current.CancellationToken);
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA", "explicit-repository-and-named-endpoint")]
+    public async Task ClassicSagaHarness_ExplicitRepositoryConsumesFromItsNamedEndpointAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        const string queueName = "explicit-classic-saga";
+        Guid sagaId = NewId.NextGuid();
+        using var harness = CreateHarness(timeout);
+        var repository = new InMemorySagaRepository<ClassicSaga>();
+        SagaTestHarness<ClassicSaga> sagaHarness = harness.AddSaga(repository, queueName);
+
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            ISendEndpoint endpoint = await harness.GetSendEndpointAsync(
+                new Uri(harness.BaseAddress, queueName),
+                TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(
+                new StartSaga(sagaId, "explicit", [new SagaValue("repository")]),
+                TestContext.Current.CancellationToken);
+
+            Assert.Equal(sagaId, await sagaHarness.WaitForSagaAsync(
+                sagaId,
+                timeout,
+                TestContext.Current.CancellationToken));
+            Assert.True(await sagaHarness.Sagas.AnyAsync(TestContext.Current.CancellationToken));
+            Assert.True(await sagaHarness.Sagas.AnyAsync(
+                saga => saga.Value == "explicit",
+                TestContext.Current.CancellationToken));
+            Assert.Equal(
+                sagaId,
+                (await sagaHarness.Sagas
+                    .SelectAsync(TestContext.Current.CancellationToken)
+                    .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Saga.CorrelationId);
+            Assert.Equal(
+                sagaId,
+                (await sagaHarness.Sagas
+                    .SelectAsync(saga => saga.Value == "explicit", TestContext.Current.CancellationToken)
+                    .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Saga.CorrelationId);
+            Assert.Equal(
+                sagaId,
+                Assert.Single(sagaHarness.Sagas.Snapshot(saga => saga.Value == "explicit")).Saga.CorrelationId);
+            ClassicSaga instance = Assert.IsType<ClassicSaga>(sagaHarness.Sagas.FindById(sagaId));
+            Assert.Equal("explicit", instance.Value);
+            Assert.Equal(["repository"], instance.Values);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE", "explicit-repository-and-named-endpoint")]
+    public async Task StateMachineHarness_ExplicitRepositoryConsumesFromItsNamedEndpointAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        const string queueName = "explicit-state-machine";
+        Guid sagaId = NewId.NextGuid();
+        using var harness = CreateHarness(timeout);
+        var machine = new ResponsiveStateMachine();
+        var repository = new InMemorySagaRepository<ResponsiveState>();
+        using ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(machine, repository, queueName);
+
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            ISendEndpoint endpoint = await harness.GetSendEndpointAsync(
+                new Uri(harness.BaseAddress, queueName),
+                TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(
+                new ResponsiveRequest(sagaId, "explicit"),
+                context => context.ResponseAddress = harness.BusAddress,
+                TestContext.Current.CancellationToken);
+
+            Assert.Equal(sagaId, await sagaHarness.WaitForSagaInStateAsync(
+                sagaId,
+                machine.Responded,
+                timeout,
+                TestContext.Current.CancellationToken));
+            Assert.Equal(sagaId, await sagaHarness.WaitForSagaInStateAsync(
+                sagaId,
+                static stateMachine => stateMachine.Responded,
+                timeout,
+                TestContext.Current.CancellationToken));
+            Assert.Equal(
+                [sagaId],
+                await sagaHarness.WaitForSagasInStateAsync(
+                    state => state.Value == "explicit",
+                    static stateMachine => stateMachine.Responded,
+                    timeout,
+                    TestContext.Current.CancellationToken));
+            ResponsiveState instance = Assert.IsType<ResponsiveState>(sagaHarness.Sagas.FindById(sagaId));
+            Assert.Equal("explicit", instance.Value);
+            Assert.Equal(machine.Responded.Name, instance.CurrentState);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA", "registration-boundaries")]
+    public void SagaRegistration_RejectsEveryMissingDependencyAndInvalidQueueName()
+    {
+        using var harness = CreateHarness(OperationTimeout());
+        var machine = new ResponsiveStateMachine();
+        var sagaRepository = new InMemorySagaRepository<ClassicSaga>();
+        var stateMachineRepository = new InMemorySagaRepository<ResponsiveState>();
+
+        Assert.Equal("harness", Assert.Throws<ArgumentNullException>(() =>
+            SagaTestHarnessExtensions.AddSaga<ClassicSaga>(null!)).ParamName);
+        Assert.Equal("repository", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddSaga((ISagaRepository<ClassicSaga>)null!)).ParamName);
+        Assert.Equal("queueName", Assert.Throws<ArgumentException>(() =>
+            harness.AddSaga(sagaRepository, " ")).ParamName);
+        Assert.Equal("harness", Assert.Throws<ArgumentNullException>(() =>
+            SagaStateMachineTestHarnessExtensions.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(
+                null!,
+                machine)).ParamName);
+        Assert.Equal("stateMachine", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(null!)).ParamName);
+        Assert.Equal("repository", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(
+                machine,
+                (ISagaRepository<ResponsiveState>)null!)).ParamName);
+        Assert.Equal("queueName", Assert.Throws<ArgumentException>(() =>
+            harness.AddSagaStateMachine<ResponsiveStateMachine, ResponsiveState>(machine, stateMachineRepository, " ")).ParamName);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -475,6 +658,34 @@ public sealed class SagaTestHarnessBehaviorTests
     public sealed record ResponsiveRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
     public sealed record ResponsiveResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+
+    public sealed record FaultingRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed class FaultingState : SagaStateMachineInstance
+    {
+        public Guid CorrelationId { get; set; }
+
+        public string CurrentState { get; set; } = string.Empty;
+    }
+
+    public sealed class FaultingStateMachine : ViciOneServiceBusStateMachine<FaultingState>
+    {
+        public FaultingStateMachine(Exception failure)
+        {
+            ArgumentNullException.ThrowIfNull(failure);
+            InstanceState(instance => instance.CurrentState);
+            Event(() => Fail, configuration =>
+            {
+                configuration.CorrelateById(context => context.Message.CorrelationId);
+                configuration.SelectId(context => context.Message.CorrelationId);
+                configuration.InsertOnInitial = true;
+            });
+
+            Initially(When(Fail).Then(_ => throw failure));
+        }
+
+        public Event<FaultingRequest> Fail { get; } = null!;
+    }
 
     public sealed class ResponsiveState : SagaStateMachineInstance
     {

@@ -1926,3 +1926,156 @@ for `JobTypeStateMachine.cs`,
 
 The protected `review/` and `TestResults/` trees were neither changed nor staged. The complete A+
 source goal remains active for the next unreviewed owner.
+
+## Iteration 94 outcome
+
+Review the complete `ViciOne.ServiceBus.Testing` assembly as one coherent developer-facing test
+platform: direct and dependency-injection harness lifecycle, mediator ownership, observation
+retention and identity, inactivity timing, consumer/handler/saga/state-machine/activity harnesses,
+telemetry correlation and output, request clients, dynamic endpoints, service registration, and
+failure cleanup. Preserve every testing capability while replacing inherited noun-like and
+ambiguous public members with explicit Greenfield `Create`, `Add`, `WaitFor`, and lifecycle APIs.
+
+Keep `src/ViciOne.ServiceBus.Testing` as an independent first-party assembly directly below `src`.
+`src/ViciOne.ServiceBus` is the Core project, not an umbrella directory; nesting sibling projects
+inside it would falsely imply Core ownership and expose them to that SDK project's recursive compile
+globs. External providers and integrations remain grouped by their real architectural axes under
+`Persistence`, `Scheduling`, and `Transports`. “Provider” or “integration” is the precise term for
+those groups; “adapter” is acceptable only as a loose implementation-pattern description.
+
+## Iteration 94 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-TEST-HARNESS-LIFECYCLE` | start, failed start, stop, restart, cancellation, and disposal | direct and DI lifecycle tests | serialized transitions, owned bounded cleanup token, rollback after partial start, primary-failure preservation, cleanup aggregation, idempotency, and no created bus leak |
+| `REQ-VSB-TEST-HARNESS-DI` | full public service-registration surface | service-collection, service-provider, endpoint-registration, and MultiBus tests | every overload, exact scopes, concrete/interface identity, formatter/rider/client-factory composition, runtime endpoints, typed-bus isolation, and required-argument rejection |
+| `REQ-VSB-TEST-HARNESS-OBSERVATION` | consumed, sent, published, received, activity, saga, and state-machine observation | observation-policy, message-list, telemetry, and state-machine collector tests | causal trace isolation, stable identity, missing identifiers, duplicate suppression, retention modes, exact fault ownership, thread safety, and timeout semantics |
+| `REQ-VSB-TEST-HARNESS-INACTIVITY` | activity accounting and completion timers | time-provider and inactivity tests | deterministic clock control, cancellation before token access, no post-dispose callback, no late evaluation, restart behavior, and concurrent activity safety |
+| `REQ-VSB-TEST-HARNESS-CONSUMERS` | consumer, handler, saga, state-machine, and activity composition | focused harness behavior suites | all factory/configurator/repository/queue overloads, default endpoint attachment, exact handler exception, async saga mutation, and exact state-selector invocation |
+| `REQ-VSB-TEST-HARNESS-MEDIATOR` | owned mediator composition and lifecycle | mediator behavior tests | sealed composition boundary, start, request clients, observer connections, synchronous and asynchronous disposal, partial-failure cleanup, and repeated calls |
+| `REQ-VSB-TEST-HARNESS-TELEMETRY` | operation execution, idle waiting, response variants, and diagnostic rendering | telemetry and diagnostic-output tests | action and one/two/three-response overloads, causal faults, response propagation, cycle-safe timelines, detail formatting, and external-trace exclusion |
+| `REQ-VSB-TEST-HARNESS-API` | complete public Testing package surface | broad reflection/behavior API tests and packed consumer contract | every public type/member, every new or changed optional parameter, intentional rename/removal diff, package-only compilation, and no legacy alias retained |
+| `REQ-VSB-ENDPOINT-REGISTRATION` | standalone and container endpoint definition ownership | endpoint-registration and MultiBus tests | non-null selector, authoritative default definition identity, runtime `AddEndpoint(Type)`, per-bus typed definition creation, and no cross-bus collision |
+| `REQ-VSB-ASYNC-API` | method name and asynchronous contract agree bidirectionally | architecture async convention tests | semantic inspection of every source project, external callback allowlist, `Async` as the operation suffix, and both positive and negative synthetic cases |
+| `REQ-VSB-SOURCE-NAVIGATION` | all Testing source files and moved extension type | source-file naming and repository-graph architecture tests plus manual ledger | matching type/file/namespace/folder responsibility, `SagaStateMachineTestHarnessExtensions.cs`, correct sibling-project placement, no repeated path concept, and no empty directory |
+| `REQ-VSB-SOURCE-COMMENTS` | every comment in every Testing source file | manual read plus documentation/comment architecture gates | current code and behavior only; no history, migration narrative, filler, generated rewrite, stale name, or missing public API block |
+
+## Iteration 94 mutation obligations
+
+- Drop observations without identifiers or accept the same identified observation twice: the exact
+  message-list identity tests must fail.
+- Disable causal trace filtering in an active observation scope: the external-trace isolation test
+  must fail.
+- Restore a second default endpoint-definition instance or register an unbound typed endpoint
+  definition globally: the authoritative-identity test or same-consumer MultiBus test must fail.
+- Omit created-bus rollback after a failed harness start: the direct lifecycle test must fail by
+  observing a zero stop count.
+- Allow the inactivity timer callback to evaluate after disposal: the deterministic race test must
+  fail by observing an evaluation count of one.
+- Make cancellation before first token access a no-op: the direct/DI cancellation test must fail
+  because the subsequently obtained token is not canceled.
+
+## Iteration 94 baseline
+
+The unchanged focused Testing namespace passed 146/146 tests. Manual file-by-file review then found
+real lifecycle, identity, and API-design gaps that aggregate coverage alone did not reveal: start
+failure could leave a created bus running; DI endpoint-definition aliases could disagree or collide
+between typed buses; the consumer harness configuration constructor did not attach its default
+endpoint; the handler wait path could lose the exact exception; pre-token cancellation was not
+durable; inactivity disposal had a timer race; observation lists conflated missing identifiers and
+duplicates; timeline traversal lacked cycle protection; and several inherited public names did not
+state whether they created, added, or waited for a resource.
+
+## Iteration 94 completion
+
+All 100 original Testing C# files and all 9,606 physical lines were read manually in full together
+with every comment, every original direct Testing test, the project file, requirements, downstream
+call sites, and the packed public surface. No generator or scripted source/comment rewrite was used.
+The documentation utility was invoked only in read-only `analyze` mode after the manual review; it
+reports zero missing public documentation blocks in `ViciOne.ServiceBus.Testing`. The final project
+contains 101 C# files and 9,826 physical lines. Every filename, type, namespace, visibility,
+responsibility, XML comment, and implementation comment was checked again after remediation.
+
+The direct and container harnesses now serialize lifecycle transitions, carry cancellation issued
+before token access, use owned bounded cleanup tokens, stop a bus created before a start failure,
+preserve the primary start exception when rollback also fails, aggregate independent cleanup
+failures, and dispose idempotently. `BusTestHarness` explicitly implements `IAsyncDisposable`.
+`MediatorTestHarness` is sealed and owns its composed mediator and observers without an overridable
+half-initialized lifecycle. Consumer construction attaches its configured default endpoint, handler
+waits preserve the exact fault, and saga mutation is consistently asynchronous and serialized.
+
+Observation storage is thread-safe, retains missing identifiers, suppresses only identified
+duplicates, applies bounded timing without overflow, and filters active scopes by causal trace.
+Inactivity evaluation cannot race beyond disposal. Telemetry response overloads preserve every
+response and fault, and timeline generation terminates on malformed cyclic span graphs. State-
+machine observation registration is eagerly materialized through one internal marker contract so
+the DI harness cannot silently omit its collector.
+
+The public API now uses `CreateTaskCompletionSource`, `CreateConsumeObserver`,
+`CreateRequestClient`, `AddConsumer`, `AddHandler`, `AddSaga`, `AddSagaStateMachine`,
+`AddActivity`, `AddExecuteActivity`, `WaitForMessageAsync`, `WaitForHandledMessageAsync`,
+`WaitForConsumerAsync`, `WaitForHandlerExecutionAsync`, `WaitForCompletionAsync`, and
+`GetCompletionTasks`. `ITestHarness` owns `StartAsync`, `StopAsync`, and `RestartAsync`; obsolete
+synchronous saga mutation and hosted-service extension aliases are absent. All repository call
+sites compile against the new names, and the package contract diff contains no unrelated API
+change. Every public Testing API and every new or changed parameter has direct compile-time or
+runtime coverage in the focused tests and packed consumers; this is distinct from claiming that
+every compiler-generated or defensive internal branch executed.
+
+The endpoint-registration fixes are deliberately small Core changes discovered through Testing:
+standalone runtime endpoint registrations receive a real selector, default definition interfaces
+and concrete types resolve to the same authoritative instance, and typed-bus definitions are
+created inside their bound bus registration rather than leaked as one unbound global service. The
+same-consumer MultiBus regression proves the isolation boundary.
+
+The focused namespace grows from 146 to 192 runtime cases and passes 192/192. Its 25 executable
+test files contain 186 `[Fact]`/`[Theory]` methods and 1,113 assertion call sites (5.98 per method).
+Static assertion and anti-pattern review finds no effective assertion-free, trivial-only,
+tautological, unawaited, skipped, wall-clock-dependent, random, mutable-static-state, swallowed-
+exception, sleep, or debug-output test. One syntactic zero-assertion method delegates to a helper
+that performs the complete retention assertion matrix. Large overload/integration matrices remain
+cohesive and intentionally verify distinct observable contracts.
+
+Fresh focused instrumentation passes 192/192 and records 93.1402% line and 75.5636% branch coverage
+for `ViciOne.ServiceBus.Testing`. Fresh complete Core-host instrumentation passes 3,256/3,256 and
+records 94.2073% line and 77.1867% branch coverage for Testing; the cross-package host measurement
+is 75.1781% line and 67.9172% branch and is not presented as whole-repository coverage. The complete
+artifact SHA-256 is `e55ac29261894bdddd57fe9da13af4829885d671392517412261e3f2cd42ddc7`.
+The remaining zero-line Testing methods are an unreachable activity-start defensive helper,
+diagnostic `IProbeSite` forwarding methods, two compiler-generated timeline lambdas, and one
+reflection-capability lambda; none is a missing public API or parameter path.
+
+Eight isolated source counterchanges were compiled and killed: dropping missing-ID observations,
+accepting identified duplicates, disabling causal trace filtering, duplicating the default endpoint
+definition, leaking an unbound typed-bus definition, omitting failed-start bus rollback, restoring
+the inactivity disposal race, and making pre-token cancellation a no-op. Every counterchange was
+restored manually before the final no-incremental build.
+
+Final SHA-256 values are
+`acdfb9e161cd9410938988e5f9d0fee6ee6440c942a917405100d1839a80fc8f` for
+`BusTestHarness.cs`, `64695b6285f79f23c20ba2e909d1ccd1dd8d491977909a5c73ca0481b425b9c3`
+for `ContainerTestHarness.cs`,
+`6f6335cd5e019203ebca6f97cf147ec330ce827d66029cbfc82c603411963d1f` for
+`MediatorTestHarness.cs`, `4559c87dfe179b7c6d119994a8ae3523131b1934500e70e38602cab3c0dcea46`
+for `AsyncElementList.cs`, and
+`37ae5d349344e8448bb620b9b967208745f7e96c9a05ae082baf03e307d09f6f` for
+`DependencyInjectionEndpointRegistrationExtensions.cs`.
+
+Product, Engineering, and Unit locked restores pass. Their Release builds pass with warnings as
+errors and zero warnings/errors, including every Local-Integration project affected by the rename.
+The final hermetic Unit/Architecture solution passes 6,121/6,121 tests across 23 hosts with zero
+failures and zero skips; the Architecture owner passes 292/292, including all 30 bidirectional async
+convention cases and the repository-wide source-file/type/folder checks. Both official format gates,
+requirements JSON, `git diff --check`, repository-wide C# preprocessor scan, targeted dummy-marker
+scan, public documentation, package graph, and empty-directory checks pass. The first Engineering
+format attempt exposed one import-order error in the new endpoint regression test; after manual
+correction both gates returned exit code zero and the rebuilt Core host again passed 3,256/3,256.
+
+Fresh-package verification passes once while explicitly updating the five consumer locks and public
+contract and again strictly without update flags: 18 developer journeys, 31 freshly packed ViciOne
+packages, three executed isolated provider-testing consumers, and all 30 runtime API assemblies.
+The reviewed packed API diff is confined to the intended Testing redesign. The final contract has
+19,082 lines with SHA-256
+`15a337639e0a3430a2e404fe15839c196b94a97e40835ecfa434f0a8dd5120dd`.
+The protected `review/` and `TestResults/` trees were neither changed nor staged. The complete A+
+source goal remains active for the next unreviewed owner.

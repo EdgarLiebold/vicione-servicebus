@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -14,7 +15,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        ConsumerTestHarness<ReplyingConsumer> consumer = harness.Consumer<ReplyingConsumer>();
+        ConsumerTestHarness<ReplyingConsumer> consumer = harness.AddConsumer<ReplyingConsumer>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -46,7 +47,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         var entered = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         var release = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness(timeout);
-        ConsumerTestHarness<GatedConsumer> consumer = harness.Consumer(() => new GatedConsumer(entered, release));
+        ConsumerTestHarness<GatedConsumer> consumer = harness.AddConsumer(() => new GatedConsumer(entered, release));
 
         await harness.StartAsync(cancellationToken);
         try
@@ -82,7 +83,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        ConsumerTestHarness<MultiContractConsumer> consumer = harness.Consumer<MultiContractConsumer>();
+        ConsumerTestHarness<MultiContractConsumer> consumer = harness.AddConsumer<MultiContractConsumer>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -119,7 +120,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        ConsumerTestHarness<InterfaceConsumer> consumer = harness.Consumer<InterfaceConsumer>();
+        ConsumerTestHarness<InterfaceConsumer> consumer = harness.AddConsumer<InterfaceConsumer>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -146,7 +147,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<HandlerRequest> handler = harness.Handler<HandlerRequest>(context =>
+        HandlerTestHarness<HandlerRequest> handler = harness.AddHandler<HandlerRequest>(context =>
             context.RespondAsync(new HandlerResponse(context.Message.Value + 1)));
 
         await harness.StartAsync(cancellationToken);
@@ -179,7 +180,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("expected handler failure");
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<FailingHandlerMessage> handler = harness.Handler<FailingHandlerMessage>(_ => Task.FromException(expected));
+        HandlerTestHarness<FailingHandlerMessage> handler = harness.AddHandler<FailingHandlerMessage>(_ => Task.FromException(expected));
 
         await harness.StartAsync(cancellationToken);
         try
@@ -207,7 +208,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<PassiveHandlerMessage> handler = harness.Handler<PassiveHandlerMessage>();
+        HandlerTestHarness<PassiveHandlerMessage> handler = harness.AddHandler<PassiveHandlerMessage>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -238,7 +239,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<IPassiveHandlerContract> handler = harness.Handler<IPassiveHandlerContract>();
+        HandlerTestHarness<IPassiveHandlerContract> handler = harness.AddHandler<IPassiveHandlerContract>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -269,7 +270,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("expected consumer failure");
         using var harness = CreateHarness(timeout);
-        ConsumerTestHarness<FailingConsumer> consumer = harness.Consumer(() => new FailingConsumer(expected));
+        ConsumerTestHarness<FailingConsumer> consumer = harness.AddConsumer(() => new FailingConsumer(expected));
 
         await harness.StartAsync(cancellationToken);
         try
@@ -300,7 +301,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         const string queueName = "dedicated-consumer";
         using var harness = CreateHarness(timeout);
-        ConsumerTestHarness<NamedConsumer> consumer = harness.Consumer<NamedConsumer>(queueName);
+        ConsumerTestHarness<NamedConsumer> consumer = harness.AddConsumer<NamedConsumer>(queueName);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -323,10 +324,88 @@ public sealed class InMemoryTestHarnessBehaviorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "all-factory-and-configuration-overloads")]
+    public async Task ConsumerRegistration_AllFactoryAndConfigurationOverloadsDeliverThroughTheirOwnEndpointsAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var configurationCount = 0;
+        var directConfigurationCount = 0;
+        using var harness = CreateHarness(timeout);
+        ConsumerTestHarness<NamedConsumer> defaultConfigured = harness.AddConsumer<NamedConsumer>(
+            _ => Interlocked.Increment(ref configurationCount),
+            "default-configured");
+        ConsumerTestHarness<NamedConsumer> factory = harness.AddConsumer<NamedConsumer>(
+            new DelegateConsumerFactory<NamedConsumer>(() => new NamedConsumer()),
+            "factory");
+        ConsumerTestHarness<NamedConsumer> factoryConfigured = harness.AddConsumer<NamedConsumer>(
+            new DelegateConsumerFactory<NamedConsumer>(() => new NamedConsumer()),
+            _ => Interlocked.Increment(ref configurationCount),
+            "factory-configured");
+        ConsumerTestHarness<NamedConsumer> delegateConfigured = harness.AddConsumer(
+            () => new NamedConsumer(),
+            _ => Interlocked.Increment(ref configurationCount),
+            "delegate-configured");
+        var directConfigured = new ConsumerTestHarness<NamedConsumer>(
+            harness,
+            new DelegateConsumerFactory<NamedConsumer>(() => new NamedConsumer()),
+            _ => Interlocked.Increment(ref directConfigurationCount));
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            Assert.Equal(3, Volatile.Read(ref configurationCount));
+            Assert.Equal(1, Volatile.Read(ref directConfigurationCount));
+
+            await SendAndAssertConsumedAsync(defaultConfigured, "default-configured", harness, cancellationToken);
+            await SendAndAssertConsumedAsync(factory, "factory", harness, cancellationToken);
+            await SendAndAssertConsumedAsync(factoryConfigured, "factory-configured", harness, cancellationToken);
+            await SendAndAssertConsumedAsync(delegateConfigured, "delegate-configured", harness, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new NamedConsumerMessage("direct-configured"), cancellationToken);
+            IConsumedMessage<NamedConsumerMessage> directlyReceived = await directConfigured.Consumed
+                .SelectAsync<NamedConsumerMessage>(cancellationToken)
+                .FirstObservedAsync(cancellationToken: cancellationToken);
+            Assert.Equal("direct-configured", directlyReceived.Context.Message.Value);
+            Assert.Equal(harness.InputQueueAddress, directlyReceived.Context.Advanced().ReceiveContext.InputAddress);
+            Assert.Null(directlyReceived.Exception);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "registration-boundaries")]
+    public void ConsumerRegistration_RejectsEveryAbsentDelegateFactoryAndConfiguration()
+    {
+        using var harness = CreateHarness(OperationTimeout());
+        var factory = new DelegateConsumerFactory<NamedConsumer>(() => new NamedConsumer());
+
+        Assert.Equal("harness", Assert.Throws<ArgumentNullException>(() =>
+            ConsumerTestHarnessExtensions.AddConsumer<NamedConsumer>(null!)).ParamName);
+        Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer<NamedConsumer>((Action<IConsumerConfigurator<NamedConsumer>>)null!)).ParamName);
+        Assert.Equal("consumerFactory", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer<NamedConsumer>((IConsumerFactory<NamedConsumer>)null!)).ParamName);
+        Assert.Equal("consumerFactory", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer<NamedConsumer>((IConsumerFactory<NamedConsumer>)null!, _ => { })).ParamName);
+        Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer(factory, (Action<IConsumerConfigurator<NamedConsumer>>)null!)).ParamName);
+        Assert.Equal("consumerFactory", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer<NamedConsumer>((Func<NamedConsumer>)null!)).ParamName);
+        Assert.Equal("consumerFactory", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer<NamedConsumer>((Func<NamedConsumer>)null!, _ => { })).ParamName);
+        Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() =>
+            harness.AddConsumer(() => new NamedConsumer(), (Action<IConsumerConfigurator<NamedConsumer>>)null!)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "public-boundaries-and-repeated-start")]
     public async Task PublicBoundaries_RejectInvalidInputsAndRepeatedStartAsync()
     {
         Assert.Equal("virtualHost", Assert.Throws<ArgumentException>(() => new InMemoryTestHarness(" ")).ParamName);
+        Assert.Equal("virtualHost", Assert.Throws<ArgumentException>(() => new InMemoryTestHarness("///")).ParamName);
 
         TimeSpan timeout = OperationTimeout();
         using var harness = CreateHarness(timeout);
@@ -341,7 +420,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         }).ParamName);
         Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
         {
-            _ = harness.SubscribeHandlerAsync<RequestMessage>(null!, TestContext.Current.CancellationToken);
+            _ = harness.WaitForMessageAsync<RequestMessage>(null!, TestContext.Current.CancellationToken);
         }).ParamName);
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
@@ -363,8 +442,208 @@ public sealed class InMemoryTestHarnessBehaviorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "delegate-failure-completes-awaitable")]
+    public async Task WaitForHandlerExecutionAsync_PropagatesTheExactDelegateFailureAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var expected = new InvalidOperationException("expected handler failure");
+        Task<ConsumeContext<FailingHandlerMessage>>? handled = null;
+        using var harness = CreateHarness(timeout);
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
+            handled = harness.WaitForHandlerExecutionAsync<FailingHandlerMessage>(configurator, _ => Task.FromException(expected));
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            await harness.InputQueueSendEndpoint.SendAsync(new FailingHandlerMessage(), cancellationToken);
+
+            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                Assert.IsType<Task<ConsumeContext<FailingHandlerMessage>>>(handled).WaitAsync(timeout, cancellationToken));
+            Assert.Same(expected, actual);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "failed-start-rolls-back-created-bus")]
+    public async Task ObserverConnectionFailure_StopsTheCreatedBusAndClearsOwnedStateAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        using var harness = CreateHarness(timeout);
+        var expected = new InvalidOperationException("observer connection failed");
+
+        void FailObserverConnection(IBus _) => throw expected;
+
+        harness.ObserversConnecting += FailObserverConnection;
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            harness.StartAsync(TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+        Assert.Throws<InvalidOperationException>(() => harness.BusControl);
+        Assert.Throws<InvalidOperationException>(() => harness.BusSendEndpoint);
+        Assert.Throws<InvalidOperationException>(() => harness.InputQueueSendEndpoint);
+
+        harness.ObserversConnecting -= FailObserverConnection;
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "wait-api-success-overloads")]
+    public async Task WaitApis_CompleteForPlainFilteredCountedDelegateAndConsumerRegistrationsAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Task<ConsumeContext<PlainWaitMessage>>? plain = null;
+        Task<ConsumeContext<FilteredWaitMessage>>? filtered = null;
+        Task<ConsumeContext<CountedWaitMessage>>? counted = null;
+        Task<ConsumeContext<DelegateWaitMessage>>? delegated = null;
+        Task<ConsumeContext<ConsumerWaitMessage>>? consumed = null;
+        using var harness = CreateHarness(timeout);
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
+        {
+            plain = harness.WaitForHandledMessageAsync<PlainWaitMessage>(configurator, cancellationToken);
+            filtered = harness.WaitForHandledMessageAsync<FilteredWaitMessage>(
+                configurator,
+                context => context.Message.Accept,
+                cancellationToken);
+            counted = harness.WaitForHandledMessageAsync<CountedWaitMessage>(configurator, 2, cancellationToken);
+            delegated = harness.WaitForHandlerExecutionAsync<DelegateWaitMessage>(
+                configurator,
+                context => context.RespondAsync(new DelegateWaitResponse(context.Message.Value + 1)),
+                cancellationToken);
+            consumed = harness.WaitForConsumerAsync<ConsumerWaitMessage>(configurator, cancellationToken);
+        };
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            Task<ConsumeContext<SubscriptionWaitMessage>> subscription = harness.WaitForMessageAsync<SubscriptionWaitMessage>(
+                context => context.Message.Accept,
+                cancellationToken);
+            await harness.BusSendEndpoint.SendAsync(new SubscriptionWaitMessage("ignored", false), cancellationToken);
+            await harness.BusSendEndpoint.SendAsync(new SubscriptionWaitMessage("accepted", true), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new PlainWaitMessage("plain"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FilteredWaitMessage("ignored", false), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FilteredWaitMessage("accepted", true), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new CountedWaitMessage(1), cancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<CountedWaitMessage>(
+                message => message.Context.Message.Value == 1,
+                cancellationToken));
+            await harness.InputQueueSendEndpoint.SendAsync(new CountedWaitMessage(2), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
+                new DelegateWaitMessage(41),
+                context => context.ResponseAddress = harness.BusAddress,
+                cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new ConsumerWaitMessage("consumer"), cancellationToken);
+
+            Assert.Equal("plain", (await Assert.IsType<Task<ConsumeContext<PlainWaitMessage>>>(plain)
+                .WaitAsync(timeout, cancellationToken)).Message.Value);
+            Assert.Equal("accepted", (await Assert.IsType<Task<ConsumeContext<FilteredWaitMessage>>>(filtered)
+                .WaitAsync(timeout, cancellationToken)).Message.Value);
+            Assert.Equal(2, (await Assert.IsType<Task<ConsumeContext<CountedWaitMessage>>>(counted)
+                .WaitAsync(timeout, cancellationToken)).Message.Value);
+            Assert.Equal(41, (await Assert.IsType<Task<ConsumeContext<DelegateWaitMessage>>>(delegated)
+                .WaitAsync(timeout, cancellationToken)).Message.Value);
+            Assert.Equal("consumer", (await Assert.IsType<Task<ConsumeContext<ConsumerWaitMessage>>>(consumed)
+                .WaitAsync(timeout, cancellationToken)).Message.Value);
+            Assert.Equal("accepted", (await subscription.WaitAsync(timeout, cancellationToken)).Message.Value);
+            Assert.True(await harness.Sent.AnyAsync<DelegateWaitResponse>(cancellationToken));
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "wait-api-boundaries")]
+    public async Task WaitApis_RejectEveryInvalidArgumentAndPreservePreCanceledTokensAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        using var harness = CreateHarness(timeout);
+        IReceiveEndpointConfigurator? configurator = null;
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => configurator = endpoint;
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            IReceiveEndpointConfigurator endpoint = Assert.IsAssignableFrom<IReceiveEndpointConfigurator>(configurator);
+            Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = harness.WaitForHandledMessageAsync<PlainWaitMessage>(null!, TestContext.Current.CancellationToken);
+            }).ParamName);
+            Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = harness.WaitForHandledMessageAsync<FilteredWaitMessage>(endpoint, null!, TestContext.Current.CancellationToken);
+            }).ParamName);
+            Assert.Equal("expectedCount", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                _ = harness.WaitForHandledMessageAsync<CountedWaitMessage>(endpoint, 0, TestContext.Current.CancellationToken);
+            }).ParamName);
+            Assert.Equal("handler", Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = harness.WaitForHandlerExecutionAsync<DelegateWaitMessage>(endpoint, null!, TestContext.Current.CancellationToken);
+            }).ParamName);
+            Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = harness.WaitForConsumerAsync<ConsumerWaitMessage>(null!, TestContext.Current.CancellationToken);
+            }).ParamName);
+
+            using var canceled = new CancellationTokenSource();
+            canceled.Cancel();
+            Task<ConsumeContext<PlainWaitMessage>> wait = harness.WaitForHandledMessageAsync<PlainWaitMessage>(endpoint, canceled.Token);
+            OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => wait);
+            Assert.Equal(canceled.Token, exception.CancellationToken);
+
+            await harness.CleanAsync(TestContext.Current.CancellationToken);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => harness.CleanAsync(canceled.Token));
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "direct-async-disposal-stops-running-bus")]
+    public async Task DisposeAsync_StopsARunningBusCancelsItsScopeAndIsIdempotentAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        var harness = CreateHarness(timeout);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        CancellationToken scopeToken = harness.TestCancellationToken;
+
+        await harness.DisposeAsync();
+        await harness.DisposeAsync();
+
+        Assert.True(scopeToken.IsCancellationRequested);
+        Assert.Throws<InvalidOperationException>(() => harness.BusControl);
+        await Assert.ThrowsAsync<ObjectDisposedException>(() =>
+            harness.StartAsync(TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ObjectDisposedException>(() =>
+            harness.StopAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "direct-sync-disposal-stops-running-bus")]
+    public async Task Dispose_StopsARunningBusAndClearsItsOwnedEndpointsAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        var harness = CreateHarness(timeout);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+
+        harness.Dispose();
+
+        Assert.Throws<InvalidOperationException>(() => harness.BusControl);
+        Assert.Throws<InvalidOperationException>(() => harness.BusSendEndpoint);
+        Assert.Throws<InvalidOperationException>(() => harness.InputQueueSendEndpoint);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "subscription-caller-cancellation")]
-    public async Task SubscribeHandlerAsync_RemainsCancelableAfterRegistrationAsync()
+    public async Task WaitForMessageAsync_RemainsCancelableAfterRegistrationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         using var harness = CreateHarness(timeout);
@@ -372,7 +651,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         try
         {
             using var cancellationSource = new CancellationTokenSource();
-            Task<ConsumeContext<RequestMessage>> pending = harness.SubscribeHandlerAsync<RequestMessage>(cancellationSource.Token);
+            Task<ConsumeContext<RequestMessage>> pending = harness.WaitForMessageAsync<RequestMessage>(cancellationSource.Token);
 
             cancellationSource.Cancel();
 
@@ -395,6 +674,26 @@ public sealed class InMemoryTestHarnessBehaviorTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
+
+    private static async Task SendAndAssertConsumedAsync(
+        ConsumerTestHarness<NamedConsumer> consumer,
+        string queueName,
+        InMemoryTestHarness harness,
+        CancellationToken cancellationToken)
+    {
+        ISendEndpoint endpoint = await harness.GetSendEndpointAsync(
+            new Uri(harness.BaseAddress, queueName),
+            cancellationToken);
+        await endpoint.SendAsync(new NamedConsumerMessage(queueName), cancellationToken);
+
+        IConsumedMessage<NamedConsumerMessage> received = await consumer.Consumed
+            .SelectAsync<NamedConsumerMessage>(cancellationToken)
+            .FirstObservedAsync(cancellationToken: cancellationToken);
+
+        Assert.Equal(queueName, received.Context.Message.Value);
+        Assert.Equal(new Uri(harness.BaseAddress, queueName), received.Context.Advanced().ReceiveContext.InputAddress);
+        Assert.Null(received.Exception);
+    }
 
     private sealed record RequestMessage(string Value);
 
@@ -464,6 +763,20 @@ public sealed class InMemoryTestHarnessBehaviorTests
     private sealed record HandlerResponse(int Value);
 
     private sealed record FailingHandlerMessage;
+
+    private sealed record PlainWaitMessage(string Value);
+
+    private sealed record FilteredWaitMessage(string Value, bool Accept);
+
+    private sealed record CountedWaitMessage(int Value);
+
+    private sealed record DelegateWaitMessage(int Value);
+
+    private sealed record DelegateWaitResponse(int Value);
+
+    private sealed record ConsumerWaitMessage(string Value);
+
+    private sealed record SubscriptionWaitMessage(string Value, bool Accept);
 
     private sealed record PassiveHandlerMessage(string Value);
 

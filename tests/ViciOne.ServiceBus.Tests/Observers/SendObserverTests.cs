@@ -17,7 +17,7 @@ public sealed class SendObserverTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<ObservedSend> handler = harness.Handler<ObservedSend>();
+        HandlerTestHarness<ObservedSend> handler = harness.AddHandler<ObservedSend>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -64,7 +64,7 @@ public sealed class SendObserverTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        harness.Handler<ObservedSend>();
+        harness.AddHandler<ObservedSend>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -100,7 +100,7 @@ public sealed class SendObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var responseFailure = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness(timeout);
-        harness.Handler<ResponseRequest>(async context =>
+        harness.AddHandler<ResponseRequest>(async context =>
         {
             try
             {

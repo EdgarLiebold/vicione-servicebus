@@ -322,7 +322,7 @@ public sealed class ActiveMqJobServiceTests
 
         public Task<Guid> SubmitAsync(Guid jobId, ActiveMqJob job)
         {
-            IRequestClient<SubmitJob<ActiveMqJob>> client = Harness.GetRequestClient<SubmitJob<ActiveMqJob>>();
+            IRequestClient<SubmitJob<ActiveMqJob>> client = Harness.CreateRequestClient<SubmitJob<ActiveMqJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -349,7 +349,7 @@ public sealed class ActiveMqJobServiceTests
 
         public Task<JobState> GetStateAsync(Guid jobId)
         {
-            IRequestClient<GetJobState> client = Harness.GetRequestClient<GetJobState>();
+            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
             return client.GetJobStateAsync(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }

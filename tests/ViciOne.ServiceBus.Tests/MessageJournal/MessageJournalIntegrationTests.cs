@@ -18,7 +18,7 @@ public sealed class MessageJournalIntegrationTests
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("journal-default-off", timeout);
-        HandlerTestHarness<JournalMessage> handler = harness.Handler<JournalMessage>();
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
         var store = new RecordingStore(expectedEntries: 1);
 
         await harness.StartAsync(cancellationToken);
@@ -46,7 +46,7 @@ public sealed class MessageJournalIntegrationTests
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("journal-outgoing", timeout);
-        harness.Handler<JournalMessage>();
+        harness.AddHandler<JournalMessage>();
         var store = new RecordingStore(expectedEntries: 2);
 
         await harness.StartAsync(cancellationToken);
@@ -86,8 +86,8 @@ public sealed class MessageJournalIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expectedFailure = new ExpectedConsumerException();
         using var harness = CreateHarness("journal-consume-outcomes", timeout);
-        harness.Handler<SuccessfulMessage>();
-        harness.Handler<FaultingMessage>(_ => Task.FromException(expectedFailure));
+        harness.AddHandler<SuccessfulMessage>();
+        harness.AddHandler<FaultingMessage>(_ => Task.FromException(expectedFailure));
         var store = new RecordingStore(expectedEntries: 2);
 
         await harness.StartAsync(cancellationToken);
@@ -132,7 +132,7 @@ public sealed class MessageJournalIntegrationTests
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("journal-store-failure", timeout);
-        HandlerTestHarness<JournalMessage> handler = harness.Handler<JournalMessage>();
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
         var store = new RecordingStore(
             expectedEntries: 0,
             failure: new ExpectedStoreException(),
@@ -219,7 +219,7 @@ public sealed class MessageJournalIntegrationTests
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("journal-disconnect", timeout);
-        harness.Handler<JournalMessage>();
+        harness.AddHandler<JournalMessage>();
         var store = new RecordingStore(expectedEntries: 1);
 
         await harness.StartAsync(cancellationToken);

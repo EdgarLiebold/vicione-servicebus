@@ -20,7 +20,7 @@ public sealed class ConsumeContextScopeTests
             TestInactivityTimeout = timeout,
         };
         var assertionsCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<ScopeMessage>(context =>
+        harness.AddHandler<ScopeMessage>(context =>
         {
             var rootPayload = new CounterPayload(10);
             Assert.Same(rootPayload, context.GetOrAddPayload(() => rootPayload));

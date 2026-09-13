@@ -45,39 +45,52 @@ public static class TimelineExtensions
         await foreach (var message in harness.Consumed.SelectAsync(_ => true, cancellationToken: cancellationToken).ConfigureAwait(false))
             consumed.Add(new TimelineMessage(message));
 
-        Dictionary<Guid, ConversationThread> conversations = produced.GroupBy(message => message.ConversationKey).Select(group =>
+        List<ConversationThread> conversations = produced.GroupBy(message => message.ConversationKey).SelectMany(group =>
         {
             List<TimelineMessage> messages = group.OrderBy(message => message.StartTime).ToList();
+            var roots = new List<ConversationThread>();
+            var visited = new HashSet<TimelineMessage>();
 
-            var initiator = messages.FirstOrDefault(message => message.ParentMessageId == null) ?? messages[0];
-
-            var initiatorThread = new ConversationThread(initiator, 1);
-
-            var stack = new Stack<ConversationThread>();
-            stack.Push(initiatorThread);
-
-            while (stack.Any())
+            IEnumerable<TimelineMessage> rootCandidates = messages.Where(message => message.ParentMessageId == null).Concat(messages);
+            foreach (TimelineMessage initiator in rootCandidates)
             {
-                var thread = stack.Pop();
+                if (!visited.Add(initiator))
+                    continue;
 
-                List<TimelineMessage> consumes = consumed.Where(message => message.MessageId == thread.Message.MessageId).ToList();
-                thread.Consumers.AddRange(consumes.Select(message => new ConversationConsumer(message)));
+                var initiatorThread = new ConversationThread(initiator, 1);
+                roots.Add(initiatorThread);
 
-                IEnumerable<TimelineMessage> threadMessages = group.Where(message => message.ParentMessageId == thread.Message.MessageId);
-                foreach (var message in threadMessages)
+                var stack = new Stack<ConversationThread>();
+                stack.Push(initiatorThread);
+
+                while (stack.Any())
                 {
-                    var nextThread = new ConversationThread(message, thread.Depth + 1);
-                    thread.Nodes.Add(nextThread);
-                    stack.Push(nextThread);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var thread = stack.Pop();
+
+                    List<TimelineMessage> consumes = consumed.Where(message => message.MessageId == thread.Message.MessageId).ToList();
+                    thread.Consumers.AddRange(consumes.Select(message => new ConversationConsumer(message)));
+
+                    IEnumerable<TimelineMessage> threadMessages = messages.Where(
+                        message => message.ParentMessageId == thread.Message.MessageId);
+                    foreach (TimelineMessage message in threadMessages)
+                    {
+                        if (!visited.Add(message))
+                            continue;
+
+                        var nextThread = new ConversationThread(message, thread.Depth + 1);
+                        thread.Nodes.Add(nextThread);
+                        stack.Push(nextThread);
+                    }
                 }
             }
 
-            return initiatorThread;
-        }).ToDictionary(thread => thread.Message.ConversationKey);
+            return roots;
+        }).ToList();
 
         var chart = new ChartTable();
 
-        foreach (var conversation in conversations.Values.OrderBy(x => x.Message.StartTime))
+        foreach (var conversation in conversations.OrderBy(x => x.Message.StartTime))
         {
             var whitespace = new string(' ', (conversation.Depth - 1) * 2);
             var conversationLine = $"{whitespace}{conversation.Message.EventType} {options.GetMessageTypeName(conversation.Message)}";

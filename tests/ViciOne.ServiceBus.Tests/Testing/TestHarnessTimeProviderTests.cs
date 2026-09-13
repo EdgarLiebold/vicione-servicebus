@@ -32,6 +32,16 @@ public sealed class TestHarnessTimeProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TIME", "protected-system-time-construction")]
+    public void DerivedBusHarness_DefaultConstructionUsesSystemTimeAndOneCancellationScope()
+    {
+        using var harness = new SystemTimeBusHarness();
+
+        Assert.Same(TimeProvider.System, harness.TimeProvider);
+        Assert.Equal(harness.TestCancellationToken, harness.CancellationToken);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-TIME", "rolling-timer-restart")]
     public void RollingTimer_RestartMovesTheDeadlineOnTheConfiguredClock()
     {
@@ -153,7 +163,7 @@ public sealed class TestHarnessTimeProviderTests
 
         harness.BeginTestScope();
         CancellationToken currentToken = harness.TestCancellationToken;
-        TaskCompletionSource<int> currentTask = harness.GetTask<int>();
+        TaskCompletionSource<int> currentTask = harness.CreateTaskCompletionSource<int>(TestContext.Current.CancellationToken);
 
         harness.Cancel();
 
@@ -162,12 +172,27 @@ public sealed class TestHarnessTimeProviderTests
 
         harness.BeginTestScope();
         CancellationToken nextToken = harness.TestCancellationToken;
-        TaskCompletionSource<int> nextTask = harness.GetTask<int>();
+        TaskCompletionSource<int> nextTask = harness.CreateTaskCompletionSource<int>(TestContext.Current.CancellationToken);
 
         Assert.False(nextToken.IsCancellationRequested);
         Assert.NotEqual(currentToken, nextToken);
         Assert.True(nextTask.TrySetResult(42));
         Assert.Equal(42, await nextTask.Task);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "cancel-materializes-current-scope")]
+    public void Cancel_CancelsTheCurrentScopeBeforeItsTokenIsFirstRequested()
+    {
+        using var harness = new InMemoryTestHarness
+        {
+            TestTimeout = TimeSpan.FromMinutes(1),
+        };
+
+        harness.BeginTestScope();
+        harness.Cancel();
+
+        Assert.True(harness.TestCancellationToken.IsCancellationRequested);
     }
 
     [Fact]
@@ -277,21 +302,103 @@ public sealed class TestHarnessTimeProviderTests
     public async Task CompletionSource_ObservesBothHarnessAndCallerCancellationAsync()
     {
         using var callerCancellation = new CancellationTokenSource();
-        using var harness = new AsyncHarnessProbe();
+        using var harness = new InMemoryTestHarness();
 
-        Task<int> callerTask = harness.CreateTaskForTestAsync<int>(callerCancellation.Token);
+        Task<int> callerTask = harness.CreateTaskCompletionSource<int>(callerCancellation.Token).Task;
         callerCancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => callerTask);
 
         harness.BeginTestScope();
-        Task<int> harnessTask = harness.CreateTaskForTestAsync<int>(CancellationToken.None);
+        Task<int> harnessTask = harness.CreateTaskCompletionSource<int>(TestContext.Current.CancellationToken).Task;
         harness.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => harnessTask);
     }
 
-    private sealed class AsyncHarnessProbe : AsyncTestHarness
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "inactivity-source-disposal-suppresses-callback")]
+    public void InactivitySource_DisposalSuppressesTimerCallbacksAndPreventsTimerRecreation()
     {
-        public Task<T> CreateTaskForTestAsync<T>(CancellationToken cancellationToken) =>
-            CreateTask<T>(cancellationToken).Task;
+        var timeProvider = new DisposeCallbackTimeProvider();
+        var source = new InactivitySourceProbe(timeProvider);
+        var observer = new CountingInactivityObserver();
+        using ConnectHandle connection = source.ConnectInactivityObserver(observer);
+        source.StartTimerForTest(TimeSpan.FromMinutes(1));
+
+        source.Dispose();
+        source.Dispose();
+
+        Assert.Equal(0, observer.EvaluationCount);
+        Assert.False(source.IsInactive);
+        Assert.True(source.RestartTimerAsync(cancellationToken: TestContext.Current.CancellationToken).IsCompletedSuccessfully);
+        Assert.Equal(1, timeProvider.CreatedTimerCount);
+        Assert.Throws<ObjectDisposedException>(() => source.ConnectInactivityObserver(observer));
+    }
+
+    private sealed class InactivitySourceProbe(TimeProvider timeProvider) : InactivityTestObserver(timeProvider)
+    {
+        public void StartTimerForTest(TimeSpan timeout) => StartTimer(timeout);
+    }
+
+    private sealed class SystemTimeBusHarness : BusTestHarness
+    {
+        public override string InputQueueName => "system-time";
+
+        public override Uri InputQueueAddress { get; } = new("loopback://localhost/system-time");
+
+        protected override Task<IBusControl> CreateBusAsync(CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class CountingInactivityObserver : IInactivityObserver
+    {
+        private int _evaluationCount;
+
+        public int EvaluationCount => Volatile.Read(ref _evaluationCount);
+
+        public void RegisterSource(IInactivityObservationSource source)
+        {
+        }
+
+        public Task EvaluateInactivityAsync(CancellationToken cancellationToken = default)
+        {
+            Interlocked.Increment(ref _evaluationCount);
+            return Task.CompletedTask;
+        }
+
+        public void ForceInactive()
+        {
+        }
+    }
+
+    private sealed class DisposeCallbackTimeProvider : TimeProvider
+    {
+        private int _createdTimerCount;
+
+        public int CreatedTimerCount => Volatile.Read(ref _createdTimerCount);
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            Interlocked.Increment(ref _createdTimerCount);
+            return new DisposeCallbackTimer(callback, state);
+        }
+
+        private sealed class DisposeCallbackTimer(TimerCallback callback, object? state) : ITimer
+        {
+            private int _disposed;
+
+            public bool Change(TimeSpan dueTime, TimeSpan period) => Volatile.Read(ref _disposed) == 0;
+
+            public void Dispose()
+            {
+                if (Interlocked.Exchange(ref _disposed, 1) == 0)
+                    callback(state);
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                Dispose();
+                return ValueTask.CompletedTask;
+            }
+        }
     }
 }

@@ -16,8 +16,8 @@ public sealed class ReceiveObserverTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        harness.Handler<HandledMessage>();
-        harness.Consumer<ObservedConsumer>();
+        harness.AddHandler<HandledMessage>();
+        harness.AddConsumer<ObservedConsumer>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -58,7 +58,7 @@ public sealed class ReceiveObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("consumer failed");
         using var harness = CreateHarness(timeout);
-        harness.Handler<FaultingMessage>(_ => Task.FromException(expected));
+        harness.AddHandler<FaultingMessage>(_ => Task.FromException(expected));
 
         await harness.StartAsync(cancellationToken);
         try

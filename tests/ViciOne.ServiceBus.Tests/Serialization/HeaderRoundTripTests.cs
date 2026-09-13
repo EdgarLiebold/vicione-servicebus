@@ -19,7 +19,7 @@ public sealed class HeaderRoundTripTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        HandlerTestHarness<HeaderMessage> handler = harness.Handler<HeaderMessage>();
+        HandlerTestHarness<HeaderMessage> handler = harness.AddHandler<HeaderMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var original = new ClaimsIdentityValue
         {

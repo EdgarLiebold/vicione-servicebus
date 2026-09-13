@@ -296,6 +296,8 @@ public static class ViciOneServiceBusTestingServiceCollectionExtensions
         services.TryAddSingleton<RegistrationSagaStateMachineTestHarness<TStateMachine, TSaga>>();
         services.TryAddSingleton<ISagaStateMachineTestHarness<TStateMachine, TSaga>>(provider =>
             provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, TSaga>>());
+        services.AddSingleton<IContainerTestHarnessObservationRegistration>(provider =>
+            provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, TSaga>>());
     }
 
 }

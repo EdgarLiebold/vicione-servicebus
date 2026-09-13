@@ -108,16 +108,16 @@ public class DependencyInjectionContainerRegistrar :
         where T : class
         where TDefinition : class, IEndpointDefinition<T>
     {
-        Collection.AddSingleton<TDefinition>();
-
         if (settings == null)
-            Collection.AddSingleton<IEndpointDefinition<T>, TDefinition>();
+            Collection.AddSingleton<TDefinition>();
         else
         {
             Collection.TryAddTransient<IEndpointSettings<IEndpointDefinition<T>>>(
                 _ => throw new InvalidOperationException("The settings are no longer configured in the container."));
-            Collection.AddSingleton<IEndpointDefinition<T>>(provider => ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));
+            Collection.AddSingleton(provider => ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));
         }
+
+        Collection.AddSingleton<IEndpointDefinition<T>>(provider => provider.GetRequiredService<TDefinition>());
     }
 
     /// <summary>Gets registrations.</summary>
@@ -346,10 +346,11 @@ public class DependencyInjectionContainerRegistrar<TBus> :
     /// <param name="settings">The settings that control the operation.</param>
     public override void AddEndpointDefinition<T, TDefinition>(IEndpointSettings<IEndpointDefinition<T>>? settings)
     {
-        Collection.AddSingleton<TDefinition>();
-
         if (settings == null)
-            Collection.AddSingleton(provider => Bind<TBus>.Create<IEndpointDefinition<T>>(provider.GetRequiredService<TDefinition>()));
+        {
+            Collection.AddSingleton(provider =>
+                Bind<TBus>.Create<IEndpointDefinition<T>>(ActivatorUtilities.CreateInstance<TDefinition>(provider)));
+        }
         else
         {
             Collection.TryAddTransient<IEndpointSettings<IEndpointDefinition<T>>>(

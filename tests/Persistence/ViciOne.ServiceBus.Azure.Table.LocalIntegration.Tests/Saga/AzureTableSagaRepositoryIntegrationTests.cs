@@ -88,11 +88,11 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
         try
         {
             Guid sagaId = Guid.NewGuid();
-            IRequestClient<StartReadOnlySaga> startClient = harness.GetRequestClient<StartReadOnlySaga>();
+            IRequestClient<StartReadOnlySaga> startClient = harness.CreateRequestClient<StartReadOnlySaga>();
             Response<ReadOnlySagaStarted> started = await startClient.GetResponseAsync<ReadOnlySagaStarted>(
                 new StartReadOnlySaga(sagaId),
                 cancellationToken);
-            IRequestClient<CheckReadOnlySaga> statusClient = harness.GetRequestClient<CheckReadOnlySaga>();
+            IRequestClient<CheckReadOnlySaga> statusClient = harness.CreateRequestClient<CheckReadOnlySaga>();
 
             Response<ReadOnlySagaStatus> first = await statusClient.GetResponseAsync<ReadOnlySagaStatus>(
                 new CheckReadOnlySaga(sagaId),

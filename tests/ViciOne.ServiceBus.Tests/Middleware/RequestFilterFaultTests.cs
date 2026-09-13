@@ -41,7 +41,7 @@ public sealed class RequestFilterFaultTests
         try
         {
             var request = new ValidatedRequest(Guid.Parse("889c7912-2ac2-4d5f-b00f-d4f67e675dbd"));
-            IRequestClient<ValidatedRequest> client = harness.GetRequestClient<ValidatedRequest>();
+            IRequestClient<ValidatedRequest> client = harness.CreateRequestClient<ValidatedRequest>();
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.GetResponseAsync<ValidatedResponse>(request, cancellationToken));

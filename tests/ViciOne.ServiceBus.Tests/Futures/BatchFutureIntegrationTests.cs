@@ -294,7 +294,7 @@ public sealed class BatchFutureIntegrationTests
             _provider = provider;
             Harness = harness;
             Timeout = timeout;
-            Client = harness.GetRequestClient<BatchRequest>();
+            Client = harness.CreateRequestClient<BatchRequest>();
         }
 
         public CancellationToken CancellationToken => TestContext.Current.CancellationToken;

@@ -8,11 +8,12 @@ using ViciOne.ServiceBus.Testing.Internal;
 namespace ViciOne.ServiceBus.Testing;
 
 /// <summary>Hosts an isolated in-process mediator and records its consume, publish, and send activity.</summary>
-public class MediatorTestHarness :
+public sealed class MediatorTestHarness :
     AsyncTestHarness,
     IBaseTestHarness,
     IAsyncDisposable
 {
+    readonly SemaphoreSlim _lifecycleGate = new(1, 1);
     ConnectHandle? _consumeObserverConnection;
     BusTestConsumeObserver? _consumed;
     int _disposed;
@@ -72,51 +73,63 @@ public class MediatorTestHarness :
     /// <summary>Creates the mediator and attaches harness observers.</summary>
     /// <param name="cancellationToken">The token checked before mediator creation.</param>
     /// <returns>A task that completes after the mediator and its observers are ready.</returns>
-    public virtual async Task StartAsync(CancellationToken cancellationToken = default)
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
         ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
-        if (_mediator != null)
-            throw new InvalidOperationException("The mediator test harness has already been started.");
+        if (!cancellationToken.CanBeCanceled)
+            cancellationToken = TestCancellationToken;
+        cancellationToken.ThrowIfCancellationRequested();
 
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
-            ((ITestContextRetention)_consumed.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
-            _consumed.ConnectInactivityObserver(InactivityObserver);
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            if (_mediator != null)
+                throw new InvalidOperationException("The mediator test harness has already been started.");
 
-            _published = new BusTestPublishObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider);
-            ((ITestContextRetention)_published.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
-            _published.ConnectInactivityObserver(InactivityObserver);
-
-            _sent = new BusTestSendObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider);
-            ((ITestContextRetention)_sent.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
-            _sent.ConnectInactivityObserver(InactivityObserver);
-
-            _mediator = CreateMediator();
-
-            _consumeObserverConnection = _mediator.ConnectConsumeObserver(_consumed);
-            _publishObserverConnection = _mediator.ConnectPublishObserver(_published);
-            _sendObserverConnection = _mediator.ConnectSendObserver(_sent);
-        }
-        catch (Exception startupException)
-        {
-            var failures = new List<Exception>();
-            DisposeObservers(failures);
-            await DisposeMediatorAsync(failures).ConfigureAwait(false);
-            if (failures.Count > 0)
+            try
             {
-                failures.Insert(0, startupException);
-                throw new AggregateException("Mediator test harness startup and cleanup both failed.", failures);
-            }
+                _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
+                ((ITestContextRetention)_consumed.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
+                _consumed.ConnectInactivityObserver(InactivityObserver);
 
-            throw;
+                _published = new BusTestPublishObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider);
+                ((ITestContextRetention)_published.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
+                _published.ConnectInactivityObserver(InactivityObserver);
+
+                _sent = new BusTestSendObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider);
+                ((ITestContextRetention)_sent.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
+                _sent.ConnectInactivityObserver(InactivityObserver);
+
+                _mediator = CreateMediator();
+
+                _consumeObserverConnection = _mediator.ConnectConsumeObserver(_consumed);
+                _publishObserverConnection = _mediator.ConnectPublishObserver(_published);
+                _sendObserverConnection = _mediator.ConnectSendObserver(_sent);
+            }
+            catch (Exception startupException)
+            {
+                var failures = new List<Exception>();
+                DisposeObservers(failures);
+                await DisposeMediatorAsync(failures).ConfigureAwait(false);
+                if (failures.Count > 0)
+                {
+                    failures.Insert(0, startupException);
+                    throw new AggregateException("Mediator test harness startup and cleanup both failed.", failures);
+                }
+
+                throw;
+            }
+        }
+        finally
+        {
+            _lifecycleGate.Release();
         }
     }
 
-    /// <summary>Applies subscriber and derived-class configuration to a mediator.</summary>
+    /// <summary>Applies subscriber configuration to a mediator.</summary>
     /// <param name="configurator">The mediator configurator.</param>
-    protected virtual void ConfigureMediator(IMediatorConfigurator configurator)
+    void ConfigureMediator(IMediatorConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         MediatorConfiguring?.Invoke(configurator);
@@ -130,14 +143,22 @@ public class MediatorTestHarness :
 
     /// <summary>Disconnects harness observers and releases the owned mediator and timeout resources.</summary>
     /// <returns>A task that completes after every cleanup attempt finishes.</returns>
-    public virtual async ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
             return;
 
         var failures = new List<Exception>();
-        DisposeObservers(failures);
-        await DisposeMediatorAsync(failures).ConfigureAwait(false);
+        await _lifecycleGate.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+        try
+        {
+            DisposeObservers(failures);
+            await DisposeMediatorAsync(failures).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
 
         try
         {
@@ -155,7 +176,7 @@ public class MediatorTestHarness :
     /// <summary>Creates a mediator request client using the harness assertion timeout.</summary>
     /// <typeparam name="TRequest">The request contract.</typeparam>
     /// <returns>The request client.</returns>
-    public virtual IRequestClient<TRequest> CreateRequestClient<TRequest>()
+    public IRequestClient<TRequest> CreateRequestClient<TRequest>()
         where TRequest : class
     {
         return Mediator.CreateRequestClient<TRequest>(new RequestTimeout(TestTimeout));

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ internal sealed class ContainerTestHarness :
     readonly Lazy<BusTestReceiveObserver> _received;
     readonly Lazy<IServiceScope> _scope;
     readonly Lazy<BusTestSendObserver> _sent;
+    readonly SemaphoreSlim _lifecycleGate = new(1, 1);
     CancellationToken _cancellationToken;
     CancellationTokenSource? _cancellationTokenSource;
     int _disposed;
@@ -96,19 +98,14 @@ internal sealed class ContainerTestHarness :
 
         var failures = new List<Exception>();
 
-        if (_hostedServices != null)
+        await _lifecycleGate.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+        try
         {
-            foreach (var service in _hostedServices.Reverse())
-            {
-                try
-                {
-                    await service.StopAsync(CancellationToken.None).ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    failures.Add(exception);
-                }
-            }
+            await StopCoreAsync(CancellationToken.None, failures).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
         }
 
         if (_scope.IsValueCreated)
@@ -216,7 +213,20 @@ internal sealed class ContainerTestHarness :
     /// <inheritdoc />
     public void Cancel()
     {
-        _cancellationTokenSource?.Cancel();
+        CancellationTokenSource source;
+        lock (_lifecycleLock)
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            source = GetOrCreateCancellationSource();
+        }
+
+        try
+        {
+            source.Cancel();
+        }
+        catch (ObjectDisposedException) when (Volatile.Read(ref _disposed) != 0)
+        {
+        }
     }
 
     /// <inheritdoc />
@@ -248,7 +258,7 @@ internal sealed class ContainerTestHarness :
     }
 
     /// <inheritdoc />
-    public IRequestClient<T> GetRequestClient<T>()
+    public IRequestClient<T> CreateRequestClient<T>()
         where T : class
     {
         return _scope.Value.ServiceProvider.GetRequiredService<IRequestClient<T>>();
@@ -281,7 +291,7 @@ internal sealed class ContainerTestHarness :
     public Uri GetHandlerAddress<T>()
         where T : class
     {
-        return GetConsumerAddress<MessageHandlerConsumer<T>>();
+        return new Uri($"queue:{EndpointNameFormatter.Message<T>()}");
     }
 
     /// <inheritdoc />
@@ -322,18 +332,84 @@ internal sealed class ContainerTestHarness :
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+        if (!cancellationToken.CanBeCanceled)
+            cancellationToken = CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (Interlocked.CompareExchange(ref _started, 1, 0) != 0)
-            throw new InvalidOperationException("The test harness has already been started.");
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            if (Volatile.Read(ref _started) != 0)
+                throw new InvalidOperationException("The test harness has already been started.");
 
+            IHostedService[] services = GetHostedServices();
+            await StartCoreAsync(services, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task StopAsync(CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            var failures = new List<Exception>();
+            await StopCoreAsync(cancellationToken, failures).ConfigureAwait(false);
+            ThrowLifecycleFailures("One or more test-harness services could not be stopped.", failures);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task RestartAsync(CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            if (Volatile.Read(ref _started) == 0)
+                throw new InvalidOperationException("The test harness has not been started.");
+
+            IHostedService[] services = _hostedServices?.ToArray()
+                ?? throw new InvalidOperationException("The test harness has no started hosted services to restart.");
+            var failures = new List<Exception>();
+            await StopCoreAsync(cancellationToken, failures).ConfigureAwait(false);
+            ThrowLifecycleFailures("One or more test-harness services could not be stopped for restart.", failures);
+
+            await StartCoreAsync(services, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    IHostedService[] GetHostedServices()
+    {
         IHostedService[] services = _provider.GetServices<IHostedService>().ToArray();
         if (services.Length == 0)
-        {
-            Volatile.Write(ref _started, 0);
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Test harness", "unknown", "The ViciOne.ServiceBus hosted service was not found.", "Correct the named configuration before starting the host"));
-        }
 
+        return services;
+    }
+
+    async Task StartCoreAsync(IHostedService[] services, CancellationToken cancellationToken)
+    {
         var startedServices = new List<IHostedService>(services.Length);
         try
         {
@@ -344,6 +420,7 @@ internal sealed class ContainerTestHarness :
             }
 
             _hostedServices = startedServices;
+            Volatile.Write(ref _started, 1);
         }
         catch (Exception startException)
         {
@@ -360,12 +437,50 @@ internal sealed class ContainerTestHarness :
                 }
             }
 
+            _hostedServices = null;
             Volatile.Write(ref _started, 0);
-            if (failures.Count > 1)
-                throw new AggregateException("The test harness failed to start and at least one started service could not be stopped.", failures);
-
-            throw;
+            ThrowLifecycleFailures("The test harness failed to start and at least one started service could not be stopped.", failures);
         }
+    }
+
+    async Task StopCoreAsync(CancellationToken cancellationToken, ICollection<Exception> failures)
+    {
+        if (_hostedServices == null || _hostedServices.Count == 0)
+        {
+            Volatile.Write(ref _started, 0);
+            return;
+        }
+
+        var failedServices = new List<IHostedService>();
+        foreach (IHostedService service in _hostedServices.Reverse())
+        {
+            try
+            {
+                await service.StopAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                failures.Add(exception);
+                failedServices.Add(service);
+            }
+        }
+
+        failedServices.Reverse();
+        _hostedServices = failedServices.Count == 0 ? null : failedServices;
+        Volatile.Write(ref _started, failedServices.Count == 0 ? 0 : 1);
+    }
+
+    static void ThrowLifecycleFailures(string message, IReadOnlyCollection<Exception> failures)
+    {
+        if (failures.Count == 0)
+            return;
+        if (failures.Count == 1)
+        {
+            ExceptionDispatchInfo.Capture(failures.Single()).Throw();
+            return;
+        }
+
+        throw new AggregateException(message, failures);
     }
 
     /// <inheritdoc />
@@ -400,34 +515,50 @@ internal sealed class ContainerTestHarness :
             lock (_lifecycleLock)
             {
                 ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
-                if (_cancellationToken == CancellationToken.None)
-                {
-                    _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
-                    _cancellationToken = _cancellationTokenSource.Token;
-                }
-
+                GetOrCreateCancellationSource();
                 return _cancellationToken;
             }
         }
     }
 
     /// <inheritdoc />
-    public TaskCompletionSource<T> GetTask<T>()
+    public TaskCompletionSource<T> CreateTaskCompletionSource<T>(CancellationToken cancellationToken = default)
     {
         var source = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-        CancellationToken cancellationToken = CancellationToken;
-        if (cancellationToken.IsCancellationRequested)
-            source.TrySetCanceled(cancellationToken);
-        else
-            cancellationToken.Register(
-                static state =>
-                {
-                    var registration = ((TaskCompletionSource<T> Source, CancellationToken Token))state!;
-                    registration.Source.TrySetCanceled(registration.Token);
-                },
-                (source, cancellationToken));
+        CancellationToken harnessCancellationToken = CancellationToken;
+        RegisterCancellation(source, harnessCancellationToken);
+        if (cancellationToken.CanBeCanceled && cancellationToken != harnessCancellationToken)
+            RegisterCancellation(source, cancellationToken);
 
         return source;
+    }
+
+    static void RegisterCancellation<T>(TaskCompletionSource<T> source, CancellationToken cancellationToken)
+    {
+        CancellationTokenRegistration registration = cancellationToken.Register(
+            static state =>
+            {
+                var registrationState = ((TaskCompletionSource<T> Source, CancellationToken Token))state!;
+                registrationState.Source.TrySetCanceled(registrationState.Token);
+            },
+            (source, cancellationToken));
+
+        _ = source.Task.ContinueWith(
+            static (_, state) => ((CancellationTokenRegistration)state!).Dispose(),
+            registration,
+            CancellationToken.None,
+            TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
+    }
+
+    CancellationTokenSource GetOrCreateCancellationSource()
+    {
+        if (_cancellationTokenSource != null)
+            return _cancellationTokenSource;
+
+        _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
+        _cancellationToken = _cancellationTokenSource.Token;
+        return _cancellationTokenSource;
     }
 
     /// <summary>Connects the harness observers after the bus has been created.</summary>
@@ -435,6 +566,10 @@ internal sealed class ContainerTestHarness :
     public void PostCreate(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
+
+        _ = _provider
+            .GetServices<IContainerTestHarnessObservationRegistration>()
+            .ToArray();
 
         _handles.Add(bus.ConnectReceiveEndpointObserver(new TestReceiveEndpointObserver(_published.Value)));
 

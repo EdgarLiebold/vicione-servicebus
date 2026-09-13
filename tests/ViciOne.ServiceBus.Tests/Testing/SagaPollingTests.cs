@@ -187,6 +187,96 @@ public sealed class SagaPollingTests
         Assert.Equal(1, repository.LoadCount);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA-POLLING", "all-repository-capability-overloads")]
+    public async Task RepositoryOverloads_RouteEveryDeclaredCapabilityAndPreserveTheMatchedIdentityAsync()
+    {
+        Guid sagaId = NewId.NextGuid();
+        var saga = new PollingSaga(sagaId);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        ILoadSagaRepository<PollingSaga> loadRepository = new LoadSagaRepository(_ => saga);
+        ILoadSagaRepository<PollingSaga> emptyLoadRepository = new LoadSagaRepository(_ => null);
+        IQuerySagaRepository<PollingSaga> queryRepository = new QueryAndDispatchSagaRepository<PollingSaga>([saga]);
+        IQuerySagaRepository<PollingSaga> emptyQueryRepository = new QueryAndDispatchSagaRepository<PollingSaga>([]);
+        ISagaRepository<PollingSaga> dispatchLoadRepository = new LoadAndDispatchSagaRepository<PollingSaga>(_ => saga);
+        ISagaRepository<PollingSaga> emptyDispatchLoadRepository = new LoadAndDispatchSagaRepository<PollingSaga>(_ => null);
+        ISagaRepository<PollingSaga> dispatchQueryRepository = new QueryAndDispatchSagaRepository<PollingSaga>([saga]);
+        ISagaRepository<PollingSaga> emptyDispatchQueryRepository = new QueryAndDispatchSagaRepository<PollingSaga>([]);
+
+        Assert.Equal(sagaId, await loadRepository.WaitForSagaAsync(sagaId, TimeSpan.Zero, cancellationToken));
+        Assert.Equal(sagaId, await loadRepository.WaitForSagaAsync(
+            sagaId,
+            candidate => candidate.CorrelationId == sagaId,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await emptyLoadRepository.WaitForSagaRemovalAsync(sagaId, TimeSpan.Zero, cancellationToken));
+
+        Assert.Equal(sagaId, await queryRepository.WaitForSagaAsync(sagaId, TimeSpan.Zero, cancellationToken));
+        Assert.Equal(sagaId, await queryRepository.WaitForSagaAsync(
+            candidate => candidate.CorrelationId == sagaId,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await emptyQueryRepository.WaitForSagaRemovalAsync(sagaId, TimeSpan.Zero, cancellationToken));
+
+        Assert.Equal(sagaId, await dispatchLoadRepository.WaitForSagaAsync(sagaId, TimeSpan.Zero, cancellationToken));
+        Assert.Equal(sagaId, await dispatchLoadRepository.WaitForSagaAsync(
+            sagaId,
+            candidate => candidate.CorrelationId == sagaId,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await emptyDispatchLoadRepository.WaitForSagaRemovalAsync(sagaId, TimeSpan.Zero, cancellationToken));
+
+        Assert.Equal(sagaId, await dispatchQueryRepository.WaitForSagaAsync(sagaId, TimeSpan.Zero, cancellationToken));
+        Assert.Equal(sagaId, await dispatchQueryRepository.WaitForSagaAsync(
+            candidate => candidate.CorrelationId == sagaId,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await emptyDispatchQueryRepository.WaitForSagaRemovalAsync(sagaId, TimeSpan.Zero, cancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE-OBSERVATION", "all-state-selector-and-filter-overloads")]
+    public async Task StateMachineObservationOverloads_PreserveRecordedAndPersistedStateMatchesAsync()
+    {
+        Guid sagaId = NewId.NextGuid();
+        var machine = new PollingStateMachine();
+        var instance = new PollingState
+        {
+            CorrelationId = sagaId,
+            CurrentState = machine.Initial.Name,
+        };
+        ISagaList<PollingState> observations = new StaticSagaList<PollingState>([instance]);
+        ISagaRepository<PollingState> repository = new QueryAndDispatchSagaRepository<PollingState>([instance]);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        Assert.Same(instance, observations.FindByIdInState(sagaId, machine, selected => selected.Initial));
+        Assert.Same(instance, observations.FindByIdInState(sagaId, machine, machine.Initial));
+        Assert.Equal(sagaId, await repository.WaitForSagaInStateAsync(
+            sagaId,
+            machine,
+            selected => selected.Initial,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await repository.WaitForSagaInStateAsync(
+            sagaId,
+            machine,
+            machine.Initial,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await repository.WaitForSagaInStateAsync(
+            candidate => candidate.CorrelationId == sagaId,
+            machine,
+            selected => selected.Initial,
+            TimeSpan.Zero,
+            cancellationToken));
+        Assert.Equal(sagaId, await repository.WaitForSagaInStateAsync(
+            candidate => candidate.CorrelationId == sagaId,
+            machine,
+            machine.Initial,
+            TimeSpan.Zero,
+            cancellationToken));
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -202,7 +292,10 @@ public sealed class SagaPollingTests
 
         public Task<PollingSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Tests.Testing.SagaPollingTests.PollingSaga?>(cancellationToken); PollingSaga? saga = load(++LoadCount);
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<PollingSaga?>(cancellationToken);
+
+            PollingSaga? saga = load(++LoadCount);
             return Task.FromResult(saga);
         }
 
@@ -273,5 +366,111 @@ public sealed class SagaPollingTests
         public void Probe(ProbeContext context)
         {
         }
+    }
+
+    private sealed class LoadAndDispatchSagaRepository<TSaga>(Func<Guid, TSaga?> load) :
+        ISagaRepository<TSaga>,
+        ILoadSagaRepository<TSaga>
+        where TSaga : class, ISaga
+    {
+        public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(load(correlationId));
+        }
+
+        public Task SendAsync<T>(
+            ConsumeContext<T> context,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class => Task.CompletedTask;
+
+        public Task SendQueryAsync<T>(
+            ConsumeContext<T> context,
+            ISagaQuery<TSaga> query,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class => Task.CompletedTask;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class QueryAndDispatchSagaRepository<TSaga>(IEnumerable<TSaga> sagas) :
+        ISagaRepository<TSaga>,
+        IQuerySagaRepository<TSaga>
+        where TSaga : class, ISaga
+    {
+        private readonly TSaga[] _sagas = sagas.ToArray();
+
+        public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            Func<TSaga, bool> filter = query.FilterExpression.Compile();
+            return Task.FromResult<IEnumerable<Guid>>(_sagas.Where(filter).Select(saga => saga.CorrelationId).ToArray());
+        }
+
+        public Task SendAsync<T>(
+            ConsumeContext<T> context,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class => Task.CompletedTask;
+
+        public Task SendQueryAsync<T>(
+            ConsumeContext<T> context,
+            ISagaQuery<TSaga> query,
+            ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class => Task.CompletedTask;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class StaticSagaList<TSaga>(IEnumerable<TSaga> sagas) : ISagaList<TSaga>
+        where TSaga : class, ISaga
+    {
+        private readonly ISagaInstance<TSaga>[] _observations = sagas.Select(saga => new StaticSagaInstance<TSaga>(saga)).ToArray();
+
+        public int Count => _observations.Length;
+
+        public TestContextSaveMode SaveMode => TestContextSaveMode.All;
+
+        public int MaximumSavedElements => int.MaxValue;
+
+        public IReadOnlyList<ISagaInstance<TSaga>> Snapshot() => _observations;
+
+        public IReadOnlyList<ISagaInstance<TSaga>> Snapshot(FilterDelegate<TSaga> filter) =>
+            _observations.Where(observation => filter(observation.Saga)).ToArray();
+
+        public TSaga? FindById(Guid sagaId) =>
+            _observations.Select(observation => observation.Saga).LastOrDefault(saga => saga.CorrelationId == sagaId);
+
+        public IAsyncEnumerable<ISagaInstance<TSaga>> SelectAsync(FilterDelegate<ISagaInstance<TSaga>> filter,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public IAsyncEnumerable<ISagaInstance<TSaga>> SelectAsync(CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<ISagaInstance<TSaga>> SelectAsync(FilterDelegate<TSaga> filter,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<bool> AnyAsync(FilterDelegate<ISagaInstance<TSaga>> filter, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<bool> AnyAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<bool> AnyAsync(FilterDelegate<TSaga> filter, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class StaticSagaInstance<TSaga>(TSaga saga) : ISagaInstance<TSaga>
+        where TSaga : class, ISaga
+    {
+        public TSaga Saga { get; } = saga;
+
+        public Guid? ElementId => Saga.CorrelationId;
     }
 }

@@ -28,7 +28,7 @@ public sealed class ResponseAcceptanceTests
             TestInactivityTimeout = timeout,
         };
         var observed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<AcceptanceProbe>(context =>
+        harness.AddHandler<AcceptanceProbe>(context =>
         {
             observed.TrySetResult(context.Advanced().IsResponseAccepted<AcceptedResponse>());
             return Task.CompletedTask;

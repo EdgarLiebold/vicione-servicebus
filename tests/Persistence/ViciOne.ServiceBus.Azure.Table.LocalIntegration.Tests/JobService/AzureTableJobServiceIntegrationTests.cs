@@ -292,7 +292,7 @@ public sealed class AzureTableJobServiceIntegrationTests
 
         public Task<Guid> SubmitAsync(Guid jobId, PersistentJob job)
         {
-            IRequestClient<SubmitJob<PersistentJob>> client = Harness.GetRequestClient<SubmitJob<PersistentJob>>();
+            IRequestClient<SubmitJob<PersistentJob>> client = Harness.CreateRequestClient<SubmitJob<PersistentJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }

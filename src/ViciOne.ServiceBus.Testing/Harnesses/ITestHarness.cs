@@ -20,10 +20,11 @@ public interface ITestHarness :
     /// <summary>Gets the formatter used to derive registered endpoint names.</summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 
-    /// <summary>Creates a completion source that is canceled with the current test scope.</summary>
+    /// <summary>Creates a completion source canceled by either the current test scope or the supplied token.</summary>
     /// <typeparam name="T">The result type.</typeparam>
+    /// <param name="cancellationToken">An additional token that can cancel the completion source.</param>
     /// <returns>A completion source whose continuations run asynchronously.</returns>
-    TaskCompletionSource<T> GetTask<T>();
+    TaskCompletionSource<T> CreateTaskCompletionSource<T>(CancellationToken cancellationToken = default);
 
     /// <summary>Gets the registered harness for a consumer.</summary>
     /// <typeparam name="T">The consumer implementation.</typeparam>
@@ -45,10 +46,10 @@ public interface ITestHarness :
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance;
 
-    /// <summary>Gets a request client registered for the request contract.</summary>
+    /// <summary>Creates a request client for the registered request contract.</summary>
     /// <typeparam name="T">The request contract.</typeparam>
-    /// <returns>The registered request client.</returns>
-    IRequestClient<T> GetRequestClient<T>()
+    /// <returns>The request client.</returns>
+    IRequestClient<T> CreateRequestClient<T>()
         where T : class;
 
     /// <summary>Gets the send endpoint for a registered consumer.</summary>
@@ -111,4 +112,14 @@ public interface ITestHarness :
     /// <param name="cancellationToken">The token that cancels startup.</param>
     /// <returns>A task that completes when the test host is ready.</returns>
     Task StartAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Stops the test host and every hosted service started by the harness.</summary>
+    /// <param name="cancellationToken">The token that cancels shutdown.</param>
+    /// <returns>A task that completes when all reached services have stopped.</returns>
+    Task StopAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Stops and starts the test host while preserving dependency-injection registration order.</summary>
+    /// <param name="cancellationToken">The token that cancels the restart.</param>
+    /// <returns>A task that completes when the restarted test host is ready.</returns>
+    Task RestartAsync(CancellationToken cancellationToken = default);
 }

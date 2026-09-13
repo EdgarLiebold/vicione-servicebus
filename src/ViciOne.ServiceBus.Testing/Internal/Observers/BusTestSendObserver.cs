@@ -11,15 +11,6 @@ internal sealed class BusTestSendObserver :
 {
     readonly SentMessageList _messages;
 
-    /// <summary>Creates a send observer that uses the system clock.</summary>
-    /// <param name="timeout">The maximum time an assertion waits for a matching send.</param>
-    /// <param name="inactivityTimeout">The interval without send activity that indicates inactivity.</param>
-    /// <param name="testCompleted">The token that ends pending test observations.</param>
-    public BusTestSendObserver(TimeSpan timeout, TimeSpan inactivityTimeout, CancellationToken testCompleted = default)
-        : this(timeout, inactivityTimeout, testCompleted, TimeProvider.System)
-    {
-    }
-
     /// <summary>Creates a send observer.</summary>
     /// <param name="timeout">The maximum time an assertion waits for a matching send.</param>
     /// <param name="inactivityTimeout">The interval without send activity that indicates inactivity.</param>

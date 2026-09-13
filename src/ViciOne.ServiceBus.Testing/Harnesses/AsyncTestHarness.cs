@@ -160,10 +160,23 @@ public abstract class AsyncTestHarness :
         lock (_scopeLock)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
+
+            if (_cancellationTokenSource == null)
+            {
+                _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
+                _cancellationToken = _cancellationTokenSource.Token;
+            }
+
             source = _cancellationTokenSource;
         }
 
-        source?.Cancel();
+        try
+        {
+            source.Cancel();
+        }
+        catch (ObjectDisposedException) when (_disposed)
+        {
+        }
     }
 
     /// <summary>Completes the inactivity observer without waiting for its timeout.</summary>
@@ -172,24 +185,14 @@ public abstract class AsyncTestHarness :
         GetInactivityObserver().ForceInactive();
     }
 
-    /// <summary>Creates a completion source that is canceled with the current test scope.</summary>
-    /// <typeparam name="T">The result type.</typeparam>
-    /// <returns>A completion source whose continuations run asynchronously.</returns>
-    public TaskCompletionSource<T> GetTask<T>()
-    {
-        TaskCompletionSource<T> source = TaskCompletionSources.Create<T>();
-        RegisterCancellation(source, TestCancellationToken);
-
-        return source;
-    }
-
     /// <summary>Creates a completion source canceled by either the current test scope or the supplied token.</summary>
     /// <typeparam name="T">The result type.</typeparam>
     /// <param name="cancellationToken">An additional token that can cancel the completion source.</param>
     /// <returns>A completion source whose continuations run asynchronously.</returns>
-    protected TaskCompletionSource<T> CreateTask<T>(CancellationToken cancellationToken)
+    public TaskCompletionSource<T> CreateTaskCompletionSource<T>(CancellationToken cancellationToken = default)
     {
-        TaskCompletionSource<T> source = GetTask<T>();
+        TaskCompletionSource<T> source = TaskCompletionSources.Create<T>();
+        RegisterCancellation(source, TestCancellationToken);
         if (cancellationToken.CanBeCanceled && cancellationToken != TestCancellationToken)
             RegisterCancellation(source, cancellationToken);
 
@@ -199,15 +202,18 @@ public abstract class AsyncTestHarness :
     /// <summary>Creates an observer that exposes completion tasks for one consumed, skipped, or faulted message.</summary>
     /// <typeparam name="T">The consumed message type.</typeparam>
     /// <returns>A message observer bound to the current test scope.</returns>
-    public TestConsumeMessageObserver<T> GetConsumeObserver<T>()
+    public TestConsumeMessageObserver<T> CreateConsumeObserver<T>()
         where T : class
     {
-        return new TestConsumeMessageObserver<T>(GetTask<T>(), GetTask<T>(), GetTask<T>());
+        return new TestConsumeMessageObserver<T>(
+            CreateTaskCompletionSource<T>(),
+            CreateTaskCompletionSource<T>(),
+            CreateTaskCompletionSource<T>());
     }
 
     /// <summary>Creates an observer that records consumed message contexts until the harness becomes inactive.</summary>
     /// <returns>A consume observer configured with this harness's timeouts.</returns>
-    public TestConsumeObserver GetConsumeObserver()
+    public TestConsumeObserver CreateConsumeObserver()
     {
         return new TestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
     }

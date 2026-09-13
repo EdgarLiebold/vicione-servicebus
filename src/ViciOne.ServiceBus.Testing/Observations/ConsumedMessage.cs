@@ -34,9 +34,12 @@ public sealed class ConsumedMessage<TMessage> :
         ElementId = _context.MessageId;
 
         ElapsedTime = context.Advanced().ReceiveContext.ElapsedTime;
-        StartTime = timeProvider.GetUtcNow() - ElapsedTime;
-        if (StartTime < context.SentTime)
-            StartTime = context.SentTime.Value;
+        DateTimeOffset now = timeProvider.GetUtcNow();
+        DateTimeOffset estimatedStart = now - ElapsedTime;
+        if (context.SentTime is { } sentTime && estimatedStart < sentTime)
+            estimatedStart = sentTime;
+
+        StartTime = estimatedStart <= now ? estimatedStart : now;
     }
 
     /// <inheritdoc />

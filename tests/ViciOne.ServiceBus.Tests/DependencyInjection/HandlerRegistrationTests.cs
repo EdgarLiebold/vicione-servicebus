@@ -80,7 +80,7 @@ public sealed class HandlerRegistrationTests
         Guid? requestId;
         try
         {
-            IRequestClient<HandlerRequest> client = harness.GetRequestClient<HandlerRequest>();
+            IRequestClient<HandlerRequest> client = harness.CreateRequestClient<HandlerRequest>();
             Response<HandlerResponse> result = await client.GetResponseAsync<HandlerResponse>(
                 new HandlerRequest(messageId),
                 cancellationToken);

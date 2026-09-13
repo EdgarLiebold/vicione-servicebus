@@ -98,12 +98,25 @@ public sealed class MessageFilterTests
         sent.Includes.Add<FilterMessage>(message => ((FilterMessage)message.MessageObject).Value > 0);
         sent.Excludes.Add<FilterMessage>(message => ((FilterMessage)message.MessageObject).Value == 2);
 
-        Assert.True(received.Any(new StubConsumedMessage<FilterMessage>(new FilterMessage(1))));
-        Assert.False(received.Any(new StubConsumedMessage<FilterMessage>(new FilterMessage(2))));
-        Assert.False(received.Any(new StubConsumedMessage<OtherFilterMessage>(new OtherFilterMessage(1))));
-        Assert.True(sent.Any(new StubSentMessage<FilterMessage>(new FilterMessage(1))));
-        Assert.False(sent.Any(new StubSentMessage<FilterMessage>(new FilterMessage(2))));
-        Assert.False(sent.Any(new StubSentMessage<OtherFilterMessage>(new OtherFilterMessage(1))));
+        var receivedIncluded = new StubConsumedMessage<FilterMessage>(new FilterMessage(1));
+        var receivedExcluded = new StubConsumedMessage<FilterMessage>(new FilterMessage(2));
+        var receivedOtherType = new StubConsumedMessage<OtherFilterMessage>(new OtherFilterMessage(1));
+        var sentIncluded = new StubSentMessage<FilterMessage>(new FilterMessage(1));
+        var sentExcluded = new StubSentMessage<FilterMessage>(new FilterMessage(2));
+        var sentOtherType = new StubSentMessage<OtherFilterMessage>(new OtherFilterMessage(1));
+
+        Assert.True(received.Any(receivedIncluded));
+        Assert.False(received.Any(receivedExcluded));
+        Assert.False(received.Any(receivedOtherType));
+        Assert.False(received.None(receivedIncluded));
+        Assert.False(received.None(receivedExcluded));
+        Assert.True(received.None(receivedOtherType));
+        Assert.True(sent.Any(sentIncluded));
+        Assert.False(sent.Any(sentExcluded));
+        Assert.False(sent.Any(sentOtherType));
+        Assert.False(sent.None(sentIncluded));
+        Assert.False(sent.None(sentExcluded));
+        Assert.True(sent.None(sentOtherType));
     }
 
     [Fact]

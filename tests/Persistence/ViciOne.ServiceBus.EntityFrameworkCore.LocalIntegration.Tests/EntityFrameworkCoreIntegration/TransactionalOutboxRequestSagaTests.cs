@@ -121,7 +121,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         Response<RequestSagaStarted> started = await fixture.Client.GetResponseAsync<RequestSagaStarted>(
             new StartRequestSaga(sagaId, Fail: false, LookupKey: lookupKey),
             fixture.CancellationToken);
-        IRequestClient<QueryRequestSaga> queryClient = fixture.Harness.GetRequestClient<QueryRequestSaga>();
+        IRequestClient<QueryRequestSaga> queryClient = fixture.Harness.CreateRequestClient<QueryRequestSaga>();
         Response<RequestSagaFound> found = await queryClient.GetResponseAsync<RequestSagaFound>(
             new QueryRequestSaga(lookupKey),
             fixture.CancellationToken);
@@ -415,7 +415,7 @@ public sealed class TransactionalOutboxRequestSagaTests
             ScopeProxies = scopeProxies;
             OperationTimeout = operationTimeout;
             CancellationToken = cancellationToken;
-            Client = harness.GetRequestClient<StartRequestSaga>();
+            Client = harness.CreateRequestClient<StartRequestSaga>();
         }
 
         public RequestAttemptProbe Attempts { get; }

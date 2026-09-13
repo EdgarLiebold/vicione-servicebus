@@ -80,7 +80,7 @@ public sealed class RoutingSlipHostConfigurationTests
                 compensate.RoutingSlip(routingSlip => routingSlip.UseExecute(
                     context => observed.Enqueue($"compensate-slip:{context.Message.TrackingNumber:D}")));
             });
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
@@ -141,7 +141,7 @@ public sealed class RoutingSlipHostConfigurationTests
             compensate => compensate.UsePartitioner(
                 partitioner!,
                 context => RecordKey(compensateKeys, context.Log.OriginalValue)));
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);

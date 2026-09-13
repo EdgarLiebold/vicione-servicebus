@@ -143,7 +143,7 @@ public sealed class DependencyInjectionTestHarnessTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            IRequestClient<RequestMessage> client = harness.GetRequestClient<RequestMessage>();
+            IRequestClient<RequestMessage> client = harness.CreateRequestClient<RequestMessage>();
 
             Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                 new RequestMessage(correlationId),
@@ -242,12 +242,17 @@ public sealed class DependencyInjectionTestHarnessTests
             provider.GetRequiredService<IndexedSagaDictionary<ManagedSaga>>();
         Guid correlationId = NewId.NextGuid();
 
-        harness.AddSagaInstance<ManagedSaga>(correlationId, saga => saga.Value = "initial");
+        await harness.AddSagaInstanceAsync<ManagedSaga>(
+            correlationId,
+            saga => saga.Value = "initial",
+            TestContext.Current.CancellationToken);
 
         Assert.Equal(1, repository.Count);
         Assert.Equal("initial", Assert.IsType<ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
-        ArgumentException duplicate = Assert.Throws<ArgumentException>(() =>
-            harness.AddSagaInstance<ManagedSaga>(correlationId));
+        ArgumentException duplicate = await Assert.ThrowsAsync<ArgumentException>(() =>
+            harness.AddSagaInstanceAsync<ManagedSaga>(
+                correlationId,
+                cancellationToken: TestContext.Current.CancellationToken));
         Assert.Equal("correlationId", duplicate.ParamName);
 
         await harness.AddOrUpdateSagaInstanceAsync<ManagedSaga>(
@@ -264,6 +269,47 @@ public sealed class DependencyInjectionTestHarnessTests
         Assert.False(await harness.TryRemoveSagaInstanceAsync<ManagedSaga>(
             correlationId,
             TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "saga-update-callback-failure-is-atomic")]
+    public async Task InMemorySagaUpdate_PreservesTheExistingInstanceWhenConfigurationFailsAsync()
+    {
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration =>
+                configuration.AddSaga<ManagedSaga>().InMemoryRepository())
+            .BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = provider.GetTestHarness();
+        IndexedSagaDictionary<ManagedSaga> repository =
+            provider.GetRequiredService<IndexedSagaDictionary<ManagedSaga>>();
+        Guid correlationId = NewId.NextGuid();
+        await harness.AddSagaInstanceAsync<ManagedSaga>(
+            correlationId,
+            saga => saga.Value = "preserved",
+            TestContext.Current.CancellationToken);
+        ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga> original =
+            Assert.IsType<ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga>>(repository[correlationId]);
+        var expected = new InvalidOperationException("configuration failed");
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            harness.AddOrUpdateSagaInstanceAsync<ManagedSaga>(
+                correlationId,
+                _ => throw expected,
+                TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+        Assert.Equal(1, repository.Count);
+        Assert.Same(original, repository[correlationId]);
+        Assert.False(original.IsRemoved);
+        Assert.Equal("preserved", original.Instance.Value);
+
+        await harness.AddOrUpdateSagaInstanceAsync<ManagedSaga>(
+            correlationId,
+            saga => saga.Value = "replacement",
+            TestContext.Current.CancellationToken);
+        Assert.Equal(
+            "replacement",
+            Assert.IsType<ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
     }
 
     [Fact]
@@ -284,7 +330,7 @@ public sealed class DependencyInjectionTestHarnessTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            IRequestClient<RequestMessage> client = harness.GetRequestClient<RequestMessage>();
+            IRequestClient<RequestMessage> client = harness.CreateRequestClient<RequestMessage>();
             IConsumerTestHarness<RequestConsumer> consumerHarness = harness.GetConsumerHarness<RequestConsumer>();
 
             Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
@@ -439,6 +485,11 @@ public sealed class DependencyInjectionTestHarnessTests
             ISagaStateMachineTestHarness<ContainerMetadataStateMachine, ContainerMetadataState> sagaHarness =
                 harness.GetSagaStateMachineHarness<ContainerMetadataStateMachine, ContainerMetadataState>();
             Guid? running = await sagaHarness.WaitForSagaInStateAsync(sagaId, machine => machine.Running, timeout, TestContext.Current.CancellationToken);
+            IReadOnlyList<Guid> runningSagas = await sagaHarness.WaitForSagasInStateAsync(
+                state => state.Value == "expected",
+                static stateMachine => stateMachine.Running,
+                timeout,
+                TestContext.Current.CancellationToken);
             ContainerMetadataState? created = sagaHarness.Created
                 .Snapshot()
                 .Where(instance => instance.Saga.CorrelationId == sagaId)
@@ -453,10 +504,19 @@ public sealed class DependencyInjectionTestHarnessTests
             Assert.Equal(sagaId, published.Context.InitiatorId);
             Assert.Equal(received.Context.ConversationId, published.Context.ConversationId);
             Assert.Equal(sagaId, running);
+            Assert.Equal([sagaId], runningSagas);
             Assert.NotNull(created);
             Assert.Equal("expected", created.Value);
             Assert.Equal(sagaHarness.StateMachine.Running.Name, created.CurrentState);
             Assert.True(await sagaHarness.Consumed.AnyAsync<ContainerStart>(cancellationToken));
+            Assert.Contains(sagaHarness.Events, observation =>
+                observation.SagaId == sagaId
+                && observation.EventName == sagaHarness.StateMachine.Start.Name
+                && observation.Status == StateMachineEventExecutionStatus.Completed);
+            Assert.Contains(sagaHarness.StateChanges, change =>
+                change.SagaId == sagaId
+                && change.PreviousState == sagaHarness.StateMachine.Initial.Name
+                && change.CurrentState == sagaHarness.StateMachine.Running.Name);
         }
         finally
         {
@@ -486,7 +546,7 @@ public sealed class DependencyInjectionTestHarnessTests
         {
             Guid sagaId = NewId.NextGuid();
             IRequestClient<SagaTestHarnessBehaviorTests.ResponsiveRequest> client =
-                harness.GetRequestClient<SagaTestHarnessBehaviorTests.ResponsiveRequest>();
+                harness.CreateRequestClient<SagaTestHarnessBehaviorTests.ResponsiveRequest>();
 
             Response<SagaTestHarnessBehaviorTests.ResponsiveResponse> response =
                 await client.GetResponseAsync<SagaTestHarnessBehaviorTests.ResponsiveResponse>(
@@ -508,6 +568,71 @@ public sealed class DependencyInjectionTestHarnessTests
             Assert.Equal("container", state.Value);
             Assert.Equal(sagaHarness.StateMachine.Responded.Name, state.CurrentState);
             Assert.True(await sagaHarness.Consumed.AnyAsync<SagaTestHarnessBehaviorTests.ResponsiveRequest>(cancellationToken));
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "public-endpoints-observers-and-inactivity")]
+    public async Task PublicHarnessSurface_ResolvesHandlerAndActivityEndpointsAndConnectsEveryObserverAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        var handled = new TaskCompletionSource<ContainerHandlerMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddHandler<ContainerHandlerMessage>(context =>
+                {
+                    handled.TrySetResult(context.Message);
+                    return Task.CompletedTask;
+                });
+                configuration.AddExecuteActivity<ContainerExecuteActivity, ContainerExecuteArguments>();
+            })
+            .BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = await provider.StartTestHarnessAsync(
+            cancellationToken: TestContext.Current.CancellationToken).WaitAsync(
+                timeout,
+                TestContext.Current.CancellationToken);
+
+        try
+        {
+            var observer = new RecordingObserver();
+            using ConnectHandle consumeConnection = harness.ConnectConsumeObserver(observer);
+            using ConnectHandle publishConnection = harness.ConnectPublishObserver(observer);
+            using ConnectHandle sendConnection = harness.ConnectSendObserver(observer);
+            Uri handlerAddress = harness.GetHandlerAddress<ContainerHandlerMessage>();
+            ISendEndpoint handlerEndpoint = await harness.GetHandlerEndpointAsync<ContainerHandlerMessage>(
+                TestContext.Current.CancellationToken);
+            Uri executeAddress = harness.GetExecuteActivityAddress<ContainerExecuteActivity, ContainerExecuteArguments>();
+            ISendEndpoint executeEndpoint = await harness.GetExecuteActivityEndpointAsync<
+                ContainerExecuteActivity,
+                ContainerExecuteArguments>(TestContext.Current.CancellationToken);
+            var expected = new ContainerHandlerMessage(NewId.NextGuid(), "expected");
+
+            await handlerEndpoint.SendAsync(expected, TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync(expected, TestContext.Current.CancellationToken);
+            ContainerHandlerMessage actual = await handled.Task.WaitAsync(
+                timeout,
+                TestContext.Current.CancellationToken);
+            harness.ForceInactive();
+            await harness.InactivityTask.WaitAsync(timeout, TestContext.Current.CancellationToken);
+
+            Assert.Equal(expected, actual);
+            Assert.NotNull(handlerEndpoint);
+            Assert.NotNull(executeEndpoint);
+            Assert.Equal(
+                new Uri($"queue:{harness.EndpointNameFormatter.Message<ContainerHandlerMessage>()}"),
+                handlerAddress);
+            Assert.Equal(
+                new Uri($"queue:{harness.EndpointNameFormatter.ExecuteActivity<ContainerExecuteActivity, ContainerExecuteArguments>()}"),
+                executeAddress);
+            Assert.True(observer.ConsumeCount >= 2);
+            Assert.True(observer.PublishCount >= 2);
+            Assert.True(observer.SendCount >= 2);
         }
         finally
         {
@@ -585,6 +710,80 @@ public sealed class DependencyInjectionTestHarnessTests
     }
 
     private sealed class ExpectedRetryException(string message) : Exception(message);
+
+    private sealed record ContainerHandlerMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+
+    public sealed record ContainerExecuteArguments(string Value);
+
+    public sealed class ContainerExecuteActivity : IExecuteActivity<ContainerExecuteArguments>
+    {
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ContainerExecuteArguments> context) =>
+            Task.FromResult(context.Completed());
+    }
+
+    private sealed class RecordingObserver : IConsumeObserver, IPublishObserver, ISendObserver
+    {
+        private int _consumeCount;
+        private int _publishCount;
+        private int _sendCount;
+
+        public int ConsumeCount => Volatile.Read(ref _consumeCount);
+
+        public int PublishCount => Volatile.Read(ref _publishCount);
+
+        public int SendCount => Volatile.Read(ref _sendCount);
+
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context)
+            where T : class
+        {
+            Interlocked.Increment(ref _consumeCount);
+            return Task.CompletedTask;
+        }
+
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context)
+            where T : class
+        {
+            Interlocked.Increment(ref _consumeCount);
+            return Task.CompletedTask;
+        }
+
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+
+        public Task PrePublishAsync<T>(PublishContext<T> context)
+            where T : class
+        {
+            Interlocked.Increment(ref _publishCount);
+            return Task.CompletedTask;
+        }
+
+        public Task PostPublishAsync<T>(PublishContext<T> context)
+            where T : class
+        {
+            Interlocked.Increment(ref _publishCount);
+            return Task.CompletedTask;
+        }
+
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+
+        public Task PreSendAsync<T>(SendContext<T> context)
+            where T : class
+        {
+            Interlocked.Increment(ref _sendCount);
+            return Task.CompletedTask;
+        }
+
+        public Task PostSendAsync<T>(SendContext<T> context)
+            where T : class
+        {
+            Interlocked.Increment(ref _sendCount);
+            return Task.CompletedTask;
+        }
+
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+    }
 
     public sealed class ManagedSaga : ISaga
     {

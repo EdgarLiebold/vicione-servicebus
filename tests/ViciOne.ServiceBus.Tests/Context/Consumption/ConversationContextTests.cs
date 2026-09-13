@@ -12,7 +12,7 @@ public sealed class ConversationContextTests
     public async Task RootSendAndPublish_CreateIndependentNonEmptyConversationIdsAsync()
     {
         using var harness = CreateHarness();
-        HandlerTestHarness<RootMessage> handler = harness.Handler<RootMessage>();
+        HandlerTestHarness<RootMessage> handler = harness.AddHandler<RootMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var sent = new RootMessage(NewId.NextGuid(), "sent");
         var published = new RootMessage(NewId.NextGuid(), "published");
@@ -47,9 +47,9 @@ public sealed class ConversationContextTests
     public async Task MessageProducedInsideAConsumer_InheritsConversationAndEndpointSourceAsync()
     {
         using var harness = CreateHarness();
-        harness.Handler<ParentMessage>(context =>
+        harness.AddHandler<ParentMessage>(context =>
             context.Advanced().PublishAsync(new ChildMessage(context.Message.CorrelationId, "inherited")));
-        HandlerTestHarness<ChildMessage> childHandler = harness.Handler<ChildMessage>();
+        HandlerTestHarness<ChildMessage> childHandler = harness.AddHandler<ChildMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid conversationId = NewId.NextGuid();
         var parent = new ParentMessage(NewId.NextGuid());
@@ -80,11 +80,11 @@ public sealed class ConversationContextTests
     public async Task StartNewConversationInsideAConsumer_RecordsThePreviousConversationAsync()
     {
         using var harness = CreateHarness();
-        harness.Handler<ParentMessage>(context =>
+        harness.AddHandler<ParentMessage>(context =>
             context.Advanced().PublishAsync(
                 new ChildMessage(context.Message.CorrelationId, "new"),
                 sendContext => sendContext.StartNewConversation()));
-        HandlerTestHarness<ChildMessage> childHandler = harness.Handler<ChildMessage>();
+        HandlerTestHarness<ChildMessage> childHandler = harness.AddHandler<ChildMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid originalConversationId = NewId.NextGuid();
         var parent = new ParentMessage(NewId.NextGuid());
@@ -118,7 +118,7 @@ public sealed class ConversationContextTests
     public async Task ExplicitRootConversation_UsesTheExactIdWithoutAnInitiatingHeaderAsync()
     {
         using var harness = CreateHarness();
-        HandlerTestHarness<RootMessage> handler = harness.Handler<RootMessage>();
+        HandlerTestHarness<RootMessage> handler = harness.AddHandler<RootMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid conversationId = NewId.NextGuid();
         var message = new RootMessage(NewId.NextGuid(), "explicit");

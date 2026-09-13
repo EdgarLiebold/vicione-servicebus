@@ -12,7 +12,7 @@ public static class ActivityTestHarnessExtensions
     /// <typeparam name="TLog">The compensation log.</typeparam>
     /// <param name="harness">The harness that hosts the activity endpoints.</param>
     /// <returns>The activity harness.</returns>
-    public static ActivityTestHarness<TActivity, TArguments, TLog> Activity<TActivity, TArguments, TLog>(this BusTestHarness harness)
+    public static ActivityTestHarness<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(this BusTestHarness harness)
         where TActivity : class, IActivity<TArguments, TLog>, new()
         where TArguments : class
         where TLog : class
@@ -35,7 +35,7 @@ public static class ActivityTestHarnessExtensions
     /// <param name="executeFactory">The delegate that creates an instance for execution.</param>
     /// <param name="compensateFactory">The delegate that creates an instance for compensation.</param>
     /// <returns>The activity harness.</returns>
-    public static ActivityTestHarness<TActivity, TArguments, TLog> Activity<TActivity, TArguments, TLog>(this BusTestHarness harness,
+    public static ActivityTestHarness<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(this BusTestHarness harness,
         Func<TArguments, TActivity> executeFactory, Func<TLog, TActivity> compensateFactory)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -58,7 +58,7 @@ public static class ActivityTestHarnessExtensions
     /// <typeparam name="TArguments">The execute arguments.</typeparam>
     /// <param name="harness">The harness that hosts the execute endpoint.</param>
     /// <returns>The execute activity harness.</returns>
-    public static ExecuteActivityTestHarness<TActivity, TArguments> ExecuteActivity<TActivity, TArguments>(this BusTestHarness harness)
+    public static ExecuteActivityTestHarness<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(this BusTestHarness harness)
         where TActivity : class, IExecuteActivity<TArguments>, new()
         where TArguments : class
     {
@@ -76,7 +76,7 @@ public static class ActivityTestHarnessExtensions
     /// <param name="harness">The harness that hosts the execute endpoint.</param>
     /// <param name="executeFactory">The delegate that creates an activity instance.</param>
     /// <returns>The execute activity harness.</returns>
-    public static ExecuteActivityTestHarness<TActivity, TArguments> ExecuteActivity<TActivity, TArguments>(this BusTestHarness harness,
+    public static ExecuteActivityTestHarness<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(this BusTestHarness harness,
         Func<TArguments, TActivity> executeFactory)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class

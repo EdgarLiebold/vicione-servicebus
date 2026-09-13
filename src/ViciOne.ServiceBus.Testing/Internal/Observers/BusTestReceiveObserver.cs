@@ -8,13 +8,6 @@ internal sealed class BusTestReceiveObserver :
     InactivityTestObserver,
     IReceiveObserver
 {
-    /// <summary>Creates a receive observer that uses the system clock.</summary>
-    /// <param name="inactivityTimeout">The interval without receive activity that indicates inactivity.</param>
-    public BusTestReceiveObserver(TimeSpan inactivityTimeout)
-        : this(inactivityTimeout, TimeProvider.System)
-    {
-    }
-
     /// <summary>Creates a receive observer.</summary>
     /// <param name="inactivityTimeout">The interval without receive activity that indicates inactivity.</param>
     /// <param name="timeProvider">The clock used by the inactivity timer.</param>

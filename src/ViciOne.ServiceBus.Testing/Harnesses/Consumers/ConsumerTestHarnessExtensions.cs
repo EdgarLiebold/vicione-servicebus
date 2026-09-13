@@ -11,7 +11,7 @@ public static class ConsumerTestHarnessExtensions
     /// <param name="harness">The harness that hosts the consumer.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>A harness that records deliveries to the consumer.</returns>
-    public static ConsumerTestHarness<TConsumer> Consumer<TConsumer>(this BusTestHarness harness, string? queueName = null)
+    public static ConsumerTestHarness<TConsumer> AddConsumer<TConsumer>(this BusTestHarness harness, string? queueName = null)
         where TConsumer : class, IConsumer, new()
     {
         ArgumentNullException.ThrowIfNull(harness);
@@ -26,7 +26,7 @@ public static class ConsumerTestHarnessExtensions
     /// <param name="configure">The consumer configuration callback.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>A harness that records deliveries to the consumer.</returns>
-    public static ConsumerTestHarness<TConsumer> Consumer<TConsumer>(this BusTestHarness harness,
+    public static ConsumerTestHarness<TConsumer> AddConsumer<TConsumer>(this BusTestHarness harness,
         Action<IConsumerConfigurator<TConsumer>> configure,
         string? queueName = null)
         where TConsumer : class, IConsumer, new()
@@ -44,7 +44,7 @@ public static class ConsumerTestHarnessExtensions
     /// <param name="consumerFactory">The factory that creates consumer instances.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>A harness that records deliveries to the consumer.</returns>
-    public static ConsumerTestHarness<TConsumer> Consumer<TConsumer>(this BusTestHarness harness,
+    public static ConsumerTestHarness<TConsumer> AddConsumer<TConsumer>(this BusTestHarness harness,
         IConsumerFactory<TConsumer> consumerFactory, string? queueName = null)
         where TConsumer : class, IConsumer
     {
@@ -60,7 +60,7 @@ public static class ConsumerTestHarnessExtensions
     /// <param name="configure">The consumer configuration callback.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>A harness that records deliveries to the consumer.</returns>
-    public static ConsumerTestHarness<TConsumer> Consumer<TConsumer>(this BusTestHarness harness,
+    public static ConsumerTestHarness<TConsumer> AddConsumer<TConsumer>(this BusTestHarness harness,
         IConsumerFactory<TConsumer> consumerFactory, Action<IConsumerConfigurator<TConsumer>> configure, string? queueName = null)
         where TConsumer : class, IConsumer
     {
@@ -76,7 +76,7 @@ public static class ConsumerTestHarnessExtensions
     /// <param name="consumerFactory">The delegate that creates consumer instances.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>A harness that records deliveries to the consumer.</returns>
-    public static ConsumerTestHarness<TConsumer> Consumer<TConsumer>(this BusTestHarness harness, Func<TConsumer> consumerFactory,
+    public static ConsumerTestHarness<TConsumer> AddConsumer<TConsumer>(this BusTestHarness harness, Func<TConsumer> consumerFactory,
         string? queueName = null)
         where TConsumer : class, IConsumer
     {
@@ -92,7 +92,7 @@ public static class ConsumerTestHarnessExtensions
     /// <param name="configure">The consumer configuration callback.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>A harness that records deliveries to the consumer.</returns>
-    public static ConsumerTestHarness<TConsumer> Consumer<TConsumer>(this BusTestHarness harness, Func<TConsumer> consumerFactory,
+    public static ConsumerTestHarness<TConsumer> AddConsumer<TConsumer>(this BusTestHarness harness, Func<TConsumer> consumerFactory,
         Action<IConsumerConfigurator<TConsumer>> configure, string? queueName = null)
         where TConsumer : class, IConsumer
     {

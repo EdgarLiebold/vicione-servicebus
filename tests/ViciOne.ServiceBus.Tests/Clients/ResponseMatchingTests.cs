@@ -307,7 +307,7 @@ public sealed class ResponseMatchingTests
         TaskCompletionSource<ConsumeContext<MatchingRequest>>? requestSeen,
         string responseValue)
     {
-        harness.Handler<MatchingRequest>(async context =>
+        harness.AddHandler<MatchingRequest>(async context =>
         {
             requestSeen?.TrySetResult(context);
             if (!context.Advanced().IsResponseAccepted<AcceptedResponse>())

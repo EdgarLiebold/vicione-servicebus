@@ -25,7 +25,7 @@ public sealed class RequestClientMetadataTests
         using var harness = CreateHarness(timeout);
         var requestSeen = new TaskCompletionSource<ConsumeContext<MetadataRequest>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<MetadataRequest>(async context =>
+        harness.AddHandler<MetadataRequest>(async context =>
         {
             requestSeen.TrySetResult(context);
             await context.RespondAsync(new MetadataResponse(context.Message.CorrelationId, "options"));
@@ -289,7 +289,7 @@ public sealed class RequestClientMetadataTests
         using var harness = CreateHarness(timeout);
         var requestSeen = new TaskCompletionSource<ConsumeContext<MetadataRequest>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<MetadataRequest>(async context =>
+        harness.AddHandler<MetadataRequest>(async context =>
         {
             requestSeen.TrySetResult(context);
             await context.RespondAsync(new MetadataResponse(context.Message.CorrelationId, "accepted"));
@@ -334,7 +334,7 @@ public sealed class RequestClientMetadataTests
         var sentSeen = new TaskCompletionSource<ConsumeContext<SentSideEffect>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         Uri auditAddress = new(harness.BaseAddress, "request-client-audit");
-        harness.Handler<MetadataRequest>(async context =>
+        harness.AddHandler<MetadataRequest>(async context =>
         {
             requestSeen.TrySetResult(context);
             await context.Advanced().PublishAsync(new PublishedSideEffect(context.Message.CorrelationId), context.CancellationToken);
@@ -399,7 +399,7 @@ public sealed class RequestClientMetadataTests
         using var harness = CreateHarness(timeout);
         var requestSeen = new TaskCompletionSource<ConsumeContext<MetadataRequest>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<MetadataRequest>(context =>
+        harness.AddHandler<MetadataRequest>(context =>
         {
             requestSeen.TrySetResult(context);
             throw new ExpectedRequestFailure("request rejected");
@@ -409,7 +409,7 @@ public sealed class RequestClientMetadataTests
         try
         {
             Task<ConsumeContext<Fault<MetadataRequest>>> faultSeen =
-                harness.SubscribeHandlerAsync<Fault<MetadataRequest>>(TestContext.Current.CancellationToken);
+                harness.WaitForMessageAsync<Fault<MetadataRequest>>(TestContext.Current.CancellationToken);
             var requestMessage = new MetadataRequest(
                 Guid.Parse("6f56f140-cd81-4d10-b224-fd3bbb70d4df"),
                 true);

@@ -59,7 +59,7 @@ public sealed class ContainerNamespaceDiscoveryTests
 
             Guid messageId = NewId.NextGuid();
             IRequestClient<ContainerDiscovery.DiscoveryPing> client =
-                harness.GetRequestClient<ContainerDiscovery.DiscoveryPing>();
+                harness.CreateRequestClient<ContainerDiscovery.DiscoveryPing>();
             Response<ContainerDiscovery.DiscoveryPong> response = await client
                 .GetResponseAsync<ContainerDiscovery.DiscoveryPong>(
                     new ContainerDiscovery.DiscoveryPing(messageId),

@@ -157,7 +157,7 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
                 TestInactivityTimeout = database.OperationTimeout,
             };
             TaskCompletionSource<TransactionalMessage> received = new(TaskCreationOptions.RunContinuationsAsynchronously);
-            harness.Handler<TransactionalMessage>(context =>
+            harness.AddHandler<TransactionalMessage>(context =>
             {
                 received.TrySetResult(context.Message);
                 return Task.CompletedTask;

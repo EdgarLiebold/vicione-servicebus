@@ -18,11 +18,11 @@ public sealed class RoutingSlipFaultIntegrationTests
         var observed = new TaskCompletionSource<DateTimeOffset>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-fault-delay");
         harness.InMemoryBusConfiguring += bus => bus.ConfigureDelayedMessageScheduler();
-        ActivityTestHarness<ObservingCompensationCourierActivity, CourierArguments, CourierLog> compensating = harness.Activity<
+        ActivityTestHarness<ObservingCompensationCourierActivity, CourierArguments, CourierLog> compensating = harness.AddActivity<
             ObservingCompensationCourierActivity,
             CourierArguments,
             CourierLog>(_ => new ObservingCompensationCourierActivity(observed), _ => new ObservingCompensationCourierActivity(observed));
-        ExecuteActivityTestHarness<DelayedFaultingCourierActivity, DelayedCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<DelayedFaultingCourierActivity, DelayedCourierArguments> failing = harness.AddExecuteActivity<
             DelayedFaultingCourierActivity,
             DelayedCourierArguments>();
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
@@ -63,7 +63,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-invalid-result-options");
-        ExecuteActivityTestHarness<InvalidResultOptionsCourierActivity, InvalidResultOptionsArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<InvalidResultOptionsCourierActivity, InvalidResultOptionsArguments> activity = harness.AddExecuteActivity<
             InvalidResultOptionsCourierActivity,
             InvalidResultOptionsArguments>();
         using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
@@ -94,7 +94,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-execute-cancellation");
-        ExecuteActivityTestHarness<CancellingExecuteCourierActivity, CourierArguments> cancelling = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<CancellingExecuteCourierActivity, CourierArguments> cancelling = harness.AddExecuteActivity<
             CancellingExecuteCourierActivity,
             CourierArguments>();
         await harness.StartAsync(cancellationToken);
@@ -127,11 +127,11 @@ public sealed class RoutingSlipFaultIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-compensate-cancellation");
-        ActivityTestHarness<CancellingCompensationCourierActivity, CourierArguments, CourierLog> cancelling = harness.Activity<
+        ActivityTestHarness<CancellingCompensationCourierActivity, CourierArguments, CourierLog> cancelling = harness.AddActivity<
             CancellingCompensationCourierActivity,
             CourierArguments,
             CourierLog>(_ => new CancellingCompensationCourierActivity(), _ => new CancellingCompensationCourierActivity());
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         await harness.StartAsync(cancellationToken);
@@ -166,15 +166,15 @@ public sealed class RoutingSlipFaultIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var compensationOrder = new ConcurrentQueue<string>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-thrown-fault");
-        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.Activity<
+        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.AddActivity<
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(compensationOrder), _ => new FirstCourierActivity(compensationOrder));
-        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.Activity<
+        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.AddActivity<
             SecondCourierActivity,
             CourierArguments,
             CourierLog>(_ => new SecondCourierActivity(compensationOrder), _ => new SecondCourierActivity(compensationOrder));
-        ExecuteActivityTestHarness<ThrowingCourierActivity, FaultingCourierArguments> throwing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<ThrowingCourierActivity, FaultingCourierArguments> throwing = harness.AddExecuteActivity<
             ThrowingCourierActivity,
             FaultingCourierArguments>();
         using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
@@ -233,15 +233,15 @@ public sealed class RoutingSlipFaultIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var compensationOrder = new ConcurrentQueue<string>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-fault");
-        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.Activity<
+        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.AddActivity<
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(compensationOrder), _ => new FirstCourierActivity(compensationOrder));
-        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.Activity<
+        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.AddActivity<
             SecondCourierActivity,
             CourierArguments,
             CourierLog>(_ => new SecondCourierActivity(compensationOrder), _ => new SecondCourierActivity(compensationOrder));
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(2);
@@ -308,15 +308,15 @@ public sealed class RoutingSlipFaultIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-compensation-null-variable");
-        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.Activity<
+        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.AddActivity<
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(), _ => new FirstCourierActivity());
-        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.Activity<
+        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.AddActivity<
             SecondCourierActivity,
             CourierArguments,
             CourierLog>(_ => new SecondCourierActivity(), _ => new SecondCourierActivity());
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(2);
@@ -354,7 +354,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-handled-domain-fault");
-        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<FaultingCourierActivity, FaultingCourierArguments> failing = harness.AddExecuteActivity<
             FaultingCourierActivity,
             FaultingCourierArguments>();
         using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);

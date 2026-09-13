@@ -56,8 +56,8 @@ public sealed class TestingServiceProviderExtensionsTests
             .BuildServiceProvider(validateScopes: true);
 
         TaskCompletionSource<string>[] sources = provider.GetServices<TaskCompletionSource<string>>().ToArray();
-        Task<string>[] tasks = provider.GetTasks<string>();
-        Task<string> required = provider.GetTaskAsync<string>(cancellationToken: TestContext.Current.CancellationToken);
+        Task<string>[] tasks = provider.GetCompletionTasks<string>();
+        Task<string> required = provider.WaitForCompletionAsync<string>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, sources.Length);
         Assert.Equal(2, tasks.Length);
@@ -126,7 +126,7 @@ public sealed class TestingServiceProviderExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "harness-bound-task-caller-cancellation")]
-    public async Task GetTaskAsync_CallerCancellationEndsOnlyTheWaitAndPreservesTheExactTokenAsync()
+    public async Task WaitForCompletionAsync_CallerCancellationEndsOnlyTheWaitAndPreservesTheExactTokenAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration => configuration.AddTaskCompletionSource<string>())
@@ -134,7 +134,7 @@ public sealed class TestingServiceProviderExtensionsTests
         TaskCompletionSource<string> source = provider.GetRequiredService<TaskCompletionSource<string>>();
         using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
 
-        Task<string> wait = provider.GetTaskAsync<string>(cancellation.Token);
+        Task<string> wait = provider.WaitForCompletionAsync<string>(cancellation.Token);
         cancellation.Cancel();
 
         OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => wait);
@@ -151,12 +151,12 @@ public sealed class TestingServiceProviderExtensionsTests
     {
         Assert.Equal(
             "provider",
-            Assert.Throws<ArgumentNullException>(() => ServiceProviderTestExtensions.GetTasks<string>(null!)).ParamName);
+            Assert.Throws<ArgumentNullException>(() => ServiceProviderTestExtensions.GetCompletionTasks<string>(null!)).ParamName);
         Assert.Equal(
             "provider",
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = ServiceProviderTestExtensions.GetTaskAsync<string>(
+                _ = ServiceProviderTestExtensions.WaitForCompletionAsync<string>(
                     null!,
                     TestContext.Current.CancellationToken);
             }).ParamName);
@@ -215,7 +215,7 @@ public sealed class TestingServiceProviderExtensionsTests
                 "get_TestTimeout" => _timeout,
                 "get_TimeProvider" => _timeProvider ?? throw new InvalidOperationException("The time provider was not configured."),
                 "get_CancellationToken" => CancellationToken.None,
-                "GetTask" => Activator.CreateInstance(
+                "CreateTaskCompletionSource" => Activator.CreateInstance(
                     targetMethod.ReturnType,
                     TaskCreationOptions.RunContinuationsAsynchronously),
                 _ => throw new NotSupportedException(targetMethod?.Name),

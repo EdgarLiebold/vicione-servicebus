@@ -11,15 +11,6 @@ internal sealed class BusTestPublishObserver :
 {
     readonly PublishedMessageList _messages;
 
-    /// <summary>Creates a publish observer that uses the system clock.</summary>
-    /// <param name="timeout">The maximum time an assertion waits for a matching publication.</param>
-    /// <param name="inactivityTimeout">The interval without publish activity that indicates inactivity.</param>
-    /// <param name="testCompleted">The token that ends pending test observations.</param>
-    public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimeout, CancellationToken testCompleted = default)
-        : this(timeout, inactivityTimeout, testCompleted, TimeProvider.System)
-    {
-    }
-
     /// <summary>Creates a publish observer.</summary>
     /// <param name="timeout">The maximum time an assertion waits for a matching publication.</param>
     /// <param name="inactivityTimeout">The interval without publish activity that indicates inactivity.</param>

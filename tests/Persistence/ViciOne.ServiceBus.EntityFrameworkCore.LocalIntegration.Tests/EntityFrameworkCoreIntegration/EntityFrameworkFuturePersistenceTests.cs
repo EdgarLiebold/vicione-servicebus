@@ -643,7 +643,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
             where TRequest : class
             where TResponse : class
         {
-            IRequestClient<TRequest> client = Harness.GetRequestClient<TRequest>();
+            IRequestClient<TRequest> client = Harness.CreateRequestClient<TRequest>();
             return client.GetResponseAsync<TResponse>(command, TestContext.Current.CancellationToken)
                 .WaitAsync(_database.OperationTimeout, TestContext.Current.CancellationToken);
         }

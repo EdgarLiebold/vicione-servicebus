@@ -19,6 +19,7 @@ public abstract class AsyncElementList<TElement> :
     readonly Connectable<Channel<TElement>> _channels;
     readonly IDictionary<Guid, TElement> _messageLookup;
     readonly List<TElement> _messages;
+    readonly HashSet<TElement> _unidentifiedMessages;
     readonly CancellationToken _testCompleted;
     readonly TimeProvider _timeProvider;
     readonly TimeSpan _timeout;
@@ -47,6 +48,7 @@ public abstract class AsyncElementList<TElement> :
 
         _messages = new List<TElement>();
         _messageLookup = new Dictionary<Guid, TElement>();
+        _unidentifiedMessages = new HashSet<TElement>(ReferenceEqualityComparer.Instance);
         _channels = new Connectable<Channel<TElement>>();
     }
 
@@ -64,10 +66,24 @@ public abstract class AsyncElementList<TElement> :
     }
 
     /// <inheritdoc />
-    public TestContextSaveMode SaveMode => _saveMode;
+    public TestContextSaveMode SaveMode
+    {
+        get
+        {
+            lock (_messages)
+                return _saveMode;
+        }
+    }
 
     /// <inheritdoc />
-    public int MaximumSavedElements => _maximumSavedElements;
+    public int MaximumSavedElements
+    {
+        get
+        {
+            lock (_messages)
+                return _maximumSavedElements;
+        }
+    }
 
     /// <inheritdoc />
     public IReadOnlyList<TElement> Snapshot()
@@ -92,6 +108,7 @@ public abstract class AsyncElementList<TElement> :
             {
                 _messages.Clear();
                 _messageLookup.Clear();
+                _unidentifiedMessages.Clear();
                 return;
             }
 
@@ -109,7 +126,11 @@ public abstract class AsyncElementList<TElement> :
         // This queue is scoped to one assertion enumerator and bounded both by the assertion timeout
         // and by an explicit element capacity. Overflow fails the assertion loudly instead of dropping
         // observations or allowing test traffic to grow process memory without a bound.
-        var channel = Channel.CreateBounded<TElement>(new BoundedChannelOptions(_maximumSavedElements)
+        int capacity;
+        lock (_messages)
+            capacity = _maximumSavedElements;
+
+        var channel = Channel.CreateBounded<TElement>(new BoundedChannelOptions(capacity)
         {
             SingleReader = true,
             SingleWriter = false,
@@ -118,11 +139,12 @@ public abstract class AsyncElementList<TElement> :
         });
 
         var handle = _channels.Connect(channel);
-        var returned = new HashSet<Guid>();
+        var returnedIds = new HashSet<Guid>();
+        var returnedUnidentified = new HashSet<TElement>(ReferenceEqualityComparer.Instance);
 
         try
         {
-            foreach (var entry in GetMatchingSnapshot(filter, returned))
+            foreach (var entry in GetMatchingSnapshot(filter, returnedIds, returnedUnidentified))
                 yield return entry;
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -145,15 +167,19 @@ public abstract class AsyncElementList<TElement> :
                     break;
                 }
 
-                if (_saveMode == TestContextSaveMode.None)
+                TestContextSaveMode saveMode;
+                lock (_messages)
+                    saveMode = _saveMode;
+
+                if (saveMode == TestContextSaveMode.None)
                 {
-                    if (observed.ElementId is Guid id && returned.Add(id) && filter(observed))
+                    if (MarkReturned(observed, returnedIds, returnedUnidentified) && filter(observed))
                         yield return observed;
 
                     continue;
                 }
 
-                foreach (var entry in GetMatchingSnapshot(filter, returned))
+                foreach (var entry in GetMatchingSnapshot(filter, returnedIds, returnedUnidentified))
                     yield return entry;
             }
         }
@@ -173,7 +199,8 @@ public abstract class AsyncElementList<TElement> :
         return false;
     }
 
-    IEnumerable<TElement> GetMatchingSnapshot(FilterDelegate<TElement> filter, HashSet<Guid> returned)
+    IEnumerable<TElement> GetMatchingSnapshot(FilterDelegate<TElement> filter, HashSet<Guid> returnedIds,
+        HashSet<TElement> returnedUnidentified)
     {
         TElement[] snapshot;
         lock (_messages)
@@ -181,7 +208,7 @@ public abstract class AsyncElementList<TElement> :
 
         foreach (var entry in snapshot)
         {
-            if (!entry.ElementId.HasValue || !returned.Add(entry.ElementId.Value))
+            if (!MarkReturned(entry, returnedIds, returnedUnidentified))
                 continue;
 
             if (filter(entry))
@@ -189,31 +216,31 @@ public abstract class AsyncElementList<TElement> :
         }
     }
 
-    /// <summary>Records an identified observation and makes it available to active queries.</summary>
+    /// <summary>Records an observation and makes it available to active queries.</summary>
     /// <param name="element">The observation to record.</param>
     protected void Add(TElement element)
     {
         ArgumentNullException.ThrowIfNull(element);
 
-        if (!element.ElementId.HasValue)
-            return;
-
-        if (_saveMode != TestContextSaveMode.None)
+        int capacity;
+        lock (_messages)
         {
-            lock (_messages)
+            capacity = _maximumSavedElements;
+            if (_saveMode != TestContextSaveMode.None)
             {
-                var elementId = element.ElementId.Value;
+                if (element.ElementId is Guid elementId)
+                {
+                    if (_messageLookup.ContainsKey(elementId))
+                        return;
 
-                if (_messageLookup.ContainsKey(elementId))
+                    _messageLookup.Add(elementId, element);
+                }
+                else if (!_unidentifiedMessages.Add(element))
                     return;
 
                 _messages.Add(element);
-                _messageLookup.Add(elementId, element);
-
                 if (_saveMode == TestContextSaveMode.Bounded)
                     TrimToCapacity();
-
-                Monitor.PulseAll(_messages);
             }
         }
 
@@ -222,9 +249,16 @@ public abstract class AsyncElementList<TElement> :
             if (!channel.Writer.TryWrite(element))
             {
                 channel.Writer.TryComplete(new InvalidOperationException(
-                    $"Test assertion observation capacity ({_maximumSavedElements}) was exceeded."));
+                    $"Test assertion observation capacity ({capacity}) was exceeded."));
             }
         });
+    }
+
+    static bool MarkReturned(TElement element, ISet<Guid> returnedIds, ISet<TElement> returnedUnidentified)
+    {
+        return element.ElementId is Guid elementId
+            ? returnedIds.Add(elementId)
+            : returnedUnidentified.Add(element);
     }
 
     void TrimToCapacity()
@@ -235,6 +269,8 @@ public abstract class AsyncElementList<TElement> :
             _messages.RemoveAt(0);
             if (removed.ElementId.HasValue)
                 _messageLookup.Remove(removed.ElementId.Value);
+            else
+                _unidentifiedMessages.Remove(removed);
         }
     }
 

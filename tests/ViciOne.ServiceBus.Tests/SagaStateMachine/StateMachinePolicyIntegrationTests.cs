@@ -127,7 +127,7 @@ public sealed class StateMachinePolicyIntegrationTests
         using var harness = CreateHarness("ignore-repeat", timeout);
         var machine = new IgnoreMachine();
         ISagaStateMachineTestHarness<IgnoreMachine, IgnoreState> sagaHarness =
-            harness.StateMachineSaga<IgnoreState, IgnoreMachine>(machine);
+            harness.AddSagaStateMachine<IgnoreMachine, IgnoreState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -174,7 +174,7 @@ public sealed class StateMachinePolicyIntegrationTests
             retry.ConnectRetryObserver(retryObserver);
         });
         ISagaStateMachineTestHarness<RetryIgnoreMachine, RetryIgnoreState> sagaHarness =
-            harness.StateMachineSaga<RetryIgnoreState, RetryIgnoreMachine>(machine);
+            harness.AddSagaStateMachine<RetryIgnoreMachine, RetryIgnoreState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

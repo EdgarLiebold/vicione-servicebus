@@ -52,6 +52,7 @@ public class ConsumerTestHarness<TConsumer> :
     {
         ArgumentNullException.ThrowIfNull(configure);
         _configure = configure;
+        testHarness.ReceiveEndpointConfiguring += ConfigureReceiveEndpoint;
     }
 
     /// <summary>Creates the consumer observer used by the harness.</summary>

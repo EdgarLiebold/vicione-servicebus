@@ -12,7 +12,8 @@ namespace ViciOne.ServiceBus.Testing.Internal;
 /// <typeparam name="TInstance">The saga state type.</typeparam>
 internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
     BaseSagaTestHarness<TInstance>,
-    ISagaStateMachineTestHarness<TStateMachine, TInstance>
+    ISagaStateMachineTestHarness<TStateMachine, TInstance>,
+    IContainerTestHarnessObservationRegistration
     where TStateMachine : SagaStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {

@@ -19,7 +19,7 @@ public sealed class SentMessageMetadataTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        HandlerTestHarness<TimedMessage> handler = harness.Handler<TimedMessage>();
+        HandlerTestHarness<TimedMessage> handler = harness.AddHandler<TimedMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         await harness.StartAsync(cancellationToken);

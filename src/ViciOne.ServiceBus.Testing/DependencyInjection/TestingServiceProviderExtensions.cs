@@ -1,10 +1,8 @@
 using System;
-using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Testing;
@@ -51,7 +49,7 @@ public static class TestingServiceProviderExtensions
         ArgumentNullException.ThrowIfNull(filter);
         cancellationToken.ThrowIfCancellationRequested();
 
-        TaskCompletionSource<ConsumeContext<TMessage>> source = harness.GetTask<ConsumeContext<TMessage>>();
+        TaskCompletionSource<ConsumeContext<TMessage>> source = harness.CreateTaskCompletionSource<ConsumeContext<TMessage>>(cancellationToken);
 
         IHostReceiveEndpointHandle handle = harness.Bus.ConnectReceiveEndpoint(configurator =>
         {
@@ -107,36 +105,7 @@ public static class TestingServiceProviderExtensions
     public static void AddTaskCompletionSource<TResult>(this IBusRegistrationConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        configurator.Services.AddSingleton(provider => provider.GetRequiredService<ITestHarness>().GetTask<TResult>());
-    }
-
-    /// <summary>Stops every hosted service in reverse dependency-injection registration order.</summary>
-    /// <param name="harness">The harness whose provider owns the hosted services.</param>
-    /// <param name="cancellationToken">The token used to cancel shutdown.</param>
-    /// <returns>A task that completes after all reached services stop.</returns>
-    public static async Task StopAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(harness);
-        IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();
-
-        foreach (var service in services.Reverse())
-            await service.StopAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>Stops hosted services in reverse order and then starts them in registration order.</summary>
-    /// <param name="harness">The harness whose provider owns the hosted services.</param>
-    /// <param name="cancellationToken">The token used to cancel the restart.</param>
-    /// <returns>A task that completes after the restart sequence.</returns>
-    public static async Task RestartHostedServicesAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(harness);
-        IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();
-
-        foreach (var service in services.Reverse())
-            await service.StopAsync(cancellationToken).ConfigureAwait(false);
-
-        foreach (var service in services)
-            await service.StartAsync(cancellationToken).ConfigureAwait(false);
+        configurator.Services.AddSingleton(provider => provider.GetRequiredService<ITestHarness>().CreateTaskCompletionSource<TResult>());
     }
 
     /// <summary>Adds a saga instance to the in-memory saga repository.</summary>
@@ -144,24 +113,36 @@ public static class TestingServiceProviderExtensions
     /// <param name="harness">The harness whose provider owns the repository.</param>
     /// <param name="correlationId">The correlation identifier, or <see langword="null"/> to generate one.</param>
     /// <param name="configureSaga">An optional callback that initializes additional saga state.</param>
-    public static void AddSagaInstance<TSaga>(this ITestHarness harness, Guid? correlationId = default, Action<TSaga>? configureSaga = null)
+    /// <param name="cancellationToken">The token used to cancel repository access.</param>
+    /// <returns>A task that completes after the saga state has been stored.</returns>
+    public static async Task AddSagaInstanceAsync<TSaga>(this ITestHarness harness, Guid? correlationId = default,
+        Action<TSaga>? configureSaga = null,
+        CancellationToken cancellationToken = default)
         where TSaga : class, ISaga, new()
     {
         ArgumentNullException.ThrowIfNull(harness);
+
+        var instance = new TSaga { CorrelationId = correlationId ?? NewId.NextGuid() };
+        configureSaga?.Invoke(instance);
 
         var dictionary = harness.Provider.GetService<IndexedSagaDictionary<TSaga>>();
         if (dictionary == null)
             throw new InvalidOperationException($"No in-memory saga repository is registered for {TypeCache<TSaga>.ShortName}.");
 
-        if (correlationId.HasValue && dictionary[correlationId.Value] != null)
-            throw new ArgumentException(
-                $"An in-memory saga with correlation id '{correlationId}' already exists.",
-                nameof(correlationId));
+        await dictionary.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            if (dictionary[instance.CorrelationId] != null)
+                throw new ArgumentException(
+                    $"An in-memory saga with correlation id '{instance.CorrelationId}' already exists.",
+                    nameof(correlationId));
 
-        var instance = new TSaga { CorrelationId = correlationId ?? NewId.NextGuid() };
-        configureSaga?.Invoke(instance);
-
-        dictionary.Add(new SagaInstance<TSaga>(instance));
+            dictionary.Add(new SagaInstance<TSaga>(instance));
+        }
+        finally
+        {
+            dictionary.Release();
+        }
     }
 
     /// <summary>Adds or updates an existing saga instance using the in-memory saga repository.</summary>
@@ -179,6 +160,9 @@ public static class TestingServiceProviderExtensions
         ArgumentNullException.ThrowIfNull(harness);
         correlationId ??= NewId.NextGuid();
 
+        var instance = new TSaga { CorrelationId = correlationId.Value };
+        configureSaga?.Invoke(instance);
+
         var dictionary = harness.Provider.GetService<IndexedSagaDictionary<TSaga>>();
         if (dictionary == null)
             throw new InvalidOperationException($"No in-memory saga repository is registered for {TypeCache<TSaga>.ShortName}.");
@@ -190,13 +174,15 @@ public static class TestingServiceProviderExtensions
             if (existingSaga != null)
             {
                 await existingSaga.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
-
-                existingSaga.Remove();
-                dictionary.Remove(existingSaga);
+                try
+                {
+                    dictionary.Remove(existingSaga);
+                }
+                finally
+                {
+                    existingSaga.Release();
+                }
             }
-
-            var instance = new TSaga { CorrelationId = correlationId.Value };
-            configureSaga?.Invoke(instance);
 
             dictionary.Add(new SagaInstance<TSaga>(instance));
         }
@@ -229,9 +215,14 @@ public static class TestingServiceProviderExtensions
             if (existingSaga != null)
             {
                 await existingSaga.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
-
-                existingSaga.Remove();
-                dictionary.Remove(existingSaga);
+                try
+                {
+                    dictionary.Remove(existingSaga);
+                }
+                finally
+                {
+                    existingSaga.Release();
+                }
 
                 return true;
             }

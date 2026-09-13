@@ -134,7 +134,7 @@ public sealed class ContainerRequestClientRegistrationTests
         try
         {
             IRequestClient<ScopedFactoryOuterRequest> client =
-                harness.GetRequestClient<ScopedFactoryOuterRequest>();
+                harness.CreateRequestClient<ScopedFactoryOuterRequest>();
             var request = new ScopedFactoryOuterRequest(NewId.NextGuid(), "scoped");
 
             Response<ScopedFactoryOuterResponse> response = await client.GetResponseAsync<ScopedFactoryOuterResponse>(

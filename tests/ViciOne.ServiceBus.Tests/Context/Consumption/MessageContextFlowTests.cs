@@ -18,7 +18,7 @@ public sealed class MessageContextFlowTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<ContextMessage> handler = harness.Handler<ContextMessage>();
+        HandlerTestHarness<ContextMessage> handler = harness.AddHandler<ContextMessage>();
         Guid correlationId = Guid.Parse("18c63967-6284-4db6-97ac-720fd842ff7f");
 
         await harness.StartAsync(cancellationToken);
@@ -61,7 +61,7 @@ public sealed class MessageContextFlowTests
         using var harness = CreateHarness(timeout);
         var requestSeen = new TaskCompletionSource<ConsumeContext<RequestMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<RequestMessage>(async context =>
+        harness.AddHandler<RequestMessage>(async context =>
         {
             requestSeen.TrySetResult(context);
             await context.RespondAsync(new AcceptedResponse(context.Message.CorrelationId, "accepted"));
@@ -72,7 +72,7 @@ public sealed class MessageContextFlowTests
         await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<AcceptedResponse>> subscriber = harness.SubscribeHandlerAsync<AcceptedResponse>(TestContext.Current.CancellationToken);
+            Task<ConsumeContext<AcceptedResponse>> subscriber = harness.WaitForMessageAsync<AcceptedResponse>(TestContext.Current.CancellationToken);
             IRequestClient<RequestMessage> client =
                 harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, new RequestTimeout(timeout));
             Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
@@ -125,7 +125,7 @@ public sealed class MessageContextFlowTests
         using var harness = CreateHarness(timeout);
         var requestSeen = new TaskCompletionSource<ConsumeContext<RequestMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.Handler<RequestMessage>(async context =>
+        harness.AddHandler<RequestMessage>(async context =>
         {
             requestSeen.TrySetResult(context);
             await context.RespondAsync(new AcceptedResponse(context.Message.CorrelationId, "published"));
@@ -161,7 +161,7 @@ public sealed class MessageContextFlowTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        harness.Handler<RequestMessage>(context =>
+        harness.AddHandler<RequestMessage>(context =>
             context.RespondAsync(new RejectedResponse(context.Message.CorrelationId, "not-supported")));
         Guid correlationId = Guid.Parse("22d12caf-c8ec-461b-a4c4-6acfa7e02a51");
 

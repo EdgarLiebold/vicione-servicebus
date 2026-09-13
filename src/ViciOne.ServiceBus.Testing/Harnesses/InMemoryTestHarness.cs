@@ -48,11 +48,16 @@ public class InMemoryTestHarness :
     {
         ArgumentNullException.ThrowIfNull(specifications);
         if (virtualHost != null)
+        {
             ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+
+            virtualHost = virtualHost.Trim('/');
+            ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+        }
 
         BaseAddress = new Uri("loopback://localhost/");
         if (virtualHost != null)
-            BaseAddress = new Uri(BaseAddress, virtualHost.Trim('/') + '/');
+            BaseAddress = new Uri(BaseAddress, virtualHost + '/');
 
         _inputQueueName = "input_queue";
         _busConfiguration = new InMemoryBusConfiguration(new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology()), BaseAddress);
@@ -68,8 +73,6 @@ public class InMemoryTestHarness :
     public override Uri InputQueueAddress { get; }
     /// <summary>Gets the name of the harness receive queue.</summary>
     public override string InputQueueName => _inputQueueName;
-
-    internal IHostConfiguration HostConfiguration => _busConfiguration.HostConfiguration;
 
     /// <summary>Occurs while the harness configures the in-memory bus factory.</summary>
     public event Action<IInMemoryBusFactoryConfigurator>? InMemoryBusConfiguring;

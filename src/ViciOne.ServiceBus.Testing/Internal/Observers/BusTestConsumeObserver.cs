@@ -12,14 +12,6 @@ internal sealed class BusTestConsumeObserver :
     readonly ConsumedMessageList _messages;
     int _activeCount;
 
-    /// <summary>Creates a consume observer that uses the system clock.</summary>
-    /// <param name="timeout">The maximum time an assertion waits for a matching consumption.</param>
-    /// <param name="testCompleted">The token that ends pending test observations.</param>
-    public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted)
-        : this(timeout, testCompleted, TimeProvider.System)
-    {
-    }
-
     /// <summary>Creates a consume observer.</summary>
     /// <param name="timeout">The maximum time an assertion waits for a matching consumption.</param>
     /// <param name="testCompleted">The token that ends pending test observations.</param>

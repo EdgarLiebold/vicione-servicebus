@@ -148,7 +148,7 @@ public sealed class MultiBusRequestTests
         try
         {
             Guid correlationId = Guid.Parse("2b35606c-2d37-4dd5-8229-e936a56e99cd");
-            IRequestClient<DefaultRequest> client = harness.GetRequestClient<DefaultRequest>();
+            IRequestClient<DefaultRequest> client = harness.CreateRequestClient<DefaultRequest>();
 
             Response<DefaultResponse> response = await client.Advanced().GetResponseAsync<DefaultResponse>(
                 new DefaultRequest(correlationId, "Hello"),

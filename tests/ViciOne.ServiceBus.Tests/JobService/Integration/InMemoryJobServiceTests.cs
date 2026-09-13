@@ -695,7 +695,7 @@ public sealed class InMemoryJobServiceTests
 
         public Task<Guid> SubmitAsync(Guid jobId, InMemoryJob job)
         {
-            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.GetRequestClient<SubmitJob<InMemoryJob>>();
+            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<SubmitJob<InMemoryJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -705,14 +705,14 @@ public sealed class InMemoryJobServiceTests
             InMemoryJob job,
             Action<IRecurringJobScheduleConfigurator> configure)
         {
-            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.GetRequestClient<SubmitJob<InMemoryJob>>();
+            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<SubmitJob<InMemoryJob>>();
             return client.AddOrUpdateRecurringJobAsync(jobName, job, configure, CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
 
         public Task<Guid> ScheduleAsync(DateTimeOffset start, InMemoryJob job)
         {
-            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.GetRequestClient<SubmitJob<InMemoryJob>>();
+            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.CreateRequestClient<SubmitJob<InMemoryJob>>();
             return client.ScheduleJobAsync(start, job, CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -769,7 +769,7 @@ public sealed class InMemoryJobServiceTests
 
         public Task<JobState> GetStateAsync(Guid jobId)
         {
-            IRequestClient<GetJobState> client = Harness.GetRequestClient<GetJobState>();
+            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
             return client.GetJobStateAsync(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -777,7 +777,7 @@ public sealed class InMemoryJobServiceTests
         public Task<JobState<TCheckpoint>> GetStateAsync<TCheckpoint>(Guid jobId)
             where TCheckpoint : class
         {
-            IRequestClient<GetJobState> client = Harness.GetRequestClient<GetJobState>();
+            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
             return client.GetJobStateAsync<TCheckpoint>(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }

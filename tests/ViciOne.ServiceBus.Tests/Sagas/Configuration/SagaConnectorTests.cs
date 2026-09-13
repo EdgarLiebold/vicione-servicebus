@@ -37,7 +37,7 @@ public sealed class SagaConnectorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid correlationId = NewId.NextGuid();
         using var harness = CreateHarness(timeout);
-        SagaTestHarness<DuplicateRoleSaga> sagaHarness = harness.Saga<DuplicateRoleSaga>();
+        SagaTestHarness<DuplicateRoleSaga> sagaHarness = harness.AddSaga<DuplicateRoleSaga>();
 
         await harness.StartAsync(cancellationToken);
         try
@@ -67,7 +67,7 @@ public sealed class SagaConnectorTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid correlationId = NewId.NextGuid();
         using var harness = CreateHarness(timeout);
-        SagaTestHarness<PropertySaga> sagaHarness = harness.Saga<PropertySaga>();
+        SagaTestHarness<PropertySaga> sagaHarness = harness.AddSaga<PropertySaga>();
 
         await harness.StartAsync(cancellationToken);
         try

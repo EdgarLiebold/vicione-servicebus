@@ -36,7 +36,7 @@ public sealed class StateMachineRequestIntegrationTests
                 endpoint.Handler<ValidateSurname>(context => HandleValidateSurnameAsync(context, outcome));
             });
         ISagaStateMachineTestHarness<CompositeRequestMachine, CompositeRequestState> sagaHarness =
-            harness.StateMachineSaga<CompositeRequestState, CompositeRequestMachine>(machine);
+            harness.AddSagaStateMachine<CompositeRequestMachine, CompositeRequestState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -118,7 +118,7 @@ public sealed class StateMachineRequestIntegrationTests
                 _ => context.RespondAsync(new MemberValid(context.Message.CorrelationId, "valid")),
             }));
         ISagaStateMachineTestHarness<MultiResponseMachine, MultiResponseState> sagaHarness =
-            harness.StateMachineSaga<MultiResponseState, MultiResponseMachine>(machine);
+            harness.AddSagaStateMachine<MultiResponseMachine, MultiResponseState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

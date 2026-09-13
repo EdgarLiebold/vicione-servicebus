@@ -17,13 +17,13 @@ public sealed class RoutingSlipRetryIntegrationTests
         var compensationCounts = new ConcurrentQueue<int>();
         var redeliveryAttempts = new ConcurrentQueue<RetryObservation>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-redelivery-header-isolation");
-        ActivityTestHarness<HeaderIsolationActivity, RetryArguments, RetryLog> compensating = harness.Activity<
+        ActivityTestHarness<HeaderIsolationActivity, RetryArguments, RetryLog> compensating = harness.AddActivity<
             HeaderIsolationActivity,
             RetryArguments,
             RetryLog>(
             _ => new HeaderIsolationActivity(compensationCounts),
             _ => new HeaderIsolationActivity(compensationCounts));
-        ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> failing = harness.AddExecuteActivity<
             RedeliverThenFaultActivity,
             RedeliveryArguments>(_ => new RedeliverThenFaultActivity(redeliveryAttempts));
         failing.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseDelayedRedelivery(
@@ -69,7 +69,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var attempts = new ConcurrentQueue<RetryObservation>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-immediate-success");
-        ExecuteActivityTestHarness<RetryThenCompleteActivity, RetryArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RetryThenCompleteActivity, RetryArguments> activity = harness.AddExecuteActivity<
             RetryThenCompleteActivity,
             RetryArguments>(_ => new RetryThenCompleteActivity(attempts));
         activity.ExecuteReceiveEndpointConfiguring += endpoint =>
@@ -117,7 +117,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var attempts = new ConcurrentQueue<CompensationObservation>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-immediate-compensate");
-        ActivityTestHarness<RetryThenCompensateActivity, RetryArguments, RetryLog> compensating = harness.Activity<
+        ActivityTestHarness<RetryThenCompensateActivity, RetryArguments, RetryLog> compensating = harness.AddActivity<
             RetryThenCompensateActivity,
             RetryArguments,
             RetryLog>(
@@ -125,7 +125,7 @@ public sealed class RoutingSlipRetryIntegrationTests
             _ => new RetryThenCompensateActivity(attempts));
         compensating.CompensateReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
-        ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.AddExecuteActivity<
             TerminalFaultActivity,
             RetryArguments>();
         using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
@@ -196,7 +196,7 @@ public sealed class RoutingSlipRetryIntegrationTests
                 return Task.CompletedTask;
             });
         });
-        ActivityTestHarness<AlwaysFailingCompensationActivity, RetryArguments, RetryLog> compensating = harness.Activity<
+        ActivityTestHarness<AlwaysFailingCompensationActivity, RetryArguments, RetryLog> compensating = harness.AddActivity<
             AlwaysFailingCompensationActivity,
             RetryArguments,
             RetryLog>(
@@ -204,7 +204,7 @@ public sealed class RoutingSlipRetryIntegrationTests
             _ => new AlwaysFailingCompensationActivity(attempts));
         compensating.CompensateReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
-        ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.AddExecuteActivity<
             TerminalFaultActivity,
             RetryArguments>();
         using var publishedActivityFailure = new CourierMessageRecorder<RoutingSlipActivityCompensationFailed>(1);
@@ -289,7 +289,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var attempts = new ConcurrentQueue<RetryObservation>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness($"courier-redelivery-{redeliveryCount}");
-        ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> activity = harness.AddExecuteActivity<
             RedeliverThenFaultActivity,
             RedeliveryArguments>(_ => new RedeliverThenFaultActivity(attempts));
         activity.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseDelayedRedelivery(
@@ -342,7 +342,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var attempts = new ConcurrentQueue<RetryObservation>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-retry-terminal-fault");
-        ExecuteActivityTestHarness<RetryThenFaultActivity, RetryArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RetryThenFaultActivity, RetryArguments> activity = harness.AddExecuteActivity<
             RetryThenFaultActivity,
             RetryArguments>(_ => new RetryThenFaultActivity(attempts));
         activity.ExecuteReceiveEndpointConfiguring += endpoint =>

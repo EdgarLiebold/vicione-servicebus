@@ -105,6 +105,45 @@ public sealed class MultiTestConsumerBehaviorTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-MULTI-CONSUMER", "direct-pipe-connection")]
+    public async Task DirectPipeConnection_AttachesEveryConfiguredConsumerAndRejectsANullConnectorAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = new InMemoryTestHarness($"multi-consumer-direct-{NewId.NextGuid():N}")
+        {
+            TestTimeout = timeout,
+            TestInactivityTimeout = timeout,
+        };
+        var consumer = new MultiTestConsumer(timeout, harness.InactivityToken);
+        IConsumedMessageList<DirectMessage> messages = consumer.AddConsumer<DirectMessage>();
+
+        Assert.Equal("connector", Assert.Throws<ArgumentNullException>(() => consumer.Connect(null!)).ParamName);
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            using ConnectHandle connection = consumer.Connect((IConsumePipeConnector)harness.Bus);
+            var expected = new DirectMessage(NewId.NextGuid(), "direct");
+            ISendEndpoint endpoint = await harness.Bus.GetSendEndpointAsync(
+                harness.Bus.Address,
+                TestContext.Current.CancellationToken);
+
+            await endpoint.SendAsync(expected, cancellationToken);
+
+            IConsumedMessage<DirectMessage> observed = await messages
+                .SelectAsync(cancellationToken)
+                .FirstObservedAsync(cancellationToken: cancellationToken);
+            Assert.Equal(expected, observed.Context.Message);
+            Assert.Null(observed.Exception);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -114,4 +153,6 @@ public sealed class MultiTestConsumerBehaviorTests
     private sealed record SecondMessage(string Value);
 
     private sealed record FaultMessage(string Value);
+
+    private sealed record DirectMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 }

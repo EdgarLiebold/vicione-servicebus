@@ -46,7 +46,7 @@ static class BusLifecycleScenario
                 // endpoint and come back out of it. A send that is merely accepted proves nothing.
                 var roundTrip = Stopwatch.StartNew();
 
-                Task<ConsumeContext<DiagnosticPing>> handled = harness.SubscribeHandlerAsync<DiagnosticPing>(cancellationToken: cancellationToken);
+                Task<ConsumeContext<DiagnosticPing>> handled = harness.WaitForMessageAsync<DiagnosticPing>(cancellationToken: cancellationToken);
 
                 await harness.BusSendEndpoint.SendAsync(new DiagnosticPing(), cancellationToken: cancellationToken);
 

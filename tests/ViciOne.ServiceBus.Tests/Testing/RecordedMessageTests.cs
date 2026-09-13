@@ -61,6 +61,43 @@ public sealed class RecordedMessageTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RECORDED-MESSAGE", "future-transport-time-is-clamped")]
+    public void SentAndPublishedMessages_ClampFutureTransportTimeToTheObservationClock()
+    {
+        var context = new MessageSendContext<ObservedMessage>(new ObservedMessage("future"));
+        var publishContext = new TestPublishContext<ObservedMessage>(new ObservedMessage("future"));
+        var observationClock = new FakeTimeProvider(DateTimeOffset.UnixEpoch);
+
+        var sent = new SentMessage<ObservedMessage>(context, null, observationClock);
+        var published = new PublishedMessage<ObservedMessage>(publishContext, null, observationClock);
+
+        Assert.Equal(DateTimeOffset.UnixEpoch, sent.StartTime);
+        Assert.Equal(TimeSpan.Zero, sent.ElapsedTime);
+        Assert.Equal(DateTimeOffset.UnixEpoch, published.StartTime);
+        Assert.Equal(TimeSpan.Zero, published.ElapsedTime);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECORDED-MESSAGE", "system-clock-construction")]
+    public void SystemClockConstructors_PreserveContextAndProduceNonNegativeTiming()
+    {
+        DateTimeOffset before = TimeProvider.System.GetUtcNow();
+        var sendContext = new MessageSendContext<ObservedMessage>(new ObservedMessage("sent"));
+        var publishContext = new TestPublishContext<ObservedMessage>(new ObservedMessage("published"));
+
+        var sent = new SentMessage<ObservedMessage>(sendContext);
+        var published = new PublishedMessage<ObservedMessage>(publishContext);
+        DateTimeOffset after = TimeProvider.System.GetUtcNow();
+
+        Assert.Same(sendContext, ((ISentMessage<ObservedMessage>)sent).Context);
+        Assert.InRange(sent.StartTime, before, after);
+        Assert.True(sent.ElapsedTime >= TimeSpan.Zero);
+        Assert.Same(publishContext, ((IPublishedMessage<ObservedMessage>)published).Context);
+        Assert.InRange(published.StartTime, before, after);
+        Assert.True(published.ElapsedTime >= TimeSpan.Zero);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RECORDED-MESSAGE", "missing-dependencies-rejected")]
     public void Construction_RejectsMissingContextAndTimeProviderForEveryRecordedMessageKind()
     {

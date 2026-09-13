@@ -17,7 +17,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         using var harness = CreateHarness("respond-matrix", timeout);
         var machine = new ResponseMachine();
         ISagaStateMachineTestHarness<ResponseMachine, ResponseState> sagaHarness =
-            harness.StateMachineSaga<ResponseState, ResponseMachine>(machine);
+            harness.AddSagaStateMachine<ResponseMachine, ResponseState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -75,7 +75,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
             endpoint.UseVolatileOutbox();
         };
         ISagaStateMachineTestHarness<OutboxMachine, OutboxState> sagaHarness =
-            harness.StateMachineSaga<OutboxState, OutboxMachine>(machine, repository);
+            harness.AddSagaStateMachine<OutboxMachine, OutboxState>(machine, repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -124,7 +124,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("missing-substitute", timeout);
         var machine = new MissingResponseMachine();
-        harness.StateMachineSaga<MissingResponseState, MissingResponseMachine>(machine);
+        harness.AddSagaStateMachine<MissingResponseMachine, MissingResponseState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -160,7 +160,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         var machine = new CatchMachine();
         var repository = new InMemorySagaRepository<CatchState>();
         ISagaStateMachineTestHarness<CatchMachine, CatchState> sagaHarness =
-            harness.StateMachineSaga<CatchState, CatchMachine>(machine, repository);
+            harness.AddSagaStateMachine<CatchMachine, CatchState>(machine, repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -213,7 +213,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         using var harness = CreateHarness("fault-events", timeout);
         var machine = new SelfFaultMachine();
         ISagaStateMachineTestHarness<SelfFaultMachine, SelfFaultState> sagaHarness =
-            harness.StateMachineSaga<SelfFaultState, SelfFaultMachine>(machine);
+            harness.AddSagaStateMachine<SelfFaultMachine, SelfFaultState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

@@ -348,7 +348,7 @@ public sealed class PostgreSqlJobServiceTests
 
         public Task<Guid> SubmitAsync(Guid jobId, PostgreSqlJob job)
         {
-            IRequestClient<SubmitJob<PostgreSqlJob>> client = Harness.GetRequestClient<SubmitJob<PostgreSqlJob>>();
+            IRequestClient<SubmitJob<PostgreSqlJob>> client = Harness.CreateRequestClient<SubmitJob<PostgreSqlJob>>();
             return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
@@ -375,7 +375,7 @@ public sealed class PostgreSqlJobServiceTests
 
         public Task<JobState> GetStateAsync(Guid jobId)
         {
-            IRequestClient<GetJobState> client = Harness.GetRequestClient<GetJobState>();
+            IRequestClient<GetJobState> client = Harness.CreateRequestClient<GetJobState>();
             return client.GetJobStateAsync(jobId).WaitAsync(OperationTimeout, CancellationToken);
         }
 

@@ -55,6 +55,10 @@ public static class DependencyInjectionEndpointRegistrationExtensions
     /// <returns>The endpoint registration produced by the operation.</returns>
     public static IEndpointRegistration RegisterEndpoint(this IServiceCollection collection, IContainerRegistrar registrar, Type endpointDefinitionType)
     {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(registrar);
+        ArgumentNullException.ThrowIfNull(endpointDefinitionType);
+
         if (!endpointDefinitionType.TryGetSingleClosedGenericArguments(typeof(IEndpointDefinition<>), out Type[] types))
             throw new ArgumentException($"{TypeCache.GetShortName(endpointDefinitionType)} is not an endpoint definition", nameof(endpointDefinitionType));
 
@@ -75,25 +79,33 @@ public static class DependencyInjectionEndpointRegistrationExtensions
         where TDefinition : class, IEndpointDefinition<T>
         where T : class
     {
-        readonly IRegistration _registration;
+        readonly IRegistration? _registration;
+
+        public EndpointRegistrar()
+        {
+        }
 
         public EndpointRegistrar(IRegistration registration)
         {
-            _registration = registration;
+            _registration = registration ?? throw new ArgumentNullException(nameof(registration));
         }
 
         public IEndpointRegistration Register(IContainerRegistrar registrar)
         {
             registrar.AddEndpointDefinition<T, TDefinition>();
 
-            return registrar.GetOrAddRegistration<IEndpointRegistration>(typeof(T), _ => new EndpointRegistration<T>(_registration, registrar));
+            return registrar.GetOrAddRegistration<IEndpointRegistration>(typeof(T), _ => _registration == null
+                ? new EndpointRegistration<T>(registrar)
+                : new EndpointRegistration<T>(_registration, registrar));
         }
 
         public IEndpointRegistration Register(IContainerRegistrar registrar, IEndpointSettings<IEndpointDefinition<T>>? settings)
         {
             registrar.AddEndpointDefinition<T, TDefinition>(settings);
 
-            return registrar.GetOrAddRegistration<IEndpointRegistration>(typeof(T), _ => new EndpointRegistration<T>(_registration, registrar));
+            return registrar.GetOrAddRegistration<IEndpointRegistration>(typeof(T), _ => new EndpointRegistration<T>(
+                _registration ?? throw new InvalidOperationException("A component registration is required when endpoint settings are supplied."),
+                registrar));
         }
     }
 }

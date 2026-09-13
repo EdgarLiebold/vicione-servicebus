@@ -33,7 +33,7 @@ public sealed class PublishedMessage<TMessage> :
         ElementId = _context.MessageId;
 
         DateTimeOffset now = timeProvider.GetUtcNow();
-        StartTime = context.SentTime ?? now;
+        StartTime = context.SentTime is { } sentTime && sentTime <= now ? sentTime : now;
         ElapsedTime = now - StartTime;
     }
 

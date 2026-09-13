@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing.Internal;
@@ -9,8 +11,10 @@ namespace ViciOne.ServiceBus.Testing;
 /// <summary>Hosts one service-bus instance and records its send, publish, receive, and consume activity for tests.</summary>
 public abstract class BusTestHarness :
     AsyncTestHarness,
-    IBaseTestHarness
+    IBaseTestHarness,
+    IAsyncDisposable
 {
+    readonly SemaphoreSlim _lifecycleGate = new(1, 1);
     bool _busStarted;
     IBusControl? _busControl;
     ISendEndpoint? _busSendEndpoint;
@@ -19,6 +23,7 @@ public abstract class BusTestHarness :
     BusTestPublishObserver? _published;
     BusTestReceiveObserver? _received;
     BusTestSendObserver? _sent;
+    int _disposed;
 
     /// <summary>Initializes a harness that uses the system time provider.</summary>
     protected BusTestHarness()
@@ -167,15 +172,32 @@ public abstract class BusTestHarness :
     /// <summary>Starts the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public virtual async Task StartAsync(CancellationToken cancellationToken = default)
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        if (_busControl != null)
-            throw new InvalidOperationException("The bus test harness has already been started.");
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
         if (!cancellationToken.CanBeCanceled)
             cancellationToken = TestCancellationToken;
 
         cancellationToken.ThrowIfCancellationRequested();
+
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            await StartCoreAsync(cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    async Task StartCoreAsync(CancellationToken cancellationToken)
+    {
+        if (_busControl != null)
+            throw new InvalidOperationException("The bus test harness has already been started.");
+
         DisposeObservers();
 
         _received = new BusTestReceiveObserver(TestInactivityTimeout, TimeProvider);
@@ -243,10 +265,25 @@ public abstract class BusTestHarness :
     /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public virtual async Task StopAsync(CancellationToken cancellationToken = default)
+    public async Task StopAsync(CancellationToken cancellationToken = default)
     {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
         cancellationToken.ThrowIfCancellationRequested();
 
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            await StopCoreAsync(cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    async Task StopCoreAsync(CancellationToken cancellationToken)
+    {
         try
         {
             if (_busStarted && _busControl != null)
@@ -280,12 +317,52 @@ public abstract class BusTestHarness :
             : Task.CompletedTask;
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <summary>Synchronously stops the bus and releases the resources owned by this instance.</summary>
     public override void Dispose()
     {
-        DisposeObservers();
+        DisposeAsync().AsTask().GetAwaiter().GetResult();
+    }
 
-        base.Dispose();
+    /// <summary>Stops the bus and asynchronously releases the resources owned by this instance.</summary>
+    /// <returns>A task that completes after all cleanup attempts finish.</returns>
+    public async ValueTask DisposeAsync()
+    {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+            return;
+
+        var failures = new List<Exception>();
+        await _lifecycleGate.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+        try
+        {
+            try
+            {
+                await StopCoreAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                failures.Add(exception);
+            }
+
+            DisposeObservers();
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+
+        try
+        {
+            base.Dispose();
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
+
+        if (failures.Count == 1)
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures.Count > 1)
+            throw new AggregateException("One or more bus test-harness resources could not be released.", failures);
     }
 
     /// <summary>Gets a send endpoint for the specified address from the running bus.</summary>
@@ -299,17 +376,14 @@ public abstract class BusTestHarness :
         return BusControl.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Subscribes a message handler to the bus, which is disconnected after the message
-    /// is received.
-    /// </summary>
+    /// <summary>Waits for the first message of the specified type and then removes the temporary subscription.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>An awaitable task completed when the message is received.</returns>
-    public Task<ConsumeContext<T>> SubscribeHandlerAsync<T>(CancellationToken cancellationToken = default)
+    public Task<ConsumeContext<T>> WaitForMessageAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         ConnectHandle handler = Bus.ConnectHandler<T>(context =>
         {
@@ -323,19 +397,16 @@ public abstract class BusTestHarness :
         return source.Task;
     }
 
-    /// <summary>
-    /// Subscribes a message handler to the bus, which is disconnected after the message
-    /// is received.
-    /// </summary>
+    /// <summary>Waits for the first message accepted by a filter and then removes the temporary subscription.</summary>
     /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="filter">A filter that only completes the task if filter is true.</param>
+    /// <param name="filter">The predicate that selects the message context to return.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>An awaitable task completed when the message is received.</returns>
-    public Task<ConsumeContext<T>> SubscribeHandlerAsync<T>(Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
+    public Task<ConsumeContext<T>> WaitForMessageAsync<T>(Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(filter);
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         ConnectHandle handler = Bus.ConnectHandler<T>(context =>
         {
@@ -351,21 +422,22 @@ public abstract class BusTestHarness :
     }
 
     /// <summary>
-    /// Registers a handler on the receive endpoint that is cancelled when the test is canceled
+    /// Registers a handler on the receive endpoint that is canceled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="configurator">The endpoint configurator.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the handled outcome.</returns>
-    public Task<ConsumeContext<T>> HandledAsync<T>(IReceiveEndpointConfigurator configurator, CancellationToken cancellationToken = default)
+    public Task<ConsumeContext<T>> WaitForHandledMessageAsync<T>(IReceiveEndpointConfigurator configurator,
+        CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ConsumeContext<T>>(cancellationToken);
 
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         configurator.Handler<T>(context =>
         {
@@ -377,15 +449,17 @@ public abstract class BusTestHarness :
     }
 
     /// <summary>
-    /// Registers a handler on the receive endpoint that is cancelled when the test is canceled
+    /// Registers a handler on the receive endpoint that is canceled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="configurator">The endpoint configurator.</param>
-    /// <param name="filter">Filter the messages based on the handled consume context.</param>
+    /// <param name="filter">The predicate that selects the handled context to return.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the handled outcome.</returns>
-    public Task<ConsumeContext<T>> HandledAsync<T>(IReceiveEndpointConfigurator configurator, Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
+    public Task<ConsumeContext<T>> WaitForHandledMessageAsync<T>(IReceiveEndpointConfigurator configurator,
+        Func<ConsumeContext<T>, bool> filter,
+        CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -393,7 +467,7 @@ public abstract class BusTestHarness :
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ConsumeContext<T>>(cancellationToken);
 
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         configurator.Handler<T>(context =>
         {
@@ -407,7 +481,7 @@ public abstract class BusTestHarness :
     }
 
     /// <summary>
-    /// Registers a handler on the receive endpoint that is cancelled when the test is canceled
+    /// Registers a handler on the receive endpoint that is canceled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
@@ -415,7 +489,8 @@ public abstract class BusTestHarness :
     /// <param name="expectedCount">The expected number of messages.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the handled outcome.</returns>
-    public Task<ConsumeContext<T>> HandledAsync<T>(IReceiveEndpointConfigurator configurator, int expectedCount, CancellationToken cancellationToken = default)
+    public Task<ConsumeContext<T>> WaitForHandledMessageAsync<T>(IReceiveEndpointConfigurator configurator, int expectedCount,
+        CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -423,7 +498,7 @@ public abstract class BusTestHarness :
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ConsumeContext<T>>(cancellationToken);
 
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         var count = 0;
         configurator.Handler<T>(context =>
@@ -442,12 +517,13 @@ public abstract class BusTestHarness :
     /// Registers a handler on the receive endpoint that is completed after the specified handler is
     /// executed and canceled if the test is canceled.
     /// </summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="handler">The handler.</param>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="configurator">The receive endpoint configurator.</param>
+    /// <param name="handler">The handler to execute before the wait completes.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the handler outcome.</returns>
-    public Task<ConsumeContext<T>> HandlerAsync<T>(IReceiveEndpointConfigurator configurator, MessageHandler<T> handler, CancellationToken cancellationToken = default)
+    public Task<ConsumeContext<T>> WaitForHandlerExecutionAsync<T>(IReceiveEndpointConfigurator configurator, MessageHandler<T> handler,
+        CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -455,33 +531,42 @@ public abstract class BusTestHarness :
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ConsumeContext<T>>(cancellationToken);
 
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         configurator.Handler<T>(async context =>
         {
-            await handler(context).ConfigureAwait(false);
-            source.TrySetResult(context);
+            try
+            {
+                await handler(context).ConfigureAwait(false);
+                source.TrySetResult(context);
+            }
+            catch (Exception exception)
+            {
+                source.TrySetException(exception);
+                throw;
+            }
         });
 
         return source.Task;
     }
 
     /// <summary>
-    /// Registers a consumer on the receive endpoint that is cancelled when the test is canceled
+    /// Registers a consumer on the receive endpoint that is canceled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="configurator">The endpoint configurator.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the handled by consumer outcome.</returns>
-    public Task<ConsumeContext<T>> HandledByConsumerAsync<T>(IReceiveEndpointConfigurator configurator, CancellationToken cancellationToken = default)
+    /// <returns>A task that produces the consumed message context.</returns>
+    public Task<ConsumeContext<T>> WaitForConsumerAsync<T>(IReceiveEndpointConfigurator configurator,
+        CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ConsumeContext<T>>(cancellationToken);
 
-        TaskCompletionSource<ConsumeContext<T>> source = CreateTask<ConsumeContext<T>>(cancellationToken);
+        TaskCompletionSource<ConsumeContext<T>> source = CreateTaskCompletionSource<ConsumeContext<T>>(cancellationToken);
 
         configurator.Consumer(() => new Consumer<T>(source));
 

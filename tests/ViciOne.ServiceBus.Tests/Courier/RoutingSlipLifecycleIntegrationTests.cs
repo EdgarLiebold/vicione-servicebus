@@ -17,10 +17,10 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         var observed = new TaskCompletionSource<DateTimeOffset>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-completion-delay");
         harness.InMemoryBusConfiguring += bus => bus.ConfigureDelayedMessageScheduler();
-        ExecuteActivityTestHarness<DelayedCompletionCourierActivity, DelayedCourierArguments> delayed = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<DelayedCompletionCourierActivity, DelayedCourierArguments> delayed = harness.AddExecuteActivity<
             DelayedCompletionCourierActivity,
             DelayedCourierArguments>();
-        ExecuteActivityTestHarness<ObservingExecuteCourierActivity, CourierArguments> next = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<ObservingExecuteCourierActivity, CourierArguments> next = harness.AddExecuteActivity<
             ObservingExecuteCourierActivity,
             CourierArguments>(_ => new ObservingExecuteCourierActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
@@ -81,7 +81,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-single");
-        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> activity = harness.Activity<
+        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> activity = harness.AddActivity<
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(), _ => new FirstCourierActivity());
@@ -128,11 +128,11 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-two");
-        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.Activity<
+        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> first = harness.AddActivity<
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(), _ => new FirstCourierActivity());
-        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.Activity<
+        ActivityTestHarness<SecondCourierActivity, CourierArguments, CourierLog> second = harness.AddActivity<
             SecondCourierActivity,
             CourierArguments,
             CourierLog>(_ => new SecondCourierActivity(), _ => new SecondCourierActivity());

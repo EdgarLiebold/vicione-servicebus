@@ -10,7 +10,7 @@ public static class SagaTestHarnessExtensions
     /// <param name="harness">The harness that hosts the saga endpoint.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>The saga harness.</returns>
-    public static SagaTestHarness<TSaga> Saga<TSaga>(this BusTestHarness harness, string? queueName = null)
+    public static SagaTestHarness<TSaga> AddSaga<TSaga>(this BusTestHarness harness, string? queueName = null)
         where TSaga : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(harness);
@@ -25,7 +25,7 @@ public static class SagaTestHarnessExtensions
     /// <param name="repository">The saga repository to decorate.</param>
     /// <param name="queueName">The dedicated endpoint queue, or <see langword="null"/> for the harness endpoint.</param>
     /// <returns>The saga harness.</returns>
-    public static SagaTestHarness<TSaga> Saga<TSaga>(this BusTestHarness harness, ISagaRepository<TSaga> repository,
+    public static SagaTestHarness<TSaga> AddSaga<TSaga>(this BusTestHarness harness, ISagaRepository<TSaga> repository,
         string? queueName = null)
         where TSaga : class, ISaga
     {

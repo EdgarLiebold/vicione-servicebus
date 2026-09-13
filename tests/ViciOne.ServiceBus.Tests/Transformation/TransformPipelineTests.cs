@@ -138,7 +138,7 @@ public sealed class TransformPipelineTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CreateHarness(timeout, $"bus-{configureSend}-{dispatchSend}");
-        HandlerTestHarness<TransformMessage> handler = harness.Handler<TransformMessage>();
+        HandlerTestHarness<TransformMessage> handler = harness.AddHandler<TransformMessage>();
         harness.InMemoryBusConfiguring += bus =>
         {
             void Configure(ITransformConfigurator<TransformMessage> transform)

@@ -25,11 +25,11 @@ public sealed class InMemoryTransportIsolationTests
         Assert.Equal(new Uri($"loopback://localhost/{internalVirtualHost}/"), internalHarness.BaseAddress);
         Assert.Equal(new Uri($"loopback://localhost/{externalVirtualHost}/"), externalHarness.BaseAddress);
         Assert.NotEqual(internalHarness.BaseAddress, externalHarness.BaseAddress);
-        ConsumerTestHarness<RelayConsumer> internalRelay = internalHarness.Consumer(
+        ConsumerTestHarness<RelayConsumer> internalRelay = internalHarness.AddConsumer(
             () => new RelayConsumer(externalHarness.Bus, internalRelayDecisions));
-        ConsumerTestHarness<RelayConsumer> externalRelay = externalHarness.Consumer(
+        ConsumerTestHarness<RelayConsumer> externalRelay = externalHarness.AddConsumer(
             () => new RelayConsumer(internalHarness.Bus, externalRelayDecisions));
-        ConsumerTestHarness<RealConsumer> realConsumer = internalHarness.Consumer(
+        ConsumerTestHarness<RealConsumer> realConsumer = internalHarness.AddConsumer(
             () => new RealConsumer(realDeliveries));
         bool internalStarted = false;
         bool externalStarted = false;

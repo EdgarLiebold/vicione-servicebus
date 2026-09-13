@@ -19,8 +19,8 @@ public sealed class ConsumeObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var timeProvider = new FakeTimeProvider(ObservationTime);
         using var harness = CreateHarness(timeout, timeProvider);
-        TestConsumeMessageObserver<ObservedMessage> typed = harness.GetConsumeObserver<ObservedMessage>();
-        TestConsumeObserver untyped = harness.GetConsumeObserver();
+        TestConsumeMessageObserver<ObservedMessage> typed = harness.CreateConsumeObserver<ObservedMessage>();
+        TestConsumeObserver untyped = harness.CreateConsumeObserver();
         harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ObservedMessage>(_ => Task.CompletedTask);
 
@@ -67,8 +67,8 @@ public sealed class ConsumeObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("expected observer failure");
         using var harness = CreateHarness(timeout, new FakeTimeProvider(ObservationTime));
-        TestConsumeMessageObserver<FailingObservedMessage> typed = harness.GetConsumeObserver<FailingObservedMessage>();
-        TestConsumeObserver untyped = harness.GetConsumeObserver();
+        TestConsumeMessageObserver<FailingObservedMessage> typed = harness.CreateConsumeObserver<FailingObservedMessage>();
+        TestConsumeObserver untyped = harness.CreateConsumeObserver();
         harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<FailingObservedMessage>(_ => Task.FromException(expected));
 
@@ -107,7 +107,7 @@ public sealed class ConsumeObserverTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, new FakeTimeProvider(ObservationTime));
-        TestConsumeMessageObserver<ConsumerObservedMessage> observer = harness.GetConsumeObserver<ConsumerObservedMessage>();
+        TestConsumeMessageObserver<ConsumerObservedMessage> observer = harness.CreateConsumeObserver<ConsumerObservedMessage>();
         var consumed = new TaskCompletionSource<ConsumerObservedMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
         harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Consumer(() => new ObservedConsumer(consumed));
@@ -146,8 +146,8 @@ public sealed class ConsumeObserverTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        TestConsumeMessageObserver<ObservedRequest> typed = harness.GetConsumeObserver<ObservedRequest>();
-        TestConsumeObserver untyped = harness.GetConsumeObserver();
+        TestConsumeMessageObserver<ObservedRequest> typed = harness.CreateConsumeObserver<ObservedRequest>();
+        TestConsumeObserver untyped = harness.CreateConsumeObserver();
         harness.MediatorConfiguring += configurator => configurator.Handler<ObservedRequest>(context =>
             context.RespondAsync(new ObservedResponse(context.Message.CorrelationId, $"response:{context.Message.Value}")));
 
@@ -177,6 +177,17 @@ public sealed class ConsumeObserverTests
         Assert.Equal(request.Context.RequestId, observedResponse.Context.RequestId);
         Assert.Null(request.Exception);
         Assert.Null(observedResponse.Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUME-OBSERVER", "system-time-construction-and-completion")]
+    public async Task SystemTimeObserver_CompletesAnEmptyQueryWhenItsOwnerIsAlreadyInactiveAsync()
+    {
+        using var inactive = new CancellationTokenSource();
+        inactive.Cancel();
+        var observer = new TestConsumeObserver(OperationTimeout(), inactive.Token);
+
+        Assert.False(await observer.Messages.AnyAsync<ObservedMessage>(TestContext.Current.CancellationToken));
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()

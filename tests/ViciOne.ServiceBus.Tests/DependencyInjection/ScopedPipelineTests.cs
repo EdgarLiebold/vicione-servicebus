@@ -39,7 +39,7 @@ public sealed class ScopedPipelineTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            IRequestClient<ScopedRequest> client = harness.GetRequestClient<ScopedRequest>();
+            IRequestClient<ScopedRequest> client = harness.CreateRequestClient<ScopedRequest>();
 
             Response<ScopedResponse> response = await client.GetResponseAsync<ScopedResponse>(
                 new ScopedRequest(correlationId),
@@ -87,7 +87,7 @@ public sealed class ScopedPipelineTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            IRequestClient<FilteredRequest> client = harness.GetRequestClient<FilteredRequest>();
+            IRequestClient<FilteredRequest> client = harness.CreateRequestClient<FilteredRequest>();
 
             Response<FilteredResponse> response = await client.GetResponseAsync<FilteredResponse>(
                 new FilteredRequest(correlationId),

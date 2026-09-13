@@ -15,7 +15,7 @@ public sealed class DynamicContractIntegrationTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<ProxyContract> handler = harness.Handler<ProxyContract>();
+        HandlerTestHarness<ProxyContract> handler = harness.AddHandler<ProxyContract>();
         Guid correlationId = Guid.Parse("beec3a3c-1df8-4d44-aade-e787133d64a8");
         var address = new Uri("https://example.test/proxy/42");
 
@@ -87,7 +87,7 @@ public sealed class DynamicContractIntegrationTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HandlerTestHarness<ExecuteSql> command = harness.Handler<ExecuteSql>(context =>
+        HandlerTestHarness<ExecuteSql> command = harness.AddHandler<ExecuteSql>(context =>
             context.Advanced().SendAsync<SecureCommand<ExecuteSql>>(
                 harness.InputQueueAddress,
                 new
@@ -95,7 +95,7 @@ public sealed class DynamicContractIntegrationTests
                     Command = context.Message,
                     Credentials = new { Username = "service", Password = "not-a-real-secret" },
                 }));
-        HandlerTestHarness<SecureCommand<ExecuteSql>> secure = harness.Handler<SecureCommand<ExecuteSql>>();
+        HandlerTestHarness<SecureCommand<ExecuteSql>> secure = harness.AddHandler<SecureCommand<ExecuteSql>>();
 
         await harness.StartAsync(cancellationToken);
         try

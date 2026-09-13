@@ -21,7 +21,7 @@ public sealed class RoutingSlipArgumentIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observed = new TaskCompletionSource<ResolvedArguments>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-arguments");
-        ExecuteActivityTestHarness<ResolveArgumentsActivity, ResolveArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<ResolveArgumentsActivity, ResolveArguments> activity = harness.AddExecuteActivity<
             ResolveArgumentsActivity,
             ResolveArguments>(_ => new ResolveArgumentsActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);

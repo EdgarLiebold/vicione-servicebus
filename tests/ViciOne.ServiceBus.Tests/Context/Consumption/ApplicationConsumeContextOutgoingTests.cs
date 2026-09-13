@@ -30,7 +30,7 @@ public sealed class ApplicationConsumeContextOutgoingTests
         EnvelopeExpectation publishExpected = EnvelopeExpectation.Create(2, includeRequestId: true);
         EnvelopeExpectation responseExpected = EnvelopeExpectation.Create(3, includeRequestId: false);
         harness.InMemoryBusConfiguring += bus => bus.Route<RoutedSent>(harness.InputQueueAddress);
-        harness.Handler<ScopedRequest>(async context =>
+        harness.AddHandler<ScopedRequest>(async context =>
         {
             Assert.Same(context.Outgoing, context.Outgoing);
             await context.Outgoing.SendAsync(new RoutedSent(context.Message.Value), context.CancellationToken);
@@ -53,22 +53,22 @@ public sealed class ApplicationConsumeContextOutgoingTests
                 new ScopedResponse(context.Message.Value),
                 responseExpected.ToSendOptions());
         });
-        harness.Handler<ScopedSent>(context =>
+        harness.AddHandler<ScopedSent>(context =>
         {
             sentSeen.TrySetResult(context);
             return Task.CompletedTask;
         });
-        harness.Handler<ScopedPublished>(context =>
+        harness.AddHandler<ScopedPublished>(context =>
         {
             publishedSeen.TrySetResult(context);
             return Task.CompletedTask;
         });
-        harness.Handler<RoutedSent>(context =>
+        harness.AddHandler<RoutedSent>(context =>
         {
             routedSeen.TrySetResult(context);
             return Task.CompletedTask;
         });
-        harness.Handler<DefaultPublished>(context =>
+        harness.AddHandler<DefaultPublished>(context =>
         {
             defaultPublishedSeen.TrySetResult(context);
             return Task.CompletedTask;

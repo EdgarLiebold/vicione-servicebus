@@ -16,10 +16,10 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var executionOrder = new ConcurrentQueue<string>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-revision-preserve");
-        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> recording = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> recording = harness.AddExecuteActivity<
             RecordingRevisionActivity,
             RevisionArguments>(_ => new RecordingRevisionActivity(executionOrder));
-        ExecuteActivityTestHarness<RevisingActivity, RevisionArguments> revising = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RevisingActivity, RevisionArguments> revising = harness.AddExecuteActivity<
             RevisingActivity,
             RevisionArguments>(_ => new RevisingActivity(() => recording.ExecuteAddress, preserveSource: true));
         using var revised = new CourierMessageRecorder<RoutingSlipRevised>(1);
@@ -66,10 +66,10 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var executionOrder = new ConcurrentQueue<string>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-revision-discard");
-        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> recording = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> recording = harness.AddExecuteActivity<
             RecordingRevisionActivity,
             RevisionArguments>(_ => new RecordingRevisionActivity(executionOrder));
-        ExecuteActivityTestHarness<RevisingActivity, RevisionArguments> revising = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RevisingActivity, RevisionArguments> revising = harness.AddExecuteActivity<
             RevisingActivity,
             RevisionArguments>(_ => new RevisingActivity(() => recording.ExecuteAddress, preserveSource: false));
         using var revised = new CourierMessageRecorder<RoutingSlipRevised>(1);
@@ -118,10 +118,10 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var executionOrder = new ConcurrentQueue<string>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-termination");
-        ExecuteActivityTestHarness<TerminatingActivity, RevisionArguments> terminating = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<TerminatingActivity, RevisionArguments> terminating = harness.AddExecuteActivity<
             TerminatingActivity,
             RevisionArguments>();
-        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> remaining = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> remaining = harness.AddExecuteActivity<
             RecordingRevisionActivity,
             RevisionArguments>(_ => new RecordingRevisionActivity(executionOrder));
         using var terminated = new CourierMessageRecorder<RoutingSlipTerminated>(1);
@@ -171,10 +171,10 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var executionOrder = new ConcurrentQueue<string>();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-revision-subscription");
-        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> recording = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<RecordingRevisionActivity, RevisionArguments> recording = harness.AddExecuteActivity<
             RecordingRevisionActivity,
             RevisionArguments>(_ => new RecordingRevisionActivity(executionOrder));
-        ExecuteActivityTestHarness<SubscriptionRevisingActivity, RevisionArguments> revising = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<SubscriptionRevisingActivity, RevisionArguments> revising = harness.AddExecuteActivity<
             SubscriptionRevisingActivity,
             RevisionArguments>(_ => new SubscriptionRevisingActivity(
                 () => recording.ExecuteAddress,
@@ -222,7 +222,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-subscription-none");
-        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> activity = harness.Activity<
+        ActivityTestHarness<FirstCourierActivity, CourierArguments, CourierLog> activity = harness.AddActivity<
             FirstCourierActivity,
             CourierArguments,
             CourierLog>(_ => new FirstCourierActivity(), _ => new FirstCourierActivity());
@@ -273,7 +273,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             useRawJson ? "courier-subscription-raw" : "courier-subscription-envelope");
         if (useRawJson)
             harness.InMemoryBusConfiguring += configurator => configurator.UseRawJsonSerializer();
-        ExecuteActivityTestHarness<CustomEventActivity, CustomEventArguments> activity = harness.ExecuteActivity<
+        ExecuteActivityTestHarness<CustomEventActivity, CustomEventArguments> activity = harness.AddExecuteActivity<
             CustomEventActivity,
             CustomEventArguments>();
         using var customCompleted = new CourierMessageRecorder<RegistrationCompleted>(1);

@@ -18,7 +18,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
         using var harness = CreateHarness("nested-complete", timeout, failRequest: false);
         var machine = new CreateLinkMachine(new Uri(harness.BaseAddress, "short-link-service"));
         ISagaStateMachineTestHarness<CreateLinkMachine, CreateLinkState> sagaHarness =
-            harness.StateMachineSaga<CreateLinkState, CreateLinkMachine>(machine);
+            harness.AddSagaStateMachine<CreateLinkMachine, CreateLinkState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -57,7 +57,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
         Uri link = new("https://www.google.com/");
         using var harness = CreateHarness("nested-fault", timeout, failRequest: true);
         var machine = new CreateLinkMachine(new Uri(harness.BaseAddress, "short-link-service"));
-        harness.StateMachineSaga<CreateLinkState, CreateLinkMachine>(machine);
+        harness.AddSagaStateMachine<CreateLinkMachine, CreateLinkState>(machine);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try

@@ -53,87 +53,9 @@ internal sealed class TestHarnessRegistrationConfigurator :
     }
 
     /// <inheritdoc />
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where T : class, ISaga
-    {
-        return AddSaga(null, configure);
-    }
-
-    /// <inheritdoc />
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Type? sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where T : class, ISaga
-    {
-        ISagaRegistrationConfigurator<T> registrationConfigurator = _configurator.AddSaga(sagaDefinitionType, configure);
-
-        _configurator.Services.AddSagaContainerTestHarness<T>();
-
-        return registrationConfigurator;
-    }
-
-    /// <inheritdoc />
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where TStateMachine : class, SagaStateMachine<T>
-        where T : class, SagaStateMachineInstance
-    {
-        return AddSagaStateMachine<TStateMachine, T>(null, configure);
-    }
-
-    /// <inheritdoc />
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type? sagaDefinitionType,
-        Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where TStateMachine : class, SagaStateMachine<T>
-        where T : class, SagaStateMachineInstance
-    {
-        ISagaRegistrationConfigurator<T> registrationConfigurator = _configurator.AddSagaStateMachine<TStateMachine, T>(sagaDefinitionType, configure);
-
-        _configurator.Services.AddSagaStateMachineContainerTestHarness<TStateMachine, T>();
-
-        return registrationConfigurator;
-    }
-
-    /// <inheritdoc />
-    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        return _configurator.AddExecuteActivity(configure);
-    }
-
-    /// <inheritdoc />
-    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type? executeActivityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        return _configurator.AddExecuteActivity(executeActivityDefinitionType, configure);
-    }
-
-    /// <inheritdoc />
-    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
-        where TActivity : class, IActivity<TArguments, TLog>
-        where TArguments : class
-        where TLog : class
-    {
-        return _configurator.AddActivity(configureExecute, configureCompensate);
-    }
-
-    /// <inheritdoc />
-    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type? activityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
-        where TActivity : class, IActivity<TArguments, TLog>
-        where TArguments : class
-        where TLog : class
-    {
-        return _configurator.AddActivity(activityDefinitionType, configureExecute, configureCompensate);
-    }
-
-    /// <inheritdoc />
     public void AddEndpoint(Type endpointDefinition)
     {
+        ArgumentNullException.ThrowIfNull(endpointDefinition);
         _configurator.AddEndpoint(endpointDefinition);
     }
 
@@ -188,29 +110,6 @@ internal sealed class TestHarnessRegistrationConfigurator :
     public void SetEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter)
     {
         _configurator.SetEndpointNameFormatter(endpointNameFormatter);
-    }
-
-    /// <inheritdoc />
-    public ISagaRegistrationConfigurator<T> AddSagaRepository<T>()
-        where T : class, ISaga
-    {
-        return _configurator.AddSagaRepository<T>();
-    }
-
-    /// <inheritdoc />
-    public void SetSagaRepositoryProvider(ISagaRepositoryRegistrationProvider provider)
-    {
-        if (provider == null)
-            throw new ArgumentNullException(nameof(provider));
-
-        _configurator.SetSagaRepositoryProvider(provider);
-    }
-
-    /// <inheritdoc />
-    public IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type? futureDefinitionType = null)
-        where TFuture : class, SagaStateMachine<FutureState>
-    {
-        return _configurator.AddFuture<TFuture>(futureDefinitionType);
     }
 
     /// <inheritdoc />
@@ -278,7 +177,6 @@ internal sealed class TestHarnessRegistrationConfigurator :
     {
         _advancedConfigurator.AddRider(configure);
     }
-
 
     sealed class ConsumerKindTestHarnessContext :
         IConsumerKindTestHarnessContext

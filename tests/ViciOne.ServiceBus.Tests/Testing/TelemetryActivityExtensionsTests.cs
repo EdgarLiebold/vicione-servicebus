@@ -24,7 +24,7 @@ public sealed class TelemetryActivityExtensionsTests
             TestTimeout = operationTimeout,
             TestInactivityTimeout = operationTimeout,
         };
-        harness.Consumer<MonitoredConsumer>();
+        harness.AddConsumer<MonitoredConsumer>();
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
@@ -168,7 +168,7 @@ public sealed class TelemetryActivityExtensionsTests
             TestTimeout = operationTimeout,
             TestInactivityTimeout = operationTimeout,
         };
-        ConsumerTestHarness<MonitoredConsumer> consumer = harness.Consumer<MonitoredConsumer>();
+        ConsumerTestHarness<MonitoredConsumer> consumer = harness.AddConsumer<MonitoredConsumer>();
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
@@ -213,7 +213,7 @@ public sealed class TelemetryActivityExtensionsTests
             TestTimeout = operationTimeout,
             TestInactivityTimeout = operationTimeout,
         };
-        harness.Consumer<MonitoredRequestConsumer>();
+        harness.AddConsumer<MonitoredRequestConsumer>();
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
@@ -251,6 +251,100 @@ public sealed class TelemetryActivityExtensionsTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "multiple-response-overloads")]
+    public async Task RequestOperation_PreservesTheSelectedBranchForTwoAndThreeResponseOverloadsAsync()
+    {
+        TimeSpan operationTimeout = OperationTimeout();
+        TimeSpan idleTimeout = TimeSpan.FromMilliseconds(10);
+        using var harness = new InMemoryTestHarness($"telemetry-multiple-response-{NewId.NextGuid():N}")
+        {
+            TestTimeout = operationTimeout,
+            TestInactivityTimeout = operationTimeout,
+        };
+        harness.AddConsumer<MultipleResponseConsumer>();
+
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            IRequestClient<MultipleResponseRequest> client = harness.CreateRequestClient<MultipleResponseRequest>();
+            Response<FirstMultipleResponse, SecondMultipleResponse> twoResponses = await client.ExecuteAndWaitForIdleAsync(
+                requestClient => requestClient.Advanced().GetResponseAsync<FirstMultipleResponse, SecondMultipleResponse>(
+                    new MultipleResponseRequest(2),
+                    cancellationToken: TestContext.Current.CancellationToken),
+                operationTimeout,
+                idleTimeout,
+                TestContext.Current.CancellationToken);
+            Response<FirstMultipleResponse, SecondMultipleResponse, ThirdMultipleResponse> threeResponses =
+                await client.ExecuteAndWaitForIdleAsync(
+                    requestClient => requestClient.Advanced()
+                        .GetResponseAsync<FirstMultipleResponse, SecondMultipleResponse, ThirdMultipleResponse>(
+                            new MultipleResponseRequest(3),
+                            cancellationToken: TestContext.Current.CancellationToken),
+                    operationTimeout,
+                    idleTimeout,
+                    TestContext.Current.CancellationToken);
+
+            Assert.True(twoResponses.Is(out Response<SecondMultipleResponse>? second));
+            Assert.Equal(2, second.Message.Value);
+            Assert.True(threeResponses.Is(out Response<ThirdMultipleResponse>? third));
+            Assert.Equal(3, third.Message.Value);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "system-time-overloads")]
+    public async Task MessagingOperations_SystemTimeOverloadsCompletePublishSendAndSingleResponseFlowsAsync()
+    {
+        TimeSpan operationTimeout = OperationTimeout();
+        TimeSpan idleTimeout = TimeSpan.FromMilliseconds(10);
+        Guid correlationId = NewId.NextGuid();
+        using var harness = new InMemoryTestHarness($"telemetry-system-time-{NewId.NextGuid():N}")
+        {
+            TestTimeout = operationTimeout,
+            TestInactivityTimeout = operationTimeout,
+        };
+        harness.AddConsumer<MonitoredConsumer>();
+        harness.AddConsumer<MonitoredRequestConsumer>();
+
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            await harness.Bus.ExecuteAndWaitForIdleAsync(
+                endpoint => endpoint.PublishAsync(new MonitoredMessage(correlationId), TestContext.Current.CancellationToken),
+                operationTimeout,
+                idleTimeout,
+                TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.ExecuteAndWaitForIdleAsync(
+                endpoint => endpoint.SendAsync(new MonitoredMessage(correlationId), TestContext.Current.CancellationToken),
+                operationTimeout,
+                idleTimeout,
+                TestContext.Current.CancellationToken);
+
+            IRequestClient<MonitoredRequest> client = harness.CreateRequestClient<MonitoredRequest>();
+            Response<MonitoredResponse> response = await client.ExecuteAndWaitForIdleAsync(
+                requestClient => requestClient.GetResponseAsync<MonitoredResponse>(
+                    new MonitoredRequest(correlationId),
+                    TestContext.Current.CancellationToken),
+                operationTimeout,
+                idleTimeout,
+                TestContext.Current.CancellationToken);
+
+            Assert.Equal(correlationId, response.Message.CorrelationId);
+            Assert.True(await harness.Published.AnyAsync<MonitoredMessage>(TestContext.Current.CancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<MonitoredMessage>(TestContext.Current.CancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<MonitoredRequest>(TestContext.Current.CancellationToken));
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -262,6 +356,14 @@ public sealed class TelemetryActivityExtensionsTests
     private sealed record MonitoredResponse(Guid CorrelationId);
 
     private sealed record MonitoredRequestHandled(Guid CorrelationId);
+
+    private sealed record MultipleResponseRequest(int ResponseIndex);
+
+    private sealed record FirstMultipleResponse(int Value);
+
+    private sealed record SecondMultipleResponse(int Value);
+
+    private sealed record ThirdMultipleResponse(int Value);
 
     private sealed class MonitoredConsumer : IConsumer<MonitoredMessage>
     {
@@ -277,6 +379,16 @@ public sealed class TelemetryActivityExtensionsTests
                 context.CancellationToken);
             await context.RespondAsync(new MonitoredResponse(context.Message.CorrelationId));
         }
+    }
+
+    private sealed class MultipleResponseConsumer : IConsumer<MultipleResponseRequest>
+    {
+        public Task ConsumeAsync(ConsumeContext<MultipleResponseRequest> context) => context.Message.ResponseIndex switch
+        {
+            2 => context.RespondAsync(new SecondMultipleResponse(2)),
+            3 => context.RespondAsync(new ThirdMultipleResponse(3)),
+            _ => context.RespondAsync(new FirstMultipleResponse(1)),
+        };
     }
 
     private sealed class ReceiveCompletionObserver(ObservableTimeProvider timeProvider) : IReceiveObserver

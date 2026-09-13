@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Testing;
@@ -23,11 +25,11 @@ public sealed class DiagnosticOutputTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.Consumer(() => new FlowAConsumer());
-        harness.Consumer(() => new FlowBConsumer(harness.InputQueueAddress));
-        harness.Consumer(() => new FlowCConsumer());
-        harness.Consumer(() => new FlowDConsumer());
-        harness.Consumer(() => new FlowEConsumer());
+        harness.AddConsumer(() => new FlowAConsumer());
+        harness.AddConsumer(() => new FlowBConsumer(harness.InputQueueAddress));
+        harness.AddConsumer(() => new FlowCConsumer());
+        harness.AddConsumer(() => new FlowDConsumer());
+        harness.AddConsumer(() => new FlowEConsumer());
 
         await harness.StartAsync(cancellationToken);
         try
@@ -66,6 +68,13 @@ public sealed class DiagnosticOutputTests
             Assert.Equal(ExpectedFlowDCount, Rows(lines, "Consume FlowD"));
             Assert.All(lines.Where(line => line.Contains("Consume ", StringComparison.Ordinal)),
                 line => Assert.Contains(harness.InputQueueName, line, StringComparison.Ordinal));
+
+            using var namespacedWriter = new StringWriter();
+            await harness.OutputTimelineAsync(
+                namespacedWriter,
+                options => options.RenderImmediately().IncludeMessageNamespace(),
+                cancellationToken: TestContext.Current.CancellationToken);
+            Assert.Contains("ViciOne.ServiceBus.Tests.Testing", namespacedWriter.ToString(), StringComparison.Ordinal);
         }
         finally
         {
@@ -110,6 +119,50 @@ public sealed class DiagnosticOutputTests
 
         Assert.Equal("writer", listener.ParamName);
         Assert.Equal("textWriter", timeline.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "cyclic-parent-metadata")]
+    public async Task Timeline_RendersEachProducedMessageOnceWhenParentMetadataContainsACycleAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        Guid conversationId = NewId.NextGuid();
+        Guid firstId = NewId.NextGuid();
+        Guid secondId = NewId.NextGuid();
+        using var observationsCompleted = new CancellationTokenSource();
+        var sent = new SentMessageList(timeout, observationsCompleted.Token);
+        sent.Add(CreateCyclicContext(new CyclicTimelineMessage("first"), firstId, secondId, conversationId));
+        sent.Add(CreateCyclicContext(new CyclicTimelineMessage("second"), secondId, firstId, conversationId));
+        observationsCompleted.Cancel();
+        var harness = new TimelineHarness(sent, timeout, observationsCompleted.Token);
+        using var writer = new StringWriter();
+        using var cancellation = new CancellationTokenSource(timeout);
+
+        Task rendering = Task.Run(
+            () => harness.OutputTimelineAsync(writer, cancellationToken: cancellation.Token),
+            CancellationToken.None);
+        await rendering.WaitAsync(timeout, TestContext.Current.CancellationToken);
+
+        string[] lines = writer.ToString().Split('\n');
+        Assert.Equal(2, lines.Count(line => line.Contains("Send CyclicTimelineMessage", StringComparison.Ordinal)));
+    }
+
+    private static MessageSendContext<CyclicTimelineMessage> CreateCyclicContext(
+        CyclicTimelineMessage message,
+        Guid messageId,
+        Guid parentMessageId,
+        Guid conversationId)
+    {
+        var context = new MessageSendContext<CyclicTimelineMessage>(message)
+        {
+            MessageId = messageId,
+            ConversationId = conversationId,
+            DestinationAddress = new Uri("loopback://localhost/timeline"),
+        };
+        ConsumeContext parent = DispatchProxy.Create<ConsumeContext, ParentContextProxy>();
+        ((ParentContextProxy)(object)parent).MessageId = parentMessageId;
+        context.GetOrAddPayload(() => parent);
+        return context;
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -166,4 +219,46 @@ public sealed class DiagnosticOutputTests
     private sealed record FlowD(Guid CorrelationId) : CorrelatedBy<Guid>;
 
     private sealed record FlowE(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    private sealed record CyclicTimelineMessage(string Value);
+
+    private sealed class TimelineHarness(ISentMessageList sent, TimeSpan timeout, CancellationToken observationsCompleted) : IBaseTestHarness
+    {
+        public TimeSpan TestTimeout { get; set; } = timeout;
+        public TimeSpan TestInactivityTimeout { get; set; } = timeout;
+        public TimeProvider TimeProvider => TimeProvider.System;
+        public TestContextSaveMode ContextSaveMode => TestContextSaveMode.All;
+        public int MaximumSavedContexts => int.MaxValue;
+        public CancellationToken CancellationToken => CancellationToken.None;
+        public CancellationToken InactivityToken => observationsCompleted;
+        public Task InactivityTask => Task.CompletedTask;
+        public IConsumedMessageList Consumed { get; } = new ConsumedMessageList(timeout, observationsCompleted);
+        public IPublishedMessageList Published { get; } = new PublishedMessageList(timeout, observationsCompleted);
+        public ISentMessageList Sent { get; } = sent;
+
+        public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => throw new NotSupportedException();
+
+        public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => throw new NotSupportedException();
+
+        public ConnectHandle ConnectSendObserver(ISendObserver observer) => throw new NotSupportedException();
+
+        public void Cancel() => throw new NotSupportedException();
+
+        public void ForceInactive()
+        {
+        }
+    }
+
+    private class ParentContextProxy : DispatchProxy
+    {
+        public Guid MessageId { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            return targetMethod.Name == "get_MessageId"
+                ? MessageId
+                : throw new NotSupportedException(targetMethod.Name);
+        }
+    }
 }

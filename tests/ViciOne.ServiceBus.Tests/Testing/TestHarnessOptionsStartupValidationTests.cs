@@ -41,7 +41,12 @@ public sealed class TestHarnessOptionsStartupValidationTests
     {
         using ServiceProvider provider = Provider(null);
 
-        provider.GetRequiredService<IStartupValidator>().Validate();
+        Exception? failure = Record.Exception(() =>
+            provider.GetRequiredService<IStartupValidator>().Validate());
+
+        Assert.Null(failure);
+        Assert.True(Enum.IsDefined(provider.GetRequiredService<IOptions<TestHarnessOptions>>().Value.ContextSaveMode));
+        Assert.True(Enum.IsDefined(provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>().Value.MinimumLevel));
     }
 
     static ServiceProvider Provider(InvalidOption? invalid)
