@@ -76,6 +76,63 @@ public sealed class AnalyzerInstanceStateTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ANALYZER-PUBLIC-SURFACE", "diagnostic-analyzers-only")]
+    public void ProductAnalyzerAssembly_ExportsOnlyTheDiagnosticAnalyzers()
+    {
+        var exportedTypes = typeof(global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer).Assembly
+            .GetExportedTypes()
+            .Select(type => type.Name)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(
+            [
+                nameof(AsyncMethodAnalyzer),
+                nameof(BlockingConsumerCallAnalyzer),
+                nameof(CancellationTokenOverloadMethodAnalyzer),
+                nameof(ConsumerConcurrencyDeclarationAnalyzer),
+                nameof(ConsumerEndpointQosAnalyzer),
+                nameof(ExcludedTopologyConsumerAnalyzer),
+                nameof(LargeInlinePayloadAnalyzer),
+                nameof(MessageContractAnalyzer),
+            ],
+            exportedTypes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ANALYZER-PUBLIC-SURFACE", "null-initialize-guard")]
+    public void EveryAnalyzer_RejectsANullAnalysisContext()
+    {
+        foreach (var analyzer in AnalyzerTypes().Select(type => (DiagnosticAnalyzer)Activator.CreateInstance(type)!))
+            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => analyzer.Initialize(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ANALYZER-PUBLIC-SURFACE", "complete-diagnostic-metadata")]
+    public void EveryDiagnostic_HasCompleteUniqueMetadata()
+    {
+        var descriptors = AnalyzerTypes()
+            .Select(type => (DiagnosticAnalyzer)Activator.CreateInstance(type)!)
+            .SelectMany(analyzer => analyzer.SupportedDiagnostics)
+            .ToArray();
+
+        Assert.NotEmpty(descriptors);
+        Assert.Equal(
+            descriptors.Length,
+            descriptors.Select(descriptor => descriptor.Id).Distinct(StringComparer.Ordinal).Count());
+
+        foreach (var descriptor in descriptors)
+        {
+            Assert.StartsWith("VOSB", descriptor.Id, StringComparison.Ordinal);
+            Assert.False(string.IsNullOrWhiteSpace(descriptor.Title.ToString()));
+            Assert.False(string.IsNullOrWhiteSpace(descriptor.MessageFormat.ToString()));
+            Assert.False(string.IsNullOrWhiteSpace(descriptor.Category));
+            Assert.False(string.IsNullOrWhiteSpace(descriptor.Description.ToString()));
+            Assert.True(descriptor.IsEnabledByDefault);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ANALYZER-INSTANCE-STATE", "one-instance-multiple-compilations")]
     public async Task OneAnalyzerInstance_ProducesIndependentResultsAcrossCompilationsAsync()
     {
@@ -98,7 +155,7 @@ public sealed class AnalyzerInstanceStateTests
             ServiceBusAnalyzerFixture.ReferenceRoots,
             TestContext.Current.CancellationToken);
 
-        return diagnostics.Select(diagnostic => diagnostic.Id).ToArray();
+        return [.. diagnostics.Select(diagnostic => diagnostic.Id)];
     }
 
     private static string CancellableConsumer(string contract) =>

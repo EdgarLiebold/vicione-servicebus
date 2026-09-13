@@ -2,15 +2,10 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Analyzers.Internals;
 
-sealed class SymbolIndex<T>
+sealed class SymbolIndex<T>(int capacity, IEqualityComparer<T>? comparer)
     where T : notnull
 {
-    readonly Dictionary<T, int> _nodes;
-
-    public SymbolIndex(int capacity, IEqualityComparer<T>? comparer)
-    {
-        _nodes = new Dictionary<T, int>(capacity, comparer);
-    }
+    readonly Dictionary<T, int> _nodes = new(capacity, comparer);
 
     public int this[T key]
     {

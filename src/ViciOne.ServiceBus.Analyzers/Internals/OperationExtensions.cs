@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -11,17 +12,17 @@ namespace ViciOne.ServiceBus.Analyzers.Internals;
 
 static class OperationExtensions
 {
-    public static ITypeSymbol? GetReceiverType(this IInvocationOperation invocation, Compilation compilation, bool beforeConversion,
+    public static ITypeSymbol? GetSourceReceiverType(this IInvocationOperation invocation, Compilation compilation,
         CancellationToken cancellationToken)
     {
         if (invocation.Instance != null)
-            return beforeConversion ? GetReceiverType(invocation.Instance.Syntax, compilation, cancellationToken) : invocation.Instance.Type;
+            return GetReceiverType(invocation.Instance.Syntax, compilation, cancellationToken);
 
         if (!invocation.TargetMethod.IsExtensionMethod || invocation.TargetMethod.Parameters.IsEmpty)
             return null;
         var firstArg = invocation.Arguments.FirstOrDefault();
         if (firstArg != null)
-            return beforeConversion ? GetReceiverType(firstArg.Value.Syntax, compilation, cancellationToken) : firstArg.Value.Type;
+            return GetReceiverType(firstArg.Value.Syntax, compilation, cancellationToken);
 
         return invocation.TargetMethod.Parameters[0].IsParams ? invocation.TargetMethod.Parameters[0].Type : null;
     }
@@ -47,57 +48,32 @@ static class OperationExtensions
             switch (node)
             {
                 case AccessorDeclarationSyntax accessor:
-                    {
-                        if (accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
-                        {
-                            var property = node.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
-                            if (property != null)
-                            {
-                                var symbol = semanticModel.GetDeclaredSymbol(property, cancellationToken);
-                                if (symbol != null)
-                                    result.Add(new NameAndType("value", symbol.Type));
-                            }
-                        }
-
-                        break;
-                    }
+                    AddSetterValue(result, semanticModel, accessor, cancellationToken);
+                    break;
 
                 case PropertyDeclarationSyntax _:
                     return result;
 
-                case IndexerDeclarationSyntax indexerDeclarationSyntax:
-                    {
-                        var symbol = semanticModel.GetDeclaredSymbol(indexerDeclarationSyntax, cancellationToken);
-                        if (symbol != null)
-                            result.AddRange(symbol.Parameters.Select(parameter => new NameAndType(parameter.Name, parameter.Type)));
+                case AnonymousFunctionExpressionSyntax anonymousFunction:
+                    if (semanticModel.GetOperation(anonymousFunction, cancellationToken) is IAnonymousFunctionOperation lambdaOperation)
+                        AddParameters(result, lambdaOperation.Symbol.Parameters);
+                    break;
 
-                        return result;
-                    }
+                case IndexerDeclarationSyntax indexerDeclarationSyntax:
+                    AddParameters(result, semanticModel.GetDeclaredSymbol(indexerDeclarationSyntax, cancellationToken)?.Parameters);
+                    return result;
 
                 case MethodDeclarationSyntax methodDeclaration:
-                    {
-                        var symbol = semanticModel.GetDeclaredSymbol(methodDeclaration, cancellationToken);
-                        if (symbol != null)
-                            result.AddRange(symbol.Parameters.Select(parameter => new NameAndType(parameter.Name, parameter.Type)));
+                    AddParameters(result, semanticModel.GetDeclaredSymbol(methodDeclaration, cancellationToken)?.Parameters);
+                    return result;
 
-                        return result;
-                    }
                 case LocalFunctionStatementSyntax localFunctionStatement:
-                    {
-                        if (semanticModel.GetDeclaredSymbol(localFunctionStatement, cancellationToken) is IMethodSymbol symbol)
-                            result.AddRange(symbol.Parameters.Select(parameter => new NameAndType(parameter.Name, parameter.Type)));
-
-                        break;
-                    }
+                    AddParameters(result, semanticModel.GetDeclaredSymbol(localFunctionStatement, cancellationToken)?.Parameters);
+                    break;
 
                 case ConstructorDeclarationSyntax constructorDeclaration:
-                    {
-                        var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration, cancellationToken);
-                        if (symbol != null)
-                            result.AddRange(symbol.Parameters.Select(parameter => new NameAndType(parameter.Name, parameter.Type)));
-
-                        return result;
-                    }
+                    AddParameters(result, semanticModel.GetDeclaredSymbol(constructorDeclaration, cancellationToken)?.Parameters);
+                    return result;
             }
 
             node = node.Parent;
@@ -106,29 +82,34 @@ static class OperationExtensions
         return result;
     }
 
-    public static bool IsStaticMember(this IOperation operation, CancellationToken cancellationToken)
+    static void AddSetterValue(List<NameAndType> result, SemanticModel semanticModel, AccessorDeclarationSyntax accessor,
+        CancellationToken cancellationToken)
     {
-        var memberDeclarationSyntax = operation.Syntax.Ancestors().FirstOrDefault(syntax => syntax is MemberDeclarationSyntax);
-        if (memberDeclarationSyntax == null)
-            return false;
+        if (!accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
+            return;
 
-        var semanticModel = operation.SemanticModel;
-        if (semanticModel == null)
-            return false;
-
-        var symbol = semanticModel.GetDeclaredSymbol(memberDeclarationSyntax, cancellationToken);
-        return symbol is { IsStatic: true };
-    }
-    [StructLayout(LayoutKind.Auto)]
-    internal readonly struct NameAndType
-    {
-        public NameAndType(string name, ITypeSymbol typeSymbol)
+        var property = accessor.Ancestors().OfType<BasePropertyDeclarationSyntax>().FirstOrDefault();
+        IPropertySymbol? symbol = property switch
         {
-            Name = name;
-            TypeSymbol = typeSymbol;
-        }
+            PropertyDeclarationSyntax declaration => semanticModel.GetDeclaredSymbol(declaration, cancellationToken),
+            IndexerDeclarationSyntax declaration => semanticModel.GetDeclaredSymbol(declaration, cancellationToken),
+            _ => null,
+        };
+        if (symbol is not null)
+            result.Add(new NameAndType("value", symbol.Type));
+    }
 
-        public string Name { get; }
-        public ITypeSymbol TypeSymbol { get; }
+    static void AddParameters(List<NameAndType> result, ImmutableArray<IParameterSymbol>? parameters)
+    {
+        if (parameters is { } values)
+            result.AddRange(values.Select(parameter => new NameAndType(parameter.Name, parameter.Type)));
+    }
+
+
+    [StructLayout(LayoutKind.Auto)]
+    internal readonly struct NameAndType(string name, ITypeSymbol typeSymbol)
+    {
+        public string Name { get; } = name;
+        public ITypeSymbol TypeSymbol { get; } = typeSymbol;
     }
 }

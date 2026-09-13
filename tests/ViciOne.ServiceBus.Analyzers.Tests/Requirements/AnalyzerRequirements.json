@@ -21,6 +21,27 @@
     "testMethod": "ProductAnalyzerAssembly_ContainsTheExplicitAnalyzerSet"
   },
   {
+    "requirementId": "REQ-VSB-ANALYZER-PUBLIC-SURFACE",
+    "variantKey": "diagnostic-analyzers-only",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "ProductAnalyzerAssembly_ExportsOnlyTheDiagnosticAnalyzers"
+  },
+  {
+    "requirementId": "REQ-VSB-ANALYZER-PUBLIC-SURFACE",
+    "variantKey": "null-initialize-guard",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "EveryAnalyzer_RejectsANullAnalysisContext"
+  },
+  {
+    "requirementId": "REQ-VSB-ANALYZER-PUBLIC-SURFACE",
+    "variantKey": "complete-diagnostic-metadata",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "EveryDiagnostic_HasCompleteUniqueMetadata"
+  },
+  {
     "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE",
     "variantKey": "one-instance-multiple-compilations",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
@@ -70,6 +91,34 @@
     "testMethod": "SourceDefinedLookalikeProducer_DoesNotReportAsync"
   },
   {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "runtime-contract-initializers-must-be-observed",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "RuntimeContractInitializerCalls_RequireObservationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "destination-schedule-must-be-observed",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "DestinationScheduleWithoutObservation_ReportsMessageLossRiskAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "advanced-and-application-producer-families",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "AdvancedAndApplicationProducerFamilies_RequireObservationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "discarded-and-configured-tasks-are-unobserved",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "DiscardedAndConfiguredProducerTasks_ReportMessageLossRiskAsync"
+  },
+  {
     "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
     "variantKey": "task-delay-overload",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
@@ -106,10 +155,38 @@
   },
   {
     "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "inherited-context-method-is-excluded",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "InheritedConsumeContextMethod_DoesNotSuggestItsOwnOptionalTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
     "variantKey": "incompatible-overload-shapes-are-silent",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
     "testMethod": "ReorderedAndRefIncompatibleOverloads_DoNotReportAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "lambda-and-outer-context-tokens",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "NestedLambda_ReportsItsOwnAndTheOuterContextTokensAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "accessor-constructor-and-local-function-contexts",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "AccessorsConstructorAndLocalFunction_ExposeTheirAvailableContextTokensAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "extension-method-overload",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "ExtensionMethodWithTokenOverload_ReportsTheAvailableContextTokenAsync"
   },
   {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
@@ -155,10 +232,73 @@
   },
   {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "inherited-contract-properties",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "InheritedContractProperties_AreRequiredMessageValuesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "nonserialized-input-properties",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "StaticAndIndexerInputProperties_AreNotMessageValuesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "supported-message-headers",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "SupportedMessageHeader_WithItsCanonicalType_IsAcceptedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "invalid-message-headers",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "UnknownAndInvalidMessageHeaders_AreRejectedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "recursive-structural-contract",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "RecursiveCollectionContract_WithMatchingRecursiveInput_TerminatesWithoutDiagnosticAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "destination-schedule-contract",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "DestinationSchedule_ValidatesAnonymousMessageValuesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "interface-implementation-conversion",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "ConcreteInterfaceImplementation_IsACompatibleMessageValueAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "static-generic-carrier-contract",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "StaticGenericInitializerCarrier_ProvidesTheMessageContractAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
     "variantKey": "named-message-argument-is-resolved",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
     "testMethod": "NamedMessageArgument_IsMatchedToItsObjectParameterAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "publicly-readable-properties-only",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "PropertyWithPrivateGetter_IsNotARequiredMessageValueAsync"
   },
   {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
@@ -190,6 +330,27 @@
   },
   {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "message-data-supported-conversion-matrix",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "SupportedMessageDataInputs_SatisfyEveryCanonicalConversionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "message-data-unsupported-conversion-matrix",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "UnsupportedMessageDataInputs_ReportEveryIncompatiblePropertyWithoutHangingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "nullable-source-and-target-conversions",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "NullableAndNonNullableValues_AreCompatibleInBothDirectionsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
     "variantKey": "canonical-scenario-catalog",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractScenarioTests",
@@ -211,6 +372,20 @@
   },
   {
     "requirementId": "REQ-VSB-RULE-ANALYZERS",
+    "variantKey": "blocking-synchronization-primitives",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
+    "testMethod": "BlockingConsumerAnalyzer_ReportsCanonicalSynchronizationPrimitivesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
+    "variantKey": "all-configuration-write-forms",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
+    "testMethod": "DefinitionAnalyzers_ReportEveryCanonicalConfigurationWriteFormAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "consumer-definition-canonical-properties",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
@@ -229,6 +404,13 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
     "testMethod": "LargeInlinePayloadAnalyzer_CoversInheritedConsumedAndOutboundContractsWithoutMessageDataFalsePositiveAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
+    "variantKey": "large-inline-serialized-members-only",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
+    "testMethod": "LargeInlinePayloadAnalyzer_ReportsEachSerializedMemberExactlyOnceAsync"
   },
   {
     "requirementId": "REQ-VSB-RULE-ANALYZERS",

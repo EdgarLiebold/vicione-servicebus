@@ -2181,3 +2181,97 @@ Final source SHA-256 values are
 `RabbitMqManagementApi.cs`.
 The protected `review/` and `TestResults/` trees were neither changed nor staged. The complete A+
 source goal remains active for the next unreviewed owner.
+
+## Iteration 96 analyzer-toolchain plan
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Preserve the physical assembly model | treat `src/ViciOne.ServiceBus` as the Core project directory; retain independent capability projects as `src` siblings and external integrations under `Persistence`, `Scheduling`, and `Transports`; verify the complete tree through architecture and package gates |
+| Keep the shipped analyzer surface intentional | export only the eight diagnostic analyzers and the two code-fix providers; move shared compiler mechanics to an internal matching folder and namespace |
+| Recognize every current producer family | direct Roslyn scenarios for Core, application, Advanced, initializer, request, response, and scheduling APIs |
+| Make structural message validation total | recursive contracts, inherited/readable properties, concrete interface implementations, collections, dictionaries, headers, nullable values, and every supported or rejected `MessageData<T>` carrier |
+| Prevent unobserved message-production work | expression statements, discards, nullable suppression, parentheses, and `ConfigureAwait` wrappers while preserving ordinary variables and observed tasks |
+| Enforce cancellation and consumer safety | exact overload shape matching, all available pipeline contexts, inherited context receivers, every configuration write form, and blocking framework synchronization primitives including timed acquisition |
+| Modernize packaging without compatibility residue | remove old `install.ps1`/`uninstall.ps1` integration and prove the analyzer package contains only modern Roslyn assets and package metadata |
+| Demonstrate test strength | red-first regressions, isolated source counterchanges, focused coverage/CRAP analysis, assertion-quality review, full build/test/format/package gates, and a final manual reread |
+
+## Iteration 96 mutation obligations
+
+- Replace interface-aware conversion with base-class-only conversion: the concrete-interface
+  message test must report `VOSB1002`.
+- Remove an application producer identity: the complete producer-family test must lose exactly one
+  expected diagnostic.
+- Remove lock-operation registration or increment/decrement write extraction: the corresponding
+  exact rule matrix must lose its expected diagnostic.
+- Broaden serializable-member selection: the exact member-name test must report private, static,
+  indexer, or write-only members.
+- Stop recognizing `ConfigureAwait` or discard assignment: the exact unobserved-task matrix must
+  lose the corresponding diagnostic.
+- Accept unsupported `MessageData<T>` value carriers: the incompatibility matrix must lose the
+  value-type member, and no input is allowed to hang.
+- Treat a property with a private getter as readable or omit timed `TryEnter` handling: the final
+  red-first regressions must fail on the exact missing property or diagnostic count.
+- Every counterchange must be restored manually before final validation. A surviving mutation must
+  be investigated as equivalent or a genuine gap rather than reported as killed.
+
+## Iteration 96 completion
+
+All 17 original production C# files in the analyzer, code-fix, and aggregate-package owner were
+read manually in full together with every comment, project file, analyzer release record, packaging
+script, directly owning test, and requirement projection. No generator or scripted source/comment
+rewrite was used. The final owner contains 16 C# files and 3,018 physical lines after removing the
+obsolete attribute polyfill and consolidating shared compiler logic under `Internals`.
+
+The eight diagnostic analyzers and two code-fix providers are now the exact exported surfaces.
+Code fixes occupy `ViciOne.ServiceBus.Analyzers.CodeFixes`; shared symbol extensions are internal
+and live in the matching `Internals` directory. Diagnostic metadata is complete and unique, every
+analyzer rejects a null registration context, and no analyzer instance retains compilation-bound
+Roslyn state.
+
+Producer recognition covers the current Core, application, Advanced, request, response,
+initializer, and scheduling families. Unobserved producer tasks are found through transparent
+parentheses, nullable suppression, `ConfigureAwait`, and discard assignment. Message-contract
+analysis now terminates on recursive graphs, handles concrete interface implementations, uses
+publicly readable instance properties only, de-duplicates inherited properties, validates the
+canonical header set, and rejects unsupported `MessageData<T>` value carriers without looping.
+Cancellation analysis understands lambda, accessor, indexer, constructor, local-function,
+extension, and inherited consume-context receivers. Consumer rules cover every assignment form,
+language locks, blocking waits, and timed `Monitor`/`SpinLock` acquisition while leaving immediate
+`Monitor.TryEnter` unreported.
+
+The focused analyzer host grows from 126 to 164 tests and passes 164/164. The focused code-fix host
+grows from 32 to 36 tests and passes 36/36. Final instrumentation records 95.5538% line and
+85.4072% branch coverage for `ViciOne.ServiceBus.Analyzers`, complexity 905, 174 methods, and no
+CRAP score above 30. The code-fix assembly records 94.4915% line and 71.9697% branch coverage,
+complexity 138, and 29 methods. Its sole score above 30 is the compiler-generated async `MoveNext`
+for the fully line-covered recursive traversal; the highest genuine method score is 25.87.
+
+Eight non-equivalent isolated source counterchanges were killed and restored: concrete-interface
+conversion, an application producer identity, lock registration, increment/decrement write
+extraction, serializable-member filtering, `ConfigureAwait` recognition, discard recognition, and
+unsupported value-type `MessageData<T>` acceptance. Two attempted counterchanges to special-case
+reduced extension receivers survived because Roslyn's ordinary receiver path already handled them;
+the redundant production branch was removed. The final manual reread additionally produced two
+red-first failures for private getters and timed `TryEnter`; both now pass and remain exact
+regressions.
+
+The aggregate package no longer contains NuGet `tools` scripts. A fresh `.nupkg` contains only its
+relationship/content metadata, README, and the analyzer plus code-fix assemblies under
+`analyzers/dotnet/cs`. Product, Engineering, and Unit locked restores pass. The final serial
+Engineering Release build passes all 77 projects with zero warnings and errors. The complete
+Unit/Architecture solution passes 6,214/6,214 with zero failures and zero skips; Architecture
+passes its repository-wide bidirectional async and file/type/folder rules.
+
+Both complete Roslyn format gates, requirements JSON, Git whitespace, analyzer-owner preprocessor,
+dummy-marker, and empty-directory checks pass. Final fresh-package validation passes with 18
+developer journeys, exactly 31 packages, three executed isolated provider-testing consumers, and
+all 30 runtime API assemblies matching the 19,083-line committed contract at SHA-256
+`1e8055f4700954d11ab7cadd4be01251e01fa17fef1702366df7b9d10eb8c843`.
+
+The structured build diagnosis is repeatable: the sandbox forbids Microsoft Testing Platform and
+Roslyn named-pipe creation (`SocketException: Permission denied`) and may leave `pack`/restore
+waiting after its child process has gone. Focused compilation can run inside when it does not hit
+that boundary; authoritative coverage, restore, pack, format, and full-suite gates run outside the
+sandbox with build-server reuse disabled where appropriate. The protected `review/` and
+`TestResults/` trees remain untouched and unstaged. The repository-wide A+ source goal remains
+active for the next unreviewed owner.

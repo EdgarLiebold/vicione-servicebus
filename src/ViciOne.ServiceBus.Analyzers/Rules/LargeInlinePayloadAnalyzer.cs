@@ -69,7 +69,7 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
         INamedTypeSymbol message,
         ConcurrentDictionary<ISymbol, byte> reported)
     {
-        foreach (ISymbol member in GetContractMembers(message))
+        foreach (ISymbol member in GetSerializableContractMembers(message))
         {
             ITypeSymbol? memberType = member switch
             {
@@ -88,20 +88,42 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static IEnumerable<ISymbol> GetContractMembers(INamedTypeSymbol message)
+    private static IEnumerable<ISymbol> GetSerializableContractMembers(INamedTypeSymbol message)
     {
-        for (INamedTypeSymbol? current = message; current is not null; current = current.BaseType)
-        {
-            foreach (ISymbol member in current.GetMembers())
-                yield return member;
-        }
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        IEnumerable<INamedTypeSymbol> contractTypes = message.TypeKind == TypeKind.Interface
+            ? new[] { message }.Concat(message.AllInterfaces)
+            : BaseTypes(message);
 
-        foreach (INamedTypeSymbol contract in message.AllInterfaces)
+        foreach (INamedTypeSymbol contractType in contractTypes)
         {
-            foreach (ISymbol member in contract.GetMembers())
-                yield return member;
+            foreach (ISymbol member in contractType.GetMembers())
+            {
+                if (IsSerializableMember(member) && names.Add(member.Name))
+                    yield return member;
+            }
         }
     }
+
+    private static IEnumerable<INamedTypeSymbol> BaseTypes(INamedTypeSymbol type)
+    {
+        for (INamedTypeSymbol? current = type; current is not null; current = current.BaseType)
+            yield return current;
+    }
+
+    private static bool IsSerializableMember(ISymbol member)
+        => member switch
+        {
+            IPropertySymbol property => property.DeclaredAccessibility == Accessibility.Public
+                && !property.IsStatic
+                && property.GetMethod?.DeclaredAccessibility == Accessibility.Public
+                && property.Parameters.IsEmpty,
+            IFieldSymbol field => field.DeclaredAccessibility == Accessibility.Public
+                && !field.IsStatic
+                && !field.IsConst
+                && !field.IsImplicitlyDeclared,
+            _ => false,
+        };
 
     private static bool IsLargeInlineType(Compilation compilation, ITypeSymbol type)
     {

@@ -536,15 +536,13 @@ public static class MessageContractScenarioCatalog
         new(
             MissingId,
             DiagnosticSeverity.Info,
-            $"Anonymous type is missing properties that are in the message contract '{contract}'. " +
-            $"The following properties are missing: {string.Join(", ", properties)}.");
+            $"Message values for contract '{contract}' are missing properties: {string.Join(", ", properties)}");
 
     private static ExpectedMessageContractDiagnostic Incompatible(string contract, params string[] properties) =>
         new(
             IncompatibleId,
             DiagnosticSeverity.Error,
-            $"Anonymous type does not map to message contract '{contract}'. " +
-            $"The following properties of the anonymous type are incompatible: {string.Join(", ", properties)}.");
+            $"Message values do not map to contract '{contract}'; incompatible properties: {string.Join(", ", properties)}");
 
     private static ExpectedInitializer Init(string path, string expression) => new(path, expression);
 

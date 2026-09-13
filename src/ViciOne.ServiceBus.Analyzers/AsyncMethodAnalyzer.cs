@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using ViciOne.ServiceBus.Analyzers.Internals;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
@@ -17,14 +18,14 @@ public sealed class AsyncMethodAnalyzer :
 
     const string Category = "Usage";
 
-    static readonly DiagnosticDescriptor MissingAwaitRule = new DiagnosticDescriptor(MissingAwaitRuleId,
-        "ViciOne.ServiceBus method is not awaited or captured",
-        "Method {0} is not awaited or captured and may result in message loss",
+    static readonly DiagnosticDescriptor MissingAwaitRule = new(MissingAwaitRuleId,
+        "Observe the asynchronous ServiceBus operation",
+        "Observe the task returned by '{0}' to prevent message loss",
         Category, DiagnosticSeverity.Warning, true,
-        "ViciOne.ServiceBus method is not awaited or captured.");
+        "Every asynchronous message-production operation must be awaited or retained until completion.");
 
     /// <summary>Gets the unobserved-producer-task diagnostic.</summary>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MissingAwaitRule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [MissingAwaitRule];
 
     /// <summary>Registers invocation analysis for non-generated source.</summary>
     /// <param name="context">The analyzer registration context.</param>
@@ -48,15 +49,74 @@ public sealed class AsyncMethodAnalyzer :
         {
             var methodSymbol = (IMethodSymbol)symbol.Symbol;
 
-            if (methodSymbol.IsProducerMethod(out _) && methodSymbol.ReturnsTask())
+            if (methodSymbol.IsProducerMethod()
+                && methodSymbol.ReturnsTask()
+                && IsUnobserved(invocationExpression, context.SemanticModel, context.CancellationToken))
             {
-                if (invocationExpression.Parent is ExpressionStatementSyntax)
-                {
-                    context.ReportDiagnostic(Diagnostic.Create(MissingAwaitRule, invocationExpression.GetLocation(),
-                        SymbolDisplay.ToDisplayString(methodSymbol,
-                            SymbolDisplayFormat.CSharpShortErrorMessageFormat.WithParameterOptions(SymbolDisplayParameterOptions.None))));
-                }
+                context.ReportDiagnostic(Diagnostic.Create(MissingAwaitRule, invocationExpression.GetLocation(),
+                    SymbolDisplay.ToDisplayString(methodSymbol,
+                        SymbolDisplayFormat.CSharpShortErrorMessageFormat.WithParameterOptions(SymbolDisplayParameterOptions.None))));
             }
         }
+    }
+
+    static bool IsUnobserved(
+        InvocationExpressionSyntax producerInvocation,
+        SemanticModel semanticModel,
+        System.Threading.CancellationToken cancellationToken)
+    {
+        SyntaxNode value = SkipTransparentWrappers(producerInvocation);
+        if (TryGetConfigureAwaitInvocation(value, semanticModel, cancellationToken, out var configureAwait))
+            value = SkipTransparentWrappers(configureAwait);
+
+        if (value.Parent is ExpressionStatementSyntax)
+            return true;
+
+        return IsDiscardAssignment(value.Parent, semanticModel, cancellationToken);
+    }
+
+    static SyntaxNode SkipTransparentWrappers(SyntaxNode value)
+    {
+        while (value.Parent is ParenthesizedExpressionSyntax
+               || value.Parent is PostfixUnaryExpressionSyntax { RawKind: (int)SyntaxKind.SuppressNullableWarningExpression })
+            value = value.Parent;
+
+        return value;
+    }
+
+    static bool TryGetConfigureAwaitInvocation(
+        SyntaxNode value,
+        SemanticModel semanticModel,
+        System.Threading.CancellationToken cancellationToken,
+        out InvocationExpressionSyntax invocation)
+    {
+        if (value.Parent is MemberAccessExpressionSyntax { Parent: InvocationExpressionSyntax wrapper } memberAccess
+            && ReferenceEquals(memberAccess.Expression, value)
+            && semanticModel.GetSymbolInfo(wrapper, cancellationToken).Symbol is IMethodSymbol
+            {
+                Name: "ConfigureAwait",
+                ContainingNamespace: { } containingNamespace,
+            }
+            && containingNamespace.ToDisplayString().Equals("System.Threading.Tasks", StringComparison.Ordinal))
+        {
+            invocation = wrapper;
+            return true;
+        }
+
+        invocation = null!;
+        return false;
+    }
+
+    static bool IsDiscardAssignment(
+        SyntaxNode? parent,
+        SemanticModel semanticModel,
+        System.Threading.CancellationToken cancellationToken)
+    {
+        return parent is AssignmentExpressionSyntax
+        {
+            RawKind: (int)SyntaxKind.SimpleAssignmentExpression,
+            Left: IdentifierNameSyntax { Identifier.ValueText: "_" } discard,
+        }
+            && semanticModel.GetSymbolInfo(discard, cancellationToken).Symbol is null or IDiscardSymbol;
     }
 }

@@ -28,6 +28,13 @@
     "testMethod": "NamedArgumentFix_AddsANamedCancellationTokenAsync"
   },
   {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "extension-method-overload",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
+    "testMethod": "ExtensionMethodFix_AddsTheTokenAfterTheReducedArgumentsAsync"
+  },
+  {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
     "variantKey": "canonical-scenario-catalog",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
@@ -47,5 +54,26 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
     "testMethod": "MissingPropertiesFix_QualifiesACustomValueTypeOutsideTheCurrentNamespaceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
+    "variantKey": "inherited-contract-property",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
+    "testMethod": "MissingPropertiesFix_AddsAnInheritedContractPropertyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-CODEFIX-PROVIDER-CONTRACT",
+    "variantKey": "diagnostic-and-fix-all-metadata",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CodeFixProviderContractTests",
+    "testMethod": "EveryProvider_DeclaresItsExactDiagnosticAndBatchFixAllProvider"
+  },
+  {
+    "requirementId": "REQ-VSB-CODEFIX-PROVIDER-CONTRACT",
+    "variantKey": "exported-provider-surface",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CodeFixProviderContractTests",
+    "testMethod": "CodeFixAssembly_ExportsOnlyTheTwoCodeFixProviders"
   }
 ]

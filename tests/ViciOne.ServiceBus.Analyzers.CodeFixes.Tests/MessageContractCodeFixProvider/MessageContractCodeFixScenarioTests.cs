@@ -11,11 +11,17 @@ namespace ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixPro
 
 public sealed class MessageContractCodeFixScenarioTests
 {
-    public static IEnumerable<object[]> Cases() =>
-        MessageContractScenarioCatalog.All
-            .Where(scenario => scenario.HasCodeFix)
-            .SelectMany(scenario => scenario.EnumerateForms(), (scenario, form) =>
-                new object[] { scenario.Key, form });
+    public static TheoryData<string, MessageSourceForm> Cases()
+    {
+        var cases = new TheoryData<string, MessageSourceForm>();
+        foreach (var scenario in MessageContractScenarioCatalog.All.Where(scenario => scenario.HasCodeFix))
+        {
+            foreach (var form in scenario.EnumerateForms())
+                cases.Add(scenario.Key, form);
+        }
+
+        return cases;
+    }
 
     [Theory]
     [MemberData(nameof(Cases))]
@@ -32,7 +38,7 @@ public sealed class MessageContractCodeFixScenarioTests
         var fixedSource = await RoslynTestHost.ApplyAllFixesAsync(
             source,
             new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
-            new global::ViciOne.ServiceBus.Analyzers.MessageContractCodeFixProvider(),
+            new global::ViciOne.ServiceBus.Analyzers.CodeFixes.MessageContractCodeFixProvider(),
             ServiceBusCodeFixFixture.ReferenceRoots,
             TestContext.Current.CancellationToken);
         var after = ReadLeafInitializers(fixedSource);
@@ -84,7 +90,7 @@ namespace ConsoleApplication1
         var fixedSource = await RoslynTestHost.ApplyAllFixesAsync(
             source,
             new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
-            new global::ViciOne.ServiceBus.Analyzers.MessageContractCodeFixProvider(),
+            new global::ViciOne.ServiceBus.Analyzers.CodeFixes.MessageContractCodeFixProvider(),
             ServiceBusCodeFixFixture.ReferenceRoots,
             TestContext.Current.CancellationToken);
         var initializers = ReadLeafInitializers(fixedSource);
@@ -124,7 +130,7 @@ namespace ConsoleApplication1
         var fixedSource = await RoslynTestHost.ApplyAllFixesAsync(
             source,
             new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
-            new global::ViciOne.ServiceBus.Analyzers.MessageContractCodeFixProvider(),
+            new global::ViciOne.ServiceBus.Analyzers.CodeFixes.MessageContractCodeFixProvider(),
             ServiceBusCodeFixFixture.ReferenceRoots,
             TestContext.Current.CancellationToken);
         var initializers = ReadLeafInitializers(fixedSource);
@@ -132,7 +138,47 @@ namespace ConsoleApplication1
         Assert.Equal("default(Contracts.ExternalId)", initializers["Id"]);
     }
 
-    private static IReadOnlyDictionary<string, string> ReadLeafInitializers(string source)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-CODEFIX", "inherited-contract-property")]
+    public async Task MissingPropertiesFix_AddsAnInheritedContractPropertyAsync()
+    {
+        var source = ServiceBusCodeFixFixture.Usings + @"
+namespace ConsoleApplication1
+{
+    public abstract class MessageBase
+    {
+        public Guid Id { get; init; }
+    }
+
+    public sealed class Message : MessageBase
+    {
+        public string Name { get; init; }
+    }
+
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+            await bus.PublishAsync<Message>(/* VSB_TARGET */ new { Name = ""order"" });
+        }
+    }
+}
+";
+
+        var fixedSource = await RoslynTestHost.ApplyAllFixesAsync(
+            source,
+            new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
+            new global::ViciOne.ServiceBus.Analyzers.CodeFixes.MessageContractCodeFixProvider(),
+            ServiceBusCodeFixFixture.ReferenceRoots,
+            TestContext.Current.CancellationToken);
+        var initializers = ReadLeafInitializers(fixedSource);
+
+        Assert.Equal("default(Guid)", initializers["Id"]);
+        Assert.Equal("\"order\"", initializers["Name"]);
+    }
+
+    private static Dictionary<string, string> ReadLeafInitializers(string source)
     {
         var markerIndex = source.IndexOf(MessageContractSourceFactory.TargetMarker, StringComparison.Ordinal);
         Assert.True(markerIndex >= 0, "The source must preserve the canonical target marker.");

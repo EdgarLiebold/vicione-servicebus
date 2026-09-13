@@ -68,7 +68,7 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB1004",
                 DiagnosticSeverity.Info,
-                "Anonymous type is missing properties that are in the message contract 'OrderSubmitted'. The following properties are missing: Id, CustomerId, OrderItems.",
+                "Message values for contract 'OrderSubmitted' are missing properties: Id, CustomerId, OrderItems",
                 "Test0.cs",
                 47,
                 52));
@@ -116,7 +116,7 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB1002",
                 DiagnosticSeverity.Error,
-                "Anonymous type does not map to message contract 'OrderSubmitted'. The following properties of the anonymous type are incompatible: OrderItems.",
+                "Message values do not map to contract 'OrderSubmitted'; incompatible properties: OrderItems",
                 "Test0.cs",
                 47,
                 52));
@@ -202,7 +202,7 @@ namespace ConsoleApplication1
         var diagnostic = Assert.Single(diagnostics);
         Assert.Equal("VOSB1002", diagnostic.Id);
         Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
-        Assert.Contains("incompatible: OrderItems", diagnostic.Message, StringComparison.Ordinal);
+        Assert.Contains("incompatible properties: OrderItems", diagnostic.Message, StringComparison.Ordinal);
     }
 
     private static async Task AssertDiagnosticsAsync(

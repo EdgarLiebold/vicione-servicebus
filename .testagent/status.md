@@ -505,3 +505,40 @@ All available direct stable dependency updates are applied, the Microsoft 10.0 f
 at 10.0.12, and isolated consumer pins and locks match. Current online inventories contain no
 outdated direct, known-vulnerable direct/transitive, or deprecated direct/transitive packages. The
 iteration is ready for commit, annotated tag, normal remote push, and final remote verification.
+
+## Iteration 96
+
+Iteration 96 completes the bounded manual A+ review of the analyzer, code-fix, and analyzer-package
+owner. Every original production file and every comment was read and checked against current
+behavior without generator-authored source or documentation. The final public surface consists of
+eight diagnostic analyzers and two code-fix providers; shared symbol mechanics are internal and
+physically aligned, and legacy NuGet install/uninstall scripts plus the obsolete nullability
+polyfill are gone.
+
+Producer recognition, unobserved-task analysis, cancellation forwarding, recursive message
+compatibility, `MessageData<T>`, header validation, consumer synchronization, configuration writes,
+diagnostic metadata, concurrency safety, and package layout now have direct adversarial coverage.
+The final manual reread caught and fixed private-getter serialization and timed `TryEnter` gaps
+through red-first tests. Eight additional isolated mutations were killed and restored; two surviving
+equivalent receiver mutations led to removal of redundant source rather than a false mutation claim.
+
+### Full validation
+
+- Analyzer tests: 164 passed, 0 failed, 0 skipped; CodeFix tests: 36 passed, 0 failed, 0 skipped.
+- Analyzer coverage: 95.5538% line, 85.4072% branch, complexity 905, 174 methods, no CRAP score
+  above 30.
+- CodeFix coverage: 94.4915% line, 71.9697% branch, complexity 138, 29 methods; the sole CRAP 32
+  carrier is a fully line-covered compiler-generated async state machine.
+- Complete serial Unit/Architecture solution: 6,214 passed, 0 failed, 0 skipped.
+- Complete serial Engineering Release build: all 77 projects, 0 warnings, 0 errors.
+- Both full Roslyn format gates, locked restores, requirements JSON, preprocessor, dummy-marker,
+  empty-directory, package-layout, and Git whitespace checks: passed.
+- Fresh-package gate: 18 journeys, exactly 31 packages, three executed isolated provider-testing
+  consumers, and all 30 runtime API assemblies match the 19,083-line contract at SHA-256
+  `1e8055f4700954d11ab7cadd4be01251e01fa17fef1702366df7b9d10eb8c843`.
+
+The final package uses the standard Roslyn `analyzers/dotnet/cs` layout and contains no legacy tools
+scripts. `src/ViciOne.ServiceBus` remains the Core assembly owner; sibling capability assemblies and
+the `Persistence`, `Scheduling`, and `Transports` provider groups are intentional and pass the
+repository architecture and consumer gates. The protected `review/` and `TestResults/` trees were
+not modified or staged. The complete source-wide A+ goal remains active after this owner is secured.

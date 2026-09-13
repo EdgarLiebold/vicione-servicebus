@@ -32,7 +32,7 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB2001",
                 DiagnosticSeverity.Info,
-                "Cancellation token from 'context.CancellationToken' can be used in cancellation token overload for 'Task.Delay' method",
+                "Forward cancellation token 'context.CancellationToken' to the cancellable overload of 'Task.Delay'",
                 "Test0.cs",
                 30,
                 20));
@@ -87,14 +87,14 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB2001",
                 DiagnosticSeverity.Info,
-                "Cancellation token from 'context.CancellationToken' can be used in cancellation token overload for 'Task.Delay' method",
+                "Forward cancellation token 'context.CancellationToken' to the cancellable overload of 'Task.Delay'",
                 "Test0.cs",
                 41,
                 20),
             new DiagnosticObservation(
                 "VOSB2001",
                 DiagnosticSeverity.Info,
-                "Cancellation token from 'ctx.CancellationToken' can be used in cancellation token overload for 'Task.Run' method",
+                "Forward cancellation token 'ctx.CancellationToken' to the cancellable overload of 'Task.Run'",
                 "Test0.cs",
                 47,
                 20));
@@ -126,7 +126,7 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB2001",
                 DiagnosticSeverity.Info,
-                "Cancellation token from 'context.CancellationToken' can be used in cancellation token overload for 'Task.Run' method",
+                "Forward cancellation token 'context.CancellationToken' to the cancellable overload of 'Task.Run'",
                 "Test0.cs",
                 32,
                 19));
@@ -176,6 +176,34 @@ namespace ConsoleApplication1
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "inherited-context-method-is-excluded")]
+    public async Task InheritedConsumeContextMethod_DoesNotSuggestItsOwnOptionalTokenAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
+namespace ConsoleApplication1
+{
+    abstract class DerivedContext : ViciOne.ServiceBus.Context.BaseConsumeContext
+    {
+        protected DerivedContext()
+            : base(default!, default!)
+        {
+        }
+    }
+
+    static class ContextOperations
+    {
+        public static Task NotifyAsync(DerivedContext context)
+        {
+            return context.NotifyConsumedAsync<SubmitOrder>(default!, TimeSpan.Zero, ""consumer"");
+        }
+    }
+}
+";
+
+        await AssertDiagnosticsAsync(source);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "incompatible-overload-shapes-are-silent")]
     public async Task ReorderedAndRefIncompatibleOverloads_DoNotReportAsync()
     {
@@ -205,6 +233,111 @@ namespace ConsoleApplication1
 
         await AssertDiagnosticsAsync(source);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "lambda-and-outer-context-tokens")]
+    public async Task NestedLambda_ReportsItsOwnAndTheOuterContextTokensAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
+namespace ConsoleApplication1
+{
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            return Invoke(inner => Task.Delay(10));
+        }
+
+        static Task Invoke(Func<ConsumeContext<SubmitOrder>, Task> callback) =>
+            callback(default!);
+    }
+}
+";
+
+        var diagnostic = Assert.Single(await AnalyzeAsync(source));
+        Assert.Equal("VOSB2001", diagnostic.Id);
+        Assert.Contains("context.CancellationToken,inner.CancellationToken", diagnostic.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "accessor-constructor-and-local-function-contexts")]
+    public async Task AccessorsConstructorAndLocalFunction_ExposeTheirAvailableContextTokensAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
+namespace ConsoleApplication1
+{
+    sealed class ContextOwner
+    {
+        public ContextOwner(ConsumeContext<SubmitOrder> context)
+        {
+            Task.Delay(1);
+        }
+
+        public ConsumeContext<SubmitOrder> Current
+        {
+            set { Task.Delay(2); }
+        }
+
+        public ConsumeContext<SubmitOrder> this[int index]
+        {
+            set { Task.Delay(3); }
+        }
+
+        public Task Run(ConsumeContext<SubmitOrder> context)
+        {
+            Task Local(ConsumeContext<SubmitOrder> nested) => Task.Delay(4);
+            return Local(context);
+        }
+    }
+}
+";
+
+        var diagnostics = await AnalyzeAsync(source);
+
+        Assert.True(
+            diagnostics.Count == 4,
+            $"Expected four diagnostics, actual: {string.Join(" | ", diagnostics.Select(diagnostic => $"{diagnostic.Line}:{diagnostic.Message}"))}");
+        Assert.Contains(diagnostics, diagnostic => diagnostic.Message.Contains("context.CancellationToken", StringComparison.Ordinal));
+        Assert.Equal(2, diagnostics.Count(diagnostic => diagnostic.Message.Contains("value.CancellationToken", StringComparison.Ordinal)));
+        Assert.Contains(diagnostics, diagnostic =>
+            diagnostic.Message.Contains("context.CancellationToken,nested.CancellationToken", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "extension-method-overload")]
+    public async Task ExtensionMethodWithTokenOverload_ReportsTheAvailableContextTokenAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
+namespace ConsoleApplication1
+{
+    static class WorkExtensions
+    {
+        public static Task WorkAsync(this string value) => Task.CompletedTask;
+        public static Task WorkAsync(this string value, System.Threading.CancellationToken cancellationToken) => Task.CompletedTask;
+    }
+
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            return ""value"".WorkAsync();
+        }
+    }
+}
+";
+
+        var diagnostic = Assert.Single(await AnalyzeAsync(source));
+        Assert.Equal("VOSB2001", diagnostic.Id);
+        Assert.Contains("context.CancellationToken", diagnostic.Message, StringComparison.Ordinal);
+    }
+
+    private static Task<IReadOnlyList<ViciOne.ServiceBus.Tests.Infrastructure.Roslyn.Diagnostics.DiagnosticObservation>> AnalyzeAsync(
+        string source) =>
+        RoslynTestHost.AnalyzeAsync(
+            source,
+            new CancellationTokenOverloadMethodAnalyzer(),
+            ServiceBusAnalyzerFixture.ReferenceRoots,
+            TestContext.Current.CancellationToken);
 
     private static async Task AssertDiagnosticsAsync(
         string source,

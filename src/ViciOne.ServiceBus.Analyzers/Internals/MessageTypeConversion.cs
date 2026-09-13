@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Analyzers.Internals;
 
-/// <summary>Evaluates conversions supported by anonymous message initializers.</summary>
+/// <summary>Evaluates conversions supported by message initializer values.</summary>
 sealed class MessageTypeConversion
 {
     readonly SemanticModel _semanticModel;
@@ -160,62 +159,37 @@ sealed class MessageTypeConversion
             }
 
             if (TryGetMessageDataValueType(symbol, out var messageDataType))
-            {
-                if (messageDataType.IsArray(out var arrayType) && arrayType.SpecialType == SpecialType.System_Byte)
-                {
-                    if (TryGetMessageDataValueType(sourceSymbol, out var sourceMessageDataType))
-                    {
-                        if (sourceMessageDataType.IsArray(out var sourceDataArrayType) && sourceDataArrayType.SpecialType == SpecialType.System_Byte)
-                            return true;
+                return CanConvertMessageData(messageDataType, sourceSymbol);
 
-                        if (sourceMessageDataType.SpecialType == SpecialType.System_String)
-                            return true;
-                    }
-
-                    if (sourceSymbol.IsArray(out var sourceArrayType) && sourceArrayType.SpecialType == SpecialType.System_Byte)
-                        return true;
-
-                    if (sourceSymbol.SpecialType == SpecialType.System_String)
-                        return true;
-
-                    return false;
-                }
-
-                if (messageDataType.SpecialType == SpecialType.System_String)
-                {
-                    if (sourceSymbol.SpecialType == SpecialType.System_String)
-                        return true;
-
-                    return false;
-                }
-
-                var streamType = GetRequiredType(typeof(Stream));
-                if (SymbolEqualityComparer.Default.Equals(messageDataType, streamType))
-                {
-                    if (sourceSymbol.ImplementsType(streamType))
-                        return true;
-
-                    return false;
-                }
-
-                if (messageDataType.IsReferenceType)
-                {
-                    symbol = messageDataType;
-                    if (TryGetMessageDataValueType(sourceSymbol, out messageDataType))
-                        sourceSymbol = messageDataType;
-                }
-
-                continue;
-            }
-
-            if (sourceSymbol.InheritsFromType(symbol))
+            if (sourceSymbol.ImplementsType(symbol))
                 return true;
 
             return _typeSymbols.Contains(symbol, sourceSymbol);
         }
     }
 
-    static bool TryGetTaskResultType(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
+    bool CanConvertMessageData(ITypeSymbol targetValueType, ITypeSymbol sourceSymbol)
+    {
+        if (TryGetMessageDataValueType(sourceSymbol, out var sourceValueType))
+            sourceSymbol = sourceValueType;
+
+        if (IsByteArray(targetValueType))
+            return IsByteArray(sourceSymbol) || sourceSymbol.SpecialType == SpecialType.System_String;
+
+        if (targetValueType.SpecialType == SpecialType.System_String)
+            return sourceSymbol.SpecialType == SpecialType.System_String;
+
+        var streamType = GetRequiredType(typeof(Stream));
+        if (SymbolEqualityComparer.Default.Equals(targetValueType, streamType))
+            return sourceSymbol.ImplementsType(streamType);
+
+        return targetValueType.IsReferenceType && CanConvert(targetValueType, sourceSymbol);
+    }
+
+    static bool IsByteArray(ITypeSymbol symbol)
+        => symbol.IsArray(out var elementType) && elementType.SpecialType == SpecialType.System_Byte;
+
+    static bool TryGetTaskResultType(ITypeSymbol symbol, out ITypeSymbol result)
     {
         if (symbol.TypeKind == TypeKind.Class
             && symbol.Name == "Task"
@@ -230,11 +204,11 @@ sealed class MessageTypeConversion
             return true;
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 
-    static bool TryGetMessageDataValueType(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
+    static bool TryGetMessageDataValueType(ITypeSymbol symbol, out ITypeSymbol result)
     {
         if (symbol.TypeKind == TypeKind.Interface
             && symbol.Name == "MessageData"
@@ -247,7 +221,7 @@ sealed class MessageTypeConversion
             return true;
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 }
@@ -257,7 +231,7 @@ static class ConversionGraphExtensions
 {
     public static void Add(this ConversionGraph<ITypeSymbol> graph, SemanticModel semanticModel, ITypeSymbol symbol, params SpecialType[] types)
     {
-        ITypeSymbol[] typeSymbols = types.Select(type => semanticModel.Compilation.GetSpecialType(type)).Cast<ITypeSymbol>().ToArray();
+        ITypeSymbol[] typeSymbols = [.. types.Select(type => semanticModel.Compilation.GetSpecialType(type)).Cast<ITypeSymbol>()];
 
         graph.Add(symbol, typeSymbols);
     }
@@ -265,7 +239,7 @@ static class ConversionGraphExtensions
     public static void Add(this ConversionGraph<ITypeSymbol> graph, SemanticModel semanticModel, SpecialType specialType, params SpecialType[] types)
     {
         var specialTypeSymbol = semanticModel.Compilation.GetSpecialType(specialType);
-        ITypeSymbol[] typeSymbols = types.Select(type => semanticModel.Compilation.GetSpecialType(type)).Cast<ITypeSymbol>().ToArray();
+        ITypeSymbol[] typeSymbols = [.. types.Select(type => semanticModel.Compilation.GetSpecialType(type)).Cast<ITypeSymbol>()];
 
         graph.Add(specialTypeSymbol, typeSymbols);
     }

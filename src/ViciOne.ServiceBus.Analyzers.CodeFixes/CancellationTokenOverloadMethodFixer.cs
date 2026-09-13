@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 using static ViciOne.ServiceBus.Analyzers.CancellationTokenOverloadMethodAnalyzer;
 
-namespace ViciOne.ServiceBus.Analyzers;
+namespace ViciOne.ServiceBus.Analyzers.CodeFixes;
 
 /// <summary>Forwards an available pipeline cancellation token to a cancellable overload.</summary>
 [ExportCodeFixProvider(LanguageNames.CSharp)]
@@ -21,7 +21,7 @@ public sealed class CancellationTokenOverloadMethodFixer :
     CodeFixProvider
 {
     /// <summary>Gets the cancellation-forwarding diagnostic fixed by this provider.</summary>
-    public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CancellationTokenOverloadMethodRuleId);
+    public override ImmutableArray<string> FixableDiagnosticIds => [CancellationTokenOverloadMethodRuleId];
 
     /// <summary>Gets the batch provider used for solution-wide cancellation forwarding.</summary>
     /// <returns>The standard batch fix-all provider.</returns>

@@ -1,82 +1,135 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
-namespace ViciOne.ServiceBus.Analyzers;
+namespace ViciOne.ServiceBus.Analyzers.Internals;
 
 /// <summary>Classifies message-producing methods and Roslyn type shapes used by analyzer rules.</summary>
-public static class AnalyzerSymbolExtensions
+internal static class AnalyzerSymbolExtensions
 {
-    static readonly IReadOnlyDictionary<string, int> _producerMethods = InitializeProducerMethods();
-    static readonly HashSet<string> _producerAssemblies = new HashSet<string>(StringComparer.Ordinal)
+    private static readonly HashSet<string> s_producerMethods = new(StringComparer.Ordinal)
+    {
+        "ViciOne.ServiceBus.Sagas.BehaviorContext.InitAsync",
+        "ViciOne.ServiceBus.ConsumeContext.RespondAsync",
+        "ViciOne.ServiceBus.Advanced.ConsumeContextSelfSchedulerExtensions.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.ConsumeContextSchedulerExtensions.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.EndpointConventionExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.ForwardExtensions.ForwardAsync",
+        "ViciOne.ServiceBus.Advanced.IClientFactory.CreateRequest",
+        "ViciOne.ServiceBus.IMessageScheduler.ScheduleSendAsync",
+        "ViciOne.ServiceBus.IMessageScheduler.SchedulePublishAsync",
+        "ViciOne.ServiceBus.IOutgoingMessages.SendAsync",
+        "ViciOne.ServiceBus.IOutgoingMessages.PublishAsync",
+        "ViciOne.ServiceBus.IOutgoingMessages.ScheduleSendAsync",
+        "ViciOne.ServiceBus.IPublishEndpoint.PublishAsync",
+        "ViciOne.ServiceBus.Advanced.IRecurringMessageScheduler.ScheduleRecurringSendAsync",
+        "ViciOne.ServiceBus.IRequestClient.Create",
+        "ViciOne.ServiceBus.IRequestClient.GetResponseAsync",
+        "ViciOne.ServiceBus.ISendEndpoint.SendAsync",
+        "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeAsync",
+        "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeMessageAsync",
+        "ViciOne.ServiceBus.Advanced.PublishExecuteExtensions.PublishAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedMessageSchedulerExtensions.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedMessageSchedulerExtensions.SchedulePublishAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedPublishEndpointExtensions.PublishAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedRequestClientExtensions.GetResponseAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedSendEndpointExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler.SchedulePublishAsync",
+        "ViciOne.ServiceBus.Advanced.IAdvancedPublishEndpoint.PublishAsync",
+        "ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint.SendAsync",
+        "ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync",
+        "ViciOne.ServiceBus.Advanced.RespondAsyncExecuteExtensions.RespondAsync",
+        "ViciOne.ServiceBus.Advanced.SchedulePublishExtensions.SchedulePublishAsync",
+        "ViciOne.ServiceBus.Advanced.SendConsumeContextExecuteExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.SendConsumeContextExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.SendExecuteExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.RelativeMessageSchedulerContextExtensions.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedRelativeMessageSchedulerExtensions.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.AdvancedRelativeMessageSchedulerExtensions.SchedulePublishAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.PublishAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.PublishEndpointExtensions.PublishAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.SendEndpointExtensions.SendAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.Create",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.ScheduleSendAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.SchedulePublishAsync",
+        "ViciOne.ServiceBus.Advanced.IAdvancedRequestClient.GetResponseAsync",
+    };
+
+    private static readonly HashSet<string> s_carrierContractProducerMethods = new(StringComparer.Ordinal)
+    {
+        "ViciOne.ServiceBus.IRequestClient.Create",
+        "ViciOne.ServiceBus.IRequestClient.GetResponseAsync",
+        "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeAsync",
+        "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeMessageAsync",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.Create",
+        "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync",
+        "ViciOne.ServiceBus.Advanced.IAdvancedRequestClient.GetResponseAsync",
+    };
+
+    private static readonly HashSet<string> s_producerAssemblies = new(StringComparer.Ordinal)
     {
         "ViciOne.ServiceBus",
         "ViciOne.ServiceBus.Abstractions",
         "ViciOne.ServiceBus.Initializers",
         "ViciOne.ServiceBus.Sagas",
     };
-    const string TaskNamespace = "System.Threading.Tasks";
 
-    static IReadOnlyDictionary<string, int> InitializeProducerMethods()
+    private const string TaskNamespace = "System.Threading.Tasks";
+
+    /// <summary>Determines whether a method performs a message-production operation.</summary>
+    /// <param name="method">The invoked method.</param>
+    /// <returns><see langword="true" /> when <paramref name="method" /> is a recognized producer method.</returns>
+    public static bool IsProducerMethod(this IMethodSymbol method)
     {
-        return new Dictionary<string, int>
-        {
-            { "ViciOne.ServiceBus.Sagas.BehaviorContext.InitAsync", 0 },
-            { "ViciOne.ServiceBus.ConsumeContext.RespondAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.ConsumeContextSelfSchedulerExtensions.ScheduleSendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.EndpointConventionExtensions.SendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.ForwardExtensions.ForwardAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.IClientFactory.CreateRequest", 0 },
-            { "ViciOne.ServiceBus.IMessageScheduler.ScheduleSendAsync", 0 },
-            { "ViciOne.ServiceBus.IMessageScheduler.SchedulePublishAsync", 0 },
-            { "ViciOne.ServiceBus.IPublishEndpoint.PublishAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.IRecurringMessageScheduler.ScheduleRecurringSendAsync", 0 },
-            { "ViciOne.ServiceBus.IRequestClient.Create", -1 },
-            { "ViciOne.ServiceBus.IRequestClient.GetResponseAsync", -1 },
-            { "ViciOne.ServiceBus.ISendEndpoint.SendAsync", 0 },
-            { "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeAsync", -1 },
-            { "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeMessageAsync", -1 },
-            { "ViciOne.ServiceBus.Advanced.PublishExecuteExtensions.PublishAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.RespondAsyncExecuteExtensions.RespondAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.SchedulePublishExtensions.SchedulePublishAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.SendConsumeContextExecuteExtensions.SendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.SendConsumeContextExtensions.SendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.SendExecuteExtensions.SendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.RelativeMessageSchedulerContextExtensions.ScheduleSendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.AdvancedRelativeMessageSchedulerExtensions.ScheduleSendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.AdvancedRelativeMessageSchedulerExtensions.SchedulePublishAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.SendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.PublishAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.Create", -1 },
-            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync", -1 },
-            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.ScheduleSendAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.SchedulePublishAsync", 0 },
-            { "ViciOne.ServiceBus.Advanced.IAdvancedRequestClient.GetResponseAsync", -1 }
-        };
+        return s_producerAssemblies.Contains(method.ContainingAssembly.Name)
+            && s_producerMethods.Contains(GetMethodIdentity(method));
     }
 
-    /// <summary>Identifies message-producing Service Bus methods and locates their contract type.</summary>
-    /// <param name="method">The invoked method.</param>
-    /// <param name="index">The generic contract argument index, or <c>-1</c> when the receiver supplies the contract.</param>
-    /// <returns><see langword="true" /> when <paramref name="method" /> is a recognized producer method.</returns>
-    public static bool IsProducerMethod(this IMethodSymbol method, out int index)
+    /// <summary>Gets the compile-time message contract supplied to a producer method.</summary>
+    /// <param name="method">The invoked producer method.</param>
+    /// <param name="typeArgument">The method or carrier type argument that identifies the message contract.</param>
+    /// <returns><see langword="true" /> when the producer exposes a compile-time contract type.</returns>
+    public static bool TryGetProducerContractTypeArgument(this IMethodSymbol method, out ITypeSymbol typeArgument)
     {
-        if (_producerAssemblies.Contains(method.ContainingAssembly.Name))
-            return _producerMethods.TryGetValue($"{method.ContainingNamespace}.{method.ContainingType.Name}.{method.Name}", out index);
+        if (!method.IsProducerMethod())
+        {
+            typeArgument = null!;
+            return false;
+        }
 
-        index = -1;
+        string identity = GetMethodIdentity(method);
+        if (s_carrierContractProducerMethods.Contains(identity))
+        {
+            INamedTypeSymbol? carrier = method.ReceiverType as INamedTypeSymbol ?? method.ContainingType;
+            if (carrier.IsGenericType && !carrier.TypeArguments.IsEmpty)
+            {
+                typeArgument = carrier.TypeArguments[0];
+                return true;
+            }
+        }
+        else if (method.IsGenericMethod && !method.TypeArguments.IsEmpty)
+        {
+            typeArgument = method.TypeArguments[0];
+            return true;
+        }
+
+        typeArgument = null!;
         return false;
     }
+
+    private static string GetMethodIdentity(IMethodSymbol method)
+        => $"{method.ContainingNamespace}.{method.ContainingType.Name}.{method.Name}";
 
     /// <summary>Resolves a concrete message contract from a class, interface, or singly constrained type parameter.</summary>
     /// <param name="typeArgument">The producer's message type.</param>
     /// <param name="contractType">The class or interface that defines the message contract.</param>
     /// <returns><see langword="true" /> when a contract type can be resolved.</returns>
-    public static bool HasMessageContract(this ITypeSymbol typeArgument, [NotNullWhen(true)] out ITypeSymbol? contractType)
+    public static bool HasMessageContract(this ITypeSymbol typeArgument, out ITypeSymbol contractType)
     {
         if (typeArgument.TypeKind.IsClassOrInterface())
         {
@@ -93,7 +146,7 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        contractType = null;
+        contractType = null!;
         return false;
     }
 
@@ -101,7 +154,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="typeArgument">The immutable array element type.</param>
     /// <returns><see langword="true" /> for a closed <see cref="ImmutableArray{T}" /> type.</returns>
-    public static bool IsImmutableArray(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
+    public static bool IsImmutableArray(this ITypeSymbol type, out ITypeSymbol typeArgument)
     {
         if (type.TypeKind == TypeKind.Struct &&
             type.Name == "ImmutableArray" &&
@@ -114,7 +167,7 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        typeArgument = null;
+        typeArgument = null!;
         return false;
     }
 
@@ -122,7 +175,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="typeArgument">The collection element type.</param>
     /// <returns><see langword="true" /> for a closed <see cref="ICollection{T}" /> type.</returns>
-    public static bool IsCollection(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
+    public static bool IsCollection(this ITypeSymbol type, out ITypeSymbol typeArgument)
     {
         if (type.TypeKind == TypeKind.Interface &&
             type.Name == "ICollection" &&
@@ -135,7 +188,7 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        typeArgument = null;
+        typeArgument = null!;
         return false;
     }
 
@@ -143,7 +196,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="typeArgument">The enumerable element type.</param>
     /// <returns><see langword="true" /> for a closed <see cref="IEnumerable{T}" /> type.</returns>
-    public static bool IsEnumerable(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
+    public static bool IsEnumerable(this ITypeSymbol type, out ITypeSymbol typeArgument)
     {
         if (type.TypeKind == TypeKind.Interface &&
             type.Name == "IEnumerable" &&
@@ -156,7 +209,7 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        typeArgument = null;
+        typeArgument = null!;
         return false;
     }
 
@@ -164,7 +217,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="typeArgument">The list element type.</param>
     /// <returns><see langword="true" /> for <see cref="List{T}" />, <see cref="IList{T}" />, or <see cref="IReadOnlyList{T}" />.</returns>
-    public static bool IsList(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
+    public static bool IsList(this ITypeSymbol type, out ITypeSymbol typeArgument)
     {
         if ((type.TypeKind == TypeKind.Class && type.Name == "List"
                 || type.TypeKind.IsClassOrInterface() && type.Name == "IReadOnlyList"
@@ -178,27 +231,26 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        typeArgument = null;
+        typeArgument = null!;
         return false;
     }
 
-    /// <summary>Gets serialized properties declared by a contract and its inherited interfaces.</summary>
-    /// <param name="contractType">The message contract.</param>
+    /// <summary>Gets serializable properties declared by a type, its base types, and its inherited interfaces.</summary>
+    /// <param name="type">The type to inspect.</param>
     /// <returns>Readable public instance properties, de-duplicated by exact name.</returns>
-    public static List<IPropertySymbol> GetContractProperties(this ITypeSymbol contractType)
+    public static List<IPropertySymbol> GetSerializableProperties(this ITypeSymbol type)
     {
-        var contractTypes = new List<ITypeSymbol> { contractType };
+        var contractTypes = type.GetAllTypes().ToList();
 
-        contractTypes.AddRange(contractType.AllInterfaces);
+        contractTypes.AddRange(type.AllInterfaces);
 
-        return contractTypes.SelectMany(i => i.GetMembers().OfType<IPropertySymbol>().Where(property =>
+        return [.. contractTypes.SelectMany(i => i.GetMembers().OfType<IPropertySymbol>().Where(property =>
                 property.DeclaredAccessibility == Accessibility.Public
                 && !property.IsStatic
-                && property.GetMethod != null
+                && property.GetMethod?.DeclaredAccessibility == Accessibility.Public
                 && property.Parameters.IsEmpty))
             .GroupBy(property => property.Name, StringComparer.Ordinal)
-            .Select(group => group.First())
-            .ToList();
+            .Select(group => group.First())];
     }
 
     /// <summary>Recognizes mutable and read-only generic dictionary shapes.</summary>
@@ -206,8 +258,8 @@ public static class AnalyzerSymbolExtensions
     /// <param name="keyType">The dictionary key type.</param>
     /// <param name="valueType">The dictionary value type.</param>
     /// <returns><see langword="true" /> for a supported two-argument dictionary type.</returns>
-    public static bool IsDictionary(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? keyType,
-        [NotNullWhen(true)] out ITypeSymbol? valueType)
+    public static bool IsDictionary(this ITypeSymbol type, out ITypeSymbol keyType,
+        out ITypeSymbol valueType)
     {
         if ((type.TypeKind == TypeKind.Class && type.Name == "Dictionary"
                 || type.TypeKind.IsClassOrInterface() && type.Name == "IReadOnlyDictionary"
@@ -222,8 +274,8 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        keyType = null;
-        valueType = null;
+        keyType = null!;
+        valueType = null!;
         return false;
     }
 
@@ -231,7 +283,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="typeArgument">The underlying value type.</param>
     /// <returns><see langword="true" /> when <paramref name="type" /> is nullable.</returns>
-    public static bool IsNullable(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
+    public static bool IsNullable(this ITypeSymbol type, out ITypeSymbol typeArgument)
     {
         if (type is INamedTypeSymbol nullableType &&
             nullableType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T &&
@@ -242,7 +294,7 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        typeArgument = null;
+        typeArgument = null!;
         return false;
     }
 
@@ -250,7 +302,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="elementType">The array element type.</param>
     /// <returns><see langword="true" /> when <paramref name="type" /> is an array.</returns>
-    public static bool IsArray(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? elementType)
+    public static bool IsArray(this ITypeSymbol type, out ITypeSymbol elementType)
     {
         if (type.TypeKind == TypeKind.Array &&
             type is IArrayTypeSymbol arrayTypeSymbol)
@@ -259,7 +311,7 @@ public static class AnalyzerSymbolExtensions
             return true;
         }
 
-        elementType = null;
+        elementType = null!;
         return false;
     }
 
@@ -267,7 +319,7 @@ public static class AnalyzerSymbolExtensions
     /// <param name="type">The type to inspect.</param>
     /// <param name="inVarType">The initializer variable's value type.</param>
     /// <returns><see langword="true" /> when the type implements the initializer-variable contract.</returns>
-    public static bool IsInVar(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? inVarType)
+    public static bool IsInVar(this ITypeSymbol type, out ITypeSymbol inVarType)
     {
         if (type.TypeKind == TypeKind.Class
             && type.ContainingNamespace.Name == "Variables"
@@ -284,7 +336,7 @@ public static class AnalyzerSymbolExtensions
             }
         }
 
-        inVarType = null;
+        inVarType = null!;
         return false;
     }
 
@@ -331,15 +383,6 @@ public static class AnalyzerSymbolExtensions
     public static bool IsClassOrInterface(this TypeKind typeKind)
     {
         return typeKind == TypeKind.Interface || typeKind == TypeKind.Class;
-    }
-
-    /// <summary>Determines whether a type implements an exact interface symbol.</summary>
-    /// <param name="symbol">The candidate implementation.</param>
-    /// <param name="type">The interface to match.</param>
-    /// <returns><see langword="true" /> when the interface is implemented.</returns>
-    public static bool ImplementsInterface(this ITypeSymbol symbol, ITypeSymbol type)
-    {
-        return symbol.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, type));
     }
 
     /// <summary>Determines whether a type is or derives from an exact type symbol.</summary>

@@ -2,17 +2,11 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Analyzers.Internals;
 
-sealed class ConversionGraph<T>
+sealed class ConversionGraph<T>(int capacity, IEqualityComparer<T>? comparer = null)
     where T : notnull
 {
-    readonly IList<HashSet<int>> _nodes;
-    readonly SymbolIndex<T> _symbolIndex;
-
-    public ConversionGraph(int capacity, IEqualityComparer<T>? comparer = null)
-    {
-        _nodes = new List<HashSet<int>>(capacity);
-        _symbolIndex = new SymbolIndex<T>(capacity, comparer);
-    }
+    readonly IList<HashSet<int>> _nodes = new List<HashSet<int>>(capacity);
+    readonly SymbolIndex<T> _symbolIndex = new(capacity, comparer);
 
     public void Add(T key, params T[] values)
     {
@@ -33,7 +27,7 @@ sealed class ConversionGraph<T>
         if (index <= _nodes.Count)
             return index;
 
-        _nodes.Add(new HashSet<int>());
+        _nodes.Add([]);
         return index;
     }
 }

@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Analyzers.Rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ConsumerEndpointQosAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>Identifies consumer-owned endpoint prefetch assignments.</summary>
+    /// <summary>Identifies consumer-owned endpoint prefetch writes.</summary>
     public const string DiagnosticId = "VOSB5002";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -25,7 +25,7 @@ public sealed class ConsumerEndpointQosAnalyzer : DiagnosticAnalyzer
     /// <summary>Gets the endpoint-quality-of-service ownership diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>Registers endpoint-property assignment analysis for non-generated source.</summary>
+    /// <summary>Registers endpoint-property write analysis for non-generated source.</summary>
     /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
@@ -33,13 +33,18 @@ public sealed class ConsumerEndpointQosAnalyzer : DiagnosticAnalyzer
             throw new ArgumentNullException(nameof(context));
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        context.RegisterOperationAction(AnalyzeAssignment, OperationKind.SimpleAssignment);
+        context.RegisterOperationAction(
+            AnalyzeWrite,
+            OperationKind.SimpleAssignment,
+            OperationKind.CompoundAssignment,
+            OperationKind.CoalesceAssignment,
+            OperationKind.Increment,
+            OperationKind.Decrement);
     }
 
-    private static void AnalyzeAssignment(OperationAnalysisContext context)
+    private static void AnalyzeWrite(OperationAnalysisContext context)
     {
-        if (context.Operation is not ISimpleAssignmentOperation assignment
-            || assignment.Target is not IPropertyReferenceOperation property
+        if (ServiceBusSymbolFacts.GetWriteTarget(context.Operation) is not IPropertyReferenceOperation property
             || !(ServiceBusSymbolFacts.IsConsumerDefinitionProperty(
                     context.Compilation,
                     property.Property,
@@ -53,6 +58,6 @@ public sealed class ConsumerEndpointQosAnalyzer : DiagnosticAnalyzer
                         context.ContainingSymbol))))
             return;
 
-        context.ReportDiagnostic(Diagnostic.Create(s_rule, assignment.Syntax.GetLocation(), property.Property.Name));
+        context.ReportDiagnostic(Diagnostic.Create(s_rule, context.Operation.Syntax.GetLocation(), property.Property.Name));
     }
 }

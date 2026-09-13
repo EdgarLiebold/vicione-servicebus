@@ -19,7 +19,8 @@ public sealed class ExcludedTopologyConsumerAnalyzer : DiagnosticAnalyzer
         "Consumer '{0}' consumes '{1}', which is excluded from automatic topology; provide an explicit compatible endpoint topology or remove the exclusion",
         "Topology",
         DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "A consumer of a topology-excluded contract requires an explicitly compatible receive topology.");
 
     /// <summary>Gets the excluded-topology-consumer diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];

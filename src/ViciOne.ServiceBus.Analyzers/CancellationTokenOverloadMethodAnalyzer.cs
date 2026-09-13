@@ -21,8 +21,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
     /// <summary>Identifies diagnostics for calls that can forward a pipeline cancellation token.</summary>
     public const string CancellationTokenOverloadMethodRuleId = "VOSB2001";
 
-    // Diagnostic property keys. The code fix reads them from its own assembly, so they are part of
-    // the contract between the two.
+    // These property keys define the diagnostic payload consumed by the code-fix assembly.
     /// <summary>Names the diagnostic property containing the cancellation-token parameter index.</summary>
     public const string ParameterIndex = "ParameterIndex";
     /// <summary>Names the diagnostic property containing the cancellation-token parameter name.</summary>
@@ -32,14 +31,14 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
 
     const string Category = "Reliability";
 
-    static readonly DiagnosticDescriptor CancellationTokenOverloadMethodRule = new DiagnosticDescriptor(CancellationTokenOverloadMethodRuleId,
-        "Context.CancellationToken could be used in method overload with CancellationToken",
-        "Cancellation token from '{0}' can be used in cancellation token overload for '{1}' method",
+    static readonly DiagnosticDescriptor CancellationTokenOverloadMethodRule = new(CancellationTokenOverloadMethodRuleId,
+        "Forward the available pipeline cancellation token",
+        "Forward cancellation token '{0}' to the cancellable overload of '{1}'",
         Category, DiagnosticSeverity.Info, true,
-        "Context.CancellationToken can be passed in method with overload.");
+        "Forward an available pipeline cancellation token when the invoked method provides a compatible cancellable overload.");
 
     /// <summary>Gets the cancellation-forwarding diagnostic supported by this analyzer.</summary>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(CancellationTokenOverloadMethodRule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [CancellationTokenOverloadMethodRule];
 
     /// <summary>Registers invocation analysis for each compilation.</summary>
     /// <param name="context">The analyzer registration context.</param>
@@ -71,7 +70,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
         {
             var invocation = (IInvocationOperation)analysisContext.Operation;
 
-            if (!(analysisContext.ContainingSymbol is IMethodSymbol))
+            if (analysisContext.ContainingSymbol is not IMethodSymbol)
                 return;
 
             if (IsContextBoundServiceBusCall(invocation, analysisContext.Compilation, consumeContextTypeSymbol,
@@ -105,7 +104,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
     static bool IsContextBoundServiceBusCall(IInvocationOperation operation, Compilation compilation, ISymbol? consumeContextTypeSymbol,
         ISymbol? outgoingMessagesTypeSymbol, CancellationToken cancellationToken)
     {
-        var receiverType = operation.GetReceiverType(compilation, true, cancellationToken);
+        var receiverType = operation.GetSourceReceiverType(compilation, cancellationToken);
         return receiverType != null
             && (consumeContextTypeSymbol != null && TryGetInterface(receiverType, consumeContextTypeSymbol, out _)
                 || outgoingMessagesTypeSymbol != null && TryGetInterface(receiverType, outgoingMessagesTypeSymbol, out _));
@@ -238,7 +237,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
 
     static SyntaxNode? GetInvocationMethodNameNode(SyntaxNode invocationNode)
     {
-        if (!(invocationNode is InvocationExpressionSyntax invocationExpression))
+        if (invocationNode is not InvocationExpressionSyntax invocationExpression)
             return null;
 
         if (invocationExpression.Expression is MemberBindingExpressionSyntax memberBindingExpression)
@@ -259,7 +258,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
 
         foreach (var reference in compilation.References)
         {
-            if (!(compilation.GetAssemblyOrModuleSymbol(reference) is IAssemblySymbol assemblySymbol))
+            if (compilation.GetAssemblyOrModuleSymbol(reference) is not IAssemblySymbol assemblySymbol)
                 continue;
 
             symbol = assemblySymbol.GetTypeByMetadataName(typeMetadataName);
@@ -301,25 +300,13 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
         return type;
     }
 
-    static SymbolVisibility GetResultantVisibility(ISymbol symbol)
+    static SymbolVisibility GetResultantVisibility(INamedTypeSymbol symbol)
     {
         var visibility = SymbolVisibility.Public;
-        switch (symbol.Kind)
+        ISymbol? current = symbol;
+        while (current is not null && current.Kind != SymbolKind.Namespace)
         {
-            case SymbolKind.Alias:
-                // Aliases are visible only in their declaring source file.
-                return SymbolVisibility.Private;
-            case SymbolKind.Parameter:
-                // Parameters inherit the visibility of their containing symbol.
-                return GetResultantVisibility(symbol.ContainingSymbol);
-            case SymbolKind.TypeParameter:
-                // Type parameters are not independently addressable outside their declaration.
-                return SymbolVisibility.Private;
-        }
-
-        while (symbol != null && symbol.Kind != SymbolKind.Namespace)
-        {
-            switch (symbol.DeclaredAccessibility)
+            switch (current.DeclaredAccessibility)
             {
                 case Accessibility.NotApplicable:
                 case Accessibility.Private:
@@ -330,7 +317,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
                     break;
             }
 
-            symbol = symbol.ContainingSymbol;
+            current = current.ContainingSymbol;
         }
 
         return visibility;
@@ -339,7 +326,6 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
     static string[] FindCancellationTokens(IOperation operation, INamedTypeSymbol cancellationTokenSymbol, INamedTypeSymbol pipeContextSymbol,
         CancellationToken cancellationToken, ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>> membersByType)
     {
-        var isStatic = operation.IsStaticMember(cancellationToken);
         var paths = new HashSet<string>(StringComparer.Ordinal);
 
         foreach (var availableSymbol in operation.GetParameters(cancellationToken))
@@ -349,28 +335,14 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
                 if (!IsSymbolAccessibleFromOperation(member, operation))
                     continue;
 
-                if (availableSymbol.Name == null && isStatic && !member.IsStatic)
-                    continue;
-
-                var fullPath = ComputeFullPath(availableSymbol.Name, member);
+                var fullPath = availableSymbol.Name + "." + member.Name;
                 paths.Add(fullPath);
             }
         }
 
         return paths.Count == 0
             ? []
-            : paths.OrderBy(value => value.Count(c => c == '.')).ThenBy(value => value, StringComparer.Ordinal).ToArray();
-
-        static string ComputeFullPath(string? prefix, ISymbol symbols)
-        {
-            if (prefix == null)
-                return symbols.Name;
-
-            if (string.IsNullOrEmpty(symbols.Name))
-                return prefix;
-
-            return prefix + "." + symbols.Name;
-        }
+            : [.. paths.OrderBy(value => value.Count(c => c == '.')).ThenBy(value => value, StringComparer.Ordinal)];
 
         static bool IsSymbolAccessibleFromOperation(ISymbol symbol, IOperation operation)
         {
@@ -390,16 +362,9 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
             var result = new HashSet<ISymbol>(SymbolEqualityComparer.Default);
             foreach (var member in GetPipeContextMembers(symbol, pipeContextSymbol))
             {
-                switch (member)
-                {
-                    case IPropertySymbol propertySymbol when SymbolEqualityComparer.Default.Equals(propertySymbol.Type, cancellationTokenSymbol):
-                        result.Add(propertySymbol);
-                        break;
-
-                    case IFieldSymbol fieldSymbol when SymbolEqualityComparer.Default.Equals(fieldSymbol.Type, cancellationTokenSymbol):
-                        result.Add(fieldSymbol);
-                        break;
-                }
+                if (member is IPropertySymbol propertySymbol
+                    && SymbolEqualityComparer.Default.Equals(propertySymbol.Type, cancellationTokenSymbol))
+                    result.Add(propertySymbol);
             }
 
             return result;

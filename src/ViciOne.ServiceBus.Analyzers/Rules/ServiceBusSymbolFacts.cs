@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace ViciOne.ServiceBus.Analyzers.Rules;
 
@@ -97,10 +98,24 @@ internal static class ServiceBusSymbolFacts
         return false;
     }
 
+    public static IOperation? GetWriteTarget(IOperation operation)
+        => operation switch
+        {
+            IAssignmentOperation assignment => assignment.Target,
+            IIncrementOrDecrementOperation incrementOrDecrement => incrementOrDecrement.Target,
+            _ => null,
+        };
+
     public static bool IsCanonicalFrameworkType(
         Compilation compilation,
         INamedTypeSymbol type,
         params string[] metadataNames)
+        => IsCanonicalFrameworkType(compilation, type, (IEnumerable<string>)metadataNames);
+
+    public static bool IsCanonicalFrameworkType(
+        Compilation compilation,
+        INamedTypeSymbol type,
+        IEnumerable<string> metadataNames)
     {
         foreach (string metadataName in metadataNames)
         {

@@ -41,12 +41,6 @@
                       PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- PackagePath is empty because NuGet keeps the item's own relative directory, so the scripts
-         land in tools/ exactly as they do in the project. -->
-    <None Update="tools\*.ps1" CopyToOutputDirectory="IfDifferent" Pack="true" PackagePath="" />
-  </ItemGroup>
-
   <Target Name="PackAnalyzerAssemblies">
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)ViciOne.ServiceBus.Analyzers.dll"

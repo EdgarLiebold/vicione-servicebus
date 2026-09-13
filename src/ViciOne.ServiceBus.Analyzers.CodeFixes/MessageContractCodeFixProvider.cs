@@ -12,8 +12,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Simplification;
+using ViciOne.ServiceBus.Analyzers;
+using ViciOne.ServiceBus.Analyzers.Internals;
 
-namespace ViciOne.ServiceBus.Analyzers;
+namespace ViciOne.ServiceBus.Analyzers.CodeFixes;
 
 /// <summary>Adds omitted members to anonymous message values from their declared contracts.</summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MessageContractCodeFixProvider))]
@@ -24,7 +26,7 @@ public sealed class MessageContractCodeFixProvider :
     const string Title = "Add missing properties";
 
     /// <summary>Gets the missing-message-property diagnostic fixed by this provider.</summary>
-    public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageContractAnalyzer.MissingPropertiesRuleId);
+    public sealed override ImmutableArray<string> FixableDiagnosticIds => [MessageContractAnalyzer.MissingPropertiesRuleId];
 
     /// <summary>Gets the batch provider used to add missing properties across a solution.</summary>
     /// <returns>The standard batch fix-all provider.</returns>
@@ -111,7 +113,7 @@ public sealed class MessageContractCodeFixProvider :
         SemanticModel semanticModel,
         CancellationToken cancellationToken)
     {
-        List<IPropertySymbol> contractProperties = contractType.GetContractProperties();
+        List<IPropertySymbol> contractProperties = contractType.GetSerializableProperties();
 
         foreach (var initializer in anonymousObject.Initializers)
         {
@@ -171,7 +173,7 @@ public sealed class MessageContractCodeFixProvider :
                 .ConfigureAwait(false);
         }
         else if (initializer.Expression is InvocationExpressionSyntax invocationExpressionSyntax
-                 && semanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol method
+                 && semanticModel.GetSymbolInfo(invocationExpressionSyntax, cancellationToken).Symbol is IMethodSymbol method
                  && method.ReturnType.IsList(out var methodReturnTypeArgument)
                  && methodReturnTypeArgument.IsAnonymousType)
         {
@@ -263,7 +265,7 @@ public sealed class MessageContractCodeFixProvider :
     {
         var newRoot = root;
 
-        List<IPropertySymbol> contractProperties = contractType.GetContractProperties();
+        List<IPropertySymbol> contractProperties = contractType.GetSerializableProperties();
 
         var propertiesToAdd = new List<AnonymousObjectMemberDeclaratorSyntax>();
         foreach (var messageContractProperty in contractProperties)
@@ -281,7 +283,7 @@ public sealed class MessageContractCodeFixProvider :
         if (propertiesToAdd.Any())
         {
             var newAnonymousObject = anonymousObject
-                .AddInitializers(propertiesToAdd.ToArray())
+                .AddInitializers([.. propertiesToAdd])
                 .WithAdditionalAnnotations(Formatter.Annotation);
             newRoot = newRoot.ReplaceNode(anonymousObject, newAnonymousObject);
         }
@@ -291,7 +293,7 @@ public sealed class MessageContractCodeFixProvider :
 
     static AnonymousObjectMemberDeclaratorSyntax[] CreateProperties(ITypeSymbol contractType, IEnumerable<ITypeSymbol> path)
     {
-        List<IPropertySymbol> contractProperties = contractType.GetContractProperties();
+        List<IPropertySymbol> contractProperties = contractType.GetSerializableProperties();
 
         var propertiesToAdd = new List<AnonymousObjectMemberDeclaratorSyntax>();
         foreach (var contractProperty in contractProperties)
@@ -300,7 +302,7 @@ public sealed class MessageContractCodeFixProvider :
             propertiesToAdd.Add(propertyToAdd);
         }
 
-        return propertiesToAdd.ToArray();
+        return [.. propertiesToAdd];
     }
 
     static AnonymousObjectMemberDeclaratorSyntax CreateProperty(IPropertySymbol contractProperty, IEnumerable<ITypeSymbol> path)
@@ -316,17 +318,15 @@ public sealed class MessageContractCodeFixProvider :
             if (path.Contains(contractElementType, SymbolEqualityComparer.Default))
                 expression = CreateEmptyArray(contractElementType);
             else
-                expression = CreateImplicitArray(contractElementType, path.Concat(new[] { contractElementType }));
+                expression = CreateImplicitArray(contractElementType, path.Concat([contractElementType]));
         }
         else if (contractProperty.Type.TypeKind == TypeKind.Interface)
         {
             if (path.Contains(contractProperty.Type, SymbolEqualityComparer.Default))
                 expression = CreateDefault(contractProperty.Type);
             else
-                expression = CreateAnonymousObject(contractProperty.Type, path.Concat(new[] { contractProperty.Type }));
+                expression = CreateAnonymousObject(contractProperty.Type, path.Concat([contractProperty.Type]));
         }
-        else if (contractProperty.Type.IsNullable(out _))
-            expression = CreateDefault(contractProperty.Type);
         else
             expression = CreateDefault(contractProperty.Type);
 
@@ -357,7 +357,7 @@ public sealed class MessageContractCodeFixProvider :
         else
             node = CreateDefault(type);
 
-        ExpressionSyntax[] nodes = { node };
+        ExpressionSyntax[] nodes = [node];
         var initializer = SyntaxFactory.InitializerExpression(SyntaxKind.ArrayInitializerExpression)
             .WithExpressions(SyntaxFactory.SeparatedList(nodes));
         return SyntaxFactory.ImplicitArrayCreationExpression(initializer)

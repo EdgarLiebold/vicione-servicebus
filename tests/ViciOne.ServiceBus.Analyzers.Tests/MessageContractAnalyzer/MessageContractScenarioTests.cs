@@ -10,10 +10,17 @@ namespace ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer;
 
 public sealed class MessageContractScenarioTests
 {
-    public static IEnumerable<object[]> Cases() =>
-        MessageContractScenarioCatalog.All
-            .SelectMany(scenario => scenario.EnumerateForms(), (scenario, form) =>
-                new object[] { scenario.Key, form });
+    public static TheoryData<string, MessageSourceForm> Cases()
+    {
+        var cases = new TheoryData<string, MessageSourceForm>();
+        foreach (var scenario in MessageContractScenarioCatalog.All)
+        {
+            foreach (var form in scenario.EnumerateForms())
+                cases.Add(scenario.Key, form);
+        }
+
+        return cases;
+    }
 
     [Theory]
     [MemberData(nameof(Cases))]

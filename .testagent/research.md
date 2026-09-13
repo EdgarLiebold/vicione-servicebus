@@ -899,3 +899,51 @@ cleanup branch has no isolated test seam. Both provider harnesses intentionally 
 template-method model of `BusTestHarness`; their provider events and protected extension points are
 real customization capabilities rather than legacy aliases, so they remain unless a complete
 replacement can preserve those capabilities.
+
+## Iteration 96 analyzer-toolchain research
+
+The bounded owner is `src/ViciOne.ServiceBus.Analyzers`,
+`src/ViciOne.ServiceBus.Analyzers.CodeFixes`, and
+`src/ViciOne.ServiceBus.Analyzers.Package`. All 17 original C# files and their comments were read
+manually in full, as were the three project files, shipped/unshipped rule records, two old NuGet
+scripts, owning tests, and requirement manifests. The physical tree was also checked as a whole.
+`src/ViciOne.ServiceBus` is the Core project directory, not a product-wide container. Independent
+capability assemblies therefore remain its siblings; external integrations remain grouped by
+`Persistence`, `Scheduling`, and `Transports`. Nesting those projects under Core would misstate
+ownership and expose their sources to the SDK project's recursive compile glob.
+
+The unchanged baselines pass 126 analyzer tests and 32 code-fix tests. Initial focused coverage is
+88.1356% line and 71.5360% branch for the analyzer assembly at complexity 953, and 92.8571% line
+and 72.3881% branch for CodeFixes at complexity 140. Static source-to-test pairing identifies the
+two internal conversion helpers as filename-unpaired, but runtime coverage proves their indirect
+execution through public analyzers; filename pairing is not behavioral evidence.
+
+Manual analysis found incomplete producer-family registration, magic generic-carrier indices,
+unobserved `ConfigureAwait` and discard forms, nonterminating recursive structural paths, missing
+concrete-interface conversion, overbroad property selection, an infinite loop for unsupported
+value-type `MessageData<T>`, incomplete diagnostic descriptions, incomplete blocking primitive and
+configuration-write handling, a leaked public helper surface, a mismatched CodeFix namespace, an
+obsolete nullability polyfill, and legacy NuGet install/uninstall scripts. Coverage hotspots agreed
+with these findings but did not discover them on their own.
+
+After the first remediation and full gates, the final manual reread found two further exact defects:
+a public property with a private getter was treated as a serialized contract member, and timed
+`Monitor.TryEnter`/`SpinLock.TryEnter` calls were not classified as blocking. Tests were added first
+and failed 2 of 164 cases with the exact unexpected missing-property diagnostic and a diagnostic
+count of 9 instead of 11. Public-getter filtering and timeout-parameter recognition then made the
+same 164 cases pass. A third adversarial test proved that inherited concrete consume contexts were
+already correctly excluded from self-token recommendations, so no speculative source change was
+made there.
+
+Direct Roslyn dependencies are on the current coherent 5.9.0 family. Older transitive System and
+Humanizer packages are owned by that compiler dependency graph and are not overridden without an
+upstream-supported combination. Packaging outside the sandbox succeeds in seconds and the package
+has exactly the modern Roslyn asset layout with no `tools`, `lib`, or compatibility scripts.
+
+Sandbox behavior is causal rather than a source defect. An authoritative coverage attempt inside
+the sandbox exited 134 with `SocketException (13): Permission denied` while Microsoft Testing
+Platform created its named-pipe server. Earlier `pack` attempts could wait with no live MSBuild
+child. Repeating the same commands outside the sandbox succeeds. This is the retained diagnostic
+rule for future iterations: first confirm the active process and error; for MTP/Roslyn IPC, NuGet,
+restore, pack, format, or full-repository gates, use the approved outside-sandbox execution rather
+than changing source or tests to accommodate the environment.

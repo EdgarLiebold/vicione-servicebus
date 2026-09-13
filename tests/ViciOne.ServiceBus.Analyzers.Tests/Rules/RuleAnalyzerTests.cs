@@ -72,6 +72,58 @@ public sealed class RuleAnalyzerTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RULE-ANALYZERS", "blocking-synchronization-primitives")]
+    public async Task BlockingConsumerAnalyzer_ReportsCanonicalSynchronizationPrimitivesAsync()
+    {
+        const string source = """
+            using System.Threading;
+            using System.Threading.Tasks;
+            using ViciOne.ServiceBus;
+
+            public sealed class Message { }
+
+            public sealed class Consumer : IConsumer<Message>
+            {
+                private readonly object _gate = new();
+                private readonly ReaderWriterLockSlim _readerWriterLock = new();
+
+                public Task ConsumeAsync(ConsumeContext<Message> context)
+                {
+                    lock (_gate) { }
+                    Monitor.Enter(_gate);
+                    Monitor.TryEnter(_gate);
+                    Monitor.TryEnter(_gate, 1);
+                    Monitor.Wait(_gate);
+                    Monitor.Pulse(_gate);
+                    Monitor.Exit(_gate);
+                    _readerWriterLock.EnterReadLock();
+                    _readerWriterLock.EnterWriteLock();
+                    _readerWriterLock.EnterUpgradeableReadLock();
+                    _readerWriterLock.TryEnterWriteLock(1);
+                    _readerWriterLock.ExitReadLock();
+                    SpinWait.SpinUntil(() => true);
+                    var spinLock = new SpinLock();
+                    var lockTaken = false;
+                    spinLock.Enter(ref lockTaken);
+                    spinLock.TryEnter(1, ref lockTaken);
+                    spinLock.Exit();
+                    return Task.CompletedTask;
+                }
+            }
+            """;
+
+        IReadOnlyList<DiagnosticObservation> diagnostics = await AnalyzeAsync(
+            new BlockingConsumerCallAnalyzer(),
+            source);
+
+        Assert.Equal(11, diagnostics.Count);
+        Assert.All(diagnostics, diagnostic => Assert.Equal(BlockingConsumerCallAnalyzer.DiagnosticId, diagnostic.Id));
+        Assert.Equal(
+            ["Enter", "Enter", "EnterReadLock", "EnterUpgradeableReadLock", "EnterWriteLock", "SpinUntil", "TryEnter", "TryEnter", "TryEnterWriteLock", "Wait", "lock"],
+            [.. diagnostics.Select(BlockingOperationName).Order(StringComparer.Ordinal)]);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RULE-ANALYZERS", "consumer-definition-canonical-properties")]
     public async Task DefinitionAnalyzers_ReportOnlyCanonicalInheritedPropertiesInConsumerDefinitionsAsync()
     {
@@ -155,6 +207,52 @@ public sealed class RuleAnalyzerTests
         DiagnosticObservation concurrencyDiagnostic = Assert.Single(concurrency);
         Assert.Equal(ConsumerConcurrencyDeclarationAnalyzer.DiagnosticId, concurrencyDiagnostic.Id);
         Assert.Contains("ConcurrentMessageLimit", concurrencyDiagnostic.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RULE-ANALYZERS", "all-configuration-write-forms")]
+    public async Task DefinitionAnalyzers_ReportEveryCanonicalConfigurationWriteFormAsync()
+    {
+        const string source = """
+            using System.Threading.Tasks;
+            using ViciOne.ServiceBus;
+
+            public sealed class Message { }
+
+            public sealed class Consumer : IConsumer<Message>
+            {
+                public Task ConsumeAsync(ConsumeContext<Message> context) => Task.CompletedTask;
+            }
+
+            public sealed class Definition : ConsumerDefinition<Consumer>
+            {
+                public Definition()
+                {
+                    ConcurrentMessageLimit += 1;
+                    ConcurrentMessageLimit ??= 1;
+                    ++ConcurrentMessageLimit;
+                }
+
+                protected override void ConfigureConsumer(
+                    IReceiveEndpointConfigurator endpointConfigurator,
+                    IConsumerConfigurator<Consumer> consumerConfigurator,
+                    IRegistrationContext context)
+                {
+                    endpointConfigurator.PrefetchCount += 1;
+                    endpointConfigurator.PrefetchCount++;
+                }
+            }
+            """;
+
+        IReadOnlyList<DiagnosticObservation> qos = await AnalyzeAsync(new ConsumerEndpointQosAnalyzer(), source);
+        IReadOnlyList<DiagnosticObservation> concurrency = await AnalyzeAsync(
+            new ConsumerConcurrencyDeclarationAnalyzer(),
+            source);
+
+        Assert.Equal(2, qos.Count);
+        Assert.All(qos, diagnostic => Assert.Equal(ConsumerEndpointQosAnalyzer.DiagnosticId, diagnostic.Id));
+        Assert.Equal(3, concurrency.Count);
+        Assert.All(concurrency, diagnostic => Assert.Equal(ConsumerConcurrencyDeclarationAnalyzer.DiagnosticId, diagnostic.Id));
     }
 
     [Fact]
@@ -252,8 +350,43 @@ public sealed class RuleAnalyzerTests
         Assert.All(diagnostics, diagnostic => Assert.Equal(LargeInlinePayloadAnalyzer.DiagnosticId, diagnostic.Id));
         Assert.Equal(
             ["Attachment", "Bytes", "Memory", "ReadOnlyMemory", "Stream"],
-            diagnostics.Select(MemberName).Order(StringComparer.Ordinal).ToArray());
+            [.. diagnostics.Select(MemberName).Order(StringComparer.Ordinal)]);
         Assert.DoesNotContain(diagnostics, diagnostic => diagnostic.Message.Contains("External", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RULE-ANALYZERS", "large-inline-serialized-members-only")]
+    public async Task LargeInlinePayloadAnalyzer_ReportsEachSerializedMemberExactlyOnceAsync()
+    {
+        const string source = """
+            using ViciOne.ServiceBus;
+
+            public interface PayloadContract
+            {
+                byte[] Data { get; }
+            }
+
+            [MessageContract("payload")]
+            public sealed class Payload : PayloadContract
+            {
+                private byte[] PrivateData { get; } = [];
+                protected byte[] ProtectedData { get; } = [];
+                public static byte[] StaticData { get; } = [];
+                public byte[] this[int index] => [];
+                public byte[] WriteOnlyData { set { } }
+                public byte[] PublicField = [];
+                public byte[] Data { get; init; } = [];
+            }
+            """;
+
+        IReadOnlyList<DiagnosticObservation> diagnostics = await AnalyzeAsync(
+            new LargeInlinePayloadAnalyzer(),
+            source);
+
+        Assert.Equal(2, diagnostics.Count);
+        Assert.Equal(
+            ["Data", "PublicField"],
+            [.. diagnostics.Select(MemberName).Order(StringComparer.Ordinal)]);
     }
 
     [Fact]
@@ -350,9 +483,7 @@ public sealed class RuleAnalyzerTests
 
         foreach (DiagnosticAnalyzer analyzer in CreateAnalyzers())
         {
-            Task<IReadOnlyList<DiagnosticObservation>>[] runs = Enumerable.Range(0, 8)
-                .Select(_ => AnalyzeAsync(analyzer, source))
-                .ToArray();
+            Task<IReadOnlyList<DiagnosticObservation>>[] runs = [.. Enumerable.Range(0, 8).Select(_ => AnalyzeAsync(analyzer, source))];
             IReadOnlyList<DiagnosticObservation>[] results = await Task.WhenAll(runs);
 
             Assert.NotEmpty(results[0]);
@@ -383,6 +514,14 @@ public sealed class RuleAnalyzerTests
     private static string MemberName(DiagnosticObservation diagnostic)
     {
         const string marker = "Message contract member '";
+        int start = diagnostic.Message.IndexOf(marker, StringComparison.Ordinal) + marker.Length;
+        int end = diagnostic.Message.IndexOf('\'', start);
+        return diagnostic.Message[start..end];
+    }
+
+    private static string BlockingOperationName(DiagnosticObservation diagnostic)
+    {
+        const string marker = "blocking call '";
         int start = diagnostic.Message.IndexOf(marker, StringComparison.Ordinal) + marker.Length;
         int end = diagnostic.Message.IndexOf('\'', start);
         return diagnostic.Message[start..end];

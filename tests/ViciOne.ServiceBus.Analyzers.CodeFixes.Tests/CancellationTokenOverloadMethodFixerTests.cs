@@ -199,6 +199,50 @@ namespace ConsoleApplication1
         await AssertFixedSourceAsync(source, expected);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-CODEFIX", "extension-method-overload")]
+    public async Task ExtensionMethodFix_AddsTheTokenAfterTheReducedArgumentsAsync()
+    {
+        var source = Prefix + @"
+namespace ConsoleApplication1
+{
+    static class WorkExtensions
+    {
+        public static Task WorkAsync(this string value) => Task.CompletedTask;
+        public static Task WorkAsync(this string value, System.Threading.CancellationToken cancellationToken) => Task.CompletedTask;
+    }
+
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            return ""value"".WorkAsync();
+        }
+    }
+}
+";
+        var expected = Prefix + @"
+namespace ConsoleApplication1
+{
+    static class WorkExtensions
+    {
+        public static Task WorkAsync(this string value) => Task.CompletedTask;
+        public static Task WorkAsync(this string value, System.Threading.CancellationToken cancellationToken) => Task.CompletedTask;
+    }
+
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            return ""value"".WorkAsync(cancellationToken: context.CancellationToken);
+        }
+    }
+}
+";
+
+        await AssertFixedSourceAsync(source, expected);
+    }
+
     private static string Prefix =>
         ServiceBusCodeFixFixture.Usings + ServiceBusCodeFixFixture.SimpleMessageContracts;
 

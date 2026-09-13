@@ -57,7 +57,7 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB1004",
                 DiagnosticSeverity.Info,
-                "Anonymous type is missing properties that are in the message contract 'ProcessDocument'. The following properties are missing: Id, CustomerId, Document, Stream.",
+                "Message values for contract 'ProcessDocument' are missing properties: Id, CustomerId, Document, Stream",
                 "Test0.cs",
                 28,
                 53));
@@ -93,7 +93,7 @@ namespace ConsoleApplication1
             new DiagnosticObservation(
                 "VOSB1002",
                 DiagnosticSeverity.Error,
-                "Anonymous type does not map to message contract 'ProcessDocument'. The following properties of the anonymous type are incompatible: Document, Stream.",
+                "Message values do not map to contract 'ProcessDocument'; incompatible properties: Document, Stream",
                 "Test0.cs",
                 28,
                 53));
@@ -157,16 +157,143 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(source);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "message-data-supported-conversion-matrix")]
+    public async Task SupportedMessageDataInputs_SatisfyEveryCanonicalConversionAsync()
+    {
+        var source = Usings + @"
+namespace ConsoleApplication1
+{
+    public interface Document
+    {
+        string Name { get; }
+    }
+
+    public sealed class PdfDocument : Document
+    {
+        public string Name { get; init; }
+    }
+
+    public interface StoreDocument
+    {
+        MessageData<byte[]> BinaryFromBytes { get; }
+        MessageData<byte[]> BinaryFromText { get; }
+        MessageData<byte[]> BinaryFromMessageData { get; }
+        MessageData<string> Text { get; }
+        MessageData<Stream> Stream { get; }
+        MessageData<Document> Document { get; }
+    }
+
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+            MessageData<string> textData = default!;
+
+            await bus.PublishAsync<StoreDocument>(new
+            {
+                BinaryFromBytes = new byte[] { 1, 2, 3 },
+                BinaryFromText = ""content"",
+                BinaryFromMessageData = textData,
+                Text = ""content"",
+                Stream = new MemoryStream(),
+                Document = new PdfDocument { Name = ""document"" }
+            });
+        }
+    }
+}
+";
+
+        await AssertDiagnosticsAsync(source);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "message-data-unsupported-conversion-matrix")]
+    public async Task UnsupportedMessageDataInputs_ReportEveryIncompatiblePropertyWithoutHangingAsync()
+    {
+        var source = Usings + @"
+namespace ConsoleApplication1
+{
+    public interface InvalidMessageData
+    {
+        MessageData<byte[]> Binary { get; }
+        MessageData<string> Text { get; }
+        MessageData<Stream> Stream { get; }
+        MessageData<int> ValueType { get; }
+    }
+
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+
+            await bus.PublishAsync<InvalidMessageData>(new
+            {
+                Binary = 1,
+                Text = 2,
+                Stream = 3,
+                ValueType = 4
+            });
+        }
+    }
+}
+";
+
+        var diagnostic = Assert.Single(await AnalyzeAsync(source));
+        Assert.Equal("VOSB1002", diagnostic.Id);
+        Assert.Equal(
+            "Message values do not map to contract 'InvalidMessageData'; incompatible properties: Binary, Text, Stream, ValueType",
+            diagnostic.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "nullable-source-and-target-conversions")]
+    public async Task NullableAndNonNullableValues_AreCompatibleInBothDirectionsAsync()
+    {
+        var source = Usings + @"
+namespace ConsoleApplication1
+{
+    public interface PriceChanged
+    {
+        decimal? OptionalPrice { get; }
+        decimal RequiredPrice { get; }
+    }
+
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+            decimal? requiredPrice = 12m;
+
+            await bus.PublishAsync<PriceChanged>(new
+            {
+                OptionalPrice = 10m,
+                RequiredPrice = requiredPrice
+            });
+        }
+    }
+}
+";
+
+        await AssertDiagnosticsAsync(source);
+    }
+
     private static async Task AssertDiagnosticsAsync(
         string source,
         params DiagnosticObservation[] expected)
     {
-        var actual = await RoslynTestHost.AnalyzeAsync(
+        var actual = await AnalyzeAsync(source);
+
+        ServiceBusAnalyzerFixture.AssertDiagnostics(actual, expected);
+    }
+
+    private static Task<IReadOnlyList<DiagnosticObservation>> AnalyzeAsync(string source) =>
+        RoslynTestHost.AnalyzeAsync(
             source,
             new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
             ServiceBusAnalyzerFixture.ReferenceRoots,
             TestContext.Current.CancellationToken);
-
-        ServiceBusAnalyzerFixture.AssertDiagnostics(actual, expected);
-    }
 }
