@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines configuration options for inbox cleanup service.</summary>
+/// <summary>Controls duplicate-detection retention and cleanup query behavior for an inbox.</summary>
 public abstract class InboxCleanupServiceOptions
 {
-    /// <summary>The amount of time a message remaining in the Inbox.</summary>
+    /// <summary>Gets or sets how long an inbox retains a consumed message for duplicate detection.</summary>
     public TimeSpan DuplicateDetectionWindow { get; set; } = TimeSpan.FromMinutes(30);
 
-    /// <summary>The maximum number of messages to load and remove at a time that meet the criteria.</summary>
+    /// <summary>Gets or sets the maximum number of expired inbox records removed in one query.</summary>
     public int QueryMessageLimit { get; set; } = 100;
 
-    /// <summary>Database query timeout for loading/removing messages.</summary>
+    /// <summary>Gets or sets the timeout for each cleanup query.</summary>
     public TimeSpan QueryTimeout { get; set; } = TimeSpan.FromSeconds(30);
 
-    /// <summary>Delay between each database sweep to cleanup the inbox.</summary>
+    /// <summary>Gets or sets the delay between cleanup queries.</summary>
     public TimeSpan QueryDelay { get; set; } = TimeSpan.FromSeconds(10);
 }
 
 
-/// <summary>Defines configuration options for inbox cleanup service.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Scopes inbox cleanup options to a persistence owner.</summary>
+/// <typeparam name="T">The persistence owner that isolates the option instance.</typeparam>
 public sealed class InboxCleanupServiceOptions<T> :
     InboxCleanupServiceOptions
     where T : class

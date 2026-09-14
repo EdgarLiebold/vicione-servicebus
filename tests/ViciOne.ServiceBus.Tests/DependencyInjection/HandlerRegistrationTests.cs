@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -10,6 +11,38 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 
 public sealed class HandlerRegistrationTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DI-HANDLER", "all-registration-overloads-reject-missing-configurator-and-handler")]
+    public void RegistrationOverloads_RejectEveryMissingRequiredInputBeforeChangingServices()
+    {
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
+        int initialCount = services.Count;
+        MethodInfo[] methods = typeof(HandlerRegistrationConfiguratorExtensions)
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .Where(method => method.Name == nameof(HandlerRegistrationConfiguratorExtensions.AddHandler))
+            .OrderBy(method => method.GetGenericArguments().Length)
+            .ThenBy(method => method.GetParameters()[1].ParameterType.ToString(), StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(16, methods.Length);
+        foreach (MethodInfo method in methods)
+        {
+            MethodInfo closedMethod = method.MakeGenericMethod(
+                Enumerable.Repeat(typeof(HandlerMessage), method.GetGenericArguments().Length).ToArray());
+
+            TargetInvocationException missingConfigurator = Assert.Throws<TargetInvocationException>(() =>
+                closedMethod.Invoke(null, [null, null]));
+            TargetInvocationException missingHandler = Assert.Throws<TargetInvocationException>(() =>
+                closedMethod.Invoke(null, [configurator, null]));
+
+            Assert.Equal("configurator", Assert.IsType<ArgumentNullException>(missingConfigurator.InnerException).ParamName);
+            Assert.Equal("handler", Assert.IsType<ArgumentNullException>(missingHandler.InnerException).ParamName);
+        }
+
+        Assert.Equal(initialCount, services.Count);
+    }
+
     [Theory]
     [InlineData(MessageHandlerShape.Message)]
     [InlineData(MessageHandlerShape.Context)]

@@ -5,13 +5,15 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for delayed message scheduler registration.</summary>
+/// <summary>Registers transport-native delayed-message schedulers.</summary>
 public static class DelayedMessageSchedulerRegistrationExtensions
 {
-    /// <summary>Add a <see cref="IMessageScheduler" /> to the container that uses transport message delay to schedule messages.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Registers a scoped scheduler that uses the default bus transport's native delivery delay.</summary>
+    /// <param name="configurator">The default bus registration to extend.</param>
     public static void AddDelayedMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<IBus>();
@@ -21,12 +23,14 @@ public static class DelayedMessageSchedulerRegistrationExtensions
         });
     }
 
-    /// <summary>Add a <see cref="IMessageScheduler" /> to the container that uses transport message delay to schedule messages.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Registers a scoped scheduler that uses a typed bus transport's native delivery delay.</summary>
+    /// <typeparam name="TBus">The bus contract that owns the scheduler.</typeparam>
+    /// <param name="configurator">The typed bus registration to extend.</param>
     public static void AddDelayedMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<TBus>();

@@ -361,7 +361,7 @@
     },
     {
       "type": "ViciOneServiceBusHealthCheckOptions<TBus>",
-      "source": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/ViciOneServiceBusHealthCheckOptions.cs",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ViciOneServiceBusHealthCheckOptions.cs",
       "boundary": "host-start",
       "registrationSource": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ViciOneServiceBusHealthCheckOptionsExtensions.cs",
       "invariantCount": 3,

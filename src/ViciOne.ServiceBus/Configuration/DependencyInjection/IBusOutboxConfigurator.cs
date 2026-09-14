@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures bus outbox.</summary>
+/// <summary>Controls background delivery for a durable bus outbox.</summary>
 public interface IBusOutboxConfigurator
 {
-    /// <summary>Disable the outbox message delivery service, removing the hosted service from the service collection.</summary>
+    /// <summary>Disables the hosted service that delivers stored outbox messages to the transport.</summary>
     void DisableDeliveryService();
 }

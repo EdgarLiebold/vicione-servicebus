@@ -18,6 +18,7 @@ public sealed class TenantScopeIntegrationTests
     [InlineData(TenantPipeline.SendOpenConsume)]
     [InlineData(TenantPipeline.RetrySendOpenConsume)]
     [InlineData(TenantPipeline.ExecuteActivity)]
+    [InlineData(TenantPipeline.ExecuteActivityTyped)]
     [RequirementCoverage("REQ-VSB-TENANT-SCOPE", "header-filter-initializes-scope-before-consumer-or-activity-resolution")]
     public async Task TenantFilter_InitializesTheScopeBeforeDependentComponentsAreResolvedAsync(TenantPipeline pipeline)
     {
@@ -31,7 +32,7 @@ public sealed class TenantScopeIntegrationTests
         services.AddViciOneServiceBusTestHarness(configuration =>
         {
             configuration.SetTestTimeouts(timeout, timeout);
-            if (pipeline == TenantPipeline.ExecuteActivity)
+            if (pipeline is TenantPipeline.ExecuteActivity or TenantPipeline.ExecuteActivityTyped)
                 configuration.AddExecuteActivity<TenantActivity, TenantArguments>();
             else
                 configuration.AddConsumer<TenantConsumer>();
@@ -46,6 +47,8 @@ public sealed class TenantScopeIntegrationTests
             {
                 if (pipeline == TenantPipeline.ExecuteActivity)
                     endpoint.UseExecuteActivityFilter(typeof(TenantExecuteFilter<>), context);
+                else if (pipeline == TenantPipeline.ExecuteActivityTyped)
+                    endpoint.UseExecuteActivityFilter<TypedTenantExecuteFilter>(context);
                 else if (pipeline is TenantPipeline.PublishTypedConsume or TenantPipeline.TypedPublishTypedConsume)
                     endpoint.UseConsumeFilter<TypedTenantConsumeFilter>(context);
                 else
@@ -76,7 +79,7 @@ public sealed class TenantScopeIntegrationTests
         try
         {
             Guid correlationId = NewId.NextGuid();
-            if (pipeline == TenantPipeline.ExecuteActivity)
+            if (pipeline is TenantPipeline.ExecuteActivity or TenantPipeline.ExecuteActivityTyped)
             {
                 var builder = new RoutingSlipBuilder(correlationId);
                 builder.AddActivity(
@@ -119,6 +122,7 @@ public sealed class TenantScopeIntegrationTests
         SendOpenConsume,
         RetrySendOpenConsume,
         ExecuteActivity,
+        ExecuteActivityTyped,
     }
 
     public sealed record TenantRequest(Guid CorrelationId, int FailureCount) : ICorrelatedBy<Guid>;
@@ -258,6 +262,17 @@ public sealed class TenantScopeIntegrationTests
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("executeTenant");
+    }
+
+    public sealed class TypedTenantExecuteFilter(TenantContext tenant) : IFilter<ExecuteContext<TenantArguments>>
+    {
+        public Task SendAsync(ExecuteContext<TenantArguments> context, IPipe<ExecuteContext<TenantArguments>> next)
+        {
+            tenant.TenantId = context.Headers.Get<string>(TenantHeader) ?? string.Empty;
+            return next.SendAsync(context);
+        }
+
+        public void Probe(ProbeContext context) => context.CreateFilterScope("typedExecuteTenant");
     }
 
     public sealed class TenantRetryException(string message) : Exception(message);

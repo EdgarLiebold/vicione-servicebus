@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -7,9 +6,9 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IRiderRegistrationContext :
     IRegistrationContext
 {
-    /// <summary>Gets registrations.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The registrations.</returns>
+    /// <summary>Returns registrations owned by the rider.</summary>
+    /// <typeparam name="T">The registration category.</typeparam>
+    /// <returns>The rider-specific registrations.</returns>
     IEnumerable<T> GetRegistrations<T>()
         where T : class, IRegistration;
 }

@@ -49,9 +49,9 @@ public sealed class InMemoryScheduledPublishTests
                     cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
 
-            Assert.False(consumed.IsCompleted);
+            Assert.Empty(harness.Consumed.Snapshot<ScheduledMessage>());
             delayProvider.Advance(scheduleDelay - TimeSpan.FromTicks(1));
-            Assert.False(consumed.IsCompleted);
+            Assert.Empty(harness.Consumed.Snapshot<ScheduledMessage>());
 
             delayProvider.Advance(TimeSpan.FromTicks(1));
             ConsumeContext<ScheduledMessage> context = (await consumed.WaitAsync(

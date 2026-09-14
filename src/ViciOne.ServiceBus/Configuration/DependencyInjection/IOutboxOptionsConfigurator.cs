@@ -2,12 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures outbox options.</summary>
+/// <summary>Configures delivery from a consume outbox to the transport.</summary>
 public interface IOutboxOptionsConfigurator
 {
-    /// <summary>The number of messages to deliver at a time from the outbox to the broker.</summary>
-    public int MessageDeliveryLimit { set; }
+    /// <summary>Sets the maximum number of stored messages delivered in one batch.</summary>
+    int MessageDeliveryLimit { set; }
 
-    /// <summary>Transport Send timeout when delivering messages to the transport.</summary>
+    /// <summary>Sets the timeout for each transport send performed by outbox delivery.</summary>
     TimeSpan MessageDeliveryTimeout { set; }
 }

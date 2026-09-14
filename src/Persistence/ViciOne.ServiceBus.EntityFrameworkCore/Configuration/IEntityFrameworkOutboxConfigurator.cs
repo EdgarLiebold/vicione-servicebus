@@ -5,8 +5,7 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Configures EF Core inbox deduplication and transactional-outbox persistence.</summary>
-public interface IEntityFrameworkOutboxConfigurator :
-    ITransactionalOutboxConfigurator
+public interface IEntityFrameworkOutboxConfigurator
 {
     /// <summary>Gets or sets how long a message remains in the inbox for duplicate detection.</summary>
     TimeSpan DuplicateDetectionWindow { get; set; }

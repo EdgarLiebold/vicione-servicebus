@@ -1,14 +1,14 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures the container registration, and supports creation of a bus or a mediator.</summary>
+/// <summary>Registers the default bus, its endpoint components, and its transport services.</summary>
 public interface IBusRegistrationConfigurator :
     IRegistrationConfigurator
 {
 }
 
 
-/// <summary>Configures additional bus instances, configured via MultiBus.</summary>
-/// <typeparam name="TBus">The additional bus interface type.</typeparam>
+/// <summary>Registers an independently owned typed bus in the same service collection.</summary>
+/// <typeparam name="TBus">The application-facing bus contract.</typeparam>
 public interface IBusRegistrationConfigurator<in TBus> :
     IBusRegistrationConfigurator
     where TBus : class, IBus

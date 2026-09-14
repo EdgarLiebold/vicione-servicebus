@@ -218,6 +218,63 @@ public sealed class GreenfieldApiArchitectureTests
             $"Tracing activation must depend on ActivitySource listeners rather than the logging context:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-DI-CONFIGURATION", "single-physical-owner")]
+    public void DependencyInjectionConfiguration_HasOnePhysicalOwner()
+    {
+        string obsoleteDirectory = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "DependencyInjection",
+            "Configuration");
+        string ownerDirectory = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Configuration",
+            "DependencyInjection");
+        string advancedRegistrationDirectory = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Advanced",
+            "Registration");
+
+        Assert.False(
+            Directory.Exists(obsoleteDirectory),
+            $"Dependency-injection configuration must not be split across inverted directories: {RepositoryLayout.RelativeToRoot(obsoleteDirectory)}");
+        Assert.NotEmpty(Directory.EnumerateFiles(ownerDirectory, "*.cs", SearchOption.TopDirectoryOnly));
+        Assert.All(
+            new[]
+            {
+                "AdvancedBusRegistrationConfiguratorExtensions.cs",
+                "IAdvancedBusRegistrationConfigurator.cs",
+                "IAdvancedRegistrationConfigurator.cs",
+            },
+            file => Assert.True(
+                File.Exists(Path.Combine(advancedRegistrationDirectory, file)),
+                $"Advanced registration API must be owned by Advanced/Registration: {file}"));
+        Assert.DoesNotContain(
+            Directory.EnumerateFiles(ownerDirectory, "*.cs", SearchOption.TopDirectoryOnly),
+            file => File.ReadAllText(file).Contains(
+                "namespace ViciOne.ServiceBus.Advanced.Registration;",
+                StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-DI-CONFIGURATION", "no-test-only-or-empty-compatibility-api")]
+    public void DependencyInjectionConfiguration_HasNoTestOnlyOrEmptyCompatibilityApi()
+    {
+        Assembly core = typeof(IBus).Assembly;
+
+        Assert.Null(core.GetType("ViciOne.ServiceBus.Configuration.DependencyInjectionHandlerRegistrationExtensions"));
+        Assert.Null(core.GetType("ViciOne.ServiceBus.Configuration.ITransactionalOutboxConfigurator"));
+        Assert.DoesNotContain(
+            typeof(HandlerRegistrationConfiguratorExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static),
+            static method => method.Name == "AddHandler" && method.GetParameters().Length == 1);
+    }
+
     private static IEnumerable<string> FindLoggingGatedActivityCreation(string path)
     {
         CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))

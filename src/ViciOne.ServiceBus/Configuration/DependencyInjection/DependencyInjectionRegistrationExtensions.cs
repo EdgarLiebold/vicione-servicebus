@@ -180,32 +180,6 @@ public static class DependencyInjectionRegistrationExtensions
         collection.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ServiceBusHostedService>());
     }
 
-    internal static void RemoveViciOneServiceBus(this IServiceCollection collection)
-    {
-        collection.RemoveAll<IClientFactory>();
-        collection.RemoveAll<Bind<IBus, IBusRegistrationContext>>();
-        collection.RemoveAll<IBusRegistrationContext>();
-        collection.RemoveAll(typeof(IReceiveEndpointDispatcher<>));
-        collection.RemoveAll<IReceiveEndpointDispatcherFactory>();
-        collection.RemoveAll<IBusDepot>();
-        collection.RemoveAll<IScopedConsumeContextProvider>();
-        collection.RemoveAll<Bind<IBus, ISetScopedConsumeContext>>();
-        collection.RemoveAll<Bind<IBus, IScopedConsumeContextProvider>>();
-        collection.RemoveAll<IScopedBusContextProvider<IBus>>();
-        collection.RemoveAll<ConsumeContext>();
-        collection.RemoveAll<ISendEndpointProvider>();
-        collection.RemoveAll<IPublishEndpoint>();
-        collection.RemoveAll(typeof(IRequestClient<>));
-        collection.RemoveAll<IMessageScheduler>();
-
-        collection.RemoveAll<Bind<IBus, IBusInstance>>();
-        collection.RemoveAll<IBusInstance>();
-        collection.RemoveAll<IReceiveEndpointConnector>();
-        collection.RemoveAll<IBusControl>();
-        collection.RemoveAll<IBus>();
-
-        collection.RemoveAll<IScopedClientFactory>();
-    }
     class Callback<TBus> :
         IBusInstanceBuilderCallback<TBus, IServiceCollection>
         where TBus : class, IBus

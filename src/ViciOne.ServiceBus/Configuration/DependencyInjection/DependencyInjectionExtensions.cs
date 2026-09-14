@@ -1,19 +1,21 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for dependency injection.</summary>
+/// <summary>Configures dependency-injection scopes and resolves request clients.</summary>
 public static class DependencyInjectionExtensions
 {
-    /// <summary>Creates a single scope for the receive endpoint that is used by all consumers, sagas, messages, etc.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates one dependency-injection scope for an entire receive operation.</summary>
+    /// <param name="configurator">The receive pipeline to configure.</param>
+    /// <param name="context">The registration context that owns the container.</param>
     public static void UseServiceScope(this IConsumePipeConfigurator configurator, IRegistrationContext context)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
+
         var scopeProvider = new ConsumeScopeProvider(context);
         var specification = new FilterPipeSpecification<ConsumeContext>(new ScopeConsumeFilter(scopeProvider));
 
@@ -21,39 +23,42 @@ public static class DependencyInjectionExtensions
     }
 
 
-    /// <summary>Creates a scope for each message type, compatible with UseMessageRetry and UseVolatileOutbox.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a dependency-injection scope for each dispatched message contract.</summary>
+    /// <param name="configurator">The receive pipeline to configure.</param>
+    /// <param name="context">The registration context that owns the container.</param>
     public static void UseMessageScope(this IConsumePipeConfigurator configurator, IRegistrationContext context)
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
 
-        var observer = new MessageScopeConfigurationObserver(configurator, context);
+        _ = new MessageScopeConfigurationObserver(configurator, context);
     }
 
-    /// <summary>Create a request client, using the specified service address, using the <see cref="IClientFactory" /> from the container.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
-    /// <param name="timeout">The default timeout for requests.</param>
-    /// <returns>The created request client.</returns>
+    /// <summary>Creates a request client through the container's <see cref="IClientFactory" />.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="provider">The service provider that contains the client factory.</param>
+    /// <param name="timeout">The timeout override, or an unspecified value to use the configured default.</param>
+    /// <returns>A request client for <typeparamref name="T" />.</returns>
     public static IRequestClient<T> CreateRequestClient<T>(this IServiceProvider provider, RequestTimeout timeout = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(provider);
+
         return provider.GetRequiredService<IClientFactory>().CreateRequestClient<T>(timeout);
     }
 
-    /// <summary>Create a request client, using the specified service address, using the <see cref="IClientFactory" /> from the container.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <summary>Creates a request client for an explicit destination through the container's <see cref="IClientFactory" />.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="provider">The service provider that contains the client factory.</param>
     /// <param name="destinationAddress">The destination service address.</param>
-    /// <param name="timeout">The default timeout for requests.</param>
-    /// <returns>The created request client.</returns>
+    /// <param name="timeout">The timeout override, or an unspecified value to use the configured default.</param>
+    /// <returns>A request client for <typeparamref name="T" />.</returns>
     public static IRequestClient<T> CreateRequestClient<T>(this IServiceProvider provider, Uri destinationAddress, RequestTimeout timeout = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+
         return provider.GetRequiredService<IClientFactory>().CreateRequestClient<T>(destinationAddress, timeout);
     }
 }

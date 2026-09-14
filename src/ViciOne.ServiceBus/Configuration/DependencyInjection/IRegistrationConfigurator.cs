@@ -1,81 +1,70 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures registration.</summary>
+/// <summary>Registers endpoint components, request clients, and naming defaults for one bus owner.</summary>
 public interface IRegistrationConfigurator :
     IRegistrationConfiguratorServices
 {
-    /// <summary>Adds the consumer, allowing configuration when it is configured on an endpoint.</summary>
-    /// <typeparam name="T">The consumer type.</typeparam>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The consumer registration configurator produced by the operation.</returns>
+    /// <summary>Registers a consumer with an optional endpoint-time callback.</summary>
+    /// <typeparam name="T">The consumer implementation.</typeparam>
+    /// <param name="configure">The callback that receives the active registration context and consumer configurator.</param>
+    /// <returns>A fluent configurator for the consumer registration.</returns>
     IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer;
 
-    /// <summary>Adds the consumer, allowing configuration when it is configured on an endpoint.</summary>
-    /// <typeparam name="T">The consumer type.</typeparam>
-    /// <param name="consumerDefinitionType">The consumer definition type.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The consumer registration configurator produced by the operation.</returns>
+    /// <summary>Registers a consumer with an optional runtime definition and endpoint-time callback.</summary>
+    /// <typeparam name="T">The consumer implementation.</typeparam>
+    /// <param name="consumerDefinitionType">The concrete consumer definition, or <see langword="null" /> to use convention defaults.</param>
+    /// <param name="configure">The callback that receives the active registration context and consumer configurator.</param>
+    /// <returns>A fluent configurator for the consumer registration.</returns>
     IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type? consumerDefinitionType,
         Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer;
 
     /// <summary>
-    /// Adds an endpoint definition, which will to used for consumers, sagas, etc. that are on that same endpoint. If a consumer, etc.
-    /// specifies an endpoint without a definition, the default endpoint definition is used if one cannot be resolved from the configuration
-    /// service provider (via generic registration).
+    /// Registers a runtime-selected endpoint definition for its associated consumer, saga, activity, or future.
     /// </summary>
-    /// <param name="endpointDefinition">The endpoint definition to add.</param>
-    void AddEndpoint(Type endpointDefinition);
+    /// <param name="endpointDefinitionType">The concrete endpoint definition.</param>
+    void AddEndpoint(Type endpointDefinitionType);
 
     /// <summary>
-    /// Add a request client, for the request type, which uses the <see cref="ConsumeContext" /> if present, otherwise
-    /// uses the <see cref="IBus" />. The request is published, unless an endpoint convention is specified for the
-    /// request type.
+    /// Registers a request client whose destination is resolved from message topology.
     /// </summary>
-    /// <typeparam name="T">The request message type.</typeparam>
-    /// <param name="timeout">The request timeout.</param>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="timeout">An explicit timeout, or an unspecified value to inherit the configured default.</param>
     void AddRequestClient<T>(RequestTimeout timeout = default)
         where T : class;
 
     /// <summary>
-    /// Add a request client, for the request type, which uses the <see cref="ConsumeContext" /> if present, otherwise
-    /// uses the <see cref="IBus" />.
+    /// Registers a request client bound to an explicit destination.
     /// </summary>
-    /// <typeparam name="T">The request message type.</typeparam>
-    /// <param name="destinationAddress">The destination address for the request.</param>
-    /// <param name="timeout">The request timeout.</param>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="destinationAddress">The address to which requests are sent.</param>
+    /// <param name="timeout">An explicit timeout, or an unspecified value to inherit the configured default.</param>
     void AddRequestClient<T>(Uri destinationAddress, RequestTimeout timeout = default)
         where T : class;
 
     /// <summary>
-    /// Add a request client, for the request type, which uses the <see cref="ConsumeContext" /> if present, otherwise
-    /// uses the <see cref="IBus" />. The request is published, unless an endpoint convention is specified for the
-    /// request type.
+    /// Registers a runtime-selected request client whose destination is resolved from message topology.
     /// </summary>
-    /// <param name="requestType">The request message type.</param>
-    /// <param name="timeout">The request timeout.</param>
+    /// <param name="requestType">The request message contract.</param>
+    /// <param name="timeout">An explicit timeout, or an unspecified value to inherit the configured default.</param>
     void AddRequestClient(Type requestType, RequestTimeout timeout = default);
 
     /// <summary>
-    /// Add a request client, for the request type, which uses the <see cref="ConsumeContext" /> if present, otherwise
-    /// uses the <see cref="IBus" />.
+    /// Registers a runtime-selected request client bound to an explicit destination.
     /// </summary>
-    /// <param name="requestType">The request message type.</param>
-    /// <param name="destinationAddress">The destination address for the request.</param>
-    /// <param name="timeout">The request timeout.</param>
+    /// <param name="requestType">The request message contract.</param>
+    /// <param name="destinationAddress">The address to which requests are sent.</param>
+    /// <param name="timeout">An explicit timeout, or an unspecified value to inherit the configured default.</param>
     void AddRequestClient(Type requestType, Uri destinationAddress, RequestTimeout timeout = default);
 
-    /// <summary>Sets the default request timeout for this bus instance, used by the client factory to create request clients.</summary>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <summary>Sets the timeout inherited by request clients that omit an explicit value.</summary>
+    /// <param name="timeout">The default request timeout.</param>
     void SetDefaultRequestTimeout(RequestTimeout timeout);
 
-    /// <summary>Set the default endpoint name formatter used for endpoint names.</summary>
-    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <summary>Sets the endpoint naming convention for this registration owner.</summary>
+    /// <param name="endpointNameFormatter">The naming convention to register.</param>
     void SetEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter);
-
 }

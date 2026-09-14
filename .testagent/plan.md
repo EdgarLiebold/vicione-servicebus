@@ -2661,6 +2661,79 @@ the established diagnostic rule for local .NET build hosts. The protected `revie
 `TestResults/` trees remain unchanged and unstaged. The overall A+ goal continues with the remaining
 complete source owners and the final repository-wide completion audit.
 
+## Iteration 106 Core dependency-injection configuration plan
+
+Iteration 106 starts from remotely verified commit
+`affdec42f1ece80d4ec470cb631d26a80b297ae8` and annotated tag
+`servicebus-a-plus-remediation-iteration-105-2026-09-14`. It treats the 66 production files and
+6,102 lines currently split between `Configuration/DependencyInjection/` and
+`DependencyInjection/Configuration/` as one coherent composition owner: public registration
+contracts and extensions, container registration, endpoint definitions, bus and rider contexts,
+scope-pipeline observers, health options, and transport-factory composition. Every file and comment
+is read manually before changes; no source or comment generator is used.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Make composition deterministic | registration identity, replacement, duplicate, order, scope, endpoint, rider, observer, health, and validation paths have exact behavior tests |
+| Modernize the Greenfield surface | every public type, member, parameter, default, name, async contract, and extension location is reviewed without compatibility-only API |
+| Resolve the split source layout | folder and namespace ownership is decided from final responsibilities and assembly/API boundaries, with moves validated by source-navigation and package gates |
+| Keep DI lifetime-safe | root/scoped ownership, disposal, cancellation, callback, and failure paths cannot leak or resolve from the wrong provider |
+| Correct every comment manually | XML and implementation comments describe only the final code and current behavior after the containing file has been understood |
+| Demonstrate test strength | source-to-test mapping, pseudo-mutation analysis, red-first regressions, controlled counterchanges, focused/full tests, coverage/CRAP, format, package/API, requirements, and hygiene gates |
+
+Cross-owner edits are limited to proven consumers and architecture rules required to preserve a
+coherent composition contract. The protected `review/` and `TestResults/` trees remain outside the
+iteration.
+
+### Iteration 106 completion
+
+Iteration 106 completes the 66-file Core dependency-injection configuration owner after a manual
+read of every production file and comment. The physical boundary is now explicit:
+`src/ViciOne.ServiceBus` owns the Core assembly, independent deliverable assemblies remain sibling
+projects under `src`, and external provider families remain grouped under `Persistence`,
+`Scheduling`, and `Transports`. Inside Core, all registration configuration now has one owner at
+`Configuration/DependencyInjection`; the advanced public facade resides at
+`Advanced/Registration`, while `DependencyInjection` retains only runtime container concerns.
+
+The iteration removes a duplicated 678-line handler extension implementation, the no-op
+`AddHandler<T>()` overload, the empty transactional-outbox compatibility interface, the removal API
+that could not safely undo registration, and throwing endpoint-setting placeholders. It corrects
+request-timeout inheritance, rider completion, execute/compensate filter selection, owner-specific
+registration identity, factory null boundaries, open-generic consumer rejection, endpoint
+definition composition, transport-specification failure preservation, and ambiguous or missing
+consumer-kind ownership. `BusRegistrationContext.ConfigureEndpoints` is decomposed into explicit
+registration and endpoint planning phases so its behavior is reviewable and its CRAP score is
+bounded without feature loss.
+
+The new dependency-injection contract suite has 33 test methods and 34 cases with direct state,
+identity, lifetime, ordering, exception, topology, callback, and asynchronous failure assertions.
+The handler guard test exercises all 16 public overloads, the tenant test adds the typed execute
+filter path, and two permanent architecture tests enforce physical ownership and the absence of
+empty compatibility API. A full-run-only observation race in the in-memory scheduled-publish test
+was corrected by asserting the actual consume snapshot at both time boundaries instead of treating
+every completed observation task as delivery. The test passes in isolation, under parallel
+repetition, and in the final full run.
+
+One red-first test exposed the accepted open-generic consumer defect. Six isolated controlled
+counterchanges were killed and restored, including timeout inheritance, idempotent completion,
+filter selection, endpoint identity, early specification validation, and service-instance owner
+cardinality. Changed-test assertion and smell review finds no assertion-free, trivial,
+self-referential, skipped, random, wall-clock-sleep, or swallowed-exception case.
+
+The final Engineering Release build passes all 77 projects with zero warnings and errors. Both
+complete format gates make no changes. All 23 Unit/Architecture hosts pass 6,317/6,317 tests with no
+failure or skip, including 3,345 Core-host tests. Fresh owner coverage is 82.7847% line and 76.4354%
+branch across 539 methods; no method exceeds CRAP 30 and the maximum is 29.0179. The accepted raw
+artifact is `/private/tmp/vsb-iteration106-core-risk3.cobertura.xml`, SHA-256
+`f61d55f3c854c5aca80d392b9db98721d8a54fc746ac3b8d06e797bf8c25053c`.
+
+Package validation passes 18 developer journeys, 31 freshly packed packages, three isolated
+provider-testing consumers, and all 30 runtime package APIs. The intentional 18,879-line packed API
+contract has SHA-256 `09218528f7e3f0b9c54ea3142587fa165c28ad017e590a7b042b6efcea9b076e`.
+Requirements JSON, Git whitespace, source directives, dummy markers, obsolete-path references,
+empty directories, and protected-tree checks pass. The overall A+ goal remains active for the
+remaining complete source owners and final repository-wide audit.
+
 ## Iteration 102 Courier interface contract and navigation plan
 
 Iteration 102 starts from remotely verified commit
