@@ -222,8 +222,7 @@ public sealed class InMemoryDurableSendIntegrationTests
             DestinationAddress = new Uri("loopback://durable-host/durable-input"),
             ContentType = SystemTextJsonMessageSerializer.JsonContentType.MediaType,
             Body = Encoding.UTF8.GetBytes(body),
-            // This fixture exercises the process-local completion capability, not envelope metadata. Reliable
-            // metadata is now a versioned codec and intentionally rejects arbitrary opaque bytes.
+            // This fixture exercises process-local completion; empty metadata is a valid versioned envelope.
             Metadata = ReadOnlyMemory<byte>.Empty,
         };
     }

@@ -29,6 +29,9 @@ internal readonly struct InMemoryEndpointAddress
         ExchangeType = InMemoryExchangeType.FanOut;
 
         var addressScheme = address.Scheme.ToLowerInvariant();
+        if (addressScheme != InMemoryHostAddress.InMemoryScheme)
+            ValidateShortAddress(address);
+
         switch (addressScheme)
         {
             case InMemoryHostAddress.InMemoryScheme:
@@ -109,7 +112,7 @@ internal readonly struct InMemoryEndpointAddress
     /// <summary>Gets the logical in-memory host name.</summary>
     public string Host { get; }
 
-    /// <summary>Gets the decoded virtual-host path.</summary>
+    /// <summary>Gets the decoded virtual-host identity.</summary>
     public string VirtualHost { get; }
 
     /// <summary>Gets the destination exchange name.</summary>
@@ -128,8 +131,8 @@ internal readonly struct InMemoryEndpointAddress
             Scheme = address.Scheme,
             Host = address.Host,
             Path = address.VirtualHost == "/"
-                ? $"/{address.Name}"
-                : $"/{Uri.EscapeDataString(address.VirtualHost)}/{address.Name}"
+                ? $"/{Uri.EscapeDataString(address.Name)}"
+                : $"/{Uri.EscapeDataString(address.VirtualHost)}/{Uri.EscapeDataString(address.Name)}"
         };
 
         builder.Query += string.Join("&", address.GetQueryStringOptions());
@@ -154,6 +157,19 @@ internal readonly struct InMemoryEndpointAddress
         {
             throw new ArgumentException(
                 $"The endpoint address '{address}' does not belong to the configured in-memory host '{(Uri)configuredHost}'.",
+                nameof(address));
+        }
+    }
+
+    static void ValidateShortAddress(Uri address)
+    {
+        if (!string.IsNullOrEmpty(address.Authority)
+            || !string.IsNullOrEmpty(address.UserInfo)
+            || !string.IsNullOrEmpty(address.Fragment)
+            || address.AbsolutePath.StartsWith("/", StringComparison.Ordinal))
+        {
+            throw new ArgumentException(
+                "A short in-memory address cannot contain an authority, an absolute path, credentials, or a fragment.",
                 nameof(address));
         }
     }

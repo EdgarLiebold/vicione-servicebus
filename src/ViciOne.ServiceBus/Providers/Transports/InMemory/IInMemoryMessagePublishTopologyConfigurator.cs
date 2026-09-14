@@ -8,6 +8,7 @@ public interface IInMemoryMessagePublishTopologyConfigurator<TMessage> :
     where TMessage : class
 {
     /// <summary>Sets the exchange routing behavior.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned value is not a defined <see cref="InMemoryExchangeType" />.</exception>
     InMemoryExchangeType ExchangeType { set; }
 }
 

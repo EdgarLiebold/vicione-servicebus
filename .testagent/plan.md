@@ -3294,6 +3294,96 @@ fresh packages, three isolated provider consumers, and all 30 runtime APIs; the 
 `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
 
 Requirements, dummy and compatibility markers, SDK pinning, empty directories, formatting, and Git
-whitespace are clean. The explicit `net10.0` target is the platform contract and no `global.json` or
-CLI SDK version is pinned. Protected trees remain unchanged and unstaged. The overall A+ goal
+whitespace are clean. The explicit `net10.0` target is the platform contract. The repository
+`global.json` selects Microsoft Testing Platform only; it contains no `sdk` block or CLI SDK version
+pin. Protected trees remain unchanged and unstaged. The overall A+ goal
 continues with the remaining complete source owners and the final repository-wide audit.
+
+## Iteration 113 Core InMemoryTransport plan
+
+Iteration 113 reviews the complete 66-file, 3,846-line built-in InMemory owner: the 57 implementation
+files below `src/ViciOne.ServiceBus/InMemoryTransport`, the nine public provider-contract files below
+`src/ViciOne.ServiceBus/Providers/Transports/InMemory`, and the public selection entry point below
+`src/ViciOne.ServiceBus/Configuration/InMemoryTransport`. Every file and comment has been read
+manually before a product edit. No source, test, or comment generator is permitted; coverage and
+source-to-test pairing remain read-only completeness aids.
+
+InMemoryTransport remains a built-in Core capability. Its five internal folders express addressing,
+configuration, process-local durable-send completion, runtime delivery, and topology ownership.
+External transport integrations remain independent projects beneath `src/Transports`.
+
+### Iteration 113 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Host and endpoint addresses are canonical and cannot cross a provider boundary | complete component, query, virtual-host, routing-type, equality, and invalid-input matrices |
+| Topology mutation declares and binds each intended entity exactly once | direct publish/consume specification, implemented-contract, exclusion, and validation assertions |
+| Configuration materializes isolated endpoints without losing shared policies | root/child configuration identity, callback order, endpoint definition, observer, and validation tests |
+| Send and receive envelopes preserve immutable body, headers, routing, delay, and durable state | exact ownership, copy, round-trip, unsupported-value, and mutation-isolation tests |
+| Runtime start, delivery, stop, and dynamic endpoints have one lifecycle owner | deterministic concurrency, cancellation, fault, disconnect, drain, and retry evidence |
+| Logical delays are ordered, bounded, cancellable, and disposed exactly once | fake-time boundary and registration-race tests without sleeping |
+| Durable dispatch retires an intent only after successful logical consumption | contract resolution, send acceptance, consumer completion, failure, cancellation, and invalid-input tests |
+| Every collaborator and provider result fails at its owning boundary | constructor, method, null-task, null-result, wrong-type, and pre-cancellation cases |
+| No feature is lost | 80-case baseline, focused and Core coverage, full hermetic suite, build, format, package/API, requirements, and hygiene gates |
+
+### Iteration 113 validation
+
+1. Preserve the 80/80 focused baseline and record source-to-test ownership and fresh risk data.
+2. Compare every address, topology, configuration, send, receive, delay, lifecycle, and durable path
+   with existing direct tests.
+3. Add red-first tests only for independently justified behavior or boundary defects.
+4. Apply the smallest coherent correction and manually update every affected comment.
+5. Kill meaningful isolated counterchanges and restore the accepted implementation after each run.
+6. Audit changed tests for exact causal assertions, determinism, bounded synchronization, and
+   requirement identity.
+7. Run focused and complete Core coverage, both format gates, the serial 77-project build, all 23
+   hermetic hosts, package/API, requirements, async/source architecture, hygiene, empty-directory,
+   and Git gates.
+8. Commit, annotate Iteration 113, push without force, and verify remote branch and peeled tag hashes.
+
+### Iteration 113 completion
+
+All 66 final production files and 3,846 physical lines in the complete built-in InMemory owner were
+read manually, including every source comment. The implementation remains a process-local Core
+capability under `src/ViciOne.ServiceBus/InMemoryTransport`; its public provider contracts and
+selection API remain under the matching Core namespaces. Independently packaged integrations stay
+as sibling projects grouped beneath `Persistence`, `Scheduling`, and `Transports`. No product C#
+file belongs directly under the repository `src` root.
+
+Canonical address ownership now rejects ambiguous raw multi-segment virtual hosts and unsupported
+short-address URI components while preserving escaped host and entity identities. Endpoint address
+materialization uses the final configured host, publish topology rejects undefined exchange types
+at assignment, and moved messages retain their complete MIME content type. Durable dispatch rejects
+missing messages, unknown or null contract resolutions, null endpoint tasks, and null endpoints at
+their owning boundary; pre-cancellation preserves the caller token and skips collaborators.
+
+Eighteen new requirement projections add 24 focused cases. Direct tests also close custom-address
+and typed-bus delay-provider ownership, provider-neutral endpoint callbacks, public receive binding,
+runtime fabric ownership, namespace discovery, zero logical delay, all new entry-point parameters,
+and dead-letter metadata. The focused profile grows from 80 to 104 cases. Seven simultaneous
+counterchanges produced exactly 15 expected failures while 34 unrelated cases remained green; the
+accepted implementation was restored and rebuilt. Changed tests contain causal assertions, bounded
+waits, deterministic logical time, and no sleeps, random input, skips, assertion-free paths, or
+wall-clock assumptions.
+
+Final focused coverage passes 104/104 and records 90.4889% line (1,018/1,125) and 76.0101% branch
+(301/396) reachability across 272 compiler method records, with maximum CRAP 18 and none above 30.
+Its artifact is `/private/tmp/vsb-iteration113-inmemory-final3.cobertura.xml`, SHA-256
+`5388c5139c95c229dc00315fa7a8ca902085fdf75bc36537446a3c3409176de8`. Complete Core coverage passes
+3,528/3,528; the InMemory owner reaches 96.4444% line (1,085/1,125) and 78.7879% branch (312/396).
+The complete artifact is `/private/tmp/vsb-iteration113-core-final3.cobertura.xml`, SHA-256
+`b0f878be0ebb78f4ad4c48126e78fde891ef751fc8996a59b634a8d1302ed7a9`.
+
+Both format gates pass. The serial Engineering Release build passes 77 projects with zero warnings
+and errors. All 23 hermetic hosts pass 6,501/6,501 with no failure or skip, and the separate
+architecture host passes 307/307. Package/API verification passes 18 journeys, 31 fresh packages,
+three isolated provider-testing consumers, and all 30 runtime APIs; the unchanged 18,879-line API
+SHA-256 is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, Greenfield API rules, comments, directives, filenames,
+folders, namespaces, dummy and legacy markers, SDK-version pinning, empty directories, formatting,
+and Git whitespace pass. `global.json` contains only the Microsoft Testing Platform runner selection
+and no `sdk` version. The sole source `NotImplementedException` reference is the intentional
+non-retryable exception classification case. Protected `review/` and `TestResults/` remain unchanged
+and unstaged. The overall A+ goal continues with the remaining complete source owners and final
+repository-wide audit.

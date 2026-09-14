@@ -29,8 +29,8 @@ public interface IInMemoryBusFactoryConfigurator :
     /// <param name="configure">An optional callback that configures host capacity.</param>
     void Host(Uri baseAddress, Action<IInMemoryHostConfigurator>? configure = null);
 
-    /// <summary>Sets a virtual-host path that isolates this bus's message fabric and applies host settings.</summary>
-    /// <param name="virtualHost">The non-empty virtual-host path.</param>
+    /// <summary>Sets a virtual-host identity that isolates this bus's message fabric and applies host settings.</summary>
+    /// <param name="virtualHost">The non-empty virtual-host identity encoded as one address component.</param>
     /// <param name="configure">An optional callback that configures host capacity.</param>
     void Host(string virtualHost, Action<IInMemoryHostConfigurator>? configure = null);
 }

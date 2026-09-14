@@ -30,6 +30,8 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        if (context.Message is null)
+            throw new ArgumentException("A durable-send dispatch context must contain a serialized message.", nameof(context));
 
         SerializedDurableSend message = context.Message.Validate();
         IMessageContractCatalog contractCatalog =
@@ -41,8 +43,22 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
             throw new MessageContractException(
                 $"Durable send contract identity '{message.ContractIdentity}' is not registered in the immutable message contract catalog.");
         }
+        if (messageType is null)
+        {
+            throw new MessageContractException(
+                $"The immutable message contract catalog returned no message type for '{message.ContractIdentity}'.");
+        }
 
-        ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
+        Task<ISendEndpoint>? endpointTask = _bus.GetSendEndpointAsync(
+            message.DestinationAddress,
+            cancellationToken: cancellationToken);
+        if (endpointTask is null)
+            throw new InvalidOperationException("The bus returned a null task while resolving a durable-send endpoint.");
+
+        ISendEndpoint? endpoint = await endpointTask.ConfigureAwait(false);
+        if (endpoint is null)
+            throw new InvalidOperationException("The bus returned a null endpoint for a durable send.");
+
         var pipe = new InMemoryDurableSendPipe(message, messageType, context);
         await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, cancellationToken).ConfigureAwait(false);
         return DurableSendDispatchResult.AwaitConsumerCompletion;

@@ -78,14 +78,17 @@ internal sealed class InMemoryBusFactoryConfigurator :
         configure?.Invoke(_hostConfiguration.Configurator);
     }
 
-    /// <summary>Sets a virtual-host path that distinguishes this in-memory bus.</summary>
-    /// <param name="virtualHost">The virtual-host path.</param>
+    /// <summary>Sets a virtual-host identity that distinguishes this in-memory bus.</summary>
+    /// <param name="virtualHost">The virtual-host identity encoded as one address component.</param>
     /// <param name="configure">An optional callback that configures the host.</param>
     public void Host(string virtualHost, Action<IInMemoryHostConfigurator>? configure)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
 
-        _hostConfiguration.BaseAddress = new UriBuilder(_hostConfiguration.HostAddress) { Path = virtualHost }.Uri;
+        _hostConfiguration.BaseAddress = new UriBuilder(_hostConfiguration.HostAddress)
+        {
+            Path = Uri.EscapeDataString(virtualHost)
+        }.Uri;
 
         configure?.Invoke(_hostConfiguration.Configurator);
     }

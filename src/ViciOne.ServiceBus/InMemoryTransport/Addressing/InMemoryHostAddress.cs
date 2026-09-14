@@ -29,9 +29,17 @@ internal readonly struct InMemoryHostAddress
         if (!string.Equals(address.Scheme, InMemoryScheme, StringComparison.OrdinalIgnoreCase))
             throw new ArgumentException($"The in-memory address scheme is not supported: {address.Scheme}", nameof(address));
 
+        string escapedPath = address.AbsolutePath.Trim('/');
+        if (escapedPath.Contains('/', StringComparison.Ordinal))
+        {
+            throw new ArgumentException(
+                "An in-memory virtual host must be encoded as one URI path component.",
+                nameof(address));
+        }
+
         Scheme = InMemoryScheme;
         Host = address.Host;
-        VirtualHost = address.ParseHostPath();
+        VirtualHost = escapedPath.Length == 0 ? "/" : Uri.UnescapeDataString(escapedPath);
 
         if (string.IsNullOrWhiteSpace(Host))
             throw new ArgumentException("The in-memory host address must include a host name.", nameof(address));
@@ -43,7 +51,7 @@ internal readonly struct InMemoryHostAddress
     /// <summary>Gets the logical in-memory host name.</summary>
     public string Host { get; }
 
-    /// <summary>Gets the decoded virtual-host path.</summary>
+    /// <summary>Gets the decoded virtual-host identity.</summary>
     public string VirtualHost { get; }
 
     /// <summary>Converts the normalized host address to its absolute URI.</summary>

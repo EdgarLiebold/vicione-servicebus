@@ -18,6 +18,7 @@ internal sealed class InMemoryMessagePublishTopology<TMessage> :
 {
     readonly List<IInMemoryMessagePublishTopology> _implementedMessageTypes;
     readonly IMessageTopology<TMessage> _messageTopology;
+    InMemoryExchangeType _exchangeType;
 
     /// <summary>Creates publish topology over shared topology and entity-name configuration.</summary>
     /// <param name="publishTopology">The parent publish topology.</param>
@@ -30,7 +31,17 @@ internal sealed class InMemoryMessagePublishTopology<TMessage> :
     }
 
     /// <summary>Gets or sets the exchange routing behavior.</summary>
-    public InMemoryExchangeType ExchangeType { get; set; }
+    public InMemoryExchangeType ExchangeType
+    {
+        get => _exchangeType;
+        set
+        {
+            if (!Enum.IsDefined(value))
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The exchange type is not supported.");
+
+            _exchangeType = value;
+        }
+    }
 
     /// <summary>Declares the message exchange and its implemented-contract bindings.</summary>
     /// <param name="builder">The publish topology builder to update.</param>

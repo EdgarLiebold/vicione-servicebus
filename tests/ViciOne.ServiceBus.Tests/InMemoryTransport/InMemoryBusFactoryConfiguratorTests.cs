@@ -12,6 +12,123 @@ namespace ViciOne.ServiceBus.Tests.InMemoryTransport;
 public sealed class InMemoryBusFactoryConfiguratorTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "custom-address-entry-points-and-delay-provider-ownership")]
+    public async Task CustomAddressEntryPoints_OwnTheirExactHostsAndDelayProvidersAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(15);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var standaloneAddress = new Uri("loopback://standalone/tenant");
+        IBusControl standalone = Bus.Factory.CreateUsingInMemory(standaloneAddress, _ => { });
+
+        await standalone.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            Assert.Equal(standaloneAddress.Host, standalone.Address.Host);
+            Assert.StartsWith(
+                $"{standaloneAddress.AbsolutePath.TrimEnd('/')}/",
+                standalone.Address.AbsolutePath,
+                StringComparison.Ordinal);
+        }
+        finally
+        {
+            await standalone.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        var defaultAddress = new Uri("loopback://default-owner/tenant");
+        var typedAddress = new Uri("loopback://typed-owner/tenant");
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBus(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.UsingInMemory(defaultAddress);
+            })
+            .AddViciOneServiceBus<ITestBus>(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.UsingInMemory(typedAddress);
+            })
+            .BuildServiceProvider(validateScopes: true);
+        IBus defaultBus = provider.GetRequiredService<IBus>();
+        ITestBus typedBus = provider.GetRequiredService<ITestBus>();
+        IInMemoryDelayProvider defaultDelayProvider = provider.GetRequiredService<IInMemoryDelayProvider>();
+        IInMemoryDelayProvider typedDelayProvider = provider
+            .GetRequiredService<Bind<ITestBus, IInMemoryDelayProvider>>()
+            .Value;
+
+        Assert.Equal(defaultAddress.Host, defaultBus.Address.Host);
+        Assert.StartsWith(
+            $"{defaultAddress.AbsolutePath.TrimEnd('/')}/",
+            defaultBus.Address.AbsolutePath,
+            StringComparison.Ordinal);
+        Assert.Equal(typedAddress.Host, typedBus.Address.Host);
+        Assert.StartsWith(
+            $"{typedAddress.AbsolutePath.TrimEnd('/')}/",
+            typedBus.Address.AbsolutePath,
+            StringComparison.Ordinal);
+        Assert.NotSame(defaultDelayProvider, typedDelayProvider);
+
+        Task relativeDelay = defaultDelayProvider.DelayAsync(TimeSpan.FromMinutes(1), cancellationToken);
+        defaultDelayProvider.Advance(TimeSpan.FromMinutes(1));
+        await relativeDelay.WaitAsync(timeout, cancellationToken);
+
+        Task absoluteDelay = typedDelayProvider.DelayAsync(
+            typedDelayProvider.UtcNow.AddMinutes(1),
+            cancellationToken);
+        typedDelayProvider.Advance(TimeSpan.FromMinutes(1));
+        await absoluteDelay.WaitAsync(timeout, cancellationToken);
+
+        await using ServiceProvider typedOnlyProvider = new ServiceCollection()
+            .AddViciOneServiceBus<ITestBus>(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.UsingInMemory(new Uri("loopback://typed-only/tenant"));
+            })
+            .BuildServiceProvider(validateScopes: true);
+        IInMemoryDelayProvider typedOnlyDefault = typedOnlyProvider.GetRequiredService<IInMemoryDelayProvider>();
+        IInMemoryDelayProvider typedOnlyBound = typedOnlyProvider
+            .GetRequiredService<Bind<ITestBus, IInMemoryDelayProvider>>()
+            .Value;
+
+        Assert.Same(typedOnlyDefault, typedOnlyBound);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "host-identity-is-order-independent")]
+    public async Task HostConfiguredAfterAnEndpoint_OwnsThatEndpointsFinalInputAddressAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(15);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observedInputAddress = new TaskCompletionSource<Uri>(TaskCreationOptions.RunContinuationsAsynchronously);
+        IBusControl bus = InMemoryBus.Create(configurator =>
+        {
+            configurator.ReceiveEndpoint("late-host-endpoint", endpoint =>
+                endpoint.Handler<HostOrderMessage>(context =>
+                {
+                    observedInputAddress.TrySetResult(context.Advanced().ReceiveContext.InputAddress);
+                    return Task.CompletedTask;
+                }));
+            configurator.Host(new Uri("loopback://late-host/tenant-blue"), null);
+        });
+
+        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(
+                new Uri("loopback://late-host/tenant-blue/late-host-endpoint"),
+                cancellationToken);
+            await endpoint.SendAsync(new HostOrderMessage(), cancellationToken);
+
+            Assert.Equal(
+                new Uri("loopback://late-host/tenant-blue/late-host-endpoint"),
+                await observedInputAddress.Task.WaitAsync(timeout, cancellationToken));
+        }
+        finally
+        {
+            await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "bus-endpoint-auto-start-follows-configured-value")]
     public void AutoStart_ChangesTheBusEndpointStartupPolicy()
     {
@@ -63,6 +180,48 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         Assert.Same(
             configurator.PublishTopology.GetMessageTopology<RuntimeConfiguredMessage>(),
             configurator.PublishTopology.GetMessageTopology(typeof(RuntimeConfiguredMessage)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "provider-neutral-endpoint-definition-callback")]
+    public void ProviderNeutralEndpointDefinition_InvokesItsCallbackOnTheOwnedEndpoint()
+    {
+        (InMemoryBusFactoryConfigurator configurator, _) = CreateConfigurator();
+        var callbackCount = 0;
+
+        configurator.ReceiveEndpoint(
+            new NeutralEndpointDefinition(),
+            null,
+            (Action<IReceiveEndpointConfigurator>)(_ => callbackCount++));
+
+        Assert.Equal(1, callbackCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "virtual-host-value-remains-one-address-component")]
+    public void Host_PreservesTheCompleteVirtualHostAsOneAddressComponent()
+    {
+        (InMemoryBusFactoryConfigurator configurator, InMemoryBusConfiguration bus) = CreateConfigurator();
+
+        configurator.Host("tenant/blue", null);
+
+        Assert.Equal("tenant/blue", new InMemoryHostAddress(bus.HostConfiguration.HostAddress).VirtualHost);
+        Assert.Equal(new Uri("loopback://localhost/tenant%2Fblue"), bus.HostConfiguration.HostAddress);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "publish-exchange-type-rejected-at-configuration-boundary")]
+    public void Publish_RejectsAnUndefinedExchangeTypeAtTheConfigurationBoundary()
+    {
+        (InMemoryBusFactoryConfigurator configurator, _) = CreateConfigurator();
+        IInMemoryMessagePublishTopologyConfigurator<ConfiguredMessage> topology =
+            configurator.PublishTopology.GetMessageTopology<ConfiguredMessage>();
+
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            topology.ExchangeType = (InMemoryExchangeType)42);
+
+        Assert.Equal("value", exception.ParamName);
+        Assert.Equal((InMemoryExchangeType)42, exception.ActualValue);
     }
 
     [Fact]
@@ -131,16 +290,28 @@ public sealed class InMemoryBusFactoryConfiguratorTests
             InMemoryBus.Create(new Uri("loopback://localhost/"), null!)).ParamName);
         Assert.Equal("selector", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.CreateUsingInMemory(null!, _ => { })).ParamName);
+        Assert.Equal("selector", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryConfigurationExtensions.CreateUsingInMemory(
+                null!, new Uri("loopback://localhost/"), _ => { })).ParamName);
         Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.CreateUsingInMemory(Bus.Factory, null!, _ => { })).ParamName);
         Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.CreateUsingInMemory(Bus.Factory, (Action<IInMemoryBusFactoryConfigurator>)null!)).ParamName);
+        Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryConfigurationExtensions.CreateUsingInMemory(
+                Bus.Factory, new Uri("loopback://localhost/"), null!)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.UsingInMemory(null!, (Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>?)null)).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryConfigurationExtensions.UsingInMemory(
+                null!, new Uri("loopback://localhost/"), null)).ParamName);
         Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.UsingInMemory(CreateRegistrationConfigurator(), null!, null)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.UsingInMemory<ITestBus>(null!, (Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>?)null)).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryConfigurationExtensions.UsingInMemory<ITestBus>(
+                null!, new Uri("loopback://localhost/"), null)).ParamName);
         Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.UsingInMemory<ITestBus>(CreateTypedRegistrationConfigurator(), null!, null)).ParamName);
     }
@@ -204,6 +375,13 @@ public sealed class InMemoryBusFactoryConfiguratorTests
     private sealed record ConfiguredMessage;
 
     private sealed record RuntimeConfiguredMessage;
+
+    private sealed record HostOrderMessage;
+
+    private sealed class NeutralEndpointDefinition : DefaultEndpointDefinition
+    {
+        public override string GetEndpointName(IEndpointNameFormatter formatter) => "neutral-endpoint";
+    }
 
     public interface ITestBus : IBus;
 }

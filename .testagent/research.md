@@ -1845,8 +1845,102 @@ isolated provider-testing consumers, and 30 runtime API assemblies. The public A
 
 Requirement JSON, Git whitespace, bidirectional Async naming, source-file and folder ownership,
 comments, compiler directives, compatibility identities, and empty source/test directories pass.
-No product C# directive, dummy marker, MassTransit identity, `global.json`, or CLI SDK-version pin
-exists. The explicit `net10.0` target frameworks are the platform contract, not SDK pinning. The
+No product C# directive, dummy marker, MassTransit identity, or CLI SDK-version pin exists. The
+repository `global.json` selects Microsoft Testing Platform only and has no `sdk` block. The explicit
+`net10.0` target frameworks are the platform contract, not SDK pinning. The
 sole source reference to `NotImplementedException` is the intentional non-retryable exception
 classification case, not an implementation placeholder. Protected `review/` and `TestResults/`
 remain unchanged and unstaged.
+
+## Iteration 113 Core InMemoryTransport initial research
+
+Iteration 113 starts from remotely verified commit
+`410fb01fca19aa101afa14b6f6009d305fa1055a` and annotated tag
+`servicebus-a-plus-remediation-iteration-112-2026-09-14`. The implementation subtree of the built-in
+in-memory transport contains 57 production files and 3,380 physical lines under
+`src/ViciOne.ServiceBus/InMemoryTransport`. The complete owner expands to 66 files and 3,846 lines
+when its nine public provider contracts and public selection entry point are included. All 66 files
+and every source comment were read manually before any product edit. No source, test, or comment
+generator is permitted.
+
+The physical model is intentional. This transport is a process-local Core capability used as the
+default runtime and testing transport, so `Addressing/`, `Configuration/`, `DurableSend/`,
+`Runtime/`, and `Topology/` belong inside the `ViciOne.ServiceBus` assembly. The projects grouped
+under `src/Transports` are independently packaged external-provider integrations; moving the
+in-memory implementation there would create a false package boundary and make Core depend on an
+optional provider. The current filenames and primary types align with their folders.
+
+The unchanged focused namespace baseline passes 80/80. Fresh focused coverage reaches 86.6071%
+line (873/1,008) and 69.8830% branch (239/342), across 244 compiler method records with no CRAP
+score above 30 and a maximum of 14.9211. The baseline artifact is
+`/private/tmp/vsb-iteration113-inmemory-baseline.cobertura.xml`, SHA-256
+`e8d25ab1e2a3c553e1200e8d23fb39ded3fb730ce1c83c34dca359218f1a794c`.
+
+Existing direct tests cover logical delays, scheduling, lifecycle races, durable-send completion,
+error and dead-letter movement, publish and point-to-point endpoints, endpoint concurrency, host
+isolation, address parsing, topology, header projection, and several configuration boundaries. The
+remaining review must distinguish uncovered defensive branches from semantic gaps in provider
+results, transport-envelope ownership, cancellation identity, topology mutation, runtime shutdown,
+dynamic endpoint configuration, and durable dispatch. Coverage and static pairing are used only to
+route the manual code and test review, never to replace it.
+
+## Iteration 113 Core InMemoryTransport final research
+
+The final owner contains 66 production files and 3,846 physical lines across the internal
+implementation, its public Core provider contracts, and its public Core selection entry point. All
+files and comments were read manually. The physical architecture is deliberate: InMemory is the
+process-local default and testing transport and therefore belongs to the Core assembly. Optional
+provider integrations remain independent sibling assemblies grouped under `Persistence`,
+`Scheduling`, and `Transports`; placing InMemory there would introduce a false package boundary.
+
+The review confirmed seven independently testable defect families. Short addresses accepted
+hierarchical, credential, absolute-path, or fragment components. Raw multi-segment host identities
+were ambiguous, while canonical endpoint reconstruction failed to escape entity names. Endpoint
+configuration captured its host before later host configuration completed. Undefined exchange-type
+values crossed the public configuration boundary. Dead-letter movement discarded MIME parameters.
+Durable dispatch trusted null messages, invalid catalog success results, and invalid endpoint
+provider results. Each correction is placed at the earliest owning boundary and preserves all
+existing features.
+
+Permanent evidence covers canonical address round-trips and all invalid component classes; late
+host configuration; valid and undefined topology routing; standalone, default, typed, and typed-only
+bus ownership; provider-neutral callbacks; both public binding APIs; logical zero delay; runtime
+fabric and unsupported-agent contracts; unfiltered publish discovery and a genuine namespace-less
+runtime type; complete dead-letter MIME metadata; durable unknown-contract, null-catalog, null-task,
+null-result, default-context, and exact pre-cancellation outcomes; and every newly exercised public
+parameter. Eighteen requirement projections add 24 focused cases, taking the profile from 80 to
+104.
+
+The seven substantive fixes were simultaneously counterchanged. The mutated build remained valid,
+and the 49 targeted cases produced exactly 15 expected failures while 34 unrelated cases passed.
+The accepted source was restored byte-for-byte and rebuilt. Changed tests were manually reviewed for
+exact failure identity, collaborator call counts, token and ownership identity, semantic MIME
+comparison, deterministic logical time, and bounded synchronization. They contain no sleeps, random
+input, skips, assertion-free paths, swallowed failures, or wall-clock timing assumptions.
+
+Final focused coverage passes 104/104 and reaches 90.4889% line (1,018/1,125) and 76.0101% branch
+(301/396) coverage over 272 compiler method records. Maximum CRAP is 18 and no score exceeds 30. The
+artifact is `/private/tmp/vsb-iteration113-inmemory-final3.cobertura.xml`, SHA-256
+`5388c5139c95c229dc00315fa7a8ca902085fdf75bc36537446a3c3409176de8`. The complete Core run passes
+3,528/3,528 and records repository reachability of 77.0444% line (48,887/63,453) and 69.7121% branch
+(17,023/24,419). Within that run, the InMemory owner reaches 96.4444% line (1,085/1,125) and 78.7879%
+branch (312/396), again with maximum CRAP 18 and none above 30. The complete artifact is
+`/private/tmp/vsb-iteration113-core-final3.cobertura.xml`, SHA-256
+`b0f878be0ebb78f4ad4c48126e78fde891ef751fc8996a59b634a8d1302ed7a9`.
+
+Both format gates pass. The serial Engineering Release build passes all 77 projects with zero
+warnings and errors. The definitive hermetic profile passes all 6,501 tests across 23 Unit and
+Architecture hosts with zero failures and skips. A separate architecture run passes 307/307 and
+therefore independently reconfirms bidirectional Async naming, Greenfield API rules, requirements,
+comments, compiler directives, source-file naming, folders, namespaces, and repository structure.
+Package verification passes 18 developer journeys, 31 freshly packed packages, three isolated
+provider-testing consumers, and all 30 runtime APIs. The public API remains 18,879 lines with
+SHA-256 `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Static gates confirm no SDK version pin, product C# directive, empty source/test directory, dummy or
+maintenance marker, or MassTransit identity. `global.json` intentionally contains only the
+Microsoft Testing Platform runner selection and no `sdk` block. The sole source occurrence of
+`NotImplementedException` is an intentional non-retryable BCL exception classification, not a
+placeholder. Git whitespace is clean. Protected `review/` and `TestResults/` remain unchanged and
+unstaged. The overall A+ goal remains active for the remaining complete source owners and final
+repository-wide audit.

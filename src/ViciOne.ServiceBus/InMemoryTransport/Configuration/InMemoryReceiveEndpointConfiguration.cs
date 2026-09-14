@@ -32,10 +32,6 @@ internal sealed class InMemoryReceiveEndpointConfiguration :
         _queueName = queueName;
         _endpointConfiguration = endpointConfiguration;
 
-        HostAddress = hostConfiguration.HostAddress;
-
-        InputAddress = new InMemoryEndpointAddress(hostConfiguration.HostAddress, queueName);
-
         Receive.Configurator.AddPipeSpecification(new InMemoryDurableSendCompletionPipeSpecification());
     }
 
@@ -43,11 +39,11 @@ internal sealed class InMemoryReceiveEndpointConfiguration :
 
     IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>Gets the owning host's loopback address.</summary>
-    public override Uri HostAddress { get; }
+    /// <summary>Gets the owning host's final loopback address.</summary>
+    public override Uri HostAddress => _hostConfiguration.HostAddress;
 
-    /// <summary>Gets the endpoint queue's canonical input address.</summary>
-    public override Uri InputAddress { get; }
+    /// <summary>Gets the endpoint queue's canonical address under the owning host.</summary>
+    public override Uri InputAddress => new InMemoryEndpointAddress(HostAddress, _queueName);
 
     /// <summary>Materializes the receive pipeline into a runtime endpoint context.</summary>
     /// <returns>The configured runtime endpoint context.</returns>

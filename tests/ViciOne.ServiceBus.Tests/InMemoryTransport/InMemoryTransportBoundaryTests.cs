@@ -30,6 +30,7 @@ public sealed class InMemoryTransportBoundaryTests
     [InlineData("loopback://user@localhost/")]
     [InlineData("loopback://localhost/?option=true")]
     [InlineData("loopback://localhost/#fragment")]
+    [InlineData("loopback:/tenant")]
     [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "host-address-rejects-unsupported-components")]
     public void HostAddress_RejectsEveryUnsupportedComponent(string value)
     {
@@ -41,6 +42,19 @@ public sealed class InMemoryTransportBoundaryTests
     public void HostAddress_RejectsANullAddress()
     {
         ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => new InMemoryHostAddress(null!));
+        var relativeAddress = new Uri("tenant", UriKind.Relative);
+
+        Assert.Equal("address", exception.ParamName);
+        Assert.Equal("address", Assert.Throws<ArgumentException>(() =>
+            new InMemoryHostAddress(relativeAddress)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "host-address-rejects-ambiguous-unescaped-paths")]
+    public void HostAddress_RejectsAnUnescapedMultisegmentVirtualHost()
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new InMemoryHostAddress(new Uri("loopback://localhost/tenant/blue")));
 
         Assert.Equal("address", exception.ParamName);
     }
@@ -54,6 +68,7 @@ public sealed class InMemoryTransportBoundaryTests
             HostAddress,
             new Uri("exchange:events?type=direct"));
         var topic = new InMemoryEndpointAddress(HostAddress, new Uri("topic:notifications"));
+        var generated = new InMemoryEndpointAddress(HostAddress, new Uri("queue:*"));
 
         Assert.Equal("orders", queue.Name);
         Assert.Equal(InMemoryExchangeType.FanOut, queue.ExchangeType);
@@ -65,6 +80,9 @@ public sealed class InMemoryTransportBoundaryTests
 
         Assert.Equal(InMemoryExchangeType.Topic, topic.ExchangeType);
         Assert.Equal(new Uri("loopback://localhost/tenant/notifications?type=Topic"), (Uri)topic);
+        Assert.NotEqual("*", generated.Name);
+        Assert.False(string.IsNullOrWhiteSpace(generated.Name));
+        Assert.Equal(generated.Name, new InMemoryEndpointAddress(HostAddress, (Uri)generated).Name);
     }
 
     [Fact]
@@ -77,6 +95,15 @@ public sealed class InMemoryTransportBoundaryTests
         Assert.Throws<ArgumentException>(() => new InMemoryEndpointAddress(
             HostAddress,
             new Uri("loopback://localhost/other/orders")));
+        Assert.Throws<ArgumentException>(() => new InMemoryEndpointAddress(
+            HostAddress,
+            new Uri("loopback://user@localhost/tenant/orders")));
+        Assert.Throws<ArgumentException>(() => new InMemoryEndpointAddress(
+            HostAddress,
+            new Uri("loopback://localhost:1234/tenant/orders")));
+        Assert.Throws<ArgumentException>(() => new InMemoryEndpointAddress(
+            HostAddress,
+            new Uri("loopback://localhost/tenant/orders#fragment")));
 
         var matching = new InMemoryEndpointAddress(
             HostAddress,
@@ -94,10 +121,26 @@ public sealed class InMemoryTransportBoundaryTests
     [InlineData("exchange:orders?type=direct&type=topic")]
     [InlineData("topic:orders?type=direct")]
     [InlineData("exchange:")]
+    [InlineData("invalid:orders")]
     [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "endpoint-address-rejects-malformed-options")]
     public void EndpointAddress_RejectsMalformedOrContradictoryAddresses(string value)
     {
         Assert.Throws<ArgumentException>(() => new InMemoryEndpointAddress(HostAddress, new Uri(value)));
+    }
+
+    [Theory]
+    [InlineData("queue://external/orders")]
+    [InlineData("queue:/orders")]
+    [InlineData("queue:orders#fragment")]
+    [InlineData("exchange://external/orders")]
+    [InlineData("topic:notifications#fragment")]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "short-address-rejects-hierarchical-and-fragment-components")]
+    public void EndpointAddress_RejectsUnsupportedShortAddressComponents(string value)
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new InMemoryEndpointAddress(HostAddress, new Uri(value)));
+
+        Assert.Equal("address", exception.ParamName);
     }
 
     [Fact]
@@ -110,6 +153,21 @@ public sealed class InMemoryTransportBoundaryTests
             new InMemoryEndpointAddress(HostAddress, " ")).ParamName);
         Assert.Equal("exchangeType", Assert.Throws<ArgumentOutOfRangeException>(() =>
             new InMemoryEndpointAddress(HostAddress, "orders", exchangeType: (InMemoryExchangeType)42)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "endpoint-address-escaped-entity-round-trip")]
+    public void EndpointAddress_PreservesAnEscapedEntityNameAcrossCanonicalRoundTrips()
+    {
+        var parsed = new InMemoryEndpointAddress(HostAddress, new Uri("queue:orders%2Farchive"));
+
+        Uri canonical = parsed;
+        var reparsed = new InMemoryEndpointAddress(HostAddress, canonical);
+
+        Assert.Equal("orders/archive", parsed.Name);
+        Assert.Equal(parsed.Name, reparsed.Name);
+        Assert.Equal(new Uri("loopback://localhost/tenant/orders%2Farchive"), canonical);
+        Assert.Equal(canonical, (Uri)reparsed);
     }
 
     [Fact]
@@ -163,6 +221,7 @@ public sealed class InMemoryTransportBoundaryTests
     public void PublishTopologyDiscovery_RegistersOnlyAcceptedContractsExactlyOnce()
     {
         var discovered = new List<Type>();
+        var runtimeDiscovered = new List<Type>();
         var explicitTypes = new List<Type>();
 
         _ = InMemoryBus.Create(configurator =>
@@ -174,10 +233,16 @@ public sealed class InMemoryTransportBoundaryTests
                 [typeof(ExplicitMessage)],
                 (_, messageType) => explicitTypes.Add(messageType));
         });
+        _ = InMemoryBus.Create(configurator =>
+            configurator.AddPublishMessageTypesFromNamespaceContaining(
+                typeof(DiscoveryMessageOne),
+                (_, messageType) => runtimeDiscovered.Add(messageType)));
 
         Assert.Equal(
             [typeof(DiscoveryMessageOne), typeof(DiscoveryMessageTwo)],
             discovered.OrderBy(type => type.Name, StringComparer.Ordinal));
+        Assert.Contains(typeof(DiscoveryMessageOne), runtimeDiscovered);
+        Assert.Contains(typeof(DiscoveryMessageTwo), runtimeDiscovered);
         Assert.Equal([typeof(ExplicitMessage)], explicitTypes);
     }
 
@@ -185,6 +250,14 @@ public sealed class InMemoryTransportBoundaryTests
     [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "publish-contract-registration-required-inputs")]
     public void PublishTopologyDiscovery_RejectsEveryMissingRequiredInput()
     {
+        Type namespaceLessType = System.Reflection.Emit.AssemblyBuilder
+            .DefineDynamicAssembly(
+                new System.Reflection.AssemblyName($"InMemoryNamespaceBoundary{Guid.NewGuid():N}"),
+                System.Reflection.Emit.AssemblyBuilderAccess.Run)
+            .DefineDynamicModule("BoundaryTypes")
+            .DefineType("NamespaceLessMessage", System.Reflection.TypeAttributes.Public)
+            .CreateType()!;
+
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             InMemoryPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining<DiscoveryMessageOne>(null!)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
@@ -193,6 +266,10 @@ public sealed class InMemoryTransportBoundaryTests
             InMemoryPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining(
                 CreateConfigurator(),
                 null!)).ParamName);
+        Assert.Equal("type", Assert.Throws<ArgumentException>(() =>
+            InMemoryPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining(
+                CreateConfigurator(),
+                namespaceLessType)).ParamName);
         Assert.Equal("messageTypes", Assert.Throws<ArgumentNullException>(() =>
             InMemoryPublishTopologyConfigurationExtensions.AddPublishMessageTypes(CreateConfigurator(), null!)).ParamName);
         Assert.Equal("messageTypes", Assert.Throws<ArgumentException>(() =>
@@ -274,6 +351,38 @@ public sealed class InMemoryTransportBoundaryTests
         Assert.Equal(ValidationResultDisposition.Failure, failure.Disposition);
         Assert.Equal("binding", failure.Key);
         Assert.Equal("invalid", failure.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "receive-endpoint-binding-api-projects-complete-topology")]
+    public void ReceiveEndpointBindings_ProjectEveryPublicBindingIntoTheOwnedTopology()
+    {
+        var topology = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
+        var bus = new InMemoryBusConfiguration(topology, HostAddress);
+
+        Assert.Equal("queueName", Assert.Throws<ArgumentException>(() =>
+            bus.HostConfiguration.CreateReceiveEndpointConfiguration(" ", null)).ParamName);
+        Assert.Equal("endpointConfiguration", Assert.Throws<ArgumentNullException>(() =>
+            bus.HostConfiguration.CreateReceiveEndpointConfiguration("orders", null!, null)).ParamName);
+
+        IInMemoryReceiveEndpointConfiguration endpoint = bus.HostConfiguration
+            .CreateReceiveEndpointConfiguration("orders", null);
+        IInMemoryReceiveEndpointConfigurator configurator = endpoint.Configurator;
+        Assert.Same(endpoint, configurator);
+        Assert.Equal("exchangeName", Assert.Throws<ArgumentException>(() =>
+            configurator.Bind(" ", InMemoryExchangeType.Direct, "tenant-a")).ParamName);
+
+        configurator.Bind("source", InMemoryExchangeType.Direct, "tenant-a");
+        configurator.Bind<DiscoveryMessageOne>(InMemoryExchangeType.Topic, "events.*");
+
+        var builder = new RecordingConsumeTopologyBuilder("orders", "orders");
+        endpoint.Topology.Consume.Apply(builder);
+
+        Assert.Contains(("source", InMemoryExchangeType.Direct), builder.Declarations);
+        Assert.Contains(builder.Declarations, declaration => declaration.Type == InMemoryExchangeType.Topic);
+        Assert.Contains(("source", "orders", "tenant-a"), builder.ExchangeBindings);
+        Assert.Contains(builder.ExchangeBindings, binding =>
+            binding.Destination == "orders" && binding.RoutingKey == "events.*");
     }
 
     private static IInMemoryBusFactoryConfigurator CreateConfigurator()

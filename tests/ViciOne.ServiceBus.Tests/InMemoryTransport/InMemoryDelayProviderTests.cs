@@ -31,6 +31,26 @@ public sealed class InMemoryDelayProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "zero-and-noncancelable-relative-delay")]
+    public async Task RelativeDelay_CompletesZeroImmediatelyAndAcceptsANoncancelableTokenAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        await using var delayProvider = new InMemoryDelayProvider(timeProvider);
+
+        Task immediate = delayProvider.DelayAsync(TimeSpan.Zero, CancellationToken.None);
+
+        Assert.True(immediate.IsCompletedSuccessfully);
+        Assert.Equal(0, timeProvider.ChangeCount);
+
+        Task pending = delayProvider.DelayAsync(TimeSpan.FromMinutes(1), CancellationToken.None);
+        Assert.False(pending.IsCompleted);
+
+        delayProvider.Advance(TimeSpan.FromMinutes(1));
+        await pending;
+        Assert.True(pending.IsCompletedSuccessfully);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "manual-advance-boundary")]
     public async Task Advance_ReleasesOnlyDeadlinesAtOrBeforeTheNewLogicalTimeAsync()
     {

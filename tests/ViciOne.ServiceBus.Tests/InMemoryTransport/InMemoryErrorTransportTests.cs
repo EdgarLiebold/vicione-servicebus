@@ -1,4 +1,6 @@
+using System.Net.Mime;
 using System.Runtime.Serialization;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -8,6 +10,57 @@ namespace ViciOne.ServiceBus.Tests.InMemoryTransport;
 
 public sealed class InMemoryErrorTransportTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-ERROR-TRANSPORT", "dead-letter-preserves-complete-content-type")]
+    public async Task UnconsumedMessage_PreservesItsCompleteContentTypeOnTheDeadLetterQueueAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("dead-letter-content-type", timeout);
+        var moved = new TaskCompletionSource<ConsumeContext<DeadLetterMessage>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        string skippedQueueName = $"{harness.InputQueueName}_skipped";
+        harness.InMemoryBusConfiguring += configurator =>
+            configurator.ReceiveEndpoint(skippedQueueName, endpoint => endpoint.Handler<DeadLetterMessage>(context =>
+            {
+                moved.TrySetResult(context);
+                return Task.CompletedTask;
+            }));
+        var contentType = new ContentType(
+            $"{SystemTextJsonMessageSerializer.JsonMediaType}; charset=utf-8; profile=dead-letter");
+        var serializer = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options, contentType);
+        bool started = false;
+
+        try
+        {
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            started = true;
+            await harness.InputQueueSendEndpoint.SendAsync(
+                new DeadLetterMessage("retained"),
+                context =>
+                {
+                    context.Serializer = serializer;
+                    context.Headers.Set("application-header", "retained");
+                },
+                cancellationToken);
+
+            ConsumeContext<DeadLetterMessage> actual = await moved.Task.WaitAsync(timeout, cancellationToken);
+            ContentType actualContentType = actual.Advanced().ReceiveContext.ContentType;
+
+            Assert.Equal(contentType.MediaType, actualContentType.MediaType);
+            Assert.Equal(contentType.Parameters.Count, actualContentType.Parameters.Count);
+            Assert.Equal(contentType.Parameters["charset"], actualContentType.Parameters["charset"]);
+            Assert.Equal(contentType.Parameters["profile"], actualContentType.Parameters["profile"]);
+            Assert.Equal("retained", actual.Headers.Get<string>("application-header"));
+            Assert.Equal("retained", actual.Message.Value);
+        }
+        finally
+        {
+            if (started)
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-ERROR-TRANSPORT", "complete-envelope-moves-once")]
     public async Task SerializationFailure_MovesOneCompleteEnvelopeToTheErrorQueueAsync()
@@ -143,6 +196,8 @@ public sealed class InMemoryErrorTransportTests
     private sealed record ErrorMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
 
     private sealed record DisabledFaultMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
+
+    private sealed record DeadLetterMessage(string Value);
 
     private sealed class DisabledFaultException : Exception;
 }

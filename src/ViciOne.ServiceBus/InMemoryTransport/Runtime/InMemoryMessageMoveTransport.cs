@@ -38,7 +38,7 @@ internal abstract class InMemoryMessageMoveTransport
 
         byte[] body = context.GetBodyContent();
 
-        var transportMessage = new InMemoryTransportMessage(messageId, body, context.ContentType?.MediaType);
+        var transportMessage = new InMemoryTransportMessage(messageId, body, context.ContentType?.ToString());
 
         transportMessage.Headers.SetHostHeaders();
 

@@ -918,3 +918,35 @@ Requirements, Async naming, source/comment/directive/file/folder architecture, d
 markers, CLI SDK pinning, empty directories, formatting, and Git whitespace are clean. The explicit
 `net10.0` product target remains intentional. Protected trees remain unchanged and unstaged. The
 overall A+ goal remains active.
+
+## Iteration 113
+
+Iteration 113 completes the manual review of the full 66-file, 3,846-line built-in InMemory owner,
+including every source comment. The process-local implementation remains inside the Core project;
+its public contracts and selection API use matching Core namespaces. Independent provider
+assemblies remain siblings grouped beneath `Persistence`, `Scheduling`, and `Transports`.
+
+Address parsing and reconstruction are canonical and boundary-safe, endpoint addresses follow the
+final configured host, exchange types fail at configuration, moved messages retain complete MIME
+metadata, and durable dispatch rejects every invalid catalog or endpoint result at its owner. Direct
+tests also close custom-address and delay-provider ownership, public binding and callback APIs,
+logical-delay boundaries, runtime fabric identity, publish discovery, and all new parameters.
+
+Eighteen requirement projections add 24 focused cases; InMemory passes 104/104. Seven simultaneous
+counterchanges caused exactly 15 expected failures with 34 unrelated passes and were fully restored.
+Focused owner coverage is 90.4889% line and 76.0101% branch; the complete Core run passes 3,528/3,528
+and raises owner coverage to 96.4444% line and 78.7879% branch. Across 272 methods, maximum CRAP is
+18 and none exceeds 30. The final artifact SHA-256 values are
+`5388c5139c95c229dc00315fa7a8ca902085fdf75bc36537446a3c3409176de8` focused and
+`b0f878be0ebb78f4ad4c48126e78fde891ef751fc8996a59b634a8d1302ed7a9` complete Core.
+
+Both format gates pass. The 77-project Release build has zero warnings and errors. All 23 hermetic
+hosts pass 6,501/6,501, and the separate architecture host passes 307/307. Package/API validation
+passes 18 journeys, 31 packages, three isolated provider consumers, and all 30 runtime APIs; the
+18,879-line API SHA-256 remains
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, comments, directives, filenames, folders, namespaces,
+dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
+`global.json` selects only Microsoft Testing Platform and contains no SDK version. Protected trees
+remain unchanged and unstaged. The overall A+ goal remains active.
