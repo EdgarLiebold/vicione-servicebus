@@ -112,17 +112,32 @@ public sealed class DefaultInitializerConventionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-CONVENTIONS", "required-property-metadata")]
+    public void ConventionEntryPoints_RejectNullPropertyMetadata()
+    {
+        var convention = new DefaultInitializerConvention<HeaderInitializedMessage, HeaderBoundaryInput>();
+
+        ArgumentNullException propertyException = Assert.Throws<ArgumentNullException>(() =>
+            convention.TryGetPropertyInitializer<string>(null!, out _));
+        ArgumentNullException headerException = Assert.Throws<ArgumentNullException>(() =>
+            convention.TryGetHeaderInitializer<string>(null!, out _));
+        ArgumentNullException namedHeaderException = Assert.Throws<ArgumentNullException>(() =>
+            convention.TryGetHeadersInitializer<string>(null!, out _));
+
+        Assert.Equal("propertyInfo", propertyException.ParamName);
+        Assert.Equal("propertyInfo", headerException.ParamName);
+        Assert.Equal("propertyInfo", namedHeaderException.ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-HEADER-CONVENTION", "invalid-property")]
-    public void HeaderConvention_RejectsNullAndIgnoresAnEmptyHeaderName()
+    public void HeaderConvention_IgnoresAnEmptyHeaderName()
     {
         var convention = new DefaultInitializerConvention<HeaderInitializedMessage, HeaderBoundaryInput>();
         var emptyHeaderProperty = typeof(HeaderBoundaryInput).GetProperty(nameof(HeaderBoundaryInput.__Header_))!;
 
-        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() =>
-            convention.TryGetHeadersInitializer<string>(null!, out _));
         bool found = convention.TryGetHeadersInitializer<string>(emptyHeaderProperty, out var initializer);
 
-        Assert.Equal("propertyInfo", exception.ParamName);
         Assert.False(found);
         Assert.Null(initializer);
     }

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Converts date/time values and signed Unix millisecond timestamps to UTC instants.</summary>
+/// <summary>Converts date/time values among invariant text, signed Unix millisecond timestamps, and UTC instants.</summary>
 internal sealed class DateTimeTypeConverter :
     ITypeConverter<string, DateTime>,
     ITypeConverter<int, DateTime>,

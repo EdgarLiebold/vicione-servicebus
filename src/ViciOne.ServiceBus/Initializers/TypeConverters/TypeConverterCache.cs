@@ -40,92 +40,102 @@ public static class TypeConverterCache
     {
         var neededType = typeof(ITypeConverter<TProperty, TInput>);
 
-        if (_typeConverters.TryGetValue(neededType, out var converter))
+        if (TryGetCachedConverter(neededType, out typeConverter))
+            return true;
+
+        lock (_lock)
+        {
+            if (TryGetCachedConverter(neededType, out typeConverter))
+                return true;
+
+            AddConverterIfSupported(neededType, typeof(TProperty), typeof(TInput));
+
+            return TryGetCachedConverter(neededType, out typeConverter);
+        }
+    }
+
+    static bool TryGetCachedConverter<TProperty, TInput>(Type neededType,
+        [NotNullWhen(true)] out ITypeConverter<TProperty, TInput>? typeConverter)
+    {
+        if (_typeConverters.TryGetValue(neededType, out object? converter))
         {
             typeConverter = converter as ITypeConverter<TProperty, TInput>;
             return typeConverter != null;
         }
 
-        lock (_lock)
+        typeConverter = null;
+        return false;
+    }
+
+    static void AddConverterIfSupported(Type neededType, Type propertyType, Type inputType)
+    {
+        if (propertyType == typeof(string) && typeof(INamedInitializerValue).IsAssignableFrom(inputType))
         {
-            if (_typeConverters.TryGetValue(neededType, out converter))
-            {
-                typeConverter = converter as ITypeConverter<TProperty, TInput>;
-                return typeConverter != null;
-            }
+            var namedValueConverterType = typeof(NamedInitializerValueTypeConverter<>).MakeGenericType(inputType);
+            AddSupportedTypes(namedValueConverterType);
 
-            var propertyType = typeof(TProperty);
-            if (propertyType == typeof(string) && typeof(INamedInitializerValue).IsAssignableFrom(typeof(TInput)))
-            {
-                var namedValueConverterType = typeof(NamedInitializerValueTypeConverter<>).MakeGenericType(typeof(TInput));
-                AddSupportedTypes(namedValueConverterType);
+            if (_typeConverters.ContainsKey(neededType))
+                return;
+        }
 
-                if (_typeConverters.TryGetValue(neededType, out converter))
-                {
-                    typeConverter = converter as ITypeConverter<TProperty, TInput>;
-                    return typeConverter != null;
-                }
-            }
+        object? matched = _converters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
+        if (matched != null)
+        {
+            _typeConverters.GetOrAdd(neededType, matched);
+            return;
+        }
 
-            var matched = _converters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
-            if (matched != default)
-            {
-                _typeConverters.GetOrAdd(neededType, matched);
+        if (propertyType.IsEnum)
+        {
+            var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
+            if (enumConverterType.ImplementsInterface(neededType))
+                AddSupportedTypes(enumConverterType);
 
-                typeConverter = matched as ITypeConverter<TProperty, TInput>;
-                return typeConverter != null;
-            }
+            return;
+        }
 
-            if (propertyType.IsEnum)
-            {
-                var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
-                if (enumConverterType.ImplementsInterface(neededType))
-                    AddSupportedTypes(enumConverterType);
-            }
-            else if (propertyType.IsNullable(out var underlyingType))
-            {
-                if (underlyingType == typeof(TInput))
-                {
-                    var nullableType = typeof(ToNullableTypeConverter<>).MakeGenericType(underlyingType);
-                    AddSupportedTypes(nullableType);
-                }
-                else
-                {
-                    var converterType = typeof(ITypeConverter<,>).MakeGenericType(underlyingType, typeof(TInput));
-                    AddEnumConverterIfSupported(underlyingType, converterType);
-                    if (_typeConverters.TryGetValue(converterType, out converter))
-                    {
-                        var nullableType = typeof(ToNullableTypeConverter<,>).MakeGenericType(underlyingType, typeof(TInput));
-                        AddSupportedTypes(nullableType, converter);
-                    }
-                }
-            }
-            else if (typeof(TInput).IsNullable(out underlyingType))
-            {
-                if (underlyingType == propertyType)
-                {
-                    var nullableType = typeof(FromNullableTypeConverter<>).MakeGenericType(underlyingType);
-                    AddSupportedTypes(nullableType);
-                }
-                else
-                {
-                    var converterType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, underlyingType);
-                    if (_typeConverters.TryGetValue(converterType, out converter))
-                    {
-                        var nullableType = typeof(FromNullableTypeConverter<,>).MakeGenericType(propertyType, underlyingType);
-                        AddSupportedTypes(nullableType, converter);
-                    }
-                }
-            }
+        if (propertyType.IsNullable(out Type? resultType))
+        {
+            AddNullableResultConverterIfSupported(resultType, inputType);
+            return;
+        }
 
-            if (_typeConverters.TryGetValue(neededType, out converter))
-            {
-                typeConverter = converter as ITypeConverter<TProperty, TInput>;
-                return typeConverter != null;
-            }
+        if (inputType.IsNullable(out Type? sourceType))
+            AddNullableSourceConverterIfSupported(propertyType, sourceType);
+    }
 
-            typeConverter = null;
-            return false;
+    static void AddNullableResultConverterIfSupported(Type resultType, Type inputType)
+    {
+        if (resultType == inputType)
+        {
+            var nullableType = typeof(ToNullableTypeConverter<>).MakeGenericType(resultType);
+            AddSupportedTypes(nullableType);
+            return;
+        }
+
+        var converterType = typeof(ITypeConverter<,>).MakeGenericType(resultType, inputType);
+        AddEnumConverterIfSupported(resultType, converterType);
+        if (_typeConverters.TryGetValue(converterType, out object? converter))
+        {
+            var nullableType = typeof(ToNullableTypeConverter<,>).MakeGenericType(resultType, inputType);
+            AddSupportedTypes(nullableType, converter);
+        }
+    }
+
+    static void AddNullableSourceConverterIfSupported(Type propertyType, Type sourceType)
+    {
+        if (sourceType == propertyType)
+        {
+            var nullableType = typeof(FromNullableTypeConverter<>).MakeGenericType(sourceType);
+            AddSupportedTypes(nullableType);
+            return;
+        }
+
+        var converterType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, sourceType);
+        if (_typeConverters.TryGetValue(converterType, out object? converter))
+        {
+            var nullableType = typeof(FromNullableTypeConverter<,>).MakeGenericType(propertyType, sourceType);
+            AddSupportedTypes(nullableType, converter);
         }
     }
 

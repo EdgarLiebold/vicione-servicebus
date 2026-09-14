@@ -3387,3 +3387,90 @@ and no `sdk` version. The sole source `NotImplementedException` reference is the
 non-retryable exception classification case. Protected `review/` and `TestResults/` remain unchanged
 and unstaged. The overall A+ goal continues with the remaining complete source owners and final
 repository-wide audit.
+
+## Iteration 114 Core Initializers plan
+
+Iteration 114 reviews the complete 87-file, 7,571-line Core Initializers owner below
+`src/ViciOne.ServiceBus/Initializers` and its 46-file, 7,384-line direct test owner. Every production
+and test file and every source comment is read manually before correction. No source, test, comment,
+or structural generator is permitted; coverage and static scans only route and verify the manual
+review.
+
+The directory model follows assembly ownership. `src/ViciOne.ServiceBus` is the project root of the
+Core assembly, not a solution-wide container. Independent assemblies therefore remain sibling
+projects directly beneath `src`, while optional provider families remain grouped beneath
+`Persistence`, `Scheduling`, and `Transports`. Initializers are a Core runtime capability and belong
+inside the Core project. No product C# file belongs directly in the repository `src` root.
+
+### Iteration 114 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Every property and header initializer returns a valid task | direct null-task ownership tests with exact failure text and downstream call counts |
+| Initializer failures and cancellation retain their exact identity | existing synchronous, asynchronous, completed-task, pending-task, and token matrices |
+| Convention entry points require valid property metadata | exact parameter-name assertions for all three convention entry points |
+| Converter discovery preserves enum, nullable, named-value, and registered-converter semantics | complete converter matrices plus focused and Core regression suites |
+| Converter resolution remains understandable and below the accepted risk threshold | manual decomposition and fresh per-method CRAP analysis |
+| Comments describe only current behavior | manual comment review and correction after understanding each implementation |
+| Folder and file ownership match types, namespaces, and assemblies | manual 87-file structural review plus repository architecture gates |
+| No feature or public API is lost | focused and Core coverage, serial build, all hermetic hosts, package consumers, and packed API baseline |
+
+### Iteration 114 validation
+
+1. Preserve the correct 178/178 focused Initializers baseline and record fresh coverage and risk.
+2. Review every implementation and direct test against its conversions, conventions, ownership,
+   cancellation, concurrency, and failure boundaries.
+3. Add red-first tests only for independently justified contract gaps.
+4. Apply the smallest coherent correction and manually update affected comments and requirement
+   projections.
+5. Kill a meaningful isolated counterchange and restore the accepted source byte-for-byte.
+6. Re-run focused and complete Core coverage and bind their artifacts to the final source names.
+7. Run both format gates, the serial 77-project build, all 23 hermetic hosts, package/API validation,
+   bidirectional Async naming, requirements, structure, directives, comments, hygiene, empty-folder,
+   and Git gates.
+8. Commit, annotate Iteration 114, push without force, and verify remote branch and peeled tag hashes.
+
+### Iteration 114 completion
+
+All 87 final production files and 7,593 physical lines in Core Initializers and all 46 direct test
+files and 7,452 test lines were read manually. Their files, namespaces, folders, and assembly
+ownership are coherent. Initializers remain inside the Core project; independent assemblies remain
+siblings under `src`, and optional integrations remain grouped by provider family. No product C#
+file is stored directly in the repository `src` root.
+
+Property and header initializer null tasks now fail at the owning boundary with explicit,
+deterministic contract errors; a header failure prevents the downstream send pipe. Convention entry
+points have direct required-metadata coverage. Converter discovery was decomposed by cache lookup,
+direct conversion, nullable-result conversion, and nullable-source conversion without changing its
+ordering or supported semantics. The DateTime converter summary now accurately includes invariant
+text and signed Unix-millisecond conversions instead of claiming every output is a UTC instant.
+
+The two new contract cases failed red against the original implementation while 19 related cases
+passed. Replacing the owned null-task rejection with `Task.CompletedTask` caused exactly the same two
+cases to fail while the same 19 unrelated cases remained green; the accepted source was restored.
+The bidirectional Async gate then identified the newly introduced task-returning private helper, and
+its name and call sites were corrected before the definitive validation.
+
+Final focused coverage passes 181/181 and reaches 97.6589% line (2,336/2,392) and 90.3448% branch
+(1,048/1,160) coverage across 494 compiler method records. The artifact is
+`/private/tmp/vsb-iteration114-initializers-final3.cobertura.xml`, SHA-256
+`621c6186e8f9e4412d4bdfa2a33395a710cf697f5aee62947790454be4233509`. Complete Core coverage passes
+3,531/3,531, records 77.0558% repository line (48,905/63,467) and 69.7433% branch
+(17,032/24,421) coverage, and raises the Initializers owner to 97.7007% line (2,337/2,392) and
+90.4310% branch (1,049/1,160). Its artifact is
+`/private/tmp/vsb-iteration114-core-final3.cobertura.xml`, SHA-256
+`0402d07f5a2dfe26c6e63875e835575611ea4e7d55d552b13e0089b33e1e4b40`. Maximum owner CRAP is 28,
+with no score above 30.
+
+Both format gates pass. The final serial Engineering Release build passes all 77 projects with zero
+warnings and errors. All 23 hermetic Unit and Architecture hosts pass 6,504/6,504 with no failure or
+skip. Package/API verification passes 18 journeys, 31 freshly packed packages, three isolated
+provider-testing consumers, and all 30 runtime APIs; the unchanged 18,879-line API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, comments, directives, filenames, folders, namespaces,
+dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
+`global.json` contains no SDK version. The sole source `NotImplementedException` reference is the
+intentional non-retryable exception classification case. Protected `review/` and `TestResults/`
+remain unchanged and unstaged. The overall A+ goal continues with the remaining complete source
+owners and final repository-wide audit.

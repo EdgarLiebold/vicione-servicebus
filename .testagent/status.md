@@ -950,3 +950,35 @@ Requirements, bidirectional Async naming, comments, directives, filenames, folde
 dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
 `global.json` selects only Microsoft Testing Platform and contains no SDK version. Protected trees
 remain unchanged and unstaged. The overall A+ goal remains active.
+
+## Iteration 114
+
+Iteration 114 completes the manual review of all 87 Core Initializers production files and 7,593
+final source lines plus all 46 direct test files and 7,452 test lines. Their comments, filenames,
+namespaces, folders, and Core assembly ownership are coherent. Independent assemblies remain direct
+siblings under `src`; optional integrations remain grouped under `Persistence`, `Scheduling`, and
+`Transports`; no product C# file exists directly in the repository `src` root.
+
+Null property and header initializer tasks now fail explicitly at their owning boundary, and header
+failure prevents downstream dispatch. All convention metadata entry points have exact contract
+coverage. Converter discovery is decomposed without changing enum, nullable, named-value, or
+registered-converter behavior. The stale DateTime converter description is corrected. Two red-first
+cases and an isolated counterchange prove the null-task behavior; the repository Async gate also
+caught and drove correction of the new private helper's name.
+
+Initializers passes 181/181 focused tests with 97.6589% line and 90.3448% branch coverage. Complete
+Core coverage passes 3,531/3,531 and reaches 97.7007% owner line and 90.4310% owner branch coverage.
+Across 494 owner methods, maximum CRAP is 28 and none exceeds 30. Final coverage artifact SHA-256
+values are `621c6186e8f9e4412d4bdfa2a33395a710cf697f5aee62947790454be4233509` focused and
+`0402d07f5a2dfe26c6e63875e835575611ea4e7d55d552b13e0089b33e1e4b40` complete Core.
+
+Both format gates pass. The serial Engineering Release build passes all 77 projects with zero
+warnings and errors. All 23 hermetic hosts pass 6,504/6,504 with no failure or skip. Package/API
+validation passes 18 journeys, 31 packages, three isolated provider-testing consumers, and all 30
+runtime APIs; the 18,879-line public API SHA-256 remains
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, comments, directives, filenames, folders, namespaces,
+dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
+Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal remains
+active.

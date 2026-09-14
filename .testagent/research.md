@@ -1944,3 +1944,78 @@ Microsoft Testing Platform runner selection and no `sdk` block. The sole source 
 placeholder. Git whitespace is clean. Protected `review/` and `TestResults/` remain unchanged and
 unstaged. The overall A+ goal remains active for the remaining complete source owners and final
 repository-wide audit.
+
+## Iteration 114 Core Initializers initial research
+
+Iteration 114 starts from remotely verified commit
+`9caad5be9b9993126add663ccf04c705023ffffc` and annotated tag
+`servicebus-a-plus-remediation-iteration-113-2026-09-14`. The Initializers owner contains 87
+production files and 7,571 physical lines; its direct test owner contains 46 files and 7,384 lines.
+All production and test files and every source comment were read manually before correction. No
+source, test, comment, or structure generator is permitted.
+
+The physical placement is intentional. `src/ViciOne.ServiceBus` is the Core assembly project root,
+not an umbrella around every ServiceBus assembly. Core Initializers therefore belong beneath that
+project. Independent assemblies remain sibling projects below `src`; optional provider integration
+families remain grouped below `Persistence`, `Scheduling`, and `Transports`. There is no product C#
+file directly below the repository `src` root.
+
+The correct namespace baseline passes 178/178. Fresh focused coverage reaches 97.5868% line
+(2,305/2,362) and 90.0519% branch (1,041/1,156) coverage across 489 compiler method records. The
+baseline artifact is `/private/tmp/vsb-iteration114-initializers-baseline2.cobertura.xml`, SHA-256
+`42424c1db8b538ef3db7b4052fa7567c5452a9513ff2d1bccb715230a21be528`. The sole CRAP score above 30
+is the monolithic `TypeConverterCache.TryGetTypeConverterCore` at 30.0693. Existing tests provide
+broad direct coverage of message construction, conventions, providers, property/header
+initialization, scalar/collection conversions, enum and nullable discovery, cancellation, failures,
+and public boundaries.
+
+## Iteration 114 Core Initializers final research
+
+The final owner contains 87 production files and 7,593 physical lines, with 46 direct test files and
+7,452 test lines. Manual review confirmed coherent filenames, namespaces, subfolders, comments, and
+Core ownership. The repository structure distinguishes assembly boundaries from provider-family
+grouping and requires no source move.
+
+Custom property and header initializers could return null tasks. The implementation forwarded those
+values into `Task.WhenAll`, producing a generic framework failure instead of an owned ServiceBus
+contract error. The final boundary turns each invalid task into an explicit faulted task, preserving
+parallel observation while producing exact property/header failure identity. Direct tests also
+prove that a null header task prevents the downstream pipe. All three convention discovery entry
+points now directly prove their required property metadata contract.
+
+The converter cache's single high-risk resolver combined cache lookup, named values, registered
+converters, enums, nullable results, and nullable sources. It is now decomposed into four focused
+helpers while retaining lookup ordering and dynamically registered converter behavior. Fresh
+coverage removes the only CRAP score above 30; maximum owner CRAP is now 28. The DateTime converter
+comment was manually corrected to describe invariant text, signed Unix milliseconds, and UTC
+instants without falsely claiming every conversion produces UTC.
+
+The two new null-task cases failed against the original implementation with the generic
+`ArgumentException`, while 19 related cases passed. A controlled counterchange accepting null as a
+completed task caused exactly those two cases to fail while the same 19 unrelated cases passed. The
+accepted implementation was restored byte-for-byte. A repository-wide bidirectional Async naming
+test subsequently caught the new task-returning helper's missing `Async` suffix; the helper and all
+call sites were renamed, and the isolated architecture test passed before the final all-host run.
+
+Final focused coverage passes 181/181 and reaches 97.6589% line (2,336/2,392) and 90.3448% branch
+(1,048/1,160) coverage across 494 compiler method records. The artifact is
+`/private/tmp/vsb-iteration114-initializers-final3.cobertura.xml`, SHA-256
+`621c6186e8f9e4412d4bdfa2a33395a710cf697f5aee62947790454be4233509`. Complete Core coverage passes
+3,531/3,531 and records repository reachability of 77.0558% line (48,905/63,467) and 69.7433% branch
+(17,032/24,421). Within that run, Initializers reaches 97.7007% line (2,337/2,392) and 90.4310%
+branch (1,049/1,160). The complete artifact is
+`/private/tmp/vsb-iteration114-core-final3.cobertura.xml`, SHA-256
+`0402d07f5a2dfe26c6e63875e835575611ea4e7d55d552b13e0089b33e1e4b40`.
+
+Both final format gates pass. The definitive serial Engineering Release build passes 77 projects
+with zero warnings and errors. All 23 hermetic Unit and Architecture hosts pass 6,504/6,504 with no
+failure or skip. Package verification passes 18 developer journeys, 31 freshly packed packages,
+three isolated provider-testing consumers, and all 30 runtime APIs. The public API remains 18,879
+lines with SHA-256 `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, source/comment/directive/file/folder architecture, dummy
+and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass. No product
+C# file exists directly beneath `src`, and `global.json` has no SDK version. The sole source
+occurrence of `NotImplementedException` is the intentional non-retryable exception classification,
+not a placeholder. Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall
+A+ goal remains active for the remaining complete source owners and final repository-wide audit.

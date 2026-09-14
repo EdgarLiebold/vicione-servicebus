@@ -351,6 +351,41 @@ public sealed class MessageInitializerContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-FAULT", "null-property-initializer-task")]
+    public async Task NullPropertyInitializerTask_IsRejectedAtTheOwningBoundaryAsync()
+    {
+        MessageInitializer<TestMessage, TestInput> initializer = Create(
+            propertyInitializer: new NullTaskPropertyInitializer());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            initializer.InitializeAsync(new TestInput(), TestContext.Current.CancellationToken));
+
+        Assert.Equal("A property initializer returned a null task.", exception.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-FAULT", "null-header-initializer-task")]
+    public async Task NullHeaderInitializerTask_StopsBeforeTheDownstreamPipeAsync()
+    {
+        var downstream = new RecordingSendPipe();
+        MessageInitializer<TestMessage, TestInput> initializer = Create(
+            headerInitializer: new NullTaskHeaderInitializer());
+        InitializedMessage<TestMessage> initialized = await initializer.InitializeMessageAsync(
+            new TestInput(),
+            downstream,
+            TestContext.Current.CancellationToken);
+        var sendContext = new MessageSendContext<TestMessage>(
+            initialized.Message,
+            TestContext.Current.CancellationToken);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            initialized.Pipe.SendAsync(sendContext));
+
+        Assert.Equal("A header initializer returned a null task.", exception.Message);
+        Assert.Equal(0, downstream.TypedSendCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-API", "cache-facades-hide-mutable-implementation")]
     public void CacheFacades_AreStaticAndDoNotExportImplementationContracts()
     {
@@ -497,6 +532,21 @@ public sealed class MessageInitializerContractTests
             CancellationToken cancellationToken = default) => _completion.Task;
     }
 
+    private sealed class NullTaskPropertyInitializer : IPropertyInitializer<TestMessage, TestInput>
+    {
+        public Task ApplyAsync(
+            InitializeContext<TestMessage, TestInput> context,
+            CancellationToken cancellationToken = default) => null!;
+    }
+
+    private sealed class NullTaskHeaderInitializer : IHeaderInitializer<TestMessage, TestInput>
+    {
+        public Task ApplyAsync(
+            InitializeContext<TestMessage, TestInput> context,
+            SendContext sendContext,
+            CancellationToken cancellationToken = default) => null!;
+    }
+
     private sealed class FaultedPropertyProvider(Exception exception) : IPropertyProvider<TestInput, string?>
     {
         public Task<string?> GetPropertyAsync<TMessage>(
@@ -536,6 +586,8 @@ public sealed class MessageInitializerContractTests
 
         public int ProbeCount { get; private set; }
 
+        public int TypedSendCount { get; private set; }
+
         public void Probe(ProbeContext context)
         {
             ArgumentNullException.ThrowIfNull(context);
@@ -545,6 +597,7 @@ public sealed class MessageInitializerContractTests
         public Task SendAsync(SendContext<TestMessage> context)
         {
             ArgumentNullException.ThrowIfNull(context);
+            TypedSendCount++;
             return Task.CompletedTask;
         }
 

@@ -184,7 +184,9 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         cancellationToken.ThrowIfCancellationRequested();
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext, cancellationToken)))
+        await Task.WhenAll(_initializers.Select(x => RequireInitializerTaskAsync(
+                x.ApplyAsync(inputContext, cancellationToken),
+                "property")))
             .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -200,7 +202,9 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         cancellationToken.ThrowIfCancellationRequested();
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext, cancellationToken)))
+        await Task.WhenAll(_initializers.Select(x => RequireInitializerTaskAsync(
+                x.ApplyAsync(inputContext, cancellationToken),
+                "property")))
             .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -233,6 +237,12 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         return snapshot;
     }
 
+    static Task RequireInitializerTaskAsync(Task? task, string initializerKind)
+    {
+        return task ?? Task.FromException(
+            new InvalidOperationException($"A {initializerKind} initializer returned a null task."));
+    }
+
 
     class InitializerSendContextPipe :
         IPipe<SendContext<TMessage>>,
@@ -260,7 +270,9 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         {
             ArgumentNullException.ThrowIfNull(context);
             context.CancellationToken.ThrowIfCancellationRequested();
-            await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(_context, context, context.CancellationToken)))
+            await Task.WhenAll(_initializers.Select(x => RequireInitializerTaskAsync(
+                    x.ApplyAsync(_context, context, context.CancellationToken),
+                    "header")))
                 .WaitAsync(context.CancellationToken)
                 .ConfigureAwait(false);
 
