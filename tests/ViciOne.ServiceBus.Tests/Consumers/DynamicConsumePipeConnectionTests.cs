@@ -42,6 +42,61 @@ public sealed class DynamicConsumePipeConnectionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-CONSUMER-CONNECTION", "default-delegate-and-runtime-factories-dispatch-exact-contracts")]
+    public async Task DefaultDelegateAndRuntimeFactoryConnections_DispatchTheirExactContractsAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness(timeout);
+        var delegateConsumer = new DelegateConnectedConsumer();
+        var runtimeConsumer = new RuntimeConnectedConsumer();
+        var delegateFactoryCalls = 0;
+        var runtimeFactoryCalls = 0;
+        DefaultConnectedConsumer.Reset();
+
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        IHostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
+        try
+        {
+            using ConnectHandle defaultHandle = endpoint.ReceiveEndpoint.ConnectConsumer<DefaultConnectedConsumer>();
+            using ConnectHandle delegateHandle = endpoint.ReceiveEndpoint.ConnectConsumer(() =>
+            {
+                Interlocked.Increment(ref delegateFactoryCalls);
+                return delegateConsumer;
+            });
+            using ConnectHandle runtimeHandle = endpoint.ReceiveEndpoint.ConnectConsumer(
+                typeof(RuntimeConnectedConsumer),
+                requestedType =>
+                {
+                    Assert.Equal(typeof(RuntimeConnectedConsumer), requestedType);
+                    Interlocked.Increment(ref runtimeFactoryCalls);
+                    return runtimeConsumer;
+                });
+            ISendEndpoint sendEndpoint = await harness.Bus.GetSendEndpointAsync(
+                endpoint.ReceiveEndpoint.InputAddress,
+                cancellationToken).WaitAsync(timeout, cancellationToken);
+            var defaultMessage = new DefaultConnectedMessage(NewId.NextGuid());
+            var delegateMessage = new DelegateConnectedMessage(NewId.NextGuid());
+            var runtimeMessage = new RuntimeConnectedMessage(NewId.NextGuid());
+
+            await sendEndpoint.SendAsync(defaultMessage, cancellationToken);
+            await sendEndpoint.SendAsync(delegateMessage, cancellationToken);
+            await sendEndpoint.SendAsync(runtimeMessage, cancellationToken);
+
+            Assert.Equal(defaultMessage, await DefaultConnectedConsumer.Consumed.Task.WaitAsync(timeout, cancellationToken));
+            Assert.Equal(delegateMessage, await delegateConsumer.Consumed.Task.WaitAsync(timeout, cancellationToken));
+            Assert.Equal(runtimeMessage, await runtimeConsumer.Consumed.Task.WaitAsync(timeout, cancellationToken));
+            Assert.Equal(1, Volatile.Read(ref delegateFactoryCalls));
+            Assert.Equal(1, Volatile.Read(ref runtimeFactoryCalls));
+        }
+        finally
+        {
+            await endpoint.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONSUMER-CONNECTION", "object-instance-multiple-contracts")]
     public async Task ObjectInstanceConnection_DeliversEveryImplementedMessageContractExactlyOnceAsync()
     {
@@ -204,6 +259,47 @@ public sealed class DynamicConsumePipeConnectionTests
     public sealed record FirstMessage(Guid Id);
 
     public sealed record SecondMessage(Guid Id);
+
+    public sealed record DefaultConnectedMessage(Guid Id);
+
+    public sealed record DelegateConnectedMessage(Guid Id);
+
+    public sealed record RuntimeConnectedMessage(Guid Id);
+
+    private sealed class DefaultConnectedConsumer : IConsumer<DefaultConnectedMessage>
+    {
+        public static TaskCompletionSource<DefaultConnectedMessage> Consumed { get; private set; } = NewSignal<DefaultConnectedMessage>();
+
+        public static void Reset() => Consumed = NewSignal<DefaultConnectedMessage>();
+
+        public Task ConsumeAsync(ConsumeContext<DefaultConnectedMessage> context)
+        {
+            Consumed.TrySetResult(context.Message);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class DelegateConnectedConsumer : IConsumer<DelegateConnectedMessage>
+    {
+        public TaskCompletionSource<DelegateConnectedMessage> Consumed { get; } = NewSignal<DelegateConnectedMessage>();
+
+        public Task ConsumeAsync(ConsumeContext<DelegateConnectedMessage> context)
+        {
+            Consumed.TrySetResult(context.Message);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class RuntimeConnectedConsumer : IConsumer<RuntimeConnectedMessage>
+    {
+        public TaskCompletionSource<RuntimeConnectedMessage> Consumed { get; } = NewSignal<RuntimeConnectedMessage>();
+
+        public Task ConsumeAsync(ConsumeContext<RuntimeConnectedMessage> context)
+        {
+            Consumed.TrySetResult(context.Message);
+            return Task.CompletedTask;
+        }
+    }
 
     private sealed class SingleMessageConsumer : IConsumer<FirstMessage>
     {

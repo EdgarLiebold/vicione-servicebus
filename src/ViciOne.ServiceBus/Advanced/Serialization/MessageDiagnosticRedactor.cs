@@ -69,44 +69,63 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
 
     private string BoundAndSanitize(string value)
     {
-        int length = Math.Min(value.Length, _maximumStringLength);
-        if (length < value.Length
-            && length > 0
-            && char.IsHighSurrogate(value[length - 1])
-            && char.IsLowSurrogate(value[length]))
-            length--;
-
+        int length = GetBoundedLength(value);
         bool truncated = value.Length > length;
-        int firstUnsafeCharacter = -1;
-        for (int index = 0; index < length; index++)
-        {
-            char character = value[index];
-            bool invalidSurrogate = char.IsHighSurrogate(character)
-                ? index + 1 >= length || !char.IsLowSurrogate(value[index + 1])
-                : char.IsLowSurrogate(character)
-                    && (index == 0 || !char.IsHighSurrogate(value[index - 1]));
-            if (char.IsControl(character) || invalidSurrogate)
-            {
-                firstUnsafeCharacter = index;
-                break;
-            }
-        }
+        int firstUnsafeCharacter = FindFirstUnsafeCharacter(value.AsSpan(0, length));
 
         if (firstUnsafeCharacter < 0)
             return truncated ? string.Concat(value.AsSpan(0, length), "…") : value;
 
         char[] sanitized = value.AsSpan(0, length).ToArray();
-        for (int index = firstUnsafeCharacter; index < sanitized.Length; index++)
-        {
-            char character = sanitized[index];
-            bool invalidSurrogate = char.IsHighSurrogate(character)
-                ? index + 1 >= sanitized.Length || !char.IsLowSurrogate(sanitized[index + 1])
-                : char.IsLowSurrogate(character)
-                    && (index == 0 || !char.IsHighSurrogate(sanitized[index - 1]));
-            if (char.IsControl(character) || invalidSurrogate)
-                sanitized[index] = '�';
-        }
+        Sanitize(sanitized.AsSpan(firstUnsafeCharacter));
 
         return truncated ? string.Concat(sanitized, "…") : new string(sanitized);
+    }
+
+    private int GetBoundedLength(string value)
+    {
+        int length = Math.Min(value.Length, _maximumStringLength);
+        if (length < value.Length
+            && length > 0
+            && char.IsHighSurrogate(value[length - 1])
+            && char.IsLowSurrogate(value[length]))
+            return length - 1;
+
+        return length;
+    }
+
+    private static int FindFirstUnsafeCharacter(ReadOnlySpan<char> value)
+    {
+        for (int index = 0; index < value.Length; index++)
+        {
+            if (IsUnsafeCharacter(value, index))
+                return index;
+        }
+
+        return -1;
+    }
+
+    private static void Sanitize(Span<char> value)
+    {
+        for (int index = 0; index < value.Length; index++)
+        {
+            if (IsUnsafeCharacter(value, index))
+                value[index] = '�';
+        }
+    }
+
+    private static bool IsUnsafeCharacter(ReadOnlySpan<char> value, int index)
+    {
+        char character = value[index];
+        return char.IsControl(character) || IsInvalidSurrogate(value, index, character);
+    }
+
+    private static bool IsInvalidSurrogate(ReadOnlySpan<char> value, int index, char character)
+    {
+        if (char.IsHighSurrogate(character))
+            return index + 1 >= value.Length || !char.IsLowSurrogate(value[index + 1]);
+
+        return char.IsLowSurrogate(character)
+            && (index == 0 || !char.IsHighSurrogate(value[index - 1]));
     }
 }

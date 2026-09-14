@@ -14193,6 +14193,11 @@ TYPE interface public ViciOne.ServiceBus.Advanced.IScopedClientFactory
   METHOD public abstract ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(T message, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract ViciOne.ServiceBus.IRequestClient<T> CreateRequestClient<T>(System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
   METHOD public abstract ViciOne.ServiceBus.IRequestClient<T> CreateRequestClient<T>(ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
+TYPE interface public ViciOne.ServiceBus.Advanced.ITransactionContext
+  METHOD public abstract System.Threading.Tasks.Task CommitAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Void Rollback()
+  METHOD public abstract System.Void Rollback(System.Exception exception)
+  PROPERTY System.Transactions.Transaction Transaction { public-get;  }
 TYPE delegate public ViciOne.ServiceBus.Advanced.InlineFilterMethod<T> [sealed]
   CTOR public ViciOne.ServiceBus.Advanced.InlineFilterMethod<T>(System.Object object, System.IntPtr method)
   METHOD public virtual System.IAsyncResult BeginInvoke(T context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<T> next, System.AsyncCallback callback, System.Object object)
@@ -14558,11 +14563,6 @@ TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageConsumeTopology<TM
   METHOD public virtual System.Void UpdateConvention<TConvention>(System.Func<TConvention,TConvention> update)
   PROPERTY System.Boolean ConfigureConsumeTopology { public-get; public-set; }
   PROPERTY System.Boolean IsBindableMessageType { protected-get;  }
-TYPE interface public ViciOne.ServiceBus.Advanced.TransactionContext
-  METHOD public abstract System.Threading.Tasks.Task CommitAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Void Rollback()
-  METHOD public abstract System.Void Rollback(System.Exception exception)
-  PROPERTY System.Transactions.Transaction Transaction { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.TransactionContextExtensions [static]
   METHOD public static System.Transactions.TransactionScope CreateTransactionScope(ViciOne.ServiceBus.Advanced.PipeContext context)
   METHOD public static System.Transactions.TransactionScope CreateTransactionScope(ViciOne.ServiceBus.Advanced.PipeContext context, System.TimeSpan scopeTimeout)

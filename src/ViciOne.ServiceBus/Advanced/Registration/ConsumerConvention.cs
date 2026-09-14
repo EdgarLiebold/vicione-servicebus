@@ -4,10 +4,10 @@ using ViciOne.ServiceBus.Consumers.Conventions;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>Manages conventions that discover message contracts implemented by consumer types.</summary>
+/// <summary>Manages process-wide conventions that discover message contracts implemented by consumer types.</summary>
 public static class ConsumerConvention
 {
-    /// <summary>Registers a newly constructed consumer convention when its concrete type is not already registered.</summary>
+    /// <summary>Registers a newly constructed process-wide consumer convention when its concrete type is not already registered.</summary>
     /// <typeparam name="TConvention">The convention type.</typeparam>
     /// <returns><see langword="true" /> when the convention was added; otherwise, <see langword="false" />.</returns>
     public static bool Register<TConvention>()
@@ -18,7 +18,7 @@ public static class ConsumerConvention
         return ConsumerConventionCache.TryAdd(convention);
     }
 
-    /// <summary>Registers a consumer convention when its concrete type is not already registered.</summary>
+    /// <summary>Registers a process-wide consumer convention when its concrete type is not already registered.</summary>
     /// <typeparam name="TConvention">The convention type.</typeparam>
     /// <param name="convention">The convention to register.</param>
     /// <returns><see langword="true" /> when the convention was added; otherwise, <see langword="false" />.</returns>
@@ -31,7 +31,7 @@ public static class ConsumerConvention
         return ConsumerConventionCache.TryAdd(convention);
     }
 
-    /// <summary>Removes the first registered convention of the specified type.</summary>
+    /// <summary>Removes the first process-wide convention of the specified type.</summary>
     /// <typeparam name="TConvention">The convention type to remove.</typeparam>
     public static void Remove<TConvention>()
         where TConvention : IConsumerConvention

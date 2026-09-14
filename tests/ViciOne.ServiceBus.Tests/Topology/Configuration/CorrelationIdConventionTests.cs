@@ -8,6 +8,49 @@ namespace ViciOne.ServiceBus.Tests.Topology.Configuration;
 public sealed class CorrelationIdConventionTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-CORRELATION-ID", "global-selector-overloads-reject-null")]
+    public void GlobalSelectors_RejectMissingRequiredAndOptionalSelectors()
+    {
+        Assert.Equal("getCorrelationId", Assert.Throws<ArgumentNullException>(() =>
+            MessageCorrelation.UseCorrelationId<RequiredSelectorMessage>((Func<RequiredSelectorMessage, Guid>)null!)).ParamName);
+        Assert.Equal("getCorrelationId", Assert.Throws<ArgumentNullException>(() =>
+            MessageCorrelation.UseCorrelationId<OptionalSelectorMessage>((Func<OptionalSelectorMessage, Guid?>)null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CORRELATION-ID", "optional-global-selector-preserves-present-and-absent-identities")]
+    public async Task OptionalGlobalSelector_PreservesPresentAndAbsentCorrelationIdentitiesAsync()
+    {
+        using var harness = CreateHarness();
+        HandlerTestHarness<OptionalGlobalSelectorMessage> handler = harness.AddHandler<OptionalGlobalSelectorMessage>();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Guid selectedCorrelationId = NewId.NextGuid();
+        var selected = new OptionalGlobalSelectorMessage(selectedCorrelationId, "selected");
+        var absent = new OptionalGlobalSelectorMessage(null, "absent");
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            await harness.InputQueueSendEndpoint.SendAsync(selected, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(absent, cancellationToken);
+
+            ConsumeContext<OptionalGlobalSelectorMessage> selectedContext = (await handler.Consumed
+                .SelectAsync(observation => observation.Context.Message.Label == selected.Label, cancellationToken)
+                .FirstObservedAsync(cancellationToken: cancellationToken)).Context;
+            ConsumeContext<OptionalGlobalSelectorMessage> absentContext = (await handler.Consumed
+                .SelectAsync(observation => observation.Context.Message.Label == absent.Label, cancellationToken)
+                .FirstObservedAsync(cancellationToken: cancellationToken)).Context;
+
+            Assert.Equal(selectedCorrelationId, selectedContext.CorrelationId);
+            Assert.Null(absentContext.CorrelationId);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CORRELATION-ID", "correlated-contract-send-and-publish")]
     public async Task CorrelatedByGuid_DrivesBothSendAndPublishAsync()
     {
@@ -199,6 +242,12 @@ public sealed class CorrelationIdConventionTests
     }
 
     private sealed record CorrelatedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+
+    private sealed record RequiredSelectorMessage;
+
+    private sealed record OptionalSelectorMessage;
+
+    public sealed record OptionalGlobalSelectorMessage(Guid? SelectedCorrelationId, string Label);
 
     private sealed record CorrelationEventCommandMessage(Guid CorrelationId, Guid EventId, Guid CommandId);
 

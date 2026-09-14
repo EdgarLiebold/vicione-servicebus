@@ -18,7 +18,7 @@ public sealed class TransactionConfigurationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = TimeSpan.FromSeconds(17);
         var driver = new TransactionFilterTestDriver(IsolationLevel.Serializable, timeout);
-        TransactionContext? observed = null;
+        ITransactionContext? observed = null;
 
         await driver.ExecuteAsync(context =>
         {
@@ -69,7 +69,7 @@ public sealed class TransactionConfigurationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var driver = new TransactionFilterTestDriver(IsolationLevel.ReadCommitted, TimeSpan.FromSeconds(5));
         using var existing = new RecordingExternalTransactionContext();
-        TransactionContext? observed = null;
+        ITransactionContext? observed = null;
 
         await driver.ExecuteWithExistingAsync(existing, context =>
         {
@@ -123,7 +123,7 @@ public sealed class TransactionConfigurationTests
     {
     }
 
-    private sealed class RecordingExternalTransactionContext : TransactionContext, IDisposable
+    private sealed class RecordingExternalTransactionContext : ITransactionContext, IDisposable
     {
         private readonly CommittableTransaction _transaction = new();
 

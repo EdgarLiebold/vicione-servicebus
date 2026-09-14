@@ -112,27 +112,35 @@ public sealed class PipeContextHandleLifecycleTests
         IAsyncPipeContextAgent<CountingDisposableContext> asyncAgent = agent;
         var rejectedContext = new CountingDisposableContext();
 
+        Assert.False(asyncAgent.IsDisposed);
+        Assert.False(asyncAgent.Stopping.IsCancellationRequested);
+        Assert.Contains(nameof(PipeContextAgent<CountingDisposableContext>), asyncAgent.ToString(), StringComparison.Ordinal);
+
         await asyncAgent.StopAsync(CancellationToken.None);
         await asyncAgent.CreatedAsync(rejectedContext);
 
         Assert.Equal(1, rejectedContext.DisposeCount);
+        Assert.True(asyncAgent.IsDisposed);
         Assert.True(asyncAgent.Context.IsCanceled);
         Assert.True(asyncAgent.Completed.IsCompletedSuccessfully);
+        Assert.True(asyncAgent.Stopping.IsCancellationRequested);
         Assert.True(asyncAgent.Stopped.IsCancellationRequested);
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-TERMINALITY", "agent-late-cancellation-does-not-stop-created-context")]
-    public async Task AsyncAgent_LateCreationCancellationDoesNotStopAnAlreadyCreatedContextAsync()
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-TERMINALITY", "agent-late-failure-outcomes-do-not-stop-created-context")]
+    public async Task AsyncAgent_LateCreationFailureOutcomesDoNotStopAnAlreadyCreatedContextAsync()
     {
         var agent = new AsyncPipeContextAgent<AgentContext>();
         IAsyncPipeContextAgent<AgentContext> asyncAgent = agent;
         var expected = new AgentContext();
+        var lateFailure = new ExpectedFailureException();
         using var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
 
         await asyncAgent.CreatedAsync(expected);
         await asyncAgent.CreateCanceledAsync(cancellationTokenSource.Token);
+        await asyncAgent.CreateFaultedAsync(lateFailure);
 
         Assert.Same(expected, await asyncAgent.Context);
         Assert.False(asyncAgent.Completed.IsCompleted);
@@ -211,6 +219,8 @@ public sealed class PipeContextHandleLifecycleTests
         AgentContext observed = await asyncAgent.Context.WaitAsync(Xunit.TestContext.Current.CancellationToken);
         Assert.Same(expected, observed);
         Assert.False(send.IsCompleted);
+        Assert.NotNull(pipe.GetProbeResult(Xunit.TestContext.Current.CancellationToken));
+        Assert.Equal(1, inner.ProbeInvocationCount);
 
         await ((IAsyncDisposable)asyncAgent).DisposeAsync();
         await send;
@@ -230,6 +240,41 @@ public sealed class PipeContextHandleLifecycleTests
         Assert.False(contextSource.Task.IsCompleted);
         Assert.True(agent.Completed.IsCompletedSuccessfully);
         Assert.True(agent.Stopped.IsCancellationRequested);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-DISPOSAL", "synchronous-context-is-disposed-exactly-once")]
+    public async Task PipeContextAgent_DisposesASynchronousContextExactlyOnceAsync()
+    {
+        var context = new SynchronousDisposableContext();
+        var agent = new PipeContextAgent<SynchronousDisposableContext>(context);
+
+        await agent.DisposeAsync();
+        await agent.DisposeAsync();
+
+        Assert.Equal(1, context.DisposeCount);
+        Assert.True(((IPipeContextHandle<SynchronousDisposableContext>)agent).IsDisposed);
+        Assert.True(agent.Completed.IsCompletedSuccessfully);
+        Assert.False(agent.Stopped.IsCancellationRequested);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-DISPOSAL", "constant-handle-success-is-shared-and-idempotent")]
+    public async Task ConstantHandle_SharesOneSuccessfulSynchronousDisposalAsync()
+    {
+        var context = new SynchronousDisposableContext();
+        var handle = new ConstantPipeContextHandle<SynchronousDisposableContext>(context);
+        IPipeContextHandle<SynchronousDisposableContext> contextHandle = handle;
+
+        Assert.Same(context, await contextHandle.Context);
+        Assert.False(contextHandle.IsDisposed);
+
+        Task first = contextHandle.DisposeAsync().AsTask();
+        Task second = contextHandle.DisposeAsync().AsTask();
+        await Task.WhenAll(first, second);
+
+        Assert.True(contextHandle.IsDisposed);
+        Assert.Equal(1, context.DisposeCount);
     }
 
     [Fact]
@@ -440,6 +485,26 @@ public sealed class PipeContextHandleLifecycleTests
         Assert.Contains("returned no active ", activeFailure.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-BOUNDARY", "active-handle-must-return-context")]
+    public async Task Supervisor_RejectsAnActiveHandleThatReturnsNoContextAsync()
+    {
+        var supervisor = new PipeContextSupervisor<AgentContext>(new NullContextFactory());
+
+        try
+        {
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                supervisor.SendAsync(new NoOpPipe(), TestContext.Current.CancellationToken));
+
+            Assert.StartsWith("The active context handle completed without a ", exception.Message, StringComparison.Ordinal);
+            Assert.Contains(nameof(AgentContext), exception.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await supervisor.StopAsync(CancellationToken.None);
+        }
+    }
+
     private sealed class CoordinatedDisposableContext(Exception? failure = null) : BasePipeContext, IAsyncDisposable
     {
         private readonly TaskCompletionSource _disposeEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -474,6 +539,15 @@ public sealed class PipeContextHandleLifecycleTests
             Interlocked.Increment(ref _disposeCount);
             return ValueTask.CompletedTask;
         }
+    }
+
+    private sealed class SynchronousDisposableContext : BasePipeContext, IDisposable
+    {
+        private int _disposeCount;
+
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+        public void Dispose() => Interlocked.Increment(ref _disposeCount);
     }
 
     private sealed class RetryingDisposableContext(Exception firstFailure) : BasePipeContext, IAsyncDisposable
@@ -532,6 +606,38 @@ public sealed class PipeContextHandleLifecycleTests
             CancellationToken cancellationToken = default) => null!;
     }
 
+    private sealed class NullContextFactory : IPipeContextFactory<AgentContext>
+    {
+        public IPipeContextAgent<AgentContext> CreateContext(ISupervisor supervisor) =>
+            supervisor.AddContext(new AgentContext());
+
+        public IActivePipeContextAgent<AgentContext> CreateActiveContext(
+            ISupervisor supervisor,
+            IPipeContextHandle<AgentContext> context,
+            CancellationToken cancellationToken = default) => new NullContextActiveAgent();
+    }
+
+    private sealed class NullContextActiveAgent : IActivePipeContextAgent<AgentContext>
+    {
+        public bool IsDisposed => false;
+
+        public Task<AgentContext> Context => Task.FromResult<AgentContext>(null!);
+
+        public Task Ready => Task.CompletedTask;
+
+        public Task Completed => Task.CompletedTask;
+
+        public CancellationToken Stopping => CancellationToken.None;
+
+        public CancellationToken Stopped => CancellationToken.None;
+
+        public Task FaultedAsync(Exception exception) => Task.CompletedTask;
+
+        public Task StopAsync(StopContext context, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
     private sealed class NoOpPipe : IPipe<AgentContext>
     {
         public Task SendAsync(AgentContext context) => Task.CompletedTask;
@@ -543,10 +649,13 @@ public sealed class PipeContextHandleLifecycleTests
 
     private sealed class CallbackPipe(Func<AgentContext, Task> callback) : IPipe<AgentContext>
     {
+        public int ProbeInvocationCount { get; private set; }
+
         public Task SendAsync(AgentContext context) => callback(context);
 
         public void Probe(ProbeContext context)
         {
+            ProbeInvocationCount++;
         }
     }
 

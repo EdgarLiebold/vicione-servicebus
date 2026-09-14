@@ -745,3 +745,29 @@ runtime APIs. The 18,879-line packed API SHA-256 is
 `09218528f7e3f0b9c54ea3142587fa165c28ad017e590a7b042b6efcea9b076e`. Source hygiene and protected
 trees pass. The overall A+ goal continues with the remaining source owners and final whole-repository
 audit.
+
+## Iteration 107
+
+Iteration 107 completes the manual 80-file Core Advanced owner review. The directory model is now
+explicit: `src/ViciOne.ServiceBus` is the Core project, independent assemblies remain sibling
+projects, integration adapters remain grouped beneath Persistence, Scheduling, and Transports, and
+Advanced's internal directories mirror real namespace and API ownership.
+
+`TransactionContext` is now the convention-correct `ITransactionContext` without a compatibility
+alias. Nullable dispatcher flow, cancellation-token identity, supervisor completion, retained log
+contexts, abstract JSON mappings, diagnostic Unicode handling, and convention documentation are
+corrected and directly tested. All 50 changed or added tests have meaningful assertions and no
+identified test smell. Nine of nine controlled counterchanges were killed; one exposed a real
+supervisor cancellation race, whose fix passed 20 isolated repetitions.
+
+Fresh Advanced coverage passes 3,382 tests at 98.7% line and 91.1% branch coverage over 373 methods,
+with zero CRAP scores above 30. The 77-project Engineering build has zero warnings and errors, both
+format gates pass, and all 23 native test hosts pass 6,355/6,355 with no skip. Package/API validation
+passes twice with 18 journeys, 31 packages, three provider-testing consumers, and 30 runtime APIs;
+the intentional 18,879-line contract SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional async naming, comments, directives, dummy and legacy identities, SDK
+pinning, empty directories, formatting, and Git whitespace pass. Protected trees remain unchanged
+and unstaged. The overall A+ goal continues with the remaining source owners and final repository
+audit.

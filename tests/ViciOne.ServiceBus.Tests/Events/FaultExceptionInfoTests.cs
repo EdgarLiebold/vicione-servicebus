@@ -57,6 +57,41 @@ public sealed class FaultExceptionInfoTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "all-wrapper-constructors-preserve-message-inner-data-and-precedence")]
+    public void FaultDataConstruction_PreservesEveryConstructorContractAndDataPrecedence()
+    {
+        var source = new InvalidOperationException("source-message");
+        source.Data["InnerOnly"] = "inner";
+        source.Data["Shared"] = "inner-shared";
+        source.Data[17] = "ignored-non-string-key";
+        source.Data["IgnoredNull"] = null;
+        var objectValues = new { Shared = "object-shared", ObjectOnly = 23 };
+        KeyValuePair<string, object>[] pairValues =
+        [
+            new("shared", "pair-shared"),
+            new("PairOnly", true),
+        ];
+
+        var basic = new FaultDataException(source);
+        var fromObject = new FaultDataException(source, objectValues);
+        var fromPairs = new FaultDataException(source, pairValues);
+        var messageOnly = new FaultDataException("explicit-message", source);
+        var messageObject = new FaultDataException("explicit-object", source, objectValues);
+        var messagePairs = new FaultDataException("explicit-pairs", source, pairValues);
+
+        AssertWrapper(basic, "source-message", source, "inner-shared", "InnerOnly");
+        AssertWrapper(fromObject, "source-message", source, "object-shared", "InnerOnly", "ObjectOnly");
+        AssertWrapper(fromPairs, "source-message", source, "pair-shared", "InnerOnly", "PairOnly");
+        AssertWrapper(messageOnly, "explicit-message", source, "inner-shared", "InnerOnly");
+        AssertWrapper(messageObject, "explicit-object", source, "object-shared", "InnerOnly", "ObjectOnly");
+        AssertWrapper(messagePairs, "explicit-pairs", source, "pair-shared", "InnerOnly", "PairOnly");
+
+        Assert.Equal(23, fromObject.ApplicationData["objectonly"]);
+        Assert.True(Assert.IsType<bool>(fromPairs.ApplicationData["paironly"]));
+        Assert.DoesNotContain(basic.ApplicationData, entry => entry.Key == "IgnoredNull");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "mutable-type-identifiers-are-snapshotted")]
     public void FaultConstruction_CopiesMutableMessageTypeCollections()
     {
@@ -432,6 +467,20 @@ public sealed class FaultExceptionInfoTests
         {
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
+    }
+
+    private static void AssertWrapper(
+        FaultDataException wrapper,
+        string message,
+        Exception source,
+        string sharedValue,
+        params string[] expectedKeys)
+    {
+        Assert.Equal(message, wrapper.Message);
+        Assert.Same(source, wrapper.InnerException);
+        Assert.Same(wrapper.ApplicationData, wrapper.Data);
+        Assert.Equal(sharedValue, wrapper.ApplicationData["SHARED"]);
+        Assert.All(expectedKeys, key => Assert.True(wrapper.ApplicationData.ContainsKey(key), key));
     }
 
     private sealed record DiagnosticFailure(FailureSource Source);

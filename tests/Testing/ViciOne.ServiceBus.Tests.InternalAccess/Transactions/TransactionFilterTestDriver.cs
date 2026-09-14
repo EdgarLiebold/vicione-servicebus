@@ -21,17 +21,17 @@ public sealed class TransactionFilterTestDriver
 
     public TransactionLifecycleSnapshot? Lifecycle => _factory.Context?.Snapshot;
 
-    public Task ExecuteAsync(Func<TransactionContext, Task> downstream)
+    public Task ExecuteAsync(Func<ITransactionContext, Task> downstream)
     {
         ArgumentNullException.ThrowIfNull(downstream);
 
         var context = new DriverContext();
         return _filter.SendAsync(
             context,
-            Pipe.ExecuteAwaited<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
+            Pipe.ExecuteAwaited<DriverContext>(current => downstream(current.GetPayload<ITransactionContext>())));
     }
 
-    public Task ExecuteNestedAsync(Func<TransactionContext, Task> downstream)
+    public Task ExecuteNestedAsync(Func<ITransactionContext, Task> downstream)
     {
         ArgumentNullException.ThrowIfNull(downstream);
 
@@ -42,10 +42,10 @@ public sealed class TransactionFilterTestDriver
                 _filter.SendAsync(
                     outerContext,
                     Pipe.ExecuteAwaited<DriverContext>(innerContext =>
-                        downstream(innerContext.GetPayload<TransactionContext>())))));
+                        downstream(innerContext.GetPayload<ITransactionContext>())))));
     }
 
-    public Task ExecuteWithExistingAsync(TransactionContext existing, Func<TransactionContext, Task> downstream)
+    public Task ExecuteWithExistingAsync(ITransactionContext existing, Func<ITransactionContext, Task> downstream)
     {
         ArgumentNullException.ThrowIfNull(existing);
         ArgumentNullException.ThrowIfNull(downstream);
@@ -54,7 +54,7 @@ public sealed class TransactionFilterTestDriver
         context.GetOrAddPayload(() => existing);
         return _filter.SendAsync(
             context,
-            Pipe.ExecuteAwaited<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
+            Pipe.ExecuteAwaited<DriverContext>(current => downstream(current.GetPayload<ITransactionContext>())));
     }
 
     public static object CreateWithNullFactory() =>

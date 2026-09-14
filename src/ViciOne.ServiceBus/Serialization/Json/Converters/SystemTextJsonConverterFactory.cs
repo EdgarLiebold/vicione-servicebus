@@ -45,11 +45,11 @@ internal sealed class SystemTextJsonConverterFactory :
         if (TryGetMaterializableDictionaryTypes(typeToConvert, out _, out _))
             return true;
 
-        if (!typeToConvert.IsInterface)
-            return false;
-
         if (JsonMessageTypeMappingRegistry.Contains(typeToConvert))
             return true;
+
+        if (!typeToConvert.IsInterface)
+            return false;
 
         return IsConvertibleInterfaceType(typeToConvert);
     }

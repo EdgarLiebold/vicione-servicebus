@@ -1,3 +1,4 @@
+using System.Text.Json;
 using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -63,6 +64,39 @@ public sealed class SupervisorAgentCreationTests
         {
             await supervisor.StopAsync(CancellationToken.None);
         }
+
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "available-and-task-context-overloads-share-supervisor-lifecycle")]
+    public async Task AvailableAndTaskContexts_ShareTheExactSupervisorLifecycleAsync()
+    {
+        var supervisor = new TestSupervisor();
+        var directChild = new ChildContext();
+        var taskChild = new ChildContext();
+        IPipeContextAgent<ChildContext> directOwner = supervisor.AddContext(directChild);
+        IPipeContextAgent<ChildContext> taskOwner = supervisor.AddContext(Task.FromResult(taskChild));
+        IActivePipeContextAgent<ChildContext> directBorrower = supervisor.AddActiveContext(directOwner, directChild);
+        IActivePipeContextAgent<ChildContext> taskBorrower = supervisor.AddActiveContext(taskOwner, Task.FromResult(taskChild));
+
+        Assert.Same(directChild, await directOwner.Context);
+        Assert.Same(taskChild, await taskOwner.Context);
+        Assert.Same(directChild, await directBorrower.Context);
+        Assert.Same(taskChild, await taskBorrower.Context);
+        Assert.Equal(4, supervisor.TotalCount);
+        Assert.False(directBorrower.IsDisposed);
+        Assert.False(taskBorrower.IsDisposed);
+        Assert.Equal("Active<ChildContext>", directBorrower.ToString());
+        Assert.Equal("Active<ChildContext>", taskBorrower.ToString());
+
+        await supervisor.StopAsync(CancellationToken.None);
+
+        Assert.True(directBorrower.IsDisposed);
+        Assert.True(taskBorrower.IsDisposed);
+        Assert.True(directOwner.Completed.IsCompletedSuccessfully);
+        Assert.True(taskOwner.Completed.IsCompletedSuccessfully);
+        Assert.True(directBorrower.Completed.IsCompletedSuccessfully);
+        Assert.True(taskBorrower.Completed.IsCompletedSuccessfully);
     }
 
     [Fact]
@@ -179,6 +213,10 @@ public sealed class SupervisorAgentCreationTests
             Assert.Same(expected, actual);
             Assert.Equal(1, supervisor.TotalCount);
             Assert.False(asyncContext.Completed.IsCompleted);
+            Assert.Contains(
+                "\"createAgent\"",
+                JsonSerializer.Serialize(Assert.IsAssignableFrom<IProbeResult>(supervisor.LastPipeProbe).Results),
+                StringComparison.Ordinal);
         }
         finally
         {
@@ -215,13 +253,96 @@ public sealed class SupervisorAgentCreationTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "supervisor-fault-is-transferred-to-pending-context")]
+    public async Task CreateAgent_TransfersTheExactSupervisorFailureToThePendingContextAsync()
+    {
+        var expected = new SupervisorFailureException();
+        var supervisor = new FailingSupervisor(Task.FromException(expected));
+        IAsyncPipeContextAgent<ChildContext> asyncContext = supervisor.AddAsyncContext<ChildContext>();
+
+        try
+        {
+            SupervisorFailureException actual = await Assert.ThrowsAsync<SupervisorFailureException>(() =>
+                supervisor.CreateAgentAsync(
+                    asyncContext,
+                    (_, _) => Task.FromResult(new ChildContext()),
+                    TestContext.Current.CancellationToken));
+            SupervisorFailureException published = await Assert.ThrowsAsync<SupervisorFailureException>(() => asyncContext.Context);
+
+            Assert.Same(expected, actual);
+            Assert.Same(expected, published);
+        }
+        finally
+        {
+            await supervisor.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "supervisor-cancellation-token-is-transferred-to-pending-context")]
+    public async Task CreateAgent_TransfersTheExactSupervisorCancellationTokenToThePendingContextAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var supervisor = new FailingSupervisor(Task.FromCanceled(cancellation.Token));
+        IAsyncPipeContextAgent<ChildContext> asyncContext = supervisor.AddAsyncContext<ChildContext>();
+
+        try
+        {
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                supervisor.CreateAgentAsync(
+                    asyncContext,
+                    (_, _) => Task.FromResult(new ChildContext()),
+                    TestContext.Current.CancellationToken));
+            OperationCanceledException published = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => asyncContext.Context);
+
+            Assert.Equal(cancellation.Token, actual.CancellationToken);
+            Assert.Equal(cancellation.Token, published.CancellationToken);
+        }
+        finally
+        {
+            await supervisor.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "supervisor-cancellation-without-token-uses-call-token")]
+    public async Task CreateAgent_UsesTheCallTokenWhenSupervisorCancellationHasNoTokenAsync()
+    {
+        using var fallbackCancellation = new CancellationTokenSource();
+        var fallbackSupervisor = new FailingSupervisor(Task.FromException(new OperationCanceledException()));
+        IAsyncPipeContextAgent<ChildContext> fallbackContext = fallbackSupervisor.AddAsyncContext<ChildContext>();
+
+        try
+        {
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                fallbackSupervisor.CreateAgentAsync(
+                    fallbackContext,
+                    (_, _) => Task.FromResult(new ChildContext()),
+                    fallbackCancellation.Token));
+            OperationCanceledException published = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                fallbackContext.Context);
+
+            Assert.Equal(fallbackCancellation.Token, actual.CancellationToken);
+            Assert.Equal(fallbackCancellation.Token, published.CancellationToken);
+        }
+        finally
+        {
+            await fallbackSupervisor.StopAsync(CancellationToken.None);
+        }
+    }
+
     private sealed class TestSupervisor : Supervisor, ISupervisor<OwnerContext>
     {
         private readonly OwnerContext _context = new();
 
+        public IProbeResult? LastPipeProbe { get; private set; }
+
         public Task SendAsync(IPipe<OwnerContext> pipe, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            LastPipeProbe = pipe.GetProbeResult(cancellationToken);
             return pipe.SendAsync(_context);
         }
 
@@ -237,6 +358,15 @@ public sealed class SupervisorAgentCreationTests
             cancellationToken.ThrowIfCancellationRequested();
             return Task.CompletedTask;
         }
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class FailingSupervisor(Task outcome) : Supervisor, ISupervisor<OwnerContext>
+    {
+        public Task SendAsync(IPipe<OwnerContext> pipe, CancellationToken cancellationToken = default) => outcome;
 
         public void Probe(ProbeContext context)
         {
@@ -288,4 +418,6 @@ public sealed class SupervisorAgentCreationTests
     private sealed class FactoryFailureException : Exception;
 
     private sealed class OutcomePublicationFailureException : Exception;
+
+    private sealed class SupervisorFailureException : Exception;
 }

@@ -38,6 +38,11 @@ public sealed class MessageDiagnosticRedactorTests
             _redactor.RenderValue(typeof(InterfaceMemberMessage), nameof(InterfaceMemberMessage.Secret), "secret"));
         Assert.Equal(MessageDiagnosticRedactor.Redacted,
             _redactor.RenderValue(typeof(OverrideSensitiveMemberMessage), nameof(OverrideSensitiveMemberMessage.Secret), "secret"));
+
+        MessageSensitivityDescriptor fieldDescriptor = new MessageSensitivityInspector().Inspect(typeof(FieldSensitiveMessage));
+        Assert.True(fieldDescriptor.IsMemberSensitive(nameof(FieldSensitiveMessage.DirectSecret)));
+        Assert.True(fieldDescriptor.IsMemberSensitive(nameof(FieldSensitiveBase.BaseSecret)));
+        Assert.False(fieldDescriptor.IsMemberSensitive(nameof(FieldSensitiveMessage.Visible)));
     }
 
     [Fact]
@@ -65,8 +70,14 @@ public sealed class MessageDiagnosticRedactorTests
             typeof(NormalMessage), nameof(NormalMessage.Text), "A😀B"));
         Assert.Equal("A😀…", threeCharacterLimit.RenderValue(
             typeof(NormalMessage), nameof(NormalMessage.Text), "A😀B"));
+        Assert.Equal("A😀", threeCharacterLimit.RenderValue(
+            typeof(NormalMessage), nameof(NormalMessage.Text), "A😀"));
         Assert.Equal("A�B", _redactor.RenderValue(
             typeof(NormalMessage), nameof(NormalMessage.Text), "A\uD800B"));
+        Assert.Equal("�A", _redactor.RenderValue(
+            typeof(NormalMessage), nameof(NormalMessage.Text), "\uDC00A"));
+        Assert.Equal("A�", _redactor.RenderValue(
+            typeof(NormalMessage), nameof(NormalMessage.Text), "A\uD800"));
     }
 
     [Fact]
@@ -98,12 +109,32 @@ public sealed class MessageDiagnosticRedactorTests
     public void SafePrimitives_UseCultureIndependentBoundedFormats()
     {
         Guid guid = Guid.Parse("f44a3ca3-7f6f-4485-b81c-9bc50eaaee29");
+        DateTime dateTime = new(2026, 9, 3, 12, 34, 56, DateTimeKind.Utc);
         DateTimeOffset timestamp = DateTimeOffset.Parse("2026-09-03T12:34:56+00:00");
+        var complete = new MessageDiagnosticRedactor(new MessageSensitivityInspector(), maximumStringLength: 256);
 
         Assert.Equal("true", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), true));
+        Assert.Equal("false", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), false));
+        Assert.Equal("A", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), 'A'));
+        Assert.Equal("�", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), '\n'));
+        Assert.Equal("1", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), (byte)1));
+        Assert.Equal("-2", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), (sbyte)-2));
+        Assert.Equal("-3", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), (short)-3));
+        Assert.Equal("4", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), (ushort)4));
+        Assert.Equal("-5", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), -5));
+        Assert.Equal("6", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), 6U));
+        Assert.Equal("-7", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), -7L));
+        Assert.Equal("8", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), 8UL));
+        Assert.Equal("1.25", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), 1.25F));
+        Assert.Equal("2.5", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), 2.5D));
         Assert.Equal("12.5", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), 12.5m));
         Assert.Equal("f44a3ca3…", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), guid));
+        Assert.Equal("2026-09-03T12:34:56.0000000Z",
+            complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), dateTime));
         Assert.Equal("2026-09-…", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), timestamp));
+        Assert.Equal("01:02:03", complete.RenderValue(
+            typeof(NormalMessage), nameof(NormalMessage.Value), new TimeSpan(1, 2, 3)));
+        Assert.Equal("Monday", complete.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), DayOfWeek.Monday));
         Assert.Equal("<null>", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), null));
     }
 
@@ -125,6 +156,16 @@ public sealed class MessageDiagnosticRedactorTests
             typeof(SensitiveMessage),
             " ",
             "secret")).ParamName);
+        Assert.Equal("messageType", Assert.Throws<ArgumentNullException>(() =>
+            _redactor.RenderValue(null!, null, null)).ParamName);
+        Assert.Equal("messageType", Assert.Throws<ArgumentNullException>(() =>
+            new MessageSensitivityInspector().Inspect(null!)).ParamName);
+        Assert.Equal("inspector", Assert.Throws<ArgumentNullException>(() =>
+            new MessageDiagnosticRedactor(null!)).ParamName);
+        Assert.Equal("maximumStringLength", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new MessageDiagnosticRedactor(new MessageSensitivityInspector(), 0)).ParamName);
+        Assert.Equal("maximumStringLength", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new MessageDiagnosticRedactor(new MessageSensitivityInspector(), -1)).ParamName);
     }
 
     [Fact]
@@ -211,6 +252,20 @@ public sealed class MessageDiagnosticRedactorTests
     private sealed class OverrideSensitiveMemberMessage : SensitiveMemberBase
     {
         public override string Secret { get; init; } = string.Empty;
+    }
+
+    private class FieldSensitiveBase
+    {
+        [SensitiveMember]
+        public string BaseSecret = string.Empty;
+    }
+
+    private sealed class FieldSensitiveMessage : FieldSensitiveBase
+    {
+        [SensitiveMember]
+        public string DirectSecret = string.Empty;
+
+        public string Visible = string.Empty;
     }
 
     private sealed class ExplosiveToString

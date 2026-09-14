@@ -89,7 +89,7 @@ public static class LogContext
                 ConfigureCurrentLogContext();
         }
 
-        LogContextMetricsExtensions.TryConfigure(provider);
+        LogContextMetricsExtensions.TryConfigure(provider, Current!);
     }
 
     /// <summary>Sets an available context only when the asynchronous flow has none.</summary>

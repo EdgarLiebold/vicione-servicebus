@@ -5,7 +5,7 @@ using System.Transactions;
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Controls the transaction owned or exposed by a pipeline context.</summary>
-public interface TransactionContext
+public interface ITransactionContext
 {
     /// <summary>Gets the transaction used to create nested transaction scopes.</summary>
     Transaction Transaction { get; }

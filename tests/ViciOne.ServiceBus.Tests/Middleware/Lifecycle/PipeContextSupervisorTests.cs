@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -8,6 +9,26 @@ namespace ViciOne.ServiceBus.Tests.Middleware.Lifecycle;
 
 public sealed class PipeContextSupervisorTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-CACHE", "probe-reports-empty-active-and-stopped-cache-state")]
+    public async Task Probe_ReportsEmptyActiveAndStoppedCacheStateAsync()
+    {
+        var factory = new TrackingContextFactory();
+        var supervisor = new PipeContextSupervisor<TrackingContext>(factory);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        string empty = JsonSerializer.Serialize(supervisor.GetProbeResult(cancellationToken).Results);
+        await supervisor.SendAsync(Pipe.Empty<TrackingContext>(), cancellationToken);
+        string active = JsonSerializer.Serialize(supervisor.GetProbeResult(cancellationToken).Results);
+        await supervisor.StopAsync(CancellationToken.None);
+        string stopped = JsonSerializer.Serialize(supervisor.GetProbeResult(cancellationToken).Results);
+
+        Assert.Contains("\"hasContext\":false", empty, StringComparison.Ordinal);
+        Assert.Contains("\"hasContext\":true", active, StringComparison.Ordinal);
+        Assert.Contains("\"hasContext\":false", stopped, StringComparison.Ordinal);
+        Assert.Contains(nameof(PipeContextSupervisor<TrackingContext>), active, StringComparison.Ordinal);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-CACHE", "fault-invalidates-cache")]
     public async Task PipelineFailure_DiscardsTheFaultedContextBeforeTheNextSendAsync()

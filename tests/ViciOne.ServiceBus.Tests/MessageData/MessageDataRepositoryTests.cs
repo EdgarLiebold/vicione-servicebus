@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.Serialization;
@@ -96,6 +97,35 @@ public sealed class MessageDataRepositoryTests
         Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
             repository.PutObjectAsync(new object(), typeof(object), null, null!, cancellationToken))).ParamName);
         Assert.Equal(0, repository.PutCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "retention-overloads-forward-exact-value-lifetime-and-cancellation")]
+    public async Task RetentionOverloads_ForwardExactValuesLifetimeAndCancellationAsync()
+    {
+        var repository = new RecordingRepository();
+        var timeToLive = TimeSpan.FromMinutes(43);
+        using var cancellation = new CancellationTokenSource();
+        const string text = "retained-text";
+        byte[] bytes = [2, 3, 5, 7, 11];
+        var payload = new RetainedPayload("north", 17);
+
+        MessageData<string> textData = await repository.PutStringAsync(text, timeToLive, cancellation.Token);
+        Assert.Equal(timeToLive, repository.LastTimeToLive);
+        Assert.Equal(cancellation.Token, repository.LastCancellationToken);
+        Assert.Equal(Encoding.UTF8.GetBytes(text), repository.StoredBytes(MessageDataTestSupport.Require(textData.Address, nameof(textData))));
+
+        MessageData<byte[]> byteData = await repository.PutBytesAsync(bytes, timeToLive, cancellation.Token);
+        Assert.Equal(timeToLive, repository.LastTimeToLive);
+        Assert.Equal(cancellation.Token, repository.LastCancellationToken);
+        Assert.Equal(bytes, repository.StoredBytes(MessageDataTestSupport.Require(byteData.Address, nameof(byteData))));
+
+        IMessageData objectData = await repository.PutObjectAsync(payload, typeof(RetainedPayload), timeToLive, cancellation.Token);
+        Assert.Equal(timeToLive, repository.LastTimeToLive);
+        Assert.Equal(cancellation.Token, repository.LastCancellationToken);
+        byte[] serialized = repository.StoredBytes(MessageDataTestSupport.Require(objectData.Address, nameof(objectData)));
+        Assert.Equal(payload, JsonSerializer.Deserialize<RetainedPayload>(serialized, ServiceBusMetadataJson.Options));
+        Assert.Equal(3, repository.PutCalls);
     }
 
     [Fact]
@@ -405,6 +435,10 @@ public sealed class MessageDataRepositoryTests
 
         public int PutCalls => Volatile.Read(ref _putCalls);
 
+        public TimeSpan? LastTimeToLive { get; private set; }
+
+        public CancellationToken LastCancellationToken { get; private set; }
+
         public Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -419,6 +453,8 @@ public sealed class MessageDataRepositoryTests
             TimeSpan? timeToLive = null,
             CancellationToken cancellationToken = default)
         {
+            LastTimeToLive = timeToLive;
+            LastCancellationToken = cancellationToken;
             var address = new Uri($"urn:recorded:{NewId.NextGuid():N}");
             using var copy = new MemoryStream();
             await stream.CopyToAsync(copy, cancellationToken);
@@ -429,6 +465,8 @@ public sealed class MessageDataRepositoryTests
 
         public byte[] StoredBytes(Uri address) => _values[address];
     }
+
+    private sealed record RetainedPayload(string Tenant, int Attempt);
 
     private sealed class SingleStreamRepository(TrackingStream stream) : IMessageDataRepository
     {

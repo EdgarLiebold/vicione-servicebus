@@ -169,7 +169,7 @@ public static class SupervisorExtensions
                     ? exception.CancellationToken
                     : cancellationToken;
                 await asyncContext.CreateCanceledAsync(canceledToken).ConfigureAwait(false);
-                throw;
+                throw new OperationCanceledException(exception.Message, exception, canceledToken);
             }
             catch (Exception exception)
             {

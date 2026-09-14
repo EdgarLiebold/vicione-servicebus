@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -8,6 +10,19 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 
 public sealed class ConsumerKindExtensionTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "dispatcher-success-guarantees-non-null-result")]
+    public void DispatcherProvider_DeclaresThatSuccessProducesANonNullDispatcher()
+    {
+        MethodInfo method = Assert.Single(
+            typeof(IConsumerKindDispatcherProvider).GetMethods(),
+            candidate => candidate.Name == nameof(IConsumerKindDispatcherProvider.TryCreateDispatcher));
+        ParameterInfo dispatcher = Assert.Single(method.GetParameters(), parameter => parameter.Name == "dispatcher");
+        NotNullWhenAttribute annotation = Assert.Single(dispatcher.GetCustomAttributes<NotNullWhenAttribute>());
+
+        Assert.True(annotation.ReturnValue);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "consumer-kind-segregates-optional-capabilities")]
     public void ConsumerKindContract_HasNoSilentOptionalOperations()

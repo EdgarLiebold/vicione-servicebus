@@ -56,6 +56,8 @@ public sealed class MessageContractCatalogTests
             builder.Register(typeof(int), new MessageContractIdentity("vicione.contract.value", 1))).ParamName);
         Assert.Equal("messageType", Assert.Throws<ArgumentException>(() =>
             builder.Register(typeof(OpenContract<>), new MessageContractIdentity("vicione.contract.open", 1))).ParamName);
+        Assert.Equal("identity", Assert.Throws<ArgumentException>(() =>
+            builder.Register(typeof(ExplicitContract), default)).ParamName);
         ConfigurationException missingAttribute = Assert.Throws<ConfigurationException>(() =>
             builder.Register(typeof(ExplicitContract)));
         Assert.Contains(nameof(MessageContractAttribute), missingAttribute.Message, StringComparison.Ordinal);

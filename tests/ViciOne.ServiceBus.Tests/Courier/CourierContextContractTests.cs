@@ -1,4 +1,6 @@
+using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
@@ -53,6 +55,34 @@ public sealed class CourierContextContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-CONTEXT", "activity-variable-accessors-cover-reference-value-default-and-boundary-contracts")]
+    public void ActivityVariables_PreserveReferenceAndValueContractsAndRejectInvalidInputs()
+    {
+        ActivityContext context = DispatchProxy.Create<ActivityContext, ActivityVariableContextProxy>();
+        var proxy = (ActivityVariableContextProxy)(object)context;
+        proxy.Variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["tenant"] = "north",
+            ["attempt"] = 27,
+        };
+        proxy.SerializerContext = DispatchProxy.Create<SerializerContext, VariableSerializerContextProxy>();
+
+        Assert.Equal("north", context.GetVariable<string>("tenant"));
+        Assert.Equal(27, context.GetVariable<int>("attempt"));
+        Assert.Equal("fallback", context.GetVariable("missing-reference", "fallback"));
+        Assert.Equal(73, context.GetVariable<int>("missing-value", 73));
+
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            ActivityContextVariableExtensions.GetVariable<string>(null!, "tenant")).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+            ActivityContextVariableExtensions.GetVariable<int>(null!, "attempt")).ParamName);
+        Assert.Equal("key", Assert.Throws<ArgumentException>(() =>
+            context.GetVariable<string>(" ")).ParamName);
+        Assert.Equal("key", Assert.Throws<ArgumentException>(() =>
+            context.GetVariable<int>(string.Empty)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-CONTEXT", "decorators-require-an-underlying-courier-context")]
     public void CourierContextDecorators_RejectAMissingUnderlyingContext()
     {
@@ -78,4 +108,37 @@ public sealed class CourierContextContractTests
         ICourierContext context,
         TimeSpan timeout,
         CancellationToken cancellationToken) : TimeoutCourierContextProxy(context, timeout, cancellationToken);
+
+    private class ActivityVariableContextProxy : DispatchProxy
+    {
+        public IReadOnlyDictionary<string, object> Variables { get; set; } = null!;
+
+        public SerializerContext SerializerContext { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        {
+            "get_Variables" => Variables,
+            "get_SerializerContext" => SerializerContext,
+            _ => throw new NotSupportedException($"Unexpected activity-context member: {targetMethod?.Name}"),
+        };
+    }
+
+    private class VariableSerializerContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(IObjectDeserializer.DeserializeObject))
+                throw new NotSupportedException($"Unexpected serializer-context member: {targetMethod?.Name}");
+
+            object? value = args?[0];
+            object? defaultValue = args?[1];
+            if (value is null)
+                return defaultValue;
+
+            Type targetType = targetMethod.GetGenericArguments()[0];
+            return targetType.IsInstanceOfType(value)
+                ? value
+                : Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
+        }
+    }
 }

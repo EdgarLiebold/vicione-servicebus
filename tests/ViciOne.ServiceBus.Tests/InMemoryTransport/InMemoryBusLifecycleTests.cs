@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
@@ -31,6 +32,7 @@ public sealed class InMemoryBusLifecycleTests
     }
 
     [Fact]
+    [SuppressMessage("Usage", "xUnit1051", Justification = "This contract test intentionally exercises the optional default cancellation token.")]
     [RequirementCoverage("REQ-VSB-BUS-CONTROL-LIFECYCLE", "bounded-operations-use-supplied-clock")]
     public async Task BoundedLifecycleExtensions_UseTheSuppliedClockAsync()
     {
@@ -48,6 +50,42 @@ public sealed class InMemoryBusLifecycleTests
 
         clock.Advance(TimeSpan.FromMinutes(2));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => stop);
+
+        Task startWithoutCallerToken = bus.StartAsync(TimeSpan.FromMinutes(3), clock);
+        Assert.False(startWithoutCallerToken.IsCompleted);
+        clock.Advance(TimeSpan.FromMinutes(3));
+        OperationCanceledException startTimeout = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => startWithoutCallerToken);
+
+        Task stopWithoutCallerToken = bus.StopAsync(TimeSpan.FromMinutes(4), clock);
+        Assert.False(stopWithoutCallerToken.IsCompleted);
+        clock.Advance(TimeSpan.FromMinutes(4));
+        OperationCanceledException stopTimeout = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => stopWithoutCallerToken);
+
+        Assert.True(startTimeout.CancellationToken.CanBeCanceled);
+        Assert.True(stopTimeout.CancellationToken.CanBeCanceled);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-CONTROL-LIFECYCLE", "caller-cancellation-preserves-token-identity")]
+    public async Task BoundedLifecycleExtensions_PreserveTheCallerCancellationTokenAsync()
+    {
+        var clock = new FakeTimeProvider();
+        IBusControl bus = DispatchProxy.Create<IBusControl, LifecycleTimeoutProxy>();
+        using var startCancellation = new CancellationTokenSource();
+        using var stopCancellation = new CancellationTokenSource();
+
+        Task start = bus.StartAsync(TimeSpan.FromMinutes(1), clock, startCancellation.Token);
+        startCancellation.Cancel();
+        OperationCanceledException startException = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => start);
+
+        Task stop = bus.StopAsync(TimeSpan.FromMinutes(1), clock, stopCancellation.Token);
+        stopCancellation.Cancel();
+        OperationCanceledException stopException = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => stop);
+
+        Assert.Equal(startCancellation.Token, startException.CancellationToken);
+        Assert.Equal(stopCancellation.Token, stopException.CancellationToken);
     }
 
     [Fact]

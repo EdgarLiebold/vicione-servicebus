@@ -15,6 +15,46 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 public sealed class DependencyInjectionConfigurationContractTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-DI-PUBLIC-BOUNDARIES", "advanced-selectors-preserve-identity-and-reject-unsupported-configurators")]
+    public void AdvancedRegistrationSelectors_PreserveIdentityAndRejectUnsupportedConfigurators()
+    {
+        var untyped = new ServiceCollectionBusConfigurator(new ServiceCollection());
+        IRegistrationConfigurator registration = untyped;
+        IBusRegistrationConfigurator busRegistration = untyped;
+        var typed = new ServiceCollectionBusConfigurator<TestBus, TestBusInstance>(new ServiceCollection());
+        IBusRegistrationConfigurator<TestBus> typedBusRegistration = typed;
+
+        Assert.Same(untyped, registration.Advanced());
+        Assert.Same(untyped, busRegistration.Advanced());
+        Assert.Same(typed, typedBusRegistration.Advanced());
+
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            AdvancedBusRegistrationConfiguratorExtensions.Advanced((IRegistrationConfigurator)null!)).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            AdvancedBusRegistrationConfiguratorExtensions.Advanced((IBusRegistrationConfigurator)null!)).ParamName);
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
+            AdvancedBusRegistrationConfiguratorExtensions.Advanced<TestBus>(null!)).ParamName);
+
+        IRegistrationConfigurator unsupportedRegistration =
+            CreateConfigurationProxy<IRegistrationConfigurator>(new List<object>());
+        IBusRegistrationConfigurator unsupportedBusRegistration =
+            CreateConfigurationProxy<IBusRegistrationConfigurator>(new List<object>());
+        IBusRegistrationConfigurator<TestBus> unsupportedTypedBusRegistration =
+            CreateConfigurationProxy<IBusRegistrationConfigurator<TestBus>>(new List<object>());
+
+        ConfigurationException registrationException = Assert.Throws<ConfigurationException>(() =>
+            unsupportedRegistration.Advanced());
+        ConfigurationException busException = Assert.Throws<ConfigurationException>(() =>
+            unsupportedBusRegistration.Advanced());
+        ConfigurationException typedBusException = Assert.Throws<ConfigurationException>(() =>
+            unsupportedTypedBusRegistration.Advanced());
+
+        Assert.Contains("does not support advanced registration", registrationException.Message, StringComparison.Ordinal);
+        Assert.Contains("does not support advanced registration", busException.Message, StringComparison.Ordinal);
+        Assert.Contains("does not support advanced registration", typedBusException.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DI-REQUEST-CLIENT", "destination-registration-inherits-configured-default-timeout")]
     public void DestinationRequestClient_UsesTheConfiguredDefaultTimeout()
     {
@@ -55,10 +95,11 @@ public sealed class DependencyInjectionConfigurationContractTests
     public void RiderRegistration_CompletesCapabilityParticipantsExactlyOnce()
     {
         var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
+        IBusRegistrationConfigurator registration = configurator;
         var participant = new RecordingCompletionParticipant();
         IRegistrationConfigurator? riderConfigurator = null;
 
-        configurator.AddRider(rider =>
+        registration.AddRider(rider =>
         {
             riderConfigurator = rider;
             Assert.Same(
@@ -68,6 +109,22 @@ public sealed class DependencyInjectionConfigurationContractTests
 
         Assert.Equal(1, participant.CompletionCount);
         Assert.Same(riderConfigurator, participant.Configurator);
+
+        var typedConfigurator = new ServiceCollectionBusConfigurator<TestBus, TestBusInstance>(new ServiceCollection());
+        IBusRegistrationConfigurator<TestBus> typedRegistration = typedConfigurator;
+        var typedParticipant = new RecordingCompletionParticipant();
+        IRegistrationConfigurator? typedRiderConfigurator = null;
+
+        typedRegistration.AddRider(rider =>
+        {
+            typedRiderConfigurator = rider;
+            Assert.Same(
+                typedParticipant,
+                rider.Advanced().GetOrAddRegistrationCompletionParticipant(() => typedParticipant));
+        });
+
+        Assert.Equal(1, typedParticipant.CompletionCount);
+        Assert.Same(typedRiderConfigurator, typedParticipant.Configurator);
     }
 
     [Fact]

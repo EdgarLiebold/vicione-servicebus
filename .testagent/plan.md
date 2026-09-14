@@ -2869,3 +2869,81 @@ coverage is 90.4990% line and 85.4839% branch. The packed 19,030-line contract h
 
 The overall A+ goal remains active for the remaining complete source owners and the final
 repository-wide completion audit.
+
+## Iteration 107 Core Advanced API and ownership plan
+
+Iteration 107 reviews the complete `src/ViciOne.ServiceBus/Advanced` owner manually. The review
+covers every production file and comment, the Core project boundary, all exported contracts and
+parameters, runtime behavior, asynchronous naming, cancellation, disposal, concurrency, source
+paths, filenames, namespaces, directly owning tests, requirement projections, and package API.
+No source or comment generator is permitted.
+
+The physical ownership rule is explicit. `src/ViciOne.ServiceBus` is the Core assembly directory,
+not an umbrella for sibling packages. Independent capability assemblies remain direct children of
+`src`; external persistence, scheduling, and transport integrations remain grouped by provider
+family. Within Core, `Advanced/`, `Advanced/Middleware`, `Advanced/Registration`, and
+`Advanced/Serialization` must express real API and namespace ownership rather than historical or
+visual nesting.
+
+### Iteration 107 requirement-to-test map
+
+| Requirement | Evidence |
+|---|---|
+| Every Advanced source file and comment is current, necessary, and manually understood | complete file inventory, manual review record, final reread |
+| Public Advanced APIs are intentional expert extension points and expose no replaceable implementation detail | exact public-surface review, packed API comparison, developer-consumer compilation |
+| Paths, namespaces, filenames, and types express one coherent Core owner | architecture rules plus complete compile-ownership and source-navigation checks |
+| Every retained public operation and parameter has direct behavioral evidence | source-to-test map, focused behavior tests, requirement projections, gap audit |
+| Async names, behavior, cancellation, disposal, and concurrency are bidirectionally correct | repository async gate plus deterministic focused lifecycle and cancellation tests |
+| Findings are causally test-protected | red-first tests where applicable and isolated one-cause counterchanges restored byte-for-byte |
+| No feature is lost | full build, full Unit/Architecture profile, package journeys, provider consumers, and runtime API comparison |
+
+### Iteration 107 validation
+
+1. Establish the unchanged focused baseline and complete semantic source-to-test map.
+2. Read and classify all 80 Advanced source files and every comment before editing product code.
+3. Implement only confirmed Greenfield API, behavior, documentation, or ownership corrections.
+4. Build and execute focused tests after every coherent correction group.
+5. Audit assertions, test smells, source gaps, line/branch coverage, CRAP risk, and meaningful
+   one-cause mutations for the final owner state.
+6. Run the complete serial Release Engineering build, all hermetic Unit/Architecture hosts, both
+   format gates, requirements, source-hygiene, package/API, empty-directory, and Git checks.
+7. Freeze the candidate commit, perform the required read-only red-team audit against that exact
+   commit, remediate any finding, then commit, annotate, push normally, and verify branch and tag
+   hashes remotely.
+
+### Iteration 107 completion
+
+All 80 Advanced production files and 5,803 lines, including every source comment, were read and
+classified manually. The Core assembly remains at `src/ViciOne.ServiceBus`; it is not a container
+for sibling projects. Independent capability assemblies remain direct `src` children, provider
+integrations remain grouped beneath `Persistence/`, `Scheduling/`, and `Transports/`, and the four
+Advanced directory branches correctly mirror their API and namespace owners inside Core.
+
+The public transaction contract is now `ITransactionContext`, without a compatibility alias. Its
+filename, consumers, documentation, architecture rule, and packed identity agree. Dispatcher
+nullable-flow metadata, caller cancellation identity, supervisor cancellation propagation,
+established-log-context metrics binding, abstract JSON mappings, process-wide convention
+documentation, and diagnostic Unicode handling were corrected. Redactor complexity was separated
+into bounded-length, detection, and sanitization responsibilities without changing its contract.
+
+Fifty changed or added test methods were reviewed individually. Every method has causal assertions;
+there are no assertion-free, self-referential, swallowed-exception, skipped, random, sleeping, or
+wall-clock-dependent cases. Nine meaningful single-cause counterchanges were executed separately;
+all nine were killed by their owning tests and fully reverted. The supervisor counterchange exposed
+a real cancellation race, which was corrected and then passed 20 isolated repetitions.
+
+Fresh Advanced coverage passes 3,382 tests and records 98.7% line coverage (1,639/1,661) and 91.1%
+branch coverage (574/630) over 373 methods, with no CRAP score above 30. The accepted artifact is
+`/private/tmp/vsb-iteration107-final.cobertura.xml`, SHA-256
+`0b1b7a780345c2727bcdabad6f2236e8008b008d7c6e9ef10b4cb64794a4ab69`.
+
+The final Engineering build passes all 77 projects with zero warnings or errors, both full format
+gates pass, and all 23 native hermetic hosts pass 6,355/6,355 without failure or skip. Package/API
+verification passes twice with 18 developer journeys, 31 fresh packages, three isolated provider
+testing consumers, and 30 runtime assemblies. The intentional 18,879-line packed contract SHA-256
+is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional async naming, source comments, preprocessor directives, dummy markers,
+MassTransit identities, SDK pinning, empty directories, formatting, and Git whitespace are clean.
+The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
+continues with the remaining complete source owners and the final whole-repository audit.

@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -309,6 +310,32 @@ public sealed class PartitionerTests
             releaseFirst.TrySetResult();
             await first.WaitAsync(OperationTimeout, CancellationToken.None);
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PARTITIONER", "typed-and-untyped-probes-report-shared-partition-outcomes")]
+    public async Task Partitioner_ProbesReportTheSharedIdentityCountAndOutcomesAsync()
+    {
+        await using var partitioner = new PipePartitioner(2, new FirstByteHashGenerator());
+        IPartitioner<PartitionContext> typedPartitioner = partitioner.GetPartitioner<PartitionContext>(context => context.Key);
+
+        await typedPartitioner.SendAsync(
+            new PartitionContext([1]),
+            Pipe.Execute<PartitionContext>(_ => { }),
+            TestCancellationToken);
+
+        string untypedProbe = JsonSerializer.Serialize(
+            partitioner.GetProbeResult(TestCancellationToken).Results);
+        string typedProbe = JsonSerializer.Serialize(
+            typedPartitioner.GetProbeResult(TestCancellationToken).Results);
+
+        Assert.Equal(untypedProbe, typedProbe);
+        Assert.Contains("\"partitionCount\":2", untypedProbe, StringComparison.Ordinal);
+        Assert.Contains("\"partition-0\"", untypedProbe, StringComparison.Ordinal);
+        Assert.Contains("\"partition-1\"", untypedProbe, StringComparison.Ordinal);
+        Assert.Contains("\"attemptCount\":1", untypedProbe, StringComparison.Ordinal);
+        Assert.Contains("\"successCount\":1", untypedProbe, StringComparison.Ordinal);
+        Assert.Contains("\"failureCount\":0", untypedProbe, StringComparison.Ordinal);
     }
 
     [Fact]

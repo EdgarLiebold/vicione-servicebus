@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Advanced.Registration;
@@ -88,7 +89,7 @@ sealed class SagaConsumerKind :
     }
 
     public bool TryCreateDispatcher(Type registrationType, IReceiveEndpointDispatcherFactory factory,
-        IEndpointNameFormatter formatter, out IReceiveEndpointDispatcher? dispatcher)
+        IEndpointNameFormatter formatter, [NotNullWhen(true)] out IReceiveEndpointDispatcher? dispatcher)
     {
         ArgumentNullException.ThrowIfNull(registrationType);
         ArgumentNullException.ThrowIfNull(factory);

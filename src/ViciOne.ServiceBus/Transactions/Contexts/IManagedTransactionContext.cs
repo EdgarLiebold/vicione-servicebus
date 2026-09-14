@@ -2,7 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Transactions;
 
-internal interface IManagedTransactionContext : TransactionContext, IDisposable
+internal interface IManagedTransactionContext : ITransactionContext, IDisposable
 {
     bool IsActive { get; }
 }

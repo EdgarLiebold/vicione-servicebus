@@ -1,4 +1,5 @@
 using ViciOne.ServiceBus.Tests.SagaStateMachine;
+using ViciOne.ServiceBus.Tests.Topology.Configuration;
 using Xunit;
 
 [assembly: AssemblyFixture(typeof(ViciOne.ServiceBus.Tests.TestAssemblyBootstrap))]
@@ -21,5 +22,7 @@ public sealed class TestAssemblyBootstrap
             message => message.ServiceId);
         MessageCorrelation.UseCorrelationId<StateMachineTransportIntegrationTests.DynamicStop>(
             message => message.ServiceId);
+        MessageCorrelation.UseCorrelationId<CorrelationIdConventionTests.OptionalGlobalSelectorMessage>(
+            (Func<CorrelationIdConventionTests.OptionalGlobalSelectorMessage, Guid?>)(message => message.SelectedCorrelationId));
     }
 }

@@ -1390,3 +1390,67 @@ provider-testing consumers, and 30 runtime assemblies. The final 19,030-line con
 `9f0d543184d729768ba0606420ca05d005c6e1bd1961bfeda472600d18985345`. Requirements,
 directives, dummy markers, old identities, empty directories, and Git whitespace are clean; protected
 review and test-result trees remain untouched.
+
+## Iteration 107 Core Advanced API and ownership research
+
+`src/ViciOne.ServiceBus` is the physical boundary of the Core assembly, not an umbrella directory.
+Moving independent projects below it would misstate assembly ownership and make the Core SDK
+project's recursive compile ownership unsafe. Standalone capability projects therefore remain
+siblings directly below `src`, while the related external adapters are coherently grouped by
+provider family below `Persistence/`, `Scheduling/`, and `Transports/`. Inside Core, the 80-file
+Advanced owner already has the correct physical branches for `ViciOne.ServiceBus.Advanced`,
+`Advanced.Middleware`, `Advanced.Registration`, and `Advanced.Serialization`; the partitioning
+implementation folders intentionally belong to the flattened middleware namespace.
+
+Every Advanced file, all 5,803 production lines, and every comment were read manually. No source or
+comment generator was used. The remaining unprefixed public interface was `TransactionContext`.
+It is now `ITransactionContext` throughout Core, Courier, Sagas, JobService, internal test access,
+tests, its filename, and the packed API, without retaining a Greenfield compatibility alias. A
+permanent architecture rule enforces the interface convention. Nullable-flow metadata now states
+that successful consumer-kind dispatch always returns a dispatcher, and all implementations agree.
+
+Behavior review corrected three cancellation and lifecycle details. Bus start and stop translate a
+linked-token cancellation back to the caller's original token identity. Supervisor agent creation
+now gives both its completion source and direct caller the same usable cancellation token, including
+the tokenless-supervisor fallback. A focused deterministic test exposed that the original rethrow
+could race and deliver a tokenless exception; the repaired behavior passed 20 isolated repetitions.
+Log-context configuration now binds metrics to an already usable current context without replacing
+its identity or logger. JSON conversion checks explicit mappings before its interface convention,
+so deliberately mapped abstract base contracts materialize correctly.
+
+Diagnostic redaction was decomposed into length bounding, unsafe-character detection, and
+sanitization. Tests cover control characters, broken low and high surrogates, preserved Unicode
+pairs, truncation boundaries, primitive values, reflected fields, and value types. Process-wide
+consumer-convention comments now describe the actual lifetime. Broader direct contract tests close
+all Request and endpoint-convention overloads, client-factory boundaries, redelivery payload and
+fallback behavior, correlation selectors, message-data retention, retry factories and filters,
+supervisor and pipe lifecycles, consumer connector forms, activity variables, dependency-injection
+selectors, fault data, and message-catalog identity.
+
+The assertion-quality and test-smell audits reviewed all 50 changed or added test methods. Every
+test has a meaningful outcome or state assertion, and no assertion-free, trivial, self-referential,
+swallowed-exception, skipped, random, sleeping, or timing-dependent test remains. Long matrix tests
+represent cohesive overload-family contracts. Nine isolated counterchanges covered abstract JSON
+mapping, caller cancellation identity, log-context preservation, null pipe contexts, fallback
+cancellation identity, redelivery payload forwarding, message-data retention, retry filtering, and
+Unicode surrogate validation. Every counterchange failed its owning test and was restored before
+the next experiment.
+
+Fresh full-host coverage passes 3,382 tests. Advanced records 98.7% line coverage (1,639/1,661),
+91.1% branch coverage (574/630), and 373 methods with zero CRAP scores above 30. Remaining uncovered
+branches are private defensive or compiler-generated paths and do not justify artificial tests.
+The accepted Cobertura SHA-256 is
+`0b1b7a780345c2727bcdabad6f2236e8008b008d7c6e9ef10b4cb64794a4ab69`.
+
+The final Engineering Release build passes 77 projects with zero warnings or errors. Both complete
+format gates pass. All 23 native hermetic test hosts pass 6,355/6,355 with no failures or skips.
+Package validation passes in update and independent comparison modes with 18 journeys, 31 freshly
+packed packages, three isolated provider-testing consumers, and all 30 runtime API assemblies. The
+18,879-line API contract SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`; its only intentional change
+is `TransactionContext` to `ITransactionContext`.
+
+Repository-wide scans find no C# preprocessor directives, dummy markers, MassTransit identities,
+SDK-version pinning, or empty source directories. The sole `NotImplementedException` text is an
+intentional non-retryable failure-classification rule, not a placeholder. Requirements JSON and Git
+whitespace pass. The protected `review/` and `TestResults/` trees were neither changed nor staged.

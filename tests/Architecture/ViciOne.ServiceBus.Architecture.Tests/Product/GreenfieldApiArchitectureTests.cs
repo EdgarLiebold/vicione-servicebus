@@ -35,6 +35,21 @@ public sealed class GreenfieldApiArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-CORE-ADVANCED-API", "interfaces-use-dotnet-prefix")]
+    public void CoreAdvancedInterfaces_UseTheDotNetInterfacePrefix()
+    {
+        string advancedDirectory = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Advanced");
+        string[] violations = Directory.EnumerateFiles(advancedDirectory, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(FindUnprefixedInterfaces)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Core Advanced interfaces must begin with I followed by an uppercase letter:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-SAGA-API", "interfaces-use-dotnet-prefix")]
     public void SagaInterfaces_UseTheDotNetInterfacePrefix()
     {

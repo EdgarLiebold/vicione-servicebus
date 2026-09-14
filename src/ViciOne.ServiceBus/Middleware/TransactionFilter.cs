@@ -59,7 +59,7 @@ public class TransactionFilter<T> :
 
         IManagedTransactionContext? managedTransactionContext = null;
 
-        TransactionContext CreateManagedTransactionContext()
+        ITransactionContext CreateManagedTransactionContext()
         {
             managedTransactionContext = _contextFactory.Create(_options)
                 ?? throw new InvalidOperationException("The transaction context factory returned null.");
@@ -67,7 +67,7 @@ public class TransactionFilter<T> :
             return managedTransactionContext;
         }
 
-        context.AddOrUpdatePayload<TransactionContext>(
+        context.AddOrUpdatePayload<ITransactionContext>(
             CreateManagedTransactionContext,
             existing => existing is IManagedTransactionContext { IsActive: false }
                 ? CreateManagedTransactionContext()

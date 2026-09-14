@@ -147,15 +147,29 @@ internal static class LogContextMetricsExtensions
     public static MetricOperation? TryStartOutboxDeliveryMetrics(this ILogContext logContext) =>
         StartOutbox(logContext, "deliver");
 
-    internal static void TryConfigure(IServiceProvider provider)
+    internal static void TryConfigure(IServiceProvider provider) =>
+        Configure(provider, currentContext: null);
+
+    /// <summary>Attaches dependency-injection instrumentation without replacing an established logging context.</summary>
+    /// <param name="provider">The provider that owns the logging and metric services.</param>
+    /// <param name="currentContext">The logging context whose identity and logger must be preserved.</param>
+    internal static void TryConfigure(IServiceProvider provider, ILogContext currentContext)
+    {
+        ArgumentNullException.ThrowIfNull(currentContext);
+
+        Configure(provider, currentContext);
+    }
+
+    private static void Configure(IServiceProvider provider, ILogContext? currentContext)
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        LogContext.Current = new BusLogContext(NullLoggerFactory.Instance);
+        LogContext.Current = currentContext ?? new BusLogContext(NullLoggerFactory.Instance);
         try
         {
             ILoggerFactory loggerFactory = provider.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance;
-            LogContext.Current = new BusLogContext(loggerFactory);
+            ILogContext configuredContext = currentContext ?? new BusLogContext(loggerFactory);
+            LogContext.Current = configuredContext;
 
             IMeterFactory? meterFactory = provider.GetService<IMeterFactory>();
             if (meterFactory == null)
@@ -173,14 +187,14 @@ internal static class LogContextMetricsExtensions
 
             LogContextMetricsState metrics = lazyState.Value;
             BindMetrics(metrics.RootLogContext, metrics);
-            LogContext.Current = metrics.RootLogContext;
+            BindMetrics(configuredContext, metrics);
         }
         catch
         {
             // Instrument creation belongs to the application observation boundary. A broken custom
             // meter factory or listener disables metrics for this activation, not the service bus.
-            // The provider-specific uninstrumented log context installed above ensures that each
-            // activation owns its meter scope.
+            // The active uninstrumented log context installed above preserves logging when metric
+            // construction fails and keeps instrumentation failure outside bus behavior.
         }
     }
 

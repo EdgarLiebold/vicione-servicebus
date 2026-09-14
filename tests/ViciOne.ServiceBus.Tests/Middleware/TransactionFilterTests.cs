@@ -85,7 +85,7 @@ public sealed class TransactionFilterTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var contexts = new List<TransactionContext>();
+        var contexts = new List<ITransactionContext>();
         var expected = new TransactionRetryException("terminal transaction retry failure");
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
         {
@@ -93,7 +93,7 @@ public sealed class TransactionFilterTests
             configuration.UseTransaction();
             configuration.UseExecute(context =>
             {
-                contexts.Add(context.GetPayload<TransactionContext>());
+                contexts.Add(context.GetPayload<ITransactionContext>());
                 throw expected;
             });
         });

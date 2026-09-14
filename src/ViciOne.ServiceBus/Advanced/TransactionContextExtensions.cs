@@ -14,7 +14,7 @@ public static class TransactionContextExtensions
     public static TransactionScope CreateTransactionScope(this PipeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var transactionContext = context.GetPayload<TransactionContext>();
+        var transactionContext = context.GetPayload<ITransactionContext>();
 
         return new TransactionScope(transactionContext.Transaction, TransactionScopeAsyncFlowOption.Enabled);
     }
@@ -28,7 +28,7 @@ public static class TransactionContextExtensions
     public static TransactionScope CreateTransactionScope(this PipeContext context, TimeSpan scopeTimeout)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var transactionContext = context.GetPayload<TransactionContext>();
+        var transactionContext = context.GetPayload<ITransactionContext>();
 
         return new TransactionScope(transactionContext.Transaction, scopeTimeout, TransactionScopeAsyncFlowOption.Enabled);
     }
@@ -43,7 +43,7 @@ public static class TransactionContextExtensions
     public static TransactionScope CreateTransactionScope(this PipeContext context, TimeSpan scopeTimeout, TransactionScopeAsyncFlowOption asyncFlowOptions)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var transactionContext = context.GetPayload<TransactionContext>();
+        var transactionContext = context.GetPayload<ITransactionContext>();
 
         return new TransactionScope(transactionContext.Transaction, scopeTimeout, asyncFlowOptions);
     }
