@@ -194,7 +194,8 @@ public sealed class SourceFileNamingArchitectureTests
         (string Directory, string Namespace, string[] Files)[] groups =
         [
             ("src/ViciOne.ServiceBus/Consumers", "ViciOne.ServiceBus.Consumers",
-                ["DefaultConstructorConsumerFactory.cs", "DelegateConsumerFactory.cs", "InstanceConsumerFactory.cs", "ObjectConsumerFactory.cs"]),
+                ["DefaultConstructorConsumerFactory.cs", "DelegateConsumerFactory.cs", "InstanceConsumerFactory.cs", "ObjectConsumerFactory.cs",
+                    "OwnedConsumerLifetime.cs"]),
             ("src/ViciOne.ServiceBus/Consumers/Contexts", "ViciOne.ServiceBus.Consumers.Contexts",
                 ["ConsumerConsumeContextProxy.cs", "ConsumerConsumeContextScope.cs"]),
             ("src/ViciOne.ServiceBus/Consumers/Conventions", "ViciOne.ServiceBus.Consumers.Conventions",

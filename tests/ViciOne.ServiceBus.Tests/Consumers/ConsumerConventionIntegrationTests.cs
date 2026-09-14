@@ -37,6 +37,71 @@ public sealed class ConsumerConventionIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "no-op-mutations-preserve-version-and-metadata-identity")]
+    public void DuplicateRegistrationAndMissingRemoval_DoNotPublishANewVersion()
+    {
+        IReadOnlyList<IMessageInterfaceType> before = ConsumerMetadataCache<SnapshotConsumer>.ConsumerTypes;
+        (long version, IConsumerConvention[] conventions) = ConsumerConventionCache.GetSnapshot();
+
+        Assert.False(ConsumerConvention.Register(new AsyncConsumerConvention()));
+        Assert.False(ConsumerConventionCache.Remove<NeverRegisteredConsumerConvention>());
+
+        (long currentVersion, IConsumerConvention[] currentConventions) = ConsumerConventionCache.GetSnapshot();
+        Assert.Equal(version, currentVersion);
+        Assert.Equal(conventions, currentConventions);
+        Assert.Same(before, ConsumerMetadataCache<SnapshotConsumer>.ConsumerTypes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "later-convention-overrides-one-duplicate-message-contract")]
+    public void LaterConvention_OverridesADuplicateMessageContractUntilItIsRemoved()
+    {
+        IMessageInterfaceType original = Assert.Single(ConsumerMetadataCache<OverrideConsumer>.ConsumerTypes);
+        Assert.IsType<ConsumerInterfaceType>(original);
+
+        try
+        {
+            Assert.True(ConsumerConvention.Register<OverrideConsumerConvention>());
+
+            IMessageInterfaceType overridden = Assert.Single(ConsumerMetadataCache<OverrideConsumer>.ConsumerTypes);
+            Assert.IsType<OverrideMessageInterfaceType>(overridden);
+            Assert.Equal(typeof(OverrideMessage), overridden.MessageType);
+        }
+        finally
+        {
+            ConsumerConvention.Remove<OverrideConsumerConvention>();
+        }
+
+        IMessageInterfaceType restored = Assert.Single(ConsumerMetadataCache<OverrideConsumer>.ConsumerTypes);
+        Assert.IsType<ConsumerInterfaceType>(restored);
+        Assert.Equal(typeof(OverrideMessage), restored.MessageType);
+    }
+
+    [Theory]
+    [InlineData(InvalidConventionResult.MessageConvention)]
+    [InlineData(InvalidConventionResult.MessageTypes)]
+    [InlineData(InvalidConventionResult.MessageDescriptor)]
+    [InlineData(InvalidConventionResult.MessageType)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "invalid-provider-results-fail-at-convention-boundary")]
+    public void InvalidConventionProviderResult_IsRejectedAtItsOwningBoundary(InvalidConventionResult result)
+    {
+        try
+        {
+            Assert.True(ConsumerConvention.Register(new InvalidResultConsumerConvention(result)));
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+                _ = ConsumerMetadataCache<InvalidResultConsumer>.ConsumerTypes);
+
+            Assert.Contains(nameof(InvalidResultConsumerConvention), exception.Message, StringComparison.Ordinal);
+            Assert.Contains(result.ToString(), exception.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            ConsumerConvention.Remove<InvalidResultConsumerConvention>();
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "versioned-metadata-and-connector-snapshots")]
     public void RegistrationChanges_RefreshSubsequentMetadataAndConnectorResolution()
     {
@@ -194,6 +259,25 @@ public sealed class ConsumerConventionIntegrationTests
 
     private sealed class SnapshotConsumer;
 
+    private sealed record OverrideMessage;
+
+    private sealed record InvalidResultMessage;
+
+    private sealed class OverrideConsumer : IConsumer<OverrideMessage>
+    {
+        public Task ConsumeAsync(ConsumeContext<OverrideMessage> context) => Task.CompletedTask;
+    }
+
+    private sealed class InvalidResultConsumer;
+
+    public enum InvalidConventionResult
+    {
+        MessageConvention,
+        MessageTypes,
+        MessageDescriptor,
+        MessageType,
+    }
+
     private sealed class LateBoundConsumer : ILateBoundHandler<LateBoundMessage>
     {
         public LateBoundMessage? LastMessage { get; private set; }
@@ -287,6 +371,75 @@ public sealed class ConsumerConventionIntegrationTests
     {
         IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>() =>
             new SnapshotMarkerConsumerMessageConvention<T>();
+    }
+
+    private sealed class NeverRegisteredConsumerConvention : IConsumerConvention
+    {
+        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>() =>
+            new SnapshotMarkerConsumerMessageConvention<T>();
+    }
+
+    private sealed class OverrideConsumerConvention : IConsumerConvention
+    {
+        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>() =>
+            new OverrideConsumerMessageConvention<T>();
+    }
+
+    private sealed class OverrideConsumerMessageConvention<T> : IConsumerMessageConvention
+        where T : class
+    {
+        public IEnumerable<IMessageInterfaceType> GetMessageTypes() =>
+            typeof(T) == typeof(OverrideConsumer)
+                ? [new OverrideMessageInterfaceType()]
+                : [];
+    }
+
+    private sealed class OverrideMessageInterfaceType : IMessageInterfaceType
+    {
+        private readonly ConsumerInterfaceType _inner =
+            new(typeof(OverrideMessage), typeof(OverrideConsumer));
+
+        public Type MessageType => _inner.MessageType;
+
+        public IConsumerMessageConnector<T> GetConsumerConnector<T>()
+            where T : class => _inner.GetConsumerConnector<T>();
+
+        public IInstanceMessageConnector<T> GetInstanceConnector<T>()
+            where T : class => _inner.GetInstanceConnector<T>();
+    }
+
+    private sealed class InvalidResultConsumerConvention(InvalidConventionResult result) : IConsumerConvention
+    {
+        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>() =>
+            result == InvalidConventionResult.MessageConvention
+                ? null!
+                : new InvalidResultConsumerMessageConvention(result);
+    }
+
+    private sealed class InvalidResultConsumerMessageConvention(InvalidConventionResult result) :
+        IConsumerMessageConvention
+    {
+        public IEnumerable<IMessageInterfaceType> GetMessageTypes() => result switch
+        {
+            InvalidConventionResult.MessageTypes => null!,
+            InvalidConventionResult.MessageDescriptor => [null!],
+            InvalidConventionResult.MessageType => [new InvalidMessageInterfaceType()],
+            _ => [],
+        };
+    }
+
+    private sealed class InvalidMessageInterfaceType : IMessageInterfaceType
+    {
+        private readonly ConsumerInterfaceType _inner =
+            new(typeof(InvalidResultMessage), typeof(InvalidResultConsumer));
+
+        public Type MessageType => null!;
+
+        public IConsumerMessageConnector<T> GetConsumerConnector<T>()
+            where T : class => _inner.GetConsumerConnector<T>();
+
+        public IInstanceMessageConnector<T> GetInstanceConnector<T>()
+            where T : class => _inner.GetInstanceConnector<T>();
     }
 
     private sealed class SnapshotMarkerConsumerMessageConvention<T> : IConsumerMessageConvention

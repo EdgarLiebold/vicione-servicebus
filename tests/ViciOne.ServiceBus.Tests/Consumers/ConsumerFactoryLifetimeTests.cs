@@ -1,6 +1,7 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Operations;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Consumers;
@@ -51,6 +52,83 @@ public sealed class ConsumerFactoryLifetimeTests
         Assert.Equal(1, consumer.AsyncDisposeCount);
     }
 
+    [Theory]
+    [InlineData(OwnedFactoryShape.DefaultConstructor)]
+    [InlineData(OwnedFactoryShape.Delegate)]
+    [InlineData(OwnedFactoryShape.Object)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-LIFETIME", "pipeline-and-release-failures-remain-observable")]
+    public async Task OwnedFactories_PreservePipelineAndReleaseFailuresExactlyAsync(OwnedFactoryShape shape)
+    {
+        ConsumeContext<FactoryMessage> context = CreateContext();
+        FaultingReleaseConsumer.LastInstance = null;
+        FaultingReleaseConsumer? suppliedConsumer = null;
+        IConsumerFactory<FaultingReleaseConsumer> factory = shape switch
+        {
+            OwnedFactoryShape.DefaultConstructor => new DefaultConstructorConsumerFactory<FaultingReleaseConsumer>(),
+            OwnedFactoryShape.Delegate => new DelegateConsumerFactory<FaultingReleaseConsumer>(
+                () => suppliedConsumer = new FaultingReleaseConsumer()),
+            OwnedFactoryShape.Object => new ObjectConsumerFactory<FaultingReleaseConsumer>(
+                requestedType =>
+                {
+                    Assert.Equal(typeof(FaultingReleaseConsumer), requestedType);
+                    return suppliedConsumer = new FaultingReleaseConsumer();
+                }),
+            _ => throw new ArgumentOutOfRangeException(nameof(shape), shape, null),
+        };
+        var pipelineFailure = new ExpectedPipelineException();
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() => factory.SendAsync(
+            context,
+            new ConsumerPipe<FaultingReleaseConsumer>(_ => Task.FromException(pipelineFailure))));
+
+        Assert.StartsWith(
+            "Consumer pipeline and release encountered multiple failures.",
+            actual.Message,
+            StringComparison.Ordinal);
+        Assert.Collection(
+            actual.InnerExceptions,
+            failure => Assert.Same(pipelineFailure, failure),
+            failure => Assert.Same(FaultingReleaseConsumer.ReleaseFailure, failure));
+        FaultingReleaseConsumer consumer = suppliedConsumer
+            ?? Assert.IsType<FaultingReleaseConsumer>(FaultingReleaseConsumer.LastInstance);
+        Assert.Equal(1, consumer.AsyncDisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-LIFETIME", "release-failure-after-success-preserves-identity")]
+    public async Task OwnedFactory_PreservesTheExactReleaseFailureAfterSuccessfulPipelineAsync()
+    {
+        ConsumeContext<FactoryMessage> context = CreateContext();
+        var consumer = new FaultingReleaseConsumer();
+        var factory = new DelegateConsumerFactory<FaultingReleaseConsumer>(() => consumer);
+
+        FactoryReleaseException actual = await Assert.ThrowsAsync<FactoryReleaseException>(() =>
+            factory.SendAsync(context, new ConsumerPipe<FaultingReleaseConsumer>(_ => Task.CompletedTask)));
+
+        Assert.Same(FaultingReleaseConsumer.ReleaseFailure, actual);
+        Assert.Equal(1, consumer.AsyncDisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-LIFETIME", "synchronous-release-and-pipeline-failures-remain-observable")]
+    public async Task SynchronousRelease_PreservesBothFailuresExactlyAsync()
+    {
+        ConsumeContext<FactoryMessage> context = CreateContext();
+        var consumer = new SynchronouslyFaultingReleaseConsumer();
+        var factory = new DelegateConsumerFactory<SynchronouslyFaultingReleaseConsumer>(() => consumer);
+        var pipelineFailure = new ExpectedPipelineException();
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() => factory.SendAsync(
+            context,
+            new ConsumerPipe<SynchronouslyFaultingReleaseConsumer>(_ => Task.FromException(pipelineFailure))));
+
+        Assert.Collection(
+            actual.InnerExceptions,
+            failure => Assert.Same(pipelineFailure, failure),
+            failure => Assert.Same(SynchronouslyFaultingReleaseConsumer.ReleaseFailure, failure));
+        Assert.Equal(1, consumer.DisposeCount);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-LIFETIME", "external-instance-remains-caller-owned")]
     public async Task InstanceFactory_NeverReleasesTheCallerOwnedConsumerAsync()
@@ -84,14 +162,52 @@ public sealed class ConsumerFactoryLifetimeTests
             return Task.CompletedTask;
         });
         var nullFactory = new DelegateConsumerFactory<AsynchronouslyDisposableConsumer>(() => null!);
+        var nullObjectFactory = new ObjectConsumerFactory<AsynchronouslyDisposableConsumer>(_ => null!);
         var wrongTypeFactory = new ObjectConsumerFactory<AsynchronouslyDisposableConsumer>(_ => new object());
 
         await Assert.ThrowsAsync<ConsumerException>(() => nullFactory.SendAsync(context, pipe));
-        ConsumerException wrongType = await Assert.ThrowsAsync<ConsumerException>(() => wrongTypeFactory.SendAsync(context, pipe));
+        ConsumerException nullObject = await Assert.ThrowsAsync<ConsumerException>(() =>
+            nullObjectFactory.SendAsync(context, pipe));
+        ConsumerException wrongType = await Assert.ThrowsAsync<ConsumerException>(() =>
+            wrongTypeFactory.SendAsync(context, pipe));
 
         Assert.Equal(0, calls);
+        Assert.Contains("'null'", nullObject.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(AsynchronouslyDisposableConsumer), nullObject.Message, StringComparison.Ordinal);
         Assert.Contains(nameof(AsynchronouslyDisposableConsumer), wrongType.Message, StringComparison.Ordinal);
         Assert.Contains("System.Object", wrongType.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-PROBE", "every-factory-reports-source-and-consumer-type")]
+    public void ConsumerFactories_ReportTheirExactOwnershipSource()
+    {
+        var consumer = new AsynchronouslyDisposableConsumer();
+        (IProbeSite Factory, string Source)[] factories =
+        [
+            (new DefaultConstructorConsumerFactory<AsynchronouslyDisposableConsumer>(), "defaultConstructor"),
+            (new DelegateConsumerFactory<AsynchronouslyDisposableConsumer>(() => consumer), "delegate"),
+            (new InstanceConsumerFactory<AsynchronouslyDisposableConsumer>(consumer), "instance"),
+            (new ObjectConsumerFactory<AsynchronouslyDisposableConsumer>(_ => consumer), "objectFactory"),
+        ];
+
+        foreach ((IProbeSite factory, string expectedSource) in factories)
+        {
+            var driver = new ProbeResultBuilderTestDriver(
+                Guid.NewGuid(),
+                TestContext.Current.CancellationToken,
+                TimeProvider.System);
+
+            factory.Probe(driver.Context);
+
+            IReadOnlyDictionary<string, object> result = driver.Build().Results;
+            IReadOnlyDictionary<string, object> scope = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
+                Assert.Contains("consumerFactory", result));
+            Assert.Equal(expectedSource, Assert.Contains("source", scope));
+            Assert.Equal(
+                TypeCache<AsynchronouslyDisposableConsumer>.ShortName,
+                Assert.Contains("consumerType", scope));
+        }
     }
 
     [Fact]
@@ -190,7 +306,49 @@ public sealed class ConsumerFactoryLifetimeTests
         }
     }
 
+    public enum OwnedFactoryShape
+    {
+        DefaultConstructor,
+        Delegate,
+        Object,
+    }
+
+    private sealed class FaultingReleaseConsumer : IAsyncDisposable
+    {
+        public static readonly FactoryReleaseException ReleaseFailure = new();
+
+        public FaultingReleaseConsumer()
+        {
+            LastInstance = this;
+        }
+
+        public static FaultingReleaseConsumer? LastInstance { get; set; }
+
+        public int AsyncDisposeCount { get; private set; }
+
+        public ValueTask DisposeAsync()
+        {
+            AsyncDisposeCount++;
+            return new ValueTask(Task.FromException(ReleaseFailure));
+        }
+    }
+
+    private sealed class SynchronouslyFaultingReleaseConsumer : IDisposable
+    {
+        public static readonly FactoryReleaseException ReleaseFailure = new();
+
+        public int DisposeCount { get; private set; }
+
+        public void Dispose()
+        {
+            DisposeCount++;
+            throw ReleaseFailure;
+        }
+    }
+
     private sealed class ExpectedPipelineException : Exception;
+
+    private sealed class FactoryReleaseException : Exception;
 
     private class UnusedConsumeContextProxy : DispatchProxy
     {

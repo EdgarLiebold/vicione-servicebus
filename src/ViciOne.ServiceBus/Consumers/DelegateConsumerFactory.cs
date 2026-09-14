@@ -32,6 +32,7 @@ public sealed class DelegateConsumerFactory<TConsumer> :
         ArgumentNullException.ThrowIfNull(next);
 
         TConsumer? consumer = null;
+        Exception? operationFailure = null;
         try
         {
             consumer = _factoryMethod();
@@ -40,18 +41,12 @@ public sealed class DelegateConsumerFactory<TConsumer> :
 
             await next.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, consumer)).ConfigureAwait(false);
         }
-        finally
+        catch (Exception exception)
         {
-            switch (consumer)
-            {
-                case IAsyncDisposable asyncDisposable:
-                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                    break;
-                case IDisposable disposable:
-                    disposable.Dispose();
-                    break;
-            }
+            operationFailure = exception;
         }
+
+        await OwnedConsumerLifetime.ReleaseAfterOperationAsync(consumer, operationFailure).ConfigureAwait(false);
     }
 
     void IProbeSite.Probe(ProbeContext context)

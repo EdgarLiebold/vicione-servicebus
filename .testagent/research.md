@@ -1682,3 +1682,73 @@ non-seekable stream members or Event Hubs endpoint-local transport operations th
 not support; they are not placeholders. The sole `NotImplementedException` reference is an
 intentional non-retryable failure-classification case. The protected `review/` and `TestResults/`
 trees remain unchanged and unstaged.
+
+## Iteration 111 Core Consumers initial research
+
+The complete `src/ViciOne.ServiceBus/Consumers` owner contains nine production files and 448 lines.
+All files and every source comment were read manually. Four root factories own default-constructor,
+delegate, object-factory, and caller-owned instance lifetimes; `Contexts/` owns proxy and scoped
+consumer contexts; `Conventions/` owns the process-wide ordered registry; and `Metadata/` owns
+versioned message-contract snapshots and registration classification. Filenames, primary types,
+namespaces, and directories align. This capability belongs inside Core rather than in an external
+provider family or an independent assembly.
+
+The unchanged broad Consumer namespace baseline passes 119/119 tests. Direct symbol pairing finds
+named tests for all nine source files. Existing tests prove successful synchronous and asynchronous
+release, release after a pipeline failure, caller ownership, null and wrong factory results, context
+and payload projection, immutable concurrent metadata snapshots, late convention registration and
+removal, custom dispatch, and public null boundaries. Architecture tests explicitly bind all nine
+filenames to their owners.
+
+The accepted Iteration 110 Core artifact shows complete line coverage for metadata caching and
+consumer-context construction, while missing-removal, null object-factory results, probe variants,
+and one registration-classification branch remain indirect or uncovered. The principal semantic
+risk is stronger than a percentage gap: both owned factories use `finally` disposal, so a disposal
+failure can replace an already selected pipeline failure. A deterministic red-first test must
+establish whether both failures remain observable. Direct registration-type matrices and stable
+version behavior must also distinguish actual missing behavior from already-correct code.
+
+The final owner contains ten production files and 539 lines. All ten files, their types, and every
+final source comment were read manually. The added `OwnedConsumerLifetime` is an internal Core
+helper shared by the two owned factory implementations. `Contexts/`, `Conventions/`, and
+`Metadata/` remain coherent namespace owners; no new project or provider boundary is justified.
+
+Two defect families were confirmed red before correction. Default-constructor, delegate, and object
+factories each discarded the selected pipeline failure when consumer release also failed. They now
+release through one terminal lifetime operation that preserves exact single failures and reports
+ordered operation and release failures together. Custom convention providers could also return a
+null message convention, sequence, descriptor, or message type; all four invalid shapes now fail at
+the convention boundary with the owning convention and consumer identities. The validated metadata
+builder retains first message-type order while allowing a later convention to replace the descriptor
+in that position.
+
+Eight permanent requirement projections add 17 focused cases, taking the Consumer namespace from
+119/119 to 136/136. Direct evidence also covers no-op convention version stability, later-convention
+precedence, the full registration/exclusion matrix, all four factory probe identities, synchronous
+and asynchronous release failures, null object-factory results, and scoped-context null parameters.
+All changed tests were reviewed for causal and exact assertions, isolation, and determinism. They
+contain no sleeps, random input, unbounded waits, skips, assertion-free paths, self-reference, or
+swallowed failures. Seven provider/lifetime cases were observed red on the unchanged implementation.
+Three isolated one-cause counterchanges were then killed and restored: excluded-consumer admission,
+later-descriptor replacement, and duplicate-registration version mutation.
+
+Fresh Consumers coverage passes all 136 focused cases and records 100% line coverage (172/172) and
+100% branch coverage (58/58), across 34 methods with no CRAP score above 30 and a maximum of 12. The
+accepted artifact is `/private/tmp/vsb-iteration111-consumers-final/consumers-final.cobertura.xml`,
+SHA-256 `a8b20e372302554e706a4c3b63664258db2d77477db94c912e803a23ceb92b24`.
+The accepted complete Core coverage run passes 3,443/3,443 and records repository reachability of
+76.7657% line (48,681/63,415) and 69.4332% branch (16,941/24,399). Its artifact is
+`/private/tmp/vsb-iteration111-core-final/core-final.cobertura.xml`, SHA-256
+`91dde737706e9d409aac01328c607314b0b57ee6c0decf31458188be462abeff`.
+
+Both format gates pass. The serial Engineering Release build passes all 77 projects with zero
+warnings and errors. All 23 hermetic Unit and Architecture hosts pass 6,416/6,416 with no failure or
+skip, including bidirectional Async naming and source-file, namespace, folder, and project rules.
+Package verification passes 18 journeys, 31 freshly packed packages, three isolated provider-testing
+consumers, and 30 runtime API assemblies. The public contract is unchanged at 18,879 lines with
+SHA-256 `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements JSON, Git whitespace, source directives, dummy and compatibility identities, SDK
+version pinning, and empty source directories are clean. The only source reference to
+`NotImplementedException` remains the intentional non-retryable classifier case. Protected
+`review/` and `TestResults/` remain unchanged and unstaged.

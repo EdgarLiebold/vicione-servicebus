@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Consumers.Conventions;
 
@@ -26,12 +25,7 @@ internal static class ConsumerMetadataCache<TConsumer>
                 if (_version == version)
                     return _consumerTypes;
 
-                IMessageInterfaceType[] consumerTypes = conventions
-                    .Select(convention => convention.GetConsumerMessageConvention<TConsumer>())
-                    .SelectMany(convention => convention.GetMessageTypes())
-                    .GroupBy(type => type.MessageType)
-                    .Select(group => group.Last())
-                    .ToArray();
+                IMessageInterfaceType[] consumerTypes = CreateConsumerTypes(conventions);
                 _consumerTypes = Array.AsReadOnly(consumerTypes);
                 _version = version;
                 return _consumerTypes;
@@ -47,5 +41,52 @@ internal static class ConsumerMetadataCache<TConsumer>
             lock (CacheLock)
                 return _version;
         }
+    }
+
+    /// <summary>
+    /// Builds an ordered descriptor snapshot in which a later convention replaces an earlier descriptor for the same message contract.
+    /// </summary>
+    /// <param name="conventions">The convention-registry snapshot to evaluate.</param>
+    /// <returns>The validated message-contract descriptors.</returns>
+    static IMessageInterfaceType[] CreateConsumerTypes(IConsumerConvention[] conventions)
+    {
+        var consumerTypes = new List<IMessageInterfaceType>();
+        var positions = new Dictionary<Type, int>();
+
+        foreach (IConsumerConvention convention in conventions)
+        {
+            string conventionName = TypeCache.GetShortName(convention.GetType());
+            IConsumerMessageConvention messageConvention =
+                ConsumerConventionCache.GetMessageConvention<TConsumer>(convention);
+            IEnumerable<IMessageInterfaceType> messageTypes = messageConvention.GetMessageTypes()
+                ?? throw new InvalidOperationException(
+                    $"Consumer convention '{conventionName}' returned no MessageTypes collection "
+                    + $"for consumer '{TypeCache<TConsumer>.ShortName}'.");
+
+            foreach (IMessageInterfaceType? descriptor in messageTypes)
+            {
+                if (descriptor is null)
+                {
+                    throw new InvalidOperationException(
+                        $"Consumer convention '{conventionName}' returned a null MessageDescriptor "
+                        + $"for consumer '{TypeCache<TConsumer>.ShortName}'.");
+                }
+
+                Type messageType = descriptor.MessageType
+                    ?? throw new InvalidOperationException(
+                        $"Consumer convention '{conventionName}' returned a MessageDescriptor with no MessageType "
+                        + $"for consumer '{TypeCache<TConsumer>.ShortName}'.");
+
+                if (positions.TryGetValue(messageType, out int position))
+                    consumerTypes[position] = descriptor;
+                else
+                {
+                    positions.Add(messageType, consumerTypes.Count);
+                    consumerTypes.Add(descriptor);
+                }
+            }
+        }
+
+        return consumerTypes.ToArray();
     }
 }

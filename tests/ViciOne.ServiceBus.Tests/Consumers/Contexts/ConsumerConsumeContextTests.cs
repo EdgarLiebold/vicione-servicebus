@@ -53,6 +53,14 @@ public sealed class ConsumerConsumeContextTests
             "consumer",
             Assert.Throws<ArgumentNullException>(() => new ConsumerConsumeContextScope<TestConsumer, ConsumerMessage>(source, null!)).ParamName);
         Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() =>
+                new ConsumerConsumeContextScope<TestConsumer, ConsumerMessage>(null!, consumer, localPayload)).ParamName);
+        Assert.Equal(
+            "consumer",
+            Assert.Throws<ArgumentNullException>(() =>
+                new ConsumerConsumeContextScope<TestConsumer, ConsumerMessage>(source, null!, localPayload)).ParamName);
+        Assert.Equal(
             "payloads",
             Assert.Throws<ArgumentNullException>(() =>
                 new ConsumerConsumeContextScope<TestConsumer, ConsumerMessage>(source, consumer, null!)).ParamName);

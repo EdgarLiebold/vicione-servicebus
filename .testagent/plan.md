@@ -3159,3 +3159,71 @@ three isolated provider-testing consumers, and all 30 runtime API assemblies; th
 Requirements, bidirectional Async naming, file/folder/namespace ownership, source hygiene, empty
 directories, and Git whitespace pass. Protected trees remain unchanged and unstaged. The overall
 A+ goal continues with the remaining complete source owners and final whole-repository audit.
+
+## Iteration 111 Core Consumers plan
+
+Iteration 111 reviews all nine production files and 448 lines under
+`src/ViciOne.ServiceBus/Consumers`. All source and comments are read manually. No source, test, or
+comment generator is permitted; static pairing and coverage remain read-only completeness aids.
+
+Consumers is an internal Core capability and remains below `src/ViciOne.ServiceBus/Consumers`.
+Its `Contexts/`, `Conventions/`, and `Metadata/` branches match concrete namespace ownership. The
+review covers per-delivery consumer creation and release, caller-owned instances, cleanup failure
+identity, context and payload projection, process-wide convention snapshots, versioned metadata,
+registration exclusion, runtime-type classification, probes, every public parameter, and
+asynchronous naming.
+
+### Iteration 111 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Owned consumer factories must release exactly once without losing operation or cleanup failures | deterministic success, pipeline failure, disposal failure, and dual-failure identity cases |
+| Caller-owned instances must never be released by the factory | success and failure lifetime assertions |
+| Object and delegate factories must reject null or incompatible results before dispatch | exact type, message, dispatch-count, and boundary assertions |
+| Consumer contexts must preserve message, consumer, inherited payloads, and local isolation | proxy and scoped-context identity tests including invalid inputs |
+| Convention snapshots must be immutable, ordered, versioned, and stable when no mutation occurs | duplicate registration, successful/missing removal, concurrent snapshot identity, and precedence tests |
+| Registration metadata must classify core consumers, definitions, excluded capabilities, and unrelated types exactly | direct positive and negative type matrix |
+| Every file, type, namespace, comment, and parameter must express one Core owner | manual reread, architecture, async, format, API, and hygiene gates |
+| No feature may be lost | 119-case baseline, focused and Core coverage, full hermetic suite, Engineering build, package/API comparison |
+
+### Iteration 111 validation
+
+1. Preserve the 119/119 Consumer namespace baseline and record direct source-to-test ownership.
+2. Compare every state and failure path with existing tests and the fresh Core coverage artifact.
+3. Add red-first tests for independently justified lifetime or metadata gaps.
+4. Make the smallest coherent implementation correction and manually update affected comments.
+5. Kill meaningful one-cause counterchanges and restore the accepted implementation each time.
+6. Audit all changed tests for exact, causal assertions, determinism, bounded waits, and requirement
+   identity.
+7. Run focused coverage, both format gates, the 77-project build, all 23 hermetic hosts, package/API,
+   requirements, source hygiene, empty-directory, and Git checks.
+8. Commit, annotate Iteration 111, push without force, and verify remote branch and peeled tag hashes.
+
+### Iteration 111 completion
+
+All ten final Consumers production files and 539 lines, including every final comment, were read
+manually. Consumers remains a Core capability under `src/ViciOne.ServiceBus/Consumers`; its three
+subfolders continue to match namespace and runtime ownership. Independent assemblies remain sibling
+projects and external providers remain grouped under `Persistence/`, `Scheduling/`, and
+`Transports/`.
+
+Owned factory release now preserves exact operation and cleanup failures, singly or together. Every
+invalid custom convention-provider result fails at its owning boundary, and ordered metadata
+replacement, no-op version identity, registration exclusion, probe identity, and context boundaries
+have direct evidence. Eight requirement projections add 17 focused cases, taking Consumers from
+119/119 to 136/136. Seven cases were red before correction, and three controlled counterchanges were
+killed and restored.
+
+Fresh Consumers coverage is 100% line and branch over 34 methods, with zero CRAP scores above 30.
+The complete Core artifact passes 3,443/3,443 and has SHA-256
+`91dde737706e9d409aac01328c607314b0b57ee6c0decf31458188be462abeff`.
+
+Both format gates pass. The 77-project Release build has zero warnings and errors. All 23 hermetic
+hosts pass 6,416/6,416 without a skip. Package/API verification passes 18 journeys, 31 packages,
+three isolated provider-testing consumers, and all 30 runtime APIs; the unchanged 18,879-line API
+SHA-256 is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, source and project architecture, directives, dummy and
+legacy markers, SDK pinning, empty directories, formatting, and Git whitespace are clean. Protected
+trees remain unchanged and unstaged. The overall A+ goal continues with the remaining complete
+source owners and final repository-wide audit.

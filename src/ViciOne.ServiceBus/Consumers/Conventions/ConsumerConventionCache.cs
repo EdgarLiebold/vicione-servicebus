@@ -65,7 +65,20 @@ internal static class ConsumerConventionCache
     {
         (_, IConsumerConvention[] conventions) = GetSnapshot();
 
-        return conventions.Select(convention => convention.GetConsumerMessageConvention<TConsumer>()).ToArray();
+        return conventions.Select(GetMessageConvention<TConsumer>).ToArray();
+    }
+
+    /// <summary>Creates and validates one message-discovery convention for a consumer type.</summary>
+    /// <typeparam name="TConsumer">The consumer type to inspect.</typeparam>
+    /// <param name="convention">The owning process-wide convention.</param>
+    /// <returns>The convention-specific message-contract discovery operation.</returns>
+    internal static IConsumerMessageConvention GetMessageConvention<TConsumer>(IConsumerConvention convention)
+        where TConsumer : class
+    {
+        return convention.GetConsumerMessageConvention<TConsumer>()
+            ?? throw new InvalidOperationException(
+                $"Consumer convention '{TypeCache.GetShortName(convention.GetType())}' returned no MessageConvention "
+                + $"for consumer '{TypeCache<TConsumer>.ShortName}'.");
     }
 
     internal static (long Version, IConsumerConvention[] Conventions) GetSnapshot()
