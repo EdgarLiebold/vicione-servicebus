@@ -18,6 +18,7 @@ public sealed class ServiceBusTelemetryTests
         Assert.Equal("ViciOne.ServiceBus", ServiceBusTelemetry.Name);
         Assert.Equal(ServiceBusTelemetry.Name, ServiceBusTelemetry.MeterName);
         Assert.Equal(ServiceBusTelemetry.Name, ServiceBusTelemetry.ActivitySourceName);
+        Assert.Equal("message journal observe", ServiceBusTelemetry.Activities.MessageJournalObserve);
     }
 
     [Fact]
@@ -81,6 +82,8 @@ public sealed class ServiceBusTelemetryTests
             ServiceBusTelemetry.Metrics.PayloadAdmission,
             ServiceBusTelemetry.Metrics.PayloadBodySize,
             ServiceBusTelemetry.Metrics.PayloadEnvelopeSize,
+            ServiceBusTelemetry.Metrics.MessageJournalOperations,
+            ServiceBusTelemetry.Metrics.MessageJournalDuration,
         ];
 
         Assert.Equal(
@@ -110,6 +113,8 @@ public sealed class ServiceBusTelemetryTests
             "vicione.servicebus.payload.admission",
             "vicione.servicebus.payload.body.size",
             "vicione.servicebus.payload.envelope.size",
+            "vicione.servicebus.message_journal.operations",
+            "vicione.servicebus.message_journal.duration",
         ], names);
         Assert.Equal(names.Length, names.Distinct(StringComparer.Ordinal).Count());
         Assert.All(names, name => Assert.True(
@@ -153,6 +158,10 @@ public sealed class ServiceBusTelemetryTests
             ServiceBusTelemetry.Attributes.ExceptionType,
             ServiceBusTelemetry.Attributes.ExceptionMessage,
             ServiceBusTelemetry.Attributes.ExceptionStackTrace,
+            ServiceBusTelemetry.Attributes.MessageJournalOperation,
+            ServiceBusTelemetry.Attributes.MessageJournalOutcome,
+            ServiceBusTelemetry.Attributes.MessageJournalResult,
+            ServiceBusTelemetry.Attributes.MessageJournalFailureReason,
         ];
         Assert.Equal(
         [
@@ -190,6 +199,10 @@ public sealed class ServiceBusTelemetryTests
             "exception.type",
             "exception.message",
             "exception.stacktrace",
+            "vicione.servicebus.message_journal.operation",
+            "vicione.servicebus.message_journal.outcome",
+            "vicione.servicebus.message_journal.result",
+            "vicione.servicebus.message_journal.failure.reason",
         ], attributes);
         Assert.Equal(attributes.Length, attributes.Distinct(StringComparer.Ordinal).Count());
         Assert.All(attributes, name => Assert.True(

@@ -9,12 +9,12 @@ namespace ViciOne.ServiceBus.MessageJournal;
 /// </remarks>
 public interface IMessageJournalStore
 {
-    /// <summary>Gets the limits.</summary>
+    /// <summary>Gets the finite entry-size, capacity, and retention limits enforced by this store.</summary>
     MessageJournalStoreLimits Limits { get; }
 
-    /// <summary>Appends the supplied value.</summary>
-    /// <param name="entry">The entry.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Enforces <see cref="Limits"/> and persists one sanitized entry without internal queuing or retry.</summary>
+    /// <param name="entry">The immutable sanitized entry to persist.</param>
+    /// <param name="cancellationToken">The token that cancels retention, capacity enforcement, or persistence.</param>
+    /// <returns>A value task that completes when the bounded append has completed.</returns>
     ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken);
 }

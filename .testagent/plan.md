@@ -2583,6 +2583,84 @@ executable non-retry classification policy. The protected `review/` and `TestRes
 unchanged and unstaged. The overall A+ goal continues with the remaining complete source owners and
 the final repository-wide completion audit.
 
+## Iteration 105 Core transactions and message-journal plan
+
+Iteration 105 starts from remotely verified commit
+`d8cb018a4980ec140cf10a4753da1507aa526165` and annotated tag
+`servicebus-a-plus-remediation-iteration-104-2026-09-14`. It treats the 29 production files and
+1,709 lines in `Transactions/` and `MessageJournal/` as one coherent delivery-integrity owner:
+ambient and managed transaction lifetime, deferred and buffered publish/send behavior, journal
+capture policy, immutable entry projection, store limits, observer isolation, and telemetry. Every
+file and comment is read manually before changes; no source or comment generator is used.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Preserve transactional semantics | commit, rollback, enlistment, buffering, deferred endpoint, cancellation, ordering, and failure paths retain exact ownership |
+| Preserve journal correctness | policy, classification, projection, limits, metadata, clocks, immutable snapshots, observer behavior, and store failures have exact assertions |
+| Modernize the Greenfield surface | every public type, member, parameter, name, async contract, null boundary, and default is reviewed without compatibility-only API |
+| Align navigation and comments | project-relative namespaces, directories, filenames, primary types, and every manually verified comment express the final responsibilities |
+| Demonstrate test strength | source-to-test mapping, pseudo-mutation analysis, red-first regressions, controlled counterchanges, focused/full tests, coverage/CRAP, format, package/API, requirements, and hygiene gates |
+
+The provider-specific journal stores remain in their separately delivered Persistence assemblies;
+this iteration owns only the provider-neutral Core contract and runtime. The protected `review/`
+and `TestResults/` trees remain outside the iteration.
+
+### Iteration 105 completion
+
+The complete 29-file, 1,709-line transactions and provider-neutral message-journal owner was read
+and reviewed manually, including every source comment. The source layout correctly represents
+assembly ownership: `src/ViciOne.ServiceBus` is the Core assembly, independently delivered
+assemblies remain sibling projects under `src`, and Persistence, Scheduling, and Transports are
+integration/provider families rather than folders inside Core. Within the reviewed Core owner,
+folders, filenames, namespaces, and primary types align with their final responsibilities.
+
+Message-journal telemetry now spans policy projection and optional storage instead of describing an
+already completed write. Stable public activity, metric, and attribute names expose low-cardinality
+operation, outcome, result, and failure-phase dimensions; activities inherit the ambient parent,
+carry sampling-time identity, terminate with an exact status, and cannot let hostile start or stop
+listeners affect journal or message semantics. Metrics have precise units and descriptions. Exact
+tests cover every terminal failure reason, elapsed-time and clock failures, filtering, storage,
+oversize rejection, content-size accounting, listener isolation, and real in-memory send, publish,
+and consume envelopes, including faults and preserved scheduled, lifetime, header, and exception
+metadata.
+
+Deferred bus boundaries now reject invalid observer, pipe, endpoint-definition, queue-name, and
+probe arguments locally. A strict forwarding spy proves every remaining member preserves arguments,
+handles, endpoints, address, and topology; buffered send contexts and cancellation/failure recovery
+have end-to-end assertions. The publish endpoint helper no longer advertises an interface it cannot
+coherently implement or carry a compatibility-only observer indirection. Completed ambient
+transactions reject enlistment without retaining the action. Twelve red-first tests and four killed
+controlled counterchanges prove sampling tags, local receive-observer validation, buffered-action
+restoration, and faulted send classification are behaviorally observable.
+
+A fresh dependency-graph build exposed stale locked closures after the internal-access test assembly
+gained the Sagas reference. All eleven consuming lock files were regenerated with force evaluation;
+normal locked restores for Product, Engineering, and Unit graphs then pass, and all lock files and
+requirements manifests parse successfully. The Engineering Release build passes all 77 projects
+with zero warnings or errors, and the product pack plus package-only developer-journey gate passes
+18 scenarios, 31 fresh packages, three isolated provider-testing consumers, and all 30 runtime APIs.
+The intentional public contract change is exactly eight telemetry constants. The resulting
+19,038-line packed API has SHA-256
+`a613f715b7cacada8b4edc424785e088535c4e79ce6b156eda58f21ee7c4cb37`.
+
+Both full format gates pass without changes. All 23 native Unit/Architecture hosts pass
+6,279/6,279 tests with no failure or skip, including 3,309 Core-host tests. The reviewed tests contain
+no assertion-free, trivial, self-referential, skipped, swallowed-exception, random, or wall-clock
+sleep cases; the two infinite delays are cancellation-controlled blocking test doubles. Fresh
+Core-host coverage is 75.6155% line and 68.2642% branch across its reachability closure. The completed
+owner covers 666/671 executable lines (99.2548%) and 125/138 branch outcomes (90.5797%) across 156
+methods, with no CRAP score above 8. The five unreachable lines are defensive null-event,
+double-prepare, and queue-enqueue exception paths. The accepted artifact is
+`/private/tmp/vsb-iteration105-core-final.cobertura.xml`, SHA-256
+`5d1e09206bfaacb01fc1a79e635d72b4159c19710b31c815b9510ff3fa09967d`.
+
+Git whitespace, C# preprocessor, dummy-marker, old-identity, async-convention, JSON, lock-graph, and
+empty-directory checks pass. The initial in-sandbox format attempt failed solely because Roslyn was
+denied its local named pipe; rerunning the identical command outside the sandbox passed, preserving
+the established diagnostic rule for local .NET build hosts. The protected `review/` and
+`TestResults/` trees remain unchanged and unstaged. The overall A+ goal continues with the remaining
+complete source owners and the final repository-wide completion audit.
+
 ## Iteration 102 Courier interface contract and navigation plan
 
 Iteration 102 starts from remotely verified commit

@@ -451,6 +451,36 @@ public sealed class AmbientTransactionBusTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AMBIENT-TRANSACTION-BUS", "failed-enlistment-leaves-no-pending-state")]
+    public async Task CompletedTransaction_RejectsEnlistmentWithoutRetainingTheActionAsync()
+    {
+        var driver = new AmbientTransactionBusTestDriver();
+        using var transaction = new CommittableTransaction();
+        var dispatchCount = 0;
+        transaction.Commit();
+        Transaction? previous = Transaction.Current;
+
+        try
+        {
+            Transaction.Current = transaction;
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                driver.EnqueueAsync(_ =>
+                {
+                    Interlocked.Increment(ref dispatchCount);
+                    return Task.CompletedTask;
+                }, TestContext.Current.CancellationToken));
+        }
+        finally
+        {
+            Transaction.Current = previous;
+        }
+
+        Assert.Equal(0, dispatchCount);
+        Assert.Equal(0, driver.PendingTransactionCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AMBIENT-TRANSACTION-BUS", "concurrent-enqueue-enlists-once")]
     public async Task ConcurrentEnqueuesInOneTransaction_ExecuteEveryActionExactlyOnceAsync()
     {

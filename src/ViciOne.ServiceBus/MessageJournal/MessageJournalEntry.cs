@@ -31,34 +31,34 @@ public sealed class MessageJournalEntry
         ContentSizeInBytes = CalculateContentSize();
     }
 
-    /// <summary>Gets the entry id.</summary>
+    /// <summary>Gets the time-ordered version-seven identifier assigned to this observation.</summary>
     public Guid EntryId { get; }
 
-    /// <summary>Gets the observed at.</summary>
+    /// <summary>Gets the UTC instant at which the journal materialized this entry.</summary>
     public DateTimeOffset ObservedAt { get; }
 
-    /// <summary>Gets the operation.</summary>
+    /// <summary>Gets the message operation that produced the observation.</summary>
     public MessageJournalOperation Operation { get; }
 
-    /// <summary>Gets the outcome.</summary>
+    /// <summary>Gets the terminal outcome of the observed message operation.</summary>
     public MessageJournalOutcome Outcome { get; }
 
-    /// <summary>Gets the data classification.</summary>
+    /// <summary>Gets the handling classification assigned by the journal policy.</summary>
     public MessageJournalDataClassification DataClassification { get; }
 
-    /// <summary>Gets the content type.</summary>
+    /// <summary>Gets the sanitized content type retained by the journal policy.</summary>
     public string? ContentType { get; }
 
-    /// <summary>Gets the message types.</summary>
+    /// <summary>Gets the immutable snapshot of retained message-contract identifiers.</summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
-    /// <summary>Gets the metadata.</summary>
+    /// <summary>Gets the immutable snapshot of retained envelope metadata.</summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
-    /// <summary>Gets the headers.</summary>
+    /// <summary>Gets the immutable snapshot of retained transport headers.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
-    /// <summary>Gets the body.</summary>
+    /// <summary>Gets an independently mutable copy of the retained body.</summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
     /// <summary>Conservative UTF-8 content size used for the store's fail-closed entry-size boundary.</summary>

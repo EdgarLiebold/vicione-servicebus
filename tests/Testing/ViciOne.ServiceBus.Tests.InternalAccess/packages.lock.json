@@ -71,6 +71,13 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "FastExpressionCompiler": "[5.4.1, )",
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "FastExpressionCompiler": {
         "type": "CentralTransitive",
         "requested": "[5.4.1, )",

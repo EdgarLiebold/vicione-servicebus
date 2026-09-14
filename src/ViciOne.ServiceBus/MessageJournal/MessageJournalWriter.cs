@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,6 +32,7 @@ internal sealed class MessageJournalWriter
     {
         ArgumentNullException.ThrowIfNull(captureFactory);
 
+        Activity? activity = MessageJournalTelemetry.StartActivity(operation, outcome);
         long startedAt = 0;
         var hasStartTimestamp = false;
         CancellationTokenSource? timeoutSource = null;
@@ -60,7 +62,7 @@ internal sealed class MessageJournalWriter
 
             if (projection is null)
             {
-                MessageJournalTelemetry.Filtered(operation, outcome, Elapsed(startedAt, hasStartTimestamp));
+                MessageJournalTelemetry.Filtered(activity, operation, outcome, Elapsed(startedAt, hasStartTimestamp));
                 return;
             }
 
@@ -75,6 +77,7 @@ internal sealed class MessageJournalWriter
             if (entry.ContentSizeInBytes > _storeLimits.MaximumEntryBytes)
             {
                 MessageJournalTelemetry.Failed(
+                    activity,
                     operation,
                     outcome,
                     "entry_too_large",
@@ -84,11 +87,12 @@ internal sealed class MessageJournalWriter
 
             phase = "store";
             await _store.AppendAsync(entry, operationSource.Token).ConfigureAwait(false);
-            MessageJournalTelemetry.Stored(operation, outcome, Elapsed(startedAt, hasStartTimestamp));
+            MessageJournalTelemetry.Stored(activity, operation, outcome, Elapsed(startedAt, hasStartTimestamp));
         }
         catch (OperationCanceledException) when (timeoutSource?.IsCancellationRequested == true)
         {
             MessageJournalTelemetry.Failed(
+                activity,
                 operation,
                 outcome,
                 "timeout",
@@ -97,6 +101,7 @@ internal sealed class MessageJournalWriter
         catch (OperationCanceledException)
         {
             MessageJournalTelemetry.Failed(
+                activity,
                 operation,
                 outcome,
                 "cancelled",
@@ -105,6 +110,7 @@ internal sealed class MessageJournalWriter
         catch (Exception)
         {
             MessageJournalTelemetry.Failed(
+                activity,
                 operation,
                 outcome,
                 phase,

@@ -9,13 +9,13 @@ public sealed class MessageJournalProjection
 {
     private readonly byte[] _body;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="dataClassification">The data classification.</param>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
-    /// <param name="messageTypes">The message types.</param>
-    /// <param name="metadata">The metadata.</param>
-    /// <param name="headers">The headers.</param>
-    /// <param name="body">The body.</param>
+    /// <summary>Creates an immutable snapshot of policy-approved content.</summary>
+    /// <param name="dataClassification">The handling classification assigned by the policy.</param>
+    /// <param name="contentType">The approved content type, or <see langword="null"/> when it is intentionally omitted.</param>
+    /// <param name="messageTypes">The approved message-contract identifiers.</param>
+    /// <param name="metadata">The approved envelope metadata.</param>
+    /// <param name="headers">The approved transport headers.</param>
+    /// <param name="body">The approved body bytes.</param>
     public MessageJournalProjection(
         MessageJournalDataClassification dataClassification,
         string? contentType,
@@ -35,22 +35,22 @@ public sealed class MessageJournalProjection
         _body = body.ToArray();
     }
 
-    /// <summary>Gets the data classification.</summary>
+    /// <summary>Gets the handling classification assigned to the sanitized content.</summary>
     public MessageJournalDataClassification DataClassification { get; }
 
-    /// <summary>Gets the content type.</summary>
+    /// <summary>Gets the approved content type, when retained by the policy.</summary>
     public string? ContentType { get; }
 
-    /// <summary>Gets the message types.</summary>
+    /// <summary>Gets the immutable snapshot of approved message-contract identifiers.</summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
-    /// <summary>Gets the metadata.</summary>
+    /// <summary>Gets the immutable snapshot of approved envelope metadata.</summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
-    /// <summary>Gets the headers.</summary>
+    /// <summary>Gets the immutable snapshot of approved transport headers.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
-    /// <summary>Gets the body.</summary>
+    /// <summary>Gets an independently mutable copy of the approved body.</summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
     private static IReadOnlyDictionary<string, string> Snapshot(IReadOnlyDictionary<string, string>? source)

@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transactions;
 
-internal sealed class DeferredBusPublishEndpointProvider :
-    IPublishEndpointProvider
+internal sealed class DeferredBusPublishEndpointProvider
 {
     readonly DeferredBus _bus;
     readonly IPublishEndpointProvider _publishEndpointProvider;
@@ -13,11 +12,6 @@ internal sealed class DeferredBusPublishEndpointProvider :
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _publishEndpointProvider = publishEndpointProvider ?? throw new ArgumentNullException(nameof(publishEndpointProvider));
-    }
-
-    public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
-    {
-        return _publishEndpointProvider.ConnectPublishObserver(observer);
     }
 
     public async Task<ISendEndpoint> GetPublishSendEndpointAsync<TMessage>(CancellationToken cancellationToken = default)

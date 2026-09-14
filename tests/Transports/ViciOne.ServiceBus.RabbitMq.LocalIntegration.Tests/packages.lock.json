@@ -380,7 +380,8 @@
         "type": "Project",
         "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.Courier": "[1.0.0, )"
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },
       "FastExpressionCompiler": {

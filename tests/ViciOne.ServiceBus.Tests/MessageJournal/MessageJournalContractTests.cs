@@ -58,6 +58,16 @@ public sealed class MessageJournalContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT", "time-provider-is-required")]
+    public void Options_RejectAMissingTimeProvider()
+    {
+        ArgumentNullException actual = Assert.Throws<ArgumentNullException>(() =>
+            MessageJournalOptions.ContinueMessageFlow(TimeSpan.FromSeconds(1), null!));
+
+        Assert.Equal("timeProvider", actual.ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT", "unsupported-timer-delay-rejected-at-composition")]
     public void Options_RejectAWriteTimeoutTheRuntimeTimerCannotRepresent()
     {

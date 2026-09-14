@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text.Json;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Serialization;
@@ -58,8 +59,18 @@ public sealed class MessageJournalIntegrationTests
                 Options(timeout));
             var sent = new JournalMessage(NewId.NextGuid(), "sent-value");
             var published = new JournalMessage(NewId.NextGuid(), "published-value");
+            Guid scheduledMessageId = NewId.NextGuid();
+            TimeSpan timeToLive = TimeSpan.FromMinutes(7);
 
-            await harness.InputQueueSendEndpoint.SendAsync(sent, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
+                sent,
+                Pipe.Execute<SendContext<JournalMessage>>(context =>
+                {
+                    context.ScheduledMessageId = scheduledMessageId;
+                    context.TimeToLive = timeToLive;
+                    context.Headers.Set("journal-test-number", 12.5m);
+                }),
+                cancellationToken);
             await harness.Bus.PublishAsync(published, cancellationToken);
             await store.ExpectedEntriesReached.WaitAsync(timeout, cancellationToken);
 
@@ -69,8 +80,16 @@ public sealed class MessageJournalIntegrationTests
                 [MessageJournalOperation.Send, MessageJournalOperation.Publish],
                 entries.Select(entry => entry.Operation).Order());
             Assert.All(entries, entry => Assert.Equal(MessageJournalOutcome.Succeeded, entry.Outcome));
-            AssertEnvelope(entries.Single(entry => entry.Operation == MessageJournalOperation.Send), sent);
+            MessageJournalEntry sentEntry = entries.Single(entry => entry.Operation == MessageJournalOperation.Send);
+            AssertEnvelope(sentEntry, sent);
             AssertEnvelope(entries.Single(entry => entry.Operation == MessageJournalOperation.Publish), published);
+            Assert.Equal(
+                scheduledMessageId.ToString("D", CultureInfo.InvariantCulture),
+                sentEntry.Metadata[MessageJournalMetadataKeys.ScheduledMessageId]);
+            Assert.Equal(
+                timeToLive.ToString("c", CultureInfo.InvariantCulture),
+                sentEntry.Metadata[MessageJournalMetadataKeys.TimeToLive]);
+            Assert.Equal("12.5", sentEntry.Headers["journal-test-number"]);
         }
         finally
         {
@@ -99,8 +118,12 @@ public sealed class MessageJournalIntegrationTests
                 Options(timeout));
             var successful = new SuccessfulMessage(NewId.NextGuid());
             var faulting = new FaultingMessage(NewId.NextGuid());
+            TimeSpan timeToLive = TimeSpan.FromMinutes(9);
 
-            await harness.InputQueueSendEndpoint.SendAsync(successful, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
+                successful,
+                Pipe.Execute<SendContext<SuccessfulMessage>>(context => context.TimeToLive = timeToLive),
+                cancellationToken);
             await harness.InputQueueSendEndpoint.SendAsync(faulting, cancellationToken);
             IPublishedMessage<Fault<FaultingMessage>> publishedFault = await harness.Published
                 .SelectAsync<Fault<FaultingMessage>>(cancellationToken)
@@ -114,10 +137,82 @@ public sealed class MessageJournalIntegrationTests
                 entry.Metadata[MessageJournalMetadataKeys.CorrelationId] == faulting.CorrelationId.ToString("D"));
             Assert.Equal(MessageJournalOutcome.Succeeded, succeeded.Outcome);
             Assert.Equal(MessageJournalOutcome.Faulted, faulted.Outcome);
+            DateTimeOffset sentAt = DateTimeOffset.ParseExact(
+                succeeded.Metadata[MessageJournalMetadataKeys.SentAt],
+                "O",
+                CultureInfo.InvariantCulture);
+            DateTimeOffset expiresAt = DateTimeOffset.ParseExact(
+                succeeded.Metadata[MessageJournalMetadataKeys.ExpiresAt],
+                "O",
+                CultureInfo.InvariantCulture);
+            Assert.InRange(
+                expiresAt - sentAt,
+                timeToLive,
+                timeToLive.Add(TimeSpan.FromSeconds(1)));
             Assert.Equal(TypeCache<ExpectedConsumerException>.ShortName,
                 faulted.Metadata[MessageJournalMetadataKeys.FailureType]);
             Assert.Contains(publishedFault.Context.Message.Exceptions,
                 exception => exception.ExceptionType == TypeCache<ExpectedConsumerException>.ShortName);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "send-and-publish-faults-are-terminal")]
+    public async Task OutgoingJournal_RecordsTheExactSendAndPublishFaultOutcomesAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-outgoing-faults", timeout);
+        harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 2);
+        var sendFailure = new ExpectedSendException();
+        var publishFailure = new ExpectedPublishException();
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store,
+                PassThroughPolicy(),
+                Options(timeout));
+            ISendEndpoint endpoint = await harness.Bus.GetSendEndpointAsync(
+                harness.InputQueueAddress,
+                cancellationToken);
+
+            ExpectedSendException actualSend;
+            using (harness.Bus.ConnectSendObserver(new ThrowingSendObserver(sendFailure)))
+            {
+                actualSend = await Assert.ThrowsAsync<ExpectedSendException>(() =>
+                    endpoint.SendAsync(
+                        new JournalMessage(NewId.NextGuid(), "send-fault"),
+                        cancellationToken));
+            }
+
+            ExpectedPublishException actualPublish;
+            using (harness.Bus.ConnectPublishObserver(new ThrowingPublishObserver(publishFailure)))
+            {
+                actualPublish = await Assert.ThrowsAsync<ExpectedPublishException>(() =>
+                    harness.Bus.PublishAsync(
+                        new JournalMessage(NewId.NextGuid(), "publish-fault"),
+                        cancellationToken));
+            }
+            await store.ExpectedEntriesReached.WaitAsync(timeout, cancellationToken);
+
+            Assert.Same(sendFailure, actualSend);
+            Assert.Same(publishFailure, actualPublish);
+            MessageJournalEntry[] entries = store.Entries;
+            MessageJournalEntry sent = Assert.Single(entries, entry => entry.Operation == MessageJournalOperation.Send);
+            MessageJournalEntry published = Assert.Single(entries, entry => entry.Operation == MessageJournalOperation.Publish);
+            Assert.Equal(MessageJournalOutcome.Faulted, sent.Outcome);
+            Assert.Equal(MessageJournalOutcome.Faulted, published.Outcome);
+            Assert.Equal(TypeCache<ExpectedSendException>.ShortName,
+                sent.Metadata[MessageJournalMetadataKeys.FailureType]);
+            Assert.Equal(TypeCache<ExpectedPublishException>.ShortName,
+                published.Metadata[MessageJournalMetadataKeys.FailureType]);
         }
         finally
         {
@@ -340,6 +435,33 @@ public sealed class MessageJournalIntegrationTests
     private sealed record FaultingMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
     private sealed record OutboxRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
     private sealed record DeferredMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+
+    private sealed class ThrowingSendObserver(Exception failure) : ISendObserver
+    {
+        public Task PreSendAsync<T>(SendContext<T> context)
+            where T : class => Task.FromException(failure);
+
+        public Task PostSendAsync<T>(SendContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+    }
+
+    private sealed class ThrowingPublishObserver(Exception failure) : IPublishObserver
+    {
+        public Task PrePublishAsync<T>(PublishContext<T> context)
+            where T : class => Task.FromException(failure);
+
+        public Task PostPublishAsync<T>(PublishContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+    }
+
     private sealed class ExpectedConsumerException : Exception;
+    private sealed class ExpectedPublishException : Exception;
+    private sealed class ExpectedSendException : Exception;
     private sealed class ExpectedStoreException : Exception;
 }

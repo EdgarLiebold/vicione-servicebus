@@ -23,6 +23,7 @@ internal abstract class DeferredBus :
 
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectPublishObserver(observer);
     }
 
@@ -108,6 +109,7 @@ internal abstract class DeferredBus :
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectSendObserver(observer);
     }
 
@@ -121,60 +123,71 @@ internal abstract class DeferredBus :
     public ConnectHandle ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(pipe);
         return _bus.ConnectConsumePipe(pipe);
     }
 
     public ConnectHandle ConnectConsumePipe<TMessage>(IPipe<ConsumeContext<TMessage>> pipe, ConnectPipeOptions options)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(pipe);
         return _bus.ConnectConsumePipe(pipe, options);
     }
 
     public ConnectHandle ConnectRequestPipe<TMessage>(Guid requestId, IPipe<ConsumeContext<TMessage>> pipe)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(pipe);
         return _bus.ConnectRequestPipe(requestId, pipe);
     }
 
     public ConnectHandle ConnectConsumeMessageObserver<TMessage>(IConsumeMessageObserver<TMessage> observer)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectConsumeMessageObserver(observer);
     }
 
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectConsumeObserver(observer);
     }
 
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectReceiveObserver(observer);
     }
 
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectReceiveEndpointObserver(observer);
     }
 
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _bus.ConnectEndpointConfigurationObserver(observer);
     }
 
     public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
+        ArgumentNullException.ThrowIfNull(definition);
         return _bus.ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
     public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
         return _bus.ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
 
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _bus.Probe(context);
     }
 

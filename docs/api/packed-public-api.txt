@@ -17604,6 +17604,8 @@ TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry [static]
   FIELD public const System.String ActivitySourceName = "ViciOne.ServiceBus"
   FIELD public const System.String MeterName = "ViciOne.ServiceBus"
   FIELD public const System.String Name = "ViciOne.ServiceBus"
+TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Activities [static]
+  FIELD public const System.String MessageJournalObserve = "message journal observe"
 TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Attributes [static]
   FIELD public const System.String Bus = "vicione.servicebus.bus"
   FIELD public const System.String ConversationId = "messaging.message.conversation_id"
@@ -17624,6 +17626,10 @@ TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Attributes [
   FIELD public const System.String MessageContract = "vicione.servicebus.contract"
   FIELD public const System.String MessageContracts = "vicione.servicebus.contracts"
   FIELD public const System.String MessageId = "messaging.message.id"
+  FIELD public const System.String MessageJournalFailureReason = "vicione.servicebus.message_journal.failure.reason"
+  FIELD public const System.String MessageJournalOperation = "vicione.servicebus.message_journal.operation"
+  FIELD public const System.String MessageJournalOutcome = "vicione.servicebus.message_journal.outcome"
+  FIELD public const System.String MessageJournalResult = "vicione.servicebus.message_journal.result"
   FIELD public const System.String MessagingSystem = "messaging.system"
   FIELD public const System.String OperationName = "messaging.operation.name"
   FIELD public const System.String OperationType = "messaging.operation.type"
@@ -17670,6 +17676,8 @@ TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Metrics [sta
   FIELD public const System.String DurableSenderRetryScheduled = "vicione.servicebus.durable_sender.retry_scheduled"
   FIELD public const System.String DurableSenderStored = "vicione.servicebus.durable_sender.stored"
   FIELD public const System.String DurableSenderStoredContentSize = "vicione.servicebus.durable_sender.stored.content.size"
+  FIELD public const System.String MessageJournalDuration = "vicione.servicebus.message_journal.duration"
+  FIELD public const System.String MessageJournalOperations = "vicione.servicebus.message_journal.operations"
   FIELD public const System.String OutboxMessages = "vicione.servicebus.outbox.messages"
   FIELD public const System.String PayloadAdmission = "vicione.servicebus.payload.admission"
   FIELD public const System.String PayloadBodySize = "vicione.servicebus.payload.body.size"

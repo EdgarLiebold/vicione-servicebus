@@ -2208,6 +2208,13 @@
       "variantKey" : "raw-data-never-reaches-store"
    },
    {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Construction_RejectsMissingCollaboratorsAndUndeclaredStoreLimits",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "writer-requires-complete-collaborators"
+   },
+   {
       "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FILTER",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "NullProjection_FiltersTheObservationWithoutCallingTheStoreAsync",
@@ -2301,6 +2308,13 @@
    {
       "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Activity_SpansPolicyProjectionAndStorePersistenceAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalTelemetryTests",
+      "variantKey" : "activity-spans-policy-and-store-work"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "StoredFilteredAndFailedWrites_EmitOnlyTheExactLowCardinalitySchemaAsync",
       "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalTelemetryTests",
       "variantKey" : "exact-low-cardinality-otel-schema"
@@ -2311,6 +2325,13 @@
       "testMethod" : "ThrowingOpenTelemetryListeners_CannotChangeStorageOrEscapeTheWriterAsync",
       "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalTelemetryTests",
       "variantKey" : "throwing-listener-cannot-change-journal-semantics"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Options_RejectAMissingTimeProvider",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "time-provider-is-required"
    },
    {
       "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT",
@@ -2339,6 +2360,13 @@
       "testMethod" : "ThrowingTimeProvider_CannotEscapeTheJournalBoundaryAsync",
       "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
       "variantKey" : "clock-failure-is-contained"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingElapsedClock_CannotEscapeAfterPersistenceAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "elapsed-clock-failure-is-contained"
    },
    {
       "requirementId" : "REQ-VSB-OBSERVABILITY-SCHEMA",
@@ -4647,6 +4675,14 @@
   ,{ "requirementId": "REQ-VSB-DEFERRED-BUS-API", "variantKey": "publish-overloads-reject-invalid-input-before-buffering", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.DeferredBusContractTests", "testMethod": "PublishOverloads_RejectInvalidInputBeforeAnythingIsBufferedAsync" }
   ,{ "requirementId": "REQ-VSB-DEFERRED-BUS-API", "variantKey": "send-overloads-reject-invalid-input-before-buffering", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.DeferredBusContractTests", "testMethod": "SendOverloads_RejectInvalidInputBeforeAnythingIsBufferedAsync" }
   ,{ "requirementId": "REQ-VSB-DEFERRED-BUS-API", "variantKey": "send-endpoint-construction-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.DeferredBusContractTests", "testMethod": "SendEndpointAdapter_RejectsMissingAndNonTransportEndpoints" }
+  ,{ "requirementId": "REQ-VSB-DEFERRED-BUS-API", "variantKey": "forwarded-bus-boundaries-reject-invalid-input-locally", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.DeferredBusContractTests", "testMethod": "ForwardedBusMembers_RejectInvalidInputBeforeCallingTheInnerBus" }
+  ,{ "requirementId": "REQ-VSB-DEFERRED-BUS-API", "variantKey": "forwarded-bus-members-preserve-arguments-and-results", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.DeferredBusContractTests", "testMethod": "ForwardedBusMembers_PreserveEveryArgumentAndResultAsync" }
+  ,{ "requirementId": "REQ-VSB-BUFFERED-BUS", "variantKey": "cancellation-between-actions-preserves-tail", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests", "testMethod": "CancellationBetweenActions_PreservesEveryUnattemptedActionInOrderAsync" }
+  ,{ "requirementId": "REQ-VSB-BUFFERED-BUS", "variantKey": "last-action-failure-releases-capacity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests", "testMethod": "LastActionFailure_ReleasesItsReservationAndLeavesTheBufferUsableAsync" }
+  ,{ "requirementId": "REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "variantKey": "send-and-publish-faults-are-terminal", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests", "testMethod": "OutgoingJournal_RecordsTheExactSendAndPublishFaultOutcomesAsync" }
+  ,{ "requirementId": "REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY", "variantKey": "every-failure-path-has-one-stable-reason", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalTelemetryTests", "testMethod": "EveryFailurePath_EmitsExactlyOneStableReasonAsync" }
+  ,{ "requirementId": "REQ-VSB-MESSAGE-JOURNAL-BOUNDS", "variantKey": "content-size-counts-every-json-separator", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests", "testMethod": "ContentSize_CountsEveryRetainedUtf8ValueAndJsonSeparatorAsync" }
+  ,{ "requirementId": "REQ-VSB-AMBIENT-TRANSACTION-BUS", "variantKey": "failed-enlistment-leaves-no-pending-state", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests", "testMethod": "CompletedTransaction_RejectsEnlistmentWithoutRetainingTheActionAsync" }
   ,{ "requirementId": "REQ-VSB-HOST-READINESS", "variantKey": "immutable-endpoint-and-rider-snapshots", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Events.HostReadyEventTests", "testMethod": "Constructor_CopiesEndpointAndRiderCollectionsIntoReadOnlySnapshots" }
   ,{ "requirementId": "REQ-VSB-HOST-READINESS", "variantKey": "required-owner-collections-and-elements", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Events.HostReadyEventTests", "testMethod": "Constructor_RejectsMissingAddressCollectionsAndElements" }
   ,{ "requirementId": "REQ-VSB-INITIALIZER-CANCELLATION", "variantKey": "property-initializers-receive-caller-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerContractTests", "testMethod": "Initialization_ForwardsTheCallerTokenToEveryPropertyInitializerAsync" }

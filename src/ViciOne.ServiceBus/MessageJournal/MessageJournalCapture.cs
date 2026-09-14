@@ -34,22 +34,22 @@ public sealed class MessageJournalCapture
         _body = body;
     }
 
-    /// <summary>Gets the operation.</summary>
+    /// <summary>Gets the message operation that produced this observation.</summary>
     public MessageJournalOperation Operation { get; }
 
-    /// <summary>Gets the outcome.</summary>
+    /// <summary>Gets the terminal outcome of the observed message operation.</summary>
     public MessageJournalOutcome Outcome { get; }
 
-    /// <summary>Gets the content type.</summary>
+    /// <summary>Gets the transport content type, when the observed envelope declares one.</summary>
     public string? ContentType { get; }
 
-    /// <summary>Gets the message types.</summary>
+    /// <summary>Gets a snapshot of the message-contract identifiers carried by the envelope.</summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
-    /// <summary>Gets the metadata.</summary>
+    /// <summary>Gets a snapshot of the recognized envelope metadata keyed by <see cref="MessageJournalMetadataKeys"/>.</summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
-    /// <summary>Gets the headers.</summary>
+    /// <summary>Gets a snapshot of all transport headers converted with invariant culture.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
     /// <summary>Gets an independently mutable copy of the captured body.</summary>

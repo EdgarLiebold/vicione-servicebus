@@ -14,6 +14,25 @@ public sealed class MessageJournalWriterTests
         new(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT", "writer-requires-complete-collaborators")]
+    public void Construction_RejectsMissingCollaboratorsAndUndeclaredStoreLimits()
+    {
+        IMessageJournalPolicy policy = PassThroughPolicy();
+        MessageJournalOptions options = MessageJournalOptions.ContinueMessageFlow(
+            TimeSpan.FromSeconds(1),
+            TimeProvider.System);
+
+        Assert.Equal("store", Assert.Throws<ArgumentNullException>(() =>
+            new MessageJournalWriterTestDriver(null!, policy, options)).ParamName);
+        Assert.Equal("policy", Assert.Throws<ArgumentNullException>(() =>
+            new MessageJournalWriterTestDriver(new RecordingStore(), null!, options)).ParamName);
+        Assert.Equal("options", Assert.Throws<ArgumentNullException>(() =>
+            new MessageJournalWriterTestDriver(new RecordingStore(), policy, null!)).ParamName);
+        Assert.Equal("store", Assert.Throws<ArgumentException>(() =>
+            new MessageJournalWriterTestDriver(new MissingLimitsStore(), policy, options)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-SANITIZATION", "raw-data-never-reaches-store")]
     public async Task Policy_IsTheOnlyBoundaryBetweenRawCaptureAndStoredEntryAsync()
     {
@@ -243,6 +262,33 @@ public sealed class MessageJournalWriterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-BOUNDS", "content-size-counts-every-json-separator")]
+    public async Task ContentSize_CountsEveryRetainedUtf8ValueAndJsonSeparatorAsync()
+    {
+        var store = new RecordingStore();
+        var policy = new DelegatePolicy(static (_, _) =>
+            ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
+                MessageJournalDataClassification.Internal,
+                "a",
+                messageTypes: ["a", "b"],
+                metadata: new Dictionary<string, string>
+                {
+                    ["a"] = "b",
+                    ["c"] = "d",
+                },
+                headers: new Dictionary<string, string> { ["e"] = "f" },
+                body: new byte[] { 1, 2 })));
+
+        await CreateDriver(store, policy).ObserveAsync(
+            MessageJournalOperation.Send,
+            MessageJournalOutcome.Succeeded,
+            ReadOnlyMemory<byte>.Empty,
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Equal(166, Assert.Single(store.Entries).ContentSizeInBytes);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "clock-failure-is-contained")]
     public async Task ThrowingTimeProvider_CannotEscapeTheJournalBoundaryAsync()
     {
@@ -257,6 +303,23 @@ public sealed class MessageJournalWriterTests
 
         Assert.Equal(0, store.AppendAttempts);
         Assert.Empty(store.Entries);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "elapsed-clock-failure-is-contained")]
+    public async Task ThrowingElapsedClock_CannotEscapeAfterPersistenceAsync()
+    {
+        var store = new RecordingStore();
+        var driver = CreateDriver(store, PassThroughPolicy(), new ThrowingElapsedTimeProvider());
+
+        await driver.ObserveAsync(
+            MessageJournalOperation.Publish,
+            MessageJournalOutcome.Succeeded,
+            "message"u8.ToArray(),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, store.AppendAttempts);
+        Assert.Single(store.Entries);
     }
 
     private static void MutateReturnedMemory(ReadOnlyMemory<byte> body)
@@ -350,6 +413,27 @@ public sealed class MessageJournalWriterTests
     }
 
     private sealed class ExpectedJournalException(string message) : Exception(message);
+
+    private sealed class MissingLimitsStore : IMessageJournalStore
+    {
+        public MessageJournalStoreLimits Limits => null!;
+
+        public ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken) =>
+            ValueTask.CompletedTask;
+    }
+
+    private sealed class ThrowingElapsedTimeProvider : TimeProvider
+    {
+        private int _timestampCalls;
+
+        public override long GetTimestamp()
+        {
+            if (Interlocked.Increment(ref _timestampCalls) == 1)
+                return 0;
+
+            throw new ExpectedJournalException("elapsed clock");
+        }
+    }
 
     private sealed class ThrowingTimestampTimeProvider : TimeProvider
     {

@@ -13,6 +13,13 @@ public static class ServiceBusTelemetry
     /// <summary>The <see cref="System.Diagnostics.Metrics.Meter"/> name used for metrics.</summary>
     public const string MeterName = Name;
 
+    /// <summary>Defines the low-cardinality names of service-bus activities.</summary>
+    public static class Activities
+    {
+        /// <summary>Represents policy projection and optional persistence of one message-journal observation.</summary>
+        public const string MessageJournalObserve = "message journal observe";
+    }
+
     /// <summary>Defines the OpenTelemetry metric instrument names emitted by the service bus.</summary>
     public static class Metrics
     {
@@ -66,6 +73,10 @@ public static class ServiceBusTelemetry
         public const string PayloadBodySize = "vicione.servicebus.payload.body.size";
         /// <summary>Measures final transport-envelope sizes in bytes.</summary>
         public const string PayloadEnvelopeSize = "vicione.servicebus.payload.envelope.size";
+        /// <summary>Counts terminal message-journal observation results.</summary>
+        public const string MessageJournalOperations = "vicione.servicebus.message_journal.operations";
+        /// <summary>Measures message-journal observation durations in seconds.</summary>
+        public const string MessageJournalDuration = "vicione.servicebus.message_journal.duration";
     }
 
     /// <summary>Defines the OpenTelemetry attribute names emitted by the service bus.</summary>
@@ -139,6 +150,14 @@ public static class ServiceBusTelemetry
         public const string ExceptionMessage = "exception.message";
         /// <summary>Records the exception stack trace attached to an exception event.</summary>
         public const string ExceptionStackTrace = "exception.stacktrace";
+        /// <summary>Identifies whether the journal observed a send, publish, or consume operation.</summary>
+        public const string MessageJournalOperation = "vicione.servicebus.message_journal.operation";
+        /// <summary>Records the terminal message outcome presented to the journal.</summary>
+        public const string MessageJournalOutcome = "vicione.servicebus.message_journal.outcome";
+        /// <summary>Records whether a journal observation was stored, filtered, or failed.</summary>
+        public const string MessageJournalResult = "vicione.servicebus.message_journal.result";
+        /// <summary>Identifies the bounded processing phase responsible for a failed journal observation.</summary>
+        public const string MessageJournalFailureReason = "vicione.servicebus.message_journal.failure.reason";
     }
 
     /// <summary>Defines the names of events emitted on service-bus activities.</summary>

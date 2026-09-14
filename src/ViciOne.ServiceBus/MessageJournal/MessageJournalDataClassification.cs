@@ -3,12 +3,12 @@ namespace ViciOne.ServiceBus.MessageJournal;
 /// <summary>Declares the handling classification of sanitized journal content.</summary>
 public enum MessageJournalDataClassification
 {
-    /// <summary>Indicates public.</summary>
+    /// <summary>Content approved for unrestricted disclosure.</summary>
     Public = 1,
-    /// <summary>Indicates internal.</summary>
+    /// <summary>Content restricted to normal internal operational access.</summary>
     Internal = 2,
-    /// <summary>Indicates confidential.</summary>
+    /// <summary>Sensitive content requiring explicitly authorized access.</summary>
     Confidential = 3,
-    /// <summary>Indicates restricted.</summary>
+    /// <summary>Highly sensitive content subject to the strongest configured handling controls.</summary>
     Restricted = 4,
 }

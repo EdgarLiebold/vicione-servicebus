@@ -5,6 +5,7 @@ using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 using ViciOne.ServiceBus.Transactions;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Transactions;
@@ -239,9 +240,16 @@ public sealed class BufferedBusTests
             var driver = new BufferedBusTestDriver(harness.Bus);
             ISendEndpoint endpoint = await driver.Bus.GetSendEndpointAsync(harness.InputQueueAddress, TestContext.Current.CancellationToken);
             var message = new TransactionalMessage(NewId.NextGuid(), "send");
+            var transportEndpoint = Assert.IsAssignableFrom<ITransportSendEndpoint>(endpoint);
+
+            SendContext<TransactionalMessage> sendContext = await transportEndpoint.CreateSendContextAsync(
+                message,
+                Pipe.Empty<SendContext<TransactionalMessage>>(),
+                cancellationToken);
 
             await endpoint.SendAsync(message, cancellationToken);
 
+            Assert.Equal(message, sendContext.Message);
             Assert.Empty(harness.Sent.Snapshot<TransactionalMessage>());
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -580,6 +588,59 @@ public sealed class BufferedBusTests
 
         Assert.Equal(["first", "second"], order);
         Assert.Equal(1, firstAttempts);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "cancellation-between-actions-preserves-tail")]
+    public async Task CancellationBetweenActions_PreservesEveryUnattemptedActionInOrderAsync()
+    {
+        var driver = new BufferedBusTestDriver();
+        using var flushSource = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        var order = new List<string>();
+        await driver.EnqueueAsync(_ =>
+        {
+            order.Add("first");
+            flushSource.Cancel();
+            return Task.CompletedTask;
+        }, TestContext.Current.CancellationToken);
+        await driver.EnqueueAsync(_ =>
+        {
+            order.Add("second");
+            return Task.CompletedTask;
+        }, TestContext.Current.CancellationToken);
+
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            driver.Bus.FlushAsync(flushSource.Token));
+
+        Assert.Equal(flushSource.Token, actual.CancellationToken);
+        Assert.Equal(["first"], order);
+
+        await driver.Bus.FlushAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(["first", "second"], order);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "last-action-failure-releases-capacity")]
+    public async Task LastActionFailure_ReleasesItsReservationAndLeavesTheBufferUsableAsync()
+    {
+        var driver = new BufferedBusTestDriver(capacity: 1);
+        var expected = new ExpectedDispatchException();
+        var order = new List<string>();
+        await driver.EnqueueAsync(_ => throw expected, TestContext.Current.CancellationToken);
+
+        ExpectedDispatchException actual = await Assert.ThrowsAsync<ExpectedDispatchException>(() =>
+            driver.Bus.FlushAsync(TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+        await driver.EnqueueAsync(_ =>
+        {
+            order.Add("next");
+            return Task.CompletedTask;
+        }, TestContext.Current.CancellationToken);
+        await driver.Bus.FlushAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(["next"], order);
     }
 
     [Fact]

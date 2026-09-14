@@ -21,6 +21,7 @@ internal sealed class DeferredBusSendEndpoint :
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _endpoint.ConnectSendObserver(observer);
     }
 

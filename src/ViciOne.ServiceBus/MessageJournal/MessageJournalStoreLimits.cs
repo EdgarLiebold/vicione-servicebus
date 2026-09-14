@@ -9,10 +9,10 @@ namespace ViciOne.ServiceBus.MessageJournal;
 /// </remarks>
 public sealed class MessageJournalStoreLimits
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="maximumEntryBytes">The maximum entry bytes.</param>
-    /// <param name="maximumEntries">The maximum entries.</param>
-    /// <param name="retentionPeriod">The retention period.</param>
+    /// <summary>Defines the finite limits a store applies transactionally to every append.</summary>
+    /// <param name="maximumEntryBytes">The largest accepted value of <see cref="MessageJournalEntry.ContentSizeInBytes"/>.</param>
+    /// <param name="maximumEntries">The largest number of entries retained after an append completes.</param>
+    /// <param name="retentionPeriod">The maximum age retained when a subsequent append performs cleanup.</param>
     public MessageJournalStoreLimits(int maximumEntryBytes, int maximumEntries, TimeSpan retentionPeriod)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(maximumEntryBytes, 1);
@@ -31,12 +31,12 @@ public sealed class MessageJournalStoreLimits
         RetentionPeriod = retentionPeriod;
     }
 
-    /// <summary>Gets the maximum entry bytes.</summary>
+    /// <summary>Gets the largest accepted conservative serialized-entry size in bytes.</summary>
     public int MaximumEntryBytes { get; }
 
-    /// <summary>Gets the maximum entries.</summary>
+    /// <summary>Gets the largest number of entries retained after each append.</summary>
     public int MaximumEntries { get; }
 
-    /// <summary>Gets the retention period.</summary>
+    /// <summary>Gets the append-driven retention period.</summary>
     public TimeSpan RetentionPeriod { get; }
 }
