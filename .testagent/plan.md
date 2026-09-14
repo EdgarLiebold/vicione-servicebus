@@ -3227,3 +3227,73 @@ Requirements, bidirectional Async naming, source and project architecture, direc
 legacy markers, SDK pinning, empty directories, formatting, and Git whitespace are clean. Protected
 trees remain unchanged and unstaged. The overall A+ goal continues with the remaining complete
 source owners and final repository-wide audit.
+
+## Iteration 112 Core Context plan
+
+Iteration 112 reviews all 15 production files and 2,191 lines below
+`src/ViciOne.ServiceBus/Context`. All source and comments are read manually. No source, test, or
+comment generator is permitted; coverage and source-to-test pairing are read-only completeness aids.
+
+Context remains an internal Core capability. `Activities/` and `Consumption/` are accepted as
+physical responsibility groups whose public types intentionally share the concise
+`ViciOne.ServiceBus.Context` namespace. The review covers message and metadata projection, local
+payload precedence and isolation, response/send/publish task ownership, endpoint resolution,
+deserializer completion, unavailable-context failure identity, observer and fault notification,
+activity results, every public parameter, and asynchronous naming.
+
+### Iteration 112 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Every context file, type, namespace, folder, and comment has one clear Core owner | complete manual reread plus architecture and API gates |
+| A typed message view preserves its explicit message and authoritative source contracts | exact and assignable materialization identity tests |
+| Response operations become consume-owned before asynchronous preparation can escape | deterministic blocked-resolution and task-identity tests |
+| Proxies and scopes preserve metadata, cancellation, observers, messages, and payload precedence | direct forwarding and local/source payload matrices |
+| Deserialization completion owns every admitted task and exact cancellation outcome | pending, success, failure, cancellation, and null-boundary tests |
+| Response and fault notification preserve routing, duration, type, exception, and token identity | direct positive, cancellation, and fault-generation tests |
+| Invalid collaborators and provider results fail at their owning boundary | constructor, method, null-task, and null-result cases |
+| No feature may be lost | 35-case baseline, owner coverage/CRAP, full Core and hermetic profiles, build, format, package/API comparison |
+
+### Iteration 112 validation
+
+1. Preserve the 35/35 Context namespace baseline and direct source-to-test ownership map.
+2. Compare all state, forwarding, failure, and lifetime paths with existing tests and fresh coverage.
+3. Add red-first tests only for independently justified behavior or boundary defects.
+4. Apply the smallest coherent correction and update every affected source comment manually.
+5. Kill meaningful isolated counterchanges and restore the accepted implementation after each run.
+6. Audit changed tests for exact causal assertions, determinism, bounded waits, and requirement identity.
+7. Run focused and full Core coverage, format, the 77-project build, all 23 hermetic hosts,
+   package/API, requirements, async/source architecture, hygiene, empty-directory, and Git gates.
+8. Commit, annotate Iteration 112, push without force, and verify remote branch and peeled tag hashes.
+
+### Iteration 112 completion
+
+All 15 final Context production files and 2,181 source lines, including every source comment, were
+read manually. `Activities/` and `Consumption/` remain coherent physical groups inside the Core
+project and intentionally share `ViciOne.ServiceBus.Context`; independent assemblies remain `src`
+siblings and external providers remain grouped under `Persistence/`, `Scheduling/`, and
+`Transports/`.
+
+Initialized responses now become consume-owned before endpoint resolution, all response shapes own
+each distinct task exactly once, invalid endpoint-provider and proxy lookup results fail at their
+owning boundaries, and projection, payload, notification, deserialization, scope, and parameter
+contracts have direct evidence. The focused profile grows from 35 to 96 cases. Original red evidence
+confirmed the four defect families, and three isolated counterchanges were killed and restored.
+
+Fresh Context coverage is 100% executable lines (527/527) and 93.75% branches (120/128), across 294
+methods with no CRAP score above 30. The accepted focused artifact SHA-256 is
+`f8d8c82b050dc8003ca7411080c64299a05a991cc8df689189b6a31f04e5cd92`; the complete Core coverage
+run passes 3,504/3,504 with SHA-256
+`51ad6d890e9c31ce7652c931f77fefbae7c0c0aeef58edeef33a44729d247820`.
+
+Both format gates pass. The 77-project Release build has zero warnings and errors. All 23 hermetic
+hosts pass 6,477/6,477 with no skip, including bidirectional Async naming, comments, directives,
+Greenfield API, and source-file/folder ownership. Package/API verification passes 18 journeys, 31
+fresh packages, three isolated provider consumers, and all 30 runtime APIs; the unchanged
+18,879-line API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, dummy and compatibility markers, SDK pinning, empty directories, formatting, and Git
+whitespace are clean. The explicit `net10.0` target is the platform contract and no `global.json` or
+CLI SDK version is pinned. Protected trees remain unchanged and unstaged. The overall A+ goal
+continues with the remaining complete source owners and the final repository-wide audit.

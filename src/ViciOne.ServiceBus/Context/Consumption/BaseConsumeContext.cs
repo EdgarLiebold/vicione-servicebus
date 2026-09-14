@@ -271,7 +271,14 @@ public abstract class BaseConsumeContext :
     {
         ArgumentNullException.ThrowIfNull(address);
 
-        var sendEndpoint = await ReceiveContext.SendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
+        Task<ISendEndpoint> resolution = ReceiveContext.SendEndpointProvider.GetSendEndpointAsync(
+                address,
+                cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException(
+                $"The receive context send endpoint provider returned no resolution task for '{address}'.");
+        ISendEndpoint sendEndpoint = await resolution.ConfigureAwait(false)
+            ?? throw new InvalidOperationException(
+                $"The receive context send endpoint provider resolved no send endpoint for '{address}'.");
 
         return new ConsumeSendEndpoint(sendEndpoint, this);
     }
@@ -333,56 +340,26 @@ public abstract class BaseConsumeContext :
     /// <param name="task">The operation to attach to consume completion.</param>
     public abstract void AddConsumeTask(Task task);
 
-    Task RespondInternalAsync<T>(T message, IPipe<SendContext<T>>? pipe = null)
+    async Task RespondInternalAsync<T>(T message, IPipe<SendContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>(CancellationToken);
-        if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
-        {
-            var sendEndpoint = sendEndpointTask.Result;
+        var sendEndpoint = await this.GetResponseEndpointAsync<T>(CancellationToken).ConfigureAwait(false);
 
-            return pipe.IsNotEmpty()
-                ? sendEndpoint.SendAsync(message, pipe!, CancellationToken)
-                : sendEndpoint.SendAsync(message, CancellationToken);
-        }
-
-        async Task RespondInternalAsync()
-        {
-            var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
-
-            if (pipe.IsNotEmpty())
-                await sendEndpoint.SendAsync(message, pipe!, CancellationToken).ConfigureAwait(false);
-            else
-                await sendEndpoint.SendAsync(message, CancellationToken).ConfigureAwait(false);
-        }
-
-        return RespondInternalAsync();
+        if (pipe.IsNotEmpty())
+            await sendEndpoint.SendAsync(message, pipe!, CancellationToken).ConfigureAwait(false);
+        else
+            await sendEndpoint.SendAsync(message, CancellationToken).ConfigureAwait(false);
     }
 
-    Task RespondInternalAsync<T>(object values, IPipe<SendContext<T>>? pipe = null)
+    async Task RespondInternalAsync<T>(object values, IPipe<SendContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>(CancellationToken);
-        if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
-        {
-            var sendEndpoint = sendEndpointTask.Result;
+        var sendEndpoint = await this.GetResponseEndpointAsync<T>(CancellationToken).ConfigureAwait(false);
 
-            return pipe.IsNotEmpty()
-                ? sendEndpoint.SendAsync(values, pipe!, CancellationToken)
-                : sendEndpoint.SendAsync<T>(values, CancellationToken);
-        }
-
-        async Task RespondInternalAsync()
-        {
-            var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
-
-            if (pipe.IsNotEmpty())
-                await sendEndpoint.SendAsync(values, pipe!, CancellationToken).ConfigureAwait(false);
-            else
-                await sendEndpoint.SendAsync<T>(values, CancellationToken).ConfigureAwait(false);
-        }
-
-        return RespondInternalAsync();
+        if (pipe.IsNotEmpty())
+            await sendEndpoint.SendAsync(values, pipe!, CancellationToken).ConfigureAwait(false);
+        else
+            await sendEndpoint.SendAsync<T>(values, CancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Generates and sends the fault contract for a failed message.</summary>

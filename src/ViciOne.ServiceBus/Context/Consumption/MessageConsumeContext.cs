@@ -317,21 +317,26 @@ public sealed class MessageConsumeContext<TMessage> :
     public Task RespondAsync<T>(object values)
         where T : class
     {
-        return RespondWithMessageAsync<T>(values);
+        ArgumentNullException.ThrowIfNull(values);
+        return ConsumeTaskAsync(RespondWithMessageAsync<T>(values));
     }
 
     /// <inheritdoc />
     public Task RespondAsync<T>(object values, IPipe<SendContext<T>> sendPipe)
         where T : class
     {
-        return RespondWithMessageAsync(values, sendPipe);
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(sendPipe);
+        return ConsumeTaskAsync(RespondWithMessageAsync(values, sendPipe));
     }
 
     /// <inheritdoc />
     public Task RespondAsync<T>(object values, IPipe<SendContext> sendPipe)
         where T : class
     {
-        return RespondWithMessageAsync<T>(values, sendPipe);
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(sendPipe);
+        return ConsumeTaskAsync(RespondWithMessageAsync<T>(values, sendPipe));
     }
 
     /// <inheritdoc />
@@ -363,19 +368,17 @@ public sealed class MessageConsumeContext<TMessage> :
     async Task RespondWithMessageAsync<T>(object values, IPipe<SendContext<T>>? responsePipe = default)
         where T : class
     {
-        if (values == null)
-            throw new ArgumentNullException(nameof(values));
-
         var responseEndpoint = await this.GetResponseEndpointAsync<T>(_context.CancellationToken).ConfigureAwait(false);
 
         (var message, IPipe<SendContext<T>> sendPipe) =
             await MessageInitializerCache<T>.InitializeMessageAsync(_context, values, new object[] { Message }, responsePipe).ConfigureAwait(false);
 
-        await ConsumeTaskAsync(responseEndpoint.SendAsync(message, sendPipe, _context.CancellationToken)).ConfigureAwait(false);
+        await responseEndpoint.SendAsync(message, sendPipe, _context.CancellationToken).ConfigureAwait(false);
     }
 
     Task ConsumeTaskAsync(Task task)
     {
+        ArgumentNullException.ThrowIfNull(task);
         _context.AddConsumeTask(task);
 
         return task;

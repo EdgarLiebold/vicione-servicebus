@@ -888,3 +888,33 @@ SHA-256 is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
 Requirements, Async and source architecture, directives, dummy and legacy markers, SDK pinning,
 empty directories, formatting, and Git whitespace are clean. Protected trees remain unchanged and
 unstaged. The overall A+ goal remains active.
+
+## Iteration 112
+
+Iteration 112 completes the manual review of all 15 Core Context files and 2,181 final source lines,
+including every source comment. `Activities/` and `Consumption/` correctly group internal Core
+responsibilities beneath `src/ViciOne.ServiceBus` while retaining the concise public
+`ViciOne.ServiceBus.Context` namespace. Independent assemblies remain sibling projects; provider
+integrations remain grouped under `Persistence/`, `Scheduling/`, and `Transports/`.
+
+Response task ownership, synchronous endpoint-resolution behavior, endpoint-provider validity, and
+proxy typed-lookup validity are corrected. Complete projection, payload, notification,
+deserialization, scope, response-shape, fault, observer, and parameter contracts now have direct
+tests. The focused profile grows from 35 to 96 cases; original red evidence confirms all four defect
+families and three controlled counterchanges were killed and restored.
+
+Fresh Context coverage is 100% executable lines (527/527) and 93.75% branches (120/128), over 294
+methods with maximum CRAP 6. The focused artifact SHA-256 is
+`f8d8c82b050dc8003ca7411080c64299a05a991cc8df689189b6a31f04e5cd92`. Complete Core coverage
+passes 3,504/3,504 with SHA-256
+`51ad6d890e9c31ce7652c931f77fefbae7c0c0aeef58edeef33a44729d247820`.
+
+Both format gates pass. The 77-project Release build has zero warnings and errors. All 23 hermetic
+hosts pass 6,477/6,477 with no failure or skip. Package/API verification passes 18 journeys, 31
+packages, three isolated provider consumers, and all 30 runtime APIs; the unchanged 18,879-line API
+SHA-256 is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, Async naming, source/comment/directive/file/folder architecture, dummy and legacy
+markers, CLI SDK pinning, empty directories, formatting, and Git whitespace are clean. The explicit
+`net10.0` product target remains intentional. Protected trees remain unchanged and unstaged. The
+overall A+ goal remains active.

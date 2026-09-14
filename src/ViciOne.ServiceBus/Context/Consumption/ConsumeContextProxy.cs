@@ -68,7 +68,17 @@ public abstract class ConsumeContextProxy :
     {
         if (_context.TryGetMessage(out ConsumeContext<T>? messageContext))
         {
-            consumeContext = new MessageConsumeContext<T>(this, messageContext.Message);
+            if (messageContext is null)
+            {
+                throw new InvalidOperationException(
+                    $"The source consume context reported a successful '{typeof(T).Name}' lookup without returning a context.");
+            }
+
+            T message = messageContext.Message
+                ?? throw new InvalidOperationException(
+                    $"The source consume context returned a '{typeof(T).Name}' context without a message.");
+
+            consumeContext = new MessageConsumeContext<T>(this, message);
             return true;
         }
 

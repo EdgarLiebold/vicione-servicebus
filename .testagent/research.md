@@ -1600,6 +1600,33 @@ raw string. Production code has no preprocessor directives, dummy or compatibili
 SDK-version pinning, or empty directories. Requirements JSON and Git whitespace pass. Protected
 `review/` and `TestResults/` remain unchanged and unstaged.
 
+## Iteration 112 Core Context initial research
+
+The complete `src/ViciOne.ServiceBus/Context` owner contains 15 production files and 2,191 lines.
+All 15 files and every source comment were read manually before any product edit. `Activities/`
+contains the execute and compensate projections, scopes, and activity-instance bindings;
+`Consumption/` contains the untyped and typed message views, payload scopes, outgoing facade,
+deserialization lifetime, shared base, and unavailable sentinel. Filenames and primary types align.
+The physical subfolders group closely related context types while the deliberately short public
+namespace remains `ViciOne.ServiceBus.Context`; introducing public `.Activities` and `.Consumption`
+namespaces would add navigation depth without defining independent assemblies or capabilities.
+
+The unchanged focused namespace baseline passes 35/35. Fresh focused reachability is 68.5714% line
+(360/525) and 59.0909% branch (78/132), across 296 compiler method records with no CRAP score above
+30 and a maximum of 20. The baseline artifact is
+`/private/tmp/vsb-iteration112-context-baseline/context.cobertura.xml`, SHA-256
+`2d9f93798a70fadf48cdd91d99d113028fd2dd4fcbe897e29d78aa2b41b74c80`. The accepted Iteration 111
+complete Core artifact reaches 448/525 owner lines and 103/132 branches, showing that several proxy
+paths are exercised indirectly but not owned by direct Context evidence.
+
+Existing direct tests comprehensively enumerate activity-result forwarding, unavailable-context
+members, application outgoing operations, route and endpoint behavior, message projection,
+conversation identity, and one local payload scope. The main unproved semantic risks are immediate
+consume-lifetime ownership of initialized response operations, duplicate or late response-task
+registration, proxy parameter and payload behavior, deserializer pending-task completion, exact
+response and fault notification ownership, provider-result validation, and all public forwarding
+parameters. These require source-owned deterministic tests before any implementation change.
+
 ## Iteration 110 Core Clients initial research
 
 The complete `src/ViciOne.ServiceBus/Clients` owner contains 17 production files and 1,805 lines.
@@ -1752,3 +1779,74 @@ Requirements JSON, Git whitespace, source directives, dummy and compatibility id
 version pinning, and empty source directories are clean. The only source reference to
 `NotImplementedException` remains the intentional non-retryable classifier case. Protected
 `review/` and `TestResults/` remain unchanged and unstaged.
+
+## Iteration 112 Core Context final research
+
+The final owner still contains the same 15 production files and now totals 2,181 physical source
+lines. Every file and source comment was read manually; the three changed production files and
+their surrounding contracts were reread after the corrections. The final comments describe only
+current code and behavior and required no generated or historical wording. The source-file
+architecture confirms that `Activities/` and `Consumption/` are coherent physical responsibility
+groups inside the Core project while their public types intentionally retain the concise
+`ViciOne.ServiceBus.Context` namespace. Independent assemblies remain sibling projects directly
+under `src`, and external integrations remain grouped by provider family under `Persistence/`,
+`Scheduling/`, and `Transports/`.
+
+Four concrete boundary and lifetime defects were confirmed before correction. Initialized typed
+responses could escape asynchronous endpoint resolution without the returned operation being owned
+by consume completion. Direct response shapes could register the same pending transport task twice
+when endpoint resolution completed synchronously. A receive-context endpoint provider could return
+a null task or endpoint and leak an unrelated null-reference or decorator exception. A proxy source
+could report a successful typed lookup while returning a null context or null message, again
+leaking an unrelated null-reference failure. The accepted implementation registers each distinct
+response operation exactly once, establishes ownership before asynchronous preparation can escape,
+and rejects every invalid provider result at its owning boundary with an exact diagnostic.
+
+Permanent direct evidence covers all twelve response shapes; all three initialized-message
+response shapes; endpoint-provider null task and null result; four fault-generation and
+notification branches; complete typed and untyped forwarding; observer identity; proxy metadata,
+message and payload projection through a real InMemory delivery; invalid proxy lookup results;
+deserializer pending work, exact failure and cancellation; empty and populated payload scopes; and
+every newly exercised required parameter. Requirement projection records these behaviors under the
+response-lifetime, endpoint-boundary, fault-notification, proxy, deserializer, message-context, and
+scope requirements.
+
+The focused Context profile grows from 35 to 96 cases and passes 96/96. Fresh accepted focused
+coverage records 100% executable-line reachability (527/527) and 93.75% branch reachability
+(120/128), across 294 compiler method records with no CRAP score above 30 and a maximum of 6. The
+artifact is `/private/tmp/vsb-iteration112-context-final3.cobertura.xml`, SHA-256
+`f8d8c82b050dc8003ca7411080c64299a05a991cc8df689189b6a31f04e5cd92`. The accepted complete Core
+coverage run passes 3,504/3,504 and records repository reachability of 76.9119% line
+(48,776/63,418) and 69.5429% branch (16,965/24,395). Its artifact is
+`/private/tmp/vsb-iteration112-core-final/core.cobertura.xml`, SHA-256
+`51ad6d890e9c31ce7652c931f77fefbae7c0c0aeef58edeef33a44729d247820`.
+
+The original implementation produced the expected red evidence for missing initialized-response
+ownership, nine duplicate-registration response forms, both invalid endpoint-provider results, and
+both invalid proxy lookup results. Three isolated one-cause counterchanges were subsequently killed
+and restored: removal of immediate initialized-response ownership, swallowing a successful null
+proxy lookup, and removal of null endpoint-result validation. All changed tests were manually
+reviewed for exact causal assertions, task and token identity, bounded synchronization, and failure
+identity. They contain no sleeping, random input, skips, assertion-free paths, swallowed failures,
+or wall-clock timing assumptions.
+
+The first all-host validation found only a private test helper with an asynchronous contract but no
+`Async` suffix; the helper was renamed and the bidirectional architecture test passed. The next
+all-host attempt exposed a test-only concurrent-list enumeration after the endpoint-start signal;
+the timing assumption was replaced by an explicit second-task-registration signal. The corrected
+test passes in isolation and the complete Core host passes 3,504/3,504. The definitive run passes
+all 6,477 tests across 23 hermetic Unit and Architecture hosts with zero failures and skips.
+
+Both format gates pass. The serial Engineering Release build passes all 77 projects with zero
+warnings and errors. Package verification passes 18 journeys, 31 freshly packed packages, three
+isolated provider-testing consumers, and 30 runtime API assemblies. The public API remains exactly
+18,879 lines with SHA-256
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirement JSON, Git whitespace, bidirectional Async naming, source-file and folder ownership,
+comments, compiler directives, compatibility identities, and empty source/test directories pass.
+No product C# directive, dummy marker, MassTransit identity, `global.json`, or CLI SDK-version pin
+exists. The explicit `net10.0` target frameworks are the platform contract, not SDK pinning. The
+sole source reference to `NotImplementedException` is the intentional non-retryable exception
+classification case, not an implementation placeholder. Protected `review/` and `TestResults/`
+remain unchanged and unstaged.
