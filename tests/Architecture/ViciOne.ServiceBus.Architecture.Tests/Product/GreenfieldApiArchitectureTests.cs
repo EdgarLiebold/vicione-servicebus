@@ -204,6 +204,41 @@ public sealed class GreenfieldApiArchitectureTests
             $"Dynamic pipe registration must remain a direct, non-blocking connection operation:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-OBSERVABILITY-API", "tracing-is-independent-from-logging-activation")]
+    public void TracingCreation_DoesNotUseTheLoggingContextAsAnActivationGate()
+    {
+        string[] violations = ProductSources()
+            .SelectMany(FindLoggingGatedActivityCreation)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Tracing activation must depend on ActivitySource listeners rather than the logging context:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    private static IEnumerable<string> FindLoggingGatedActivityCreation(string path)
+    {
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+            .GetCompilationUnitRoot();
+
+        foreach (LocalDeclarationStatementSyntax declaration in root.DescendantNodes().OfType<LocalDeclarationStatementSyntax>())
+        {
+            if (!string.Equals(declaration.Declaration.Type.ToString(), "StartedActivity?", StringComparison.Ordinal))
+                continue;
+
+            foreach (VariableDeclaratorSyntax variable in declaration.Declaration.Variables)
+            {
+                if (variable.Initializer?.Value.ToString().StartsWith("LogContext.Current?.", StringComparison.Ordinal) != true)
+                    continue;
+
+                int line = variable.GetLocation().GetLineSpan().StartLinePosition.Line + 1;
+                yield return $"{RepositoryLayout.RelativeToRoot(path)}:{line}:{variable.Identifier.ValueText}";
+            }
+        }
+    }
+
     private static bool ContainsSerializableAttribute(string path)
     {
         CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))

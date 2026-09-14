@@ -16,6 +16,6 @@ public static class InstrumentationConfigurationExtensions
     public static void UseInstrumentation(this IBusFactoryConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        LogContextInstrumentationExtensions.TryConfigure();
+        LogContextMetricsExtensions.TryConfigure();
     }
 }

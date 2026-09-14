@@ -93,6 +93,20 @@ public sealed class ProbeContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-PROBE-CONTRACT", "scope-key-collision-preserves-existing-value")]
+    public void CreateScope_RejectsAScalarKeyWithoutReplacingItsValue()
+    {
+        var driver = CreateDriver();
+        driver.Context.Add("endpoint", "input");
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+            () => driver.Context.CreateScope("endpoint"));
+
+        Assert.Equal("The key already exists and is not a scope collection: endpoint", exception.Message);
+        Assert.Equal("input", Assert.Contains("endpoint", driver.Build().Results));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BUS-PROBE-SNAPSHOT", "request-result-clock-and-token-metadata")]
     public void ProbeResult_UsesTheSuppliedRequestIdentityClockAndCancellationToken()
     {

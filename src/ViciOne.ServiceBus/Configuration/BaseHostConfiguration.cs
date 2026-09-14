@@ -76,8 +76,8 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
             SendLogContext = value?.CreateLogContext(ServiceBusLogCategories.SendTransport);
             ReceiveLogContext = value?.CreateLogContext(ServiceBusLogCategories.ReceiveTransport);
 
-            LogContextInstrumentationExtensions.CopyInstrumentation(value, SendLogContext);
-            LogContextInstrumentationExtensions.CopyInstrumentation(value, ReceiveLogContext);
+            LogContextMetricsExtensions.CopyMetrics(value, SendLogContext);
+            LogContextMetricsExtensions.CopyMetrics(value, ReceiveLogContext);
         }
     }
 

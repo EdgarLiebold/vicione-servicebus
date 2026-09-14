@@ -257,8 +257,8 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
 
                 var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
                 var endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: sendToken.Token).ConfigureAwait(false);
-                StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
-                var instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
+                StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);
+                var instrument = LogContext.Current?.TryStartOutboxDeliveryMetrics();
 
                 try
                 {

@@ -92,24 +92,24 @@ public sealed class ServiceBusInstrumentationTests
             expectedInstruments.Order(StringComparer.Ordinal),
             observations.Instruments.Select(instrument => instrument.Name).Order(StringComparer.Ordinal));
         Assert.All(observations.Instruments, instrument => Assert.False(string.IsNullOrWhiteSpace(instrument.Description)));
-        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderAdmission, unit: null);
+        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderAdmission, "{request}");
         AssertInstrument<Histogram<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderAdmissionSize, "By");
-        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderDelivery, unit: null);
+        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderDelivery, "{attempt}");
         AssertInstrument<Histogram<double>>(observations, ServiceBusTelemetry.Metrics.DurableSenderDeliveryDuration, "s");
-        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletion, unit: null);
+        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletion, "{completion}");
         AssertInstrument<Histogram<double>>(observations, ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletionDuration, "s");
-        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.ReliabilityAbandoned, unit: null);
-        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderStored, unit: null);
+        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.ReliabilityAbandoned, "{decision}");
+        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderStored, "{message}");
         AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderStoredContentSize, "By");
-        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderPending, unit: null);
-        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderRetryScheduled, unit: null);
+        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderPending, "{message}");
+        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderRetryScheduled, "{message}");
         AssertInstrument<ObservableGauge<long>>(
             observations,
             ServiceBusTelemetry.Metrics.DurableSenderAwaitingConsumerCompletion,
-            unit: null);
-        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderQuarantined, unit: null);
+            "{message}");
+        AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderQuarantined, "{message}");
         AssertInstrument<ObservableGauge<long>>(observations, ServiceBusTelemetry.Metrics.DurableSenderOldestPendingAge, "s");
-        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.PayloadAdmission, unit: null);
+        AssertInstrument<Counter<long>>(observations, ServiceBusTelemetry.Metrics.PayloadAdmission, "{decision}");
         AssertInstrument<Histogram<long>>(observations, ServiceBusTelemetry.Metrics.PayloadBodySize, "By");
         AssertInstrument<Histogram<long>>(observations, ServiceBusTelemetry.Metrics.PayloadEnvelopeSize, "By");
 

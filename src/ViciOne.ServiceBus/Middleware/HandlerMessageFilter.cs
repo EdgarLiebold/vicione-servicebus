@@ -37,8 +37,8 @@ public class HandlerMessageFilter<TMessage> :
     {
         TimeProvider timeProvider = context.GetTimeProvider();
         long startedAt = timeProvider.GetTimestamp();
-        StartedActivity? activity = LogContext.Current?.StartHandlerActivity(context);
-        var instrument = LogContext.Current?.StartHandlerInstrument(context);
+        StartedActivity? activity = MessageActivity.TryStartHandler(context);
+        var instrument = LogContext.Current?.TryStartHandlerMetrics(context);
 
         try
         {

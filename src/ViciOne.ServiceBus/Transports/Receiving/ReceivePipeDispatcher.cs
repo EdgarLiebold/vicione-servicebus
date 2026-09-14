@@ -73,8 +73,8 @@ internal sealed class ReceivePipeDispatcher :
 
         var active = StartDispatch();
 
-        StartedActivity? activity = LogContext.Current?.StartReceiveActivity(_activityName, _inputAddress, _endpointName, context);
-        var instrument = LogContext.Current?.StartReceiveInstrument(context);
+        StartedActivity? activity = MessageActivity.TryStartReceive(_activityName, _inputAddress, _endpointName, context);
+        var instrument = LogContext.Current?.TryStartReceiveMetrics(context);
 
         try
         {

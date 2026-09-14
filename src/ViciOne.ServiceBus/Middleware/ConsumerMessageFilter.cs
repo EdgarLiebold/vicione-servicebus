@@ -43,8 +43,8 @@ public class ConsumerMessageFilter<TConsumer, TMessage> :
         TimeProvider timeProvider = context.GetTimeProvider();
         long startedAt = timeProvider.GetTimestamp();
 
-        StartedActivity? activity = LogContext.Current?.StartConsumerActivity<TConsumer, TMessage>(context);
-        var instrument = LogContext.Current?.StartConsumeInstrument<TConsumer, TMessage>(context);
+        StartedActivity? activity = MessageActivity.TryStartConsumer<TConsumer, TMessage>(context);
+        var instrument = LogContext.Current?.TryStartConsumerMetrics<TConsumer, TMessage>(context);
 
         try
         {

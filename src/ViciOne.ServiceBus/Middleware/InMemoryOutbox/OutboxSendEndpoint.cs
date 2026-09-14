@@ -121,7 +121,7 @@ internal sealed class OutboxSendEndpoint :
     Task DeferAsync(Func<Task> send, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(send);
-        var enqueue = LogContext.Current?.StartOutboxEnqueueInstrument();
+        var enqueue = LogContext.Current?.TryStartOutboxEnqueueMetrics();
         try
         {
             Task pendingDelivery = _outboxContext.AddAsync(() => DeliverAsync(send), cancellationToken);
@@ -138,7 +138,7 @@ internal sealed class OutboxSendEndpoint :
 
     static async Task DeliverAsync(Func<Task> send)
     {
-        var delivery = LogContext.Current?.StartOutboxDeliveryInstrument();
+        var delivery = LogContext.Current?.TryStartOutboxDeliveryMetrics();
         try
         {
             await send().ConfigureAwait(false);

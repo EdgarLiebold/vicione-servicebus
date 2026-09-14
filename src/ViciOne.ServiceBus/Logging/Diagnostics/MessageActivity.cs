@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
@@ -10,17 +9,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Logging.Diagnostics;
 
-/// <summary>Provides extension methods for log context activity.</summary>
-internal static class LogContextActivityExtensions
+/// <summary>Creates message-flow activities and propagates their trace context across transport boundaries.</summary>
+internal static class MessageActivity
 {
-    /// <summary>Starts send activity.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="transportContext">The transport context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="tags">The tags.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartSendActivity<T>(this ILogContext logContext, SendTransportContext transportContext, SendContext<T> context,
+    /// <summary>Starts a producer activity for a transport send and injects its trace context into the message.</summary>
+    /// <typeparam name="T">The message contract being sent.</typeparam>
+    /// <param name="transportContext">The transport identity used to name and describe the activity.</param>
+    /// <param name="context">The send context that receives propagation headers and message metadata tags.</param>
+    /// <param name="tags">Additional transport-specific tags recorded when full activity data is requested.</param>
+    /// <returns>The started activity, or <see langword="null"/> when the source is not sampled or observation fails.</returns>
+    public static StartedActivity? TryStartSend<T>(SendTransportContext transportContext, SendContext<T> context,
         params (string Key, object? Value)[] tags)
         where T : class
     {
@@ -43,12 +41,11 @@ internal static class LogContextActivityExtensions
         return PopulateSendActivity(context, activity, currentActivity, tags);
     }
 
-    /// <summary>Starts outbox send activity.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartOutboxSendActivity<T>(this ILogContext logContext, SendContext<T> context)
+    /// <summary>Starts an outbox producer activity and injects its trace context into the deferred message.</summary>
+    /// <typeparam name="T">The message contract being enqueued.</typeparam>
+    /// <param name="context">The outbox send context that receives propagation headers and message metadata tags.</param>
+    /// <returns>The started activity, or <see langword="null"/> when the source is not sampled or observation fails.</returns>
+    public static StartedActivity? TryStartOutboxSend<T>(SendContext<T> context)
         where T : class
     {
         var currentActivity = System.Diagnostics.Activity.Current;
@@ -68,11 +65,10 @@ internal static class LogContextActivityExtensions
         return PopulateSendActivity(context, activity, currentActivity);
     }
 
-    /// <summary>Starts outbox deliver activity.</summary>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartOutboxDeliverActivity(this ILogContext logContext, OutboxMessageContext context)
+    /// <summary>Starts a client activity for delivery of a message retained by an outbox.</summary>
+    /// <param name="context">The retained message context that supplies the parent trace identity.</param>
+    /// <returns>The started activity, or <see langword="null"/> when the source is not sampled or observation fails.</returns>
+    public static StartedActivity? TryStartOutboxDelivery(OutboxMessageContext context)
     {
         var parentActivityContext = GetParentActivityContext(context.Headers);
 
@@ -87,14 +83,13 @@ internal static class LogContextActivityExtensions
         return new StartedActivity(activity);
     }
 
-    /// <summary>Starts receive activity.</summary>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="inputAddress">The input address.</param>
-    /// <param name="endpointName">The endpoint name.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartReceiveActivity(this ILogContext logContext, string name, string inputAddress, string endpointName,
+    /// <summary>Starts the consumer activity that represents transport delivery into a receive pipeline.</summary>
+    /// <param name="name">The low-cardinality activity name supplied by the transport.</param>
+    /// <param name="inputAddress">The receive address recorded when full activity data is requested.</param>
+    /// <param name="endpointName">The bounded destination name used by the receive endpoint.</param>
+    /// <param name="context">The receive context that supplies remote trace headers, transport identity, and timing.</param>
+    /// <returns>The started activity, or <see langword="null"/> when the source is not sampled or observation fails.</returns>
+    public static StartedActivity? TryStartReceive(string name, string inputAddress, string endpointName,
         ReceiveContext context)
     {
         var parentActivityContext = GetParentActivityContext(context.TransportHeaders, true);
@@ -118,7 +113,7 @@ internal static class LogContextActivityExtensions
         ActivityObservation.TrySetTag(
             activity,
             ServiceBusTelemetry.Attributes.MessagingSystem,
-            LogContextInstrumentationExtensions.SystemName(context));
+            LogContextMetricsExtensions.SystemName(context));
         ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationName, endpointName);
 
         if (activity.IsAllDataRequested)
@@ -137,42 +132,39 @@ internal static class LogContextActivityExtensions
         return new StartedActivity(activity, context.GetTimeProvider());
     }
 
-    /// <summary>Starts consumer activity.</summary>
-    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartConsumerActivity<TConsumer, T>(this ILogContext logContext, ConsumeContext<T> context)
+    /// <summary>Starts a process activity for a message delivered to a consumer.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation recorded as the processor.</typeparam>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The consume context that supplies the receive parent and message metadata.</param>
+    /// <returns>The started activity, or <see langword="null"/> when no receive activity is current or observation fails.</returns>
+    public static StartedActivity? TryStartConsumer<TConsumer, T>(ConsumeContext<T> context)
         where T : class
     {
-        return StartActivity((ConsumeContext)context, activity =>
+        return TryStartProcess((ConsumeContext)context, activity =>
         {
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TConsumer>.ShortName);
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<T>.DiagnosticAddress);
         });
     }
 
-    /// <summary>Starts handler activity.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartHandlerActivity<T>(this ILogContext logContext, ConsumeContext<T> context)
+    /// <summary>Starts a process activity for a message handled by a delegate.</summary>
+    /// <typeparam name="T">The handled message contract.</typeparam>
+    /// <param name="context">The consume context that supplies the receive parent and message metadata.</param>
+    /// <returns>The started activity, or <see langword="null"/> when no receive activity is current or observation fails.</returns>
+    public static StartedActivity? TryStartHandler<T>(ConsumeContext<T> context)
         where T : class
     {
-        return StartActivity((ConsumeContext)context, activity =>
+        return TryStartProcess((ConsumeContext)context, activity =>
         {
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, "Handler");
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<T>.DiagnosticAddress);
         });
     }
 
-    /// <summary>Starts generic activity.</summary>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="operationName">The operation name.</param>
-    /// <returns>The started activity produced by the operation.</returns>
-    public static StartedActivity? StartGenericActivity(this ILogContext logContext, string operationName)
+    /// <summary>Starts a client activity for an infrastructure operation.</summary>
+    /// <param name="operationName">The low-cardinality operation name.</param>
+    /// <returns>The started activity, or <see langword="null"/> when the source is not sampled or observation fails.</returns>
+    public static StartedActivity? TryStart(string operationName)
     {
         var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Client);
         if (activity == null)
@@ -346,7 +338,7 @@ internal static class LogContextActivityExtensions
         return default;
     }
 
-    internal static StartedActivity? StartActivity(ConsumeContext context, Action<System.Diagnostics.Activity> started)
+    internal static StartedActivity? TryStartProcess(ConsumeContext context, Action<System.Diagnostics.Activity> configure)
     {
         var currentActivity = System.Diagnostics.Activity.Current;
         if (currentActivity == null)
@@ -362,7 +354,7 @@ internal static class LogContextActivityExtensions
         ActivityObservation.TrySetTag(
             activity,
             ServiceBusTelemetry.Attributes.MessagingSystem,
-            LogContextInstrumentationExtensions.SystemName(context.ReceiveContext));
+            LogContextMetricsExtensions.SystemName(context.ReceiveContext));
 
         if (activity.IsAllDataRequested)
         {
@@ -383,7 +375,7 @@ internal static class LogContextActivityExtensions
 
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(",", context.SupportedMessageTypes));
 
-            started(activity);
+            configure(activity);
         }
 
         if (!ActivityObservation.TryStart(activity))

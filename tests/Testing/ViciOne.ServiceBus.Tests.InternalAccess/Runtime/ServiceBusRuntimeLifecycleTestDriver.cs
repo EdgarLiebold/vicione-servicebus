@@ -14,9 +14,9 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
     private readonly TaskCompletionSource _hostStarted =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    public ServiceBusRuntimeLifecycleTestDriver(bool completeReadyOnStop = true)
+    public ServiceBusRuntimeLifecycleTestDriver(bool completeReadyOnStop = true, TimeProvider? timeProvider = null)
     {
-        _hostHandle = new CompletingStopHostHandle(Address, completeReadyOnStop);
+        _hostHandle = new CompletingStopHostHandle(Address, completeReadyOnStop, timeProvider ?? TimeProvider.System);
 
         if (LogContext.Current == null)
             LogContext.ConfigureCurrentLogContext();
@@ -35,18 +35,28 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
         configurationProxy.ConsumePipe = PassiveProxy.Create<IConsumePipe>();
         configurationProxy.ReceiveEndpoint = PassiveProxy.Create<IReceiveEndpoint>();
 
-        Bus = new ServiceBusRuntime(host, _observer, configuration, TimeProvider.System);
+        Bus = new ServiceBusRuntime(host, _observer, configuration, timeProvider ?? TimeProvider.System);
     }
 
     public IBusControl Bus { get; }
 
+    public Task StartWithoutCancellationAsync() => Bus.StartAsync(default);
+
     public Task HostStarted => _hostStarted.Task;
+
+    public Task HostStopStarted => _hostHandle.StopStarted;
 
     public int HostStopCount => _hostHandle.StopCount;
 
     public int PostStartCount => _observer.PostStartCount;
 
     public int StartFaultedCount => _observer.StartFaultedCount;
+
+    public void FailReadiness(Exception exception) => _hostHandle.FailReadiness(exception);
+
+    public void FailStop(Exception exception) => _hostHandle.FailStop(exception);
+
+    public void BlockStopUntilCanceled() => _hostHandle.BlockStopUntilCanceled();
 
     public class HostProxy : DispatchProxy
     {
@@ -104,13 +114,19 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
             throw new InvalidOperationException($"Unexpected passive dependency member: {targetMethod?.Name}.");
     }
 
-    private sealed class CompletingStopHostHandle(Uri address, bool completeReadyOnStop) : IHostHandle
+    private sealed class CompletingStopHostHandle(Uri address, bool completeReadyOnStop, TimeProvider timeProvider) : IHostHandle
     {
         private readonly TaskCompletionSource<HostReady> _ready =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _stopStarted =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private Exception? _stopFailure;
+        private bool _waitForStopCancellation;
         private int _stopCount;
 
         public Task<HostReady> Ready => _ready.Task;
+
+        public Task StopStarted => _stopStarted.Task;
 
         public int StopCount => Volatile.Read(ref _stopCount);
 
@@ -118,10 +134,24 @@ public sealed class ServiceBusRuntimeLifecycleTestDriver
         {
             cancellationToken.ThrowIfCancellationRequested();
             Interlocked.Increment(ref _stopCount);
+            _stopStarted.TrySetResult();
+
+            if (_stopFailure is { } failure)
+                return Task.FromException(failure);
+
+            if (_waitForStopCancellation)
+                return Task.Delay(Timeout.InfiniteTimeSpan, timeProvider, cancellationToken);
+
             if (completeReadyOnStop)
                 _ready.TrySetResult(new HostReadyEvent(address, [], []));
             return Task.CompletedTask;
         }
+
+        public void FailReadiness(Exception exception) => _ready.TrySetException(exception);
+
+        public void FailStop(Exception exception) => _stopFailure = exception;
+
+        public void BlockStopUntilCanceled() => _waitForStopCancellation = true;
     }
 
     private sealed class RecordingBusObserver : IBusObserver

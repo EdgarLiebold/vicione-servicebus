@@ -39,11 +39,11 @@ assembly version. OpenTelemetry configuration selects that name, for example wit
 | `vicione.servicebus.payload.admission` | Counter | `{decision}` | Serialized payload admission decisions |
 | `vicione.servicebus.payload.body.size` | Histogram | `By` | Serialized application-body size |
 | `vicione.servicebus.payload.envelope.size` | Histogram | `By` | Final transport-envelope size |
-| `vicione.servicebus.durable_sender.admission` | Counter | `{outcome}` | Durable outbox admission outcomes |
+| `vicione.servicebus.durable_sender.admission` | Counter | `{request}` | Durable outbox admission outcomes |
 | `vicione.servicebus.durable_sender.admission.size` | Histogram | `By` | Retained content size admitted to the outbox |
-| `vicione.servicebus.durable_sender.delivery` | Counter | `{outcome}` | Carrier delivery-attempt outcomes |
+| `vicione.servicebus.durable_sender.delivery` | Counter | `{attempt}` | Carrier delivery-attempt outcomes |
 | `vicione.servicebus.durable_sender.delivery.duration` | Histogram | `s` | Carrier delivery-attempt duration |
-| `vicione.servicebus.durable_sender.consumer_completion` | Counter | `{outcome}` | In-memory consumer-completion outcomes |
+| `vicione.servicebus.durable_sender.consumer_completion` | Counter | `{completion}` | In-memory consumer-completion outcomes |
 | `vicione.servicebus.durable_sender.consumer_completion.duration` | Histogram | `s` | In-memory consumer-completion duration |
 | `vicione.servicebus.reliability.abandoned` | Counter | `{decision}` | Explicit retained-abandon decisions |
 | `vicione.servicebus.durable_sender.stored` | ObservableGauge | `{message}` | Retained outbox records |

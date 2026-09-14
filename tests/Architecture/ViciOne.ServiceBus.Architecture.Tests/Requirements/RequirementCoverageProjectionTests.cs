@@ -10,8 +10,8 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Requirements;
 /// </summary>
 /// <remarks>
 /// The comparison itself is framework-neutral and shared with every other executable test project, so
-/// the six entries below and the entries of any other test project are read by one implementation rather than
-/// by two that could drift. What stays here is what only an xUnit assembly can supply: xUnit's own
+/// this projection and the projection of every other test project are read by one implementation rather than
+/// by implementations that could drift. What stays here is what only an xUnit assembly can supply: xUnit's own
 /// definition of a test method, and the single assertion that turns evidence into a verdict.
 /// </remarks>
 public sealed class RequirementCoverageProjectionTests

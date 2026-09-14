@@ -1,7 +1,6 @@
 using System.Diagnostics;
-using Microsoft.Extensions.Logging.Abstractions;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Logging.Diagnostics;
-using ViciOne.ServiceBus.Logging.Internal;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
@@ -11,15 +10,13 @@ using DiagnosticActivityContext = System.Diagnostics.ActivityContext;
 namespace ViciOne.ServiceBus.Tests.Logging;
 
 [Collection(OpenTelemetryGlobalCollection.Name)]
-public sealed class LogContextActivityExtensionsTests
+public sealed class MessageActivityTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVITY-GENERIC", "sampling-lifecycle-kind-and-listener-fault-isolation")]
-    public void StartGenericActivity_ObeysSamplingAndIsolatesApplicationListenerFailures()
+    public void TryStart_ObeysSamplingAndIsolatesApplicationListenerFailures()
     {
-        var logContext = new BusLogContext(NullLoggerFactory.Instance);
-
-        Assert.Null(logContext.StartGenericActivity("unsampled operation"));
+        Assert.Null(MessageActivity.TryStart("unsampled operation"));
 
         Activity? observed = null;
         using (var listener = new ActivityListener
@@ -31,7 +28,7 @@ public sealed class LogContextActivityExtensionsTests
         {
             ActivitySource.AddActivityListener(listener);
 
-            using StartedActivity? started = logContext.StartGenericActivity("topology.configure");
+            using StartedActivity? started = MessageActivity.TryStart("topology.configure");
 
             Assert.NotNull(started);
             Assert.Same(started.Activity, observed);
@@ -50,7 +47,36 @@ public sealed class LogContextActivityExtensionsTests
         };
         ActivitySource.AddActivityListener(hostileListener);
 
-        Assert.Null(logContext.StartGenericActivity("fault-isolated operation"));
+        Assert.Null(MessageActivity.TryStart("fault-isolated operation"));
         Assert.Null(Activity.Current);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "activity-source-does-not-require-log-context")]
+    public void TryStart_DoesNotRequireALoggingContext()
+    {
+        ILogContext? previous = LogContext.Current;
+        Activity? observed = null;
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = activity => observed = activity,
+        };
+
+        try
+        {
+            LogContext.Current = null;
+            ActivitySource.AddActivityListener(listener);
+
+            using StartedActivity? started = MessageActivity.TryStart("independent tracing");
+
+            Assert.NotNull(started);
+            Assert.Same(started.Activity, observed);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
     }
 }

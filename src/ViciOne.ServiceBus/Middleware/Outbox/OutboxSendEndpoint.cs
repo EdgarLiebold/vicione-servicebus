@@ -251,8 +251,8 @@ internal sealed class OutboxSendEndpoint :
         if (ForwardingExpiration.TryDiscard(context))
             return;
 
-        StartedActivity? activity = LogContext.Current?.StartOutboxSendActivity(context);
-        var instrument = LogContext.Current?.StartOutboxEnqueueInstrument();
+        StartedActivity? activity = MessageActivity.TryStartOutboxSend(context);
+        var instrument = LogContext.Current?.TryStartOutboxEnqueueMetrics();
         try
         {
             await _context.AddSendAsync(context).ConfigureAwait(false);

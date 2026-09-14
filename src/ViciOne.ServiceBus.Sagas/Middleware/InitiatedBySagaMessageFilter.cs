@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.Logging.Diagnostics;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Dispatches the ConsumeContext to the consumer method for the specified message type.</summary>
-/// <typeparam name="TSaga">The consumer type.</typeparam>
-/// <typeparam name="TMessage">The message type.</typeparam>
+/// <summary>Invokes a saga that initiates from the correlated message.</summary>
+/// <typeparam name="TSaga">The initiating saga state.</typeparam>
+/// <typeparam name="TMessage">The correlated initiating message.</typeparam>
 public class InitiatedBySagaMessageFilter<TSaga, TMessage> :
     ISagaMessageFilter<TSaga, TMessage>
     where TSaga : class, ISaga, IInitiatedBy<TMessage>
@@ -19,14 +19,17 @@ public class InitiatedBySagaMessageFilter<TSaga, TMessage> :
         scope.Add("method", $"Consume({TypeCache<TMessage>.ShortName} message)");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Invokes the saga and then continues the saga-message pipeline.</summary>
+    /// <param name="context">The saga instance and correlated message.</param>
+    /// <param name="next">The pipeline stage invoked after the saga consumes the message.</param>
+    /// <returns>A task that completes after the saga and continuation finish.</returns>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        StartedActivity? activity = LogContext.Current?.StartSagaActivity(context);
-        var instrument = LogContext.Current?.StartSagaInstrument(context);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        StartedActivity? activity = SagaActivity.TryStart(context);
+        var instrument = LogContext.Current?.TryStartSagaMetrics(context);
         try
         {
             await context.Saga.ConsumeAsync(context).ConfigureAwait(false);

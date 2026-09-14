@@ -39,7 +39,7 @@ public sealed class ServiceBusTelemetryTests
         Assert.Null(product.GetType("ViciOne.ServiceBus.DependencyInjection.IHandlerConsumerAdapter"));
         Assert.Null(product.GetType("ViciOne.ServiceBus.Logging.StartedInstrument"));
         Assert.False(typeof(MetricOperation).IsPublic);
-        Assert.False(typeof(LogContextInstrumentationExtensions).IsPublic);
+        Assert.False(typeof(LogContextMetricsExtensions).IsPublic);
         Assert.DoesNotContain(product.GetExportedTypes(), type => type.Namespace is
             "ViciOne.ServiceBus.Logging.Diagnostics" or
             "ViciOne.ServiceBus.Logging.Internal" or

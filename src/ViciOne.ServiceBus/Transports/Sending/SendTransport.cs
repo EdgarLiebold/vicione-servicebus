@@ -139,8 +139,8 @@ public sealed class SendTransport<TContext> :
 
         async Task SendWithDiagnosticsAsync(TContext context, SendContext<T> sendContext)
         {
-            StartedActivity? activity = LogContext.Current?.StartSendActivity(_sendTransportContext, sendContext);
-            MetricOperation? instrument = LogContext.Current?.StartSendInstrument(_sendTransportContext, sendContext);
+            StartedActivity? activity = MessageActivity.TryStartSend(_sendTransportContext, sendContext);
+            MetricOperation? instrument = LogContext.Current?.TryStartSendMetrics(_sendTransportContext, sendContext);
             try
             {
                 await DispatchAsync(context, sendContext, activity).ConfigureAwait(false);

@@ -83,7 +83,7 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
 
     async Task ConfigureTopologyAsync(ConnectionContext context, CancellationToken cancellationToken)
     {
-        StartedActivity? activity = LogContext.Current?.StartGenericActivity("Configure Topology");
+        StartedActivity? activity = MessageActivity.TryStart("Configure Topology");
         try
         {
             await Task.WhenAll(_brokerTopology.Topics.Select(topic => CreateAsync(context, topic, cancellationToken))).ConfigureAwait(false);

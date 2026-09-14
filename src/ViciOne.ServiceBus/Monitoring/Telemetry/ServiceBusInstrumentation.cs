@@ -315,6 +315,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
 
                 var admission = meter.CreateCounter<long>(
                     ServiceBusTelemetry.Metrics.PayloadAdmission,
+                    unit: "{decision}",
                     description: "Serialized payload admission decisions.");
                 var bodySize = meter.CreateHistogram<long>(
                     ServiceBusTelemetry.Metrics.PayloadBodySize,
@@ -362,6 +363,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
 
                 var admission = meter.CreateCounter<long>(
                     ServiceBusTelemetry.Metrics.DurableSenderAdmission,
+                    unit: "{request}",
                     description: "Durable sender admission outcomes.");
                 var admissionStorageSize = meter.CreateHistogram<long>(
                     ServiceBusTelemetry.Metrics.DurableSenderAdmissionSize,
@@ -369,6 +371,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
                     description: "Logical retained content bytes of one durable-send admission request (serialized body + ServiceBus metadata).");
                 var delivery = meter.CreateCounter<long>(
                     ServiceBusTelemetry.Metrics.DurableSenderDelivery,
+                    unit: "{attempt}",
                     description: "Durable sender delivery-attempt outcomes.");
                 var deliveryDuration = meter.CreateHistogram<double>(
                     ServiceBusTelemetry.Metrics.DurableSenderDeliveryDuration,
@@ -376,6 +379,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
                     description: "Duration of one durable sender delivery attempt.");
                 var consumerCompletion = meter.CreateCounter<long>(
                     ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletion,
+                    unit: "{completion}",
                     description: "Process-local consumer-completion outcomes for volatile durable sends.");
                 var consumerCompletionDuration = meter.CreateHistogram<double>(
                     ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletionDuration,
@@ -383,11 +387,13 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
                     description: "Elapsed time from volatile durable dispatch attempt start to logical consumer completion.");
                 var reliabilityAbandoned = meter.CreateCounter<long>(
                     ServiceBusTelemetry.Metrics.ReliabilityAbandoned,
+                    unit: "{decision}",
                     description: "Explicit operator decisions to retain a quarantined reliable-messaging record as abandoned.");
 
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderStored,
                     () => Volatile.Read(ref _durableStoredCount),
+                    unit: "{message}",
                     description: "Last observed retained durable-send record count.");
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderStoredContentSize,
@@ -397,18 +403,22 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderPending,
                     () => Volatile.Read(ref _durablePendingCount),
+                    unit: "{message}",
                     description: "Last observed durable-send pending count.");
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderRetryScheduled,
                     () => Volatile.Read(ref _durableRetryScheduledCount),
+                    unit: "{message}",
                     description: "Last observed durable-send retry-scheduled count.");
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderAwaitingConsumerCompletion,
                     () => Volatile.Read(ref _durableAwaitingConsumerCompletionCount),
+                    unit: "{message}",
                     description: "Last observed durable-send count awaiting logical consumer completion.");
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderQuarantined,
                     () => Volatile.Read(ref _durableQuarantinedCount),
+                    unit: "{message}",
                     description: "Last observed durable-send quarantine count.");
                 meter.CreateObservableGauge(
                     ServiceBusTelemetry.Metrics.DurableSenderOldestPendingAge,

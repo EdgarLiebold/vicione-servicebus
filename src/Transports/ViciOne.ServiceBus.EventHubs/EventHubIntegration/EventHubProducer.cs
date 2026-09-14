@@ -178,8 +178,8 @@ public class EventHubProducer :
             if (_context is BaseSendTransportContext transportContext)
                 transportContext.ApplyPayloadAdmission(sendContext);
 
-            StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
-            var instrument = LogContext.Current?.StartSendInstrument(_context, sendContext);
+            StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);
+            var instrument = LogContext.Current?.TryStartSendMetrics(_context, sendContext);
 
             try
             {
@@ -266,7 +266,7 @@ public class EventHubProducer :
 
             sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-            StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
+            StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);
             try
             {
                 if (_context.SendObservers.Count > 0)

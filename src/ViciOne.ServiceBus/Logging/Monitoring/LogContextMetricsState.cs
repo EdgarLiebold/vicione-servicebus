@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Monitoring;
 
 namespace ViciOne.ServiceBus.Logging.Monitoring;
 
-internal sealed class LogContextInstrumentationState
+internal sealed class LogContextMetricsState
 {
     private static readonly InstrumentAdvice<double> MessagingDurationAdvice = new()
     {
@@ -13,7 +13,7 @@ internal sealed class LogContextInstrumentationState
             [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10]),
     };
 
-    public LogContextInstrumentationState(Meter meter, ILogContext rootLogContext)
+    public LogContextMetricsState(Meter meter, ILogContext rootLogContext)
     {
         Meter = meter;
         RootLogContext = rootLogContext;

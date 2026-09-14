@@ -2516,6 +2516,73 @@ that application failure as non-retryable, not a dummy implementation. The prote
 `TestResults/` trees remain unchanged and unstaged. The overall A+ goal continues with the remaining
 complete source owners and the final repository-wide audit.
 
+## Iteration 104 Core runtime, operations, and observability plan
+
+Iteration 104 starts from remotely verified commit
+`f9ea9fd0c8338eb344f6683119ae56250a851933` and annotated tag
+`servicebus-a-plus-remediation-iteration-103-2026-09-14`. It reviews the 30 production files and
+3,531 lines that jointly own the Core runtime lifecycle, generic host integration, health and probe
+operations, logging, metrics, tracing, and telemetry. This is one coherent runtime-observability
+boundary rather than five artificially small directory passes. Every file and comment is read
+manually; no source or comment generator is used.
+
+| Requirement | Planned evidence |
+| --- | --- |
+| Make lifecycle ownership deterministic | start, ready, stop, timeout, cancellation, fault, repeated-call, and partial-start cleanup paths have exact behavior and disposal evidence |
+| Keep observability side-effect safe | hostile loggers, listeners, meters, health checks, and telemetry callbacks cannot change messaging or lifecycle outcomes |
+| Preserve diagnostic fidelity | probes, health reports, activities, metrics, headers, and durable-send outcomes expose exact identities and failure details without mutable aliases |
+| Modernize the Greenfield surface | every public member, parameter, default, name, async contract, and capability boundary is reviewed without compatibility-only API |
+| Align navigation and comments | filenames, types, namespaces, folders, and manually verified comments match the final responsibility model |
+| Demonstrate test strength | red-first regression tests, controlled counterchanges for substantive fixes, focused and full tests, coverage/CRAP, build, format, package/API, requirements, and hygiene gates |
+
+Cross-owner changes are limited to proven consumers needed to preserve a coherent runtime contract.
+The protected `review/` and `TestResults/` trees remain outside the iteration.
+
+### Iteration 104 completion
+
+The complete 30-file, 3,531-line Core runtime, hosting, operations, logging, monitoring, and
+telemetry owner was read and reviewed manually, including every source comment. `ViciOne.ServiceBus`
+remains the Core assembly rather than an umbrella directory: separately delivered capability and
+provider assemblies remain siblings under `src`, while every reviewed Core folder, namespace,
+filename, and primary type follows its responsibility relative to that assembly.
+
+Tracing creation is no longer coupled to the ambient logging context. The activity implementation
+is now named `MessageActivity`, metric ownership is expressed by `LogContextMetricsExtensions` and
+`LogContextMetricsState`, and Saga and Courier tracing have dedicated capability-local helpers.
+All affected callers use explicit `TryStart...` names. A permanent syntax-aware architecture rule
+rejects any future `StartedActivity` initialization gated by `LogContext.Current`. Durable and
+payload metrics now use precise OpenTelemetry annotation units for decisions, requests, attempts,
+completions, and messages, with exact instrument tests and matching documentation.
+
+The review also closed two unrelated defects encountered through the consumer closure. Creating a
+probe scope over an existing scalar now fails without replacing the scalar. All four public saga
+message-filter variants validate both pipeline arguments before invoking the saga or creating
+observability side effects, and their previously copied consumer/send comments now describe their
+actual saga behavior. Red-first architecture, metric, naming, tracing, and saga tests plus a killed
+probe counterchange demonstrate that the regressions are observable. Three deterministic fake-time
+tests additionally prove the default readiness timeout and both failing and timed-out startup
+cleanup paths without wall-clock delay or coverage-only assertions.
+
+The complete Engineering Release build passes with zero warnings and errors. Both full format
+gates make no changes. All 23 current native Unit/Architecture hosts pass 6,267/6,267 with no
+failure or skip, including 304 architecture and 3,297 Core-host tests; removed legacy hosts are not
+included. The 49 reviewed tests contain no assertion-free, trivial, self-referential, skipped,
+wall-clock, or swallowed-exception cases. Fresh Core-host coverage is 75.5275% line and 68.1951%
+branch across its reachability closure. The completed owner is 94.1785% line and 85.6209% branch
+across 242 methods, with no CRAP score above 30; `StartCoreAsync` improved to 98.08% line coverage
+and CRAP 26. The accepted coverage artifact is
+`/private/tmp/vsb-iteration104-core-final.cobertura.xml`, SHA-256
+`3033f05dbc6f5d44911dd43e055eb6b145edd4c8ad29ee49e4100bdec49e6e0b`.
+
+Package validation passes 18 journeys, 31 fresh packages, three isolated provider-testing
+consumers, and all 30 runtime package APIs. The unchanged 19,030-line packed contract has SHA-256
+`9f0d543184d729768ba0606420ca05d005c6e1bd1961bfeda472600d18985345`.
+Requirements JSON, Git whitespace, C# preprocessor, dummy-marker, obsolete observability-identity,
+activity-gating, and empty-directory checks pass. The sole textual `NotImplementedException` is the
+executable non-retry classification policy. The protected `review/` and `TestResults/` trees remain
+unchanged and unstaged. The overall A+ goal continues with the remaining complete source owners and
+the final repository-wide completion audit.
+
 ## Iteration 102 Courier interface contract and navigation plan
 
 Iteration 102 starts from remotely verified commit

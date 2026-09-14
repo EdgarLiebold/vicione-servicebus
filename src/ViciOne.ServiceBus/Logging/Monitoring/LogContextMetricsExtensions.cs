@@ -20,10 +20,10 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Logging.Monitoring;
 
 /// <summary>Creates failure-isolated OpenTelemetry metric scopes for service-bus operations.</summary>
-internal static class LogContextInstrumentationExtensions
+internal static class LogContextMetricsExtensions
 {
-    private static readonly ConditionalWeakTable<ILogContext, LogContextInstrumentationState> LogContextStates = new();
-    private static readonly ConditionalWeakTable<IMeterFactory, Lazy<LogContextInstrumentationState>> MeterFactoryStates = new();
+    private static readonly ConditionalWeakTable<ILogContext, LogContextMetricsState> LogContextMetrics = new();
+    private static readonly ConditionalWeakTable<IMeterFactory, Lazy<LogContextMetricsState>> MeterFactoryStates = new();
     private static readonly FrozenDictionary<string, string> MessagingSystemAliases =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -46,13 +46,13 @@ internal static class LogContextInstrumentationExtensions
     private static readonly object BindingLock = new();
     private static readonly object FallbackLock = new();
 
-    private static LogContextInstrumentationState? _fallbackState;
+    private static LogContextMetricsState? _fallbackState;
 
     /// <summary>Starts metrics for one transport receive operation.</summary>
     /// <param name="logContext">The log context bound to the active meter.</param>
     /// <param name="context">The receive context that supplies transport identity and time.</param>
-    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
-    public static MetricOperation? StartReceiveInstrument(this ILogContext logContext, ReceiveContext context) =>
+    /// <returns>A completion scope, or <see langword="null"/> when metric collection is unavailable or disabled.</returns>
+    public static MetricOperation? TryStartReceiveMetrics(this ILogContext logContext, ReceiveContext context) =>
         TryStart(logContext, context, state =>
         {
             if (!state.ConsumedMessages.Enabled
@@ -79,8 +79,8 @@ internal static class LogContextInstrumentationExtensions
     /// <typeparam name="TMessage">The handled message contract.</typeparam>
     /// <param name="logContext">The log context bound to the active meter.</param>
     /// <param name="context">The active consume context.</param>
-    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
-    public static MetricOperation? StartHandlerInstrument<TMessage>(
+    /// <returns>A completion scope, or <see langword="null"/> when metric collection is unavailable or disabled.</returns>
+    public static MetricOperation? TryStartHandlerMetrics<TMessage>(
         this ILogContext logContext,
         ConsumeContext<TMessage> context)
         where TMessage : class =>
@@ -91,8 +91,8 @@ internal static class LogContextInstrumentationExtensions
     /// <typeparam name="T">The consumed message contract.</typeparam>
     /// <param name="logContext">The log context bound to the active meter.</param>
     /// <param name="context">The active consume context.</param>
-    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
-    public static MetricOperation? StartConsumeInstrument<TConsumer, T>(
+    /// <returns>A completion scope, or <see langword="null"/> when metric collection is unavailable or disabled.</returns>
+    public static MetricOperation? TryStartConsumerMetrics<TConsumer, T>(
         this ILogContext logContext,
         ConsumeContext<T> context)
         where T : class =>
@@ -107,8 +107,8 @@ internal static class LogContextInstrumentationExtensions
     /// <param name="logContext">The calling log context; the transport-bound context owns the metric binding.</param>
     /// <param name="transportContext">The transport context that supplies the metric binding and transport identity.</param>
     /// <param name="context">The active send context.</param>
-    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
-    public static MetricOperation? StartSendInstrument<T>(
+    /// <returns>A completion scope, or <see langword="null"/> when metric collection is unavailable or disabled.</returns>
+    public static MetricOperation? TryStartSendMetrics<T>(
         this ILogContext logContext,
         SendTransportContext transportContext,
         SendContext<T> context)
@@ -137,14 +137,14 @@ internal static class LogContextInstrumentationExtensions
 
     /// <summary>Starts an outcome counter scope for one outbox enqueue operation.</summary>
     /// <param name="logContext">The log context bound to the active meter.</param>
-    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
-    public static MetricOperation? StartOutboxEnqueueInstrument(this ILogContext logContext) =>
+    /// <returns>A completion scope, or <see langword="null"/> when metric collection is unavailable or disabled.</returns>
+    public static MetricOperation? TryStartOutboxEnqueueMetrics(this ILogContext logContext) =>
         StartOutbox(logContext, "enqueue");
 
     /// <summary>Starts an outcome counter scope for one outbox delivery operation.</summary>
     /// <param name="logContext">The log context bound to the active meter.</param>
-    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
-    public static MetricOperation? StartOutboxDeliveryInstrument(this ILogContext logContext) =>
+    /// <returns>A completion scope, or <see langword="null"/> when metric collection is unavailable or disabled.</returns>
+    public static MetricOperation? TryStartOutboxDeliveryMetrics(this ILogContext logContext) =>
         StartOutbox(logContext, "deliver");
 
     internal static void TryConfigure(IServiceProvider provider)
@@ -161,19 +161,19 @@ internal static class LogContextInstrumentationExtensions
             if (meterFactory == null)
                 return;
 
-            Lazy<LogContextInstrumentationState> lazyState = MeterFactoryStates.GetValue(meterFactory, key =>
-                new Lazy<LogContextInstrumentationState>(() =>
+            Lazy<LogContextMetricsState> lazyState = MeterFactoryStates.GetValue(meterFactory, key =>
+                new Lazy<LogContextMetricsState>(() =>
                 {
                     Meter meter = key.Create(new MeterOptions(ServiceBusTelemetry.MeterName)
                     {
                         Version = HostMetadataCache.Host.ViciOneServiceBusVersion,
                     });
-                    return new LogContextInstrumentationState(meter, new BusLogContext(loggerFactory));
+                    return new LogContextMetricsState(meter, new BusLogContext(loggerFactory));
                 }, LazyThreadSafetyMode.ExecutionAndPublication));
 
-            LogContextInstrumentationState instrumentation = lazyState.Value;
-            BindInstrumentation(instrumentation.RootLogContext, instrumentation);
-            LogContext.Current = instrumentation.RootLogContext;
+            LogContextMetricsState metrics = lazyState.Value;
+            BindMetrics(metrics.RootLogContext, metrics);
+            LogContext.Current = metrics.RootLogContext;
         }
         catch
         {
@@ -196,18 +196,18 @@ internal static class LogContextInstrumentationExtensions
                     {
                         var meter = new Meter(ServiceBusTelemetry.MeterName, HostMetadataCache.Host.ViciOneServiceBusVersion);
                         ILogContext root = LogContext.Current ?? new BusLogContext(NullLoggerFactory.Instance);
-                        Volatile.Write(ref _fallbackState, new LogContextInstrumentationState(meter, root));
+                        Volatile.Write(ref _fallbackState, new LogContextMetricsState(meter, root));
                     }
                 }
             }
 
-            LogContextInstrumentationState? fallback = Volatile.Read(ref _fallbackState);
+            LogContextMetricsState? fallback = Volatile.Read(ref _fallbackState);
             if (fallback == null)
                 return;
 
             ILogContext current = LogContext.Current ?? fallback.RootLogContext;
             LogContext.Current = current;
-            BindInstrumentation(current, fallback);
+            BindMetrics(current, fallback);
         }
         catch
         {
@@ -215,10 +215,10 @@ internal static class LogContextInstrumentationExtensions
         }
     }
 
-    internal static void CopyInstrumentation(ILogContext? source, ILogContext? destination)
+    internal static void CopyMetrics(ILogContext? source, ILogContext? destination)
     {
-        if (source != null && destination != null && LogContextStates.TryGetValue(source, out LogContextInstrumentationState? instrumentation))
-            BindInstrumentation(destination, instrumentation);
+        if (source != null && destination != null && LogContextMetrics.TryGetValue(source, out LogContextMetricsState? metrics))
+            BindMetrics(destination, metrics);
     }
 
     internal static MetricOperation? StartProcess(ILogContext logContext, PipeContext context, string operationName, string processorKind) =>
@@ -287,14 +287,14 @@ internal static class LogContextInstrumentationExtensions
     private static MetricOperation? TryStart(
         ILogContext? logContext,
         object context,
-        Func<LogContextInstrumentationState, MetricOperation?> start)
+        Func<LogContextMetricsState, MetricOperation?> start)
     {
         ArgumentNullException.ThrowIfNull(context);
 
         try
         {
-            LogContextInstrumentationState? instrumentation = GetInstrumentation(logContext);
-            return instrumentation == null ? null : start(instrumentation);
+            LogContextMetricsState? metrics = GetMetrics(logContext);
+            return metrics == null ? null : start(metrics);
         }
         catch
         {
@@ -304,12 +304,12 @@ internal static class LogContextInstrumentationExtensions
 
     private static MetricOperation? TryStart(
         ILogContext? logContext,
-        Func<LogContextInstrumentationState, MetricOperation?> start)
+        Func<LogContextMetricsState, MetricOperation?> start)
     {
         try
         {
-            LogContextInstrumentationState? instrumentation = GetInstrumentation(logContext);
-            return instrumentation == null ? null : start(instrumentation);
+            LogContextMetricsState? metrics = GetMetrics(logContext);
+            return metrics == null ? null : start(metrics);
         }
         catch
         {
@@ -317,18 +317,18 @@ internal static class LogContextInstrumentationExtensions
         }
     }
 
-    private static void BindInstrumentation(ILogContext logContext, LogContextInstrumentationState instrumentation)
+    private static void BindMetrics(ILogContext logContext, LogContextMetricsState metrics)
     {
         lock (BindingLock)
         {
-            LogContextStates.Remove(logContext);
-            LogContextStates.Add(logContext, instrumentation);
+            LogContextMetrics.Remove(logContext);
+            LogContextMetrics.Add(logContext, metrics);
         }
     }
 
-    private static LogContextInstrumentationState? GetInstrumentation(ILogContext? logContext) =>
-        logContext != null && LogContextStates.TryGetValue(logContext, out LogContextInstrumentationState? instrumentation)
-            ? instrumentation
+    private static LogContextMetricsState? GetMetrics(ILogContext? logContext) =>
+        logContext != null && LogContextMetrics.TryGetValue(logContext, out LogContextMetricsState? metrics)
+            ? metrics
             : null;
 
     private static TagList ClientTags(string system, string operationName, string operationType) =>

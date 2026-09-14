@@ -9,7 +9,7 @@ public static class OutboxTelemetryTestDriver
     {
         ArgumentNullException.ThrowIfNull(logContext);
 
-        var instrument = logContext.StartOutboxDeliveryInstrument();
+        var instrument = logContext.TryStartOutboxDeliveryMetrics();
         if (exception is not null)
             instrument?.RecordException(exception);
         instrument?.Complete();
@@ -24,7 +24,7 @@ public static class OutboxTelemetryTestDriver
         ArgumentNullException.ThrowIfNull(firstException);
         ArgumentNullException.ThrowIfNull(secondException);
 
-        var instrument = logContext.StartOutboxDeliveryInstrument();
+        var instrument = logContext.TryStartOutboxDeliveryMetrics();
         instrument?.RecordException(firstException);
         instrument?.RecordException(secondException);
         instrument?.Complete();

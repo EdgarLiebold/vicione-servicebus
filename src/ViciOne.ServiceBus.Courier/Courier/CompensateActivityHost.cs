@@ -38,8 +38,8 @@ internal sealed class CompensateActivityHost<TActivity, TLog> :
         TimeProvider timeProvider = context.GetTimeProvider();
         long startedAt = timeProvider.GetTimestamp();
 
-        StartedActivity? activity = LogContext.Current?.StartCompensateActivity<TActivity, TLog>(context);
-        var instrument = LogContext.Current?.StartActivityCompensateInstrument<TActivity, TLog>(context);
+        StartedActivity? activity = CourierActivity.TryStartCompensation<TActivity, TLog>(context);
+        var instrument = LogContext.Current?.TryStartCompensationMetrics<TActivity, TLog>(context);
 
         try
         {

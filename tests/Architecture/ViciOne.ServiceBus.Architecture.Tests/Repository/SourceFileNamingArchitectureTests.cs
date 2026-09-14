@@ -315,11 +315,11 @@ public sealed class SourceFileNamingArchitectureTests
         (string Directory, string Namespace, string[] Files)[] groups =
         [
             ("Diagnostics", "ViciOne.ServiceBus.Logging.Diagnostics",
-                ["ActivityObservation.cs", "DiagnosticPropagationHeaders.cs", "LogContextActivityExtensions.cs", "StartedActivity.cs"]),
+                ["ActivityObservation.cs", "DiagnosticPropagationHeaders.cs", "MessageActivity.cs", "StartedActivity.cs"]),
             ("Internal", "ViciOne.ServiceBus.Logging.Internal",
                 ["BusLogContext.cs", "ServiceBusLogCategories.cs", "SingleLoggerFactory.cs"]),
             ("Monitoring", "ViciOne.ServiceBus.Logging.Monitoring",
-                ["LogContextInstrumentationExtensions.cs", "LogContextInstrumentationState.cs", "MetricOperation.cs"]),
+                ["LogContextMetricsExtensions.cs", "LogContextMetricsState.cs", "MetricOperation.cs"]),
         ];
 
         foreach ((string directoryName, string expectedNamespace, string[] files) in groups)

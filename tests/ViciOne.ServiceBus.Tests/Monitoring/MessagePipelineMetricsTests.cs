@@ -748,7 +748,7 @@ public sealed class MessagePipelineMetricsTests
         try
         {
             LogContext.Current = applicationLogContext;
-            var instrument = applicationLogContext.StartOutboxDeliveryInstrument();
+            var instrument = applicationLogContext.TryStartOutboxDeliveryMetrics();
             instrument?.Complete();
 
             Assert.Empty(observationsA.Measurements);

@@ -67,7 +67,7 @@ public static class LogContext
         var current = Current ??= CreateDefaultLogContext();
         var created = current.CreateLogContext(categoryName);
 
-        LogContextInstrumentationExtensions.CopyInstrumentation(current, created);
+        LogContextMetricsExtensions.CopyMetrics(current, created);
         return created;
     }
 
@@ -89,7 +89,7 @@ public static class LogContext
                 ConfigureCurrentLogContext();
         }
 
-        LogContextInstrumentationExtensions.TryConfigure(provider);
+        LogContextMetricsExtensions.TryConfigure(provider);
     }
 
     /// <summary>Sets an available context only when the asynchronous flow has none.</summary>

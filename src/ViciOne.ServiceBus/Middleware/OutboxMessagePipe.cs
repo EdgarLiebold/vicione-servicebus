@@ -118,8 +118,8 @@ public class OutboxMessagePipe<TMessage> :
 
                 var endpoint = await context.CapturedContext.GetSendEndpointAsync(message.DestinationAddress).ConfigureAwait(false);
 
-                StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
-                MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
+                StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);
+                MetricOperation? instrument = LogContext.Current?.TryStartOutboxDeliveryMetrics();
                 try
                 {
                     await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, token.Token).ConfigureAwait(false);

@@ -64,8 +64,8 @@ internal sealed class StateMachineSagaMessageFilter<TInstance, TMessage> :
         IBehaviorContext<TInstance, TMessage> behaviorContext =
             new ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy<TMessage>(_machine, context, context, _event);
 
-        StartedActivity? activity = LogContext.Current?.StartSagaStateMachineActivity(behaviorContext);
-        var instrument = LogContext.Current?.StartSagaStateMachineInstrument(behaviorContext);
+        StartedActivity? activity = SagaActivity.TryStartStateMachine(behaviorContext);
+        var instrument = LogContext.Current?.TryStartSagaStateMachineMetrics(behaviorContext);
 
         try
         {

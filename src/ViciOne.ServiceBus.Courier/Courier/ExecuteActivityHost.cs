@@ -41,8 +41,8 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
         TimeProvider timeProvider = context.GetTimeProvider();
         long startedAt = timeProvider.GetTimestamp();
 
-        StartedActivity? activity = LogContext.Current?.StartExecuteActivity<TActivity, TArguments>(context);
-        var instrument = LogContext.Current?.StartActivityExecuteInstrument<TActivity, TArguments>(context);
+        StartedActivity? activity = CourierActivity.TryStartExecution<TActivity, TArguments>(context);
+        var instrument = LogContext.Current?.TryStartExecutionMetrics<TActivity, TArguments>(context);
 
         try
         {

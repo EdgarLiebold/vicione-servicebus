@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -42,6 +43,68 @@ public sealed class ServiceBusRuntimeLifecycleTests
             start.WaitAsync(TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken));
 
         Assert.Equal(source.Token, exception.CancellationToken);
+        Assert.Equal(1, driver.HostStopCount);
+        Assert.Equal(0, driver.PostStartCount);
+        Assert.Equal(1, driver.StartFaultedCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-RUNTIME-LIFECYCLE", "default-startup-timeout-cancels-and-cleans-up")]
+    public async Task DefaultStartupTimeout_CancelsReadinessAndCleansUpTheHostAsync()
+    {
+        var clock = new FakeTimeProvider();
+        var driver = new ServiceBusRuntimeLifecycleTestDriver(timeProvider: clock);
+
+        Task start = driver.StartWithoutCancellationAsync();
+        await driver.HostStarted.WaitAsync(TestContext.Current.CancellationToken);
+        clock.Advance(TimeSpan.FromSeconds(60));
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => start);
+
+        Assert.True(exception.CancellationToken.IsCancellationRequested);
+        Assert.Equal(1, driver.HostStopCount);
+        Assert.Equal(0, driver.PostStartCount);
+        Assert.Equal(1, driver.StartFaultedCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-RUNTIME-LIFECYCLE", "cleanup-failure-does-not-replace-start-cancellation")]
+    public async Task CleanupFailure_DoesNotReplaceTheOriginalStartupCancellationAsync()
+    {
+        var driver = new ServiceBusRuntimeLifecycleTestDriver();
+        driver.FailStop(new ExpectedCleanupException());
+        using var source = new CancellationTokenSource();
+
+        Task start = driver.Bus.StartAsync(source.Token);
+        await driver.HostStarted.WaitAsync(TestContext.Current.CancellationToken);
+        source.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => start);
+
+        Assert.Equal(source.Token, exception.CancellationToken);
+        Assert.Equal(2, driver.HostStopCount);
+        Assert.Equal(0, driver.PostStartCount);
+        Assert.Equal(1, driver.StartFaultedCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-RUNTIME-LIFECYCLE", "cleanup-timeout-does-not-replace-start-failure")]
+    public async Task CleanupTimeout_DoesNotReplaceTheOriginalStartupFailureAsync()
+    {
+        var clock = new FakeTimeProvider();
+        var driver = new ServiceBusRuntimeLifecycleTestDriver(timeProvider: clock);
+        driver.BlockStopUntilCanceled();
+        var expected = new ExpectedStartupException();
+
+        Task start = driver.Bus.StartAsync(TestContext.Current.CancellationToken);
+        await driver.HostStarted.WaitAsync(TestContext.Current.CancellationToken);
+        driver.FailReadiness(expected);
+        await driver.HostStopStarted.WaitAsync(TestContext.Current.CancellationToken);
+        clock.Advance(TimeSpan.FromSeconds(30));
+
+        ExpectedStartupException exception = await Assert.ThrowsAsync<ExpectedStartupException>(() => start);
+
+        Assert.Same(expected, exception);
         Assert.Equal(1, driver.HostStopCount);
         Assert.Equal(0, driver.PostStartCount);
         Assert.Equal(1, driver.StartFaultedCount);
@@ -160,4 +223,8 @@ public sealed class ServiceBusRuntimeLifecycleTests
         {
         }
     }
+
+    private sealed class ExpectedStartupException : Exception;
+
+    private sealed class ExpectedCleanupException : Exception;
 }
