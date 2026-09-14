@@ -3301,7 +3301,7 @@ continues with the remaining complete source owners and the final repository-wid
 
 ## Iteration 113 Core InMemoryTransport plan
 
-Iteration 113 reviews the complete 66-file, 3,846-line built-in InMemory owner: the 57 implementation
+Iteration 113 reviews the complete 66-file, 3,846-line built-in InMemory owner: the 56 implementation
 files below `src/ViciOne.ServiceBus/InMemoryTransport`, the nine public provider-contract files below
 `src/ViciOne.ServiceBus/Providers/Transports/InMemory`, and the public selection entry point below
 `src/ViciOne.ServiceBus/Configuration/InMemoryTransport`. Every file and comment has been read

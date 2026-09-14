@@ -1857,7 +1857,7 @@ remain unchanged and unstaged.
 Iteration 113 starts from remotely verified commit
 `410fb01fca19aa101afa14b6f6009d305fa1055a` and annotated tag
 `servicebus-a-plus-remediation-iteration-112-2026-09-14`. The implementation subtree of the built-in
-in-memory transport contains 57 production files and 3,380 physical lines under
+in-memory transport contains 56 production files and 3,380 physical lines under
 `src/ViciOne.ServiceBus/InMemoryTransport`. The complete owner expands to 66 files and 3,846 lines
 when its nine public provider contracts and public selection entry point are included. All 66 files
 and every source comment were read manually before any product edit. No source, test, or comment
