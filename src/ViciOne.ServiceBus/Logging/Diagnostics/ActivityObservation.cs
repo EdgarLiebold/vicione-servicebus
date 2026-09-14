@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Logging.Diagnostics;
 
-/// <summary>Isolates message processing from exceptions raised by application-owned activity listeners.</summary>
+/// <summary>Isolates message processing from failures while creating, mutating, or completing diagnostic activities.</summary>
 internal static class ActivityObservation
 {
     public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,
@@ -41,18 +41,6 @@ internal static class ActivityObservation
         }
     }
 
-    public static void TrySetTraceState(Activity activity, string? traceState)
-    {
-        try
-        {
-            activity.TraceStateString = traceState;
-        }
-        catch (Exception exception)
-        {
-            TryLog(exception, "Activity listener faulted while propagating trace state");
-        }
-    }
-
     public static void TrySetTag(Activity activity, string key, object? value)
     {
         try
@@ -61,7 +49,7 @@ internal static class ActivityObservation
         }
         catch (Exception exception)
         {
-            TryLog(exception, "Activity listener faulted while recording a tag");
+            TryLog(exception, "Activity observation failed while recording a tag");
         }
     }
 
@@ -73,7 +61,7 @@ internal static class ActivityObservation
         }
         catch (Exception exception)
         {
-            TryLog(exception, "Activity listener faulted while recording baggage");
+            TryLog(exception, "Activity observation failed while recording baggage");
         }
     }
 
@@ -85,7 +73,7 @@ internal static class ActivityObservation
         }
         catch (Exception exception)
         {
-            TryLog(exception, "Activity listener faulted while recording an event");
+            TryLog(exception, "Activity observation failed while recording an event");
         }
     }
 
@@ -97,7 +85,7 @@ internal static class ActivityObservation
         }
         catch (Exception exception)
         {
-            TryLog(exception, "Activity listener faulted while recording status");
+            TryLog(exception, "Activity observation failed while recording status");
         }
     }
 

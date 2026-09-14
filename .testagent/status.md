@@ -1012,3 +1012,36 @@ Requirements, bidirectional Async naming, comments, directives, filenames, folde
 dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
 Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal remains
 active for the remaining complete source owners and the final repository-wide audit.
+
+## Iteration 116
+
+Iteration 116 completes the manual review of all 13 Core Logging production files, their 1,341
+final source lines, all direct tests, and every source comment. `Diagnostics/`, `Internal/`, and
+`Monitoring/` remain coherent internal Core responsibilities. The related Azure Service Bus header
+projection correctly remains in its independent transport project below `src/Transports`; no
+product C# file is located directly in the repository `src` root.
+
+Remote transport-parent identity and the Azure received-message null boundary are corrected from
+red-first evidence. Persistent-outbox trace continuity, every receive-parent mode, exact body-size
+metrics, structured logging values and exception identity, caller-owned logger lifetime, and Azure
+diagnostic-header projection now have direct requirements and tests. Dead custom-tag machinery and
+redundant trace-state copying are removed without feature or public API loss.
+
+Focused profiles pass 21/21 Logging, 45/45 Monitoring, and 2/2 Azure header cases. Five controlled
+counterchanges are killed by exactly five causal tests and restored. The 10 changed methods and 12
+executed cases pass manual anti-pattern review with no finding. Complete Core coverage passes
+3,560/3,560; Logging reaches 95.7211% line and 100% branch coverage, maximum CRAP 28, with zero
+methods above 30. The accepted coverage SHA-256 is
+`c896dc9d95dc7f073237c80630d387c22267da46b598d1ba1bb27bf40e830cd6`.
+
+Both format gates and the serial 77-project Release build pass with zero warnings and errors. The
+canonical serialized 23-host profile passes 6,536/6,536 with no failure or skip. Package/API
+verification passes 18 journeys, 31 packages, three isolated provider-testing consumers, and all
+30 runtime APIs; the unchanged 18,879-line API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. A final targeted architecture
+run passes 53/53 bidirectional Async and source-file naming cases.
+
+Requirements, comments, directives, dummy and legacy markers, SDK pinning, empty directories,
+formatting, and Git whitespace pass. Protected `review/` and `TestResults/` remain unchanged and
+unstaged. The overall A+ goal remains active for the remaining complete source owners and the final
+repository-wide audit.

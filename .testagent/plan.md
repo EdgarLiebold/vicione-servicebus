@@ -3562,3 +3562,55 @@ comments, directives, filenames, folders, namespaces, dummy and legacy markers, 
 directories, formatting, and Git whitespace pass. Protected `review/` and `TestResults/` remain
 unchanged and unstaged. The overall A+ goal continues with the remaining complete source owners and
 the final repository-wide audit.
+
+## Iteration 116 Core Logging plan and completion
+
+Iteration 116 reviews all 13 Core Logging production files and every source comment manually. The
+owner starts with 1,373 physical source lines and finishes with 1,341 after dead internal tracing
+machinery is removed. Its `Diagnostics/`, `Internal/`, and `Monitoring/` folders match runtime
+responsibilities inside the Core assembly. The related Azure Service Bus header projection remains
+in its independent transport package under `src/Transports`; no C# product file is stored directly
+in the repository `src` root.
+
+The review covers structured log values and exact exception identity, caller-owned logger lifetime,
+distributed trace extraction and propagation, receive-parent modes, persistent outbox continuity,
+message-body metrics, listener-failure isolation, and the Azure diagnostic-header compatibility
+boundary. Every new behavior is represented in the durable requirement projection. No generator is
+used for source, tests, comments, or structure.
+
+Red-first tests expose two defects: an extracted transport parent loses its remote identity when an
+unrelated ambient activity exists, and the public Azure header provider accepts a null SDK message.
+The accepted implementation corrects both at their owning boundary. An unused transport-tag
+parameter and its dead helper are removed; redundant manual trace-state copying is also removed
+after end-to-end evidence confirms that `ActivitySource` inherits W3C trace state correctly.
+
+Five simultaneous controlled counterchanges alter exception forwarding, exact body length, the
+Link parent mode, remote-parent identity, and persistent-outbox delivery kind. Exactly five causal
+tests fail while 16 related tests remain green; the accepted sources are then restored. Focused
+Logging and Monitoring profiles pass 21/21 and 45/45. All 10 new or changed test methods, comprising
+12 executed cases, pass manual anti-pattern review with exact assertions and no sleep, wall-clock
+dependency, random input, skip, broad catch, swallowed failure, shared mutable fixture, or
+coverage-only assertion.
+
+The final Core coverage run passes 3,560/3,560. Core Logging reaches 95.7211% line (604/631) and
+100% branch (133/133) coverage across 116 compiler method records, with maximum CRAP 28 and none
+above 30. Overall loaded product reachability is 77.1372% line (48,959/63,470) and 69.9438% branch
+(17,060/24,391). The accepted artifact is
+`/private/tmp/vsb-iteration116-core-final2/core.cobertura.xml`, SHA-256
+`c896dc9d95dc7f073237c80630d387c22267da46b598d1ba1bb27bf40e830cd6`.
+
+Both format gates pass. The serial Engineering Release build passes all 77 projects with zero
+warnings and errors. The canonical serialized run passes all 6,536 tests across 23 hermetic hosts
+with no failure or skip. A deliberately non-canonical parallel host run exposed one Quartz harness
+timeout under CPU contention; the exact case passed in isolation and the documented
+`--max-parallel-test-modules 1` run passed without weakening any deadline. Package/API validation
+passes 18 journeys, 31 fresh packages, three isolated provider-testing consumers, and all 30
+runtime APIs. The public API remains 18,879 lines with SHA-256
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+A final targeted architecture run passes 53/53 bidirectional Async and source-file naming cases.
+Requirements, comments, directives, dummy and legacy markers, SDK pinning, empty directories,
+formatting, and Git whitespace pass. The sole source `NotImplementedException` reference is the
+intentional non-retryable exception-classification case. Protected `review/` and `TestResults/`
+remain unchanged and unstaged. The overall A+ goal continues with the remaining complete source
+owners and the final repository-wide audit.

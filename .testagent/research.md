@@ -2071,3 +2071,67 @@ validation passes 18 journeys, 31 fresh packages, three isolated provider-testin
 all 30 runtime APIs. The public API remains 18,879 lines with SHA-256
 `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. Protected trees remain
 unchanged and unstaged. The overall A+ goal remains active.
+
+## Iteration 116 Core Logging final research
+
+The complete Core Logging owner contains 13 files and 1,341 final source lines. Every production
+file, direct test, and source comment was read manually. Its internal `Diagnostics`, `Internal`, and
+`Monitoring` namespaces are coherent beneath the Core project. Azure Service Bus owns only its SDK
+header adapter in the independent transport project. This confirms the repository convention:
+`src/ViciOne.ServiceBus` is one project boundary, while direct `src` children are other assemblies
+and provider families are grouped below `Persistence`, `Scheduling`, and `Transports`.
+
+Distributed parent extraction previously marked a valid carrier parent as remote only when no
+ambient activity existed. A transport receive running beneath unrelated ambient instrumentation
+therefore emitted an incorrect local parent. The final extraction always preserves requested remote
+identity. Persistent outbox enqueue and delivery now have direct evidence for operation names,
+kinds, parent/trace continuity, and successful completion. Link, New, and carrier-parent modes are
+covered independently, and the full message-flow test confirms remote sampling, trace state,
+baggage, operation tags, and positive serialized-body size.
+
+The Azure header provider now rejects a missing SDK message immediately and maps Azure's
+`Diagnostic-Id` carrier to the canonical internal activity header. Its internal constant no longer
+claims that a live Azure interoperability header is legacy. Structured log convenience writers
+prove exact values and exception identity, while the single-logger factory proves logger identity
+and caller-owned lifetime. Exact serialized body length and a null generic update context are also
+directly constrained.
+
+Static caller review found that no transport supplied the former custom tag-array argument. The
+parameter and helper were dead and are removed without feature or public API loss. Manual trace
+state copying was redundant because activity creation inherits the current W3C state; complete
+integration assertions continue to prove exact propagation after its removal. Observation log
+messages now describe mutation failures accurately instead of attributing every failure to a
+listener.
+
+The original remote-parent test failed exactly on `IsRemote`, while its remaining identity
+assertions passed. The original Azure constructor test failed while diagnostic-header mapping
+passed. Five concurrent counterchanges caused exactly five failures among 21 targeted Logging cases
+and left 16 unrelated cases green; accepted source was restored and rebuilt. Focused profiles pass
+21/21 Logging, 45/45 Monitoring, and 2/2 Azure header cases.
+
+The manual anti-pattern audit covers 10 changed test methods and 12 executed cases. All assertions
+bind exact state, identity, causality, or boundary ownership. Test doubles throw on every unexpected
+call. There are no sleeps, wall-clock assumptions, random inputs, skips, broad catches, swallowed
+failures, assertion-free paths, or coverage-only tests. Existing GUID creation in an older message
+flow fixture supplies correlation identities and is not an ordering or timing oracle.
+
+Complete Core coverage passes 3,560/3,560 and records 77.1372% overall loaded-product line coverage
+(48,959/63,470) and 69.9438% branch coverage (17,060/24,391). Logging reaches 95.7211% line
+(604/631) and 100% branch (133/133) coverage over 116 compiler method records. No method has CRAP
+above 30; maximum is 28. The accepted artifact is
+`/private/tmp/vsb-iteration116-core-final2/core.cobertura.xml`, SHA-256
+`c896dc9d95dc7f073237c80630d387c22267da46b598d1ba1bb27bf40e830cd6`.
+
+Both format gates, the serial 77-project zero-warning Engineering build, and all 6,536 tests across
+23 canonical serialized hosts pass. One non-canonical parallel-host attempt timed out a Quartz
+observation case under CPU contention; the case passed in isolation in 1.393 seconds and the full
+documented serialized profile passed, so no runtime or test deadline was weakened. Package/API
+verification passes 18 journeys, 31 fresh packages, three isolated provider-testing consumers, and
+all 30 runtime APIs. The unchanged 18,879-line public API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+The final targeted Roslyn architecture run passes 53/53 cases and reconfirms both directions of the
+Async contract plus source type/file naming. Requirements JSON, directives, dummy and MassTransit
+legacy markers, SDK pinning, empty directories, formatting, and Git whitespace are clean. The sole
+source `NotImplementedException` occurrence classifies that real BCL exception as non-retryable.
+Protected `review/` and `TestResults/` remain unchanged and unstaged.

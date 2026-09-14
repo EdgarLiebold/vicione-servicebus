@@ -18,7 +18,7 @@ public class ServiceBusHeaderProvider :
     /// <param name="message">The received message whose headers are exposed.</param>
     public ServiceBusHeaderProvider(ServiceBusReceivedMessage message)
     {
-        _message = message;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
     /// <summary>Enumerates non-empty message identity, correlation, content-type, and application properties.</summary>
@@ -51,7 +51,7 @@ public class ServiceBusHeaderProvider :
                 return true;
 
             if (DiagnosticPropagationHeaders.ActivityId.Equals(key, StringComparison.OrdinalIgnoreCase)
-                && _message.ApplicationProperties.TryGetValue(DiagnosticPropagationHeaders.LegacyAzureDiagnosticId, out value)
+                && _message.ApplicationProperties.TryGetValue(DiagnosticPropagationHeaders.AzureDiagnosticId, out value)
                 && value != null)
                 return true;
         }

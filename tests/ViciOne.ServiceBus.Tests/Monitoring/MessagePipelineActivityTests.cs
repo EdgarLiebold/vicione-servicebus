@@ -32,11 +32,19 @@ public sealed class MessagePipelineActivityTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var recorded = new ConcurrentQueue<Activity>();
         var observation = new ActivityObservation();
+        var receiveParentIsRemote = false;
         using var listener = new ActivityListener
         {
             ShouldListenTo = source =>
                 source.Name == ServiceBusTelemetry.ActivitySourceName || source.Name == CallerSource,
-            Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            Sample = (ref ActivityCreationOptions<ActivityContext> options) =>
+            {
+                if (options.Kind == ActivityKind.Consumer
+                    && options.Name.EndsWith(" receive", StringComparison.Ordinal))
+                    receiveParentIsRemote = options.Parent.IsRemote;
+
+                return ActivitySamplingResult.AllDataAndRecorded;
+            },
             SampleUsingParentId = (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStopped = recorded.Enqueue,
         };
@@ -96,6 +104,7 @@ public sealed class MessagePipelineActivityTests
         Assert.Equal(callerActivity.SpanId, send.ParentSpanId);
         Assert.Equal(send.SpanId, receive.ParentSpanId);
         Assert.Equal(receive.SpanId, process.ParentSpanId);
+        Assert.True(receiveParentIsRemote);
         Assert.Equal(TraceState, send.TraceStateString);
         Assert.Equal(TraceState, receive.TraceStateString);
         Assert.Equal(TraceState, observation.TraceStateHeader);
@@ -103,6 +112,7 @@ public sealed class MessagePipelineActivityTests
         Assert.Equal(BaggageValue, observation.BaggageHeader);
         Assert.Equal(BaggageValue, process.GetBaggageItem(BaggageKey));
         Assert.Equal("send", Tag(send, ServiceBusTelemetry.Attributes.OperationName));
+        Assert.True(Assert.IsType<long>(send.GetTagItem(ServiceBusTelemetry.Attributes.MessageBodySize)) > 0);
         Assert.Equal("receive", Tag(receive, ServiceBusTelemetry.Attributes.OperationName));
         Assert.Equal("process", Tag(process, ServiceBusTelemetry.Attributes.OperationName));
         Assert.Equal("in-memory", Tag(send, ServiceBusTelemetry.Attributes.MessagingSystem));

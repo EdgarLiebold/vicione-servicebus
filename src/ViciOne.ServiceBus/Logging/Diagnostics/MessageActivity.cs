@@ -16,10 +16,8 @@ internal static class MessageActivity
     /// <typeparam name="T">The message contract being sent.</typeparam>
     /// <param name="transportContext">The transport identity used to name and describe the activity.</param>
     /// <param name="context">The send context that receives propagation headers and message metadata tags.</param>
-    /// <param name="tags">Additional transport-specific tags recorded when full activity data is requested.</param>
     /// <returns>The started activity, or <see langword="null"/> when the source is not sampled or observation fails.</returns>
-    public static StartedActivity? TryStartSend<T>(SendTransportContext transportContext, SendContext<T> context,
-        params (string Key, object? Value)[] tags)
+    public static StartedActivity? TryStartSend<T>(SendTransportContext transportContext, SendContext<T> context)
         where T : class
     {
         var currentActivity = System.Diagnostics.Activity.Current;
@@ -38,7 +36,7 @@ internal static class MessageActivity
         ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessagingSystem, transportContext.ActivitySystem);
         ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationName, transportContext.ActivityDestination);
 
-        return PopulateSendActivity(context, activity, currentActivity, tags);
+        return PopulateSendActivity(context, activity, currentActivity);
     }
 
     /// <summary>Starts an outbox producer activity and injects its trace context into the deferred message.</summary>
@@ -217,11 +215,10 @@ internal static class MessageActivity
     }
 
     static StartedActivity? PopulateSendActivity(SendContext context, System.Diagnostics.Activity activity,
-        System.Diagnostics.Activity? parentActivity, params (string Key, object? Value)[] tags)
+        System.Diagnostics.Activity? parentActivity)
     {
-        CopyParentTraceState(parentActivity, activity);
         AddSendBaggage(context, activity);
-        AddSendTags(context, activity, tags);
+        AddSendTags(context, activity);
 
         if (!ActivityObservation.TryStart(activity))
         {
@@ -233,13 +230,6 @@ internal static class MessageActivity
         return new StartedActivity(activity, context.GetTimeProvider());
     }
 
-    static void CopyParentTraceState(System.Diagnostics.Activity? parentActivity, System.Diagnostics.Activity activity)
-    {
-        if (!string.IsNullOrWhiteSpace(parentActivity?.TraceStateString)
-            && string.IsNullOrWhiteSpace(activity.TraceStateString))
-            ActivityObservation.TrySetTraceState(activity, parentActivity.TraceStateString);
-    }
-
     static void AddSendBaggage(SendContext context, System.Diagnostics.Activity activity)
     {
         if (context.CorrelationId is { } correlationId)
@@ -248,7 +238,7 @@ internal static class MessageActivity
             ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.ConversationId, conversationId.ToString("D"));
     }
 
-    static void AddSendTags(SendContext context, System.Diagnostics.Activity activity, (string Key, object? Value)[] tags)
+    static void AddSendTags(SendContext context, System.Diagnostics.Activity activity)
     {
         if (!activity.IsAllDataRequested)
             return;
@@ -256,7 +246,6 @@ internal static class MessageActivity
         AddSendIdentifierTags(context, activity);
         AddSendAddressTags(context, activity);
         ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(",", context.SupportedMessageTypes));
-        AddCustomTags(activity, tags);
     }
 
     static void AddSendIdentifierTags(SendContext context, System.Diagnostics.Activity activity)
@@ -279,15 +268,6 @@ internal static class MessageActivity
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, sourceAddress.ToString());
         if (context.DestinationAddress is { } destinationAddress)
             ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, destinationAddress.ToString());
-    }
-
-    static void AddCustomTags(System.Diagnostics.Activity activity, (string Key, object? Value)[] tags)
-    {
-        foreach ((string key, object? value) in tags)
-        {
-            if (value is not null)
-                ActivityObservation.TrySetTag(activity, key, value.ToString());
-        }
     }
 
     static void PropagateActivity(SendContext context, System.Diagnostics.Activity? activity)
@@ -322,13 +302,13 @@ internal static class MessageActivity
         return headers.TryGetHeader(DiagnosticPropagationHeaders.TraceState, out var value) ? value as string : null;
     }
 
-    static System.Diagnostics.ActivityContext GetParentActivityContext(Headers headers, bool isRemote = false)
+    internal static System.Diagnostics.ActivityContext GetParentActivityContext(Headers headers, bool isRemote = false)
     {
         if (headers.TryGetHeader(DiagnosticPropagationHeaders.ActivityId, out var headerValue)
             && headerValue is string activityId
             && System.Diagnostics.ActivityContext.TryParse(activityId, GetTraceState(headers), out var activityContext))
         {
-            if (isRemote && System.Diagnostics.Activity.Current == null)
+            if (isRemote)
                 return new System.Diagnostics.ActivityContext(activityContext.TraceId, activityContext.SpanId, activityContext.TraceFlags,
                     activityContext.TraceState, true);
 

@@ -36,6 +36,47 @@ public sealed class LogContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-LOG-CONTEXT", "convenience-writers-preserve-values-and-exception")]
+    public void EnabledWriters_PreserveStructuredValuesAndTheExactException()
+    {
+        var factory = new RecordingLoggerFactory(LogLevel.Trace);
+        var context = new BusLogContext(factory);
+        var failure = new InvalidOperationException("expected failure");
+
+        context.Info!.Log("accepted {Count}", 27);
+        context.Error!.Log(failure, "failed {Contract}", "OrderSubmitted");
+
+        Assert.Collection(
+            factory.Entries,
+            entry =>
+            {
+                Assert.Equal("accepted 27", entry.Message);
+                Assert.Null(entry.Exception);
+            },
+            entry =>
+            {
+                Assert.Equal("failed OrderSubmitted", entry.Message);
+                Assert.Same(failure, entry.Exception);
+            });
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-LOG-CONTEXT", "single-logger-factory-preserves-logger-identity")]
+    public void SingleLoggerFactory_ReturnsTheCallerOwnedLoggerForEveryCategory()
+    {
+        var owner = new RecordingLoggerFactory(LogLevel.Trace);
+        ILogger logger = owner.CreateLogger("Caller.Owned");
+        var factory = new SingleLoggerFactory(logger);
+
+        Assert.Same(logger, factory.CreateLogger("First.Category"));
+        Assert.Same(logger, factory.CreateLogger("Second.Category"));
+
+        factory.Dispose();
+        logger.LogInformation("still owned by caller");
+        Assert.Equal("still owned by caller", Assert.Single(owner.Entries).Message);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-LOG-CONTEXT", "categories-and-disabled-levels-are-preserved")]
     public void Contexts_PreserveMessageAndChildCategoriesAndHideDisabledLevels()
     {

@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Logging.Diagnostics;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -67,6 +69,21 @@ public sealed class StartedActivityTests
 
         Assert.Throws<ArgumentException>(() => started.SetTag(" ", "value"));
         Assert.Throws<ArgumentNullException>(() => started.AddExceptionEvent(null!));
+        Assert.Throws<ArgumentNullException>(() => started.Update<object>(null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVITY-OUTCOME", "send-body-length-tag-is-exact")]
+    public void Update_RecordsTheExactSerializedBodyLength()
+    {
+        using var activity = new Activity("serialized send").Start();
+        var started = new StartedActivity(activity);
+        SendContext<BodyLengthMessage> context = DispatchProxy.Create<SendContext<BodyLengthMessage>, BodyLengthSendContextProxy>();
+        ((BodyLengthSendContextProxy)(object)context).BodyLength = 73;
+
+        started.Update(context);
+
+        Assert.Equal(73L, activity.GetTagItem(ServiceBusTelemetry.Attributes.MessageBodySize));
     }
 
     private static Exception CaptureFailure()
@@ -83,4 +100,20 @@ public sealed class StartedActivityTests
 
     private static object? Tag(ActivityEvent activityEvent, string name) =>
         activityEvent.Tags.Single(tag => tag.Key == name).Value;
+
+    private sealed record BodyLengthMessage;
+
+    private class BodyLengthSendContextProxy : DispatchProxy
+    {
+        public long? BodyLength { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            if (targetMethod.Name == "get_BodyLength")
+                return BodyLength;
+
+            throw new NotSupportedException(targetMethod.Name);
+        }
+    }
 }
