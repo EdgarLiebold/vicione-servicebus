@@ -16,8 +16,13 @@ internal sealed partial class ClientRequestHandle<TRequest>
 
     void Fail(Exception responseException, Exception? messageException = null)
     {
-        if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) != 0)
-            return;
+        lock (_handlerLock)
+        {
+            if (_faultedOrCanceled != 0 || _responseCompleted)
+                return;
+
+            _faultedOrCanceled = 1;
+        }
 
         void HandleFail()
         {

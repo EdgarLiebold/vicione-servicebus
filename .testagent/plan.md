@@ -3090,3 +3090,72 @@ and 30 runtime APIs; the unchanged 18,879-line contract SHA-256 is
 Source hygiene, requirements, formatting, API identity, empty directories, and Git whitespace pass.
 The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
 continues with the remaining complete source owners and the final repository-wide audit.
+
+## Iteration 110 Core Clients plan
+
+Iteration 110 reviews all 17 production files and 1,805 lines under
+`src/ViciOne.ServiceBus/Clients`. Every source file and comment is read manually before any product
+edit. Source, comment, and test generation remain prohibited; static analysis and coverage are
+read-only completeness aids.
+
+Clients is an internal Core capability and remains inside `src/ViciOne.ServiceBus/Clients`.
+`Contexts/`, `Endpoints/`, and `Requests/` are accepted only where paths, namespaces, filenames,
+primary types, and ownership match. The review covers factory lifetime, endpoint selection,
+request/response matching, cancellation and timeout identity, temporary endpoint cleanup,
+multi-response completion, callback isolation, metadata propagation, and every public parameter.
+
+### Iteration 110 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Every Clients source file and comment is necessary, current, and manually understood | complete 17-file reread and final inventory |
+| Client folders and namespaces express one Core capability | manual ownership map plus architecture and packed-surface gates |
+| Request completion selects exactly one terminal outcome | deterministic response, fault, timeout, cancellation, and stop-race tests |
+| Multi-response handlers preserve type and identity | exact accepted, rejected, late, and duplicate response assertions |
+| Factories and endpoints preserve caller configuration | complete overload, address, timeout, callback, and metadata evidence |
+| Client-owned connections and temporary endpoints are released exactly once | explicit lifecycle, concurrent disposal, and failure-path assertions |
+| Public members and parameters remain minimal Greenfield API | contract review, invalid-input matrix, async naming, and package comparison |
+| No feature is lost | focused baseline, owner coverage/CRAP, full Core and hermetic profiles, build, format, package/API and hygiene gates |
+
+### Iteration 110 validation
+
+1. Record the unchanged focused baseline and current source-to-test ownership map.
+2. Read every production file and comment before editing product code.
+3. Compare state transitions and public parameters with existing tests and fresh owner risk data.
+4. Add red-first tests only for independently justified behavior, ownership, or API findings.
+5. Make the smallest coherent correction and update affected comments manually.
+6. Kill meaningful one-cause counterchanges, restoring the accepted implementation after each run.
+7. Audit all changed tests for assertion depth, determinism, bounded waits, and requirement identity.
+8. Run focused coverage, both format gates, all Engineering projects and hermetic hosts, package/API,
+   requirements, source hygiene, and Git checks.
+9. Commit, annotate Iteration 110, push without force, and verify branch and peeled tag hashes.
+
+### Iteration 110 completion
+
+All 17 Clients production files and their final comments were manually read. The accepted ownership
+model remains explicit: `src/ViciOne.ServiceBus` is the Core project, not an umbrella; Clients is a
+Core capability below it, independent assemblies remain sibling projects, and external providers
+remain grouped under `Persistence/`, `Scheduling/`, and `Transports/`.
+
+Six request lifecycle defects are corrected: terminal fault/response races, multiple successful
+response branches, send-before-fault-observer ordering, null fault and response connection handles,
+and null sent messages. Factory disposal, every direct and scoped request creation shape, advanced
+initialized multi-response calls, deadline-derived transport lifetime, and duplicate send-pipeline
+timer ownership now have direct evidence.
+
+Thirteen permanent requirement projections add 30 focused cases, taking Clients from 93/93 to
+123/123. Seven controlled counterchanges were killed and restored, and three provider-result
+contracts were independently red before correction. Fresh Clients coverage is 98.9831% line and
+89.6739% branch over 137 methods, with zero CRAP scores above 30. The accepted Core artifact passes
+3,426/3,426 tests and has SHA-256
+`3fe785da97559080e7eef14bc4dab1f155ae8ce155c15b8423af847655d83ce6`.
+
+Both format gates pass. The 77-project Release build has zero warnings and errors. All 23 hermetic
+hosts pass 6,399/6,399 without a skip. Package/API verification passes 18 journeys, 31 packages,
+three isolated provider-testing consumers, and all 30 runtime API assemblies; the unchanged
+18,879-line API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements, bidirectional Async naming, file/folder/namespace ownership, source hygiene, empty
+directories, and Git whitespace pass. Protected trees remain unchanged and unstaged. The overall
+A+ goal continues with the remaining complete source owners and final whole-repository audit.

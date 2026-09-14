@@ -265,6 +265,26 @@ public sealed class RequestClientBoundaryTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "factory-disposal-preserves-one-shared-failure")]
+    public async Task ClientFactory_DisposalPreservesOneSharedContextFailureAsync()
+    {
+        var failure = new FactoryDisposalException();
+        var context = new FaultingDisposableBoundaryClientFactoryContext(failure);
+        var factory = new ClientFactory(context);
+
+        Task firstDisposal = factory.DisposeAsync().AsTask();
+        Task secondDisposal = factory.DisposeAsync().AsTask();
+        FactoryDisposalException first = await Assert.ThrowsAsync<FactoryDisposalException>(() => firstDisposal);
+        FactoryDisposalException second = await Assert.ThrowsAsync<FactoryDisposalException>(() => secondDisposal);
+
+        Assert.Same(firstDisposal, secondDisposal);
+        Assert.Same(failure, first);
+        Assert.Same(first, second);
+        Assert.Equal(1, context.DisposeCount);
+        Assert.Throws<ObjectDisposedException>(() => factory.CreateRequestClient<BoundaryRequest>(default));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "pre-canceled-send-skips-endpoint-resolution")]
     public async Task PreCanceledRequestSend_SkipsEndpointResolutionAndPreservesTheTokenAsync()
     {
@@ -565,6 +585,19 @@ public sealed class RequestClientBoundaryTests
         public void ReleaseDisposal() => _releaseDisposal.TrySetResult();
     }
 
+    private sealed class FaultingDisposableBoundaryClientFactoryContext(Exception failure) : BoundaryClientFactoryContext, IAsyncDisposable
+    {
+        private int _disposeCount;
+
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+        public ValueTask DisposeAsync()
+        {
+            Interlocked.Increment(ref _disposeCount);
+            return new ValueTask(Task.FromException(failure));
+        }
+    }
+
     private class UnusedConsumeContextProxy : DispatchProxy
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
@@ -630,4 +663,6 @@ public sealed class RequestClientBoundaryTests
     }
 
     private sealed class ResolutionProbeException : Exception;
+
+    private sealed class FactoryDisposalException : Exception;
 }

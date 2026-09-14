@@ -1599,3 +1599,86 @@ already enabled centrally. The only remaining directive-shaped lines are data in
 raw string. Production code has no preprocessor directives, dummy or compatibility identities,
 SDK-version pinning, or empty directories. Requirements JSON and Git whitespace pass. Protected
 `review/` and `TestResults/` remain unchanged and unstaged.
+
+## Iteration 110 Core Clients initial research
+
+The complete `src/ViciOne.ServiceBus/Clients` owner contains 17 production files and 1,805 lines.
+All 17 files and every source comment were read manually before any product edit. `ClientFactory`
+and `ScopedClientFactory` own factory selection and lifetime; `Contexts/` owns the three bus and
+receive-endpoint response contexts; `Endpoints/` owns the five publish/send resolution paths; and
+`Requests/` owns response registration, terminal completion, metadata application, and typed
+response materialization. Filenames, primary types, namespaces, and folders are aligned.
+
+This is an internal request/response capability of the Core assembly and therefore belongs below
+`src/ViciOne.ServiceBus/Clients`. Moving it to a new sibling project would create an artificial
+package boundary across Core pipes, contexts, transports, initializers, and outgoing metadata. In
+contrast, independent persistence, scheduling, and transport deliverables remain sibling projects
+grouped below their provider families. The public contracts in `ViciOne.ServiceBus.Abstractions`
+and the `Advanced` facade were also inspected as consumer boundaries; they do not make the Core
+implementation directory an umbrella for other assemblies.
+
+The unchanged focused baseline passes 93/93 Client tests. The first source pass confirms that
+Request ID, response address, accepted response URNs, transport lifetime, absolute deadline, and
+custom outgoing options converge in `ClientRequestHandle.SendAsync`. Receive-endpoint-backed
+endpoints gate destination resolution on endpoint readiness, and `ClientFactory.DisposeAsync`
+serializes concurrent disposal through one completion source. Remaining questions for direct test
+and risk evidence are terminal response/fault/cancellation races, handler connection release,
+callback failure identity, initialized-message metadata parity, and exact factory-disposal fault
+ownership. No structural move is accepted without corresponding assembly, consumer, package,
+runtime, and test evidence.
+
+The final owner still contains the same 17 files; all final product changes are confined to the
+three partial `ClientRequestHandle` files in `Requests/`. The review found six concrete lifecycle
+defects. A fault could lose to a later response while cleanup was blocked; two response contracts
+could both complete successfully; sending began before the mandatory fault observer was connected;
+null fault and response connection handles were not rejected at their ownership boundaries; and a
+send callback could return a null request message. Terminal response, fault, cancellation, and
+disposal ownership now use the same handler lock. Fault observation is connected before send can
+start, and every missing provider result fails immediately with an exact diagnostic.
+
+Direct tests also close previously unproved but already correct contracts: a transport lifetime
+derived from a deadline requires that deadline; a second send-pipeline invocation rejects and
+releases its unowned timer; repeated asynchronous factory disposal preserves one shared failure;
+all eight direct factory request shapes, all eight scoped request shapes, and all four scoped-client
+resolution shapes preserve address, route, consume scope, typed or initialized message, request ID,
+response address, timeout, cancellation token, and timer ownership. The two- and three-response
+advanced initialized-message overloads now have exact winning-branch and message assertions.
+
+Thirteen permanent requirement projections cover the new contracts. The focused Clients suite
+grows from 93 to 123 cases. Every changed or added test was manually reviewed for causal assertions,
+bounded waits, cancellation identity, exception identity, and resource ownership. It contains no
+assertion-free, trivial, self-referential, skipped, random, sleeping, wall-clock-dependent, or
+swallowed-exception case. Seven isolated one-cause counterchanges were killed and restored:
+response-branch ownership, response-before-fault ownership, connect-before-send, explicit scoped
+address ownership, consumed initialized-message scope, deadline validation, and duplicate timer
+release. Three further provider-result tests were observed red on the unchanged implementation
+before their null-contract corrections.
+
+Fresh final Core coverage passes 3,426/3,426 tests. Repository reachability is 76.7457% line
+(48,633/63,369) and 69.4156% branch (16,927/24,385). Clients improves from 95.7821% to 98.9831%
+line coverage (584/590) and from 75.5814% to 89.6739% branch coverage (165/184), across 137 methods
+with zero CRAP scores above 30 and a maximum of 20.12. The six remaining owner lines are private
+deterministic race, cleanup, or logging defenses rather than missing API or parameter forms. The
+accepted artifact is `/private/tmp/vsb-iteration110-core-final2/core.cobertura.xml`, SHA-256
+`3fe785da97559080e7eef14bc4dab1f155ae8ce155c15b8423af847655d83ce6`.
+
+One first full Core coverage attempt reported 3,420/3,421 without retaining an identifiable
+failure in its truncated output. The same candidate then passed repeated complete Core runs,
+including the accepted 3,426-case coverage run, and the final all-host run. It is recorded as a
+non-reproduced observation rather than represented as a successful gate.
+
+Both full format gates pass. The serial Engineering Release build passes 77 projects with zero
+warnings and errors. All 23 hermetic Unit and Architecture hosts pass 6,399/6,399 without a failure
+or skip. This includes the bidirectional Async convention and source-file, namespace, project, and
+folder architecture rules. Package verification passes 18 journeys, 31 freshly packed packages,
+three isolated provider-testing consumers, and 30 runtime API assemblies. The packed public API is
+unchanged at 18,879 lines with SHA-256
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements JSON and Git whitespace pass. Source scans find no C# preprocessor directives, dummy
+markers, MassTransit or compatibility identities, SDK-version pinning, or empty source/test
+directories. The retained `NotSupportedException` operations are explicit non-readable,
+non-seekable stream members or Event Hubs endpoint-local transport operations that the contracts do
+not support; they are not placeholders. The sole `NotImplementedException` reference is an
+intentional non-retryable failure-classification case. The protected `review/` and `TestResults/`
+trees remain unchanged and unstaged.

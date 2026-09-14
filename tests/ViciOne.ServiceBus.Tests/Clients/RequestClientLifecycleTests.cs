@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Clients.Requests;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Events.Faults;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using ViciOne.ServiceBus.Transports;
@@ -58,6 +61,63 @@ public sealed class RequestClientLifecycleTests
             context.SentContext = sendContext;
             return request;
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "deadline-derived-transport-lifetime-requires-deadline")]
+    public void DeadlineDerivedTransportLifetime_RequiresAnAbsoluteDeadline()
+    {
+        var context = new RecordingClientFactoryContext(
+            TimeProvider.System,
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new ClientRequestHandle<LifecycleRequest>(
+                context,
+                (_, _, _) => Task.FromResult(new LifecycleRequest("unexpected")),
+                useDeadlineAsTimeToLive: true));
+
+        Assert.Equal("useDeadlineAsTimeToLive", exception.ParamName);
+        Assert.StartsWith(
+            "A transport lifetime derived from a deadline requires an absolute deadline.",
+            exception.Message,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "second-send-pipeline-invocation-rejects-and-releases-timer")]
+    public async Task SecondSendPipelineInvocation_DisposesItsUnownedTimerAndFailsExplicitlyAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var context = new RecordingClientFactoryContext(
+            timeProvider,
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
+        var request = new LifecycleRequest("one-send-pipeline");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return request;
+            });
+        Task<Response<LifecycleResponse>> response =
+            handle.GetResponseAsync<LifecycleResponse>(readyToSend: true, CancellationToken.None);
+
+        Assert.Same(request, await handle.Message);
+        Assert.Equal(1, timeProvider.TimerCount);
+        Assert.Equal(1, timeProvider.ActiveTimerCount);
+
+        var duplicateContext = new MessageSendContext<LifecycleRequest>(request);
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            handle.SendAsync(duplicateContext));
+
+        Assert.Equal("The request timeout timer was initialized more than once.", exception.Message);
+        Assert.Equal(2, timeProvider.TimerCount);
+        Assert.Equal(1, timeProvider.ActiveTimerCount);
+
+        handle.Dispose();
+        await Assert.ThrowsAsync<TaskCanceledException>(() => response);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
     }
 
     [Theory]
@@ -354,6 +414,225 @@ public sealed class RequestClientLifecycleTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "fault-observed-before-response-wins-terminal-race")]
+    public async Task FaultObservedBeforeAResponse_RemainsTheExactTerminalOutcomeAsync()
+    {
+        var timeProvider = new BlockingTimerDisposalTimeProvider();
+        var context = new DirectResponseClientFactoryContext(timeProvider);
+        var request = new LifecycleRequest("fault-first");
+        var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return request;
+            },
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)));
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(
+            readyToSend: true,
+            CancellationToken.None);
+        var fault = new FaultEvent<LifecycleRequest>(
+            request,
+            null,
+            HostMetadataCache.Empty,
+            new CleanupFailureException("The request failed."),
+            []);
+
+        try
+        {
+            Assert.Same(request, await handle.Message);
+
+            await context.DeliverAsync<Fault<LifecycleRequest>>(fault);
+            await timeProvider.Timer.DisposalStarted.WaitAsync(
+                TimeSpan.FromSeconds(5),
+                TestContext.Current.CancellationToken);
+            await context.DeliverAsync(new LifecycleResponse("too-late"));
+
+            timeProvider.Timer.ReleaseDisposal();
+
+            RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
+                response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            Assert.Same(fault, exception.Fault);
+            Assert.Equal(typeof(LifecycleRequest), exception.RequestType);
+        }
+        finally
+        {
+            timeProvider.Timer.ReleaseDisposal();
+            handle.Dispose();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "response-observed-before-fault-wins-terminal-race")]
+    public async Task ResponseObservedBeforeAFault_RemainsTheExactTerminalOutcomeAsync()
+    {
+        var context = new DirectResponseClientFactoryContext(TimeProvider.System);
+        var request = new LifecycleRequest("response-first");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return request;
+            },
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)));
+        Task<Response<AlternateLifecycleResponse>> losingResponse =
+            handle.GetResponseAsync<AlternateLifecycleResponse>(readyToSend: false, CancellationToken.None);
+        Task<Response<LifecycleResponse>> winningResponse =
+            handle.GetResponseAsync<LifecycleResponse>(readyToSend: true, CancellationToken.None);
+        var response = new LifecycleResponse("first-arrival");
+        var fault = new FaultEvent<LifecycleRequest>(
+            request,
+            null,
+            HostMetadataCache.Empty,
+            new CleanupFailureException("The late fault must not replace the response."),
+            []);
+
+        Assert.Same(request, await handle.Message);
+        await context.DeliverAsync(response);
+        Assert.Same(response, (await winningResponse).Message);
+
+        await context.DeliverAsync<Fault<LifecycleRequest>>(fault);
+        handle.Dispose();
+
+        await Assert.ThrowsAsync<TaskCanceledException>(() =>
+            losingResponse.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "first-response-is-the-only-successful-branch")]
+    public async Task FirstResponseContractToArrive_IsTheOnlySuccessfulBranchAsync()
+    {
+        var context = new DirectResponseClientFactoryContext(TimeProvider.System);
+        var request = new LifecycleRequest("single-winner");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return request;
+            },
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)));
+        Task<Response<AlternateLifecycleResponse>> first = handle.GetResponseAsync<AlternateLifecycleResponse>(
+            readyToSend: false,
+            CancellationToken.None);
+        Task<Response<LifecycleResponse>> second = handle.GetResponseAsync<LifecycleResponse>(
+            readyToSend: true,
+            CancellationToken.None);
+
+        Assert.Same(request, await handle.Message);
+        var winner = new LifecycleResponse("first-arrival");
+        await context.DeliverAsync(winner);
+        Assert.Same(winner, (await second).Message);
+
+        await context.DeliverAsync(new AlternateLifecycleResponse("too-late"));
+        handle.Dispose();
+
+        await Assert.ThrowsAsync<TaskCanceledException>(() =>
+            first.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "fault-observation-connects-before-send-starts")]
+    public void FaultHandlerConnectionFailure_PreventsTheRequestSendFromStarting()
+    {
+        var sendCount = 0;
+        var context = new FaultConnectionFailureClientFactoryContext();
+
+        Assert.Throws<CleanupFailureException>(() => new ClientRequestHandle<LifecycleRequest>(
+            context,
+            (_, _, _) =>
+            {
+                Interlocked.Increment(ref sendCount);
+                return Task.FromResult(new LifecycleRequest("unexpected"));
+            }));
+
+        Assert.Equal(0, sendCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "missing-fault-handler-connection-prevents-send")]
+    public void MissingFaultHandlerConnection_PreventsTheRequestSendFromStarting()
+    {
+        var sendCount = 0;
+        var context = new MissingConnectionClientFactoryContext(omitFaultConnection: true);
+        ClientRequestHandle<LifecycleRequest>? handle = null;
+
+        Exception? exception = Record.Exception(() =>
+            handle = new ClientRequestHandle<LifecycleRequest>(
+                context,
+                (_, _, _) =>
+                {
+                    Interlocked.Increment(ref sendCount);
+                    return Task.FromResult(new LifecycleRequest("unexpected"));
+                }));
+
+        try
+        {
+            InvalidOperationException actual = Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal("The client-factory context returned no fault-handler connection.", actual.Message);
+            Assert.Equal(0, sendCount);
+        }
+        finally
+        {
+            handle?.Dispose();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "missing-response-handler-connection-prevents-send")]
+    public void MissingResponseHandlerConnection_PreventsTheRequestSendFromStarting()
+    {
+        var sendCount = 0;
+        var context = new MissingConnectionClientFactoryContext(omitFaultConnection: false);
+        var request = new LifecycleRequest("missing-response-connection");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                Interlocked.Increment(ref sendCount);
+                return request;
+            });
+
+        Exception? exception = Record.Exception(() =>
+        {
+            _ = handle.GetResponseAsync<LifecycleResponse>(readyToSend: true, CancellationToken.None);
+        });
+
+        InvalidOperationException actual = Assert.IsType<InvalidOperationException>(exception);
+        Assert.Equal("The client-factory context returned no response-handler connection.", actual.Message);
+        Assert.Equal(0, sendCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "missing-sent-request-message-faults-owned-tasks")]
+    public async Task MissingSentRequestMessage_FaultsEveryOwnedTaskExplicitlyAsync()
+    {
+        var context = new RecordingClientFactoryContext(
+            TimeProvider.System,
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
+        var request = new LifecycleRequest("missing-sent-message");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return null!;
+            });
+        Task<Response<LifecycleResponse>> response =
+            handle.GetResponseAsync<LifecycleResponse>(readyToSend: true, CancellationToken.None);
+
+        InvalidOperationException messageException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            handle.Message.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+        RequestException responseException = await Assert.ThrowsAsync<RequestException>(() =>
+            response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+
+        Assert.Equal("The request send callback returned no request message.", messageException.Message);
+        Assert.Same(messageException, responseException.InnerException);
+    }
+
     private static async Task AssertSourceIsDisposedAsync(CancellationTokenSource source)
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -384,6 +663,169 @@ public sealed class RequestClientLifecycleTests
     private sealed record LifecycleRequest(string Value);
 
     private sealed record LifecycleResponse(string Value);
+
+    private sealed record AlternateLifecycleResponse(string Value);
+
+    private sealed class DirectResponseClientFactoryContext(TimeProvider timeProvider) : ClientFactoryContext
+    {
+        private readonly Dictionary<Type, object> _requestPipes = [];
+
+        public RequestTimeout DefaultTimeout => new(TimeSpan.FromMinutes(1));
+
+        public TimeProvider TimeProvider { get; } = timeProvider;
+
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
+        public Uri ResponseAddress { get; } = new("loopback://localhost/direct-response");
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+            where T : class
+        {
+            _requestPipes.Add(typeof(T), pipe);
+            return new EmptyConnectHandle();
+        }
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        public Task DeliverAsync<T>(T message)
+            where T : class
+        {
+            var pipe = Assert.IsAssignableFrom<IPipe<ConsumeContext<T>>>(_requestPipes[typeof(T)]);
+            DirectConsumeContext<T> context = DispatchProxy.Create<DirectConsumeContext<T>, DirectConsumeContextProxy<T>>();
+            ((DirectConsumeContextProxy<T>)(object)context).Message = message;
+            return pipe.SendAsync(context);
+        }
+    }
+
+    private interface DirectConsumeContext<T> : ConsumeContext, ConsumeContext<T>
+        where T : class;
+
+    private sealed class FaultConnectionFailureClientFactoryContext : ClientFactoryContext
+    {
+        public RequestTimeout DefaultTimeout => new(TimeSpan.FromMinutes(1));
+
+        public TimeProvider TimeProvider => TimeProvider.System;
+
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
+        public Uri ResponseAddress { get; } = new("loopback://localhost/fault-connection-failure");
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+            where T : class => throw new CleanupFailureException("The fault response connection failed.");
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+    }
+
+    private sealed class MissingConnectionClientFactoryContext(bool omitFaultConnection) : ClientFactoryContext
+    {
+        public RequestTimeout DefaultTimeout => new(TimeSpan.FromMinutes(1));
+
+        public TimeProvider TimeProvider => TimeProvider.System;
+
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
+        public Uri ResponseAddress { get; } = new("loopback://localhost/missing-connection");
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+            where T : class
+        {
+            bool isFaultConnection = typeof(T) == typeof(Fault<LifecycleRequest>);
+            return isFaultConnection == omitFaultConnection ? null! : new EmptyConnectHandle();
+        }
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+    }
+
+    private class DirectConsumeContextProxy<T> : DispatchProxy
+        where T : class
+    {
+        public T Message { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+
+            return targetMethod.Name switch
+            {
+                "get_Message" => Message,
+                "get_CancellationToken" => CancellationToken.None,
+                "get_Headers" => new DictionarySendHeaders(),
+                "get_Host" => HostMetadataCache.Empty,
+                "TryGetPayload" => false,
+                nameof(ConsumeContext.NotifyConsumedAsync) => Task.CompletedTask,
+                nameof(ConsumeContext.NotifyFaultedAsync) => Task.CompletedTask,
+                _ when targetMethod.Name.StartsWith("get_", StringComparison.Ordinal) => null,
+                _ => throw new NotSupportedException(targetMethod.Name),
+            };
+        }
+    }
+
+    private sealed class BlockingTimerDisposalTimeProvider : TimeProvider
+    {
+        public BlockingTimer Timer { get; } = new();
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period) => Timer;
+
+        public sealed class BlockingTimer : ITimer
+        {
+            private readonly TaskCompletionSource _disposalStarted =
+                new(TaskCreationOptions.RunContinuationsAsynchronously);
+            private readonly ManualResetEventSlim _releaseDisposal = new();
+            private int _disposeCount;
+
+            public Task DisposalStarted => _disposalStarted.Task;
+
+            public bool Change(TimeSpan dueTime, TimeSpan period) => true;
+
+            public void Dispose()
+            {
+                if (Interlocked.Increment(ref _disposeCount) != 1)
+                    return;
+
+                _disposalStarted.TrySetResult();
+                if (!_releaseDisposal.Wait(TimeSpan.FromSeconds(5)))
+                    throw new TimeoutException("The request timer disposal was not released by the test.");
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                Dispose();
+                return default;
+            }
+
+            public void ReleaseDisposal() => _releaseDisposal.Set();
+        }
+    }
 
     private sealed class RecordingClientFactoryContext(
         TimeProvider timeProvider,

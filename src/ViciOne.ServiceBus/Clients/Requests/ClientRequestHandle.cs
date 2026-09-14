@@ -43,6 +43,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     readonly RequestTimeout _timeout;
     readonly bool _useDeadlineAsTimeToLive;
     int _faultedOrCanceled;
+    bool _responseCompleted;
     ConnectHandle? _faultHandler;
     ITimer? _timeoutTimer;
     RequestTimeout _timeToLive;
@@ -99,11 +100,22 @@ internal sealed partial class ClientRequestHandle<TRequest> :
         if (cancellationToken.CanBeCanceled)
             _registration = cancellationToken.Register(Cancel);
 
-        _send = SendRequestAsync();
+        try
+        {
+            ConnectFaultHandler();
+        }
+        catch
+        {
+            _registration.Dispose();
+            _cancellationTokenSource.Dispose();
+            throw;
+        }
+
+        _send = Volatile.Read(ref _faultedOrCanceled) == 0
+            ? SendRequestAsync()
+            : _readyToSend.Task;
         _send.IgnoreUnobservedExceptions();
         DisposeCancellationTokenSourceAfterTerminalCleanupAsync().IgnoreUnobservedExceptions();
-
-        ConnectFaultHandler();
     }
 
     /// <summary>Applies request metadata, the configured send pipeline, and the response timeout to an outgoing context.</summary>
@@ -181,8 +193,13 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     /// <summary>Cancels the request and disconnects its response handlers.</summary>
     public void Cancel()
     {
-        if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) != 0)
-            return;
+        lock (_handlerLock)
+        {
+            if (_faultedOrCanceled != 0)
+                return;
+
+            _faultedOrCanceled = 1;
+        }
 
         CancelRequestSend();
         CancellationToken cancellationToken = CancellationTokenForCanceledRequest();
@@ -219,8 +236,15 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     /// <summary>Cancels the request and releases all response-handler connections.</summary>
     public void Dispose()
     {
-        if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) == 0)
-            CancelAndDispose();
+        lock (_handlerLock)
+        {
+            if (_faultedOrCanceled != 0)
+                return;
+
+            _faultedOrCanceled = 1;
+        }
+
+        CancelAndDispose();
     }
 
     /// <summary>Gets the request message produced by the send callback.</summary>

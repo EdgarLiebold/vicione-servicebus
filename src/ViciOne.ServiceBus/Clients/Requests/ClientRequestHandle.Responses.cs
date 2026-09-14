@@ -13,7 +13,8 @@ internal sealed partial class ClientRequestHandle<TRequest>
     {
         try
         {
-            var message = await _sendRequestCallback(RequestId, this, _requestSendCancellationToken).ConfigureAwait(false);
+            var message = await _sendRequestCallback(RequestId, this, _requestSendCancellationToken).ConfigureAwait(false)
+                ?? throw new InvalidOperationException("The request send callback returned no request message.");
 
             _message.TrySetResult(message);
         }
@@ -65,11 +66,20 @@ internal sealed partial class ClientRequestHandle<TRequest>
 
             Task MessageHandlerAsync(ConsumeContext<TResponse> context)
             {
-                completed.TrySetResult(context);
+                lock (_handlerLock)
+                {
+                    if (_faultedOrCanceled == 0 && !_responseCompleted)
+                    {
+                        _responseCompleted = true;
+                        completed.TrySetResult(context);
+                    }
+                }
+
                 return Task.CompletedTask;
             }
 
-            ConnectHandle connectHandle = _context.ConnectRequestHandler(RequestId, MessageHandlerAsync, pipeConfigurator);
+            ConnectHandle connectHandle = _context.ConnectRequestHandler(RequestId, MessageHandlerAsync, pipeConfigurator)
+                ?? throw new InvalidOperationException("The client-factory context returned no response-handler connection.");
             var handle = new ResponseHandlerConnectHandle<TResponse>(connectHandle, completed, _send);
 
             _responseHandlers.Add(typeof(TResponse), handle);
@@ -95,9 +105,10 @@ internal sealed partial class ClientRequestHandle<TRequest>
                 return;
 
             _faultHandler = _context.ConnectRequestHandler(
-                RequestId,
-                MessageHandlerAsync,
-                new PipeConfigurator<ConsumeContext<Fault<TRequest>>>());
+                    RequestId,
+                    MessageHandlerAsync,
+                    new PipeConfigurator<ConsumeContext<Fault<TRequest>>>())
+                ?? throw new InvalidOperationException("The client-factory context returned no fault-handler connection.");
         }
     }
 

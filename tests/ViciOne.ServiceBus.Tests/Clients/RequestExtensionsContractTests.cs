@@ -97,6 +97,23 @@ public sealed class RequestExtensionsContractTests
                 "scoped-convention-values",
             ], responses.Select(response => response.Kind));
             Assert.Equal(Enumerable.Range(1, 8).Select(id => $"callback-{id}"), responses.Select(response => response.Callback));
+
+            IRequestClient<ContractRequest> client = harness.Bus.CreateRequestClient<ContractRequest>(
+                harness.InputQueueAddress,
+                requestTimeout);
+            Response<UnusedResponse, ContractResponse> initializedPair =
+                await client.Advanced().GetResponseAsync<UnusedResponse, ContractResponse>(
+                    new { Id = 9, Kind = "initialized-pair" },
+                    cancellationToken: cancellationToken);
+            Response<UnusedResponse, ContractResponse, OtherUnusedResponse> initializedTriple =
+                await client.Advanced().GetResponseAsync<UnusedResponse, ContractResponse, OtherUnusedResponse>(
+                    new { Id = 10, Kind = "initialized-triple" },
+                    cancellationToken: cancellationToken);
+
+            Assert.True(initializedPair.Is(out Response<ContractResponse>? pairResponse));
+            Assert.Equal(new ContractResponse(9, "initialized-pair", null), pairResponse.Message);
+            Assert.True(initializedTriple.Is(out Response<ContractResponse>? tripleResponse));
+            Assert.Equal(new ContractResponse(10, "initialized-triple", null), tripleResponse.Message);
         }
         finally
         {
@@ -116,6 +133,10 @@ public sealed class RequestExtensionsContractTests
     private sealed record ContractRequestMessage(int Id, string Kind) : ContractRequest;
 
     private sealed record ContractResponse(int Id, string Kind, string? Callback);
+
+    private sealed record UnusedResponse;
+
+    private sealed record OtherUnusedResponse;
 
     private sealed record ScopedRequestTrigger;
 }
