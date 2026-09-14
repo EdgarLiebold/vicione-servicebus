@@ -2135,3 +2135,68 @@ Async contract plus source type/file naming. Requirements JSON, directives, dumm
 legacy markers, SDK pinning, empty directories, formatting, and Git whitespace are clean. The sole
 source `NotImplementedException` occurrence classifies that real BCL exception as non-retryable.
 Protected `review/` and `TestResults/` remain unchanged and unstaged.
+
+## Iteration 117 Core Events final research
+
+All 12 Core Events production files, 642 initial and 639 final physical source lines, direct tests,
+the readiness driver, product call sites, and comments were read manually. Their final placement is
+coherent: fault contracts, readiness contracts, and receive-lifecycle contracts belong to Core and
+are grouped below `Events/Faults`, `Events/Readiness`, and `Events/Receiving`. Core is one project,
+not the directory parent of other assemblies. Persistence, scheduling, and transport providers
+therefore remain separate sibling projects in their named `src` families.
+
+The previous `FaultEvent<T>` and `ReceiveFaultEvent` implementations independently projected an
+`AggregateException`. Both returned an empty array for an aggregate without inner failures and used
+only the outer aggregate list for nested failures, leaving nested aggregate nodes and losing their
+sibling leaves from the top-level diagnostic list. The shared `FaultExceptionInfo.CreateMany`
+boundary now returns one diagnostic for any non-aggregate or empty aggregate and otherwise uses the
+BCL flattening contract before applying the existing sixteen-diagnostic bound. Diagnostic
+materialization continues to isolate hostile data enumeration and remote metadata, avoids invoking
+arbitrary application `ToString`, and preserves bounded wire-safe values.
+
+`ReceiveTransportCompletedEvent` previously read a live metrics object without validating the
+semantic relationship between its counters. The event now reads both counters once, rejects either
+negative value, rejects peak concurrency above total deliveries, and retains an immutable exact
+snapshot. Lifecycle tests now constrain every address as well as state, exception, endpoint, and
+counter projection. `BusReadyEvent` has direct identity and required-owner tests. Fault events have
+direct deterministic-clock, identifier, payload, host, content-type, message-type, empty aggregate,
+nested aggregate, hostile-data, hostile-remote-type, and missing-remote-type evidence.
+
+The baseline focused profile passes 31/31 with 94.7368% line (180/190), 95.2381% branch (120/126),
+maximum CRAP 20, and artifact SHA-256
+`f04c1ebc174becaa50647e71fbe5bc1082b51d168512cfbeef33c3a150313fd4`. Four aggregate cases are red
+before their implementation and three invalid-metric cases are red before theirs. The final focused
+profile passes 45/45 and reaches 98.9637% line (191/193) and 98.3607% branch (120/122), maximum CRAP
+20, with artifact SHA-256 `37fbd434844348edd1737854abf5af6cb34fa5a5b7a7fb7ae54ce7f8d3beba25`.
+
+The controlled aggregate, readiness owner, delivery-count, and completed-address counterchanges
+produce eight failures in the 44-case combined profile; an isolated ready-address counterchange
+produces one failure in its one-case profile. Restoration is byte-exact. Accepted SHA-256 values are
+`1669276122ba35cb159cc85c5948d7e57b7899a1a4b76161e17530ea70869cb6` for
+`FaultExceptionInfo.cs`, `bc1950d933052fa1b83b05a8ffa5326349055c9ed8fd7733a79d81760f8ede81`
+for `BusReadyEvent.cs`, `e04831f95d8b7c37c871509a1762110245ba8ba03cffc58490eac917baa4e52c`
+for `ReceiveTransportCompletedEvent.cs`, and
+`988182f9a234d0f7df6cd3aa08b9ac68af8b9a43e4bbd6964222b927d845f031` for
+`ReceiveTransportReadyEvent.cs`.
+
+Complete Core coverage passes 3,574/3,574 and covers all Events executable lines (193/193) plus
+120/122 branches. Maximum owner CRAP remains 20 with none above 30. The only uncovered branches are
+defensive null fallbacks after enum `ToString` and runtime `Type.FullName`; neither can occur for
+the actual instantiated values entering those paths. Loaded product reachability in this Core-host
+artifact is 80.1843% line (46,899/58,489) and 72.5950% branch (16,421/22,620); it is not presented as
+repository-wide coverage because this host does not load every provider assembly. Artifact SHA-256
+is `c7142a4e18e6b9de70eabd8d1fb6c0b3525dc307821bdb5292fac8aebaf574ed`.
+
+The manual anti-pattern audit accounts for 14 new or changed methods and 16 affected cases. It finds
+no issue: values and identities are exact, the clock is fake, proxies fail on unexpected calls, and
+there are no sleeps, random inputs, skips, broad catches, swallowed failures, shared mutable
+fixtures, assertion-free execution, or coverage-only assertions. The bounded integration helper
+uses the repository harness and cancellation contract rather than timing assumptions.
+
+Both format gates, the 77-project zero-warning Engineering build, all 6,550 tests in 23 canonical
+hosts, requirements uniqueness, and the 30/30 isolated bidirectional Async analysis pass.
+Package/API validation passes 18 journeys, 31 fresh packages, three isolated provider-testing
+consumers, and all 30 runtime APIs. The API baseline remains 18,879 lines with SHA-256
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. Directives, dummy and
+legacy markers, SDK pinning, source-root files, empty directories, formatting, and Git whitespace
+are clean. Protected `review/` and `TestResults/` remain unchanged and unstaged.

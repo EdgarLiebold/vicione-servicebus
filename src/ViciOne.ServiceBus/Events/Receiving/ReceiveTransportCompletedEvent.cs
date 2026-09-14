@@ -14,8 +14,21 @@ internal sealed class ReceiveTransportCompletedEvent :
     {
         InputAddress = inputAddress ?? throw new ArgumentNullException(nameof(inputAddress));
         ArgumentNullException.ThrowIfNull(metrics);
-        DeliveryCount = metrics.DeliveryCount;
-        MaxConcurrentDeliveryCount = metrics.MaxConcurrentDeliveryCount;
+
+        long deliveryCount = metrics.DeliveryCount;
+        int maximumConcurrency = metrics.MaxConcurrentDeliveryCount;
+        ArgumentOutOfRangeException.ThrowIfNegative(deliveryCount, nameof(metrics));
+        ArgumentOutOfRangeException.ThrowIfNegative(maximumConcurrency, nameof(metrics));
+        if (maximumConcurrency > deliveryCount)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(metrics),
+                maximumConcurrency,
+                "Peak concurrent deliveries cannot exceed the total delivery count.");
+        }
+
+        DeliveryCount = deliveryCount;
+        MaxConcurrentDeliveryCount = maximumConcurrency;
     }
 
     /// <summary>Gets the address of the completed receive transport.</summary>

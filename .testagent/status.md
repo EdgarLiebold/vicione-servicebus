@@ -1045,3 +1045,31 @@ Requirements, comments, directives, dummy and legacy markers, SDK pinning, empty
 formatting, and Git whitespace pass. Protected `review/` and `TestResults/` remain unchanged and
 unstaged. The overall A+ goal remains active for the remaining complete source owners and the final
 repository-wide audit.
+
+## Iteration 117
+
+Iteration 117 completes the manual review of all 12 Core Events files, their 639 final source lines,
+all direct tests, call sites, and comments. `Faults`, `Readiness`, and `Receiving` remain cohesive
+Core folders; other assemblies remain siblings under `src` or in the `Persistence`, `Scheduling`,
+and `Transports` provider families.
+
+Empty and nested aggregate diagnostics, immutable and valid final delivery metrics, complete
+lifecycle address projection, direct bus-readiness identity, and hostile remote diagnostic
+boundaries now have exact tests. Seven cases were red before the two product corrections. Five
+semantic counterchanges are killed and restored byte-for-byte. The 14 new or changed test methods
+and 16 affected cases pass manual anti-pattern review without a finding.
+
+Focused Events passes 45/45 at 98.9637% line and 98.3607% branch coverage, maximum CRAP 20.
+Complete Core passes 3,574/3,574 and covers 100% of Events executable lines (193/193) and 120/122
+branches. Accepted artifact SHA-256 values are
+`37fbd434844348edd1737854abf5af6cb34fa5a5b7a7fb7ae54ce7f8d3beba25` focused and
+`c7142a4e18e6b9de70eabd8d1fb6c0b3525dc307821bdb5292fac8aebaf574ed` complete Core.
+
+Both format gates and the serial 77-project Release build pass with zero warnings and errors. All
+23 hermetic hosts pass 6,550/6,550 with no failure or skip. Package/API verification passes 18
+journeys, 31 fresh packages, three isolated provider consumers, and all 30 runtime APIs; the
+unchanged 18,879-line API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. The isolated bidirectional
+Async review passes 30/30. Requirements, comments, directives, dummy and legacy markers, SDK
+pinning, filenames, folders, namespaces, empty directories, formatting, and Git whitespace pass.
+Protected trees remain unchanged and unstaged. The overall A+ goal remains active.

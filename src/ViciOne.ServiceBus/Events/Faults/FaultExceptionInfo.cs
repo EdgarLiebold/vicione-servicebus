@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Events.Faults;
@@ -9,6 +10,7 @@ namespace ViciOne.ServiceBus.Events.Faults;
 internal sealed class FaultExceptionInfo : ExceptionInfo
 {
     const int MaximumDataCount = 32;
+    const int MaximumExceptionCount = 16;
     const int MaximumInnerExceptionCount = 16;
     const int MaximumKeyLength = 256;
     const int MaximumTextLength = 2048;
@@ -23,6 +25,24 @@ internal sealed class FaultExceptionInfo : ExceptionInfo
     public FaultExceptionInfo(Exception exception)
         : this(exception, 0)
     {
+    }
+
+    /// <summary>Creates a bounded sequence of leaf snapshots from a local failure.</summary>
+    /// <param name="exception">The failure to snapshot.</param>
+    /// <returns>One snapshot for a non-aggregate or empty aggregate; otherwise, up to sixteen flattened leaf snapshots.</returns>
+    internal static ExceptionInfo[] CreateMany(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+
+        if (exception is not AggregateException { InnerExceptions.Count: > 0 } aggregateException)
+            return [new FaultExceptionInfo(exception)];
+
+        return aggregateException
+            .Flatten()
+            .InnerExceptions
+            .Take(MaximumExceptionCount)
+            .Select(static item => (ExceptionInfo)new FaultExceptionInfo(item))
+            .ToArray();
     }
 
     FaultExceptionInfo(Exception exception, int depth)
@@ -80,17 +100,7 @@ internal sealed class FaultExceptionInfo : ExceptionInfo
         }
     }
 
-    static Exception? GetInnerException(Exception exception)
-    {
-        try
-        {
-            return exception.InnerException;
-        }
-        catch
-        {
-            return null;
-        }
-    }
+    static Exception? GetInnerException(Exception exception) => exception.InnerException;
 
     static string GetExceptionType(Exception exception)
     {
@@ -106,17 +116,7 @@ internal sealed class FaultExceptionInfo : ExceptionInfo
         return TypeCache.GetShortName(exception.GetType());
     }
 
-    static string GetMessage(Exception exception)
-    {
-        try
-        {
-            return ExceptionUtil.GetMessage(exception);
-        }
-        catch
-        {
-            return $"An exception of type {exception.GetType()} was thrown but its message could not be read.";
-        }
-    }
+    static string GetMessage(Exception exception) => ExceptionUtil.GetMessage(exception);
 
     static string GetStackTrace(Exception exception)
     {

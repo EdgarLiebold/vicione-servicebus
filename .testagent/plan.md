@@ -3614,3 +3614,54 @@ formatting, and Git whitespace pass. The sole source `NotImplementedException` r
 intentional non-retryable exception-classification case. Protected `review/` and `TestResults/`
 remain unchanged and unstaged. The overall A+ goal continues with the remaining complete source
 owners and the final repository-wide audit.
+
+## Iteration 117 Core Events plan and completion
+
+Iteration 117 reviews all 12 Core Events production files, their 642 initial and 639 final physical
+source lines, all direct event tests, the readiness driver, every product call site, and every source
+comment manually. `Faults/`, `Readiness/`, and `Receiving/` remain cohesive responsibilities inside
+the Core assembly. `src/ViciOne.ServiceBus` is the Core project rather than an umbrella directory;
+independent assemblies remain direct `src` siblings and provider families remain grouped below
+`Persistence`, `Scheduling`, and `Transports`. No product C# file is stored directly in the repository
+`src` root.
+
+The review covers typed and receive fault identity, payload, host, content type, deterministic time,
+message-type snapshots, bounded and serialization-safe diagnostics, hostile exception metadata,
+nested aggregate projection, readiness identity, lifecycle addresses, terminal state, endpoint
+identity, and immutable final delivery metrics. Red-first tests expose that empty aggregate failures
+produce no diagnostic, nested aggregates lose sibling leaves, and completed transports accept
+negative or internally impossible metrics. One shared bounded aggregate projector now preserves an
+empty aggregate and flattens non-empty aggregates into at most sixteen leaf snapshots. Completed
+transport events capture their counters once and reject invalid snapshots at construction.
+
+The original focused profile passes 31/31. The aggregate additions first produce exactly four
+failures among 41 cases; after their correction the metrics boundary adds exactly three failures
+among 44 cases. The final focused profile passes 45/45. Four simultaneous controlled
+counterchanges produce eight causal failures among 44 cases, and a separately isolated receive
+address counterchange fails its exact projection test. Every accepted source is restored to its
+recorded SHA-256 before final validation.
+
+Focused Events coverage rises from 94.7368% line (180/190) and 95.2381% branch (120/126) to
+98.9637% line (191/193) and 98.3607% branch (120/122), with maximum CRAP 20 and no method above 30.
+The focused artifact is `/private/tmp/vsb-iteration117-events-final2/events-final2.cobertura.xml`,
+SHA-256 `37fbd434844348edd1737854abf5af6cb34fa5a5b7a7fb7ae54ce7f8d3beba25`.
+Complete Core coverage passes 3,574/3,574 and executes all 193 owner lines; owner branch coverage is
+120/122. The two remaining branches are defensive null fallbacks that cannot occur for an actual
+boxed enum or instantiated runtime type. The complete artifact is
+`/private/tmp/vsb-iteration117-core-final2/core-final2.cobertura.xml`, SHA-256
+`c7142a4e18e6b9de70eabd8d1fb6c0b3525dc307821bdb5292fac8aebaf574ed`.
+
+Both format gates pass. The serial 77-project Engineering Release build has zero warnings and
+errors. All 23 canonical hermetic hosts pass 6,550/6,550 with no failure or skip. Package/API
+validation passes 18 developer journeys, 31 fresh packages, three isolated provider-testing
+consumers, and all 30 runtime APIs; the unchanged 18,879-line public API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. The isolated semantic Async
+review passes 30/30 after scanning product and test methods bidirectionally.
+
+The 14 new or changed test methods, comprising 16 affected executed cases, pass manual
+anti-pattern review: every test has causal assertions and there are no sleeps, wall-clock or random
+inputs, skips, broad catches, swallowed failures, shared mutable fixtures, assertion-free paths, or
+coverage-only assertions. Requirements, comments, directives, dummy and legacy markers, SDK
+pinning, filenames, folders, namespaces, empty directories, formatting, and Git whitespace pass.
+Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal continues
+with the remaining complete source owners and the final repository-wide audit.

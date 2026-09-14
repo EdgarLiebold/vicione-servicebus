@@ -25,10 +25,14 @@ public sealed class ReceiveLifecycleEventTests
         Assert.Equal(address, completed.InputAddress);
         Assert.Equal(47, completed.DeliveryCount);
         Assert.Equal(6, completed.MaxConcurrentDeliveryCount);
+        Assert.Equal(address, started.InputAddress);
         Assert.True(started.IsStarted);
+        Assert.Equal(address, attached.InputAddress);
         Assert.False(attached.IsStarted);
+        Assert.Equal(address, recoverable.InputAddress);
         Assert.Same(failure, recoverable.Exception);
         Assert.False(recoverable.IsTerminal);
+        Assert.Equal(address, terminal.InputAddress);
         Assert.True(terminal.IsTerminal);
     }
 
@@ -55,10 +59,46 @@ public sealed class ReceiveLifecycleEventTests
         Assert.Same(failure, endpointFaulted.Exception);
         Assert.True(endpointFaulted.IsTerminal);
         Assert.Same(endpoint, endpointFaulted.ReceiveEndpoint);
+        Assert.Equal(address, endpointReady.InputAddress);
         Assert.False(endpointReady.IsStarted);
         Assert.Same(endpoint, endpointReady.ReceiveEndpoint);
+        Assert.Equal(address, endpointStopping.InputAddress);
         Assert.True(endpointStopping.Removed);
         Assert.Same(endpoint, endpointStopping.ReceiveEndpoint);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENT-SNAPSHOTS", "completed-transport-captures-final-metrics")]
+    public void ReceiveTransportCompletedEvent_CapturesMetricsAtConstruction()
+    {
+        var metrics = new MutableDeliveryMetrics
+        {
+            DeliveryCount = 37,
+            MaxConcurrentDeliveryCount = 4,
+        };
+        var completed = new ReceiveTransportCompletedEvent(new Uri("loopback://localhost/metric-snapshot"), metrics);
+
+        metrics.DeliveryCount = 99;
+        metrics.MaxConcurrentDeliveryCount = 12;
+
+        Assert.Equal(37, completed.DeliveryCount);
+        Assert.Equal(4, completed.MaxConcurrentDeliveryCount);
+    }
+
+    [Theory]
+    [InlineData(-1L, 0)]
+    [InlineData(0L, -1)]
+    [InlineData(2L, 3)]
+    [RequirementCoverage("REQ-VSB-EVENT-SNAPSHOTS", "completed-transport-rejects-impossible-metrics")]
+    public void ReceiveTransportCompletedEvent_RejectsImpossibleFinalMetrics(long deliveryCount, int maximumConcurrency)
+    {
+        var metrics = new DeliveryMetrics(deliveryCount, maximumConcurrency);
+
+        Assert.Equal(
+            "metrics",
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ReceiveTransportCompletedEvent(
+                new Uri("loopback://localhost/invalid-metrics"),
+                metrics)).ParamName);
     }
 
     [Fact]
@@ -100,6 +140,12 @@ public sealed class ReceiveLifecycleEventTests
     }
 
     private sealed record DeliveryMetrics(long DeliveryCount, int MaxConcurrentDeliveryCount) : IDeliveryMetrics;
+
+    private sealed class MutableDeliveryMetrics : IDeliveryMetrics
+    {
+        public long DeliveryCount { get; set; }
+        public int MaxConcurrentDeliveryCount { get; set; }
+    }
 
     private class UnusedProxy : DispatchProxy
     {

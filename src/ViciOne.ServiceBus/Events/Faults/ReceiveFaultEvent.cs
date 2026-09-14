@@ -7,8 +7,6 @@ namespace ViciOne.ServiceBus.Events.Faults;
 internal sealed class ReceiveFaultEvent :
     ReceiveFault
 {
-    const int MaximumExceptionCount = 16;
-
     /// <summary>Creates an empty instance for contract materialization.</summary>
     public ReceiveFaultEvent()
     {
@@ -38,11 +36,7 @@ internal sealed class ReceiveFaultEvent :
             : faultMessageTypes.Select(messageType => messageType
                 ?? throw new ArgumentException("Fault message type collections cannot contain null elements.", nameof(faultMessageTypes))).ToArray();
 
-        var aggregateException = exception as AggregateException;
-
-        Exceptions = aggregateException?.InnerExceptions.Take(MaximumExceptionCount)
-            .Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
-            ?? [new FaultExceptionInfo(exception)];
+        Exceptions = FaultExceptionInfo.CreateMany(exception);
     }
 
     /// <summary>Gets or sets the identifier of this fault event.</summary>

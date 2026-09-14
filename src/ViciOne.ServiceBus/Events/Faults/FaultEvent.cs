@@ -25,7 +25,7 @@ internal sealed class FaultEvent<TMessage> :
     /// <param name="timeProvider">The time source used to timestamp the fault.</param>
     public FaultEvent(TMessage message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes,
         TimeProvider? timeProvider = null)
-        : this(message, faultedMessageId, host, GetExceptions(exception), faultMessageTypes, timeProvider)
+        : this(message, faultedMessageId, host, FaultExceptionInfo.CreateMany(exception), faultMessageTypes, timeProvider)
     {
     }
 
@@ -83,16 +83,6 @@ internal sealed class FaultEvent<TMessage> :
     /// <summary>Gets or sets the message whose consumption failed.</summary>
     public TMessage Message { get; set; } = default!;
 
-    static ExceptionInfo[] GetExceptions(Exception exception)
-    {
-        ArgumentNullException.ThrowIfNull(exception);
-
-        var aggregateException = exception as AggregateException;
-
-        return aggregateException?.InnerExceptions.Where(x => x != null).Take(MaximumExceptionCount)
-            .Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
-            ?? [new FaultExceptionInfo(exception)];
-    }
 }
 
 /// <summary>Materializes the non-generic fault contract during serialization.</summary>
