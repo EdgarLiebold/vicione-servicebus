@@ -28,6 +28,7 @@ public sealed class ResourceCacheContractTests
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-METRICS", "overflow-safe-hit-ratio")]
     public void Statistics_CalculatesHitRatioWithoutOverflow()
     {
+        var empty = new ResourceCacheStatistics(0, 0, 0, 0, 0, 0, 0);
         var statistics = new ResourceCacheStatistics(
             Count: 0,
             PendingCreations: 0,
@@ -37,7 +38,25 @@ public sealed class ResourceCacheContractTests
             CreationFaults: 0,
             Evictions: 0);
 
+        Assert.Equal(0, empty.HitRatio);
         Assert.Equal(0.5, statistics.HitRatio, precision: 12);
+    }
+
+    [Fact]
+    public async Task IndexOperations_RejectNullKeysWithoutReadingOrMutatingCacheStateAsync()
+    {
+        await using var cache = new ResourceCache<CacheValue>();
+        IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
+
+        Assert.Throws<ArgumentNullException>(() => index.GetAsync(null!, TestContext.Current.CancellationToken));
+        Assert.Throws<ArgumentNullException>(() => index.GetOrAddAsync(null!, cancellationToken: TestContext.Current.CancellationToken));
+        Assert.Throws<ArgumentNullException>(() => index.RemoveAsync(null!, TestContext.Current.CancellationToken));
+
+        ResourceCacheStatistics statistics = cache.Statistics;
+        Assert.Equal(0, statistics.Count);
+        Assert.Equal(0, statistics.PendingCreations);
+        Assert.Equal(0, statistics.Hits);
+        Assert.Equal(0, statistics.Misses);
     }
 
     [Fact]

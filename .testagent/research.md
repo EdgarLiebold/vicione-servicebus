@@ -1539,3 +1539,63 @@ dummy markers, SDK pinning, and empty source-directory checks pass. The sole sou
 first sandboxed MSBuild attempt stalled in named-pipe initialization; exact process inspection and
 an outside-sandbox rerun with disabled build servers produced the authoritative result. The
 protected `review/` and `TestResults/` trees remain unchanged and unstaged.
+
+## Iteration 109 Core Caching research
+
+The complete `src/ViciOne.ServiceBus/Caching` owner contains 17 production files and 1,691 lines.
+All files and comments were read manually. Public cache contracts and the partial `ResourceCache`
+implementation correctly belong to the Core assembly under `Caching/`; the `Implementation/`
+branch contains only non-public entry, pending-creation, prepared-key, and index helpers in the
+matching `ViciOne.ServiceBus.Caching.Implementation` namespace. No project move or compatibility
+folder is justified.
+
+All six existing Caching test files were read after a 100/100 focused baseline. They already prove
+key identity, atomic multi-index state, single-flight creation, capacity backpressure, absolute and
+sliding expiration, deterministic time, observer serialization and reentry protection, lifetime
+cancellation, lock ordering, clear/dispose ownership, and asynchronous resource release without
+sleeping, random, skipped, or assertion-free cases.
+
+The accepted Iteration 108 Core artifact remains valid as the initial baseline because Caching
+product code was unchanged. It records 93.38% line coverage (635/680), 87.89% branch coverage
+(225/256), 97 methods, and no CRAP score above 30. Method-level gaps raised two cancellation and
+subscription hypotheses. Direct evidence disproved the first: although the internal completion is
+faulted with an `OperationCanceledException`, every public asynchronous wrapper completes in the
+canceled state. The red-first subscription case confirmed the second: a custom event add accessor
+could retain the callback and then throw without a compensating unsubscribe. Synchronous-only
+`IDisposable` release, pending direct-add backpressure and cancellation, null-key rejection, and the
+empty hit ratio were implemented but lacked direct public-contract evidence.
+
+The accepted correction attempts an unsubscribe after any usage-subscription failure. Both the
+original failure and a possible compensation failure remain diagnostic-only and cannot undo an
+already committed entry. The original red test observed one retained handler; the corrected test
+observes zero while preserving exact cache ownership and disposal. Pending-capacity tests prove
+that direct addition does not exceed the hard bound and that caller cancellation leaves an
+uncommitted value caller-owned with the exact cancellation token.
+
+Five new tests and one strengthened existing lifecycle test were reviewed against the owning source.
+Every blocking wait is bounded, including the cancellation mutation path; all cases have causal
+state, identity, token, capacity, or disposal assertions. There are no assertion-free,
+self-referential, skipped, random, sleeping, wall-clock-dependent, or swallowed-exception cases.
+Three isolated one-cause counterchanges were killed and restored: reversing compensation into a
+second subscription, suppressing caller cancellation during capacity wait, and suppressing
+synchronous disposal.
+
+The final focused host passes 105/105. Fresh Caching coverage is 94.31% line (646/685) and 90.23%
+branch (231/256), across 97 methods with no CRAP score above 30. Remaining low-coverage methods are
+defensive exception/invariant paths or trivial alternatives, not unproved public behavior. The
+artifact is `/private/tmp/vsb-iteration109-caching-final.cobertura.xml`, SHA-256
+`16ea8775fb8206dcdeb4895df17568f5324391e8804363fd2c6cd70802741e20`.
+
+The final owner contains 17 files and 1,701 production lines. All names, namespaces, primary types,
+comments, and folder owners remain coherent. `Caching/Implementation` is a genuine non-public Core
+namespace, not a nested project. The 77-project Engineering build has zero warnings and errors,
+both format gates pass, all 23 hermetic hosts pass 6,369/6,369, and the rebuilt final Core host
+passes 3,396/3,396. Package verification passes 18 journeys, 31 fresh packages, three isolated
+provider-testing consumers, and 30 runtime API assemblies. The unchanged 18,879-line API contract
+SHA-256 is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Two redundant test-side `#nullable enable` directives were removed because nullable analysis is
+already enabled centrally. The only remaining directive-shaped lines are data inside a Roslyn test
+raw string. Production code has no preprocessor directives, dummy or compatibility identities,
+SDK-version pinning, or empty directories. Requirements JSON and Git whitespace pass. Protected
+`review/` and `TestResults/` remain unchanged and unstaged.

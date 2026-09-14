@@ -225,6 +225,16 @@ public sealed partial class ResourceCache<TValue>
         catch (Exception exception)
         {
             LogWarningSafely(exception, "Resource cache could not subscribe to usage notifications");
+
+            try
+            {
+                source.Used -= Used;
+            }
+            catch (Exception detachException)
+            {
+                LogWarningSafely(detachException, "Resource cache could not compensate a failed usage subscription");
+            }
+
             return;
         }
 

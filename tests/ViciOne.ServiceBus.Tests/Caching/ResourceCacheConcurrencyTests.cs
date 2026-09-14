@@ -332,6 +332,81 @@ public sealed class ResourceCacheConcurrencyTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DIRECT-ADD", "pending-capacity-backpressure")]
+    public async Task DirectAdd_WaitsForPendingCapacityThenAtomicallyOwnsTheReplacementAsync()
+    {
+        await using var cache = new ResourceCache<TrackedCacheValue>(new ResourceCacheOptions(
+            capacity: 1,
+            cleanupInterval: TimeSpan.FromHours(1)));
+        IResourceCacheIndex<string, TrackedCacheValue> index = cache.AddIndex("id", value => value.Id);
+        var started = NewSignal();
+        var release = NewSignal<TrackedCacheValue>();
+        var first = new TrackedCacheValue("first");
+        var replacement = new TrackedCacheValue("replacement");
+
+        Task<TrackedCacheValue> pending = index.GetOrAddAsync("first", async (_, ownerToken) =>
+            {
+                started.TrySetResult();
+                return await release.Task.WaitAsync(ownerToken);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Task addition = cache.AddAsync(replacement, TestContext.Current.CancellationToken).AsTask();
+        Assert.False(addition.IsCompleted);
+        Assert.Equal(1, cache.Statistics.PendingCreations);
+        release.TrySetResult(first);
+
+        Assert.Same(first, await pending.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        await addition.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, first.DisposeCount);
+        Assert.Equal(0, replacement.DisposeCount);
+        Assert.Same(replacement, await index.GetAsync("replacement", TestContext.Current.CancellationToken));
+        Assert.Equal(1, cache.Statistics.Count);
+        Assert.Equal(0, cache.Statistics.PendingCreations);
+        Assert.Equal(1, cache.Statistics.Evictions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DIRECT-ADD", "pending-capacity-caller-cancellation")]
+    public async Task DirectAdd_CanceledDuringPendingCapacityWaitRetainsCallerOwnershipAsync()
+    {
+        await using var cache = new ResourceCache<TrackedCacheValue>(new ResourceCacheOptions(
+            capacity: 1,
+            cleanupInterval: TimeSpan.FromHours(1)));
+        IResourceCacheIndex<string, TrackedCacheValue> index = cache.AddIndex("id", value => value.Id);
+        var started = NewSignal();
+        var release = NewSignal<TrackedCacheValue>();
+        var first = new TrackedCacheValue("first");
+        var rejected = new TrackedCacheValue("rejected");
+        using var cancellation = new CancellationTokenSource();
+
+        Task<TrackedCacheValue> pending = index.GetOrAddAsync("first", async (_, ownerToken) =>
+            {
+                started.TrySetResult();
+                return await release.Task.WaitAsync(ownerToken);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Task addition = cache.AddAsync(rejected, cancellation.Token).AsTask();
+        Assert.False(addition.IsCompleted);
+        cancellation.Cancel();
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            addition.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.Equal(0, rejected.DisposeCount);
+        Assert.Equal(0, cache.Statistics.Count);
+        Assert.Equal(1, cache.Statistics.PendingCreations);
+
+        release.TrySetResult(first);
+        Assert.Same(first, await pending.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        Assert.Same(first, await index.GetAsync("first", TestContext.Current.CancellationToken));
+        await rejected.DisposeAsync();
+        Assert.Equal(1, rejected.DisposeCount);
+    }
+
+    [Fact]
     public async Task ClearAsync_CancelsPendingOwnershipAndAllowsImmediateKeyReuseAsync()
     {
         await using var cache = CreateCache();
@@ -394,6 +469,20 @@ public sealed class ResourceCacheConcurrencyTests
     private static TimeSpan OperationTimeout => TimeSpan.FromSeconds(10);
 
     private sealed record CacheValue(string Id, string Value, int Number = 0);
+
+    private sealed class TrackedCacheValue(string id) : IAsyncDisposable
+    {
+        private int _disposeCount;
+
+        public string Id { get; } = id;
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+        public ValueTask DisposeAsync()
+        {
+            Interlocked.Increment(ref _disposeCount);
+            return default;
+        }
+    }
 
     private sealed class CacheFactoryException(string message) : Exception(message);
 }

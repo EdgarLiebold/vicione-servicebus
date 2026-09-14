@@ -807,3 +807,28 @@ Requirements JSON, Git whitespace, async naming, comments, directives, dummy mar
 and empty-directory checks pass. The protected `review/` and `TestResults/` trees remain unchanged
 and unstaged. The overall A+ goal continues with the remaining source owners and final whole-source
 completion audit.
+
+## Iteration 109
+
+Iteration 109 completes the manual review of all 17 Core Caching files and the final 1,701 source
+lines. `Caching/Implementation` is a coherent non-public namespace inside the Core project;
+independent assemblies stay as `src` siblings and provider projects stay grouped under
+`Persistence`, `Scheduling`, and `Transports`.
+
+A red-first lifecycle case found and corrected a partially registered usage-event callback leak.
+Five new tests and one strengthened assertion cover compensation, direct-add capacity backpressure,
+caller cancellation and ownership, synchronous disposal, null keys, empty hit ratio, and canceled
+clear invalidation. Three of three controlled counterchanges were killed and fully restored. The
+focused suite passes 105/105. Fresh Caching coverage is 94.31% line and 90.23% branch across 97
+methods with zero CRAP scores above 30. The artifact SHA-256 is
+`16ea8775fb8206dcdeb4895df17568f5324391e8804363fd2c6cd70802741e20`.
+
+The final Engineering build passes 77 projects with zero warnings and errors. Both format gates
+pass. All 23 hermetic hosts pass 6,369/6,369, and the final Core host passes 3,396/3,396. Package/API
+verification passes 18 journeys, 31 packages, three isolated provider consumers, and all 30
+runtime APIs; the 18,879-line contract SHA-256 remains
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Two redundant test-side nullable directives were removed; the only directive-shaped text left is
+an intentional Roslyn fixture. Source hygiene, requirements, empty directories, and Git whitespace
+pass. Protected trees remain unchanged and unstaged. The overall A+ goal remains active.

@@ -1,8 +1,6 @@
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Initializers.Conventions;
 
-#nullable enable
-
 namespace ViciOne.ServiceBus.Tests.InternalAccess.Initializers;
 
 public static class InitializerConventionRegistryTestDriver

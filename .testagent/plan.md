@@ -2784,6 +2784,82 @@ passes 18 journeys, 31 freshly packed packages, three isolated provider-testing 
 The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
 continues with the remaining complete source owners and the final repository-wide audit.
 
+## Iteration 109 Core Caching plan
+
+Iteration 109 reviews the complete `src/ViciOne.ServiceBus/Caching` owner: 17 production files and
+1,691 lines. Every file and comment will be read manually before any product edit. No source,
+comment, or test generator is permitted; static analysis and coverage remain read-only completeness
+aids.
+
+Caching is an internal Core capability and remains beneath `src/ViciOne.ServiceBus/Caching`.
+`Implementation/` is accepted only where it represents a coherent non-public namespace and every
+path, filename, namespace, and primary type agrees. The review covers key identity, concurrent
+creation, expiration modes, disposal ownership, observer isolation, statistics, cancellation,
+failure fan-out, and all public parameters.
+
+### Iteration 109 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Every Caching source file and comment is necessary, current, and manually understood | complete 17-file reread and final inventory |
+| Paths, namespaces, filenames, and types express one Core owner | source-navigation architecture rules plus manual ownership map |
+| Concurrent callers create at most one owned resource per effective key | deterministic contention, shared-result, cancellation, and factory-failure evidence |
+| Expiration modes cannot dispose an active resource or retain an expired idle resource | exact virtual-time boundaries and usage-state transitions |
+| Removal and cache disposal release each resource exactly once | direct lifecycle and idempotency assertions across success and failure paths |
+| Observer failures cannot corrupt cache state or hide primary failures | exception-order and state-invariant tests |
+| Public options, statistics, factories, and index contracts are minimal and Greenfield coherent | API review, direct parameter tests, packed API comparison |
+| No feature is lost | focused baseline, full Core coverage host, all hermetic hosts, Engineering build, package/API and hygiene gates |
+
+### Iteration 109 validation
+
+1. Record the unchanged focused baseline and source-to-test map.
+2. Read all 17 production files and comments before changing product code.
+3. Rank concrete semantic and API findings with fresh coverage and CRAP evidence.
+4. Add red-first tests only for independently justified contracts, then make the smallest coherent
+   production correction.
+5. Kill meaningful one-cause counterchanges and restore the accepted implementation after each run.
+6. Audit every changed test for assertions, determinism, failure sensitivity, and requirement
+   projection.
+7. Run focused coverage, all 77 Engineering projects, all 23 Unit/Architecture hosts, both format
+   gates, package/API verification, source hygiene, and Git checks.
+8. Commit, annotate Iteration 109, push without force, and verify branch and peeled tag hashes.
+
+### Iteration 109 completion
+
+All 17 Caching production files and the final 1,701 lines were read manually, including every
+comment. `Caching/` remains an internal Core capability, while `Caching/Implementation` contains
+only non-public helpers in its matching namespace. Independent assemblies remain sibling projects
+under `src`; external providers remain grouped under `Persistence/`, `Scheduling/`, and
+`Transports/`. The build, architecture, package, and public-surface gates confirm those boundaries.
+
+A custom usage-event add accessor could register the cache callback and then throw, leaving the
+callback retained without cache ownership metadata. Admission now attempts a compensating
+unsubscribe and isolates both the original subscription failure and any compensation failure from
+committed cache state. Direct tests also close pending-capacity backpressure and caller-cancellation
+ownership for `AddAsync`, synchronous-only `IDisposable` release, null index keys, the empty hit
+ratio, and the externally observable canceled state of clear-invalidated creation.
+
+Five new tests and one strengthened lifecycle assertion pass. Three isolated one-cause
+counterchanges were killed and fully restored: removal of subscription compensation, removal of
+caller cancellation from the pending-capacity wait, and removal of synchronous disposal. The final
+focused suite passes 105/105. Caching coverage is 94.31% line (646/685) and 90.23% branch (231/256)
+over 97 methods, with no CRAP score above 30. The accepted artifact is
+`/private/tmp/vsb-iteration109-caching-final.cobertura.xml`, SHA-256
+`16ea8775fb8206dcdeb4895df17568f5324391e8804363fd2c6cd70802741e20`.
+
+Both format gates pass. The final Engineering build passes all 77 projects with zero warnings and
+errors. All 23 hermetic hosts pass 6,369/6,369 without failure or skip, and the final rebuilt Core
+host passes 3,396/3,396. Package/API verification passes 18 journeys, 31 fresh packages, three
+isolated provider consumers, and all 30 runtime APIs; the unchanged 18,879-line contract SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Two redundant compiled `#nullable enable` directives were removed because nullable analysis is
+already centrally enabled. The only remaining directive-shaped text is an intentional raw-string
+Roslyn fixture that proves Release symbol evaluation; production source contains no directives.
+Dummy, compatibility identity, SDK pinning, empty-directory, requirements, formatting, and Git
+whitespace checks pass. Protected `review/` and `TestResults/` remain unchanged and unstaged. The
+overall A+ goal continues with the next complete source owner and the final repository-wide audit.
+
 ## Iteration 101 JobService API and navigation plan
 
 Iteration 101 starts from remotely verified commit

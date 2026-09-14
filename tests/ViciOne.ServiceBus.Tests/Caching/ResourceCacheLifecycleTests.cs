@@ -169,14 +169,50 @@ public sealed class ResourceCacheLifecycleTests
             }, TestContext.Current.CancellationToken).AsTask();
         await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Task clear = cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
-
-        release.TrySetResult(produced);
-        await clear.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        try
+        {
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
+            Assert.True(pending.IsCanceled);
+        }
+        finally
+        {
+            release.TrySetResult(produced);
+            await clear.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        }
 
         Assert.Equal(1, produced.AsyncDisposeCount);
         Assert.Equal(0, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.PendingCreations);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "partial-usage-subscription-is-compensated")]
+    public async Task UsageSubscriptionFailureAfterRegistration_IsCompensatedBeforeAddCompletesAsync()
+    {
+        var cache = new ResourceCache<PartiallyFaultingUsageResource>();
+        var value = new PartiallyFaultingUsageResource();
+
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
+
+        Assert.Equal(0, value.SubscriberCount);
+        Assert.Same(value, Assert.Single(cache.GetValues(TestContext.Current.CancellationToken)));
+
+        await cache.DisposeAsync();
+        Assert.Equal(1, value.DisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "synchronous-resource-release")]
+    public async Task SynchronousDisposableResource_IsReleasedExactlyOnceAsync()
+    {
+        var cache = new ResourceCache<SynchronousDisposableResource>();
+        var value = new SynchronousDisposableResource();
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
+
+        await cache.DisposeAsync();
+        await cache.DisposeAsync();
+
+        Assert.Equal(1, value.DisposeCount);
     }
 
     [Fact]
@@ -280,4 +316,46 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     private sealed class ProjectionException(string message) : Exception(message);
+
+    private sealed class PartiallyFaultingUsageResource : IResourceUsageSource, IAsyncDisposable
+    {
+        private int _disposeCount;
+        private int _subscriberCount;
+        private Action? _used;
+
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+        public int SubscriberCount => Volatile.Read(ref _subscriberCount);
+
+        public event Action? Used
+        {
+            add
+            {
+                _used += value;
+                Interlocked.Increment(ref _subscriberCount);
+                throw new SubscriptionException();
+            }
+            remove
+            {
+                _used -= value;
+                Interlocked.Decrement(ref _subscriberCount);
+            }
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Interlocked.Increment(ref _disposeCount);
+            return default;
+        }
+    }
+
+    private sealed class SynchronousDisposableResource : IDisposable
+    {
+        private int _disposeCount;
+
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+        public void Dispose() => Interlocked.Increment(ref _disposeCount);
+    }
+
+    private sealed class SubscriptionException : Exception;
 }

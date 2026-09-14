@@ -5,8 +5,6 @@ using ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-#nullable enable
-
 namespace ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests;
 
 public sealed class RabbitMqDurableSendAcceptanceTests
