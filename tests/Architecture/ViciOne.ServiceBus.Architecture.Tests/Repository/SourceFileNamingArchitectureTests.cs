@@ -140,6 +140,58 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "core-reflection-and-jobservice-span-splitting-have-explicit-owners")]
+    public void CoreReflectionAndJobServiceSpanSplitting_HaveExplicitOwners()
+    {
+        string reflectionDirectory = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Internals",
+            "Reflection");
+        string[] reflectionFiles =
+        [
+            "DynamicImplementationBuilder.cs",
+            "IReadProperty.cs",
+            "IWriteProperty.cs",
+            "MessageImplementationCache.cs",
+            "ReadProperty.cs",
+            "ReadPropertyCache.cs",
+            "WriteProperty.cs",
+            "WritePropertyCache.cs",
+        ];
+
+        Assert.Equal(
+            reflectionFiles,
+            Directory.EnumerateFiles(reflectionDirectory, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .Order(StringComparer.Ordinal));
+        Assert.All(reflectionFiles, file => Assert.Equal(
+            ["ViciOne.ServiceBus.Internals.Reflection"],
+            ReadNamespaces(Path.Combine(reflectionDirectory, file), TestContext.Current.CancellationToken)));
+
+        string formerCoreExtensions = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Internals",
+            "Extensions");
+        Assert.False(Directory.Exists(formerCoreExtensions));
+
+        string spanSplitPath = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus.JobService",
+            "JobService",
+            "Scheduling",
+            "SpanSplitExtensions.cs");
+        Assert.True(File.Exists(spanSplitPath), RepositoryLayout.RelativeToRoot(spanSplitPath));
+        Assert.Equal(
+            ["ViciOne.ServiceBus.JobService.Scheduling"],
+            ReadNamespaces(spanSplitPath, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "context-runtime-files-belong-to-owning-capabilities")]
     public void ContextRuntimeFiles_AreOwnedByTheirCapabilities()
     {

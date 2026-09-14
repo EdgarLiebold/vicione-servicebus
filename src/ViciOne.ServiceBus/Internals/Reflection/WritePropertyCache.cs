@@ -2,17 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ViciOne.ServiceBus.Internals.Reflection;
 
-namespace ViciOne.ServiceBus.Internals;
+namespace ViciOne.ServiceBus.Internals.Reflection;
 
-internal sealed class WritePropertyCache<T> :
-    IWritePropertyCache<T>
+internal sealed class WritePropertyCache<T>
     where T : class
 {
     readonly Type _implementationType;
     readonly IDictionary<string, IWriteProperty<T>> _properties;
-    readonly IDictionary<string, PropertyInfo> _propertyIndex;
+    readonly IReadOnlyDictionary<string, PropertyInfo> _propertyIndex;
 
     WritePropertyCache()
     {
@@ -34,74 +32,74 @@ internal sealed class WritePropertyCache<T> :
         _properties = new Dictionary<string, IWriteProperty<T>>(StringComparer.OrdinalIgnoreCase);
     }
 
-    bool IWritePropertyCache<T>.CanWrite(string name)
+    bool CanWriteCore(string name)
     {
-        if (_propertyIndex.TryGetValue(name, out var propertyInfo))
+        name = RequirePropertyName(name);
+        if (_propertyIndex.TryGetValue(name, out PropertyInfo? propertyInfo))
             return propertyInfo.CanWrite;
 
         throw new ArgumentException($"{TypeCache<T>.ShortName} does not contain the property: {name}", nameof(name));
     }
 
-    IWriteProperty<T, TProperty> IWritePropertyCache<T>.GetProperty<TProperty>(string name)
+    IWriteProperty<T, TProperty> GetRequiredProperty<TProperty>(string name)
     {
-        return GetWriteProperty<TProperty>(name);
-    }
+        name = RequirePropertyName(name);
+        if (!_propertyIndex.TryGetValue(name, out PropertyInfo? propertyInfo))
+            throw new ArgumentException($"{TypeCache<T>.ShortName} does not contain the property: {name}", nameof(name));
 
-    IWriteProperty<T, TProperty> IWritePropertyCache<T>.GetProperty<TProperty>(PropertyInfo? propertyInfo)
-    {
-        var name = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
+        if (propertyInfo.PropertyType != typeof(TProperty))
+            throw PropertyTypeMismatch<TProperty>(name, propertyInfo);
 
-        return GetWriteProperty<TProperty>(name);
-    }
-
-    IWriteProperty<T, TProperty> GetWriteProperty<TProperty>(string name)
-    {
         lock (_properties)
         {
             if (_properties.TryGetValue(name, out IWriteProperty<T>? property))
-            {
-                return property as IWriteProperty<T, TProperty>
-                    ?? throw new InvalidOperationException(
-                        $"The cached property {name} on {TypeCache<T>.ShortName} is not writable as {TypeCache<TProperty>.ShortName}.");
-            }
+                return (IWriteProperty<T, TProperty>)property;
 
-            if (_propertyIndex.TryGetValue(name, out var propertyInfo))
-            {
-                if (propertyInfo.PropertyType != typeof(TProperty))
-                {
-                    throw new ArgumentException(
-                        $"Property type mismatch, {TypeCache<TProperty>.ShortName} != {TypeCache.GetShortName(propertyInfo.PropertyType)}");
-                }
-
-                var writeProperty = new WriteProperty<T, TProperty>(_implementationType, propertyInfo);
-
-                _properties[name] = writeProperty;
-
-                return writeProperty;
-            }
+            var writeProperty = new WriteProperty<T, TProperty>(_implementationType, propertyInfo);
+            _properties.Add(name, writeProperty);
+            return writeProperty;
         }
-
-        throw new ArgumentException($"{TypeCache<T>.ShortName} does not contain the property: {name}", nameof(name));
     }
 
-    public static IWriteProperty<T, TProperty> GetProperty<TProperty>(string name)
+    internal static IWriteProperty<T, TProperty> GetProperty<TProperty>(string name)
     {
-        return Cached.PropertyCache.Value.GetProperty<TProperty>(name);
+        return Cached.PropertyCache.Value.GetRequiredProperty<TProperty>(name);
     }
 
-    public static IWriteProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo)
+    internal static IWriteProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo)
     {
-        return Cached.PropertyCache.Value.GetProperty<TProperty>(propertyInfo);
+        return Cached.PropertyCache.Value.GetRequiredProperty<TProperty>(RequireOwnedPropertyName(propertyInfo));
     }
 
-    public static bool CanWrite(string name)
+    internal static bool CanWrite(string name)
     {
-        return Cached.PropertyCache.Value.CanWrite(name);
+        return Cached.PropertyCache.Value.CanWriteCore(name);
     }
 
+    static string RequirePropertyName(string? name)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return name;
+    }
+
+    static string RequireOwnedPropertyName(PropertyInfo? propertyInfo)
+    {
+        ArgumentNullException.ThrowIfNull(propertyInfo);
+        if (propertyInfo.DeclaringType == null || !propertyInfo.DeclaringType.IsAssignableFrom(typeof(T)))
+            throw new ArgumentException($"Property {propertyInfo.Name} cannot be written on {typeof(T)}.", nameof(propertyInfo));
+
+        return propertyInfo.Name;
+    }
+
+    static ArgumentException PropertyTypeMismatch<TProperty>(string name, PropertyInfo propertyInfo)
+    {
+        return new ArgumentException(
+            $"Property {name} on {TypeCache<T>.ShortName} has type {TypeCache.GetShortName(propertyInfo.PropertyType)}, not {TypeCache<TProperty>.ShortName}.",
+            nameof(name));
+    }
 
     static class Cached
     {
-        internal static readonly Lazy<IWritePropertyCache<T>> PropertyCache = new(() => new WritePropertyCache<T>());
+        internal static readonly Lazy<WritePropertyCache<T>> PropertyCache = new(() => new WritePropertyCache<T>());
     }
 }

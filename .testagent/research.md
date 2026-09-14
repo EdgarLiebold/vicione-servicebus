@@ -2019,3 +2019,55 @@ C# file exists directly beneath `src`, and `global.json` has no SDK version. The
 occurrence of `NotImplementedException` is the intentional non-retryable exception classification,
 not a placeholder. Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall
 A+ goal remains active for the remaining complete source owners and final repository-wide audit.
+
+## Iteration 115 Core Reflection and JobService span ownership final research
+
+The original owner comprised 12 Core files and 938 lines. Every file, direct test, and comment was
+read manually. Static caller analysis confirmed that `NullSafeTrim` and `TrimEmptyToNull` were dead,
+while `SpanSplit` served only JobService Cron parsing. The final architecture therefore retains eight
+explicit Reflection files and 817 lines in Core and places the 88-line splitter beside its only
+consumer in JobService. Independent assemblies remain direct `src` siblings; optional provider
+families remain grouped below `Persistence`, `Scheduling`, and `Transports`.
+
+The former splitter used an empty remaining span as both data and completion sentinel. It therefore
+discarded a trailing empty token and accepted malformed Cron lists ending in a comma. The final
+enumerator tracks completion independently and retains every empty token for the parser's existing
+validation. Three redundant internal interfaces had exactly one implementation and no abstraction
+boundary; their removal preserves functionality while reducing indirection.
+
+Reflection emission now validates the bus-marker contract directly and locks the shared collectible
+module during different-type emission. Accessors validate metadata ownership, instance property
+shape, required accessor, property type, implementation type, and runtime instance at the earliest
+boundary. Both caches provide consistent case-insensitive identity, required/optional behavior,
+type diagnostics, and `PropertyInfo` ownership, including generated interface implementations.
+
+Red evidence is specific: seven of 37 Reflection cases, two of 136 Cron cases, and one of 23 source
+architecture cases failed before correction. The final focused results are 42/42 Reflection,
+136/136 Cron, and 23/23 architecture. A controlled four-defect mutation run yielded exactly four
+failures in the 3,552-case Core host and was restored byte-for-byte. The five restored source hashes
+are `2eaa92696121262ed753ded244384d004f15234f1c3edc96b11a9553aeba0f09`,
+`021d8671db6293bf8a631a61746e645b2844d9cd84098cbd714d0b89600e69eb`,
+`6b114bbae40b08e75c87a5aefdd1c937779f4c873c0afc286939a331e0379e72`,
+`845cdae06916a2489e895c53d5b20164ce54d0ee37ed918138ad178ca00faef2`, and
+`184b9ce41bb02c753c10f35aa1a15172246ecbfbb665692cdf1ac569df5ab872`.
+
+Focused Reflection coverage is 95.7393% line and 92.8571% branch with maximum CRAP 30 and none above
+30. The JobService splitter has 100% line and branch coverage. Complete Core coverage passes all
+3,552 tests and records 77.1131% line and 69.8889% branch overall; executable Reflection sources rise
+to 96.4194% line and 96.7033% branch. Artifact SHA-256 values are
+`c7d1107f0d9a8b61077b69916e662122bce10238d8fc4beb93c45e40496b7c81` focused Reflection,
+`3b780494b7ee9c1d133696bd20b257c0f9cd7396fe5ed4c3a14939f9fc99980c` focused Cron, and
+`48eea3d2bbf0e7942d565b84557264105f2fae0a4243051a7ddb9db522bbccd8` complete Core.
+
+A manual test anti-pattern audit accounts for all 16 new or changed test methods. It finds zero
+critical, warning, or informational defects: assertions constrain exact boundary identity and
+observable state; data cases are explicit; no sleep, clock, random, skip, catch-and-ignore, shared
+fixture, mystery dependency, assertion-free, or coverage-only behavior is present. Repository file
+access in the architecture case is its intentional system boundary.
+
+Both format gates, the 77-project zero-warning Engineering build, all 6,526 tests across 23 hermetic
+hosts, requirements uniqueness, Async/source architecture, and hygiene gates pass. Package/API
+validation passes 18 journeys, 31 fresh packages, three isolated provider-testing consumers, and
+all 30 runtime APIs. The public API remains 18,879 lines with SHA-256
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. Protected trees remain
+unchanged and unstaged. The overall A+ goal remains active.

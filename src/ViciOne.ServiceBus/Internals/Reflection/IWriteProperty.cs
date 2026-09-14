@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus.Internals;
+namespace ViciOne.ServiceBus.Internals.Reflection;
 
 internal interface IWriteProperty<in T, in TProperty> :
     IWriteProperty<T>

@@ -1,5 +1,5 @@
 using System;
-using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;

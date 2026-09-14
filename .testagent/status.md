@@ -982,3 +982,33 @@ Requirements, bidirectional Async naming, comments, directives, filenames, folde
 dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
 Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal remains
 active.
+
+## Iteration 115
+
+Iteration 115 completes the manual review of all 12 original Core Reflection/Extensions files and
+938 source lines, their direct tests, and every affected comment. Eight final Reflection files and
+817 lines remain in Core under the explicit `ViciOne.ServiceBus.Internals.Reflection` namespace.
+The 88-line span splitter now belongs beside its sole Cron consumer in JobService. Two dead trim
+helpers and three redundant internal interfaces are removed without public API or feature loss.
+
+Dynamic type emission, bus-marker validation, property accessor boundaries, cache identity, and
+trailing Cron-list validation now have direct behavioral contracts. The focused profiles pass 42/42
+Reflection, 136/136 Cron, and 23/23 architecture cases. Four simultaneous counterchanges are killed
+by exactly four causal Core cases and restored byte-for-byte. The 16 new or changed test methods
+pass a manual anti-pattern audit with no finding.
+
+Focused Reflection coverage is 95.7393% line and 92.8571% branch; complete Core coverage passes
+3,552/3,552 and raises executable Reflection coverage to 96.4194% line and 96.7033% branch. The new
+span splitter remains at 100% line and branch coverage. No owner method has CRAP above 30. Final
+artifact SHA-256 values are `c7d1107f0d9a8b61077b69916e662122bce10238d8fc4beb93c45e40496b7c81`,
+`3b780494b7ee9c1d133696bd20b257c0f9cd7396fe5ed4c3a14939f9fc99980c`, and
+`48eea3d2bbf0e7942d565b84557264105f2fae0a4243051a7ddb9db522bbccd8`.
+
+Both format gates and the serial 77-project Release build pass with zero warnings and errors. All 23
+hermetic hosts pass 6,526/6,526 with no failure or skip. Package/API verification passes 18 journeys,
+31 fresh packages, three isolated provider consumers, and all 30 runtime APIs; the unchanged
+18,879-line API SHA-256 is `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+Requirements, bidirectional Async naming, comments, directives, filenames, folders, namespaces,
+dummy and legacy markers, SDK pinning, empty directories, formatting, and Git whitespace pass.
+Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal remains
+active for the remaining complete source owners and the final repository-wide audit.

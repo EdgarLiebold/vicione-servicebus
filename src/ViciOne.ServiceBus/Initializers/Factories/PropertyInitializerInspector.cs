@@ -1,6 +1,6 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Initializers.Conventions;
-using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Initializers.Factories;
 

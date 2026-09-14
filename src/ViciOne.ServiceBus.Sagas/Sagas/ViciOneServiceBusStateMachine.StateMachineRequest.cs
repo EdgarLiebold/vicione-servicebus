@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Sagas;
 

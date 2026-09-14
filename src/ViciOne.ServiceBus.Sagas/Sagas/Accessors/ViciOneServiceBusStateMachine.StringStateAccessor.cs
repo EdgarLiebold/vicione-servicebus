@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Sagas;
 

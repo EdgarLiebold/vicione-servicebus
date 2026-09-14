@@ -7,10 +7,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
-namespace ViciOne.ServiceBus.Internals;
+namespace ViciOne.ServiceBus.Internals.Reflection;
 
-internal sealed class DynamicImplementationBuilder :
-    IImplementationBuilder
+internal sealed class DynamicImplementationBuilder
 {
     const MethodAttributes PropertyAccessMethodAttributes = MethodAttributes.Public
         | MethodAttributes.SpecialName
@@ -26,7 +25,7 @@ internal sealed class DynamicImplementationBuilder :
 
     internal static DynamicImplementationBuilder Instance { get; } = new();
 
-    public DynamicImplementationBuilder()
+    internal DynamicImplementationBuilder()
     {
         _moduleBuilders = new ConcurrentDictionary<string, ModuleBuilder>();
 
@@ -42,7 +41,7 @@ internal sealed class DynamicImplementationBuilder :
             new Lazy<Type>(() => builder.CreateBusImplementation(type)), this).Value;
     }
 
-    public Type GetImplementationType(Type interfaceType)
+    internal Type GetImplementationType(Type interfaceType)
     {
         ArgumentNullException.ThrowIfNull(interfaceType);
 
@@ -379,7 +378,8 @@ internal sealed class DynamicImplementationBuilder :
             return moduleBuilder;
         });
 
-        return callback(builder);
+        lock (builder)
+            return callback(builder);
     }
 
     static Type[]? ReturnTypeCustomModifiersForProperty(PropertyInfo propertyInfo)

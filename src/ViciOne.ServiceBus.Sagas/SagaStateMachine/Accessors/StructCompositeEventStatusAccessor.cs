@@ -1,5 +1,6 @@
 using System.Reflection;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 

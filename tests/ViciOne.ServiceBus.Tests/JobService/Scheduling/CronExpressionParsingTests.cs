@@ -140,6 +140,8 @@ public sealed class CronExpressionParsingTests
         { "*,5 0 8 ? * 2-6", "'*' and '?' must be the only value in a cron field." },
         { "0 0 8 ?,5 * 2-6", "'*' and '?' must be the only value in a cron field." },
         { "0,,5 0 8 ? * 2-6", "Cron field lists cannot contain empty values." },
+        { "0, 0 8 ? * 2-6", "Cron field lists cannot contain empty values." },
+        { "0 0 8 ? * 2-6,", "Cron field lists cannot contain empty values." },
         { "0 0 8 1W,15 * ?", "A numeric 'W' value cannot be combined with other days of the month." },
         { "0 0 8 ? * MON#1,TUE", "An nth day-of-week value using '#' must be the only value in its field." },
     };

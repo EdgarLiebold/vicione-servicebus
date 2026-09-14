@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 

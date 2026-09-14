@@ -115,6 +115,41 @@ public sealed class DynamicImplementationBuilderTests
         Assert.Equal("interfaceType", exception.ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-BUS-CONTRACT", "stable-valid-marker-type")]
+    public void ValidBusMarker_ProducesOneAssignableImplementationType()
+    {
+        var builder = new DynamicImplementationBuilderTestDriver();
+
+        Type first = builder.GetBusInstanceType(typeof(IContractBus));
+        Type second = builder.GetBusInstanceType(typeof(IContractBus));
+
+        Assert.Same(first, second);
+        Assert.True(first.IsPublic);
+        Assert.True(first.IsSealed);
+        Assert.True(typeof(IContractBus).IsAssignableFrom(first));
+        Assert.Equal(typeof(BusInstance<IContractBus>), first.BaseType);
+        PropertyInfo label = first.GetProperty(nameof(IContractBus.Label))!;
+        Assert.NotNull(label.GetMethod);
+        Assert.NotNull(label.SetMethod);
+        ConstructorInfo constructor = Assert.Single(first.GetConstructors());
+        Assert.Equal([typeof(IBusControl)], constructor.GetParameters().Select(parameter => parameter.ParameterType));
+    }
+
+    [Theory]
+    [MemberData(nameof(UnsupportedBusContractShapes))]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-BUS-CONTRACT", "unsupported-shape-validation")]
+    public void UnsupportedBusContractShape_IsRejectedAtTheOwningBoundary(Type? contractType, Type exceptionType, string reason)
+    {
+        var builder = new DynamicImplementationBuilderTestDriver();
+
+        Exception exception = Assert.Throws(exceptionType, () => builder.GetBusInstanceType(contractType!));
+
+        Assert.IsAssignableFrom<ArgumentException>(exception);
+        Assert.Equal("interfaceType", ((ArgumentException)exception).ParamName);
+        Assert.Contains(reason, exception.Message, StringComparison.Ordinal);
+    }
+
     public static TheoryData<Type, string> UnsupportedContractShapes => new()
     {
         { typeof(ConcreteContract), "interfaces" },
@@ -127,6 +162,14 @@ public sealed class DynamicImplementationBuilderTests
         { typeof(StaticPropertyContract), "instance" },
         { typeof(ConflictingContract), "conflicting" },
         { typeof(CaseConflictingContract), "case-insensitive" },
+    };
+
+    public static TheoryData<Type?, Type, string> UnsupportedBusContractShapes => new()
+    {
+        { null, typeof(ArgumentNullException), "interfaceType" },
+        { typeof(ConcreteContract), typeof(ArgumentException), "interfaces" },
+        { typeof(IGenericBus<>), typeof(ArgumentException), "generic" },
+        { typeof(INotABus), typeof(ArgumentException), nameof(IBus) },
     };
 
     public interface BaseContract
@@ -153,6 +196,15 @@ public sealed class DynamicImplementationBuilderTests
     {
         int Value { get; }
     }
+
+    public interface IContractBus : IBus
+    {
+        string Label { get; }
+    }
+
+    public interface IGenericBus<T> : IBus;
+
+    public interface INotABus;
 
     public interface FirstValueContract
     {

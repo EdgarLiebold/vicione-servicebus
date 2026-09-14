@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Sagas;
 

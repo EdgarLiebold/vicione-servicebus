@@ -87,9 +87,116 @@ public sealed class ReadWritePropertyTests
         Assert.Contains(typeof(UnrelatedTarget).ToString(), exception.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "required-constructor-metadata")]
+    public void AccessorConstructors_RejectMissingMetadataAtTheirBoundary()
+    {
+        ArgumentNullException readException = Assert.Throws<ArgumentNullException>(() =>
+            new ReadPropertyTestDriver<RuntimeTarget, string>(null!));
+        ArgumentNullException implementationException = Assert.Throws<ArgumentNullException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, string>(null!, Property<RuntimeTarget>(nameof(RuntimeTarget.Value))));
+        ArgumentNullException writeException = Assert.Throws<ArgumentNullException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, string>(typeof(RuntimeTarget), null!));
+
+        Assert.Equal("propertyInfo", readException.ParamName);
+        Assert.Equal("implementationType", implementationException.ParamName);
+        Assert.Equal("propertyInfo", writeException.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "instance-property-shape")]
+    public void Accessors_RejectUnrelatedStaticAndIndexedPropertiesAtConstruction()
+    {
+        PropertyInfo unrelated = Property<UnrelatedTarget>(nameof(UnrelatedTarget.Value));
+        PropertyInfo staticProperty = Property<RuntimeTarget>(nameof(RuntimeTarget.StaticValue));
+        PropertyInfo indexer = Property<RuntimeTarget>("Item");
+
+        ArgumentException unrelatedRead = Assert.Throws<ArgumentException>(() =>
+            new ReadPropertyTestDriver<RuntimeTarget, string>(unrelated));
+        ArgumentException unrelatedWrite = Assert.Throws<ArgumentException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, string>(typeof(RuntimeTarget), unrelated));
+        ArgumentException staticRead = Assert.Throws<ArgumentException>(() =>
+            new ReadPropertyTestDriver<RuntimeTarget, string>(staticProperty));
+        ArgumentException staticWrite = Assert.Throws<ArgumentException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, string>(typeof(RuntimeTarget), staticProperty));
+        ArgumentException indexedRead = Assert.Throws<ArgumentException>(() =>
+            new ReadPropertyTestDriver<RuntimeTarget, string>(indexer));
+        ArgumentException indexedWrite = Assert.Throws<ArgumentException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, string>(typeof(RuntimeTarget), indexer));
+
+        Assert.All(
+            [unrelatedRead, unrelatedWrite, staticRead, staticWrite, indexedRead, indexedWrite],
+            exception => Assert.Equal("propertyInfo", exception.ParamName));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "required-instance")]
+    public void Accessors_RejectANullRuntimeInstanceBeforeInvocation()
+    {
+        var read = new ReadPropertyTestDriver<RuntimeTarget, string>(Property<RuntimeTarget>(nameof(RuntimeTarget.Value)));
+        var write = new WritePropertyTestDriver<RuntimeTarget, string>(
+            typeof(RuntimeTarget),
+            Property<RuntimeTarget>(nameof(RuntimeTarget.Value)));
+
+        ArgumentNullException readException = Assert.Throws<ArgumentNullException>(() => read.Get(null!));
+        ArgumentNullException writeException = Assert.Throws<ArgumentNullException>(() => write.Set(null!, "value"));
+
+        Assert.Equal("content", readException.ParamName);
+        Assert.Equal("content", writeException.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "required-accessor-shape")]
+    public void Accessors_RejectPropertiesWithoutTheirRequiredAccessor()
+    {
+        ArgumentException readException = Assert.Throws<ArgumentException>(() =>
+            new ReadPropertyTestDriver<RuntimeTarget, string>(Property<RuntimeTarget>(nameof(RuntimeTarget.WriteOnly))));
+        ArgumentException writeException = Assert.Throws<ArgumentException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, string>(
+                typeof(RuntimeTarget),
+                Property<RuntimeTarget>(nameof(RuntimeTarget.ReadOnly))));
+
+        Assert.Equal("propertyInfo", readException.ParamName);
+        Assert.Equal("propertyInfo", writeException.ParamName);
+        Assert.Contains("getter", readException.Message, StringComparison.Ordinal);
+        Assert.Contains("setter", writeException.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "nonpublic-accessor-success")]
+    public void NonPublicAccessors_ReadAndWriteWithoutChangingTheValue()
+    {
+        var read = new ReadPropertyTestDriver<RuntimeTarget, string>(
+            Property<RuntimeTarget>(nameof(RuntimeTarget.PrivateGetterValue)));
+        var write = new WritePropertyTestDriver<RuntimeTarget, string>(
+            typeof(RuntimeTarget),
+            Property<RuntimeTarget>(nameof(RuntimeTarget.PrivateSetterValue)));
+        var target = new RuntimeTarget();
+        target.SetPrivateGetterValue("read-value");
+
+        write.Set(target, "write-value");
+
+        Assert.Equal("read-value", read.Get(target));
+        Assert.Equal("write-value", target.PrivateSetterValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "write-property-type-validation")]
+    public void WriteProperty_RejectsAPropertyTypeMismatchAtConstruction()
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            new WritePropertyTestDriver<RuntimeTarget, int>(
+                typeof(RuntimeTarget),
+                Property<RuntimeTarget>(nameof(RuntimeTarget.Value))));
+
+        Assert.Equal("propertyInfo", exception.ParamName);
+        Assert.Contains(typeof(string).ToString(), exception.Message, StringComparison.Ordinal);
+        Assert.Contains(typeof(int).ToString(), exception.Message, StringComparison.Ordinal);
+    }
+
     static PropertyInfo Property<T>(string name)
     {
-        return typeof(T).GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+        return typeof(T).GetProperty(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
             ?? throw new InvalidOperationException($"The test property {typeof(T).Name}.{name} must exist.");
     }
 
@@ -102,6 +209,7 @@ public sealed class ReadWritePropertyTests
     {
         private readonly Exception _getterFailure;
         private readonly Exception _setterFailure;
+        private string _privateGetterValue = string.Empty;
 
         public RuntimeTarget()
             : this(new IntentionalAccessorException("unused"), new IntentionalAccessorException("unused"))
@@ -115,6 +223,31 @@ public sealed class ReadWritePropertyTests
         }
 
         public string Value { get; set; } = string.Empty;
+
+        public static string StaticValue { get; set; } = string.Empty;
+
+        public string this[int index]
+        {
+            get => index.ToString();
+            set { }
+        }
+
+        public string ReadOnly => string.Empty;
+
+        public string WriteOnly
+        {
+            set { }
+        }
+
+        public string PrivateGetterValue
+        {
+            private get => _privateGetterValue;
+            set => _privateGetterValue = value;
+        }
+
+        public string PrivateSetterValue { get; private set; } = string.Empty;
+
+        public void SetPrivateGetterValue(string value) => PrivateGetterValue = value;
 
         public string ThrowingPrivateGetter
         {
@@ -131,6 +264,7 @@ public sealed class ReadWritePropertyTests
 
     private sealed class UnrelatedTarget
     {
+        public string Value { get; set; } = string.Empty;
     }
 
     private sealed class IntentionalAccessorException(string message) : Exception(message);

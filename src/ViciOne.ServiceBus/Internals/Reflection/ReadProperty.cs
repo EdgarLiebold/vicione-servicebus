@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using FastExpressionCompiler;
 
-namespace ViciOne.ServiceBus.Internals;
+namespace ViciOne.ServiceBus.Internals.Reflection;
 
 internal sealed class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
     where T : class
@@ -16,8 +16,17 @@ internal sealed class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
     {
         ArgumentNullException.ThrowIfNull(propertyInfo);
 
+        if (propertyInfo.DeclaringType == null || !propertyInfo.DeclaringType.IsAssignableFrom(typeof(T)))
+            throw new ArgumentException($"Property {propertyInfo.Name} cannot be read from {typeof(T)}.", nameof(propertyInfo));
+
+        if (propertyInfo.GetIndexParameters().Length != 0)
+            throw new ArgumentException($"Indexed property {propertyInfo.Name} is not supported.", nameof(propertyInfo));
+
         var getMethod = propertyInfo.GetGetMethod(true)
             ?? throw new ArgumentException($"The property does not have a getter: {propertyInfo.Name}", nameof(propertyInfo));
+
+        if (getMethod.IsStatic)
+            throw new ArgumentException($"Static property {propertyInfo.Name} is not supported.", nameof(propertyInfo));
 
         if (propertyInfo.PropertyType != typeof(TProperty))
             throw new ArgumentException($"Property type {propertyInfo.PropertyType} does not match {typeof(TProperty)}.", nameof(propertyInfo));
@@ -25,7 +34,11 @@ internal sealed class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
         _getMethod = CreateGetter(getMethod);
     }
 
-    public TProperty Get(T content) => _getMethod(content);
+    public TProperty Get(T content)
+    {
+        ArgumentNullException.ThrowIfNull(content);
+        return _getMethod(content);
+    }
 
     static Func<T, TProperty> CreateGetter(MethodInfo getMethod)
     {
@@ -41,14 +54,12 @@ internal sealed class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
             var call = Expression.Call(target, getMethod);
             return Expression.Lambda<Func<T, TProperty>>(call, instance).CompileFast<Func<T, TProperty>>();
         }
-        catch (Exception exception) when (IsCompilationFailure(exception))
+        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException
+            or MemberAccessException or NotSupportedException)
         {
             return entity => InvokeGetter(getMethod, entity);
         }
     }
-
-    static bool IsCompilationFailure(Exception exception) =>
-        exception is ArgumentException or InvalidOperationException or MemberAccessException or NotSupportedException;
 
     static TProperty InvokeGetter(MethodInfo getMethod, T entity)
     {

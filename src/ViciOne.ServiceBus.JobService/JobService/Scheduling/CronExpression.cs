@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
@@ -161,7 +160,7 @@ internal sealed class CronExpression :
 
         var index = CronExpressionConstants.Second;
 
-        foreach ((ReadOnlySpan<char> expr, ReadOnlySpan<char> _) in expression.SpanSplit(' ', '\t'))
+        foreach ((ReadOnlySpan<char> expr, ReadOnlySpan<char> _) in expression.AsSpan().SpanSplit(' ', '\t'))
         {
             if (expr.IsEmpty)
                 continue;

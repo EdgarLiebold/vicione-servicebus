@@ -5,9 +5,6 @@ namespace ViciOne.ServiceBus.Internals.Reflection;
 /// <summary>Caches the concrete runtime type used to materialize an interface message contract.</summary>
 internal static class MessageImplementationCache
 {
-    /// <summary>Gets the implementation builder shared by message initializers and serializers.</summary>
-    internal static IImplementationBuilder Builder => DynamicImplementationBuilder.Instance;
-
     /// <summary>Returns the generated implementation of an interface message contract.</summary>
     /// <param name="type">The interface message contract to materialize.</param>
     /// <returns>The concrete runtime type used for instances of the interface.</returns>
@@ -17,7 +14,7 @@ internal static class MessageImplementationCache
         if (!type.IsInterface)
             throw new ArgumentException("Only interface message contracts require generated implementations.", nameof(type));
 
-        return Builder.GetImplementationType(type);
+        return DynamicImplementationBuilder.Instance.GetImplementationType(type);
     }
 }
 

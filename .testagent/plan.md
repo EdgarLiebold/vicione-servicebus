@@ -3474,3 +3474,91 @@ dummy and legacy markers, SDK pinning, empty directories, formatting, and Git wh
 intentional non-retryable exception classification case. Protected `review/` and `TestResults/`
 remain unchanged and unstaged. The overall A+ goal continues with the remaining complete source
 owners and final repository-wide audit.
+
+## Iteration 115 Core Reflection and JobService span ownership plan
+
+Iteration 115 reviews the complete 12-file, 938-line Core owner below `Internals/Reflection` and
+`Internals/Extensions`, its direct reflection tests, and the only runtime consumer of the generic
+span splitter. Every production file, direct test, and source comment is read manually. No source,
+test, comment, or structure generator is permitted.
+
+The repository hierarchy follows assembly ownership. `src/ViciOne.ServiceBus` is the Core project
+root, not an umbrella for all ServiceBus projects. Independent assemblies remain direct siblings
+under `src`; optional integrations remain grouped beneath `Persistence`, `Scheduling`, and
+`Transports`. A helper used only by JobService belongs in that assembly rather than in Core.
+
+### Iteration 115 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Dynamic message and bus implementations reject unsupported contracts before emission | exact null, concrete, open-generic, behavior, property-shape, and bus-marker tests |
+| Emitted types are stable and safe under concurrent use | concrete type identity, collectible assembly, constructor/property shape, and parallel cache tests |
+| Runtime property access accepts only compatible instance metadata | unrelated, indexed, static, missing-accessor, type-mismatch, and null-instance tests |
+| Property caches have one deterministic case-insensitive contract | name boundaries, missing/optional lookup, metadata ownership, identity, and executable access tests |
+| Cron list tokenization preserves empty and trailing entries for validation | exact double-comma, separated-comma, and trailing-comma failures |
+| Files, namespaces, folders, and assemblies have explicit owners | repository architecture rule for all final Reflection files and the JobService span splitter |
+| No feature or public API is lost | focused and Core coverage, serial build, all hermetic hosts, package consumers, and packed API baseline |
+
+### Iteration 115 validation
+
+1. Preserve the correct 23/23 direct Reflection baseline and record fresh owner coverage and risk.
+2. Read all implementation and direct-test paths against emission, caching, metadata ownership,
+   concurrency, reflection fallback, failure identity, and Cron tokenization.
+3. Add red-first tests only for independently justified boundary or behavior defects.
+4. Remove dead abstractions and move single-consumer behavior to its owning assembly without
+   changing the public API.
+5. Kill a bounded group of meaningful counterchanges and restore every accepted source byte-for-byte.
+6. Audit all changed tests for causal assertions, determinism, isolation, and test anti-patterns.
+7. Run focused and complete Core coverage, both format gates, the serial Engineering build, all 23
+   hermetic hosts, package/API, requirements, Async/source architecture, hygiene, empty-folder, and
+   Git gates.
+8. Commit, annotate Iteration 115, push without force, and verify remote branch and peeled tag hashes.
+
+### Iteration 115 completion
+
+All 12 original Core files and 938 source lines, all final production files, the direct tests, and
+every affected source comment were read manually. The final Reflection owner contains eight files
+and 817 lines beneath `src/ViciOne.ServiceBus/Internals/Reflection`. Its namespace is now explicit.
+The sole live span-split consumer owns an 88-line implementation under
+`src/ViciOne.ServiceBus.JobService/JobService/Scheduling`; the two unused trim helpers and three
+redundant one-implementation cache/builder interfaces are removed. No public API is changed.
+
+Dynamic bus construction has direct valid and invalid contract coverage and serializes emission on
+each collectible module. Runtime property access rejects unrelated, indexed, static, missing,
+mismatched, and null inputs at the owning boundary. Read and write caches share deterministic
+case-insensitive lookup semantics and validate `PropertyInfo` ownership. Span splitting has an
+explicit completion state, so trailing empty Cron tokens are retained and rejected correctly.
+
+The original implementation produced seven failures among 37 Reflection cases and two failures
+among 136 Cron parsing cases; the original structure produced one failure among 23 architecture
+cases. The final focused profiles pass 42/42, 136/136, and 23/23 respectively. Four simultaneous
+counterchanges produced exactly four failures among 3,552 Core tests: both trailing-list cases, the
+null runtime-instance case, and unrelated property metadata. Every mutation was restored to its
+recorded SHA-256 before final validation.
+
+Focused Reflection coverage reaches 95.7393% line (382/399) and 92.8571% branch (169/182) coverage
+across 80 compiler method records, with maximum CRAP 30 and none above 30. The artifact is
+`/private/tmp/vsb-iteration115-internals-final1.cobertura.xml`, SHA-256
+`c7d1107f0d9a8b61077b69916e662122bce10238d8fc4beb93c45e40496b7c81`. Focused Cron coverage gives
+the new span splitter 100% line (29/29) and branch (6/6) coverage; its artifact SHA-256 is
+`3b780494b7ee9c1d133696bd20b257c0f9cd7396fe5ed4c3a14939f9fc99980c`.
+
+Complete Core coverage passes 3,552/3,552 and records 77.1131% repository line (48,956/63,486) and
+69.8889% branch (17,055/24,403) coverage. In that run, executable Reflection sources reach 96.4194%
+line (377/391) and 96.7033% branch (176/182), while the span splitter remains at 100% line and branch.
+The complete artifact is `/private/tmp/vsb-iteration115-core-final.cobertura.xml`, SHA-256
+`48eea3d2bbf0e7942d565b84557264105f2fae0a4243051a7ddb9db522bbccd8`.
+
+Both format gates pass. The serial 77-project Engineering Release build has zero warnings and
+errors. All 23 hermetic Unit and Architecture hosts pass 6,526/6,526 with no failure or skip.
+Package/API validation passes 18 journeys, 31 fresh packages, three isolated provider-testing
+consumers, and all 30 runtime APIs; the unchanged 18,879-line API SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+The 16 new or changed test methods contain causal assertions and no sleeps, wall-clock or random
+input, skips, broad catches, swallowed failures, shared mutable fixtures, assertion-free paths, or
+coverage-only assertions. Requirements are unique and complete. Bidirectional Async naming,
+comments, directives, filenames, folders, namespaces, dummy and legacy markers, SDK pinning, empty
+directories, formatting, and Git whitespace pass. Protected `review/` and `TestResults/` remain
+unchanged and unstaged. The overall A+ goal continues with the remaining complete source owners and
+the final repository-wide audit.

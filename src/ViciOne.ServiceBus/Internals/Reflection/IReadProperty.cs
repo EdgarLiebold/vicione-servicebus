@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.Internals;
+namespace ViciOne.ServiceBus.Internals.Reflection;
 
 internal interface IReadProperty<in T, out TProperty> :
     IReadProperty<T>
