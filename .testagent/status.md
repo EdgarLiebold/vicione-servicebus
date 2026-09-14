@@ -771,3 +771,39 @@ Requirements, bidirectional async naming, comments, directives, dummy and legacy
 pinning, empty directories, formatting, and Git whitespace pass. Protected trees remain unchanged
 and unstaged. The overall A+ goal continues with the remaining source owners and final repository
 audit.
+
+## Iteration 108
+
+Iteration 108 completes the manual review of all eight Core Batching files and 1,150 final source
+lines. The existing `Contexts/` and `Runtime/` folders correctly mirror their namespaces inside the
+Core project; Batching is not an external provider project.
+
+Admission now becomes terminal when timer scheduling throws or returns `false`, clears retained
+messages, stops registrations, and propagates the same failure to every owned pipeline. Primary and
+distinct cleanup failures are preserved. Timer and cancellation callbacks use observed asynchronous
+executor operations instead of self-blocking queue admission, and equal ordering keys retain
+monotonic admission order. Direct tests also close all timestamp fallback and collector lifetime
+contracts.
+
+Nine new requirement-mapped tests pass; all changed tests have causal assertions and no identified
+quality smell. Six of six isolated counterchanges were killed and restored. The focused Batching
+suite passes 79/79. Final Core coverage passes 3,391/3,391 and records Batching at 96.2% line
+(430/447) and 91.6% branch (174/190), across 80 methods with zero CRAP scores above 30. The accepted
+Cobertura artifact is `/private/tmp/vsb-iteration108-final.cobertura.xml`, SHA-256
+`a83efb60a9d774fa9879689c7fbece53f4eddc011df5bb7606e3ac6b9ee79b4b`.
+
+The bidirectional Async gate exposed and then confirmed the private
+`TerminateFailedAdmissionAsync` identity. A full-suite-only scheduling observation race was traced
+to mismatched 30-second operation and 1.2-second inactivity policies; aligning the harness policy
+made the isolated and final complete runs deterministic without product-code changes.
+
+The final Engineering build passes all 77 projects with zero warnings and errors. Both format gates
+pass, and all 23 hermetic Unit/Architecture hosts pass 6,364/6,364 with zero failures and skips.
+Package validation passes 18 developer journeys, 31 fresh packages, three isolated provider-testing
+consumers, and all 30 runtime API assemblies. The unchanged 18,879-line contract SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements JSON, Git whitespace, async naming, comments, directives, dummy markers, SDK pinning,
+and empty-directory checks pass. The protected `review/` and `TestResults/` trees remain unchanged
+and unstaged. The overall A+ goal continues with the remaining source owners and final whole-source
+completion audit.

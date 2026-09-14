@@ -2947,3 +2947,70 @@ Requirements, bidirectional async naming, source comments, preprocessor directiv
 MassTransit identities, SDK pinning, empty directories, formatting, and Git whitespace are clean.
 The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
 continues with the remaining complete source owners and the final whole-repository audit.
+
+## Iteration 108 Core Batching runtime plan
+
+Iteration 108 reviews the complete `src/ViciOne.ServiceBus/Batching` owner: eight production files
+and 1,075 lines across `Batching.Contexts` and `Batching.Runtime`. Every file and comment is read
+manually. Source and comment generation remain prohibited; static pairing and coverage tooling are
+read-only completeness aids.
+
+The project-boundary decision from Iteration 107 remains unchanged. Batching is an internal Core
+capability and therefore belongs inside `src/ViciOne.ServiceBus/Batching`; its `Contexts/` and
+`Runtime/` branches mirror the declared namespaces. It is not an independent provider adapter and
+must not become a sibling project.
+
+### Iteration 108 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| A failed batch admission must never remain buffered or be delivered later | deterministic timer-start failure test asserting exact admission failure, terminal state, cleanup, and absence of delivery |
+| Every accepted message pipeline must receive the terminal failure selected by its batch | multi-message failure test asserting exception identity for earlier and failing admissions |
+| Equal transport or timestamp ordering keys must have a deterministic admission-order tie break | ordered batch assertion with equal primary keys plus a controlled counterchange |
+| Every ordering fallback source must be intentional | separate transport sequence, sent time, receive time, and `TimeProvider` cases |
+| Cancellation callbacks must not deadlock the serialized collector under bounded backpressure | deterministic saturated-queue ownership test or a documented proof that no unsafe synchronous path remains |
+| Collector disposal must stop admissions, await admitted work, flush once, and drain both executors | direct lifetime state-transition assertions plus existing end-to-end collector disposal tests |
+| All retained code and comments must match their behavior and owner | final eight-file reread, architecture/format/hygiene gates, source-to-test map |
+| No batch feature may be lost | 70-test focused baseline, full Core host, all hermetic hosts, Engineering build, package/API comparison |
+
+### Iteration 108 validation
+
+1. Preserve the 70/70 focused baseline and record the Roslyn source-to-test pairing.
+2. Use fresh owner coverage and CRAP analysis to rank semantic gaps rather than chase percentages.
+3. Write red-first tests only for independently justified lifecycle, ordering, or failure contracts.
+4. Correct proven production defects and manually update affected comments.
+5. Kill meaningful one-cause counterchanges and restore the accepted implementation after each run.
+6. Audit every changed test for assertion quality, mutation sensitivity, determinism, and requirement
+   projection.
+7. Run focused coverage, the serial 77-project Engineering build, all 23 Unit/Architecture hosts,
+   both format gates, package/API verification, source hygiene, and Git checks.
+8. Commit, annotate Iteration 108, push without force, and verify branch and peeled tag hashes.
+
+### Iteration 108 completion
+
+All eight Batching production files and the final 1,150 source lines were read manually, including
+every comment. `Batching/Contexts` and `Batching/Runtime` correctly express an internal Core
+capability beneath `src/ViciOne.ServiceBus`; no project move or compatibility alias is needed.
+
+Timer scheduling failures now terminate admission and every owned pipeline without retaining a
+later-deliverable message. Distinct cleanup failures are preserved. Timer and cancellation
+callbacks no longer synchronously enqueue behind their own bounded collector worker, equal ordering
+keys preserve admission order, and all timestamp fallbacks are explicit. Direct lifetime tests
+prove drain, flush-once, both-executor shutdown, and failure identity.
+
+Nine permanent requirement cases and six killed counterchanges protect the corrected contracts.
+The final focused suite passes 79/79. Fresh final Core coverage passes 3,391/3,391 and records
+Batching at 96.2% line and 91.6% branch coverage over 80 methods with no CRAP score above 30. The
+accepted artifact SHA-256 is
+`a83efb60a9d774fa9879689c7fbece53f4eddc011df5bb7606e3ac6b9ee79b4b`.
+
+The serial 77-project Engineering build has zero warnings and errors, both format gates pass, and
+all 23 hermetic hosts pass 6,364/6,364 with no skip. The final run also includes the corrected
+bidirectional Async identity and a causally stabilized scheduled-publish harness timeout policy.
+Package/API verification passes 18 journeys, 31 fresh packages, three isolated provider consumers,
+and 30 runtime APIs; the unchanged 18,879-line contract SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Source hygiene, requirements, formatting, API identity, empty directories, and Git whitespace pass.
+The protected `review/` and `TestResults/` trees remain unchanged and unstaged. The overall A+ goal
+continues with the remaining complete source owners and the final repository-wide audit.

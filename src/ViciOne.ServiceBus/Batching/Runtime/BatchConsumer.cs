@@ -30,6 +30,7 @@ internal sealed class BatchConsumer<TMessage> :
     DateTimeOffset _firstMessage;
     DateTimeOffset _lastMessage;
     ILogContext? _logContext;
+    ulong _nextAdmissionOrder;
 
     /// <summary>Creates an empty batch whose completion timer starts with its first message.</summary>
     /// <param name="settings">The immutable batch size and timing limits.</param>
@@ -89,17 +90,26 @@ internal sealed class BatchConsumer<TMessage> :
         if (IsCompleted)
             return;
 
+        _ = CompleteExpiredBatchAsync();
+    }
+
+    async Task CompleteExpiredBatchAsync()
+    {
         try
         {
-            _executor.EnqueueBlocking(() => CompleteBatchAsync(BatchCompletionMode.Time));
+            await _executor.ExecuteAsync(() => CompleteBatchAsync(BatchCompletionMode.Time)).ConfigureAwait(false);
         }
         catch (ObjectDisposedException) when (IsCompleted)
         {
             // Terminal cleanup already owns the batch and has stopped the collector executor.
         }
+        catch (Exception exception)
+        {
+            TerminateWithFailure(exception);
+        }
     }
 
-    /// <summary>Adds a message and closes the batch immediately when its size limit is reached.</summary>
+    /// <summary>Adds a message, or terminates the batch when admission infrastructure fails.</summary>
     /// <param name="context">The message context to add.</param>
     /// <param name="currentActivity">The trace activity associated with the admission.</param>
     /// <param name="cancellationToken">Cancels admission of a size-completed batch to the delivery queue.</param>
@@ -119,6 +129,7 @@ internal sealed class BatchConsumer<TMessage> :
         var batchEntry = new BatchEntry(
             context,
             sequenceNumber ?? GetSentTimeAsSequenceFallback(),
+            _nextAdmissionOrder++,
             () => RemoveCanceledMessage(messageId));
 
         if (!_messages.TryAdd(messageId, batchEntry))
@@ -127,22 +138,71 @@ internal sealed class BatchConsumer<TMessage> :
             return Task.CompletedTask;
         }
 
-        _logContext ??= LogContext.Current;
-        _currentActivity = currentActivity;
+        try
+        {
+            _logContext ??= LogContext.Current;
+            _currentActivity = currentActivity;
 
-        DateTimeOffset receivedAt = _timeProvider.GetUtcNow();
-        if (_messages.Count == 1)
-            _firstMessage = receivedAt;
+            DateTimeOffset receivedAt = _timeProvider.GetUtcNow();
+            if (_messages.Count == 1)
+                _firstMessage = receivedAt;
 
-        if (_messages.Count == 1 || _settings.TimeLimitStart == BatchTimeLimitStart.FromLast)
-            _timer.Change(_settings.TimeLimit, Timeout.InfiniteTimeSpan);
+            if (_messages.Count == 1 || _settings.TimeLimitStart == BatchTimeLimitStart.FromLast)
+            {
+                if (!_timer.Change(_settings.TimeLimit, Timeout.InfiniteTimeSpan))
+                    throw new InvalidOperationException("The batch completion timer could not be scheduled.");
+            }
 
-        _lastMessage = receivedAt;
+            _lastMessage = receivedAt;
 
-        if (IsReadyToDeliver(context.Advanced()))
-            return CompleteBatchAsync(BatchCompletionMode.Size, context.Advanced(), cancellationToken);
+            if (IsReadyToDeliver(context.Advanced()))
+                return CompleteBatchAsync(BatchCompletionMode.Size, context.Advanced(), cancellationToken);
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+        catch (Exception exception)
+        {
+            return TerminateFailedAdmissionAsync(exception);
+        }
+    }
+
+    Task TerminateFailedAdmissionAsync(Exception admissionFailure)
+    {
+        return Task.FromException(TerminateWithFailure(admissionFailure));
+    }
+
+    Exception TerminateWithFailure(Exception failure)
+    {
+        if (Interlocked.CompareExchange(ref _completionState, 1, 0) != 0)
+            return failure;
+
+        Exception? cleanupFailure = StopTimerAndRegistrations();
+        _messages.Clear();
+        Exception terminalFailure = CombinePrimaryAndCleanupFailures(failure, cleanupFailure);
+        _completed.TrySetException(terminalFailure);
+        return terminalFailure;
+    }
+
+    static Exception CombinePrimaryAndCleanupFailures(Exception primaryFailure, Exception? cleanupFailure)
+    {
+        if (cleanupFailure == null || ReferenceEquals(primaryFailure, cleanupFailure))
+            return primaryFailure;
+
+        var failures = new List<Exception> { primaryFailure };
+        if (cleanupFailure is AggregateException aggregateException)
+        {
+            foreach (Exception exception in aggregateException.InnerExceptions)
+            {
+                if (!ReferenceEquals(primaryFailure, exception))
+                    failures.Add(exception);
+            }
+        }
+        else
+            failures.Add(cleanupFailure);
+
+        return failures.Count == 1
+            ? primaryFailure
+            : new AggregateException("Batch operation and cleanup encountered multiple failures.", failures);
     }
 
     void RemoveCanceledMessage(Guid messageId)
@@ -150,9 +210,14 @@ internal sealed class BatchConsumer<TMessage> :
         if (IsCompleted)
             return;
 
+        _ = RemoveCanceledMessageAsync(messageId);
+    }
+
+    async Task RemoveCanceledMessageAsync(Guid messageId)
+    {
         try
         {
-            _executor.EnqueueBlocking(() =>
+            await _executor.ExecuteAsync(() =>
             {
                 if (IsCompleted)
                     return Task.CompletedTask;
@@ -175,11 +240,15 @@ internal sealed class BatchConsumer<TMessage> :
                 }
 
                 return Task.CompletedTask;
-            });
+            }).ConfigureAwait(false);
         }
         catch (ObjectDisposedException) when (IsCompleted)
         {
             // Terminal cleanup already owns the batch and has stopped the collector executor.
+        }
+        catch (Exception exception)
+        {
+            TerminateWithFailure(exception);
         }
     }
 
@@ -327,7 +396,11 @@ internal sealed class BatchConsumer<TMessage> :
 
     List<ConsumeContext<TMessage>> GetMessageBatchInOrder()
     {
-        return _messages.Values.OrderBy(x => x.Index).Select(x => x.Context).ToList();
+        return _messages.Values
+            .OrderBy(static entry => entry.Index)
+            .ThenBy(static entry => entry.AdmissionOrder)
+            .Select(static entry => entry.Context)
+            .ToList();
     }
 
 
@@ -335,12 +408,14 @@ internal sealed class BatchConsumer<TMessage> :
     {
         public readonly ConsumeContext<TMessage> Context;
         public readonly ulong Index;
+        public readonly ulong AdmissionOrder;
         readonly CancellationTokenRegistration _registration;
 
-        public BatchEntry(ConsumeContext<TMessage> context, ulong index, Action canceled)
+        public BatchEntry(ConsumeContext<TMessage> context, ulong index, ulong admissionOrder, Action canceled)
         {
             Context = context;
             Index = index;
+            AdmissionOrder = admissionOrder;
 
             if (context.CancellationToken.CanBeCanceled)
                 _registration = context.CancellationToken.Register(() => canceled());

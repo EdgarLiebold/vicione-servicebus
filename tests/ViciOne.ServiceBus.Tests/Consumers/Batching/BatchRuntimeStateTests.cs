@@ -119,6 +119,308 @@ public sealed class BatchRuntimeStateTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-ADMISSION", "timer-restart-failure-terminates-every-owned-pipeline")]
+    public async Task TimerRestartFailure_TerminatesTheBatchWithoutRetainingOrDeliveringMessagesAsync()
+    {
+        var timerFailure = new InvalidOperationException("timer restart failed");
+        var timeProvider = new ObservableTimeProvider(
+            StartTime,
+            timerChangeException: timerFailure,
+            successfulChangesBeforeFailure: 1);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var executor = new TaskExecutor();
+        var dispatcher = new TaskExecutor();
+        var batch = new BatchConsumer<StateItem>(
+            new BatchRuntimeSettings(new BatchOptions
+            {
+                MessageLimit = 10,
+                TimeLimit = TimeSpan.FromMinutes(1),
+                TimeLimitStart = BatchTimeLimitStart.FromLast,
+            }),
+            executor,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            timeProvider);
+        ConsumeContext<StateItem> first = CreateContext(new StateItem("shared", 1), timeProvider);
+        ConsumeContext<StateItem> failing = CreateContext(new StateItem("shared", 2), timeProvider);
+
+        try
+        {
+            await batch.AddAsync(first, null, TestContext.Current.CancellationToken);
+            Task firstPipeline = batch.ConsumeAsync(first);
+
+            InvalidOperationException admissionException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                batch.AddAsync(failing, null, TestContext.Current.CancellationToken));
+            Assert.True(batch.IsCompleted);
+            InvalidOperationException pipelineException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                firstPipeline.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+
+            Assert.Same(timerFailure, admissionException);
+            Assert.Same(timerFailure, pipelineException);
+            Assert.Equal(0, GetBufferedMessageCount(batch));
+            Assert.Equal(0, timeProvider.ActiveTimerCount);
+            Assert.Empty(delivered);
+        }
+        finally
+        {
+            await dispatcher.DisposeAsync();
+            await executor.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-ADMISSION", "timer-rejection-terminates-admission-and-owned-pipeline")]
+    public async Task TimerRejection_TerminatesAdmissionAndTheOwnedPipelineAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime, timerChangeResult: false);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var executor = new TaskExecutor();
+        var dispatcher = new TaskExecutor();
+        var batch = new BatchConsumer<StateItem>(
+            new BatchRuntimeSettings(CreateOptions(messageLimit: 10)),
+            executor,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            timeProvider);
+        ConsumeContext<StateItem> context = CreateContext(new StateItem("shared", 1), timeProvider);
+
+        try
+        {
+            InvalidOperationException admissionException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                batch.AddAsync(context, null, TestContext.Current.CancellationToken));
+            InvalidOperationException pipelineException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                batch.ConsumeAsync(context).WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+
+            Assert.Same(admissionException, pipelineException);
+            Assert.Equal("The batch completion timer could not be scheduled.", admissionException.Message);
+            Assert.True(batch.IsCompleted);
+            Assert.Equal(0, GetBufferedMessageCount(batch));
+            Assert.Equal(0, timeProvider.ActiveTimerCount);
+            Assert.Empty(delivered);
+        }
+        finally
+        {
+            await dispatcher.DisposeAsync();
+            await executor.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-ADMISSION", "timer-restart-and-cleanup-failures-preserve-distinct-causes")]
+    public async Task TimerRestartAndCleanupFailures_TerminateTheBatchWithEveryDistinctCauseAsync()
+    {
+        var timerFailure = new InvalidOperationException("timer restart failed");
+        var cleanupFailure = new InvalidOperationException("timer disposal failed");
+        var timeProvider = new ObservableTimeProvider(
+            StartTime,
+            timerDisposeException: cleanupFailure,
+            timerChangeException: timerFailure,
+            successfulChangesBeforeFailure: 1);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var executor = new TaskExecutor();
+        var dispatcher = new TaskExecutor();
+        var batch = new BatchConsumer<StateItem>(
+            new BatchRuntimeSettings(new BatchOptions
+            {
+                MessageLimit = 10,
+                TimeLimit = TimeSpan.FromMinutes(1),
+                TimeLimitStart = BatchTimeLimitStart.FromLast,
+            }),
+            executor,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            timeProvider);
+        ConsumeContext<StateItem> first = CreateContext(new StateItem("shared", 1), timeProvider);
+        ConsumeContext<StateItem> failing = CreateContext(new StateItem("shared", 2), timeProvider);
+
+        try
+        {
+            await batch.AddAsync(first, null, TestContext.Current.CancellationToken);
+            Task firstPipeline = batch.ConsumeAsync(first);
+
+            AggregateException admissionException = await Assert.ThrowsAsync<AggregateException>(() =>
+                batch.AddAsync(failing, null, TestContext.Current.CancellationToken));
+            AggregateException pipelineException = await Assert.ThrowsAsync<AggregateException>(() =>
+                firstPipeline.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+
+            Assert.Same(admissionException, pipelineException);
+            Assert.Collection(
+                admissionException.InnerExceptions,
+                exception => Assert.Same(timerFailure, exception),
+                exception => Assert.Same(cleanupFailure, exception));
+            Assert.True(batch.IsCompleted);
+            Assert.Equal(0, GetBufferedMessageCount(batch));
+            Assert.Equal(0, timeProvider.ActiveTimerCount);
+            Assert.Empty(delivered);
+        }
+        finally
+        {
+            await dispatcher.DisposeAsync();
+            await executor.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-CLOCK", "saturated-collector-timeout-cannot-self-deadlock")]
+    public async Task TimeLimitCallback_DoesNotBlockTheCollectorWorkerBehindItsOwnFullQueueAsync()
+    {
+        TimeSpan timeLimit = TimeSpan.FromMinutes(1);
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
+        var dispatcher = new TaskExecutor();
+        var batch = new BatchConsumer<StateItem>(
+            new BatchRuntimeSettings(new BatchOptions { MessageLimit = 10, TimeLimit = timeLimit }),
+            executor,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            timeProvider);
+        ConsumeContext<StateItem> context = CreateContext(new StateItem("shared", 1), timeProvider);
+        await batch.AddAsync(context, null, TestContext.Current.CancellationToken);
+        Task pipeline = batch.ConsumeAsync(context);
+        var workerEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseWorker = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task advanceClock = executor.ExecuteAsync(async () =>
+        {
+            workerEntered.TrySetResult();
+            await releaseWorker.Task.ConfigureAwait(false);
+            timeProvider.Advance(timeLimit);
+        }, TestContext.Current.CancellationToken);
+
+        try
+        {
+            await workerEntered.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            await executor.EnqueueAsync(static () => Task.CompletedTask, TestContext.Current.CancellationToken);
+            releaseWorker.TrySetResult();
+
+            await advanceClock.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            await pipeline.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+            IMessageBatch<StateItem> completed = Assert.Single(delivered);
+            Assert.Equal(BatchCompletionMode.Time, completed.Mode);
+            Assert.Equal(1, Assert.Single(completed).Message.Sequence);
+            Assert.True(batch.IsCompleted);
+            Assert.Equal(0, timeProvider.ActiveTimerCount);
+        }
+        finally
+        {
+            releaseWorker.TrySetResult();
+            await dispatcher.DisposeAsync();
+            if (advanceClock.IsCompleted)
+                await executor.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-CANCELLATION", "saturated-collector-cancellation-cannot-self-deadlock")]
+    public async Task CancellationCallback_DoesNotBlockTheCollectorWorkerBehindItsOwnFullQueueAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
+        var dispatcher = new TaskExecutor();
+        var batch = new BatchConsumer<StateItem>(
+            new BatchRuntimeSettings(CreateOptions(messageLimit: 10)),
+            executor,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            timeProvider);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        ConsumeContext<StateItem> context = CreateCancelableContext(
+            new StateItem("shared", 1),
+            timeProvider,
+            cancellation);
+        var workerEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseWorker = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task admission = executor.ExecuteAsync(async () =>
+        {
+            workerEntered.TrySetResult();
+            await releaseWorker.Task.ConfigureAwait(false);
+            await batch.AddAsync(context, null, TestContext.Current.CancellationToken).ConfigureAwait(false);
+        }, TestContext.Current.CancellationToken);
+
+        try
+        {
+            await workerEntered.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            await executor.EnqueueAsync(static () => Task.CompletedTask, TestContext.Current.CancellationToken);
+            releaseWorker.TrySetResult();
+
+            await admission.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            await executor.ExecuteAsync(static () => Task.CompletedTask, TestContext.Current.CancellationToken)
+                .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+            Assert.True(batch.IsCompleted);
+            Assert.Equal(0, GetBufferedMessageCount(batch));
+            Assert.Equal(0, timeProvider.ActiveTimerCount);
+            Assert.Empty(delivered);
+        }
+        finally
+        {
+            releaseWorker.TrySetResult();
+            await dispatcher.DisposeAsync();
+            if (admission.IsCompleted)
+                await executor.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-ORDERING", "equal-primary-keys-preserve-surviving-admission-order")]
+    public async Task EqualOrderingKeys_PreserveAdmissionOrderAfterCancellationReusesABufferSlotAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var delivered = new ConcurrentQueue<IMessageBatch<StateItem>>();
+        var executor = new TaskExecutor();
+        var dispatcher = new TaskExecutor();
+        var batch = new BatchConsumer<StateItem>(
+            new BatchRuntimeSettings(CreateOptions(messageLimit: 10)),
+            executor,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            timeProvider);
+        using var cancellation = new CancellationTokenSource();
+        ConsumeContext<StateItem> first = CreateContext(new StateItem("shared", 1), timeProvider, sentTime: StartTime);
+        ConsumeContext<StateItem> removed = InMemoryOutboxTestContextFactory.Create(
+            new StateItem("shared", 2),
+            cancellation.Token,
+            sentTime: StartTime);
+        removed.SetTimeProvider(timeProvider);
+        ConsumeContext<StateItem> third = CreateContext(new StateItem("shared", 3), timeProvider, sentTime: StartTime);
+        ConsumeContext<StateItem> fourth = CreateContext(new StateItem("shared", 4), timeProvider, sentTime: StartTime);
+
+        try
+        {
+            await batch.AddAsync(first, null, TestContext.Current.CancellationToken);
+            await batch.AddAsync(removed, null, TestContext.Current.CancellationToken);
+            await batch.AddAsync(third, null, TestContext.Current.CancellationToken);
+            Task firstPipeline = batch.ConsumeAsync(first);
+            Task removedPipeline = batch.ConsumeAsync(removed);
+            Task thirdPipeline = batch.ConsumeAsync(third);
+
+            cancellation.Cancel();
+            OperationCanceledException cancellationException = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                removedPipeline.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+            Assert.Equal(cancellation.Token, cancellationException.CancellationToken);
+            await executor.ExecuteAsync(static () => Task.CompletedTask, TestContext.Current.CancellationToken);
+
+            await batch.AddAsync(fourth, null, TestContext.Current.CancellationToken);
+            Task fourthPipeline = batch.ConsumeAsync(fourth);
+            await batch.ForceCompleteAsync(TestContext.Current.CancellationToken);
+            await Task.WhenAll(firstPipeline, thirdPipeline, fourthPipeline)
+                .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+            IMessageBatch<StateItem> completed = Assert.Single(delivered);
+            Assert.Equal(BatchCompletionMode.Forced, completed.Mode);
+            Assert.Equal(new[] { 1, 3, 4 }, completed.Select(context => context.Message.Sequence));
+        }
+        finally
+        {
+            await dispatcher.DisposeAsync();
+            await executor.DisposeAsync();
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-DUPLICATE-SUPPRESSION", "collector-retains-first-context-for-duplicate-message-id")]
     public async Task DuplicateMessageIdentifier_IsRepresentedOnceWhileBothPipelinesCompleteAsync()
     {

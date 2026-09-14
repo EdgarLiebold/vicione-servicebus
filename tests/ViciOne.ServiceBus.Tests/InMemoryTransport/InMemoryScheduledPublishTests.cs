@@ -27,7 +27,10 @@ public sealed class InMemoryScheduledPublishTests
         TimeSpan scheduleDelay = TimeSpan.FromHours(3);
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration =>
-                configuration.AddConsumer<ScheduledMessageConsumer>())
+            {
+                configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+                configuration.AddConsumer<ScheduledMessageConsumer>();
+            })
             .BuildServiceProvider(new ServiceProviderOptions
             {
                 ValidateOnBuild = true,

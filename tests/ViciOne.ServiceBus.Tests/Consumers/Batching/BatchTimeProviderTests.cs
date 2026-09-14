@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Batching.Runtime;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using ViciOne.ServiceBus.Util;
@@ -12,6 +13,7 @@ namespace ViciOne.ServiceBus.Tests.Consumers.Batching;
 public sealed class BatchTimeProviderTests
 {
     private static readonly DateTimeOffset StartTime = new(2040, 11, 12, 13, 14, 15, TimeSpan.Zero);
+    private static readonly TimeSpan OperationTimeout = TimeSpan.FromSeconds(5);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-CLOCK", "from-first-exact-boundary-and-metadata")]
@@ -131,9 +133,58 @@ public sealed class BatchTimeProviderTests
         Assert.Equal(1, Assert.Single(batch).Message.Sequence);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-ORDERING", "sent-time-fallback-priority-is-context-transport-then-clock")]
+    public async Task OrderingFallback_PrefersContextThenTransportAndFinallyTheConfiguredClockAsync()
+    {
+        var clock = new FakeTimeProvider(StartTime);
+        var delivered = new TaskCompletionSource<IMessageBatch<BatchItem>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var collector = new TaskExecutor();
+        await using var dispatcher = new TaskExecutor();
+        var consumer = new BatchConsumer<BatchItem>(
+            new BatchRuntimeSettings(new BatchOptions { MessageLimit = 3, TimeLimit = TimeSpan.FromMinutes(1) }),
+            collector,
+            dispatcher,
+            new CaptureBatchPipe(delivered),
+            clock);
+        ConsumeContext<BatchItem> contextTimestamp = CreateContext(
+            new BatchItem(1),
+            StartTime.AddTicks(40),
+            StartTime.AddTicks(10));
+        ConsumeContext<BatchItem> transportTimestamp = CreateContext(
+            new BatchItem(2),
+            sentTime: null,
+            transportSentTime: StartTime.AddTicks(30));
+
+        await consumer.AddAsync(contextTimestamp, null, TestContext.Current.CancellationToken);
+        Task contextPipeline = consumer.ConsumeAsync(contextTimestamp);
+        await consumer.AddAsync(transportTimestamp, null, TestContext.Current.CancellationToken);
+        Task transportPipeline = consumer.ConsumeAsync(transportTimestamp);
+
+        clock.Advance(TimeSpan.FromTicks(20));
+        ConsumeContext<BatchItem> clockTimestamp = CreateContext(new BatchItem(3), sentTime: null, transportSentTime: null);
+        await consumer.AddAsync(clockTimestamp, null, TestContext.Current.CancellationToken);
+        Task clockPipeline = consumer.ConsumeAsync(clockTimestamp);
+
+        await Task.WhenAll(contextPipeline, transportPipeline, clockPipeline)
+            .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        IMessageBatch<BatchItem> batch = await delivered.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        Assert.Equal(new[] { 3, 2, 1 }, batch.Select(context => context.Message.Sequence));
+    }
+
     private static ConsumeContext<BatchItem> CreateContext(BatchItem message, DateTime sentTime)
     {
+        return CreateContext(message, new DateTimeOffset(sentTime, TimeSpan.Zero), transportSentTime: null);
+    }
+
+    private static ConsumeContext<BatchItem> CreateContext(
+        BatchItem message,
+        DateTimeOffset? sentTime,
+        DateTimeOffset? transportSentTime)
+    {
         ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, ReceiveContextProxy>();
+        ((ReceiveContextProxy)(object)receiveContext).Configure(transportSentTime);
         ConsumeContext<BatchItem> context = DispatchProxy.Create<BatchConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Configure(message, sentTime, receiveContext);
         return context;
@@ -163,13 +214,13 @@ public sealed class BatchTimeProviderTests
         private BatchItem _message = null!;
         private ReceiveContext _receiveContext = null!;
         private SerializerContext _serializerContext = null!;
-        private DateTimeOffset _sentTime;
+        private DateTimeOffset? _sentTime;
         private Guid _messageId;
 
-        public void Configure(BatchItem message, DateTime sentTime, ReceiveContext receiveContext)
+        public void Configure(BatchItem message, DateTimeOffset? sentTime, ReceiveContext receiveContext)
         {
             _message = message;
-            _sentTime = new DateTimeOffset(sentTime, TimeSpan.Zero);
+            _sentTime = sentTime;
             _receiveContext = receiveContext;
             _serializerContext = DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
             _messageId = NewId.NextGuid();
@@ -197,6 +248,18 @@ public sealed class BatchTimeProviderTests
     private class ReceiveContextProxy : DispatchProxy
     {
         private static readonly IPublishEndpointProvider PublishEndpointProvider = new UnsupportedPublishEndpointProvider();
+        private Headers _transportHeaders = EmptyHeaders.Instance;
+
+        public void Configure(DateTimeOffset? transportSentTime)
+        {
+            if (transportSentTime.HasValue)
+            {
+                _transportHeaders = new DictionarySendHeaders(
+                [
+                    new KeyValuePair<string, object>(MessageHeaders.TransportSentTime, transportSentTime.Value),
+                ]);
+            }
+        }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -205,6 +268,7 @@ public sealed class BatchTimeProviderTests
             return targetMethod.Name switch
             {
                 "get_PublishEndpointProvider" => PublishEndpointProvider,
+                "get_TransportHeaders" => _transportHeaders,
                 "HasPayloadType" => false,
                 "TryGetPayload" => SetMissingPayload(args),
                 _ => throw new NotSupportedException(targetMethod.Name),

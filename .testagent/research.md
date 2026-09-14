@@ -1454,3 +1454,88 @@ Repository-wide scans find no C# preprocessor directives, dummy markers, MassTra
 SDK-version pinning, or empty source directories. The sole `NotImplementedException` text is an
 intentional non-retryable failure-classification rule, not a placeholder. Requirements JSON and Git
 whitespace pass. The protected `review/` and `TestResults/` trees were neither changed nor staged.
+
+## Iteration 108 Core Batching runtime research
+
+The complete owner contains eight files and 1,075 production lines. `Batching/Contexts` contains the
+immutable delivered snapshot and its consume-context facade; `Batching/Runtime` contains collector,
+per-batch state, lifetime, factory, settings, and the internal collector contract. All paths,
+filenames, namespaces, type names, interface prefixes, and comments match their responsibilities.
+Batching is correctly part of Core rather than a separate assembly or external-adapter family.
+
+The Roslyn static pairing pass scanned 4,267 source and 1,211 test files. Seven Batch files have
+direct named test references. It labels `BatchCollectorLifetime.cs` unpaired because callers own it
+through `BatchCollectorBase`; instrumented coverage proves that indirect path is extensively
+executed. The result is a static symbol-reference heuristic, not line or branch evidence. The fresh
+focused baseline passes all 70 Batch test cases.
+
+Existing tests cover public batch delivery, size/time/forced completion, grouped and ungrouped
+streams, retry isolation, duplicate suppression, exact ordering, TimeProvider behavior, cancellation
+identity, dispatcher failures, fault fan-out, outbox rollback, connection disposal, probes, settings,
+and a 1,000-message concurrency scenario. Owner coverage from the accepted full Core run is 96.6%
+line (394/408) and 89.5% branch (154/172) over 74 methods, with zero CRAP scores above 30. The highest
+scores are `BatchConsumer.AddAsync` at 18.00 with full line coverage and
+`StopTimerAndRegistrations` at 12.32.
+
+The first semantic gap is not a percentage concern. `BatchConsumer.AddAsync` inserts and registers a
+message before starting or restarting the timer. If `ITimer.Change` throws, the method returns no
+consumer to the caller, yet the entry remains inside an active batch and can later be delivered.
+That would allow one message admission to both fail and subsequently participate in a batch. A
+red-first test must establish the exact terminal contract before remediation. Equal ordering keys,
+all sent-time fallback sources, saturated cancellation callbacks, and direct lifetime drain ordering
+remain bounded hypotheses until their tests or code proofs establish whether a change is required.
+
+The final owner contains the same eight files and 1,150 production lines. Failed timer starts and
+restarts now terminate the batch, clear retained entries, stop the timer and cancellation
+registrations, and propagate one terminal failure to every owned pipeline. A `false` return from
+`ITimer.Change` is treated as an explicit scheduling failure. When admission and cleanup both fail,
+the primary failure remains first and every distinct cleanup cause is retained without duplicating
+the same exception instance.
+
+Both timer and cancellation callbacks previously used `EnqueueBlocking`. A callback invoked on the
+collector worker could therefore wait synchronously for work queued behind itself when the bounded
+executor queue was full. The callbacks now launch fully observed asynchronous operations through
+`ExecuteAsync`; terminal races and executor disposal are handled explicitly. Equal primary ordering
+keys now use a monotonic admission-order tie break, so cancellation and dictionary slot reuse cannot
+reorder surviving messages. The context sent time, transport sent time, and configured-clock
+fallback priority is now directly demonstrated. Collector lifetime tests prove admission closure,
+drain-before-flush, exactly-once disposal, both-executor shutdown, and retained flush-failure
+identity.
+
+Nine new requirement-mapped tests cover those contracts. Every changed or added test was reread
+against the owning source and has causal state, ordering, exception-identity, or resource-lifetime
+assertions. No assertion-free, trivial, self-referential, skipped, random, sleeping, wall-clock, or
+swallowed-exception case remains. Six isolated one-cause counterchanges were killed: duplicate
+failure aggregation, context timestamp fallback, lifetime drain signaling, message-limit boundary,
+retry-count direction, and delivered-message suppression. The original timer, cancellation, and
+ordering defects were independently observed red before remediation, and every counterchange was
+restored before the next experiment.
+
+The final Core coverage host passes 3,391/3,391 tests. Repository reachability records 76.6940%
+line coverage (48,578/63,340) and 69.3636% branch coverage (16,906/24,373). Batching records 96.2%
+line coverage (430/447), 91.6% branch coverage (174/190), 80 methods, and no CRAP score above 30.
+The accepted artifact is `/private/tmp/vsb-iteration108-final.cobertura.xml`, SHA-256
+`a83efb60a9d774fa9879689c7fbece53f4eddc011df5bb7606e3ac6b9ee79b4b`; it contains the final
+`TerminateFailedAdmissionAsync` identity.
+
+The first complete post-fix run correctly rejected that private method's missing `Async` suffix.
+The bidirectional architecture gate passed after the manual rename. A later complete run exposed a
+separate load-sensitive test-policy race: the scheduled-publish integration test used a 30-second
+outer operation limit but retained the harness's 1.2-second inactivity limit. Ten isolated runs
+passed, and source inspection identified the premature inactivity token as the only empty-sequence
+path. Aligning both harness limits to the configured operation policy removes that race without
+changing product behavior; the isolated rerun and final complete suite pass.
+
+The final serial Engineering build passes all 77 projects with zero warnings and errors. Both full
+format/analyzer gates pass. All 23 hermetic Unit/Architecture hosts pass 6,364/6,364 tests without a
+failure or skip. Package verification passes 18 developer journeys, 31 fresh packages, three
+isolated provider-testing consumers, and all 30 runtime API assemblies. The unchanged 18,879-line
+packed API contract SHA-256 is
+`ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`.
+
+Requirements JSON, Git whitespace, bidirectional async naming, comments, preprocessor directives,
+dummy markers, SDK pinning, and empty source-directory checks pass. The sole source occurrence of
+`NotImplementedException` is the intentional non-retryable failure-classification pattern. The
+first sandboxed MSBuild attempt stalled in named-pipe initialization; exact process inspection and
+an outside-sandbox rerun with disabled build servers produced the authoritative result. The
+protected `review/` and `TestResults/` trees remain unchanged and unstaged.

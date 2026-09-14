@@ -6,7 +6,8 @@ internal sealed class ObservableTimeProvider(
     DateTimeOffset startTime,
     Exception? timerDisposeException = null,
     Exception? timerChangeException = null,
-    int successfulChangesBeforeFailure = 0) : TimeProvider
+    int successfulChangesBeforeFailure = 0,
+    bool timerChangeResult = true) : TimeProvider
 {
     private readonly FakeTimeProvider _inner = new(startTime);
     private readonly object _lock = new();
@@ -80,7 +81,13 @@ internal sealed class ObservableTimeProvider(
         foreach (TaskCompletionSource<bool> waiter in completedWaiters)
             waiter.TrySetResult(true);
 
-        return new ObservableTimer(this, timer, timerDisposeException, timerChangeException, successfulChangesBeforeFailure);
+        return new ObservableTimer(
+            this,
+            timer,
+            timerDisposeException,
+            timerChangeException,
+            successfulChangesBeforeFailure,
+            timerChangeResult);
     }
 
     public void Advance(TimeSpan elapsed) => _inner.Advance(elapsed);
@@ -150,7 +157,8 @@ internal sealed class ObservableTimeProvider(
         ITimer inner,
         Exception? disposeException,
         Exception? changeException,
-        int successfulChangesBeforeFailure) : ITimer
+        int successfulChangesBeforeFailure,
+        bool changeResult) : ITimer
     {
         private int _changeAttempts;
         private int _disposed;
@@ -160,6 +168,8 @@ internal sealed class ObservableTimeProvider(
             int attempt = Interlocked.Increment(ref _changeAttempts);
             if (changeException != null && attempt > successfulChangesBeforeFailure)
                 throw changeException;
+            if (!changeResult)
+                return false;
 
             bool changed = inner.Change(dueTime, period);
             if (changed)
