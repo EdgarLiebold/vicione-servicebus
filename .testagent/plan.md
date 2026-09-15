@@ -3665,3 +3665,89 @@ coverage-only assertions. Requirements, comments, directives, dummy and legacy m
 pinning, filenames, folders, namespaces, empty directories, formatting, and Git whitespace pass.
 Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal continues
 with the remaining complete source owners and the final repository-wide audit.
+
+## Iteration 118 Core Topology plan
+
+Iteration 118 reviews the complete transport-independent Topology capability: 37 Core files and
+1,561 lines plus 62 Abstractions files and 2,369 lines, for 99 production files and 3,930 initial
+lines. Its direct tests, runtime consumers, and every source comment are read manually. No generator
+may produce or rewrite source, tests, comments, namespaces, filenames, or directories.
+
+The owner is the transport-independent topology engine and remains within the
+`src/ViciOne.ServiceBus` Core project. Public topology contracts remain in the independent
+`ViciOne.ServiceBus.Abstractions` assembly; provider-specific entity models remain with their
+transport assemblies. The review must prove that these dependency and physical boundaries are
+real rather than merely visually uniform.
+
+### Iteration 118 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Correlation identifiers are selected predictably for interface, property, nullable, and delegate contracts | exact send-context projection, precedence, null, invalid type, and exception behavior |
+| Message topology convention selection is deterministic | exact-match, interface/base traversal, cache identity, ordering, replacement, exclusion, and unsupported-contract cases |
+| Routing key, partition key, correlation, and serializer conventions attach only their owned behavior | direct configuration plus executable send-pipeline evidence |
+| Entity collections have explicit identity, name, identifier, idempotency, conflict, lookup, and enumeration semantics | exact name/key/handle ownership and boundary tests |
+| Entity names are valid and bounded without collisions introduced by shortening | boundary-length, deterministic suffix, invalid maximum, and distinct-input evidence |
+| Consume and global topology expose one coherent lifecycle and observer contract | message topology identity, bind/deploy/probe behavior, observer notification, and failure propagation |
+| Files, namespaces, folders, comments, and assembly dependencies match their owners | full manual read plus repository architecture gates |
+| No public feature or package API is lost | focused and Core coverage, mutation evidence, build, all hosts, package journeys, and packed API baseline |
+
+### Iteration 118 validation
+
+1. Record a fresh focused baseline before product edits.
+2. Read all 37 production files, direct tests, public contracts, runtime call sites, and comments.
+3. Add red-first tests only for independently justified behavioral or boundary defects.
+4. Correct each defect at its owning boundary without compatibility-only surface or feature loss.
+5. Kill meaningful controlled counterchanges and restore accepted sources byte-for-byte.
+6. Audit every changed test for causal assertions, determinism, isolation, and anti-patterns.
+7. Run focused and Core coverage and calculate owner CRAP risk.
+8. Run both format gates, the serial Engineering build, all hermetic hosts, package/API,
+   requirements, Async/source architecture, hygiene, empty-folder, and Git gates.
+9. Commit, annotate Iteration 118, push without force, and verify remote hashes.
+
+### Iteration 118 completion
+
+The complete transport-independent Topology capability is manually reviewed and remediated. Its
+final physical layout contains 100 C# files and 4,331 lines across six namespace-aligned folders:
+Core `Advanced/Topology`, `Configuration/Topology`, and `Topology`, plus the corresponding three
+folders in the independent Abstractions project. `src/ViciOne.ServiceBus` remains the Core project,
+not an umbrella for other assemblies. Independent assemblies remain direct `src` siblings, while
+provider projects remain grouped beneath `Persistence`, `Scheduling`, and `Transports`. The exact
+file manifests and namespaces are protected by a repository architecture test.
+
+The public empty message-type marker and four pass-through observable implementations are removed.
+Implementation-only correlation, partition, routing, serializer, and topology-convention types are
+internal. Required collaborators and factory results fail at their owning boundary; convention
+cache publication, root observer ownership, child-builder state, entity identity, entity-name
+evaluation, application freeze behavior, and correlation precedence are deterministic. The former
+unreachable `JsonElement` consume exclusion and the dummy cache constructor argument are removed.
+The serializer extension owner is now `SerializerConventionExtensions`, and every affected
+transport override uses the parameter-free factory hook.
+
+Two controlled mutation groups prove the substantive contracts. Four Core counterchanges produce
+six exact failures among 35 focused cases; four Abstractions counterchanges produce exactly four
+failures among 50 cases. Every source is restored to its recorded SHA-256 before accepted builds.
+The final Core host passes 3,611/3,611 and the Abstractions host passes 692/692. The canonical
+23-host profile passes 6,638/6,638 without failure or skip.
+
+Core Topology coverage is 97.0149% line (520/536) and 88.5714% branch (124/140), with maximum CRAP
+10. Abstractions Topology coverage is 100% line (495/495) and 89.2045% branch (157/176), with
+maximum CRAP 8. Combined owner coverage is 98.4481% line (1,015/1,031) and 88.9241% branch
+(281/316); no method exceeds CRAP 30. Complete loaded-product coverage in the Core run is 77.3865%
+line (49,224/63,608) and 70.1117% branch (17,143/24,451).
+
+All three locked restores pass. Both final format gates make no change. The serial 77-project
+Engineering Release build passes with warnings as errors and reports zero warnings and errors.
+Package/API verification passes 18 journeys, 31 fresh packages, three isolated provider-testing
+consumers, and all 30 runtime APIs. The intentionally reduced public API contains 18,824 lines with
+SHA-256 `493a793a915b88ac2ea9b81cb6be8057ecf9beff80535f063aab8c3040d12a4f`.
+
+The final anti-pattern review accounts for 86 new or changed test methods and 90 executed cases.
+Every case has causal assertions; no skip, broad catch, swallowed failure, assertion-free path,
+shared mutable fixture, mystery dependency, random input, or coverage-only behavior remains. The
+two concurrency cases use explicit signals and bounded cancellation safeguards and kill their
+respective race counterchanges. The isolated Async/source-layout gate passes 54/54. Requirements,
+directives, old Topology names and paths, SDK patch pinning, empty directories, formatting, and Git
+whitespace are clean. Protected `review/` and `TestResults/` remain unchanged and unstaged. The
+overall A+ goal continues with the remaining complete source owners and the final repository-wide
+audit.

@@ -14,6 +14,7 @@ public sealed class TestAssemblyBootstrap
 {
     public TestAssemblyBootstrap()
     {
+        ApplicationMessageTopology.ExcludeFromConsumeTopology<NonConsumableTopologyMessage>();
         MessageCorrelation.UseCorrelationId<StateMachineLifecycleIntegrationTests.MappedStart>(
             message => message.ServiceId);
         MessageCorrelation.UseCorrelationId<StateMachineLifecycleIntegrationTests.MappedStop>(
@@ -25,4 +26,6 @@ public sealed class TestAssemblyBootstrap
         MessageCorrelation.UseCorrelationId<CorrelationIdConventionTests.OptionalGlobalSelectorMessage>(
             (Func<CorrelationIdConventionTests.OptionalGlobalSelectorMessage, Guid?>)(message => message.SelectedCorrelationId));
     }
+
+    public sealed record NonConsumableTopologyMessage;
 }

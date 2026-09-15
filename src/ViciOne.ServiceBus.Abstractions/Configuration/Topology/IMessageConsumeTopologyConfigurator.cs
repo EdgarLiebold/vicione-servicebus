@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures consume topology for a message contract.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public interface IMessageConsumeTopologyConfigurator<TMessage> :
     IMessageConsumeTopologyConfigurator,
     IMessageConsumeTopology<TMessage>

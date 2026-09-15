@@ -66,9 +66,8 @@ public class AmazonSqsSendTopology :
 
     /// <summary>Creates and announces Amazon SQS send topology for a message type.</summary>
     /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="type">The runtime message type represented by the topology.</param>
     /// <returns>The message send-topology configurator.</returns>
-    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new AmazonSqsMessageSendTopology<T>();
 

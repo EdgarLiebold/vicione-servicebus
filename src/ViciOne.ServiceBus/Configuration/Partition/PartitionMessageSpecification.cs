@@ -47,7 +47,7 @@ internal sealed class PartitionMessageSpecification<T> :
     static bool TryCreateKeyProvider([NotNullWhen(true)] out PartitionKeyProvider<ConsumeContext<T>>? keyProvider)
     {
         if (GlobalTopology.Send.GetMessageTopology<T>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<T>? convention)
-            && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<T>? messageCorrelationId))
+            && convention.TryGetCorrelationIdResolver(out IMessageCorrelationId<T>? messageCorrelationId))
         {
             keyProvider = context => messageCorrelationId.TryGetCorrelationId(context.Message, out Guid correlationId)
                 ? correlationId.ToByteArray()

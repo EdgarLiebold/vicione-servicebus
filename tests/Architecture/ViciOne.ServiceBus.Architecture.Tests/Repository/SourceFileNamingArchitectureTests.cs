@@ -328,6 +328,97 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "topology-files-have-namespace-aligned-capability-owners")]
+    public void TransportIndependentTopologyFiles_HaveNamespaceAlignedCapabilityOwners()
+    {
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            ("src/ViciOne.ServiceBus/Advanced/Topology", "ViciOne.ServiceBus.Advanced.Topology",
+                ["ConsumeTopology.cs", "GlobalTopology.cs", "IMessageCorrelationId.cs", "MessageConsumeTopology.cs"]),
+            ("src/ViciOne.ServiceBus/Configuration/Topology", "ViciOne.ServiceBus.Configuration",
+                [
+                    "ApplicationMessageTopology.cs", "CorrelatedByCorrelationIdSelector.cs", "CorrelationIdConventionExtensions.cs",
+                    "CorrelationIdMessageSendTopologyConvention.cs", "CorrelationIdSendTopologyConvention.cs", "IConventionTypeFactory.cs",
+                    "ICorrelationIdMessageSendTopologyConvention.cs", "ICorrelationIdSelector.cs",
+                    "IPartitionKeyMessageSendTopologyConvention.cs", "IPartitionKeySendTopologyConvention.cs",
+                    "IRoutingKeyMessageSendTopologyConvention.cs", "IRoutingKeySendTopologyConvention.cs",
+                    "ISetSerializerMessageSendTopologyConvention.cs", "ITopologyConfiguration.cs", "ITopologyConventionCache.cs",
+                    "PartitionKeyConventionExtensions.cs", "PartitionKeyMessageSendTopologyConvention.cs",
+                    "PartitionKeySendTopologyConvention.cs", "PropertyCorrelationIdSelector.cs", "RoutingKeyConventionExtensions.cs",
+                    "RoutingKeyMessageSendTopologyConvention.cs", "RoutingKeySendTopologyConvention.cs",
+                    "SerializerConventionExtensions.cs", "SetCorrelationIdSelector.cs", "SetPartitionKeyMessageSendTopology.cs",
+                    "SetRoutingKeyMessageSendTopology.cs", "SetSerializerMessageSendTopologyConvention.cs", "TopologyConventionCache.cs",
+                ]),
+            ("src/ViciOne.ServiceBus/Topology", "ViciOne.ServiceBus.Topology",
+                [
+                    "DelegateMessageCorrelationId.cs", "EntityCollection.cs", "EntityHandle.cs", "EntityNameShortener.cs",
+                    "InterfaceMessageCorrelationId.cs", "NamedEntityCollection.cs", "NullableDelegateMessageCorrelationId.cs",
+                    "NullablePropertyMessageCorrelationId.cs", "PropertyMessageCorrelationId.cs",
+                    "SetCorrelationIdMessageSendTopology.cs", "SetSerializerMessageSendTopology.cs",
+                ]),
+            ("src/ViciOne.ServiceBus.Abstractions/Advanced/Topology", "ViciOne.ServiceBus.Advanced.Topology",
+                [
+                    "IBusTopology.cs", "IConsumeTopology.cs", "IEntityNameFormatter.cs", "IEntityNameValidator.cs",
+                    "IMessageConsumeTopology.cs", "IMessageCorrelation.cs", "IMessageEntityNameFormatter.cs",
+                    "IMessagePublishTopology.cs", "IMessageSendTopology.cs", "IMessageTopology.cs", "IPublishTopology.cs",
+                    "ISendTopology.cs", "MessageEntityNameFormatter.cs", "MessageNameFormatterEntityNameFormatter.cs",
+                    "MessageUrnEntityNameFormatter.cs", "PrefixEntityNameFormatter.cs", "StaticEntityNameFormatter.cs",
+                ]),
+            ("src/ViciOne.ServiceBus.Abstractions/Configuration/Topology", "ViciOne.ServiceBus.Configuration",
+                [
+                    "DelegatePublishTopologyConfigurationObserver.cs", "DelegateSendTopologyConfigurationObserver.cs",
+                    "IConsumeTopologyConfigurationObserver.cs", "IConsumeTopologyConfigurationObserverConnector.cs",
+                    "IConsumeTopologyConfigurator.cs", "IConsumeTopologyConvention.cs", "IDeadLetterQueueNameFormatter.cs",
+                    "IErrorQueueNameFormatter.cs", "IMessageConsumeTopologyConfigurator.cs", "IMessageConsumeTopologyConvention.cs",
+                    "IMessagePublishTopologyConfigurator.cs", "IMessagePublishTopologyConvention.cs",
+                    "IMessageSendTopologyConfigurator.cs", "IMessageSendTopologyConvention.cs",
+                    "IMessageTopologyConfigurationObserver.cs", "IMessageTopologyConfigurationObserverConnector.cs",
+                    "IMessageTopologyConfigurator.cs", "IPublishTopologyConfigurationObserver.cs",
+                    "IPublishTopologyConfigurationObserverConnector.cs", "IPublishTopologyConfigurator.cs",
+                    "IPublishTopologyConvention.cs", "ISendTopologyConfigurationObserver.cs",
+                    "ISendTopologyConfigurationObserverConnector.cs", "ISendTopologyConfigurator.cs", "ISendTopologyConvention.cs",
+                    "ITopologyPipeBuilder.cs", "MessageConsumeTopologyPipeSpecification.cs",
+                    "MessagePublishTopologyPipeSpecification.cs", "MessageSendTopologyPipeSpecification.cs",
+                    "PublishToSendTopologyConfigurationObserver.cs", "TopologyConsumePipeSpecificationObserver.cs",
+                    "TopologyPublishPipeSpecificationObserver.cs", "TopologySendPipeSpecificationObserver.cs",
+                ]),
+            ("src/ViciOne.ServiceBus.Abstractions/Topology", "ViciOne.ServiceBus.Topology",
+                [
+                    "DefaultDeadLetterQueueNameFormatter.cs", "DefaultErrorQueueNameFormatter.cs", "MessagePublishTopology.cs",
+                    "MessageSendTopology.cs", "MessageTopology.cs", "PublishTopology.cs", "SendTopology.cs",
+                ]),
+        ];
+
+        foreach ((string relativeDirectory, string expectedNamespace, string[] expectedFiles) in groups)
+        {
+            string directory = Path.Combine(RepositoryLayout.Root, relativeDirectory);
+            string[] files = Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(path => Path.GetFileName(path)
+                    ?? throw new InvalidOperationException($"Source path '{path}' has no file name."))
+                .Order(StringComparer.Ordinal)
+                .ToArray();
+
+            Assert.Equal(expectedFiles.Order(StringComparer.Ordinal), files);
+            Assert.All(expectedFiles, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
+
+        Assert.False(Directory.Exists(Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Topology",
+            "Configuration")));
+        Assert.False(Directory.Exists(Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus.Abstractions",
+            "Topology",
+            "Configuration")));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "batch-runtime-files-have-dedicated-namespace")]
     public void BatchRuntimeFiles_HaveOneDedicatedDirectoryAndNamespace()
     {

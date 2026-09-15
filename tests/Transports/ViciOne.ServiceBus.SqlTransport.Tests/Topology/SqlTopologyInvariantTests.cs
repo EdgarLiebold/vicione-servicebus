@@ -64,7 +64,8 @@ public sealed class SqlTopologyInvariantTests
 
         ArgumentException exception = Assert.Throws<ArgumentException>(() => builder.CreateQueue("input", maxDeliveryCount: 7));
 
-        Assert.Contains("settings did not match", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("settings differ from the existing entity with the same name", exception.Message, StringComparison.Ordinal);
+        Assert.Equal("entity", exception.ParamName);
     }
 
     private sealed record Event;

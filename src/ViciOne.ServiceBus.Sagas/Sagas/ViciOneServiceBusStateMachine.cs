@@ -2213,7 +2213,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         public void RegisterCorrelation(ViciOneServiceBusStateMachine<TInstance> machine)
         {
             if (GlobalTopology.Send.GetMessageTopology<TData>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<TData>? convention)
-                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<TData>? messageCorrelationId))
+                && convention.TryGetCorrelationIdResolver(out IMessageCorrelationId<TData>? messageCorrelationId))
             {
                 var builder = new StateMachineInterfaceType<TInstance, TData>.MessageCorrelationIdEventCorrelationBuilder(machine, _event,
                     messageCorrelationId);
@@ -2240,7 +2240,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         public void RegisterCorrelation(ViciOneServiceBusStateMachine<TInstance> machine)
         {
             if (GlobalTopology.Send.GetMessageTopology<TData>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<TData>? convention)
-                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<TData>? messageCorrelationId))
+                && convention.TryGetCorrelationIdResolver(out IMessageCorrelationId<TData>? messageCorrelationId))
             {
                 var builder = new StateMachineInterfaceType<TInstance, TData>.MessageCorrelationIdFaultEventCorrelationBuilder(machine, _event,
                     messageCorrelationId);

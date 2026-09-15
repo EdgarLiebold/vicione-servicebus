@@ -78,9 +78,8 @@ public class ServiceBusSendTopology :
 
     /// <summary>Creates send topology for a message contract.</summary>
     /// <typeparam name="T">The sent message contract.</typeparam>
-    /// <param name="type">The runtime message type represented by the topology.</param>
     /// <returns>The message-specific Azure send topology.</returns>
-    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new ServiceBusMessageSendTopology<T>();
 

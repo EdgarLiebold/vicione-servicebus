@@ -3,30 +3,33 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Defines the topology for send.</summary>
+/// <summary>Owns message-specific send topology, conventions, and failure-queue naming.</summary>
 public class SendTopology :
     ISendTopologyConfigurator,
     ISendTopologyConfigurationObserver
 {
     readonly List<IMessageSendTopologyConvention> _conventions;
-    readonly object _lock = new object();
+    IDeadLetterQueueNameFormatter _deadLetterQueueNameFormatter;
+    IErrorQueueNameFormatter _errorQueueNameFormatter;
+    readonly object _lock = new();
     readonly ConcurrentDictionary<Type, Lazy<IMessageSendTopologyConfigurator>> _messageTypes;
-    readonly SendTopologyConfigurationObservable _observers;
+    readonly Connectable<ISendTopologyConfigurationObserver> _observers;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes an empty send topology with the default failure-queue formatters.</summary>
     public SendTopology()
     {
         _messageTypes = new ConcurrentDictionary<Type, Lazy<IMessageSendTopologyConfigurator>>();
 
-        _observers = new SendTopologyConfigurationObservable();
+        _observers = new Connectable<ISendTopologyConfigurationObserver>();
 
         _conventions = new List<IMessageSendTopologyConvention>(8);
 
-        DeadLetterQueueNameFormatter = DefaultDeadLetterQueueNameFormatter.Instance;
-        ErrorQueueNameFormatter = DefaultErrorQueueNameFormatter.Instance;
+        _deadLetterQueueNameFormatter = DefaultDeadLetterQueueNameFormatter.Instance;
+        _errorQueueNameFormatter = DefaultErrorQueueNameFormatter.Instance;
 
         _observers.Connect(this);
     }
@@ -36,14 +39,23 @@ public class SendTopology :
         ApplyConventionsToMessageTopology(messageTopology);
     }
 
-    /// <summary>Gets or sets the dead letter queue name formatter.</summary>
-    public IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter { get; set; }
-    /// <summary>Gets or sets the error queue name formatter.</summary>
-    public IErrorQueueNameFormatter ErrorQueueNameFormatter { get; set; }
+    /// <summary>Gets or sets the formatter for dead-letter queue names.</summary>
+    public IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter
+    {
+        get => _deadLetterQueueNameFormatter;
+        set => _deadLetterQueueNameFormatter = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
-    /// <summary>Gets message topology.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The message topology.</returns>
+    /// <summary>Gets or sets the formatter for error queue names.</summary>
+    public IErrorQueueNameFormatter ErrorQueueNameFormatter
+    {
+        get => _errorQueueNameFormatter;
+        set => _errorQueueNameFormatter = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    /// <summary>Gets or creates send topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <returns>The message-specific send topology configurator.</returns>
     public IMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class
     {
@@ -51,24 +63,28 @@ public class SendTopology :
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
         Lazy<IMessageSendTopologyConfigurator>? specification = _messageTypes.GetOrAdd(typeof(T),
-            type => new Lazy<IMessageSendTopologyConfigurator>(() => CreateMessageTopology<T>(type)));
+            _ => new Lazy<IMessageSendTopologyConfigurator>(() => CreateMessageTopology<T>()));
 
         return (IMessageSendTopologyConfigurator<T>)specification.Value;
     }
 
-    /// <summary>Connects send topology configuration observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects an observer for newly created send-message topologies.</summary>
+    /// <param name="observer">The observer to notify.</param>
+    /// <returns>A handle that disconnects the observer.</returns>
     public ConnectHandle ConnectSendTopologyConfigurationObserver(ISendTopologyConfigurationObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
+
         return _observers.Connect(observer);
     }
 
-    /// <summary>Attempts to add convention.</summary>
-    /// <param name="convention">The convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Adds a root send convention unless its runtime type is already registered.</summary>
+    /// <param name="convention">The convention to apply to current and future message topologies.</param>
+    /// <returns><see langword="true" /> when added; <see langword="false" /> for a duplicate runtime type.</returns>
     public bool TryAddConvention(ISendTopologyConvention convention)
     {
+        ArgumentNullException.ThrowIfNull(convention);
+
         var conventionType = convention.GetType();
 
         lock (_lock)
@@ -90,23 +106,24 @@ public class SendTopology :
 
     void ISendTopologyConfigurator.AddMessageSendTopology<T>(IMessageSendTopology<T> topology)
     {
+        ArgumentNullException.ThrowIfNull(topology);
+
         IMessageSendTopologyConfigurator<T> messageConfiguration = GetMessageTopology<T>();
 
         messageConfiguration.Add(topology);
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Validates every send-message topology that has been created.</summary>
+    /// <returns>The combined validation failures.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return _messageTypes.Values.SelectMany(x => x.Value.Validate());
     }
 
-    /// <summary>Creates message topology.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns>The created message topology.</returns>
-    protected virtual IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    /// <summary>Creates send topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <returns>The created send topology configurator.</returns>
+    protected virtual IMessageSendTopologyConfigurator CreateMessageTopology<T>()
         where T : class
     {
         var messageTopology = new MessageSendTopology<T>();
@@ -115,13 +132,15 @@ public class SendTopology :
         return messageTopology;
     }
 
-    /// <summary>Reports that on message topology has been created.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="messageTopology">The message topology.</param>
+    /// <summary>Notifies observers about a newly created send-message topology.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="messageTopology">The created topology configurator.</param>
     protected void OnMessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> messageTopology)
         where T : class
     {
-        _observers.MessageTopologyCreated(messageTopology);
+        ArgumentNullException.ThrowIfNull(messageTopology);
+
+        _observers.ForEach(observer => observer.MessageTopologyCreated(messageTopology));
     }
 
     void ApplyConventionsToMessageTopology<T>(IMessageSendTopologyConfigurator<T> messageTopology)

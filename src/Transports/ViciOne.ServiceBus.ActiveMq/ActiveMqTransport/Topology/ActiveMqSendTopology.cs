@@ -58,9 +58,8 @@ public class ActiveMqSendTopology :
 
     /// <summary>Creates ActiveMQ send topology for a message type.</summary>
     /// <typeparam name="T">The sent message type.</typeparam>
-    /// <param name="type">The runtime message type represented by the topology.</param>
     /// <returns>The new message send topology.</returns>
-    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new ActiveMqMessageSendTopology<T>();
 

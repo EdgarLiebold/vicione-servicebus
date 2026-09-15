@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Stores a collection of named entity values.</summary>
-/// <typeparam name="TEntity">The entity type.</typeparam>
-/// <typeparam name="THandle">The handle type.</typeparam>
+/// <summary>Indexes topology entities by name in addition to structural equality and identifier.</summary>
+/// <typeparam name="TEntity">The named topology entity type.</typeparam>
+/// <typeparam name="THandle">The entity-handle contract exposed to callers.</typeparam>
 public class NamedEntityCollection<TEntity, THandle> :
     EntityCollection<TEntity, THandle>
     where TEntity : THandle
@@ -13,22 +13,23 @@ public class NamedEntityCollection<TEntity, THandle> :
 {
     readonly IDictionary<TEntity, TEntity> _entityNames;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="entityComparer">The entity comparer.</param>
-    /// <param name="nameComparer">The name comparer.</param>
+    /// <summary>Creates an empty collection with separate structural and name equality rules.</summary>
+    /// <param name="entityComparer">The comparer for complete entity definitions.</param>
+    /// <param name="nameComparer">The comparer for broker entity names.</param>
     public NamedEntityCollection(IEqualityComparer<TEntity> entityComparer, IEqualityComparer<TEntity> nameComparer)
         : base(entityComparer)
     {
+        ArgumentNullException.ThrowIfNull(nameComparer);
+
         _entityNames = new Dictionary<TEntity, TEntity>(nameComparer);
     }
 
-    /// <summary>Gets or add.</summary>
-    /// <param name="entity">The entity.</param>
-    /// <returns>The or add.</returns>
+    /// <summary>Returns an equivalent named entity or adds a new name and definition.</summary>
+    /// <param name="entity">The named entity definition to resolve.</param>
+    /// <returns>The existing equivalent handle, or <paramref name="entity" /> when added.</returns>
     public override THandle GetOrAdd(TEntity entity)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         if (_entityNames.TryGetValue(entity, out var existingEntity))
         {
@@ -36,8 +37,13 @@ public class NamedEntityCollection<TEntity, THandle> :
             if (Entities.TryGetValue(entity, out existingEntity))
                 return existingEntity;
 
-            throw new ArgumentException($"The {TypeCache<TEntity>.ShortName} entity settings did not match the existing entity");
+            throw new ArgumentException(
+                $"The {TypeCache<TEntity>.ShortName} settings differ from the existing entity with the same name.",
+                nameof(entity));
         }
+
+        if (EntityIds.ContainsKey(entity.Id))
+            throw new ArgumentException($"The entity identifier {entity.Id} is already in use.", nameof(entity));
 
         EntityIds.Add(entity.Id, entity);
         Entities.Add(entity, entity);

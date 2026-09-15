@@ -3,7 +3,7 @@ using ViciOne.ServiceBus.Internals.Reflection;
 
 namespace ViciOne.ServiceBus.Topology;
 
-internal class NullablePropertyMessageCorrelationId<T> :
+sealed class NullablePropertyMessageCorrelationId<T> :
     IMessageCorrelationId<T>
     where T : class
 {
@@ -11,11 +11,13 @@ internal class NullablePropertyMessageCorrelationId<T> :
 
     public NullablePropertyMessageCorrelationId(IReadProperty<T, Guid?> property)
     {
-        _property = property;
+        _property = property ?? throw new ArgumentNullException(nameof(property));
     }
 
     public bool TryGetCorrelationId(T message, out Guid correlationId)
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         Guid? id = _property.Get(message);
         if (id.HasValue && id.Value != Guid.Empty)
         {

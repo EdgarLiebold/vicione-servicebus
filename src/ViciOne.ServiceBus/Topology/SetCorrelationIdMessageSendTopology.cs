@@ -4,28 +4,29 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Defines the topology for set correlation id message send.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class SetCorrelationIdMessageSendTopology<T> :
+/// <summary>Adds correlation-identifier assignment to the send pipe for one message contract.</summary>
+/// <typeparam name="T">The sent message contract type.</typeparam>
+sealed class SetCorrelationIdMessageSendTopology<T> :
     IMessageSendTopology<T>
     where T : class
 {
     readonly IFilter<SendContext<T>> _filter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="messageCorrelationId">The message correlation id.</param>
+    /// <summary>Initializes topology with the resolver used by its send filter.</summary>
+    /// <param name="messageCorrelationId">The correlation resolver.</param>
     public SetCorrelationIdMessageSendTopology(IMessageCorrelationId<T> messageCorrelationId)
     {
-        if (messageCorrelationId == null)
-            throw new ArgumentNullException(nameof(messageCorrelationId));
+        ArgumentNullException.ThrowIfNull(messageCorrelationId);
 
         _filter = new SetCorrelationIdFilter<T>(messageCorrelationId);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Adds the correlation-identifier filter to a send-pipe topology builder.</summary>
+    /// <param name="builder">The send-pipe topology builder.</param>
     public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.AddFilter(_filter);
     }
 }

@@ -13,7 +13,7 @@ public class SessionIdSendTopologyConvention :
     {
         DefaultFormatter = new EmptySessionIdFormatter();
 
-        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(ISessionIdMessageSendTopologyConvention<>), new Factory());
+        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(new Factory());
     }
 
     bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)

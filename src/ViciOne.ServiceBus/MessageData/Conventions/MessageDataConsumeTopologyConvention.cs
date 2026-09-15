@@ -14,8 +14,7 @@ internal sealed class MessageDataConsumeTopologyConvention :
     public MessageDataConsumeTopologyConvention(IMessageDataRepository repository)
     {
         ArgumentNullException.ThrowIfNull(repository);
-        _cache = new TopologyConventionCache<IMessageConsumeTopologyConvention>(typeof(MessageDataMessageConsumeTopologyConvention<>),
-            new Factory(repository));
+        _cache = new TopologyConventionCache<IMessageConsumeTopologyConvention>(new Factory(repository));
     }
 
     /// <summary>Gets the cached message-data convention for a message contract.</summary>

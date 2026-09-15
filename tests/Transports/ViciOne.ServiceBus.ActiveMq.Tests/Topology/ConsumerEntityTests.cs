@@ -56,7 +56,8 @@ public sealed class ConsumerEntityTests
         ArgumentException exception = Assert.Throws<ArgumentException>(
             () => builder.Consumer(topic, "subscriber", shared: true));
 
-        Assert.Contains("settings did not match", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("settings differ from the existing entity with the same name", exception.Message, StringComparison.Ordinal);
+        Assert.Equal("entity", exception.ParamName);
     }
 
     private static ConsumerEntity CreateTopicConsumer(string? consumerName, bool shared) =>

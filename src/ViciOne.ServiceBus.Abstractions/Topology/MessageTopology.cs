@@ -1,31 +1,32 @@
 using System;
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Defines the topology for message.</summary>
+/// <summary>Creates and caches topology for every valid message contract.</summary>
 public class MessageTopology :
     IMessageTopologyConfigurator
 {
-    readonly ConcurrentDictionary<Type, IMessageTypeTopologyConfigurator> _messageTypes;
-    readonly MessageTopologyConfigurationObservable _observers;
+    readonly ConcurrentDictionary<Type, object> _messageTypes;
+    readonly Connectable<IMessageTopologyConfigurationObserver> _observers;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="entityNameFormatter">The entity name formatter.</param>
+    /// <summary>Initializes the topology with its default entity-name formatter.</summary>
+    /// <param name="entityNameFormatter">The formatter used by newly created message topologies.</param>
     public MessageTopology(IEntityNameFormatter entityNameFormatter)
     {
         EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
 
-        _messageTypes = new ConcurrentDictionary<Type, IMessageTypeTopologyConfigurator>();
-        _observers = new MessageTopologyConfigurationObservable();
+        _messageTypes = new ConcurrentDictionary<Type, object>();
+        _observers = new Connectable<IMessageTopologyConfigurationObserver>();
     }
 
-    /// <summary>Gets or sets the entity name formatter.</summary>
+    /// <summary>Gets the formatter used by newly created message topologies.</summary>
     public IEntityNameFormatter EntityNameFormatter { get; private set; }
 
-    /// <summary>Sets entity name formatter.</summary>
-    /// <param name="entityNameFormatter">The entity name formatter.</param>
+    /// <summary>Replaces the formatter used by subsequently created message topologies.</summary>
+    /// <param name="entityNameFormatter">The replacement formatter.</param>
     public void SetEntityNameFormatter(IEntityNameFormatter entityNameFormatter)
     {
         EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
@@ -36,11 +37,13 @@ public class MessageTopology :
         return GetMessageTopology<T>();
     }
 
-    /// <summary>Connects message topology configuration observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects an observer for newly created message topologies.</summary>
+    /// <param name="observer">The observer to notify.</param>
+    /// <returns>A handle that disconnects the observer.</returns>
     public ConnectHandle ConnectMessageTopologyConfigurationObserver(IMessageTopologyConfigurationObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
+
         return _observers.Connect(observer);
     }
 
@@ -55,16 +58,15 @@ public class MessageTopology :
         if (MessageTypeCache<T>.IsValidMessageType == false)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        var specification = _messageTypes.GetOrAdd(typeof(T), CreateMessageTopology<T>);
+        var specification = _messageTypes.GetOrAdd(typeof(T), _ => CreateMessageTopology<T>());
 
         return (IMessageTopologyConfigurator<T>)specification;
     }
 
-    /// <summary>Creates message topology.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns>The created message topology.</returns>
-    protected virtual IMessageTypeTopologyConfigurator CreateMessageTopology<T>(Type type)
+    /// <summary>Creates topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <returns>The created message topology configurator.</returns>
+    protected virtual IMessageTopologyConfigurator<T> CreateMessageTopology<T>()
         where T : class
     {
         var messageTopology = new MessageTopology<T>(new MessageEntityNameFormatter<T>(EntityNameFormatter));
@@ -77,57 +79,77 @@ public class MessageTopology :
     void OnMessageTopologyCreated<T>(IMessageTopologyConfigurator<T> messageTopology)
         where T : class
     {
-        _observers.MessageTopologyCreated(messageTopology);
+        _observers.ForEach(observer => observer.MessageTopologyCreated(messageTopology));
     }
 }
 
 
-/// <summary>Defines the topology for message.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Owns entity-name configuration for one message contract.</summary>
+/// <typeparam name="TMessage">The message contract type.</typeparam>
 public class MessageTopology<TMessage> :
     IMessageTopologyConfigurator<TMessage>
     where TMessage : class
 {
     string? _entityName;
+    readonly object _lock = new();
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="entityNameFormatter">The entity name formatter.</param>
+    /// <summary>Initializes topology with an entity-name formatter.</summary>
+    /// <param name="entityNameFormatter">The formatter for this message contract.</param>
     public MessageTopology(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
     {
-        EntityNameFormatter = entityNameFormatter;
+        EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
     }
 
-    /// <summary>Gets or sets the entity name formatter.</summary>
+    /// <summary>Gets the formatter for this message contract.</summary>
     public IMessageEntityNameFormatter<TMessage> EntityNameFormatter { get; private set; }
 
-    /// <summary>Gets the entity name.</summary>
-    public string EntityName => _entityName ??= EntityNameFormatter.FormatEntityName();
-
-    /// <summary>Sets entity name formatter.</summary>
-    /// <param name="entityNameFormatter">The entity name formatter.</param>
-    public void SetEntityNameFormatter(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
+    /// <summary>Gets the entity name, evaluating the formatter at most once.</summary>
+    public string EntityName
     {
-        if (entityNameFormatter == null)
-            throw new ArgumentNullException(nameof(entityNameFormatter));
-
-        if (_entityName != null)
+        get
         {
-            if (_entityName == entityNameFormatter.FormatEntityName())
-                return;
+            if (_entityName is not null)
+                return _entityName;
 
-            throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Topology", "unknown", $"The message type {TypeCache<TMessage>.ShortName} entity name was already evaluated: {_entityName}", "Correct the named configuration before starting the host"));
+            lock (_lock)
+            {
+                if (_entityName is not null)
+                    return _entityName;
+
+                string entityName = EntityNameFormatter.FormatEntityName();
+                ArgumentException.ThrowIfNullOrWhiteSpace(entityName, nameof(EntityNameFormatter));
+                _entityName = entityName;
+                return entityName;
+            }
         }
-
-        EntityNameFormatter = entityNameFormatter;
     }
 
-    /// <summary>Sets entity name.</summary>
-    /// <param name="entityName">The entity name.</param>
+    /// <summary>Replaces the formatter before the entity name is first evaluated.</summary>
+    /// <param name="entityNameFormatter">The replacement formatter.</param>
+    public void SetEntityNameFormatter(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
+    {
+        ArgumentNullException.ThrowIfNull(entityNameFormatter);
+
+        lock (_lock)
+        {
+            if (_entityName != null)
+            {
+                if (_entityName == entityNameFormatter.FormatEntityName())
+                    return;
+
+                throw new ConfigurationException(
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Topology", "unknown", $"The message type {TypeCache<TMessage>.ShortName} entity name was already evaluated: {_entityName}", "Correct the named configuration before starting the host"));
+            }
+
+            EntityNameFormatter = entityNameFormatter;
+        }
+    }
+
+    /// <summary>Sets a fixed entity name before the current name is first evaluated.</summary>
+    /// <param name="entityName">The non-empty entity name.</param>
     public void SetEntityName(string entityName)
     {
-        if (entityName == null)
-            throw new ArgumentNullException(nameof(entityName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
 
         SetEntityNameFormatter(new StaticEntityNameFormatter<TMessage>(entityName));
     }

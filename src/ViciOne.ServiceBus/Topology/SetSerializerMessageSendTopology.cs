@@ -5,28 +5,29 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Defines the topology for set serializer message send.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class SetSerializerMessageSendTopology<T> :
+/// <summary>Adds serializer selection to the send pipe for one message contract.</summary>
+/// <typeparam name="T">The sent message contract type.</typeparam>
+sealed class SetSerializerMessageSendTopology<T> :
     IMessageSendTopology<T>
     where T : class
 {
     readonly IFilter<SendContext<T>> _filter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <summary>Initializes topology with the serializer content type used by its send filter.</summary>
+    /// <param name="contentType">The registered serializer content type.</param>
     public SetSerializerMessageSendTopology(ContentType contentType)
     {
-        if (contentType == null)
-            throw new ArgumentNullException(nameof(contentType));
+        ArgumentNullException.ThrowIfNull(contentType);
 
         _filter = new SetSerializerFilter<T>(contentType);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Adds the serializer-selection filter to a send-pipe topology builder.</summary>
+    /// <param name="builder">The send-pipe topology builder.</param>
     public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.AddFilter(_filter);
     }
 }

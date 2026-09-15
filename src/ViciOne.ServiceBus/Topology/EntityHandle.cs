@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Controls the lifetime of entity.</summary>
+/// <summary>Identifies a broker-topology entity within its owning topology builder.</summary>
 public interface EntityHandle
 {
-    /// <summary>Gets the id.</summary>
+    /// <summary>Gets the identifier assigned by the topology builder.</summary>
     long Id { get; }
 }

@@ -58,11 +58,10 @@ public class SqlSendTopology :
         return deadLetterSetting;
     }
 
-    /// <summary>Creates message topology.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns>The created message topology.</returns>
-    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    /// <summary>Creates SQL send topology for a message contract.</summary>
+    /// <typeparam name="T">The sent message contract type.</typeparam>
+    /// <returns>The SQL message send topology.</returns>
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new SqlMessageSendTopology<T>();
 

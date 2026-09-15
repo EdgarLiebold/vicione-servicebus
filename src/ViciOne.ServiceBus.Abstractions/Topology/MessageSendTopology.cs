@@ -6,8 +6,8 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Defines the topology for message send.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Composes conventions and explicit send topology for one message contract.</summary>
+/// <typeparam name="TMessage">The sent message contract.</typeparam>
 public class MessageSendTopology<TMessage> :
     IMessageSendTopologyConfigurator<TMessage>
     where TMessage : class
@@ -16,7 +16,7 @@ public class MessageSendTopology<TMessage> :
     readonly List<IMessageSendTopology<TMessage>> _delegateTopologies;
     readonly List<IMessageSendTopology<TMessage>> _topologies;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes empty topology for a message contract.</summary>
     public MessageSendTopology()
     {
         _conventions = new List<IMessageSendTopologyConvention<TMessage>>(8);
@@ -24,24 +24,30 @@ public class MessageSendTopology<TMessage> :
         _delegateTopologies = new List<IMessageSendTopology<TMessage>>(8);
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="sendTopology">The send topology.</param>
+    /// <summary>Adds explicit send topology for this message contract.</summary>
+    /// <param name="sendTopology">The topology to apply after conventions.</param>
     public void Add(IMessageSendTopology<TMessage> sendTopology)
     {
+        ArgumentNullException.ThrowIfNull(sendTopology);
+
         _topologies.Add(sendTopology);
     }
 
-    /// <summary>Adds delegate to the configuration.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <summary>Adds delegated send topology inherited from another contract.</summary>
+    /// <param name="configuration">The delegated topology to apply first.</param>
     public void AddDelegate(IMessageSendTopology<TMessage> configuration)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+
         _delegateTopologies.Add(configuration);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Applies delegated topology, conventions, and explicit topology in that order.</summary>
+    /// <param name="builder">The send-pipe topology builder.</param>
     public void Apply(ITopologyPipeBuilder<SendContext<TMessage>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         ITopologyPipeBuilder<SendContext<TMessage>> delegatedBuilder = builder.CreateDelegatedBuilder();
 
         for (var i = 0; i < _delegateTopologies.Count; i++)
@@ -57,10 +63,10 @@ public class MessageSendTopology<TMessage> :
             _topologies[i].Apply(builder);
     }
 
-    /// <summary>Attempts to get convention.</summary>
+    /// <summary>Attempts to get a convention assignable to the requested type.</summary>
     /// <typeparam name="TConvention">The convention type.</typeparam>
-    /// <param name="convention">Receives the convention produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <param name="convention">Receives the first matching convention when found.</param>
+    /// <returns><see langword="true" /> when found; otherwise, <see langword="false" />.</returns>
     public bool TryGetConvention<TConvention>([NotNullWhen(true)] out TConvention? convention)
         where TConvention : class, IMessageSendTopologyConvention<TMessage>
     {
@@ -75,11 +81,13 @@ public class MessageSendTopology<TMessage> :
         return false;
     }
 
-    /// <summary>Attempts to add convention.</summary>
-    /// <param name="convention">The convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Adds a message-specific convention unless its runtime type is already registered.</summary>
+    /// <param name="convention">The convention to add.</param>
+    /// <returns><see langword="true" /> when added; <see langword="false" /> for a duplicate runtime type.</returns>
     public bool TryAddConvention(IMessageSendTopologyConvention<TMessage> convention)
     {
+        ArgumentNullException.ThrowIfNull(convention);
+
         var conventionType = convention.GetType();
 
         for (var i = 0; i < _conventions.Count; i++)
@@ -92,54 +100,63 @@ public class MessageSendTopology<TMessage> :
         return true;
     }
 
-    /// <summary>Attempts to add convention.</summary>
-    /// <param name="convention">The convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Adds the message-specific convention exposed by a root send convention.</summary>
+    /// <param name="convention">The root convention to query.</param>
+    /// <returns><see langword="true" /> when a convention is exposed and added; otherwise, <see langword="false" />.</returns>
     public bool TryAddConvention(ISendTopologyConvention convention)
     {
+        ArgumentNullException.ThrowIfNull(convention);
+
         return convention.TryGetMessageSendTopologyConvention(out IMessageSendTopologyConvention<TMessage>? messageSendTopologyConvention)
             && TryAddConvention(messageSendTopologyConvention);
     }
 
-    /// <summary>Updates convention.</summary>
+    /// <summary>Replaces the existing convention of the requested type when present.</summary>
     /// <typeparam name="TConvention">The convention type.</typeparam>
-    /// <param name="update">The update.</param>
+    /// <param name="update">Creates a replacement from the existing convention.</param>
     public void UpdateConvention<TConvention>(Func<TConvention, TConvention> update)
         where TConvention : class, IMessageSendTopologyConvention<TMessage>
     {
+        ArgumentNullException.ThrowIfNull(update);
+
         for (var i = 0; i < _conventions.Count; i++)
         {
             if (_conventions[i] is TConvention convention)
             {
-                _conventions[i] = update(convention);
+                _conventions[i] = update(convention)
+                    ?? throw new InvalidOperationException("The send topology convention update returned null.");
                 return;
             }
         }
     }
 
-    /// <summary>Adds or update convention to the configuration.</summary>
+    /// <summary>Adds a convention or replaces the existing convention of the requested type.</summary>
     /// <typeparam name="TConvention">The convention type.</typeparam>
-    /// <param name="add">The add.</param>
-    /// <param name="update">The update.</param>
+    /// <param name="add">Creates the convention when none exists.</param>
+    /// <param name="update">Creates a replacement from the existing convention.</param>
     public void AddOrUpdateConvention<TConvention>(Func<TConvention> add, Func<TConvention, TConvention> update)
         where TConvention : class, IMessageSendTopologyConvention<TMessage>
     {
+        ArgumentNullException.ThrowIfNull(add);
+        ArgumentNullException.ThrowIfNull(update);
+
         for (var i = 0; i < _conventions.Count; i++)
         {
             if (_conventions[i] is TConvention convention)
             {
-                _conventions[i] = update(convention);
+                _conventions[i] = update(convention)
+                    ?? throw new InvalidOperationException("The send topology convention update returned null.");
                 return;
             }
         }
 
-        var addedConvention = add();
-        if (addedConvention != null)
-            _conventions.Add(addedConvention);
+        TConvention addedConvention = add()
+            ?? throw new InvalidOperationException("The send topology convention factory returned null.");
+        _conventions.Add(addedConvention);
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Returns no failures because the transport-independent topology has no constraints of its own.</summary>
+    /// <returns>An empty sequence.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return Enumerable.Empty<ValidationResult>();

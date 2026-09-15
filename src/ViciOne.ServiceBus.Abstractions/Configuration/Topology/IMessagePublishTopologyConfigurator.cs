@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures publish topology for a message contract.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The published message contract.</typeparam>
 public interface IMessagePublishTopologyConfigurator<TMessage> :
     IMessagePublishTopologyConfigurator,
     IMessagePublishTopology<TMessage>

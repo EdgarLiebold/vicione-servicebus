@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures send topology for a message contract.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TMessage">The sent message contract.</typeparam>
 public interface IMessageSendTopologyConfigurator<TMessage> :
     IMessageSendTopologyConfigurator,
     IMessageSendTopology<TMessage>
@@ -42,7 +42,7 @@ public interface IMessageSendTopologyConfigurator<TMessage> :
 
     /// <summary>Attempts to get the first registered convention of the requested type.</summary>
     /// <typeparam name="TConvention">The convention contract.</typeparam>
-    /// <param name="convention">Receives the matching convention when found.</param>
+    /// <param name="convention">The matching convention when found.</param>
     /// <returns><see langword="true" /> when a matching convention was found; otherwise, <see langword="false" />.</returns>
     bool TryGetConvention<TConvention>([NotNullWhen(true)] out TConvention? convention)
         where TConvention : class, IMessageSendTopologyConvention<TMessage>;

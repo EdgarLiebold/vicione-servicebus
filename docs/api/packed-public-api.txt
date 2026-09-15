@@ -1565,18 +1565,18 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Topology.ISendTopology [interf
   METHOD public abstract ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
   PROPERTY ViciOne.ServiceBus.Configuration.IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter { public-get;  }
   PROPERTY ViciOne.ServiceBus.Configuration.IErrorQueueNameFormatter ErrorQueueNameFormatter { public-get;  }
-TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageEntityNameFormatter<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter<TMessage>]
+TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageEntityNameFormatter<TMessage> [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter<TMessage>]
   CTOR public ViciOne.ServiceBus.Advanced.Topology.MessageEntityNameFormatter<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter entityNameFormatter)
   METHOD public virtual System.String FormatEntityName()
-TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageNameFormatterEntityNameFormatter [interfaces=ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter]
+TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageNameFormatterEntityNameFormatter [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter]
   CTOR public ViciOne.ServiceBus.Advanced.Topology.MessageNameFormatterEntityNameFormatter(ViciOne.ServiceBus.Transports.IMessageNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageUrnEntityNameFormatter [interfaces=ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter]
+TYPE class public ViciOne.ServiceBus.Advanced.Topology.MessageUrnEntityNameFormatter [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter]
   CTOR public ViciOne.ServiceBus.Advanced.Topology.MessageUrnEntityNameFormatter()
   METHOD public virtual System.String FormatEntityName<T>()
-TYPE class public ViciOne.ServiceBus.Advanced.Topology.PrefixEntityNameFormatter [interfaces=ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter]
+TYPE class public ViciOne.ServiceBus.Advanced.Topology.PrefixEntityNameFormatter [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter]
   CTOR public ViciOne.ServiceBus.Advanced.Topology.PrefixEntityNameFormatter(ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter entityNameFormatter, System.String prefix)
   METHOD public virtual System.String FormatEntityName<T>()
-TYPE class public ViciOne.ServiceBus.Advanced.Topology.StaticEntityNameFormatter<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter<TMessage>]
+TYPE class public ViciOne.ServiceBus.Advanced.Topology.StaticEntityNameFormatter<TMessage> [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter<TMessage>]
   CTOR public ViciOne.ServiceBus.Advanced.Topology.StaticEntityNameFormatter<TMessage>(System.String entityName)
 TYPE interface public ViciOne.ServiceBus.Advanced.TransformContext [interfaces=ViciOne.ServiceBus.Advanced.MessageContext&ViciOne.ServiceBus.Advanced.PipeContext]
 TYPE interface public ViciOne.ServiceBus.Advanced.TransformContext<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.TransformContext]
@@ -1642,9 +1642,6 @@ TYPE enum public ViciOne.ServiceBus.Configuration.BatchTimeLimitStart
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumePipeSpecificationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IConsumePipeSpecificationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IConsumePipeSpecificationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.ConsumePipeSpecificationObservable()
   METHOD public virtual System.Void MessageSpecificationCreated<T>(ViciOne.ServiceBus.Configuration.IMessageConsumePipeSpecification<T> specification)
-TYPE class public ViciOne.ServiceBus.Configuration.ConsumeTopologyConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IConsumeTopologyConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IConsumeTopologyConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.Configuration.ConsumeTopologyConfigurationObservable()
-  METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessageConsumeTopologyConfigurator<T> configuration)
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumerConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IConsumerConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IConsumerConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.ConsumerConfigurationObservable()
   METHOD public virtual System.Void ConsumerConfigured<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator)
@@ -1659,10 +1656,10 @@ TYPE class public ViciOne.ServiceBus.Configuration.DelegatePipeSpecification<T> 
   CTOR public ViciOne.ServiceBus.Configuration.DelegatePipeSpecification<T>(System.Action<T> callback)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<T> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.DelegatePublishTopologyConfigurationObserver [interfaces=ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurationObserver]
+TYPE class public ViciOne.ServiceBus.Configuration.DelegatePublishTopologyConfigurationObserver [sealed,interfaces=ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.DelegatePublishTopologyConfigurationObserver(ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurator publishTopology)
   METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessagePublishTopologyConfigurator<T> configurator)
-TYPE class public ViciOne.ServiceBus.Configuration.DelegateSendTopologyConfigurationObserver [interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConfigurationObserver]
+TYPE class public ViciOne.ServiceBus.Configuration.DelegateSendTopologyConfigurationObserver [sealed,interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.DelegateSendTopologyConfigurationObserver(ViciOne.ServiceBus.Advanced.Topology.ISendTopology sendTopology)
   METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configuration)
 TYPE class public ViciOne.ServiceBus.Configuration.EndpointConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IEndpointConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IEndpointConfigurationObserver]
@@ -1933,7 +1930,7 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTopologyConfigura
 TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageTopology]
   METHOD public abstract System.Void SetEntityNameFormatter(ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter entityNameFormatter)
   METHOD public abstract ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<T> GetMessageTopology<T>()
-TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageTopology<TMessage>&ViciOne.ServiceBus.Configuration.IMessageTypeTopologyConfigurator]
+TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageTopology<TMessage>]
   METHOD public abstract System.Void SetEntityName(System.String entityName)
   METHOD public abstract System.Void SetEntityNameFormatter(ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter<TMessage> entityNameFormatter)
 TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigurator
@@ -1943,7 +1940,6 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigu
   METHOD public abstract System.Void Include(System.Func<System.Type,System.Boolean> filter)
   METHOD public abstract System.Void Include(System.Type[] messageTypes)
   METHOD public abstract System.Void Include<T>()
-TYPE interface public ViciOne.ServiceBus.Configuration.IMessageTypeTopologyConfigurator
 TYPE interface public ViciOne.ServiceBus.Configuration.IObserverConfigurator<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IConsumeConfigurator&ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<TMessage>>]
 TYPE interface public ViciOne.ServiceBus.Configuration.IOptions
 TYPE interface public ViciOne.ServiceBus.Configuration.IOptionsSet
@@ -2096,7 +2092,7 @@ TYPE interface public ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<T> [
 TYPE interface public ViciOne.ServiceBus.Configuration.ITransportConfigurator
   PROPERTY System.Int32 PrefetchCount {  public-set; }
   PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit {  public-set; }
-TYPE class public ViciOne.ServiceBus.Configuration.MessageConsumeTopologyPipeSpecification<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.ConsumeContext<TMessage>>]
+TYPE class public ViciOne.ServiceBus.Configuration.MessageConsumeTopologyPipeSpecification<TMessage> [sealed,interfaces=ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.ConsumeContext<TMessage>>]
   CTOR public ViciOne.ServiceBus.Configuration.MessageConsumeTopologyPipeSpecification<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IMessageConsumeTopology<TMessage> messageConsumeTopology)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ISpecificationPipeBuilder<ViciOne.ServiceBus.ConsumeContext<TMessage>> builder)
@@ -2104,7 +2100,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.MessagePublishPipeSplitFilter
   CTOR public ViciOne.ServiceBus.Configuration.MessagePublishPipeSplitFilterSpecification<TMessage,T>(ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.Advanced.PublishContext<T>> specification)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ISpecificationPipeBuilder<ViciOne.ServiceBus.Advanced.PublishContext<TMessage>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.MessagePublishTopologyPipeSpecification<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.Advanced.PublishContext<TMessage>>]
+TYPE class public ViciOne.ServiceBus.Configuration.MessagePublishTopologyPipeSpecification<TMessage> [sealed,interfaces=ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.Advanced.PublishContext<TMessage>>]
   CTOR public ViciOne.ServiceBus.Configuration.MessagePublishTopologyPipeSpecification<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IMessagePublishTopology<TMessage> messagePublishTopology)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ISpecificationPipeBuilder<ViciOne.ServiceBus.Advanced.PublishContext<TMessage>> builder)
@@ -2112,13 +2108,10 @@ TYPE class public ViciOne.ServiceBus.Configuration.MessageSendPipeSplitFilterSpe
   CTOR public ViciOne.ServiceBus.Configuration.MessageSendPipeSplitFilterSpecification<TMessage,T>(ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.Advanced.SendContext<T>> specification)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ISpecificationPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.MessageSendTopologyPipeSpecification<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.Advanced.SendContext<TMessage>>]
+TYPE class public ViciOne.ServiceBus.Configuration.MessageSendTopologyPipeSpecification<TMessage> [sealed,interfaces=ViciOne.ServiceBus.Configuration.ISpecificationPipeSpecification<ViciOne.ServiceBus.Advanced.SendContext<TMessage>>]
   CTOR public ViciOne.ServiceBus.Configuration.MessageSendTopologyPipeSpecification<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<TMessage> messageSendTopology)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ISpecificationPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.MessageTopologyConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.Configuration.MessageTopologyConfigurationObservable()
-  METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<T> configuration)
 TYPE class public ViciOne.ServiceBus.Configuration.OptionsSet [interfaces=ViciOne.ServiceBus.Configuration.IOptionsSet]
   CTOR public ViciOne.ServiceBus.Configuration.OptionsSet()
   METHOD protected System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> ValidateOptions()
@@ -2179,11 +2172,8 @@ TYPE class public ViciOne.ServiceBus.Configuration.PublishPipeSpecification [int
 TYPE class public ViciOne.ServiceBus.Configuration.PublishPipeSpecificationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IPublishPipeSpecificationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IPublishPipeSpecificationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.PublishPipeSpecificationObservable()
   METHOD public virtual System.Void MessageSpecificationCreated<T>(ViciOne.ServiceBus.Configuration.IMessagePublishPipeSpecification<T> specification)
-TYPE class public ViciOne.ServiceBus.Configuration.PublishToSendTopologyConfigurationObserver [interfaces=ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurationObserver]
+TYPE class public ViciOne.ServiceBus.Configuration.PublishToSendTopologyConfigurationObserver [sealed,interfaces=ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.PublishToSendTopologyConfigurationObserver(ViciOne.ServiceBus.Advanced.Topology.ISendTopology sendTopology)
-  METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessagePublishTopologyConfigurator<T> configurator)
-TYPE class public ViciOne.ServiceBus.Configuration.PublishTopologyConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.Configuration.PublishTopologyConfigurationObservable()
   METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessagePublishTopologyConfigurator<T> configurator)
 TYPE class public ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguratorDependencyExtensions [static]
   METHOD public static System.Void AddDependency(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator connector, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator dependency)
@@ -2213,9 +2203,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.SendPipeSpecification [interf
 TYPE class public ViciOne.ServiceBus.Configuration.SendPipeSpecificationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.ISendPipeSpecificationObserver>,interfaces=ViciOne.ServiceBus.Configuration.ISendPipeSpecificationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.SendPipeSpecificationObservable()
   METHOD public virtual System.Void MessageSpecificationCreated<T>(ViciOne.ServiceBus.Configuration.IMessageSendPipeSpecification<T> specification)
-TYPE class public ViciOne.ServiceBus.Configuration.SendTopologyConfigurationObservable [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.ISendTopologyConfigurationObserver>,interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.Configuration.SendTopologyConfigurationObservable()
-  METHOD public virtual System.Void MessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configuration)
 TYPE class public ViciOne.ServiceBus.Configuration.SettingsEndpointDefinition<TRegistration> [abstract,interfaces=ViciOne.ServiceBus.Configuration.IEndpointDefinition<TRegistration>]
   CTOR protected ViciOne.ServiceBus.Configuration.SettingsEndpointDefinition<TRegistration>(ViciOne.ServiceBus.Configuration.IEndpointSettings<ViciOne.ServiceBus.Configuration.IEndpointDefinition<TRegistration>> settings)
   METHOD protected abstract System.String FormatEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
@@ -2233,11 +2220,11 @@ TYPE class public ViciOne.ServiceBus.Configuration.TemporaryEndpointDefinition [
   PROPERTY System.Boolean IsTemporary { public-get;  }
   PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get;  }
   PROPERTY System.Nullable<System.Int32> PrefetchCount { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.TopologyConsumePipeSpecificationObserver [interfaces=ViciOne.ServiceBus.Configuration.IConsumePipeSpecificationObserver]
+TYPE class public ViciOne.ServiceBus.Configuration.TopologyConsumePipeSpecificationObserver [sealed,interfaces=ViciOne.ServiceBus.Configuration.IConsumePipeSpecificationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.TopologyConsumePipeSpecificationObserver(ViciOne.ServiceBus.Advanced.Topology.IConsumeTopology topology)
-TYPE class public ViciOne.ServiceBus.Configuration.TopologyPublishPipeSpecificationObserver [interfaces=ViciOne.ServiceBus.Configuration.IPublishPipeSpecificationObserver]
+TYPE class public ViciOne.ServiceBus.Configuration.TopologyPublishPipeSpecificationObserver [sealed,interfaces=ViciOne.ServiceBus.Configuration.IPublishPipeSpecificationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.TopologyPublishPipeSpecificationObserver(ViciOne.ServiceBus.Advanced.Topology.IPublishTopology topology)
-TYPE class public ViciOne.ServiceBus.Configuration.TopologySendPipeSpecificationObserver [interfaces=ViciOne.ServiceBus.Configuration.ISendPipeSpecificationObserver]
+TYPE class public ViciOne.ServiceBus.Configuration.TopologySendPipeSpecificationObserver [sealed,interfaces=ViciOne.ServiceBus.Configuration.ISendPipeSpecificationObserver]
   CTOR public ViciOne.ServiceBus.Configuration.TopologySendPipeSpecificationObserver(ViciOne.ServiceBus.Advanced.Topology.ISendTopology topology)
 TYPE interface public ViciOne.ServiceBus.Configuration.ValidationResult
   PROPERTY System.String Key { public-get;  }
@@ -3582,14 +3569,12 @@ TYPE class public ViciOne.ServiceBus.StaleConcurrencyLimitCommandException [seal
   CTOR public ViciOne.ServiceBus.StaleConcurrencyLimitCommandException(System.DateTimeOffset commandTimestamp, System.DateTimeOffset lastAppliedTimestamp)
   PROPERTY System.DateTimeOffset CommandTimestamp { public-get;  }
   PROPERTY System.DateTimeOffset LastAppliedTimestamp { public-get;  }
-TYPE class public ViciOne.ServiceBus.Topology.DefaultDeadLetterQueueNameFormatter [interfaces=ViciOne.ServiceBus.Configuration.IDeadLetterQueueNameFormatter]
-  CTOR public ViciOne.ServiceBus.Topology.DefaultDeadLetterQueueNameFormatter()
-  FIELD public static readonly ViciOne.ServiceBus.Configuration.IDeadLetterQueueNameFormatter Instance
+TYPE class public ViciOne.ServiceBus.Topology.DefaultDeadLetterQueueNameFormatter [sealed,interfaces=ViciOne.ServiceBus.Configuration.IDeadLetterQueueNameFormatter]
   METHOD public virtual System.String FormatDeadLetterQueueName(System.String queueName)
-TYPE class public ViciOne.ServiceBus.Topology.DefaultErrorQueueNameFormatter [interfaces=ViciOne.ServiceBus.Configuration.IErrorQueueNameFormatter]
-  CTOR public ViciOne.ServiceBus.Topology.DefaultErrorQueueNameFormatter()
-  FIELD public static readonly ViciOne.ServiceBus.Configuration.IErrorQueueNameFormatter Instance
+  PROPERTY ViciOne.ServiceBus.Configuration.IDeadLetterQueueNameFormatter Instance { public-get;  }
+TYPE class public ViciOne.ServiceBus.Topology.DefaultErrorQueueNameFormatter [sealed,interfaces=ViciOne.ServiceBus.Configuration.IErrorQueueNameFormatter]
   METHOD public virtual System.String FormatErrorQueueName(System.String queueName)
+  PROPERTY ViciOne.ServiceBus.Configuration.IErrorQueueNameFormatter Instance { public-get;  }
 TYPE class public ViciOne.ServiceBus.Topology.MessagePublishTopology<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IMessagePublishTopologyConfigurator<TMessage>]
   CTOR public ViciOne.ServiceBus.Topology.MessagePublishTopology<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IPublishTopology publishTopology)
   METHOD public virtual System.Boolean TryAddConvention(ViciOne.ServiceBus.Configuration.IMessagePublishTopologyConvention<TMessage> convention)
@@ -3614,7 +3599,7 @@ TYPE class public ViciOne.ServiceBus.Topology.MessageSendTopology<TMessage> [int
   METHOD public virtual System.Void UpdateConvention<TConvention>(System.Func<TConvention,TConvention> update)
 TYPE class public ViciOne.ServiceBus.Topology.MessageTopology [interfaces=ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.Topology.MessageTopology(ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter entityNameFormatter)
-  METHOD protected virtual ViciOne.ServiceBus.Configuration.IMessageTypeTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected virtual ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<T> CreateMessageTopology<T>()
   METHOD public virtual System.Void SetEntityNameFormatter(ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter entityNameFormatter)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectMessageTopologyConfigurationObserver(ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurationObserver observer)
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter EntityNameFormatter { public-get;  }
@@ -3638,7 +3623,7 @@ TYPE class public ViciOne.ServiceBus.Topology.PublishTopology [interfaces=ViciOn
 TYPE class public ViciOne.ServiceBus.Topology.SendTopology [interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConfigurationObserver&ViciOne.ServiceBus.Configuration.ISendTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.Topology.SendTopology()
   METHOD protected System.Void OnMessageTopologyCreated<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> messageTopology)
-  METHOD protected virtual ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected virtual ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>()
   METHOD public virtual System.Boolean TryAddConvention(ViciOne.ServiceBus.Configuration.ISendTopologyConvention convention)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendTopologyConfigurationObserver(ViciOne.ServiceBus.Configuration.ISendTopologyConfigurationObserver observer)
@@ -4613,7 +4598,7 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqQueueSendSettings
   METHOD public virtual ViciOne.ServiceBus.ActiveMq.Topology.BrokerTopology GetBrokerTopology()
 TYPE class public ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqSendTopology [base=ViciOne.ServiceBus.Topology.SendTopology,interfaces=ViciOne.ServiceBus.ActiveMq.IActiveMqSendTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqSendTopology()
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>()
   METHOD public virtual ViciOne.ServiceBus.ActiveMq.DeadLetterSettings GetDeadLetterSettings(ViciOne.ServiceBus.ActiveMq.EntitySettings settings)
   METHOD public virtual ViciOne.ServiceBus.ActiveMq.ErrorSettings GetErrorSettings(ViciOne.ServiceBus.ActiveMq.EntitySettings settings)
   METHOD public virtual ViciOne.ServiceBus.ActiveMq.SendSettings GetSendSettings(ViciOne.ServiceBus.ActiveMq.ActiveMqEndpointAddress address)
@@ -5451,7 +5436,7 @@ TYPE class public ViciOne.ServiceBus.AmazonSqs.Topology.AmazonSqsPublishTopology
   PROPERTY System.Collections.Generic.IDictionary<System.String,System.String> TopicTags { public-get;  }
 TYPE class public ViciOne.ServiceBus.AmazonSqs.Topology.AmazonSqsSendTopology [base=ViciOne.ServiceBus.Topology.SendTopology,interfaces=ViciOne.ServiceBus.AmazonSqs.IAmazonSqsSendTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.AmazonSqs.Topology.AmazonSqsSendTopology(ViciOne.ServiceBus.Advanced.Topology.IEntityNameValidator validator)
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>()
   METHOD public virtual ViciOne.ServiceBus.AmazonSqs.DeadLetterSettings GetDeadLetterSettings(ViciOne.ServiceBus.AmazonSqs.ReceiveSettings settings)
   METHOD public virtual ViciOne.ServiceBus.AmazonSqs.ErrorSettings GetErrorSettings(ViciOne.ServiceBus.AmazonSqs.ReceiveSettings settings)
   METHOD public virtual ViciOne.ServiceBus.AmazonSqs.SendSettings GetSendSettings(ViciOne.ServiceBus.AmazonSqs.AmazonSqsEndpointAddress address)
@@ -6775,7 +6760,7 @@ TYPE class public ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusPublishT
   METHOD public virtual ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopology GetPublishBrokerTopology()
 TYPE class public ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusSendTopology [base=ViciOne.ServiceBus.Topology.SendTopology,interfaces=ViciOne.ServiceBus.AzureServiceBus.IServiceBusSendTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusSendTopology()
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>()
   METHOD public virtual ViciOne.ServiceBus.AzureServiceBus.SendSettings GetDeadLetterSettings(ViciOne.ServiceBus.AzureServiceBus.IServiceBusQueueConfigurator configurator)
   METHOD public virtual ViciOne.ServiceBus.AzureServiceBus.SendSettings GetErrorSettings(ViciOne.ServiceBus.AzureServiceBus.IServiceBusQueueConfigurator configurator)
   METHOD public virtual ViciOne.ServiceBus.AzureServiceBus.SendSettings GetSendSettings(ViciOne.ServiceBus.AzureServiceBus.ServiceBusEndpointAddress address)
@@ -10143,7 +10128,7 @@ TYPE class public ViciOne.ServiceBus.RabbitMq.Topology.RabbitMqSendSettings [bas
   PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> QueueArguments { public-get;  }
 TYPE class public ViciOne.ServiceBus.RabbitMq.Topology.RabbitMqSendTopology [base=ViciOne.ServiceBus.Topology.SendTopology,interfaces=ViciOne.ServiceBus.RabbitMq.IRabbitMqSendTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.RabbitMq.Topology.RabbitMqSendTopology(ViciOne.ServiceBus.Advanced.Topology.IEntityNameValidator validator)
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>()
   METHOD public virtual ViciOne.ServiceBus.RabbitMq.DeadLetterSettings GetDeadLetterSettings(ViciOne.ServiceBus.RabbitMq.ReceiveSettings settings)
   METHOD public virtual ViciOne.ServiceBus.RabbitMq.ErrorSettings GetErrorSettings(ViciOne.ServiceBus.RabbitMq.ReceiveSettings settings)
   METHOD public virtual ViciOne.ServiceBus.RabbitMq.SendSettings GetSendSettings(ViciOne.ServiceBus.RabbitMq.RabbitMqEndpointAddress address)
@@ -13477,7 +13462,7 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.Topology.SqlPublishTopology [b
   METHOD public virtual ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology GetPublishBrokerTopology()
 TYPE class public ViciOne.ServiceBus.SqlTransport.Topology.SqlSendTopology [base=ViciOne.ServiceBus.Topology.SendTopology,interfaces=ViciOne.ServiceBus.Providers.Transports.ISqlSendTopologyConfigurator]
   CTOR public ViciOne.ServiceBus.SqlTransport.Topology.SqlSendTopology()
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>(System.Type type)
+  METHOD protected ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator CreateMessageTopology<T>()
   METHOD public virtual ViciOne.ServiceBus.Providers.Transports.ISqlMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
   METHOD public virtual ViciOne.ServiceBus.SqlTransport.SendSettings GetDeadLetterSettings(ViciOne.ServiceBus.SqlTransport.ReceiveSettings settings)
   METHOD public virtual ViciOne.ServiceBus.SqlTransport.SendSettings GetErrorSettings(ViciOne.ServiceBus.SqlTransport.ReceiveSettings settings)
@@ -14987,19 +14972,12 @@ TYPE class public ViciOne.ServiceBus.Configuration.ContextFilterPipeSpecificatio
   CTOR public ViciOne.ServiceBus.Configuration.ContextFilterPipeSpecification<TContext>(System.Func<TContext,System.Threading.Tasks.Task<System.Boolean>> filter)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<TContext> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.CorrelatedByCorrelationIdSelector<T> [interfaces=ViciOne.ServiceBus.Configuration.ICorrelationIdSelector<T>]
-  CTOR public ViciOne.ServiceBus.Configuration.CorrelatedByCorrelationIdSelector<T>()
-  METHOD public virtual System.Boolean TryGetSetCorrelationId(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T> messageCorrelationId)
 TYPE class public ViciOne.ServiceBus.Configuration.CorrelationIdConventionExtensions [static]
   METHOD public static System.Void UseCorrelationId<T>(ViciOne.ServiceBus.Advanced.Topology.ISendTopology configurator, System.Func<T,System.Guid> correlationIdSelector)
   METHOD public static System.Void UseCorrelationId<T>(ViciOne.ServiceBus.Advanced.Topology.ISendTopology configurator, System.Func<T,System.Nullable<System.Guid>> correlationIdSelector)
   METHOD public static System.Void UseCorrelationId<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.Func<T,System.Guid> correlationIdSelector)
   METHOD public static System.Void UseCorrelationId<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.Func<T,System.Nullable<System.Guid>> correlationIdSelector)
-TYPE class public ViciOne.ServiceBus.Configuration.CorrelationIdMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.ICorrelationIdMessageSendTopologyConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.CorrelationIdMessageSendTopologyConvention<TMessage>()
-  METHOD public virtual System.Boolean TryGetMessageCorrelationId(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<TMessage> messageCorrelationId)
-  METHOD public virtual System.Void SetCorrelationId(ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<TMessage> messageCorrelationId)
-TYPE class public ViciOne.ServiceBus.Configuration.CorrelationIdSendTopologyConvention [interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConvention]
+TYPE class public ViciOne.ServiceBus.Configuration.CorrelationIdSendTopologyConvention [sealed,interfaces=ViciOne.ServiceBus.Configuration.ISendTopologyConvention]
   CTOR public ViciOne.ServiceBus.Configuration.CorrelationIdSendTopologyConvention()
   METHOD public virtual System.Boolean TryGetMessageSendTopologyConvention<T>(out ViciOne.ServiceBus.Configuration.IMessageSendTopologyConvention<T> convention)
 TYPE class public ViciOne.ServiceBus.Configuration.DeadLetterExtensions [static]
@@ -15334,10 +15312,8 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IContainerSelector
 TYPE interface public ViciOne.ServiceBus.Configuration.IConventionTypeFactory<TValue>
   METHOD public abstract TValue Create<T>()
 TYPE interface public ViciOne.ServiceBus.Configuration.ICorrelationIdMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IMessageSendTopologyConvention<TMessage>]
-  METHOD public abstract System.Boolean TryGetMessageCorrelationId(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<TMessage> messageCorrelationId)
+  METHOD public abstract System.Boolean TryGetCorrelationIdResolver(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<TMessage> messageCorrelationId)
   METHOD public abstract System.Void SetCorrelationId(ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<TMessage> messageCorrelationId)
-TYPE interface public ViciOne.ServiceBus.Configuration.ICorrelationIdSelector<T>
-  METHOD public abstract System.Boolean TryGetSetCorrelationId(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T> messageCorrelationId)
 TYPE interface public ViciOne.ServiceBus.Configuration.IDispatchConfigurator<TContext>
   METHOD public abstract System.Void Pipe<T>(System.Action<ViciOne.ServiceBus.Configuration.IPipeConfigurator<T>> configurePipe)
 TYPE interface public ViciOne.ServiceBus.Configuration.IEndpointConfiguration [interfaces=ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator&ViciOne.ServiceBus.Configuration.IPublishPipelineConfigurator&ViciOne.ServiceBus.Configuration.IReceivePipelineConfigurator&ViciOne.ServiceBus.Configuration.ISendPipelineConfigurator&ViciOne.ServiceBus.Configuration.ISpecification]
@@ -15524,7 +15500,7 @@ TYPE interface public ViciOne.ServiceBus.Configuration.ITopologyConfiguration [i
   PROPERTY ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator Message { public-get;  }
   PROPERTY ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurator Publish { public-get;  }
   PROPERTY ViciOne.ServiceBus.Configuration.ISendTopologyConfigurator Send { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Configuration.ITopologyConventionCache<T>
+TYPE interface public ViciOne.ServiceBus.Configuration.ITopologyConventionCache<TValue>
   METHOD public abstract TResult GetOrAdd<TKey,TResult>()
 TYPE interface public ViciOne.ServiceBus.Configuration.ITransactionConfigurator
   PROPERTY System.TimeSpan Timeout {  public-set; }
@@ -15827,13 +15803,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeyConventionExtensi
   METHOD public static System.Void UsePartitionKeyFormatter<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, ViciOne.ServiceBus.Transports.IMessagePartitionKeyFormatter<T> formatter)
   METHOD public static System.Void UsePartitionKeyFormatter<T>(ViciOne.ServiceBus.Configuration.ISendTopologyConfigurator configurator, System.Func<ViciOne.ServiceBus.Advanced.SendContext<T>,System.String> formatter)
   METHOD public static System.Void UsePartitionKeyFormatter<T>(ViciOne.ServiceBus.Configuration.ISendTopologyConfigurator configurator, ViciOne.ServiceBus.Transports.IMessagePartitionKeyFormatter<T> formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeyMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IPartitionKeyMessageSendTopologyConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionKeyMessageSendTopologyConvention<TMessage>(ViciOne.ServiceBus.Transports.IPartitionKeyFormatter formatter)
-  METHOD public virtual System.Boolean TryGetMessageSendTopology(out ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<TMessage> messageSendTopology)
-  METHOD public virtual System.Boolean TryGetMessageSendTopologyConvention<T>(out ViciOne.ServiceBus.Configuration.IMessageSendTopologyConvention<T> convention)
-  METHOD public virtual System.Void SetFormatter(ViciOne.ServiceBus.Transports.IMessagePartitionKeyFormatter<TMessage> formatter)
-  METHOD public virtual System.Void SetFormatter(ViciOne.ServiceBus.Transports.IPartitionKeyFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeySendTopologyConvention [interfaces=ViciOne.ServiceBus.Configuration.IPartitionKeySendTopologyConvention]
+TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeySendTopologyConvention [sealed,interfaces=ViciOne.ServiceBus.Configuration.IPartitionKeySendTopologyConvention]
   CTOR public ViciOne.ServiceBus.Configuration.PartitionKeySendTopologyConvention()
 TYPE class public ViciOne.ServiceBus.Configuration.PartitionerConfigurationExtensions [static]
   METHOD public static System.Void UseMessagePartitioner(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 partitionCount)
@@ -15852,9 +15822,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions<TBus>
   PROPERTY System.Nullable<System.Int32> MaximumTransportEnvelopeBytes { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> MessageDataOffloadThresholdBytes { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> WarningBodyBytes { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Configuration.PropertyCorrelationIdSelector<T> [interfaces=ViciOne.ServiceBus.Configuration.ICorrelationIdSelector<T>]
-  CTOR public ViciOne.ServiceBus.Configuration.PropertyCorrelationIdSelector<T>(System.String propertyName)
-  METHOD public virtual System.Boolean TryGetSetCorrelationId(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T> messageCorrelationId)
 TYPE class public ViciOne.ServiceBus.Configuration.PublishMessageSchedulerPipeSpecification [interfaces=ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.ConsumeContext>]
   CTOR public ViciOne.ServiceBus.Configuration.PublishMessageSchedulerPipeSpecification()
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
@@ -16065,11 +16032,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.RoutingKeyConventionExtension
   METHOD public static System.Void UseRoutingKeyFormatter<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, ViciOne.ServiceBus.Transports.IMessageRoutingKeyFormatter<T> formatter)
   METHOD public static System.Void UseRoutingKeyFormatter<T>(ViciOne.ServiceBus.Configuration.ISendTopologyConfigurator configurator, System.Func<ViciOne.ServiceBus.Advanced.SendContext<T>,System.String> formatter)
   METHOD public static System.Void UseRoutingKeyFormatter<T>(ViciOne.ServiceBus.Configuration.ISendTopologyConfigurator configurator, ViciOne.ServiceBus.Transports.IMessageRoutingKeyFormatter<T> formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.RoutingKeyMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IRoutingKeyMessageSendTopologyConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.RoutingKeyMessageSendTopologyConvention<TMessage>(ViciOne.ServiceBus.Transports.IRoutingKeyFormatter formatter)
-  METHOD public virtual System.Void SetFormatter(ViciOne.ServiceBus.Transports.IMessageRoutingKeyFormatter<TMessage> formatter)
-  METHOD public virtual System.Void SetFormatter(ViciOne.ServiceBus.Transports.IRoutingKeyFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.RoutingKeySendTopologyConvention [interfaces=ViciOne.ServiceBus.Configuration.IRoutingKeySendTopologyConvention]
+TYPE class public ViciOne.ServiceBus.Configuration.RoutingKeySendTopologyConvention [sealed,interfaces=ViciOne.ServiceBus.Configuration.IRoutingKeySendTopologyConvention]
   CTOR public ViciOne.ServiceBus.Configuration.RoutingKeySendTopologyConvention()
   METHOD public virtual System.Boolean TryGetMessageSendTopologyConvention<T>(out ViciOne.ServiceBus.Configuration.IMessageSendTopologyConvention<T> convention)
 TYPE class public ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationExtensions [static]
@@ -16117,6 +16080,9 @@ TYPE class public ViciOne.ServiceBus.Configuration.SerializationConfiguration [i
   METHOD public virtual ViciOne.ServiceBus.Configuration.ISerializationConfiguration CreateSerializationConfiguration()
   PROPERTY System.Net.Mime.ContentType DefaultContentType {  public-set; }
   PROPERTY System.Net.Mime.ContentType SerializerContentType {  public-set; }
+TYPE class public ViciOne.ServiceBus.Configuration.SerializerConventionExtensions [static]
+  METHOD public static System.Void UseSerializer<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.Net.Mime.ContentType contentType)
+  METHOD public static System.Void UseSerializer<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.String contentType)
 TYPE class public ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator [base=ViciOne.ServiceBus.Configuration.RegistrationConfigurator,interfaces=ViciOne.ServiceBus.Advanced.Registration.IAdvancedBusRegistrationConfigurator&ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator]
   CTOR protected ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar)
   CTOR public ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator(Microsoft.Extensions.DependencyInjection.IServiceCollection collection)
@@ -16155,21 +16121,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ServiceInstanceOptions [seale
   CTOR public ViciOne.ServiceBus.Configuration.ServiceInstanceOptions()
   METHOD public ViciOne.ServiceBus.Configuration.ServiceInstanceOptions SetEndpointNameFormatter(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter)
   PROPERTY ViciOne.ServiceBus.Advanced.IEndpointNameFormatter EndpointNameFormatter { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.SetCorrelationIdSelector<T> [interfaces=ViciOne.ServiceBus.Configuration.ICorrelationIdSelector<T>]
-  CTOR public ViciOne.ServiceBus.Configuration.SetCorrelationIdSelector<T>(ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T> messageCorrelationId)
-  METHOD public virtual System.Boolean TryGetSetCorrelationId(out ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T> messageCorrelationId)
-TYPE class public ViciOne.ServiceBus.Configuration.SetPartitionKeyMessageSendTopology<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.SetPartitionKeyMessageSendTopology<TMessage>(ViciOne.ServiceBus.Transports.IMessagePartitionKeyFormatter<TMessage> partitionKeyFormatter)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.SetRoutingKeyMessageSendTopology<TMessage> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.SetRoutingKeyMessageSendTopology<TMessage>(ViciOne.ServiceBus.Transports.IMessageRoutingKeyFormatter<TMessage> routingKeyFormatter)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<TMessage>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.SetSerializerMessageSendTopologyConvention<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.ISetSerializerMessageSendTopologyConvention<TMessage>]
-  CTOR public ViciOne.ServiceBus.Configuration.SetSerializerMessageSendTopologyConvention<TMessage>()
-  METHOD public virtual System.Void SetSerializer(System.Net.Mime.ContentType contentType)
-TYPE class public ViciOne.ServiceBus.Configuration.SetSerializerSendConventionExtensions [static]
-  METHOD public static System.Void UseSerializer<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.Net.Mime.ContentType contentType)
-  METHOD public static System.Void UseSerializer<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.String contentType)
 TYPE class public ViciOne.ServiceBus.Configuration.SnakeCaseEndpointNameFormatter [base=ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter]
   CTOR protected ViciOne.ServiceBus.Configuration.SnakeCaseEndpointNameFormatter()
   CTOR public ViciOne.ServiceBus.Configuration.SnakeCaseEndpointNameFormatter(System.Boolean includeNamespace)
@@ -16203,8 +16154,8 @@ TYPE class public ViciOne.ServiceBus.Configuration.TimeoutConfiguratorExtensions
   METHOD public static System.Void UseTimeout<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<T>> configurator, System.Action<ViciOne.ServiceBus.Configuration.ITimeoutConfigurator> configure)
   METHOD public static System.Void UseTimeout<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Action<ViciOne.ServiceBus.Configuration.ITimeoutConfigurator> configure)
   METHOD public static System.Void UseTimeout<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator, System.Action<ViciOne.ServiceBus.Configuration.ITimeoutConfigurator> configure)
-TYPE class public ViciOne.ServiceBus.Configuration.TopologyConventionCache<TValue> [interfaces=ViciOne.ServiceBus.Configuration.ITopologyConventionCache<TValue>]
-  CTOR public ViciOne.ServiceBus.Configuration.TopologyConventionCache<TValue>(System.Type genericType, ViciOne.ServiceBus.Configuration.IConventionTypeFactory<TValue> typeFactory)
+TYPE class public ViciOne.ServiceBus.Configuration.TopologyConventionCache<TValue> [sealed,interfaces=ViciOne.ServiceBus.Configuration.ITopologyConventionCache<TValue>]
+  CTOR public ViciOne.ServiceBus.Configuration.TopologyConventionCache<TValue>(ViciOne.ServiceBus.Configuration.IConventionTypeFactory<TValue> typeFactory)
 TYPE class public ViciOne.ServiceBus.Configuration.TransactionConfiguratorExtensions [static]
   METHOD public static System.Void UseTransaction<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Action<ViciOne.ServiceBus.Configuration.ITransactionConfigurator> configure = null)
 TYPE class public ViciOne.ServiceBus.Configuration.TransactionPipeSpecification<T> [interfaces=ViciOne.ServiceBus.Configuration.IPipeSpecification<T>&ViciOne.ServiceBus.Configuration.ITransactionConfigurator]
@@ -18076,7 +18027,7 @@ TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSeria
   PROPERTY System.Net.Mime.ContentType JsonContentType { public-get;  }
 TYPE class public ViciOne.ServiceBus.Serialization.SystemTextJsonSerializerOptions [static]
   METHOD public static System.Text.Json.JsonSerializerOptions CreateDefault()
-TYPE class public ViciOne.ServiceBus.Topology.DelegateMessageCorrelationId<T> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T>]
+TYPE class public ViciOne.ServiceBus.Topology.DelegateMessageCorrelationId<T> [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T>]
   CTOR public ViciOne.ServiceBus.Topology.DelegateMessageCorrelationId<T>(System.Func<T,System.Guid> getCorrelationId)
   METHOD public virtual System.Boolean TryGetCorrelationId(T message, out System.Guid correlationId)
 TYPE class public ViciOne.ServiceBus.Topology.EntityCollection<TEntity,THandle> [interfaces=System.Collections.Generic.IEnumerable<TEntity>]
@@ -18091,15 +18042,9 @@ TYPE interface public ViciOne.ServiceBus.Topology.EntityHandle
 TYPE class public ViciOne.ServiceBus.Topology.NamedEntityCollection<TEntity,THandle> [base=ViciOne.ServiceBus.Topology.EntityCollection<TEntity,THandle>]
   CTOR public ViciOne.ServiceBus.Topology.NamedEntityCollection<TEntity,THandle>(System.Collections.Generic.IEqualityComparer<TEntity> entityComparer, System.Collections.Generic.IEqualityComparer<TEntity> nameComparer)
   METHOD public THandle GetOrAdd(TEntity entity)
-TYPE class public ViciOne.ServiceBus.Topology.NullableDelegateMessageCorrelationId<T> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T>]
+TYPE class public ViciOne.ServiceBus.Topology.NullableDelegateMessageCorrelationId<T> [sealed,interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T>]
   CTOR public ViciOne.ServiceBus.Topology.NullableDelegateMessageCorrelationId<T>(System.Func<T,System.Nullable<System.Guid>> getCorrelationId)
   METHOD public virtual System.Boolean TryGetCorrelationId(T message, out System.Guid correlationId)
-TYPE class public ViciOne.ServiceBus.Topology.SetCorrelationIdMessageSendTopology<T> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<T>]
-  CTOR public ViciOne.ServiceBus.Topology.SetCorrelationIdMessageSendTopology<T>(ViciOne.ServiceBus.Advanced.Topology.IMessageCorrelationId<T> messageCorrelationId)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<T>> builder)
-TYPE class public ViciOne.ServiceBus.Topology.SetSerializerMessageSendTopology<T> [interfaces=ViciOne.ServiceBus.Advanced.Topology.IMessageSendTopology<T>]
-  CTOR public ViciOne.ServiceBus.Topology.SetSerializerMessageSendTopology<T>(System.Net.Mime.ContentType contentType)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.ITopologyPipeBuilder<ViciOne.ServiceBus.Advanced.SendContext<T>> builder)
 TYPE interface public ViciOne.ServiceBus.Transactions.IAmbientTransactionBus [interfaces=ViciOne.ServiceBus.IBus]
 TYPE interface public ViciOne.ServiceBus.Transactions.IBufferedBus [interfaces=ViciOne.ServiceBus.IBus]
   METHOD public abstract System.Threading.Tasks.Task FlushAsync(System.Threading.CancellationToken cancellationToken = null)

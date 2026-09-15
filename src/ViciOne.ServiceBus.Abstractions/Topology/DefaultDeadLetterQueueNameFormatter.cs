@@ -1,19 +1,25 @@
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Formats default dead letter queue name values.</summary>
-public class DefaultDeadLetterQueueNameFormatter :
+/// <summary>Appends the standard skipped-message suffix to receive queue names.</summary>
+public sealed class DefaultDeadLetterQueueNameFormatter :
     IDeadLetterQueueNameFormatter
 {
     const string DeadLetterQueueSuffix = "_skipped";
 
-    /// <summary>Exposes the instance used by the containing type.</summary>
-    public static readonly IDeadLetterQueueNameFormatter Instance = new DefaultDeadLetterQueueNameFormatter();
+    DefaultDeadLetterQueueNameFormatter()
+    {
+    }
 
-    /// <summary>Formats dead letter queue name.</summary>
-    /// <param name="queueName">The queue name.</param>
-    /// <returns>The formatted dead letter queue name.</returns>
+    /// <summary>Gets the shared default formatter.</summary>
+    public static IDeadLetterQueueNameFormatter Instance { get; } = new DefaultDeadLetterQueueNameFormatter();
+
+    /// <summary>Creates the skipped-message queue name for a receive queue.</summary>
+    /// <param name="queueName">The non-empty receive queue name.</param>
+    /// <returns><paramref name="queueName" /> followed by <c>_skipped</c>.</returns>
     public string FormatDeadLetterQueueName(string queueName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+
         return queueName + DeadLetterQueueSuffix;
     }
 }

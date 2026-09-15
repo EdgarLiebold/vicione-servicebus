@@ -14,8 +14,7 @@ internal sealed class MessageDataSendTopologyConvention :
     /// <param name="policy">The inline and retention policy.</param>
     public MessageDataSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
     {
-        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(MessageDataMessageSendTopologyConvention<>),
-            new Factory(repository, policy));
+        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(new Factory(repository, policy));
     }
 
     /// <summary>Gets the cached message-data convention for a message contract.</summary>

@@ -4,30 +4,32 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Stores a collection of entity values.</summary>
-/// <typeparam name="TEntity">The entity type.</typeparam>
-/// <typeparam name="THandle">The handle type.</typeparam>
+/// <summary>Indexes topology entities by structural equality and by their builder-assigned identifiers.</summary>
+/// <typeparam name="TEntity">The topology entity type.</typeparam>
+/// <typeparam name="THandle">The entity-handle contract exposed to callers.</typeparam>
 public class EntityCollection<TEntity, THandle> :
     IEnumerable<TEntity>
     where TEntity : THandle
     where THandle : EntityHandle
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="entityComparer">The entity comparer.</param>
+    /// <summary>Creates an empty collection using the specified structural equality comparer.</summary>
+    /// <param name="entityComparer">The comparer that determines whether two entity definitions are equivalent.</param>
     public EntityCollection(IEqualityComparer<TEntity> entityComparer)
     {
+        ArgumentNullException.ThrowIfNull(entityComparer);
+
         EntityIds = new Dictionary<long, TEntity>();
         Entities = new Dictionary<TEntity, TEntity>(entityComparer);
     }
 
-    /// <summary>Gets the entities.</summary>
+    /// <summary>Gets the structural entity index used by specialized collections.</summary>
     protected IDictionary<TEntity, TEntity> Entities { get; }
 
-    /// <summary>Gets the entity ids.</summary>
+    /// <summary>Gets the identifier index used by specialized collections.</summary>
     protected IDictionary<long, TEntity> EntityIds { get; }
 
-    /// <summary>Gets enumerator.</summary>
-    /// <returns>The enumerator.</returns>
+    /// <summary>Enumerates the distinct entity definitions in insertion order.</summary>
+    /// <returns>An enumerator over the stored entities.</returns>
     public IEnumerator<TEntity> GetEnumerator()
     {
         return Entities.Values.GetEnumerator();
@@ -38,17 +40,19 @@ public class EntityCollection<TEntity, THandle> :
         return GetEnumerator();
     }
 
-    /// <summary>Gets or add.</summary>
-    /// <param name="entity">The entity.</param>
-    /// <returns>The or add.</returns>
+    /// <summary>Returns the handle for an equivalent entity or adds the supplied entity.</summary>
+    /// <param name="entity">The entity definition to resolve.</param>
+    /// <returns>The existing equivalent handle, or <paramref name="entity" /> when added.</returns>
     public virtual THandle GetOrAdd(TEntity entity)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         // An equivalent entity reuses its existing handle.
         if (Entities.TryGetValue(entity, out var existingEntity))
             return existingEntity;
+
+        if (EntityIds.ContainsKey(entity.Id))
+            throw new ArgumentException($"The entity identifier {entity.Id} is already in use.", nameof(entity));
 
         EntityIds.Add(entity.Id, entity);
         Entities.Add(entity, entity);
@@ -56,19 +60,18 @@ public class EntityCollection<TEntity, THandle> :
         return entity;
     }
 
-    /// <summary>Retrieves the requested value.</summary>
-    /// <param name="entityHandle">The entity handle.</param>
-    /// <returns>The requested value.</returns>
+    /// <summary>Resolves a handle to the structurally matching entity definition.</summary>
+    /// <param name="entityHandle">The handle to resolve.</param>
+    /// <returns>The entity stored for the handle.</returns>
     public virtual TEntity Get(THandle entityHandle)
     {
-        if (entityHandle == null)
-            throw new ArgumentNullException(nameof(entityHandle));
+        ArgumentNullException.ThrowIfNull(entityHandle);
 
         if (!EntityIds.TryGetValue(entityHandle.Id, out var existingEntity))
-            throw new ArgumentException($"The existing entity was not found: {TypeCache<TEntity>.ShortName}");
+            throw new ArgumentException($"No {TypeCache<TEntity>.ShortName} entity has identifier {entityHandle.Id}.", nameof(entityHandle));
 
         if (!existingEntity.Equals(entityHandle))
-            throw new ArgumentException($"The existing entity did not match the argument entity: {TypeCache<TEntity>.ShortName}");
+            throw new ArgumentException($"The {TypeCache<TEntity>.ShortName} handle does not match the stored entity.", nameof(entityHandle));
 
         return existingEntity;
     }

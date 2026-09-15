@@ -1073,3 +1073,34 @@ unchanged 18,879-line API SHA-256 is
 Async review passes 30/30. Requirements, comments, directives, dummy and legacy markers, SDK
 pinning, filenames, folders, namespaces, empty directories, formatting, and Git whitespace pass.
 Protected trees remain unchanged and unstaged. The overall A+ goal remains active.
+
+## Iteration 118
+
+Iteration 118 completes the manual review and remediation of the transport-independent Topology
+capability: 100 final source files and 4,331 lines across three Core and three Abstractions folders.
+`src/ViciOne.ServiceBus` is explicitly treated as the Core project; independent assemblies remain
+siblings and provider projects remain grouped beneath `Persistence`, `Scheduling`, and `Transports`.
+An exact architecture manifest enforces every Topology file, namespace, folder, and retired path.
+
+Empty marker and pass-through adapter surface is removed, implementation mechanics are internal,
+and configuration vocabulary, convention caching, correlation precedence, entity identity,
+entity-name concurrency, root observation, child-builder state, application freeze, and required
+input boundaries now have direct behavioral contracts. Eight controlled counterchanges are killed
+across the Core and Abstractions profiles and restored hash-exactly.
+
+Core Topology coverage is 97.0149% line and 88.5714% branch, maximum CRAP 10. Abstractions Topology
+coverage is 100% line and 89.2045% branch, maximum CRAP 8. Combined owner coverage is 98.4481% line
+and 88.9241% branch with no method above CRAP 30. Core passes 3,611/3,611; Abstractions passes
+692/692; all 23 canonical hosts pass 6,638/6,638 without failure or skip.
+
+All three locked restores, both format gates, and the serial 77-project warnings-as-errors build
+pass with zero warnings and errors. The package gate passes 18 journeys, 31 fresh packages, three
+isolated provider consumers, and all 30 runtime APIs. The intentional Greenfield API reduction is
+captured by the 18,824-line SHA-256
+`493a793a915b88ac2ea9b81cb6be8057ecf9beff80535f063aab8c3040d12a4f` baseline.
+
+The 86-method, 90-case manual test anti-pattern review has no remaining finding. Requirements,
+bidirectional Async semantics, source layout, comments, directives, old Topology identities, SDK
+pinning, empty directories, formatting, and Git whitespace pass. Protected trees remain unchanged
+and unstaged. The overall A+ goal remains active for the remaining complete source owners and the
+final repository-wide audit.

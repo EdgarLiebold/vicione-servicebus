@@ -68,9 +68,8 @@ public class RabbitMqSendTopology :
 
     /// <summary>Creates provider-specific send topology for a message contract.</summary>
     /// <typeparam name="T">The sent message contract type.</typeparam>
-    /// <param name="type">The runtime message contract type supplied by the base topology.</param>
     /// <returns>The RabbitMQ message send topology.</returns>
-    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new RabbitMqMessageSendTopology<T>();
 

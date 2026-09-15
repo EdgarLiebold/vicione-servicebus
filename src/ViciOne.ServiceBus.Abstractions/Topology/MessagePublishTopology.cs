@@ -6,8 +6,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>Defines the topology for message publish.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Composes conventions and explicit publish topology for one message contract.</summary>
+/// <typeparam name="TMessage">The published message contract.</typeparam>
 public class MessagePublishTopology<TMessage> :
     IMessagePublishTopologyConfigurator<TMessage>
     where TMessage : class
@@ -18,41 +18,47 @@ public class MessagePublishTopology<TMessage> :
     readonly List<IMessagePublishTopology<TMessage>> _topologies;
     bool? _exclude;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="publishTopology">The publish topology.</param>
+    /// <summary>Initializes topology for a message contract.</summary>
+    /// <param name="publishTopology">The owning publish topology.</param>
     public MessagePublishTopology(IPublishTopology publishTopology)
     {
-        _publishTopology = publishTopology;
+        _publishTopology = publishTopology ?? throw new ArgumentNullException(nameof(publishTopology));
         _conventions = new List<IMessagePublishTopologyConvention<TMessage>>(8);
         _topologies = new List<IMessagePublishTopology<TMessage>>(8);
         _delegateTopologies = new List<IMessagePublishTopology<TMessage>>(8);
     }
 
-    /// <summary>Gets or sets the exclude.</summary>
+    /// <summary>Gets or sets whether this message contract is excluded from publish topology.</summary>
     public bool Exclude
     {
         get => _exclude ??= IsMessageTypeExcluded();
         set => _exclude = value;
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="publishTopology">The publish topology.</param>
+    /// <summary>Adds explicit publish topology for this message contract.</summary>
+    /// <param name="publishTopology">The topology to apply after conventions.</param>
     public void Add(IMessagePublishTopology<TMessage> publishTopology)
     {
+        ArgumentNullException.ThrowIfNull(publishTopology);
+
         _topologies.Add(publishTopology);
     }
 
-    /// <summary>Adds delegate to the configuration.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <summary>Adds delegated publish topology inherited from another contract.</summary>
+    /// <param name="configuration">The delegated topology to apply first.</param>
     public void AddDelegate(IMessagePublishTopology<TMessage> configuration)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+
         _delegateTopologies.Add(configuration);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Applies delegated topology, conventions, and explicit topology in that order.</summary>
+    /// <param name="builder">The publish-pipe topology builder.</param>
     public void Apply(ITopologyPipeBuilder<PublishContext<TMessage>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         ITopologyPipeBuilder<PublishContext<TMessage>> delegatedBuilder = builder.CreateDelegatedBuilder();
 
         for (var i = 0; i < _delegateTopologies.Count; i++)
@@ -60,7 +66,7 @@ public class MessagePublishTopology<TMessage> :
 
         for (var i = 0; i < _conventions.Count; i++)
         {
-            if (_conventions[i].TryGetMessagePublishTopology(out IMessagePublishTopology<TMessage> topology))
+            if (_conventions[i].TryGetMessagePublishTopology(out IMessagePublishTopology<TMessage>? topology))
                 topology.Apply(builder);
         }
 
@@ -68,21 +74,25 @@ public class MessagePublishTopology<TMessage> :
             topology.Apply(builder);
     }
 
-    /// <summary>Attempts to get publish address.</summary>
-    /// <param name="baseAddress">The base address.</param>
-    /// <param name="publishAddress">Receives the publish address produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to resolve a provider-specific publish address.</summary>
+    /// <param name="baseAddress">The transport base address.</param>
+    /// <param name="publishAddress">Receives the resolved address when one is available.</param>
+    /// <returns><see langword="false" /> in the transport-independent topology.</returns>
     public virtual bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
+        ArgumentNullException.ThrowIfNull(baseAddress);
+
         publishAddress = null;
         return false;
     }
 
-    /// <summary>Attempts to add convention.</summary>
-    /// <param name="convention">The convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Adds a message-specific convention unless its runtime type is already registered.</summary>
+    /// <param name="convention">The convention to add.</param>
+    /// <returns><see langword="true" /> when added; <see langword="false" /> for a duplicate runtime type.</returns>
     public bool TryAddConvention(IMessagePublishTopologyConvention<TMessage> convention)
     {
+        ArgumentNullException.ThrowIfNull(convention);
+
         var conventionType = convention.GetType();
 
         for (var i = 0; i < _conventions.Count; i++)
@@ -95,38 +105,44 @@ public class MessagePublishTopology<TMessage> :
         return true;
     }
 
-    /// <summary>Attempts to add convention.</summary>
-    /// <param name="convention">The convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Adds the message-specific convention exposed by a root publish convention.</summary>
+    /// <param name="convention">The root convention to query.</param>
+    /// <returns><see langword="true" /> when a convention is exposed and added; otherwise, <see langword="false" />.</returns>
     public bool TryAddConvention(IPublishTopologyConvention convention)
     {
-        return convention.TryGetMessagePublishTopologyConvention(out IMessagePublishTopologyConvention<TMessage> messagePublishTopologyConvention)
+        ArgumentNullException.ThrowIfNull(convention);
+
+        return convention.TryGetMessagePublishTopologyConvention(out IMessagePublishTopologyConvention<TMessage>? messagePublishTopologyConvention)
             && TryAddConvention(messagePublishTopologyConvention);
     }
 
-    /// <summary>Adds or update convention to the configuration.</summary>
+    /// <summary>Adds a convention or replaces the existing convention of the requested type.</summary>
     /// <typeparam name="TConvention">The convention type.</typeparam>
-    /// <param name="add">The add.</param>
-    /// <param name="update">The update.</param>
+    /// <param name="add">Creates the convention when none exists.</param>
+    /// <param name="update">Creates a replacement from the existing convention.</param>
     public void AddOrUpdateConvention<TConvention>(Func<TConvention> add, Func<TConvention, TConvention> update)
         where TConvention : class, IMessagePublishTopologyConvention<TMessage>
     {
+        ArgumentNullException.ThrowIfNull(add);
+        ArgumentNullException.ThrowIfNull(update);
+
         for (var i = 0; i < _conventions.Count; i++)
         {
             if (_conventions[i] is TConvention convention)
             {
-                _conventions[i] = update(convention);
+                _conventions[i] = update(convention)
+                    ?? throw new InvalidOperationException("The publish topology convention update returned null.");
                 return;
             }
         }
 
-        var addedConvention = add();
-        if (addedConvention != null)
-            _conventions.Add(addedConvention);
+        TConvention addedConvention = add()
+            ?? throw new InvalidOperationException("The publish topology convention factory returned null.");
+        _conventions.Add(addedConvention);
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Returns no failures because the transport-independent topology has no constraints of its own.</summary>
+    /// <returns>An empty sequence.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         yield break;

@@ -2200,3 +2200,95 @@ consumers, and all 30 runtime APIs. The API baseline remains 18,879 lines with S
 `ab7469f985f1e269c5cceb803c06cfdd27cfe19f9b4ca51eded8f6c97857f12f`. Directives, dummy and
 legacy markers, SDK pinning, source-root files, empty directories, formatting, and Git whitespace
 are clean. Protected `review/` and `TestResults/` remain unchanged and unstaged.
+
+## Iteration 118 Core Topology final research
+
+The manually reviewed capability finishes with 100 production files and 4,331 lines. Core owns 43
+files under `Advanced/Topology`, `Configuration/Topology`, and `Topology`; Abstractions owns 57
+files under the corresponding three folders. This resolves the apparent `src` inconsistency:
+`src/ViciOne.ServiceBus` is a single Core project, while direct siblings are independent assemblies.
+Provider assemblies therefore remain grouped beneath `Persistence`, `Scheduling`, and `Transports`
+instead of being nested into the Core project. An exact six-group manifest now fails if a Topology
+file, namespace, or retired `Topology/Configuration` directory drifts.
+
+The prior surface mixed contracts, policy, implementation mechanics, and four one-method observable
+wrappers. The final structure keeps public read-only contracts in `Advanced.Topology`, configuration
+contracts and extension vocabulary in `Configuration`, and concrete Core behavior in `Topology`.
+The empty `IMessageTypeTopologyConfigurator` marker and the four pass-through observables are gone;
+root topologies own `Connectable<TObserver>` directly. Correlation selectors and per-message
+partition, routing, serializer, and filter implementations are internal because consumers configure
+them through the retained public extension and interface contracts.
+
+The cache now uses `ConcurrentDictionary<Type, Lazy<TValue>>` so concurrent first access publishes
+one value and caches factory failures consistently. Its unused runtime-type constructor argument is
+removed, invalid runtime contracts report the owning parameter, explicit correlation resolvers have
+precedence, root conventions are applied consistently to current and future message topologies,
+and entity collections independently enforce structural, name, and identifier identity. Entity-name
+formatting evaluates at most once under concurrency and rejects empty collaborator results.
+Child topology builders retain both delegated and implemented state. Required inputs, null factory
+results, and null update results fail immediately at the responsible public boundary.
+
+Application-wide conventions still freeze on first bus topology. Capability packages may add their
+metadata afterward without reopening application configuration, including nullable correlation
+selectors. The old default exclusion for `JsonElement` is removed because every consume topology
+requires a reference message contract and the struct branch was unreachable. A real reference
+contract now proves application-wide consume exclusion.
+
+The first mutation group changed cache identity, runtime argument ownership, explicit correlation
+precedence, and same-name entity conflict behavior. The 35-case Core Topology profile produced six
+causal failures. Accepted hashes are
+`683a18c4abc503ca843503b58f0860f7e62008f3cce7d479d170236e4b388988` for
+`TopologyConventionCache.cs`,
+`94a9559b73c4825ede4e59497f59cbc7d7f23bf2061dec949bf90a193909e2c6` for
+`ConsumeTopology.cs`,
+`ead08a8f3affd9d167200a7d4b48e60e291e2a5cd9d70bfa4e0b35fdb8474c83` for
+`CorrelationIdMessageSendTopologyConvention.cs`, and
+`927874f9e609e007d5f7db0ee25cba0138873dec72242da2adb0f615d2b1078e` for
+`NamedEntityCollection.cs`.
+
+The second mutation group removed the entity-name double check, discarded consume child-builder
+state, accepted a null publish-convention factory result, and inverted the publish-to-send exclusion
+contract. Exactly four of 50 Abstractions Topology cases failed. Accepted hashes are
+`480b9bfd6e660bcabfb241d810518d7e793460706563f6e2b267a91554c3d50b` for
+`MessageTopology.cs`,
+`fc01975ef15f651f6a7b0e73de8a0ed7dfd916f45cfac8f9a3442e2085930a6b` for
+`MessageConsumeTopologyPipeSpecification.cs`,
+`47ad358d9891ea335721660a3ea2f33828b4310b778bfe1e8868225933f66b6f` for
+`MessagePublishTopology.cs`, and
+`8967dcc15d77607b5043a3f1adc48ae57db96738e96579deebbb8286bb46ce5b` for
+`PublishToSendTopologyConfigurationObserver.cs`. Both groups were restored hash-exactly and their
+focused profiles returned to 35/35 and 50/50.
+
+Fresh complete coverage passes 3,611 Core and 692 Abstractions tests. Core Topology reaches
+520/536 lines and 124/140 branches with maximum CRAP 10; Abstractions Topology reaches 495/495
+lines and 157/176 branches with maximum CRAP 8. Combined reach is 1,015/1,031 lines and 281/316
+branches, with no CRAP value above 30. The remaining two Core zero-method entries are instrumenter
+artifacts for the already-tested one-shot separation lambda and non-generic enumerator forwarding.
+The coverage artifacts are `/private/tmp/vsb-iteration118-current/core-final.cobertura.xml`, SHA-256
+`7849d9d884f5da04d69434cffb973ba63e9cbf03c214c39b5446b8a7dbb3fea6`, and
+`/private/tmp/vsb-iteration118-current/abstractions-final.cobertura.xml`, SHA-256
+`a9ca59b210b2f7e8de35bb292cf6664c171918c28e34f9a66c3cd0d30054eedb`.
+
+The complete package comparison records 38 intentional additions and 93 removals. No capability
+entry point disappears: 18 developer journeys and three isolated provider consumers compile from
+31 freshly packed packages. The 30 runtime assembly APIs match the expressly updated 18,824-line
+contract with SHA-256 `493a793a915b88ac2ea9b81cb6be8057ecf9beff80535f063aab8c3040d12a4f`.
+The apparent removals are empty markers, pass-through wrappers, or implementation mechanics; the
+serializer extension class is renamed while retaining both public overloads.
+
+The final test anti-pattern audit accounts for 86 changed methods and 90 cases. One unnecessary
+`Guid.NewGuid` input was replaced with `Guid.Empty`; no issue remains. The concurrency tests use
+explicit manual-reset signals and bounded cancellation safeguards, not sleeps, and independently
+kill both race counterchanges. Every other case constrains exact state, identity, order, type,
+exception, parameter, address, or filter behavior. There are no skips, broad catches, swallowed
+failures, shared mutable fixtures, assertion-free paths, or coverage-only assertions.
+
+All three locked restores, both final format gates, and the serial warnings-as-errors build pass.
+The build covers all 77 Engineering projects with zero warning and error. The canonical 23-host
+profile passes 6,638/6,638 with no skip. The focused Async and source-layout gate passes 54/54.
+Requirements comprise 5,027 unique variants across 36 valid JSON files. Topology old names and
+paths, source directives, SDK patch pinning, empty directories, formatting, and Git whitespace are
+clean. The sole product `NotImplementedException` occurrence classifies the real BCL exception as
+non-retryable; RabbitMQ's `NotImplemented` constant is broker reply code 540, not placeholder code.
+Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal remains
+active for the remaining source owners.

@@ -55,9 +55,31 @@ public sealed class ApplicationMessageTopologyTests
             MessageCorrelation.UseCorrelationId<AnotherLateContract>(message => message.CorrelationId));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "late-nullable-capability-correlation-preserves-value-semantics")]
+    public void FrozenTopology_AcceptsNullableCapabilityCorrelationMetadata()
+    {
+        _ = Bus.Factory.CreateUsingInMemory(_ => { });
+        Guid expected = Guid.Parse("6472ceae-78f9-4a49-9239-21a090fc46b7");
+
+        bool found = GlobalTopologyTestDriver.TryResolveCapabilityNullableCorrelationId<LateNullableCapabilityContract>(
+            message => message.CorrelationId,
+            new LateNullableCapabilityContract(expected),
+            out Guid actual);
+
+        Assert.True(found);
+        Assert.Equal(expected, actual);
+        Assert.Throws<InvalidOperationException>(() =>
+            ApplicationMessageTopology.ExcludeFromConsumeTopology<YetAnotherLateContract>());
+    }
+
     private sealed record LateContract(Guid CorrelationId);
 
     private sealed record LateCapabilityContract(Guid CorrelationId);
 
     private sealed record AnotherLateContract(Guid CorrelationId);
+
+    private sealed record LateNullableCapabilityContract(Guid? CorrelationId);
+
+    private sealed record YetAnotherLateContract;
 }
