@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
@@ -375,16 +374,17 @@ public class InMemorySagaRepositoryContext<TSaga> :
         }
     }
 
-    /// <summary>Evaluates the supplied query and materializes the matching saga identifiers.</summary>
-    /// <param name="query">The saga predicate evaluated by the dictionary.</param>
+    /// <summary>Evaluates the supplied query and materializes the original registered identifiers of its matching membership snapshot.</summary>
+    /// <param name="query">The required saga predicate evaluated by the dictionary outside owner locks.</param>
     /// <param name="cancellationToken">The operation token, or this context's token when it cannot be cancelled.</param>
-    /// <returns>A repository query context carrying the matching identifiers and this context's payloads.</returns>
+    /// <returns>A repository query context carrying the captured identifiers and this context's payloads, even if a callback retires or replaces a snapshot member.</returns>
     public async Task<ISagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(query);
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
 
-        List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();
+        List<Guid> matchingInstances = _sagas.GetMatchingCorrelationIds(query);
 
         return new DefaultSagaRepositoryQueryContext<TSaga>(this, matchingInstances);
     }

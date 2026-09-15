@@ -1,0 +1,120 @@
+# Saga query/index checkpoint artifact bindings
+
+SHA256 bindings support SAGA_INDEX_PACKET.md; they do not imply whole-product,
+cloud/provider or externally independent acceptance. Canonical paths are relative
+to the product repository. Raw paths are relative to the explicitly owned directory
+`/private/tmp/vsb-iteration119-saga-pairing.iEltCW`. Raw files remain local artifacts;
+this committed manifest retains their identities, not their complete contents.
+Native exit codes are observed from owned process handles, not inferred solely
+from report existence. The early M00 survivor and causal failures are retained.
+
+## Canonical inputs
+
+All fifteen frozen product/test/catalogue/contract inputs match the final internal
+review's entry/exit bindings. The unchanged explicit coverage profile is additional.
+
+```text
+035823eaa435ceca70c5eddd543dd2e18ff9dc2350f2e382e4a25aa5fde31b90 src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/IndexedSagaDictionary.cs
+e3e1ee47e51382b1286cdc6e20728fd4b5d7aea01ae35e01b0d7c379b632712b src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/IndexedSagaProperty.cs
+da8891f0bd9ac5cc83ed9c8e045c032ac89c83501e15df75bd5d342dfbbbd309 src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/IIndexedSagaProperty.cs
+3478232ed66401cea9a0421bdf6f612455afa19ab12353e5074e269f94f411e9 src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/IStagedSagaIndex.cs
+9cfc5e9b9caccb1b1e931a951a1b4d6213f38e0a7b608f991ff99c7d881ee158 src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/SagaIndexRegistration.cs
+1f06f4338dfcea9c72763594031f4f57d63a14569e006455214c216719e1284b src/ViciOne.ServiceBus.Sagas/Saga/SagaQuery.cs
+e335397a6ad4b0ca0ea9024bb7c81095e1af95572c0f08566baff440c276e5e6 src/ViciOne.ServiceBus.Sagas/Sagas/ISagaQuery.cs
+25aa52f0b8ad67aa11def89b3ef28c84efe06b940435466ba03b2fd1e4d9e045 src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContext.cs
+f0f8ff667d6b1412d1f0214e20f40aa4a4e55400dcbe24336f574dcd6e80c9c4 src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContextFactory.cs
+d725da5782659678fd4d5a5bac7374bbc5d9e820d44d8554cf0fb8e4ed8cbaaf tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/IndexedSagaDictionaryTests.cs
+c8518cc8f3d83c798e400cd629a1e59a9418cab221e57e65265c92c8dc5ab87f tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/IndexedSagaPropertyTests.cs
+54b4e3c5a87011ababdf47c06743d31687eb1178d86715cdb437da16ccb57822 tests/ViciOne.ServiceBus.Tests/Saga/SagaQueryTests.cs
+e51a35b7700502a9c148bde790f90bad19421224001fda2cbb2fb2795e84d6bd tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryQueryTests.cs
+b492c5e6d50ed977503d744b5174c199eeb379e097e54fb3804e50a0e436ba21 tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json
+59ea05a49d8d99e64715ac60b79bc68f9b657948f0742fd9c3d3e972babd054b docs/api/packed-public-api.txt
+3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d tools/ci/coverage.settings.xml
+```
+
+## Raw causal and strengthened baseline observations
+
+```text
+6a1b854bba4bc9f777cf08dc275ea6f94f7266413b1794d8b62c1c3af1d86d80 index-baseline-causal-build.log
+fb2b31e0a674b8e03a554c6916974e4f9d0d956e7ab7bcb65522824314d5df81 index-baseline-causal-tests.log
+451dd63e1cac672ca0d960dcf66452148c83133c4ded02c0e41575a63f7f2de9 index-baseline-causal-results/edgar.liebold_Edgars-iMac-2_2026-09-15_11_41_11.946872.ctrf
+66d242bcf67cba9c277f3cae17ff4469eb5e2ad5c5659a796ccdaf94df731169 index-connected-boundary-causal-build.log
+2da687d9c48312e4106626be1a58e1750b294949f4f9574f8ab7ae1fb6cd9f8c index-connected-boundary-causal-tests.log
+fb2341c49277dddb4b808e03c002caa8ca7873be398d9c82892b744ba4a67d7b index-connected-boundary-causal-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_09_58.463337.ctrf
+be34e8c61dc6c7c47f1d18cc4e50799820e3524977f080c7225d7755d3d32b7d index-admission-causal-build.log
+ba295b9b11f2b683974dd2fae99292df42dabc05258a776f55a94fc0890fb25d index-admission-causal.log
+046ef38210112fa6fbb3c1f389798a025ee8a0a00ba91a85f1ba307a36abe221 index-admission-causal-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_30_17.856225.ctrf
+e805d3bdc05d44dac06ffa7eddc2a013d2dfbc10a408d61aea2b42efb0ef307a index-admission-correction-build.log
+7cad642f7fd17615613048b77729982fae194e3a7fe810c77b65ca793da00a11 index-final-expanded.log
+0e90e4c1506f7f3c1af3b1c98e83a5467fe70d58eb0b8863ee93505189d7cb79 index-final-expanded-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_31_40.619320.ctrf
+5a2a2e1e9c559ae56161dd6bb2bae25d562a6947b5e2199aae44bfd4433e14e1 index-m00-keyed-filter-gap-build.log
+55034f9266e4c18e4ba1976bf6d217731c13134178f2e0871f25a92811aab78e index-m00-keyed-filter-gap-tests.log
+b436b3adada08b3da865037958ace336b15d0896fe201d976d0ec5543043edac index-m00-keyed-filter-gap-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_21_00.289713.ctrf
+```
+
+## Raw individually strict-built actual mutations
+
+```text
+eafb06cec4c122260a9b792972aa03357e5b7713f3c061197faec4c6f812fad3 index-m00-repaired-build.log
+8942718e234eed4a8fc1f4649b41f611ed0821f2e0b67426affef497586c9e8f index-m00-repaired.log
+c71b2158b2eba0e07bd19670b755fe4d02082c8cba4c18cb1c69d6715f43d343 index-m00-repaired-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_33_18.725822.ctrf
+2384b5281c46a6a510b586b1c1d2b7a6c2c83fbc24ba413d4e627e2b352ae592 index-m01-registration-equality-build.log
+ba979340940e8dc98ec14347f2ba600952abe15987f0dc9d7895498d0a4c7418 index-m01-registration-equality.log
+43efc55877807f4731d452cc080b66755bb5b4f66e468881e6b143f8be30d285 index-m01-registration-equality-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_34_55.928783.ctrf
+c2a55229900dfbf294772a51c8b5194f69be343d5b6212a6ed33f974915a7d11 index-m02-bucket-equality-build.log
+bd2f59b449826b7e9e9dc3ffaf08fd22ba2d4c3630cb7f1e65366aa0c0ff7e25 index-m02-bucket-equality.log
+4d9d4e71758f6505e3214eacc14ce2f49ea4c7b08072a115d445f1ac1ddde666 index-m02-bucket-equality-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_35_42.429846.ctrf
+18752d2a28e9fd3eb2c893256fe4285e04934c7fc1d6b8d94446df732854d5a2 index-m03-live-removal-key-build.log
+c8269f3c68440e37ce8eaf6547082af4ee591e227aba792aa5e7ad67fc4df210 index-m03-live-removal-key.log
+7cd6872afa08b40517c47ff171addab42096b8b3564ebd379e732664f05c186e index-m03-live-removal-key-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_36_33.039965.ctrf
+81cab3a4e15a4fb9256fbda2f5a4223af9e37280049dd4d53ec2886ab2fe0f42 index-m04-mutable-key-hash-build.log
+8fdf84bb18d75c115640906114cbb4c9def0f0efeba98631e662569bf1f58d32 index-m04-mutable-key-hash.log
+2310585611e06288ea908fb38566576519d0a47f4cd3b3a9f1c9c81b481dee2c index-m04-mutable-key-hash-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_37_25.429975.ctrf
+46e215866b358d4e784cbeb1c8b46adcfaf3e3b879d52998e0364b603b0ad040 index-m05-premature-publication-build.log
+d5cac4666b672a36442ac1d7bb0259a2836381365d63d986224e71f34deb7167 index-m05-premature-publication.log
+cafa4487afd5801df967f6586c75eb2493361676dde011ec929e925e2da37306 index-m05-premature-publication-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_38_26.362563.ctrf
+bd0a979f03327d3bfa9c729ce3ec00052730a503ed6a8b38b01eec59652f0fcc index-m06-retired-reference-build.log
+2b05c9ad3a751a5e44c2996e042f0f6aef98a6679524abfa15d3e59377414b6b index-m06-retired-reference.log
+a23b4a1af53c57a1f12274a86ada28556a896640fa6b3a1e8adbb502ee7533dc index-m06-retired-reference-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_39_52.309762.ctrf
+979b70bc99a42bfeb9c80d46ed714e2b739b7b5d5421df2b04a39a62277b30bf index-m07-live-query-identifiers-build.log
+b6b690f56f12f416b8a9fe830bfe26be4dcab263e5bc7710627eed835da17f57 index-m07-live-query-identifiers.log
+8eaf4250a9539c79a8d52e215ff88b9bc63b59f747c8a72329fc65c1608df801 index-m07-live-query-identifiers-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_40_58.088275.ctrf
+770c844efb2b01ea898b883158326ff502b09027e71c70cb72bd331d0908ca45 index-m08-deferred-property-values-build.log
+2981a7a6d8c403a29bbd6770b22a27fcdbadc7dde1f3d0e521c1d6d3cdfb7450 index-m08-deferred-property-values.log
+80666aa019ac939eb50b00fd771103d88ab231fb2544905d1ed86b319c2ace9a index-m08-deferred-property-values-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_41_51.495398.ctrf
+4ccc6d670b2c114a4b5ea0e0b1fa5a18d27428c62d42e6418606d8b959e13510 index-m09-unbounded-dictionary-lease-build.log
+6224833ea83d04878a57ee4b89f63801038eb13233eaf8ce5b567e3d4d335dff index-m09-unbounded-dictionary-lease.log
+1caaefd4b513587124c79a0e5aeb71f444423ef5ecd2dd31c7ea55232510d04a index-m09-unbounded-dictionary-lease-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_42_39.775461.ctrf
+fb6cbc4a0abca90a9f3121d8df048dab7f8fbf8a7e3f19a8ae70d739dcacbcfc index-m10-folded-generic-getters-build.log
+d2d8a8885f60ceb11a23a7ed9ae3a3c3efb08a7830def20811c8c93726a6b927 index-m10-folded-generic-getters.log
+160e83ff45d94853edd3437cd237cd3cdadd9b9d8d309481a3e62b0d248fa8d9 index-m10-folded-generic-getters-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_43_19.436085.ctrf
+38ecd868a0f0f650d6c7b77ae0716109dffe6ed2460af222beba5a8ec34e715e index-m11-unconditional-query-match-build.log
+e5c34c97c147877fc9504c890acd5935e5dd0a97ea903185c40be5eba3e5b5a4 index-m11-unconditional-query-match.log
+1ca923c5185f75800aa0f3eba5b2af04f5e3411e9fe4aba281225e3de633b61e index-m11-unconditional-query-match-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_43_57.559226.ctrf
+```
+
+## Raw final restored-snapshot gates
+
+```text
+58e1c92f984c5707266ab9e1efba99b7b94ac1f625b78724acc10a78a7752235 index-post-mutation-final-build.log
+38e63cdb1284180c9b3dc9d36fb8faa81656ae3818e24fadc9e51dc78eac02a3 index-post-mutation-final-core.log
+5d25b410c0dc5d43d6d8633e436b10a78a21f272994841abb4ff38c18dce8f9a index-post-mutation-final-core-results/edgar.liebold_Edgars-iMac-2_2026-09-15_12_45_22.176389.ctrf
+fb43c7b404163bff8f0a1c1ac491eeb0762697d80482243222e62e5be11ea0fc index-post-mutation-final-core-results/index-post-mutation-final-core.cobertura.xml
+df093edb6658e6dce69dbca17325c7b1a6c8c6a4bc93830a9ef448c4af677f56 index-final-product-whitespace.log
+df093edb6658e6dce69dbca17325c7b1a6c8c6a4bc93830a9ef448c4af677f56 index-final-unit-whitespace.log
+```
+
+## Raw completed package run with unresolved contract finding
+
+The owned whole-script exit is1 at the final baseline comparison, not a success.
+All earlier pack/build/journey/isolated-consumer/reflect steps complete. The frozen
+snapshot is diagnostic evidence, not an automatically accepted or rewritten contract.
+
+```text
+9e01b8958b4536a62b60b7e9501da58292c3112cfbde6da696ebd50bc28260ff index-fresh-package-api-gate.log
+d48dc5b588c0a4b871807b18e4419a5a57f42240041c51bc43fc1f14625c6bbe index-packed-public-api.txt
+```
+
+There are16canonical and59raw bindings. The completed internal declaration review
+qualifies the57already-internal omitted type blocks; the generic-nested FormatType
+ambiguity remains an explicit assurance finding before final contract reconciliation.

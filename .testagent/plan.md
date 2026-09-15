@@ -1,5 +1,12 @@
 # A+ remediation test plan
 
+## Iteration 119 saga query/index integrity
+
+Continue from the secured ownership checkpoint using
+[the saga index packet](iteration119-saga-index-packet.md). Prove actual predicate
+evaluation, reference membership, captured-key removal, staged publication, unique
+IDs, nullable keys and safe snapshots before correction. The original goal remains.
+
 ## Iteration 119 in-memory saga ownership follow-up
 
 Follow the requirement-to-oracle and red-first correction sequence in

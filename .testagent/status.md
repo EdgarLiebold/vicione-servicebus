@@ -1,5 +1,45 @@
 # A+ remediation test status
 
+## Iteration 119 — bounded saga query/index checkpoint
+
+The original whole-product A+ goal and iteration 119 remain active. Nine source
+files are personally read in full and their changed comments manually rewritten;
+four new manually authored test files provide58methods/97cases and58exact catalogue
+tuples (2,922 total, unique). Required arguments, metadata/getter identity, nullable
+and mutable keys, exact wrapper membership, captured removal/query IDs, staged
+publication, retirement/replacement and materialized values are directly covered.
+
+Actual one-cause M00–M11 owner builds all exit0, zero warnings/errors; all12candidates
+are killed natively (twenty failed cases, zero skips), then byte-restored. M00 first
+survives the earlier30Property cases; its manual selective/false filter oracle
+closes that empirical gap and the same reinjected candidate then directly fails.
+The historical survivor is not relabeled as an original kill.
+
+Final strict build exits0, zero warnings/errors. Expanded saga:200/200; full native
+Core:4,007/4,007, zero failures/skips, all97new cases and compiled2,922tuple projection.
+Fresh explicit source-only Core graph:49,603/61,163lines (81.0997%),
+17,058/23,268branches (73.3110%). Not whole-product/cloud coverage; direct Registration
+rollback branches remain unexecuted. Scoped Product/Unit whitespace both exit0 with
+the known workspace-load warning, no writes. Internal frozen Sol reviews cause real
+corrective findings/test strengthening; final15bindings match, explicit RELEASE,
+no further concrete delta finding. Internal STATIC feedback is not external acceptance.
+
+Fresh package workflow terminates exit1 only at final API-baseline comparison;
+all31packages,18journeys,3isolated consumers and30assembly reflection complete first.
+The57omitted public type blocks are already committed internal implementations,
+confirmed by an additional internal declaration/facade mapping review. The collector
+also flattens generic nested names: a real assurance finding, not silently accepted
+with an automatic baseline rewrite. Contract reconciliation/formatter proof remain
+open. This is a verified source/test intermediate backup, not whole-gate acceptance.
+Normal commit/annotated-tag/push follow final75input/raw bindings and host termination.
+Detailed evidence is in
+[`SAGA_INDEX_PACKET.md`](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/SAGA_INDEX_PACKET.md).
+Explicit saga-acquisition cancellation/token normalization, factory unwind,
+allocation/Rollback fault paths, generic query/Undo, cross-provider cleanup,
+timer/retry/providers, complete source reading and global A+ gates remain open.
+The API-inventory finding is connected assurance work before final119acceptance;
+the original goal is neither reprioritized by the navigation question nor completed.
+
 ## Iteration 119 — bounded saga ownership checkpoint
 
 The original overall A+ goal and iteration 119 remain active. The connected

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,20 +70,23 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
         await next.SendAsync(repositoryContext).ConfigureAwait(false);
     }
 
-    /// <summary>Materializes matching identifiers under the dictionary lease and invokes the query pipeline.</summary>
+    /// <summary>Materializes matching registered snapshot identifiers under the dictionary lease and invokes the query pipeline.</summary>
     /// <typeparam name="T">The consumed message type.</typeparam>
-    /// <param name="context">The message context whose token cancels dictionary acquisition.</param>
-    /// <param name="query">The saga predicate evaluated before invoking the pipeline.</param>
-    /// <param name="next">The pipeline receiving the matching identifiers and repository operations.</param>
+    /// <param name="context">The required message context whose token cancels dictionary acquisition.</param>
+    /// <param name="query">The required saga predicate evaluated outside owner locks before invoking the pipeline.</param>
+    /// <param name="next">The required pipeline receiving captured identifiers and repository operations; later state mutation does not change those identifiers.</param>
     /// <returns>A task that completes after the pipeline returns and any remaining initial dictionary lease is disposed.</returns>
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<ISagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(next);
         await _sagas.MarkInUseAsync(context.CancellationToken).ConfigureAwait(false);
 
         using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
 
-        List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();
+        List<Guid> matchingInstances = _sagas.GetMatchingCorrelationIds(query);
 
         var queryContext = new DefaultSagaRepositoryQueryContext<TSaga, T>(repositoryContext, matchingInstances);
 

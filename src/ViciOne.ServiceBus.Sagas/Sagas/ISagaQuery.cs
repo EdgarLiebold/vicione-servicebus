@@ -3,24 +3,15 @@ using System.Linq.Expressions;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// A saga query is used when a LINQ expression is accepted to query
-/// the saga repository storage to get zero or more saga instances.
-/// </summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Supplies a predicate expression and delegate for matching actual saga state.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
 public interface ISagaQuery<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// The query expression that returns true if the saga
-    /// matches the query.
-    /// </summary>
+    /// <summary>Gets the required expression that evaluates whether the supplied state matches.</summary>
     Expression<Func<TSaga, bool>> FilterExpression { get; }
 
-    /// <summary>
-    /// Compiles a function that can be used to programatically
-    /// compare a saga instance to the filter expression.
-    /// </summary>
-    /// <returns>The filter.</returns>
+    /// <summary>Gets a non-null predicate delegate evaluated against each actual referenced state.</summary>
+    /// <returns>The matching predicate; implementations may cache its compiled delegate.</returns>
     Func<TSaga, bool> GetFilter();
 }

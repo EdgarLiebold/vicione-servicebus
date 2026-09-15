@@ -89,6 +89,22 @@ finding, and secure the coherent iteration/checkpoint without force-pushing.
   is query/index integrity; explicit saga-acquisition cancellation/token normalization,
   atomic factory unwind, generic query/Undo and cross-provider dispatch cleanup
   remain open. This is bounded checkpoint acceptance, not final119/overall A+.
+- Query/index integrity is implemented in SAGA_INDEX_PACKET.md: nine complete
+  personal source reads/manual comments,58methods/97cases and2,922catalogue tuples;
+  12individually strict-built killed/byte-restored candidates, expanded200 and full
+  Core4,007all passing, fresh explicit graph-only coverage and scoped Product/Unit
+  whitespace. The empirical initial keyed-filter survivor is repaired by a direct
+  positive/negative oracle, not concealed. Frozen internal Sol reviews have15matching
+  bindings and final RELEASE. Fresh31package/18journey/3consumer workflow reaches
+  30runtime API reflection but exits1 on committed119visibility baseline drift.
+  The newly found generic-nested FormatType truncation needs coherent naming
+  correction/direct oracles and reviewed contract reconciliation before final119
+  acceptance; the original failed gate is retained, not relabeled successful.
+  Current normal Git checkpoint is a source/test backup, not whole-gate closure.
+  Next connected work is explicit saga-acquisition cancellation/token identity and
+  factory unwind, preserving exact primary/ordered cleanup and once-only ownership.
+  Genuine allocation/Apply/Rollback paths and generic query/Undo still require their
+  own direct evidence; this checkpoint does not claim their closure or whole A+.
 - Finish broader current all-host/package/API/journey/isolated-consumer and iteration
   gates after connected corrections. Commit/tag/push checkpoints normally; never
   declare whole-product A+,100% API correctness or complete reading from this packet.

@@ -1,5 +1,12 @@
 # A+ remediation research
 
+## Iteration 119 saga query/index integrity
+
+Complete personal source reads and secured baseline establish predicate-null,
+mutable key/hash, partial getter publication and deferred-enumeration diagnostics.
+[The saga index packet](iteration119-saga-index-packet.md) distinguishes static
+advice, deliberate Greenfield semantics and the still-required causal tests.
+
 ## Iteration 119 in-memory saga ownership follow-up
 
 The unchanged remote checkpoint, full-read target inventory, static-only pairing,

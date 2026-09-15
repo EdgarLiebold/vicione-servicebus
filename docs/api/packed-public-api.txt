@@ -10662,8 +10662,8 @@ TYPE interface public ViciOne.ServiceBus.Saga.IIndexedSagaProperty<TSaga>
   METHOD public abstract System.Collections.Generic.IEnumerable<TResult> Select<TResult>(System.Func<TSaga,TResult> transformer)
   METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Saga.SagaInstance<TSaga>> Where(System.Func<TSaga,System.Boolean> filter)
   METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Saga.SagaInstance<TSaga>> Where(System.Object key, System.Func<TSaga,System.Boolean> filter)
-  METHOD public abstract System.Void Add(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> newItem)
-  METHOD public abstract System.Void Remove(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> item)
+  METHOD public abstract System.Void Add(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> instance)
+  METHOD public abstract System.Void Remove(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> instance)
   PROPERTY System.Int32 Count { public-get;  }
   PROPERTY ViciOne.ServiceBus.Saga.SagaInstance<TSaga> Item[System.Object key] { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Saga.ILoadSagaRepositoryContext<TSaga> [interfaces=ViciOne.ServiceBus.Advanced.PipeContext]
@@ -10732,7 +10732,7 @@ TYPE class public ViciOne.ServiceBus.Saga.IndexedSagaDictionary<TSaga>
   METHOD public System.Threading.Tasks.Task MarkInUseAsync(System.Threading.CancellationToken cancellationToken)
   METHOD public System.Void Add(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> instance)
   METHOD public System.Void Release()
-  METHOD public System.Void Remove(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> item)
+  METHOD public System.Void Remove(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> instance)
   PROPERTY System.Int32 Count { public-get;  }
   PROPERTY ViciOne.ServiceBus.Saga.SagaInstance<TSaga> Item[System.Guid sagaId] { public-get;  }
 TYPE class public ViciOne.ServiceBus.Saga.IndexedSagaProperty<TSaga,TProperty> [interfaces=ViciOne.ServiceBus.Saga.IIndexedSagaProperty<TSaga>]
@@ -10740,7 +10740,7 @@ TYPE class public ViciOne.ServiceBus.Saga.IndexedSagaProperty<TSaga,TProperty> [
   METHOD public virtual System.Collections.Generic.IEnumerable<TResult> Select<TResult>(System.Func<TSaga,TResult> transformer)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Saga.SagaInstance<TSaga>> Where(System.Func<TSaga,System.Boolean> filter)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Saga.SagaInstance<TSaga>> Where(System.Object key, System.Func<TSaga,System.Boolean> filter)
-  METHOD public virtual System.Void Add(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> newItem)
+  METHOD public virtual System.Void Add(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> instance)
   METHOD public virtual System.Void Remove(ViciOne.ServiceBus.Saga.SagaInstance<TSaga> instance)
   PROPERTY System.Int32 Count { public-get;  }
   PROPERTY ViciOne.ServiceBus.Saga.SagaInstance<TSaga> Item[System.Object key] { public-get;  }
