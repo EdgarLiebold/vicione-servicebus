@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Caching;
 
 /// <summary>
-/// Convenience facade over the single resource-cache engine for the common one-key transport cache case.
-/// It does not own a second cache implementation.
+/// Owns a bounded resource cache accessed through one unique primary key.
+/// Resource creation, expiration and disposal use the shared resource-cache engine.
 /// </summary>
 /// <typeparam name="TKey">The key used for lookup.</typeparam>
 /// <typeparam name="TValue">The cache-owned resource type.</typeparam>
@@ -36,45 +36,45 @@ public sealed class KeyedResourceCache<TKey, TValue> :
     /// <summary>Gets a point-in-time snapshot of cache statistics.</summary>
     public ResourceCacheStatistics Statistics => _cache.Statistics;
 
-    /// <summary>Retrieves the requested value.</summary>
+    /// <summary>Retrieves a committed resource or waits for its pending creation.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="cancellationToken">The token that cancels the lookup or pending-resource wait.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <param name="cancellationToken">The token checked before lookup and used to cancel this caller's pending-resource wait.</param>
+    /// <returns>A value task that yields the resource, or fails if the key is absent.</returns>
     public ValueTask<TValue> GetAsync(TKey key, CancellationToken cancellationToken = default)
     {
         return _index.GetAsync(key, cancellationToken);
     }
 
-    /// <summary>Gets an existing resource or creates and caches one for the key.</summary>
+    /// <summary>Gets a resource or shares one cache-owned creation for the requested key.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="cancellationToken">The token that cancels lookup, admission or pending-resource waits before commit.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <param name="factory">The factory used only when no resource or pending creation exists for the key.</param>
+    /// <param name="cancellationToken">The token that cancels this caller's capacity or resource wait without canceling shared creation.</param>
+    /// <returns>A value task that yields the resource; a creation owner also awaits its added notifications.</returns>
     public ValueTask<TValue> GetOrAddAsync(TKey key, ResourceFactory<TKey, TValue> factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);
         return _index.GetOrAddAsync(key, factory, cancellationToken);
     }
 
-    /// <summary>Removes the selected value.</summary>
+    /// <summary>Removes and releases the committed resource for the key; a pending creation is left unchanged.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="cancellationToken">The token that cancels removal before it is committed.</param>
-    /// <returns>A task that produces the remove outcome.</returns>
+    /// <param name="cancellationToken">The token checked before removal starts; it does not cancel committed resource release.</param>
+    /// <returns>A value task that yields true only when a committed resource was removed.</returns>
     public ValueTask<bool> RemoveAsync(TKey key, CancellationToken cancellationToken = default)
     {
         return _index.RemoveAsync(key, cancellationToken);
     }
 
-    /// <summary>Removes and releases every resource owned by the cache.</summary>
-    /// <param name="cancellationToken">The token that cancels clearing before removal is committed.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Removes committed resources and invalidates pending creations, awaiting their ownership release.</summary>
+    /// <param name="cancellationToken">The token checked before clearing starts; committed cleanup is not canceled by this token.</param>
+    /// <returns>A value task that completes after resource release and clear notifications.</returns>
     public ValueTask ClearAsync(CancellationToken cancellationToken = default)
     {
         return _cache.ClearAsync(cancellationToken);
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops admission, cancels cache-owned creation and awaits all operations and resource release.</summary>
+    /// <returns>A value task that observes the shared disposal outcome.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();

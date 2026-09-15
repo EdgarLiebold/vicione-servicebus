@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Caching;
 
 /// <summary>
 /// Owns the lifetime of a bounded set of asynchronous resources and any number of strongly typed indices over them.
-/// All cache and index changes are committed atomically under one short critical section. Resource creation,
-/// disposal, key projection and observer callbacks are executed outside that critical section.
+/// Resource state and its unique indexes share one synchronization boundary. Resource creation,
+/// disposal, key projection and observer callbacks execute outside that boundary.
 /// </summary>
 /// <typeparam name="TValue">The cache-owned resource type.</typeparam>
 public sealed partial class ResourceCache<TValue> :
@@ -172,7 +172,7 @@ public sealed partial class ResourceCache<TValue> :
     /// When all capacity is currently occupied by in-flight creations, this call backpressures until one completes.
     /// </summary>
     /// <param name="value">The resource whose ownership is transferred to the cache after a successful commit.</param>
-    /// <param name="cancellationToken">The token that cancels admission or capacity backpressure before commit.</param>
+    /// <param name="cancellationToken">The token checked before admission and used while waiting for pending capacity.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask AddAsync(TValue value, CancellationToken cancellationToken = default)
     {
@@ -265,7 +265,7 @@ public sealed partial class ResourceCache<TValue> :
     }
 
     /// <summary>Removes and releases every resource whose configured lifetime has expired.</summary>
-    /// <param name="cancellationToken">The token that cancels the operation before expiration is committed.</param>
+    /// <param name="cancellationToken">The token checked before cleanup starts; committed resource release is not canceled by this token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask CleanupExpiredAsync(CancellationToken cancellationToken = default)
     {
@@ -282,9 +282,9 @@ public sealed partial class ResourceCache<TValue> :
         await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Removes and releases every resource owned by the cache.</summary>
-    /// <param name="cancellationToken">The token that cancels the operation before removal is committed.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Removes committed resources and invalidates pending creations, awaiting their ownership release.</summary>
+    /// <param name="cancellationToken">The token checked before clearing starts; committed cleanup is not canceled by this token.</param>
+    /// <returns>A value task that completes after resource release and clear notifications.</returns>
     public async ValueTask ClearAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -323,8 +323,8 @@ public sealed partial class ResourceCache<TValue> :
         await NotifyClearedAsync(_lifetimeCancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops admission, cancels cache-owned creation and awaits all operations, timed cleanup and resource release.</summary>
+    /// <returns>A value task that observes the shared disposal outcome.</returns>
     public ValueTask DisposeAsync()
     {
         ThrowIfObserverMutation();

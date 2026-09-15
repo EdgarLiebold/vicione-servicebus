@@ -10,23 +10,23 @@ public interface IResourceCacheIndex<TKey, TValue>
     where TKey : notnull
     where TValue : class
 {
-    /// <summary>Retrieves the requested value.</summary>
+    /// <summary>Retrieves a committed resource or waits for its pending creation.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="cancellationToken">The token that cancels the lookup or pending-resource wait.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <param name="cancellationToken">The token checked before lookup and used to cancel this caller's pending-resource wait.</param>
+    /// <returns>A value task that yields the resource, or fails if the key is absent.</returns>
     ValueTask<TValue> GetAsync(TKey key, CancellationToken cancellationToken = default);
 
-    /// <summary>Gets an existing resource or creates and caches one for the key.</summary>
+    /// <summary>Gets a resource or shares one cache-owned creation for the requested key.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="cancellationToken">The token that cancels lookup, admission or pending-resource waits before commit.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <param name="factory">The creation factory, or null to use the factory registered with this index.</param>
+    /// <param name="cancellationToken">The token that cancels this caller's capacity or resource wait without canceling shared creation.</param>
+    /// <returns>A value task that yields the resource, or fails if the key is absent and no factory is available.</returns>
     ValueTask<TValue> GetOrAddAsync(TKey key, ResourceFactory<TKey, TValue>? factory = null,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Removes the selected value.</summary>
+    /// <summary>Removes and releases the committed resource for the key; a pending creation is left unchanged.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="cancellationToken">The token that cancels removal before it is committed.</param>
-    /// <returns>A task that produces the remove outcome.</returns>
+    /// <param name="cancellationToken">The token checked before removal starts; it does not cancel committed resource release.</param>
+    /// <returns>A value task that yields true only when a committed resource was removed.</returns>
     ValueTask<bool> RemoveAsync(TKey key, CancellationToken cancellationToken = default);
 }

@@ -1,5 +1,45 @@
 # A+ remediation test status
 
+## Iteration 127 intermediate Cache source-structure checkpoint
+
+Original whole-product A+ goal remains active. Input cabe618cae88992da2409781a5ed7e8eba001675
+and annotated iteration-126 tag are actually normally pushed and independently
+branch/tag/peeled verified. Complete authority bindings remain unchanged.
+
+Fully personally read: 17 productive Cache input files / 1,701 physical lines;
+18 final files / 1,707 lines. Four manually corrected XML-comment files and one
+exact existing base-type file split; no executable/public signature, feature,
+test, project, dependency, directive or gate change. Complete final owned review
+and exact non-XML/type-body equivalence diagnostic 0.
+
+Six Cache test files / 2,974 lines fully personally read; all 104 methods reviewed,
+105 historical and 105 fresh passed cases exactly reconciled. Cumulative Core
+owner 212/557 / 64,350 lines, 345 remaining. The connected 108-file selection is
+not complete: six read, 102 unread. No partial-owner test design/edit/admission.
+
+Fresh strict Core/Architecture Release builds: zero warnings/errors. Fresh native
+Core 4,007/4,007, Architecture 439/439, no failed/skipped/pending/other records;
+bidirectional Async naming passed. Completion is verified from actual terminal
+logs/native reports and exact processes, not invented lost wrapper exits.
+Scoped findings 0 Critical / 6 High / 1 Medium / 0 Low, all seven open. No new
+productive regression, executed mutation/kill, global coverage/CRAP or provider
+receipt is claimed. Strong existing proofs and rejected false leak are retained.
+The attempted internal Sol advisor delivers no admitted code review or independent
+acceptance. Main self-review remains openly Author-Red-Team.
+
+Initial owner inventory selection diagnostic 1 is preserved; explicit qualified
+glob/exclude restores exact Git owner membership, corrected binding diagnostic 0.
+This accounting correction is not missing code, a compiler fault or reason to clean.
+One handwritten intermediate report; normal scoped commit/tag/push/keyed remote
+verification must complete before checkpoint security is reported as achieved.
+[Detailed checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-127/CACHE_SOURCE_STRUCTURE_AND_READING_CHECKPOINT.md).
+
+Continue all 345 remaining Core inputs and exact shared/parser/GitReadSet admission,
+then causal test/product repairs and effective mutations. Sibling core/optional
+projects and Persistence/Scheduling/Transports families remain deliberate. The
+original complete-source/manual-comments/API/architecture/feature/provider/global
+coverage/CRAP goal is neither shrunk, completed nor interrupted by this checkpoint.
+
 ## Iteration 126 consume, request and native transport reading checkpoint
 
 Original whole-product A+ goal remains active. Input e6ad845133aa67550f52696c63709c5924e58f78

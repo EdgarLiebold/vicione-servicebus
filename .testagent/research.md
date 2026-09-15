@@ -1,5 +1,57 @@
 # A+ remediation research
 
+## Iteration 127 intermediate Cache source-structure and reading checkpoint
+
+Input cabe618cae88992da2409781a5ed7e8eba001675 and iteration-126 annotated tag are
+actually normally pushed and independently branch/tag/peeled verified. Complete
+authority bindings remain unchanged; the agreement is completely reread.
+
+Main fully personally reads all seventeen productive Cache input files / 1,701
+physical lines and all six Cache test files / 2,974 lines, including every member,
+fixture, helper, arrangement, assertion and comment. Four productive files receive
+manually authored functional XML corrections; the exact existing internal index
+base moves into its matching file. Final productive scope: 18 files / 1,707 lines.
+Exact non-XML/body/signature equivalence proves no executable or API change.
+No generator authors comments, tests, code, dispositions or the handwritten report.
+
+All 104 Cache methods map to 105 historical and 105 fresh native passed cases.
+Prior 206 / 61,376 plus six / 2,974 gives 212/557 / 64,350 lines; 345 remain.
+The connected 108-file reading selection is still in progress, 102 unread. No
+Core test design/edit, complete-owner admission or whole-source/A+ certification.
+
+Three High productive risks concern timer-construction ownership, creation lifetime
+commit boundaries and multi-index comparer failure/reentry. Initial caller-only
+cancellation may be intentional and must be distinguished from shared lifetime.
+One Medium concerns the minimum-age parameter's lack of independent ordinary
+expiration effect. Three High test weaknesses concern winning-token observation,
+failure-sensitive bounds/release and coverage labels for unarranged/retired
+mechanisms. All seven remain open with qualified independent acceptance criteria.
+The apparent expired-resource rejection leak is rejected after complete path
+reading: index-version invalidation releases expiration before reprojection.
+Real single-flight, independent identity/state, disposal, generation, clock,
+observer-fault isolation and outside-lock probes are retained, not blanket flagged.
+
+Fresh strict Release builds show zero warnings/errors. Native MTP reports prove
+Core 4,007/4,007, Architecture 439/439, no failed/skipped/pending/other records and
+bidirectional Async naming passed. Lost truncated wrapper outcomes are not invented
+as exit 0; process/log/native report completion avoids duplicate execution. The
+run-tests skill/detection reference guides native .NET-10 invocation. The attempted
+internal Sol advisor supplies no code review, 0/18 source reads, no credited advice
+or independent acceptance because required authority reading was not closed.
+
+The initial inventory diagnostic selects no owner paths through an unqualified
+exclude and terminates 1. All read-byte/native checks succeed. Explicit owner-
+qualified glob/exclude restores exact 557-file membership; corrected diagnostic 0.
+Preserve the failed receipt; no missing work, blind clean or SDK reinstall follows.
+
+Keep separate SDK projects as src siblings: ViciOne.ServiceBus owns only the core,
+not an umbrella. Persistence/Scheduling/Transports remain integration families.
+Actual root src has shared Directory.Build.props only, no direct C# files.
+[Detailed checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-127/CACHE_SOURCE_STRUCTURE_AND_READING_CHECKPOINT.md).
+Normal checkpoint security requires actual commit/tag/push/independent keyed refs.
+Continue the original complete-source/manual-comment, greenfield API/architecture,
+owner admission, causal test/mutation, provider, coverage/CRAP and feature goals.
+
 ## Iteration 126 complete consume, request and native transport reading
 
 Actually secured input e6ad845133aa67550f52696c63709c5924e58f78 and iteration-125

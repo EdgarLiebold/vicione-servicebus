@@ -4,27 +4,29 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Caching;
 
 /// <summary>
-/// Observes committed cache state. Observer failures never roll back or corrupt cache state.
-/// Notifications are awaited directly; no unbounded background observer queue is used.
+/// Observes committed cache changes through serialized, awaited notifications.
+/// Callback failures are logged and isolated without rolling back the committed change.
+/// Callbacks must not start resource lookups or mutations, register indexes or observers,
+/// or dispose the same cache. Statistics and committed-value snapshots remain available.
 /// </summary>
 /// <typeparam name="TValue">The observed cache-owned resource type.</typeparam>
 public interface IResourceCacheObserver<in TValue>
     where TValue : class
 {
-    /// <summary>Reports that a resource has been added to the cache.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <param name="cancellationToken">The token that signals the end of cache ownership.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Reports a resource after it has been committed to the cache and its indexes.</summary>
+    /// <param name="value">The committed cache-owned resource.</param>
+    /// <param name="cancellationToken">The cache-lifetime token, not the caller's lookup or mutation token.</param>
+    /// <returns>A value task awaited before the adding operation completes.</returns>
     ValueTask ResourceAddedAsync(TValue value, CancellationToken cancellationToken);
 
-    /// <summary>Reports that a resource has been removed from the cache.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <param name="cancellationToken">The token that signals the end of cache ownership.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Reports a removed resource before its disposal during explicit removal, expiration or capacity eviction.</summary>
+    /// <param name="value">The resource removed from the cache and its indexes.</param>
+    /// <param name="cancellationToken">The cache-lifetime token, or an uncancelable token for periodic cleanup.</param>
+    /// <returns>A value task awaited before the removed resource is disposed.</returns>
     ValueTask ResourceRemovedAsync(TValue value, CancellationToken cancellationToken);
 
-    /// <summary>Reports that the cache has been cleared.</summary>
-    /// <param name="cancellationToken">The token that signals the end of cache ownership.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Reports an explicit clear after removed resources and invalidated creations have released ownership.</summary>
+    /// <param name="cancellationToken">The cache-lifetime token, not the caller's clear token.</param>
+    /// <returns>A value task awaited before the clear operation completes.</returns>
     ValueTask CacheClearedAsync(CancellationToken cancellationToken);
 }

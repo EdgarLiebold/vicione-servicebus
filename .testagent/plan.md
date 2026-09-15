@@ -1,5 +1,32 @@
 # A+ remediation test plan
 
+## Iteration 127 intermediate Cache source-structure checkpoint
+
+1. Continue the original goal from actually remote-secured iteration 126 and
+   unchanged complete authority bindings. Preserve all earlier work/findings.
+2. Completely personally read the six Cache owning test files and seventeen
+   productive input files. Manually correct comments only after understanding
+   complete code; place the existing untyped index base in its matching file.
+3. Prove exact non-XML/body/signature equivalence and fresh strict Core/Architecture
+   builds/native execution. Review all 104 existing Cache methods; retain seven
+   open findings with calibrated independent deferred acceptance requirements.
+4. Revalidate prior readings and final bytes. Preserve the failed inventory
+   receipt and correct the owner-qualified glob exclusion, not product code.
+   Handwrite one intermediate report; no generator or partial-owner test edit.
+5. Normally secure exactly six source files, the report and three history prefixes
+   with scoped commit, annotated tag, atomic push and independent keyed refs.
+
+Cache scope fully personally read: 17 productive input files / 1,701 lines,
+18 final productive files / 1,707 lines; six test files / 2,974 lines, 104 methods,
+105 historical and fresh passed cases. Cumulative Core: 212/557 / 64,350 lines,
+345 remaining. The connected 108-file selection remains in progress, 102 unread.
+Fresh Core 4,007/4,007 and Architecture 439/439; bidirectional Async naming passed.
+0 Critical / 6 High / 1 Medium / 0 Low remain open. No owner/A+ acceptance.
+
+Continue complete connected owning inputs before new test design/change, then
+causal product/test repairs and effective mutations. This checkpoint does not
+shrink, complete or interrupt the original whole-product A+ goal.
+
 ## Iteration 126 complete consume, request and native transport reading
 
 1. Continue the original goal from remote-secured iteration 125 and unchanged
