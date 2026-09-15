@@ -1,5 +1,28 @@
 # A+ remediation test plan
 
+## Iteration 130 connected Courier/Futures/Scheduling/Retry/Harness checkpoint
+
+1. Continue the unchanged original goal from secured input
+   311a2bea237e77dad480217631a9cdeb5f0a061d; preserve all prior findings and work.
+2. Personally read 93 connected owning files completely: 22,693 physical lines,
+   every fixture/member/assertion/comment; no truncated range receives credit.
+3. Verify exact current/prior Git bytes and reconcile 523 declared method names
+   with 597 historical passed cases. Cumulative owner 407/557 / 110,523 lines;
+   150 remaining / 32,604 lines. Full owner/parser/graph admission is still open.
+4. Manually record two concrete synchronization defects and qualified proof gaps,
+   retaining strong counterexamples. Fourteen grouped findings remain open:
+   0 Critical / 9 High / 3 Medium / 2 Low. No premature new Core test design/edit.
+5. Preserve all three history tails and validate the handwritten manifest; secure
+   four owned report/history paths using normal commit/new annotated tag/atomic
+   origin push and independently keyed branch/tag-object/peeled refs.
+
+No source/test/project/dependency/code-comment change, generator, fresh duplicate
+native run, coverage/CRAP/mutation/provider/global Async or external acceptance.
+Historical iteration-128 4,007 passes remain historical. Complete remaining owner
+inputs/effective graph/data/full parser/GitReadSet, then connected remediation and
+the whole productive-src manual API/architecture/comment quality work.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-130/COURIER_FUTURES_SCHEDULING_RETRY_AND_HARNESS_READING_CHECKPOINT.md).
+
 ## Iteration 129 complete connected Core contract reading checkpoint
 
 1. Continue the original goal from actually secured input

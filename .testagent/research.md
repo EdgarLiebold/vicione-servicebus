@@ -1,5 +1,37 @@
 # A+ remediation research
 
+## Iteration 130 complete connected execution/provider/harness reads
+
+The main fully personally reads all 93 selected files / 22,693 lines, including
+25 Courier, 16 Futures, 8 Scheduling, 13 RetryPolicies, 29 Testing and two bootstrap
+inputs. Names/declarations 523 reconcile with 597 historical passed cases and exact
+input Git bytes; prior 314 / 87,830 lines remain exactly bound. Cumulative Core
+owner 407/557 / 110,523 lines, 150 / 32,604 lines remain. Full effective owner,
+language parser and GitReadSet admission still precede new Core test design/edits.
+
+Concrete test issues: unbounded snapshot-filter Thread.Join can hang on the target
+lock regression; two Task.Yield calls do not prove endpoint timeout completion.
+Async cleanup inspected without await and early-failure lifetime ownership are
+also recorded. Qualified gaps cover await/token causality, drained multiplicity,
+paired metadata, retained unrelated/mutated state, configured provider execution,
+generic extra-slot membership, variants/semantics and naming/style. Fourteen groups,
+0 Critical / 9 High / 3 Medium / 2 Low, all open; no productive defect inferred
+from selected weak assertions and no actual mutant execution claimed.
+
+Strong actual held retry callbacks, one-tick trace deadlines/constructor cleanup,
+scope/registration identity, full schedule options, compensation exhausted budget,
+all-nine supplemental variables, terminal factory stored values, saga retention
+and acquired-context registration removal are retained as adjacent counterexamples.
+No productive source/test/project/dependency/comment changes or generators occur.
+Seven authority/current-input/history bindings verify before checkpoint edits.
+No new tests/build/coverage/CRAP/cloud/provider/independent acceptance; historical
+128 native 4,007/4,007 passes and all prior findings retain actual disposition.
+
+The report and all prefixes are handwritten, preserving exact prior history bytes.
+After normal four-path security, finish remaining owner inputs and effective graph/
+parser admission, then original whole-src quality remediation without feature loss.
+[Detailed checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-130/COURIER_FUTURES_SCHEDULING_RETRY_AND_HARNESS_READING_CHECKPOINT.md).
+
 ## Iteration 129 full connected existing-contract review
 
 The main personally reads all 59 remaining files / 14,429 physical lines through
