@@ -1,5 +1,51 @@
 # A+ remediation research
 
+## Iteration 125 complete middleware, transaction and in-memory saga reading
+
+Input da77c920b0df07bf867b3858176f58b545a0ddc3 and iteration-124 annotated tag
+are actually normally pushed and independently branch/tag/peeled verified.
+Main-completely-read authority remains hash-identical. Core owner tree remains
+e3be6b831183b3b65636c3b5e167c165696037d2; productive/test scopes are unchanged.
+
+The main completely personally reads all 54 selected files / 17,659 lines:
+forty Middleware, six Transactions and eight Saga, including all nested fixtures,
+fields, helpers, data arrangements and comments. Together with the exact revalidated
+prior 92 files / 25,713 lines and no overlap, owner progress is 146/557 files /
+43,372 lines, 411 remaining. No partial-owner test design/change or Lead acceptance.
+All 392 existing methods are manually reviewed and exactly reconciled to 637
+historical passed cases; counts and native green do not replace actual reading.
+
+Four High weaknesses concern eight unasserted forwarded argument positions,
+foreign-checkpoint retained actions not arranged, failure-sensitive wait/cleanup
+bounds and virtual-time negatives based only on asynchronous task completion.
+Medium findings qualify the unrelated inner one-second request timeout and
+transaction-filter flow without its own independent commit observation. Compact
+compound outbox fixture readability is Low. All seven remain open; candidate
+regressions are not relabeled actually executed/killed mutations.
+
+Strong sibling proofs include retained rollback tails, a genuinely queued failed
+response, exact lease ownership and staged index admission, real commit/rollback,
+complete delayed-redelivery sequences after drain, exclusive 33-contender recovery,
+observed flow-control rollback and exact nested retry failure ownership. The review
+avoids blanket broad-exception, private-reflection or no-op fixture findings.
+The test-anti-patterns skill and .NET extension inform uniform causal assertions,
+isolation and async-failure review; they do not generate comments or reports.
+
+One compact manually authored packet preserves 54 sorted hash/line/method/case
+rows, exact findings and scoped positives without hundreds of duplicate method
+dispositions. Actual binary input/prior-read and historical native diagnostics
+terminate 0. UTF8 textual parsing with binary .b Git equality reuses the resolved
+diagnostic lessons; no repeated build is needed to resolve an inventory issue.
+There are no productive/test/project/gate changes or fresh native runs here.
+Iteration-123 actual Core 4,007/4,007 and Architecture 439/439 remain historical;
+genuine provider/cloud acceptance and current global coverage are not inferred.
+
+The src-root tree confirms only shared Directory.Build.props directly at root.
+Core and independent optional SDK projects remain siblings; Persistence/Scheduling/
+Transports remain integration families. No superficial move or feature deletion.
+[Detailed packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-125/MIDDLEWARE_TRANSACTION_SAGA_READING_PACKET.md).
+Security requires actual normal commit/tag/push and keyed remote verification.
+
 ## Iteration 124 complete job and reliable-messaging reading
 
 Actually secured input 10d1198187cf7ab1050351cfc0cac97489111b79 and iteration-123

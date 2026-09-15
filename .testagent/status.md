@@ -1,5 +1,40 @@
 # A+ remediation test status
 
+## Iteration 125 middleware, transaction and in-memory saga reading checkpoint
+
+Original whole-product A+ goal remains active. Input da77c920b0df07bf867b3858176f58b545a0ddc3
+and annotated iteration-124 tag are actually normally pushed and independently
+branch/tag/peeled verified. Complete authority bindings remain unchanged.
+No productive source, test, project, dependency, directive or gate changes.
+
+Main complete personal reads: 54 new files / 17,659 lines, including all methods,
+fields, nested fixtures, data arrangements, helpers and comments. Cumulative
+Core owner: 146/557 files / 43,372 lines; 411 remain. Middleware/Transactions/Saga
+selected folder scopes are complete, not the whole owner. No new Core test
+design/change or complete-owner acceptance. Every one of the 392 existing methods
+is personally reviewed and exactly reconciled to 637 passed records from the
+historical iteration-123 native report at the unchanged Core tree.
+
+Settled scoped findings: 0 Critical / 4 High / 2 Medium / 1 Low, all open.
+Independent forwarded inputs, retained work on foreign-checkpoint rejection,
+bounded failure-sensitive waits/cleanup and causal virtual-clock negatives need
+correction after admission. Nested timeout policy and actual filter-owned commit
+observation are Medium; compound test-fixture readability is Low. Candidate
+mutations are not claimed as actual kills or demonstrated productive bugs.
+Actual binding/prior-read/native-membership diagnostics terminate 0. One compact
+handwritten packet retains exact per-file accounting and qualified findings.
+No identical complete build/test replay for a reading-only evidence checkpoint.
+Security follows actual normal commit/tag/push/independent keyed observation.
+
+Continue all 411 remaining owning inputs in larger coherent packets, then exact
+independent red/green repairs, effective mutants and connected runtime/API contracts.
+Full-src personal reading/manual comments, greenfield API/type/file/folder and
+feature equivalence, all earlier findings, metadata/package baseline, genuine
+durable/provider acceptance and current whole-product line/branch coverage/CRAP
+remain in the same original goal. Keep src sibling SDK project boundaries and
+Persistence/Scheduling/Transports integration families; no project relocation.
+[Detailed packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-125/MIDDLEWARE_TRANSACTION_SAGA_READING_PACKET.md).
+
 ## Iteration 124 complete job and reliability reading checkpoint
 
 Original whole-product A+ goal remains active. Input 10d1198187cf7ab1050351cfc0cac97489111b79

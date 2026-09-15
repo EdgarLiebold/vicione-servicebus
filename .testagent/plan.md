@@ -1,5 +1,34 @@
 # A+ remediation test plan
 
+## Iteration 125 complete middleware, transaction and in-memory saga reading
+
+1. Continue the original goal from actually remote-secured iteration 124;
+   revalidate unchanged complete authority bindings and preserve all prior work.
+2. Completely personally read all 54 selected owning files, including every
+   method, field, nested fixture, data arrangement, helper and comment. Keep
+   Core test design/change deferred until complete 557-file owner admission.
+3. Manually review every existing method; settle precisely scoped weaknesses,
+   independent correction criteria, positives and actual adjacent qualifications.
+4. Revalidate all 92 prior readings and selected input bytes; reconcile every
+   selected method to the unchanged historical native report. Handwrite one
+   compact packet with exact per-file accounting rather than repetitive method
+   disposition tables. Check own whitespace/source-scope invariance; no unchanged
+   complete build/test replay for reading-only evidence.
+5. Secure exactly one packet and three history prefixes with normal commit,
+   annotated tag, atomic non-force push and independent keyed remote references.
+
+Reading/review complete: 54 new files / 17,659 lines; 392 existing methods /
+637 historical native passed cases. Cumulative Core owner: 146/557 files /
+43,372 lines, 411 remaining. All three selected folder scopes are complete,
+not the entire owner. Settled 0 Critical / 4 High / 2 Medium / 1 Low remain open.
+Actual read-binding/prior-reading/method diagnostics terminate 0. Security follows
+actual terminal commands, not future plan statements.
+
+Continue larger coherent remaining-owner reading, then exact independent test
+repairs and connected productive contracts with genuine red/green/mutations.
+All full-src/manual-comment, greenfield API/structure/feature, metadata/package,
+provider and current global coverage/CRAP objectives remain in the same goal.
+
 ## Iteration 124 larger coherent Core-owner reading packet
 
 1. Continue the original goal from actually remote-secured iteration 123 and
