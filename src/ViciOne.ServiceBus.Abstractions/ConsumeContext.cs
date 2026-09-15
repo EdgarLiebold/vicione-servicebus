@@ -132,7 +132,7 @@ public interface ConsumeContext :
     /// <param name="context">The typed context that completed successfully.</param>
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
     /// <returns>A task that represents the notification operation.</returns>
     Task NotifyConsumedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         CancellationToken cancellationToken = default)
@@ -144,7 +144,7 @@ public interface ConsumeContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
     /// <param name="exception">The consumer exception.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
     /// <returns>A task that represents the notification operation.</returns>
     Task NotifyFaultedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         Exception exception, CancellationToken cancellationToken = default)

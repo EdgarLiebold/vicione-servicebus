@@ -288,7 +288,7 @@ public abstract class BaseConsumeContext :
     /// <param name="context">The typed consume context that completed.</param>
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The diagnostic name of the consumer implementation.</param>
-    /// <param name="cancellationToken">The token that cancels observer notification.</param>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
     /// <returns>A task that completes when all receive observers have been notified.</returns>
     public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
@@ -304,7 +304,7 @@ public abstract class BaseConsumeContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The diagnostic name of the consumer implementation.</param>
     /// <param name="exception">The consumer failure.</param>
-    /// <param name="cancellationToken">The token that cancels observer notification.</param>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification after any required fault generation.</param>
     /// <returns>A task that completes when fault generation and observer notification finish.</returns>
     public virtual async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class

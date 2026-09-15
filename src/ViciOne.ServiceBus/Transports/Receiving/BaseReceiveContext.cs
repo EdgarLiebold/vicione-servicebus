@@ -123,7 +123,7 @@ public abstract class BaseReceiveContext :
     /// <param name="context">The completed consume context.</param>
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The runtime consumer type that handled the message.</param>
-    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <param name="cancellationToken">Cancels notification before delivery state changes or observers are invoked.</param>
     /// <returns>A task that completes after receive observers have been notified.</returns>
     public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
@@ -148,7 +148,7 @@ public abstract class BaseReceiveContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The runtime consumer type whose delivery failed.</param>
     /// <param name="exception">The consumer failure.</param>
-    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <param name="cancellationToken">Cancels notification before fault state changes or observers are invoked.</param>
     /// <returns>A task that completes after receive observers have been notified.</returns>
     public virtual Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
@@ -181,7 +181,7 @@ public abstract class BaseReceiveContext :
 
     /// <summary>Records a receive-pipeline failure and notifies receive observers.</summary>
     /// <param name="exception">The receive-pipeline failure.</param>
-    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <param name="cancellationToken">Cancels notification before fault state changes or observers are invoked.</param>
     /// <returns>A task that completes after receive observers have been notified.</returns>
     public virtual Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {

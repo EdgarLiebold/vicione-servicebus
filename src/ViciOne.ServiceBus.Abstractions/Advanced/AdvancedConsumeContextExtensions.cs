@@ -29,8 +29,8 @@ public static class AdvancedConsumeContextExtensions
     /// <param name="context">The consume context whose message completed successfully.</param>
     /// <param name="duration">The time spent consuming the message.</param>
     /// <param name="consumerType">The diagnostic consumer identity recorded with the notification.</param>
-    /// <param name="cancellationToken">The token that cancels observer notification.</param>
-    /// <returns>A task that completes after all consume observers have been notified.</returns>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
+    /// <returns>The notification task returned by the infrastructure consume context.</returns>
     public static Task NotifyConsumedAsync<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType,
         CancellationToken cancellationToken = default)
         where T : class
@@ -44,8 +44,8 @@ public static class AdvancedConsumeContextExtensions
     /// <param name="messageContext">The typed message context that completed successfully.</param>
     /// <param name="duration">The time spent consuming the message.</param>
     /// <param name="consumerType">The diagnostic consumer identity recorded with the notification.</param>
-    /// <param name="cancellationToken">The token that cancels observer notification.</param>
-    /// <returns>A task that completes after all consume observers have been notified.</returns>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
+    /// <returns>The notification task returned by the infrastructure consume context.</returns>
     public static Task NotifyConsumedAsync<T>(this ConsumeContext<T> context, ConsumeContext<T> messageContext, TimeSpan duration,
         string consumerType, CancellationToken cancellationToken = default)
         where T : class
@@ -59,8 +59,8 @@ public static class AdvancedConsumeContextExtensions
     /// <param name="duration">The time spent before consumption failed.</param>
     /// <param name="consumerType">The diagnostic consumer identity recorded with the notification.</param>
     /// <param name="exception">The failure raised while consuming the message.</param>
-    /// <param name="cancellationToken">The token that cancels observer notification.</param>
-    /// <returns>A task that completes after all consume observers have been notified.</returns>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
+    /// <returns>The notification task returned by the infrastructure consume context.</returns>
     public static Task NotifyFaultedAsync<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
         CancellationToken cancellationToken = default)
         where T : class
@@ -75,8 +75,8 @@ public static class AdvancedConsumeContextExtensions
     /// <param name="duration">The time spent before consumption failed.</param>
     /// <param name="consumerType">The diagnostic consumer identity recorded with the notification.</param>
     /// <param name="exception">The failure raised while consuming the message.</param>
-    /// <param name="cancellationToken">The token that cancels observer notification.</param>
-    /// <returns>A task that completes after all consume observers have been notified.</returns>
+    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
+    /// <returns>The notification task returned by the infrastructure consume context.</returns>
     public static Task NotifyFaultedAsync<T>(this ConsumeContext<T> context, ConsumeContext<T> messageContext, TimeSpan duration,
         string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class

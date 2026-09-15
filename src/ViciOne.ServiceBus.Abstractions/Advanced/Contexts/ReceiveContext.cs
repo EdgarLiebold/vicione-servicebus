@@ -47,8 +47,9 @@ public interface ReceiveContext :
     /// <param name="context">The consume context of the message.</param>
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">Cancels notification before delivery state changes or observers are invoked.</param>
     /// <returns>A task that completes after the successful delivery has been recorded and consume observers have been notified.</returns>
+    /// <remarks>Arguments are validated before cancellation. Once notification begins, delivery state remains recorded even if an observer fails.</remarks>
     Task NotifyConsumedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         CancellationToken cancellationToken = default)
         where TMessage : class;
@@ -59,16 +60,18 @@ public interface ReceiveContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
     /// <param name="exception">The consumer exception.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">Cancels notification before fault state changes or observers are invoked.</param>
     /// <returns>A task that completes after the consumer fault has been recorded and consume observers have been notified.</returns>
+    /// <remarks>Arguments are validated before cancellation. Existing consumer fault metadata is preserved, and an observer failure does not undo fault state.</remarks>
     Task NotifyFaultedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         Exception exception, CancellationToken cancellationToken = default)
         where TMessage : class;
 
     /// <summary>Records a receive-pipeline fault that occurred outside a consumer.</summary>
     /// <param name="exception">The receive exception.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">Cancels notification before fault state changes or observers are invoked.</param>
     /// <returns>A task that completes after the receive fault has been recorded and receive observers have been notified.</returns>
+    /// <remarks>The exception is validated before cancellation. Once notification begins, an observer failure does not undo fault state.</remarks>
     Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
     /// <summary>Registers work that must finish before receive processing is complete.</summary>

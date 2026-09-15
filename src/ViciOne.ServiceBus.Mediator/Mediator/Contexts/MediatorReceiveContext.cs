@@ -112,49 +112,55 @@ internal sealed class MediatorReceiveContext<TMessage> :
     public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
-        ArgumentNullException.ThrowIfNull(context);
-        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
         IsDelivered = true;
 
         context.LogConsumed(duration, consumerType);
 
-        return _observers.PostConsumeAsync(context, duration, consumerType);
+        return _observers.PostConsumeAsync(context, duration, consumerType)
+            ?? throw new InvalidOperationException("The receive observer returned no post-consume task.");
     }
 
     /// <inheritdoc />
     public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested)
-            return Task.FromCanceled(cancellationToken);
-
         ArgumentNullException.ThrowIfNull(context);
         ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
         ArgumentNullException.ThrowIfNull(exception);
+
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
         IsFaulted = true;
 
         context.LogFaulted(duration, consumerType, exception);
 
         GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
 
-        return _observers.ConsumeFaultAsync(context, duration, consumerType, exception);
+        return _observers.ConsumeFaultAsync(context, duration, consumerType, exception)
+            ?? throw new InvalidOperationException("The receive observer returned no consume-fault task.");
     }
 
     /// <inheritdoc />
     public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
-        ArgumentNullException.ThrowIfNull(exception);
         IsFaulted = true;
 
         this.LogFaulted(exception);
 
-        return _observers.ReceiveFaultAsync(this, exception);
+        return _observers.ReceiveFaultAsync(this, exception)
+            ?? throw new InvalidOperationException("The receive observer returned no receive-fault task.");
     }
 
     /// <inheritdoc />
