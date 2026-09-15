@@ -1,5 +1,45 @@
 # A+ remediation research
 
+## Iteration 124 complete job and reliable-messaging reading
+
+Actually secured input 10d1198187cf7ab1050351cfc0cac97489111b79 and iteration-123
+annotated tag are independently branch/tag/peeled verified after normal atomic
+push. Complete main authority bindings remain unchanged. Core tree remains
+e3be6b831183b3b65636c3b5e167c165696037d2.
+
+The main fully reads 45 new owning files / 11,805 lines, including forty test
+files and five standalone fixtures. Together with the revalidated prior 47
+reads, progress is 92/557 files / 25,713 lines, 465 remaining. All 51 selected
+job/reliability folder files are personally read, not the complete Core owner.
+Every existing method/helper is reviewed; 283 method declarations independently
+equal 283 historical native methods / 514 passed cases at the unchanged input.
+No partial-owner test design, modification or Lead acceptance is introduced.
+
+Four High weaknesses concern exact lifecycle serializer input, an unexecuted
+dispatcher configuration callback, failure-sensitive wait/cleanup/traversal
+bounds and zero-work duplicate admission. A disconnected default-off journal
+store is a Medium oracle weakness; compact fixture formatting is Low. All six
+remain open. Actual strong sibling assertions prevent inflated global-gap claims:
+independent serialized input, executed configuration callbacks, UUID golden vector,
+drained exact reliable event sets, deterministic custom DST and complete snapshots.
+Intentional unsupported/no-op test fixtures are not productive dummy features.
+
+This packet writes no productive source, tests, projects or gates. Agreement
+§4.3 does not require unchanged expensive full execution for reading-only progress.
+Iteration-123 actual Core 4,007/4,007 and Architecture 439/439 remain historical
+input-bound execution, not fresh runs or mutation/provider/global coverage proof.
+Binary read bindings, compatible Ruby enumeration, report membership and scoped
+diff whitespace are the proportionate current checks. All corrections/reviews
+are manually authored with apply_patch; static diagnostics never generate them.
+One initial report checker exits 1 on a UTF8 em-dash regex versus an ASCII-8BIT
+string. Explicit UTF8 report reads, while keeping Git byte comparisons binary,
+resolve the cause: final checker 0, all 45 manifest and 283 method rows match.
+Preserve its failed receipt; do not treat it as a test failure or rerun builds.
+
+The [manual manifest and scoped review](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-124/CORE_OWNER_READ_PROGRESS.md)
+preserve exact counts, hashes, findings and remaining whole-goal obligations.
+Checkpoint security requires actual normal commit/tag/push/keyed remote checks.
+
 ## Iteration 123 complete saga Core reading and outbox source
 
 Input 3bb808bc999141638b1620c4adeb5bc51ceacc86 is actually committed,

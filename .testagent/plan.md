@@ -1,5 +1,33 @@
 # A+ remediation test plan
 
+## Iteration 124 larger coherent Core-owner reading packet
+
+1. Continue the original goal from actually remote-secured iteration 123 and
+   matching complete authority bindings; preserve all prior changes/findings.
+2. Completely personally read the 45 remaining selected JobService, DurableSend,
+   MessageJournal and ReliableMessaging files, including all nested/standalone
+   fixtures. No new Core test design/change before complete 557-file admission.
+3. Manually review every existing method, calibrate weaknesses against actual
+   sibling proofs, and record exact independent correction targets as deferred.
+4. Bind the unchanged input bytes, revalidate all 47 previous readings and
+   reconcile 283 methods / 514 historical native passed cases. Check manually
+   authored reports and owned whitespace; no unchanged full build/test replay
+   for reading-only evidence. Reevaluate gates for any later code/comment change.
+5. Secure exactly two evidence files and three test-agent history prefixes with
+   normal commit, annotated tag, atomic non-force push and independent keyed refs.
+
+Personal reading/review is complete: 45 new files / 11,805 lines; cumulative
+92/557 / 25,713 lines, 465 remain. All 51 selected folder files are read.
+Settled findings 0 Critical / 4 High / 1 Medium / 1 Low remain open, with exact
+targets, positives and adjacent-proof qualifications. Input and historical
+native reconciliation diagnostics terminate 0; checkpoint security follows
+its actual terminal commands rather than this plan's future intentions.
+
+Next coherent packet continues remaining Core-owner inputs toward full admission,
+then independent test repairs, connected runtime/API contracts and selected
+effective mutations. The same complete-source/manual-comment, greenfield API/
+structure/feature, package/provider and global coverage/CRAP objectives remain.
+
 ## Iteration 123 complete saga Core reading and outbox lifecycle source
 
 1. Continue the same original whole-product goal from the actually remote-secured

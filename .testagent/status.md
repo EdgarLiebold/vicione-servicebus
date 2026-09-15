@@ -1,5 +1,38 @@
 # A+ remediation test status
 
+## Iteration 124 complete job and reliability reading checkpoint
+
+Original whole-product A+ goal remains active. Input 10d1198187cf7ab1050351cfc0cac97489111b79
+and annotated iteration-123 tag are actually normally pushed and independently
+branch/tag/peeled verified. Unchanged complete authority bindings are revalidated.
+No productive source, test, project, dependency or gate changes in this packet.
+
+Main complete personal reads: 45 new files / 11,805 lines, including every nested
+helper and five standalone fixtures. Cumulative Core owner: 92/557 files /
+25,713 lines; 465 remain. All 51 selected job/reliability folder files are read,
+not the whole owner. No new Core test design/change or complete-owner acceptance.
+All 283 existing methods are manually reviewed and independently reconciled to
+514 actual passed records from the historical iteration-123 native Core report.
+That input-bound run is not relabeled fresh iteration-124 execution.
+
+Settled scoped findings: 0 Critical / 4 High / 1 Medium / 1 Low, all open.
+Exact payload binding, executable dispatcher callback, bounded waits/cleanup/
+traversal, zero-work duplicate rejection and default-off journal observation
+need correction after complete owner admission; compact fixture formatting is Low.
+No dummy-free/global coverage/provider certificate follows from passing fixtures.
+Read-only exact bindings and historical native reconciliation terminate 0.
+Manually authored evidence and report rows are checked without replaying unchanged
+builds or the complete 4,007/439 native suites for a pure-reading checkpoint.
+Security is credited by actual normal commit/tag/push/keyed remote observation.
+
+Continue remaining owner admission, then exact independent red/green corrections,
+effective mutations and connected productive contracts. Full-src reading/manual
+comments, greenfield API/type/file/folder/feature equivalence, all earlier findings,
+metadata/package baseline, genuine durable/provider acceptance and current global
+line/branch coverage/CRAP remain in the original goal. Preserve sibling src project
+owners and Persistence/Scheduling/Transports integration families.
+[Detailed packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-124/CORE_OWNER_READ_PROGRESS.md).
+
 ## Iteration 123 saga Core-reading and outbox documentation checkpoint
 
 Original whole-product A+ goal: active. Input 3bb808bc999141638b1620c4adeb5bc51ceacc86
