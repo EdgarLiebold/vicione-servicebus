@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Stores and retrieves in memory saga data.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Stores saga state by reference and exposes message, load and query repository capabilities.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
 public class InMemorySagaRepository<TSaga> :
     ISagaRepository<TSaga>,
     IQuerySagaRepository<TSaga>,
@@ -18,7 +18,7 @@ public class InMemorySagaRepository<TSaga> :
     readonly SagaRepository<TSaga> _repository;
     readonly IndexedSagaDictionary<TSaga> _sagas;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty dictionary shared by the message, load and query repository operations.</summary>
     public InMemorySagaRepository()
     {
         _sagas = new IndexedSagaDictionary<TSaga>();
@@ -32,26 +32,26 @@ public class InMemorySagaRepository<TSaga> :
         _loadRepository = new LoadSagaRepository<TSaga>(repositoryContextFactory);
     }
 
-    /// <summary>Gets or sets the value at the specified index.</summary>
-    /// <param name="id">The id.</param>
+    /// <summary>Gets the retained saga wrapper for an identifier, or null when no wrapper is stored.</summary>
+    /// <param name="id">The saga correlation identifier.</param>
     public SagaInstance<TSaga>? this[Guid id] => _sagas[id];
 
-    /// <summary>Gets the count.</summary>
+    /// <summary>Gets the number of correlation-identifier entries in the saga dictionary.</summary>
     public int Count => _sagas.Count;
 
-    /// <summary>Loads the requested state.</summary>
-    /// <param name="correlationId">The correlation id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the load outcome.</returns>
+    /// <summary>Loads live saga state through the dictionary's load capability without acquiring a saga lease.</summary>
+    /// <param name="correlationId">The identifier of the requested saga.</param>
+    /// <param name="cancellationToken">The token that cancels the load operation.</param>
+    /// <returns>The retained state by reference, or null when the saga is absent or invalidated.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         return _loadRepository.LoadAsync(correlationId, cancellationToken);
     }
 
-    /// <summary>Finds the matching value.</summary>
-    /// <param name="query">The query.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the matching value.</returns>
+    /// <summary>Finds matching saga identifiers through the dictionary's query capability.</summary>
+    /// <param name="query">The predicate evaluated against the retained saga states.</param>
+    /// <param name="cancellationToken">The token that cancels the query operation.</param>
+    /// <returns>The matching identifiers; the saga states themselves are not copied.</returns>
     public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
         return _queryRepository.FindAsync(query, cancellationToken);

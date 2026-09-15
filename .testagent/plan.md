@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## Iteration 119 in-memory saga ownership follow-up
+
+Follow the requirement-to-oracle and red-first correction sequence in
+[the saga ownership packet](iteration119-saga-ownership-packet.md): removed-load
+lease ownership, exact-once disposal, required inputs/modes/tasks, retained state
+and cancellation semantics, and replacement-safe deletion. Record real mutation
+results only after compilable runs and exact source restoration. Wider API/code/
+provider/full-read requirements remain active rather than being narrowed to this packet.
+
 ## Iteration 1 outcome
 
 Eliminate confirmed persistence defects, silent configuration contracts, discarded cancellation tokens, mutable process-global identifier configuration, and the unimplemented Azure message-session query path without losing supported behavior.

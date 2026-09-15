@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Represents an instance of saga.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Retains saga state and coordinates exclusive use and permanent invalidation.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
 public class SagaInstance<TSaga> :
     IEquatable<SagaInstance<TSaga>>
     where TSaga : class, ISaga
@@ -16,20 +16,20 @@ public class SagaInstance<TSaga> :
     readonly object _stateLock;
     bool _isRemoved;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="instance">The instance.</param>
+    /// <summary>Retains the required saga state and creates its exclusive-use lease.</summary>
+    /// <param name="instance">The required saga state, retained without copying.</param>
     public SagaInstance(TSaga instance)
     {
-        Instance = instance;
+        Instance = instance ?? throw new ArgumentNullException(nameof(instance));
         _inUse = new SemaphoreSlim(1, 1);
         _removal = new CancellationTokenSource();
         _stateLock = new object();
     }
 
-    /// <summary>Gets the instance.</summary>
+    /// <summary>Gets the exact saga state supplied at construction.</summary>
     public TSaga Instance { get; }
 
-    /// <summary>Gets a value indicating whether the instance has been removed from its repository.</summary>
+    /// <summary>Gets whether the instance has been invalidated for further lease acquisition.</summary>
     public bool IsRemoved
     {
         get
@@ -39,9 +39,9 @@ public class SagaInstance<TSaga> :
         }
     }
 
-    /// <summary>Determines whether this instance equals the supplied value.</summary>
-    /// <param name="other">The other.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Compares the retained saga states with their default equality comparer.</summary>
+    /// <param name="other">The wrapper to compare, or <see langword="null" />.</param>
+    /// <returns>Whether both wrappers retain equal saga states.</returns>
     public bool Equals(SagaInstance<TSaga>? other)
     {
         if (ReferenceEquals(null, other))
@@ -53,9 +53,9 @@ public class SagaInstance<TSaga> :
         return EqualityComparer<TSaga>.Default.Equals(Instance, other.Instance);
     }
 
-    /// <summary>Determines whether this instance equals the supplied value.</summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Compares a wrapper of the same runtime type by its retained saga state.</summary>
+    /// <param name="obj">The object to compare, or <see langword="null" />.</param>
+    /// <returns>Whether the supplied object is an equal wrapper of the same runtime type.</returns>
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
@@ -70,16 +70,16 @@ public class SagaInstance<TSaga> :
         return Equals((SagaInstance<TSaga>)obj);
     }
 
-    /// <summary>Gets hash code.</summary>
-    /// <returns>The hash code for this instance.</returns>
+    /// <summary>Gets the retained saga state's hash code from its default equality comparer.</summary>
+    /// <returns>The saga state's current hash code.</returns>
     public override int GetHashCode()
     {
         return EqualityComparer<TSaga>.Default.GetHashCode(Instance);
     }
 
-    /// <summary>Marks in use.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Acquires exclusive use unless the caller cancels or the instance is invalidated.</summary>
+    /// <param name="cancellationToken">The token that cancels waiting for exclusive use.</param>
+    /// <returns>A task that completes with one lease requiring a matching <see cref="Release" />.</returns>
     public async Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         lock (_stateLock)
@@ -109,13 +109,14 @@ public class SagaInstance<TSaga> :
         throw CreateRemovedException();
     }
 
-    /// <summary>Releases the owned resource.</summary>
+    /// <summary>Releases exactly one lease previously acquired by the caller.</summary>
     public void Release()
     {
         _inUse.Release();
     }
 
-    /// <summary>Removes the selected value.</summary>
+    /// <summary>Invalidates the instance and rejects pending and future lease acquisitions.</summary>
+    /// <remarks>Does not release the current owner's lease or remove dictionary membership. Repeated invalidation has no additional effect.</remarks>
     public void Remove()
     {
         lock (_stateLock)

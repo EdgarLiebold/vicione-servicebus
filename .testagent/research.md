@@ -1,5 +1,13 @@
 # A+ remediation research
 
+## Iteration 119 in-memory saga ownership follow-up
+
+The unchanged remote checkpoint, full-read target inventory, static-only pairing,
+concrete ownership/input findings, process cleanup and acceptance checklist are in
+[the saga ownership packet](iteration119-saga-ownership-packet.md). No source or
+comment generator is used; query-index integrity and cross-provider read-only/
+preinsert semantics remain explicit, separate open work.
+
 ## Baseline
 
 - Product commit: `c26f7cafcba4cc6828ad46ffa0985828c01b8074`

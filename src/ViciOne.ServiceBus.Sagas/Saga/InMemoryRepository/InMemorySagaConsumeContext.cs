@@ -1,31 +1,33 @@
 using System;
+using System.Threading;
 using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Carries state for in memory saga consume operations.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Wraps a consumed message and owns one acquired in-memory saga lease.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
+/// <typeparam name="TMessage">The consumed message type.</typeparam>
 public class InMemorySagaConsumeContext<TSaga, TMessage> :
     DefaultSagaConsumeContext<TSaga, TMessage>,
     IDisposable
     where TMessage : class
     where TSaga : class, ISaga
 {
-    readonly SagaInstance<TSaga> _saga;
+    SagaInstance<TSaga>? _saga;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="saga">The saga.</param>
+    /// <summary>Takes ownership of a saga lease already acquired by the caller.</summary>
+    /// <param name="context">The required consumed-message context.</param>
+    /// <param name="saga">The required saga wrapper whose lease is transferred to this context.</param>
     public InMemorySagaConsumeContext(ConsumeContext<TMessage> context, SagaInstance<TSaga> saga)
-        : base(context, saga.Instance)
+        : base(context ?? throw new ArgumentNullException(nameof(context)),
+            (saga ?? throw new ArgumentNullException(nameof(saga))).Instance)
     {
         _saga = saga;
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <summary>Releases the transferred saga lease exactly once, including concurrent disposal.</summary>
     public void Dispose()
     {
-        _saga.Release();
+        Interlocked.Exchange(ref _saga, null)?.Release();
     }
 }

@@ -8,9 +8,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Carries state for in memory saga repository operations.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Coordinates message-specific saga operations and owns the initial dictionary lease.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
+/// <typeparam name="TMessage">The consumed message type.</typeparam>
 public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
     ISagaRepositoryContext<TSaga, TMessage>,
@@ -19,52 +19,58 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     where TMessage : class
 {
     readonly ConsumeContext<TMessage> _context;
+    readonly object _dictionaryLeaseLock = new();
     readonly ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> _factory;
     readonly IndexedSagaDictionary<TSaga> _sagas;
     bool _sagasLocked;
+    int _initialDictionaryUsers;
+    bool _initialDictionaryReleaseRequested;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="sagas">The sagas.</param>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Takes ownership of a dictionary lease already acquired by the caller.</summary>
+    /// <param name="sagas">The required dictionary whose acquired lease is transferred to this context.</param>
+    /// <param name="factory">The required factory that creates message contexts and owns their saga acquisition.</param>
+    /// <param name="context">The required consumed-message context.</param>
     public InMemorySagaRepositoryContext(IndexedSagaDictionary<TSaga> sagas, ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> factory,
         ConsumeContext<TMessage> context)
         : base(context)
     {
-        _sagas = sagas;
-        _factory = factory;
+        _sagas = sagas ?? throw new ArgumentNullException(nameof(sagas));
+        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         _context = context;
         _sagasLocked = true;
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <summary>Requests once-only release of the initial dictionary lease after its active operations finish.</summary>
+    /// <remarks>Does not wait synchronously for operations or release a lease while an operation still uses it.</remarks>
     public void Dispose()
     {
-        if (_sagasLocked)
-        {
-            _sagas.Release();
-            _sagasLocked = false;
-        }
+        ReleaseInitialDictionaryLease();
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="instance">The instance.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the add outcome.</returns>
+    /// <summary>Creates an Add-mode saga context while holding the dictionary lease.</summary>
+    /// <param name="instance">The required saga state supplied to the factory.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>The factory's consume context; successful creation requests dictionary-lease release after all active initial-lease operations finish.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(instance);
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
 
-        if (_sagasLocked)
+        if (TryRetainInitialDictionaryLease())
         {
-            SagaConsumeContext<TSaga, TMessage> consumeContext =
-                await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
-
-            _sagas.Release();
-            _sagasLocked = false;
-
-            return consumeContext;
+            bool releaseLease = false;
+            try
+            {
+                SagaConsumeContext<TSaga, TMessage> consumeContext =
+                    await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
+                releaseLease = true;
+                return consumeContext;
+            }
+            finally
+            {
+                CompleteInitialDictionaryOperation(releaseLease);
+            }
         }
 
         await _sagas.MarkInUseAsync(operationCancellationToken).ConfigureAwait(false);
@@ -78,27 +84,33 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>Inserts the supplied value.</summary>
-    /// <param name="instance">The instance.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the insert outcome.</returns>
+    /// <summary>Creates an Insert-mode context only when no saga occupies the supplied identifier.</summary>
+    /// <param name="instance">The required saga state supplied to the factory.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>The new consume context, or null for an occupied identifier without releasing an initial dictionary lease.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(instance);
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
 
-        if (_sagasLocked)
+        if (TryRetainInitialDictionaryLease())
         {
-            if (_sagas[instance.CorrelationId] != null)
-                return default;
+            bool releaseLease = false;
+            try
+            {
+                if (_sagas[instance.CorrelationId] != null)
+                    return default;
 
-            SagaConsumeContext<TSaga, TMessage> consumeContext =
-                await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
-
-            _sagas.Release();
-            _sagasLocked = false;
-
-            return consumeContext;
+                SagaConsumeContext<TSaga, TMessage> consumeContext =
+                    await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+                releaseLease = true;
+                return consumeContext;
+            }
+            finally
+            {
+                CompleteInitialDictionaryOperation(releaseLease);
+            }
         }
 
         await _sagas.MarkInUseAsync(operationCancellationToken).ConfigureAwait(false);
@@ -115,30 +127,31 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>Loads the requested state.</summary>
-    /// <param name="correlationId">The correlation id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the load outcome.</returns>
+    /// <summary>Finds a live saga and asks the factory to acquire its message consume context.</summary>
+    /// <param name="correlationId">The identifier of the requested saga.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>The acquired consume context, or null when the saga is absent or already invalidated.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
 
         SagaInstance<TSaga>? saga;
-        if (_sagasLocked)
+        if (TryRetainInitialDictionaryLease())
         {
-            saga = _sagas[correlationId];
-            if (saga == null)
-                return default;
-
-            if (saga.IsRemoved)
+            bool releaseLease = false;
+            try
             {
-                saga.Release();
-                return default;
-            }
+                saga = _sagas[correlationId];
+                if (saga == null || saga.IsRemoved)
+                    return default;
 
-            _sagas.Release();
-            _sagasLocked = false;
+                releaseLease = true;
+            }
+            finally
+            {
+                CompleteInitialDictionaryOperation(releaseLease);
+            }
         }
         else
         {
@@ -151,10 +164,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
                     return default;
 
                 if (saga.IsRemoved)
-                {
-                    saga.Release();
                     return default;
-                }
             }
             finally
             {
@@ -175,7 +185,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
                 try
                 {
                     saga = _sagas[correlationId];
-                    if (saga == null)
+                    if (saga == null || saga.IsRemoved)
                         return default;
                 }
                 finally
@@ -187,11 +197,12 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     }
 
     /// <summary>Acknowledges state already held by reference in the in-memory repository, checking operation cancellation.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The required consume context whose state is already retained by reference.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>A completed acknowledgement or a task cancelled with the selected token.</returns>
     public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         return operationCancellationToken.IsCancellationRequested
             ? Task.FromCanceled(operationCancellationToken)
@@ -199,68 +210,118 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     }
 
     /// <summary>Acknowledges the current in-memory state through the same cancellation check as saving.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The required consume context whose state is already retained by reference.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>The save acknowledgement without copying or restoring state.</returns>
     public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return SaveAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Deletes the selected entity.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Removes the saga only when the dictionary still retains the context's exact state.</summary>
+    /// <param name="context">The required consume context selecting the state to remove.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>A task that removes and invalidates the retained saga, or fails without deleting a replacement; the entered scope requests lease release on either outcome.</returns>
     public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
 
-        await _sagas.MarkInUseAsync(operationCancellationToken).ConfigureAwait(false);
+        bool initialLease = TryRetainInitialDictionaryLease();
+        if (!initialLease)
+            await _sagas.MarkInUseAsync(operationCancellationToken).ConfigureAwait(false);
         try
         {
             SagaInstance<TSaga> instance = _sagas[context.Saga.CorrelationId]
                 ?? throw new InvalidOperationException($"Saga {context.Saga.CorrelationId} was not found in the in-memory repository.");
 
+            if (!ReferenceEquals(instance.Instance, context.Saga))
+                throw new InvalidOperationException($"Saga {context.Saga.CorrelationId} was replaced in the in-memory repository.");
+
             _sagas.Remove(instance);
         }
         finally
         {
-            _sagas.Release();
+            if (initialLease)
+                CompleteInitialDictionaryOperation(releaseLease: true);
+            else
+                _sagas.Release();
         }
     }
 
-    /// <summary>Discards the current value.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Discards retained state through the same identity-checked removal as deleting.</summary>
+    /// <param name="context">The required consume context selecting the state to remove.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>The deletion task; a stale context cannot discard a replacement saga.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return DeleteAsync(context, cancellationToken: cancellationToken);
     }
 
     /// <summary>Checks operation cancellation without restoring earlier values of the referenced saga instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="context">The required consume context whose referenced state is left unchanged.</param>
+    /// <param name="cancellationToken">The operation token, or the message token when this token cannot be cancelled.</param>
+    /// <returns>A completed acknowledgement or a task cancelled with the selected token.</returns>
     public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
         return operationCancellationToken.IsCancellationRequested
             ? Task.FromCanceled(operationCancellationToken)
             : Task.CompletedTask;
     }
 
-    /// <summary>Creates saga consume context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <param name="instance">The instance.</param>
-    /// <param name="mode">The mode.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <summary>Delegates consume-context creation to this repository's configured factory.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <param name="consumeContext">The message context supplied to the factory.</param>
+    /// <param name="instance">The saga state supplied to the factory.</param>
+    /// <param name="mode">The operation mode supplied to the factory.</param>
+    /// <returns>The configured factory's consume-context task.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
         return _factory.CreateSagaConsumeContextAsync(_sagas, consumeContext, instance, mode);
+    }
+
+    void ReleaseInitialDictionaryLease()
+    {
+        lock (_dictionaryLeaseLock)
+        {
+            _initialDictionaryReleaseRequested = true;
+            ReleaseInitialDictionaryLeaseIfUnused();
+        }
+    }
+
+    bool TryRetainInitialDictionaryLease()
+    {
+        lock (_dictionaryLeaseLock)
+        {
+            if (!_sagasLocked)
+                return false;
+
+            _initialDictionaryUsers++;
+            return true;
+        }
+    }
+
+    void CompleteInitialDictionaryOperation(bool releaseLease)
+    {
+        lock (_dictionaryLeaseLock)
+        {
+            _initialDictionaryReleaseRequested |= releaseLease;
+            _initialDictionaryUsers--;
+            ReleaseInitialDictionaryLeaseIfUnused();
+        }
+    }
+
+    void ReleaseInitialDictionaryLeaseIfUnused()
+    {
+        if (_sagasLocked && _initialDictionaryReleaseRequested && _initialDictionaryUsers == 0)
+        {
+            _sagasLocked = false;
+            _sagas.Release();
+        }
     }
 
     CancellationToken GetOperationCancellationToken(CancellationToken cancellationToken) =>
@@ -268,8 +329,8 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
 }
 
 
-/// <summary>Carries state for in memory saga repository operations.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Loads referenced saga state and produces matching identifiers without owning a saga lease.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
 public class InMemorySagaRepositoryContext<TSaga> :
     BasePipeContext,
     IQuerySagaRepositoryContext<TSaga>,
@@ -278,19 +339,19 @@ public class InMemorySagaRepositoryContext<TSaga> :
 {
     readonly IndexedSagaDictionary<TSaga> _sagas;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="sagas">The sagas.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Retains the required dictionary and the callback's default cancellation token.</summary>
+    /// <param name="sagas">The required saga dictionary.</param>
+    /// <param name="cancellationToken">The token used when an operation supplies no cancellable token.</param>
     public InMemorySagaRepositoryContext(IndexedSagaDictionary<TSaga> sagas, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
-        _sagas = sagas;
+        _sagas = sagas ?? throw new ArgumentNullException(nameof(sagas));
     }
 
-    /// <summary>Loads the requested state.</summary>
-    /// <param name="correlationId">The correlation id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the load outcome.</returns>
+    /// <summary>Returns a live saga by reference under a temporary dictionary lease.</summary>
+    /// <param name="correlationId">The identifier of the requested saga.</param>
+    /// <param name="cancellationToken">The operation token, or this context's token when it cannot be cancelled.</param>
+    /// <returns>The retained state, or null for an absent or invalidated saga; no saga lease is acquired.</returns>
     public async Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);
@@ -304,10 +365,7 @@ public class InMemorySagaRepositoryContext<TSaga> :
                 return default;
 
             if (saga.IsRemoved)
-            {
-                saga.Release();
                 return default;
-            }
 
             return saga.Instance;
         }
@@ -317,10 +375,10 @@ public class InMemorySagaRepositoryContext<TSaga> :
         }
     }
 
-    /// <summary>Queries the configured data source.</summary>
-    /// <param name="query">The query.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the query outcome.</returns>
+    /// <summary>Evaluates the supplied query and materializes the matching saga identifiers.</summary>
+    /// <param name="query">The saga predicate evaluated by the dictionary.</param>
+    /// <param name="cancellationToken">The operation token, or this context's token when it cannot be cancelled.</param>
+    /// <returns>A repository query context carrying the matching identifiers and this context's payloads.</returns>
     public async Task<ISagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         CancellationToken operationCancellationToken = GetOperationCancellationToken(cancellationToken);

@@ -3,23 +3,27 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Creates in memory saga consume context instances.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Acquires an in-memory saga lease and transfers it to a message consume context.</summary>
+/// <typeparam name="TSaga">The referenced saga state type.</typeparam>
 public class InMemorySagaConsumeContextFactory<TSaga> :
     ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>Creates saga consume context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <param name="instance">The instance.</param>
-    /// <param name="mode">The mode.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <summary>Acquires the selected saga, registering new state for Add and Insert modes.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <param name="context">The required saga dictionary; Add and Insert require its operation lease to be held by the caller.</param>
+    /// <param name="consumeContext">The required message context whose token cancels saga acquisition.</param>
+    /// <param name="instance">The required state to register, or whose identifier selects an existing saga.</param>
+    /// <param name="mode">Whether to register new state or acquire an existing saga.</param>
+    /// <returns>A context owning the acquired saga lease and requiring disposal.</returns>
     public async Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(IndexedSagaDictionary<TSaga> context, ConsumeContext<T> consumeContext,
         TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(instance);
+
         SagaInstance<TSaga> sagaInstance;
         switch (mode)
         {
