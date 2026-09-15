@@ -1188,3 +1188,16 @@ This remains the loaded-assembly Core graph, not entire-product/provider coverag
 redelivery CRAP97.1061/74.4725 establishes substantial risk to address with the four open findings.
 The corrected coverage profile is handwritten; no source/test/comment generator is used.
 Another explicitly intermediate checkpoint secures this coherent tested delta before the next packet.
+
+The next coherent ownership packet adds35 meaningful causal cases against unchanged b6e
+source (all35 fail after a corrected test-only DispatchProxy visibility issue); existing76
+cases pass unchanged. The manual shared policy lifetime fixes ordinary/activity redelivery
+ownership, sole/combined cleanup identity, infrastructure admission and terminal reuse.
+Additional external-caller concurrent same-context/same-exception isolation is causally corrected.
+New35/35 and existing76/76 pass; full Core passes3,744/3,744 without skips, strict focused
+build passes zero warnings/errors, Product/Unit formatting and Git whitespace checks pass.
+The complete separate internal review accounts for41 methods/111 cases and accepts local
+axes but finds four new source-derived boundaries: scheduling/ack cancellation P1, direct
+fault-callback cancellation P2, custom-decision acquisition/publication P2, and independent
+children under an active ambient parent P2. All are accepted openly before an intermediate
+backup. No final119/full-product/A+ acceptance is claimed; the original goal continues.

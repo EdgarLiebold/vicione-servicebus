@@ -22,6 +22,36 @@ public static class RetryFilterTestFactory
         return new RetryFilter<TContext>(retryPolicy, observers);
     }
 
+    /// <summary>Creates a message redelivery filter through its pipeline contract.</summary>
+    /// <typeparam name="TMessage">The consumed message type.</typeparam>
+    /// <param name="retryPolicy">The policy that selects redelivery attempts.</param>
+    /// <param name="observer">The optional lifecycle observer.</param>
+    /// <returns>The message redelivery filter.</returns>
+    public static IFilter<ConsumeContext<TMessage>> CreateRedelivery<TMessage>(
+        IRetryPolicy retryPolicy, IRetryObserver? observer = null)
+        where TMessage : class
+    {
+        var observers = new RetryObservable();
+        if (observer != null)
+            observers.Connect(observer);
+
+        return new RedeliveryRetryFilter<ConsumeContext<TMessage>, TMessage>(retryPolicy, observers);
+    }
+
+    /// <summary>Creates an activity redelivery filter through its pipeline contract.</summary>
+    /// <param name="retryPolicy">The policy that selects redelivery attempts.</param>
+    /// <param name="observer">The optional lifecycle observer.</param>
+    /// <returns>The activity redelivery filter.</returns>
+    public static IFilter<Advanced.ActivityContext> CreateActivityRedelivery(
+        IRetryPolicy retryPolicy, IRetryObserver? observer = null)
+    {
+        var observers = new RetryObservable();
+        if (observer != null)
+            observers.Connect(observer);
+
+        return new ActivityRedeliveryRetryFilter<Advanced.ActivityContext>(retryPolicy, observers);
+    }
+
     /// <summary>Adds untyped consume state and bus-lifetime cancellation to a retry policy.</summary>
     /// <param name="retryPolicy">The retry policy to decorate.</param>
     /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
