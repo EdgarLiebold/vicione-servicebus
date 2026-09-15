@@ -11,6 +11,9 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
+    /// <summary>
+    /// Stores a state reference on the saga and resolves reads through the owning machine by state name.
+    /// </summary>
     class RawStateAccessor :
         IStateAccessor<TInstance>
     {

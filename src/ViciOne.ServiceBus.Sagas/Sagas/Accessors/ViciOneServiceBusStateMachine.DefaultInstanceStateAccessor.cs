@@ -11,10 +11,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>
-    /// The default state accessor will attempt to find and use a single State property on the
-    /// instance type. If no State property is found, or more than one is found, an exception
-    /// will be thrown.
+    /// Lazily selects the saga's single public instance property whose type is exactly
+    /// <see cref="IState"/> and which has both a getter and a setter, including non-public accessors.
     /// </summary>
+    /// <remarks>
+    /// The first read, write, predicate or probe selects the property. Selection throws a
+    /// <see cref="SagaStateMachineException"/> if no property or multiple properties qualify.
+    /// A read initializes a null state through the machine's initial-state transition behavior.
+    /// </remarks>
     class DefaultInstanceStateAccessor :
         IStateAccessor<TInstance>
     {

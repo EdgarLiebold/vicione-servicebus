@@ -1,5 +1,42 @@
 # A+ remediation test plan
 
+## Iteration 122 state-accessor source and Core-owner reading
+
+1. Reconcile the secured iteration-121 input and any changed governance binding.
+2. Continue complete personal Core-owner reading from an exact, checksum-bound
+   progress table, prioritizing the existing saga state-machine paths. Do not
+   design or edit new owning runtime tests before the full owner is admitted.
+3. Fully understand the eight related accessors/contracts/extensions. Manually
+   correct inaccurate or generic comments immediately after each complete read;
+   retain runtime and API findings rather than disguising them as documentation.
+4. Prove the exact eight-file executable/signature equivalence, obtain one
+   bounded internal read-only Sol counterreview against matched entry/exit hashes,
+   strictly build the affected existing owners, execute their unfiltered native
+   tests and verify only the changed source whitespace without writes.
+5. Bind actual outcomes and secure only the owned source/comments/reading record
+   with a normal commit, annotated tag, atomic non-force push and independent
+   reference-keyed verification. Continue the full original goal, not a smaller
+   source-comment completion target.
+
+Personal source reading and four handwritten comment repairs are complete.
+Core-owner reading is partial: 27/557 files, 7,104 personally read lines.
+The internal counterreview completely reads eight files / 517 lines, finds no
+mandatory comment correction and leaves all runtime candidates separate.
+Exact XML-only equivalence terminates 0. Strict Core and Architecture builds
+terminate 0 with zero warnings/errors (64.64s / 23.66s); native Core terminates
+0, 4,007/4,007 passed with zero failures/skips (20.439s). Source whitespace
+verification terminates 0 without output/writes. Fresh native Architecture
+terminates 0, 439/439 passed, zero failures/skips (3m33.469s), including the
+actual bidirectional Async case (174206ms). Independently parsed fresh native
+reports and persisted exact source/Core-read bindings validate actual outcomes.
+Checkpoint security follows actual commit/tag/push/reference observation.
+
+Next: finish the remaining Core-owner files from the preserved read progress,
+then address connected declaration/cache/configuration/cancellation boundaries
+in the actual owning tests with independent red/green and one-cause mutations.
+The unchanged API baseline mismatch, precise remaining metadata contracts,
+provider acceptance, full code/branch coverage and all-source A+ closure remain.
+
 ## Iteration 121 recursive member nullability
 
 1. Handwrite typed PublicApiMemberNullabilityTests against the unchanged actual

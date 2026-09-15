@@ -1,5 +1,50 @@
 # A+ remediation research
 
+## Iteration 122 state-accessor source and Core-owner reading
+
+Input e280df694ab9e6c50e3877aebf97882dfeeacb5e is actually committed,
+annotated and atomically normally pushed with the iteration-121 checkpoint tag.
+Independent reference-keyed verification matches the branch, tag object and
+peeled tag. The original whole-product A+ goal remains active.
+
+Six normative bindings and the ServiceBus slice remain hash-identical.
+DECISIONS now hashes to 43d9d6a2969e16284706e4b644de73573930cd9fe408fd8db856340849599cd4.
+The main completely reads the changed Licensing decision and surrounding current
+entries. A read-only reconstruction excluding only that new decision and its
+counter/index entries exactly matches the previously completely read
+07147cdb45bdd87950c3cd91705bd636fe7bcd08a13714ec7a874edad284627d binding.
+No selected ServiceBus rule or source authority changes.
+
+The main personally completely reads eight related state-accessor source files:
+507 input lines, 517 final lines. Four files receive manually authored XML-only
+comment repairs after understanding their complete code. An exact eight-file
+comparison excluding only XML-comment lines proves unchanged executable and
+signature bytes. Other comments are inspected, not mechanically rewritten.
+Two context files were already read in iteration 120; this is not eight new
+unique files in the whole-src census. No generator writes source or comments.
+
+Core owner e3be6b831183b3b65636c3b5e167c165696037d2 contains 557 tracked files.
+The main completes 27 personally read files / 7,104 lines, including 24 C# files,
+the project, lock file and Protobuf test input. Shared effective policies are
+read/reconciled separately. This is partial admission, not a full Core-owner
+review. No new Core test design or modification occurs before complete admission.
+Existing declaration/runtime/storage/composite/cancellation/recovery tests guide
+the connected source trace without certifying their unseen neighbors.
+
+Focused strict Core/Architecture builds terminate 0 with zero warnings/errors
+(64.64s / 23.66s); these are not a clean global warning inventory. Fresh native
+unfiltered owners terminate 0: Core 4,007/4,007 (20.439s), Architecture 439/439
+(3m33.469s), zero failures/skips. The actual bidirectional Async guard passes
+(174206ms). Exact four-source whitespace verification is 0 without output/writes.
+Both native reports independently contain their exact passed-case counts and
+no other status. Persisted source-equivalence and Core-read bindings are actual 0.
+No fresh runtime mutation, package/cloud execution or global coverage is claimed.
+
+User obligations remain verbatim: "features dürfen nicht verloren gehen";
+"ich möchte nicht, dass du einen generator nutzt"; "das gilt für den gesamten
+Quelltext unter /src !!!". The original runtime, full source-reading, coverage,
+API-metadata and provider-acceptance obligations remain open.
+
 ## Iteration 121 recursive member nullability contracts
 
 Input 197a150e35c542060e8d416a124fc93f49a3ebd9 is actually remotely secured

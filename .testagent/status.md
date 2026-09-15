@@ -1,5 +1,52 @@
 # A+ remediation test status
 
+## Iteration 122 state-accessor documentation checkpoint
+
+Original whole-product A+ goal: active. Secured input:
+e280df694ab9e6c50e3877aebf97882dfeeacb5e, annotated iteration-121 tag,
+actual atomic non-force push 0 and independent three-reference verification 0.
+The current Licensing-only decision delta is completely read and exactly
+reconciled to the previous full-read binding; the ServiceBus slice is unchanged.
+
+Main complete source reads: eight files, 507 input / 517 final lines. Four
+manual XML-comment-only repairs describe lazy exact-IState property selection,
+read-side initialization, raw name resolution, stored-state predicates and
+extension forwarding without promising unsupported cancellation behavior.
+All eight exact executable/signature comparisons terminate 0; four sources are
+unchanged. Two source neighbors were already read in iteration 120. No inflated
+new-unique-source claim, generator, API rename, body change or feature removal.
+
+Core test-owner input tree: e3be6b831183b3b65636c3b5e167c165696037d2.
+Partial main admission: 27 files / 7,104 lines of 557 tracked owner files.
+The exact checksum-bound progress table is persisted; no new Core test design,
+test change or full-owner quality acceptance is claimed. Existing full execution
+does not substitute for reading the remaining owner.
+
+One internal read-only Sol counterreview completely reads all eight exact sources
+/ 517 lines with matched supplied entry/exit SHA256; no mandatory comment fix.
+It confirms documentation and scoped type/file/folder cohesion, but leaves
+cancellation, pre-observer mutation/error ordering and late index snapshots as
+unresolved runtime candidates. It is not external/product/cloud acceptance.
+
+Strict focused Release builds: Core 0 / 64.64s and Architecture 0 / 23.66s,
+both zero warnings/errors. Fresh native unfiltered Core: 0, 4,007/4,007 passed,
+zero failures/skips / 20.439s. Its help independently exposes the native runner
+and report flags. The existing registered no-progress flag is marked deprecated;
+the subsequent Architecture invocation uses the observed modern progress off.
+Source-only whitespace verification: 0, no output and no writes.
+Fresh native unfiltered Architecture: 0, 439/439 passed, zero failures/skips
+/ 3m33.469s. Actual bidirectional Async case: passed / 174206ms. Both fresh
+reports independently contain exactly the expected passed-case records and no
+non-passed status. Persisted source-equivalence and Core-read-binding diagnostics
+terminate 0. Checkpoint security follows its own actual terminal checks.
+
+No fresh runtime mutation, package execution or whole-product coverage is claimed
+for an exactly documentation-only executable/signature-equivalent source change.
+Iteration-121's actual 9/9 selected kills and package baseline mismatch remain
+their own evidence, not relabeled new results. All connected NST/SMR findings,
+remaining Core admission, whole-src personal reading, API modernization, global
+coverage/CRAP and genuine provider acceptance remain in the original active goal.
+
 ## Iteration 121 recursive member nullability checkpoint
 
 The original whole-product A+ goal remains active. Secured input is

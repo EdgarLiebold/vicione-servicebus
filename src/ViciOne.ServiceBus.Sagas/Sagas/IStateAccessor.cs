@@ -4,27 +4,28 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Defines the operations required by state accessor.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Reads and writes a saga's current state and builds predicates for its stored representation.</summary>
+/// <typeparam name="TSaga">The saga instance type.</typeparam>
 public interface IStateAccessor<TSaga> :
     IProbeSite
     where TSaga : class, ISagaStateMachineInstance
 {
-    /// <summary>Retrieves the requested value.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Reads the current state of the saga in the behavior context.</summary>
+    /// <remarks>An accessor may initialize a missing state as part of the read.</remarks>
+    /// <param name="context">The behavior context containing the saga instance.</param>
+    /// <param name="cancellationToken">Cancellation requested for the accessor operation.</param>
+    /// <returns>A task containing the current state, or null if the accessor reports no current state.</returns>
     Task<IState<TSaga>?> GetAsync(IBehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="state">The state.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stores the supplied state for the saga in the behavior context.</summary>
+    /// <param name="context">The behavior context containing the saga instance.</param>
+    /// <param name="state">The state to store as the saga's current state.</param>
+    /// <param name="cancellationToken">Cancellation requested for the accessor operation.</param>
+    /// <returns>A task representing the state update.</returns>
     Task SetAsync(IBehaviorContext<TSaga> context, IState<TSaga> state, CancellationToken cancellationToken = default);
 
-    /// <summary>Converts a state expression to the instance current state property type.</summary>
-    /// <param name="states">The states.</param>
-    /// <returns>The state expression.</returns>
+    /// <summary>Builds a predicate that matches any supplied state using the saga's stored state representation.</summary>
+    /// <param name="states">One or more states to match.</param>
+    /// <returns>An expression that tests the saga's current state against the supplied states.</returns>
     Expression<Func<TSaga, bool>> GetStateExpression(params IState[] states);
 }
