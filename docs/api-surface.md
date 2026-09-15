@@ -81,6 +81,32 @@ functionality. Moving another project beneath the Core project would obscure ass
 and require exclusions from the SDK's recursive source inclusion. The project boundaries preserve
 optional dependencies and independently selectable package capabilities.
 
+## Pipeline payload contexts
+
+`BasePipeContext` and `ScopePipeContext` validate required cache, runtime-type and
+factory arguments before payload fast paths. A required factory cannot be null even
+when a compatible context or existing payload means it will not be invoked. Optional
+initial payload arrays can still be null or empty. Token-only Base construction keeps
+the empty cache lazily initialized; both cache-taking constructors require a cache.
+
+Scope lookup prefers the scope itself, then local payloads, then the parent. Adds and
+replacements stay in scope-local storage. Parent payloads are reused by reference,
+not cloned; storage isolation does not prevent a callback from mutating a shared object.
+
+## Test activity completion
+
+Telemetry helpers await the action and then a continuous idle period for its related
+trace. Unrelated traces do not restart that period; a newly active related span
+invalidates it. The observation timeout remains anchored to the monitor's start,
+even when spans stop close to that deadline. Queued timer callbacks recheck current
+activity and deadlines before completing the wait.
+
+The cancellation token is checked before invoking the action and cancels the later
+activity wait. It is not injected into the callback: callers must pass cancellation
+to their own messaging operation. An outer `Task.WaitAsync` timeout does not cancel
+the underlying operation; deterministic tests cancel and drain that operation before
+tearing down their harness or process-wide activity listeners.
+
 ## Preferred examples
 
 The eighteen files under `samples/DeveloperJourneys` are compiled exclusively against freshly

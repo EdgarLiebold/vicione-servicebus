@@ -15,7 +15,7 @@ public static class TelemetryActivityExtensions
     /// <param name="action">The publish operation to execute.</param>
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>A task that represents the operation and its activity wait.</returns>
     public static Task ExecuteAndWaitForIdleAsync(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task> action,
         TimeSpan? timeout = null, TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
@@ -32,7 +32,7 @@ public static class TelemetryActivityExtensions
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
     /// <param name="timeProvider">The time source used for timeout measurement.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>A task that represents the operation and its activity wait.</returns>
     public static async Task ExecuteAndWaitForIdleAsync(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task> action,
         TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
@@ -63,7 +63,7 @@ public static class TelemetryActivityExtensions
     /// <param name="action">The send operation to execute.</param>
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>A task that represents the operation and its activity wait.</returns>
     public static Task ExecuteAndWaitForIdleAsync(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task> action,
         TimeSpan? timeout = null, TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
@@ -80,7 +80,7 @@ public static class TelemetryActivityExtensions
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
     /// <param name="timeProvider">The time source used for timeout measurement.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>A task that represents the operation and its activity wait.</returns>
     public static async Task ExecuteAndWaitForIdleAsync(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task> action,
         TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
@@ -113,7 +113,7 @@ public static class TelemetryActivityExtensions
     /// <param name="action">The request operation to execute.</param>
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>The response produced by <paramref name="action" />.</returns>
     public static Task<Response<TResponse>> ExecuteAndWaitForIdleAsync<TRequest, TResponse>(this IRequestClient<TRequest> client,
         Func<IRequestClient<TRequest>, Task<Response<TResponse>>> action, TimeSpan? timeout = null, TimeSpan? idleTimeout = null,
@@ -135,7 +135,7 @@ public static class TelemetryActivityExtensions
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
     /// <param name="timeProvider">The time source used for timeout measurement.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>The response produced by <paramref name="action" />.</returns>
     public static async Task<Response<TResponse>> ExecuteAndWaitForIdleAsync<TRequest, TResponse>(this IRequestClient<TRequest> client,
         Func<IRequestClient<TRequest>, Task<Response<TResponse>>> action, TimeSpan? timeout, TimeSpan? idleTimeout,
@@ -173,7 +173,7 @@ public static class TelemetryActivityExtensions
     /// <param name="action">The request operation to execute.</param>
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>The response produced by <paramref name="action" />.</returns>
     public static Task<Response<TResponse1, TResponse2>> ExecuteAndWaitForIdleAsync<TRequest, TResponse1, TResponse2>(
         this IRequestClient<TRequest> client, Func<IRequestClient<TRequest>, Task<Response<TResponse1, TResponse2>>> action,
@@ -197,7 +197,7 @@ public static class TelemetryActivityExtensions
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
     /// <param name="timeProvider">The time source used for timeout measurement.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>The response produced by <paramref name="action" />.</returns>
     public static async Task<Response<TResponse1, TResponse2>> ExecuteAndWaitForIdleAsync<TRequest, TResponse1, TResponse2>(
         this IRequestClient<TRequest> client, Func<IRequestClient<TRequest>, Task<Response<TResponse1, TResponse2>>> action,
@@ -237,7 +237,7 @@ public static class TelemetryActivityExtensions
     /// <param name="action">The request operation to execute.</param>
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>The response produced by <paramref name="action" />.</returns>
     public static Task<Response<TResponse1, TResponse2, TResponse3>> ExecuteAndWaitForIdleAsync<TRequest, TResponse1, TResponse2, TResponse3>(
         this IRequestClient<TRequest> client, Func<IRequestClient<TRequest>, Task<Response<TResponse1, TResponse2, TResponse3>>> action,
@@ -263,7 +263,7 @@ public static class TelemetryActivityExtensions
     /// <param name="timeout">The maximum time spent observing activity.</param>
     /// <param name="idleTimeout">The required period without active spans.</param>
     /// <param name="timeProvider">The time source used for timeout measurement.</param>
-    /// <param name="cancellationToken">The token that cancels the operation and its activity wait.</param>
+    /// <param name="cancellationToken">The token checked before the action and used to cancel its subsequent activity wait.</param>
     /// <returns>The response produced by <paramref name="action" />.</returns>
     public static async Task<Response<TResponse1, TResponse2, TResponse3>> ExecuteAndWaitForIdleAsync<TRequest, TResponse1, TResponse2, TResponse3>(
         this IRequestClient<TRequest> client, Func<IRequestClient<TRequest>, Task<Response<TResponse1, TResponse2, TResponse3>>> action,

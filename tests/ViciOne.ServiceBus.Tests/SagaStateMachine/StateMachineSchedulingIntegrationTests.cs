@@ -134,6 +134,7 @@ public sealed class StateMachineSchedulingIntegrationTests
             Assert.Null(received.Exception);
             Assert.Equal(correlationId, received.Context.Message.CorrelationId);
             Assert.Equal(new ScheduleCompleted(correlationId, "expired"), result);
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaRemovalAsync(correlationId, timeout, cancellationToken));
             Assert.Null(await repository.LoadAsync(correlationId, TestContext.Current.CancellationToken));
         }
         finally

@@ -18,7 +18,10 @@ public sealed class TelemetryActivityExtensionsTests
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var receiveCompleted = new ReceiveCompletionObserver(timeProvider);
+        var receiveCompleted = new ReceiveCompletionObserver(timeProvider, idleTimeout);
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task? wait = null;
+        Exception? primaryFailure = null;
         using var harness = new InMemoryTestHarness($"telemetry-{NewId.NextGuid():N}")
         {
             TestTimeout = operationTimeout,
@@ -30,9 +33,9 @@ public sealed class TelemetryActivityExtensionsTests
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
-            Task wait = harness.Bus.ExecuteAndWaitForIdleAsync(
-                endpoint => endpoint.PublishAsync(new MonitoredMessage(NewId.NextGuid()), TestContext.Current.CancellationToken),
-                TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
+            wait = harness.Bus.ExecuteAndWaitForIdleAsync(
+                endpoint => endpoint.PublishAsync(new MonitoredMessage(NewId.NextGuid()), cancellation.Token),
+                TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: cancellation.Token);
 
             await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
@@ -49,9 +52,21 @@ public sealed class TelemetryActivityExtensionsTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Null(consumed.Exception);
         }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            throw;
+        }
         finally
         {
-            await harness.StopAsync(TestContext.Current.CancellationToken);
+            try
+            {
+                await CancelAndDrainAsync(cancellation, wait, operationTimeout, primaryFailure);
+            }
+            finally
+            {
+                await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            }
         }
     }
 
@@ -87,12 +102,14 @@ public sealed class TelemetryActivityExtensionsTests
         TimeSpan operationTimeout = OperationTimeout();
         var timeProvider = new ObservableTimeProvider(StartTime);
         using var cancellation = new CancellationTokenSource();
+        Task? wait = null;
+        Exception? primaryFailure = null;
         using var harness = new InMemoryTestHarness($"telemetry-cancel-{NewId.NextGuid():N}");
 
         await harness.StartAsync(TestContext.Current.CancellationToken);
         try
         {
-            Task wait = harness.Bus.ExecuteAndWaitForIdleAsync(_ => Task.CompletedTask, TimeSpan.FromDays(1), TimeSpan.FromDays(1),
+            wait = harness.Bus.ExecuteAndWaitForIdleAsync(_ => Task.CompletedTask, TimeSpan.FromDays(1), TimeSpan.FromDays(1),
                 timeProvider, cancellation.Token);
 
             await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
@@ -102,9 +119,21 @@ public sealed class TelemetryActivityExtensionsTests
 
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => wait.WaitAsync(operationTimeout, CancellationToken.None));
         }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            throw;
+        }
         finally
         {
-            await harness.StopAsync(TestContext.Current.CancellationToken);
+            try
+            {
+                await CancelAndDrainAsync(cancellation, wait, operationTimeout, primaryFailure);
+            }
+            finally
+            {
+                await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            }
         }
     }
 
@@ -162,7 +191,10 @@ public sealed class TelemetryActivityExtensionsTests
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var receiveCompleted = new ReceiveCompletionObserver(timeProvider);
+        var receiveCompleted = new ReceiveCompletionObserver(timeProvider, idleTimeout);
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task? wait = null;
+        Exception? primaryFailure = null;
         using var harness = new InMemoryTestHarness($"telemetry-send-{NewId.NextGuid():N}")
         {
             TestTimeout = operationTimeout,
@@ -174,9 +206,9 @@ public sealed class TelemetryActivityExtensionsTests
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
-            Task wait = harness.InputQueueSendEndpoint.ExecuteAndWaitForIdleAsync(
-                endpoint => endpoint.SendAsync(new MonitoredMessage(NewId.NextGuid()), TestContext.Current.CancellationToken),
-                TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
+            wait = harness.InputQueueSendEndpoint.ExecuteAndWaitForIdleAsync(
+                endpoint => endpoint.SendAsync(new MonitoredMessage(NewId.NextGuid()), cancellation.Token),
+                TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: cancellation.Token);
 
             await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
@@ -193,9 +225,21 @@ public sealed class TelemetryActivityExtensionsTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Null(consumed.Exception);
         }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            throw;
+        }
         finally
         {
-            await harness.StopAsync(TestContext.Current.CancellationToken);
+            try
+            {
+                await CancelAndDrainAsync(cancellation, wait, operationTimeout, primaryFailure);
+            }
+            finally
+            {
+                await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            }
         }
     }
 
@@ -207,7 +251,10 @@ public sealed class TelemetryActivityExtensionsTests
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
         var callbackCompleted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var receiveCompleted = new ReceiveCompletionObserver(timeProvider);
+        var receiveCompleted = new ReceiveCompletionObserver(timeProvider, idleTimeout, expectedReceiveCount: 2);
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task<Response<MonitoredResponse>>? wait = null;
+        Exception? primaryFailure = null;
         using var harness = new InMemoryTestHarness($"telemetry-request-{NewId.NextGuid():N}")
         {
             TestTimeout = operationTimeout,
@@ -221,14 +268,14 @@ public sealed class TelemetryActivityExtensionsTests
         {
             Guid correlationId = NewId.NextGuid();
             IRequestClient<MonitoredRequest> client = harness.CreateRequestClient<MonitoredRequest>();
-            Task<Response<MonitoredResponse>> wait = client.ExecuteAndWaitForIdleAsync(async requestClient =>
+            wait = client.ExecuteAndWaitForIdleAsync(async requestClient =>
                 {
                     Response<MonitoredResponse> response = await requestClient.GetResponseAsync<MonitoredResponse>(
                         new MonitoredRequest(correlationId),
-                        TestContext.Current.CancellationToken);
+                        cancellation.Token);
                     callbackCompleted.TrySetResult(true);
                     return response;
-                }, TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
+                }, TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: cancellation.Token);
 
             await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await callbackCompleted.Task.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
@@ -245,9 +292,21 @@ public sealed class TelemetryActivityExtensionsTests
             Assert.Equal(correlationId, response.Message.CorrelationId);
             Assert.True(await harness.Consumed.AnyAsync<MonitoredRequest>(TestContext.Current.CancellationToken));
         }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            throw;
+        }
         finally
         {
-            await harness.StopAsync(TestContext.Current.CancellationToken);
+            try
+            {
+                await CancelAndDrainAsync(cancellation, wait, operationTimeout, primaryFailure);
+            }
+            finally
+            {
+                await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            }
         }
     }
 
@@ -391,10 +450,32 @@ public sealed class TelemetryActivityExtensionsTests
         };
     }
 
-    private sealed class ReceiveCompletionObserver(ObservableTimeProvider timeProvider) : IReceiveObserver
+    private static async Task CancelAndDrainAsync(CancellationTokenSource cancellation, Task? wait,
+        TimeSpan operationTimeout, Exception? primaryFailure)
+    {
+        await cancellation.CancelAsync();
+        if (wait == null)
+            return;
+
+        try
+        {
+            await wait.WaitAsync(operationTimeout, CancellationToken.None);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+        }
+        catch (Exception cleanupFailure) when (primaryFailure != null)
+        {
+            primaryFailure.Data["MonitoringCleanupFailure"] = cleanupFailure;
+        }
+    }
+
+    private sealed class ReceiveCompletionObserver(ObservableTimeProvider timeProvider, TimeSpan idleTimeout,
+        int expectedReceiveCount = 1) : IReceiveObserver
     {
         private readonly TaskCompletionSource<Task> _idleTimerArmedAfterReceive =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _receiveCount;
 
         public Task IdleTimerArmedAfterReceive => _idleTimerArmedAfterReceive.Task.Unwrap();
 
@@ -402,8 +483,11 @@ public sealed class TelemetryActivityExtensionsTests
 
         public Task PostReceiveAsync(ReceiveContext context)
         {
-            Task nextTimerChange = timeProvider.WaitForChangeCountAsync(timeProvider.ChangeCount + 1);
-            _idleTimerArmedAfterReceive.TrySetResult(nextTimerChange);
+            if (Interlocked.Increment(ref _receiveCount) == expectedReceiveCount)
+            {
+                Task idleTimerChange = timeProvider.WaitForDueTimeAsync(idleTimeout, timeProvider.ChangeCount + 1);
+                _idleTimerArmedAfterReceive.TrySetResult(idleTimerChange);
+            }
             return Task.CompletedTask;
         }
 

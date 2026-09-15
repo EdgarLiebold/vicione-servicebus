@@ -65,14 +65,21 @@ finding, and secure the coherent iteration/checkpoint without force-pushing.
   projected cancellation-getter boundaries, not fabricated inactive internal state.
 - Close ordinary/activity redelivery constructor/probe contracts and reassess all13
   emitted gaps against current source, preserving exact counters and behavior assertions.
-- Foundation: personally read remaining payload-context/cache files and all paired
-  tests; align BasePipeContext cache-constructor null policy and ScopePipeContext
-  runtime-type null validation; manually maintain all comments at each full-file read.
+- Foundation contract packet is now implemented in CONTEXT_CONTRACT_PACKET.md:
+  Base cache/type/factory and Scope type/factory validations, expanded55cases,
+  whole Abstractions749 and four killed byte-restored mutations. Remaining
+  context/cache subclasses and their full paired tests still require personal
+  reading and manual comment/type/file/function review; this is not project closure.
 - Provider: fix actual delayed/RabbitMQ topology/publishing cancellation without
   replacing provider behavior with recording fixtures. Execute proportional real
   local-provider acceptance and document any required external/cloud authority.
 - Advance complete source/type/file/folder inventory within independent SDK project
   boundaries; do not nest independent projects inside the Core compilation tree.
+- Continue the connected saga repository/context capability review and RollingTimer
+  public disposal/restart/trigger semantics after the17-file personal read packet.
+  Saga milestone and actual activity idle/maximum/root-start defects are corrected
+  and causally/mutation-tested there; their bounded acceptance is not full architecture
+  or transactional/provider acceptance.
 - Finish broader current all-host/package/API/journey/isolated-consumer and iteration
   gates after connected corrections. Commit/tag/push checkpoints normally; never
   declare whole-product A+,100% API correctness or complete reading from this packet.

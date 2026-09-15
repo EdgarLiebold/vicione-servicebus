@@ -28,15 +28,15 @@ public class SendSagaPipe<TSaga, T> :
         _correlationId = correlationId;
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Does not add diagnostic entries for this repository continuation.</summary>
+    /// <param name="context">The supplied diagnostic scope.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Loads or pre-inserts the correlated saga, executes its policy, and applies the resulting repository action.</summary>
+    /// <param name="context">The repository context that owns saga loading and persistence.</param>
+    /// <returns>A task that completes after policy execution, repository action and consume-context disposal.</returns>
     public async Task SendAsync(ISagaRepositoryContext<TSaga, T> context)
     {
         SagaConsumeContext<TSaga, T>? sagaConsumeContext = null;

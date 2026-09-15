@@ -50,6 +50,7 @@ public abstract class BasePipeContext :
 
     /// <summary>Creates a context with a required payload cache and no cancellation.</summary>
     /// <param name="payloadCache">The cache that stores supplemental payloads.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="payloadCache" /> is <see langword="null" />.</exception>
     protected BasePipeContext(IPayloadCache payloadCache)
     {
         _payloadCache = payloadCache ?? throw new ArgumentNullException(nameof(payloadCache));
@@ -57,14 +58,15 @@ public abstract class BasePipeContext :
         CancellationToken = CancellationToken.None;
     }
 
-    /// <summary>Creates a context with a payload cache and cancellation token.</summary>
-    /// <param name="payloadCache">The supplied cache; a null value is initialized lazily on first payload access.</param>
+    /// <summary>Creates a context with a required payload cache and cancellation token.</summary>
+    /// <param name="payloadCache">The cache that stores supplemental payloads.</param>
     /// <param name="cancellationToken">The token that cancels the pipeline operation.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="payloadCache" /> is <see langword="null" />.</exception>
     protected BasePipeContext(IPayloadCache payloadCache, CancellationToken cancellationToken)
     {
         CancellationToken = cancellationToken;
 
-        _payloadCache = payloadCache;
+        _payloadCache = payloadCache ?? throw new ArgumentNullException(nameof(payloadCache));
     }
 
     /// <summary>Gets the supplied cache or atomically initializes an empty cache on first access.</summary>
@@ -88,8 +90,11 @@ public abstract class BasePipeContext :
     /// <summary>Checks whether the context itself or a cached payload is assignable to a runtime type.</summary>
     /// <param name="payloadType">The required runtime payload type.</param>
     /// <returns>Whether the context or cache provides a compatible payload.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="payloadType" /> is <see langword="null" />.</exception>
     public virtual bool HasPayloadType(Type payloadType)
     {
+        ArgumentNullException.ThrowIfNull(payloadType);
+
         return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType);
     }
 
@@ -113,9 +118,12 @@ public abstract class BasePipeContext :
     /// <typeparam name="T">The required payload type.</typeparam>
     /// <param name="payloadFactory">Creates the cached payload when no compatible value exists.</param>
     /// <returns>The context itself or the existing or newly cached payload.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="payloadFactory" /> is <see langword="null" />, even when a compatible value exists.</exception>
     public virtual T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(payloadFactory);
+
         if (this is T context)
             return context;
 
@@ -127,9 +135,13 @@ public abstract class BasePipeContext :
     /// <param name="addFactory">Creates the cached payload when none exists.</param>
     /// <param name="updateFactory">Replaces a compatible existing cached payload.</param>
     /// <returns>The context itself or the resulting cached payload.</returns>
+    /// <exception cref="ArgumentNullException">Either factory is <see langword="null" />, even when the context itself is compatible.</exception>
     public virtual T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(addFactory);
+        ArgumentNullException.ThrowIfNull(updateFactory);
+
         if (this is T context)
             return context;
 

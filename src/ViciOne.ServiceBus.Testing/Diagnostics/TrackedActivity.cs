@@ -1,26 +1,30 @@
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-class TrackedActivity :
+/// <summary>Waits for a completed action's trace to remain idle, bounded by its original observation deadline.</summary>
+sealed class TrackedActivity :
     IDisposable
 {
     static readonly ActivitySource _source = new ActivitySource("ViciOne.ServiceBus.Testing.Monitor");
 
+    readonly HashSet<string> _activeSpans = new HashSet<string>(StringComparer.Ordinal);
     readonly TaskCompletionSource<bool> _completed;
     readonly TimeSpan _idleTimeout;
     readonly ActivityListener _listener;
+    readonly object _lock = new object();
+    readonly long _startedTimestamp;
     readonly Activity? _testActivity;
     readonly TimeSpan _timeout;
+    readonly TimeProvider _timeProvider;
     readonly RollingTimer _timer;
-    readonly TraceInfo _traceInfo;
-    int _disposed;
+    bool _actionCompleted;
+    bool _disposed;
+    TimeSpan? _idleSince;
 
     public TrackedActivity(string? methodName, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
     {
@@ -31,6 +35,9 @@ class TrackedActivity :
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(_timeout, TimeSpan.Zero, nameof(timeout));
 
         _completed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _timeProvider = timeProvider;
+        _startedTimestamp = timeProvider.GetTimestamp();
+        _timer = new RollingTimer(OnTimeout, _timeout, this, timeProvider);
 
         _listener = new ActivityListener
         {
@@ -40,16 +47,21 @@ class TrackedActivity :
             ActivityStopped = ActivityStopped
         };
 
-        ActivitySource.AddActivityListener(_listener);
+        try
+        {
+            ActivitySource.AddActivityListener(_listener);
+            _testActivity = _source.CreateActivity($"{methodName ?? "test"} process", ActivityKind.Internal)
+                ?? throw new InvalidOperationException("The test activity could not be started.");
+            _testActivity.Start();
 
-        _traceInfo = new TraceInfo { StartTime = timeProvider.GetUtcNow() };
-        _testActivity = _source.StartActivity($"{methodName ?? "test"} process");
-        if (_testActivity == null)
-            throw CreateActivityUnavailableException(_listener);
-        _traceInfo.StartTime = _testActivity.StartTimeUtc;
-
-        _timer = new RollingTimer(OnTimeout, _timeout, this, timeProvider);
-        _timer.Start();
+            lock (_lock)
+                ScheduleTimer(_timeProvider.GetElapsedTime(_startedTimestamp));
+        }
+        catch
+        {
+            Dispose();
+            throw;
+        }
     }
 
     public ActivityTraceId TraceId => _testActivity?.TraceId
@@ -57,13 +69,23 @@ class TrackedActivity :
 
     public void StopWaiting()
     {
-        _completed.TrySetResult(true);
+        lock (_lock)
+            _completed.TrySetResult(true);
     }
 
     public void ActionCompleted()
     {
-        if (_traceInfo.Spans.All(x => x.Value.Completed))
-            _timer.Restart(_idleTimeout);
+        lock (_lock)
+        {
+            if (_disposed || _completed.Task.IsCompleted || _actionCompleted)
+                return;
+
+            _actionCompleted = true;
+            TimeSpan elapsed = _timeProvider.GetElapsedTime(_startedTimestamp);
+            if (_activeSpans.Count == 0)
+                _idleSince = elapsed;
+            ScheduleTimer(elapsed);
+        }
     }
 
     public async Task WaitForCompletionAsync(CancellationToken cancellationToken = default)
@@ -74,18 +96,40 @@ class TrackedActivity :
 
     public void Dispose()
     {
-        if (Interlocked.Exchange(ref _disposed, 1) != 0)
-            return;
+        lock (_lock)
+        {
+            if (_disposed)
+                return;
 
-        _testActivity?.Stop();
-        _testActivity?.Dispose();
-        _listener.Dispose();
-        _timer.Dispose();
+            _disposed = true;
+            _activeSpans.Clear();
+            _completed.TrySetResult(true);
+        }
+
+        try
+        {
+            _testActivity?.Dispose();
+        }
+        finally
+        {
+            try
+            {
+                _listener.Dispose();
+            }
+            finally
+            {
+                _timer.Dispose();
+            }
+        }
     }
 
     void OnTimeout(object? state)
     {
-        _completed.TrySetResult(true);
+        lock (_lock)
+        {
+            if (!_disposed && !_completed.Task.IsCompleted)
+                ScheduleTimer(_timeProvider.GetElapsedTime(_startedTimestamp));
+        }
     }
 
     static ActivitySamplingResult Sample(ref ActivityCreationOptions<System.Diagnostics.ActivityContext> options)
@@ -95,80 +139,54 @@ class TrackedActivity :
 
     void ActivityStarted(Activity activity)
     {
-        if (!ReferenceEquals(activity, _testActivity))
-            GetSpan(activity);
+        lock (_lock)
+        {
+            if (_disposed || _completed.Task.IsCompleted || !IsRelatedSpan(activity)
+                || activity.Id is not string spanId || !_activeSpans.Add(spanId))
+                return;
+
+            _idleSince = null;
+            ScheduleTimer(_timeProvider.GetElapsedTime(_startedTimestamp));
+        }
     }
 
     void ActivityStopped(Activity activity)
     {
-        if (ReferenceEquals(activity, _testActivity))
-            return;
+        lock (_lock)
+        {
+            if (_disposed || _completed.Task.IsCompleted || !IsRelatedSpan(activity)
+                || activity.Id is not string spanId || !_activeSpans.Remove(spanId))
+                return;
 
-        var span = GetSpan(activity);
-        if (span != null)
-            span.Completed = true;
-
-        if (_traceInfo.Spans.All(x => x.Value.Completed))
-            _timer.Restart(_idleTimeout);
+            if (_actionCompleted && _activeSpans.Count == 0)
+            {
+                TimeSpan elapsed = _timeProvider.GetElapsedTime(_startedTimestamp);
+                _idleSince = elapsed;
+                ScheduleTimer(elapsed);
+            }
+        }
     }
 
-    SpanInfo? GetSpan(Activity activity)
+    bool IsRelatedSpan(Activity activity)
     {
-        var traceId = activity.RootId ?? "";
-        if (traceId != _testActivity?.RootId)
-            return null;
+        return _testActivity != null && !ReferenceEquals(activity, _testActivity)
+            && string.Equals(activity.RootId, _testActivity.RootId, StringComparison.Ordinal);
+    }
 
-        var span = _traceInfo.Spans.GetOrAdd(activity.Id ?? "", id => new SpanInfo
+    // Called only while holding _lock; queued callbacks must recheck the current trace state and deadlines.
+    void ScheduleTimer(TimeSpan elapsed)
+    {
+        TimeSpan remaining = _timeout - elapsed;
+        if (_actionCompleted && _activeSpans.Count == 0 && _idleSince.HasValue)
         {
-            SpanId = id,
-            ParentId = activity.ParentId,
-            StartTime = activity.StartTimeUtc,
-            OperationName = activity.OperationName,
-            Activity = activity,
-        });
-
-        if (activity.Duration > TimeSpan.Zero)
-        {
-            span.Duration = activity.Duration;
-
-            var traceDuration = activity.StartTimeUtc - _traceInfo.StartTime + activity.Duration;
-
-            if (traceDuration > _traceInfo.Duration)
-                _traceInfo.Duration = traceDuration;
+            TimeSpan idleRemaining = _idleTimeout - (elapsed - _idleSince.Value);
+            if (idleRemaining < remaining)
+                remaining = idleRemaining;
         }
 
-        return span;
-    }
-
-    static InvalidOperationException CreateActivityUnavailableException(ActivityListener listener)
-    {
-        listener.Dispose();
-        return new InvalidOperationException("The test activity could not be started.");
-    }
-
-
-    sealed class TraceInfo
-    {
-        public TraceInfo()
-        {
-            Spans = new ConcurrentDictionary<string, SpanInfo>();
-        }
-
-        public DateTimeOffset StartTime { get; set; }
-        public TimeSpan Duration { get; set; }
-
-        public ConcurrentDictionary<string, SpanInfo> Spans { get; set; }
-    }
-
-
-    sealed class SpanInfo
-    {
-        public string? SpanId { get; set; }
-        public DateTimeOffset StartTime { get; set; }
-        public TimeSpan Duration { get; set; }
-        public string? ParentId { get; set; }
-        public string? OperationName { get; set; }
-        public Activity? Activity { get; set; }
-        public bool Completed { get; set; }
+        if (remaining <= TimeSpan.Zero)
+            _completed.TrySetResult(true);
+        else
+            _timer.Restart(remaining);
     }
 }

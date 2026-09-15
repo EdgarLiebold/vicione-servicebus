@@ -186,7 +186,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>Persists the current state.</summary>
+    /// <summary>Acknowledges state already held by reference in the in-memory repository, checking operation cancellation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -198,7 +198,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             : Task.CompletedTask;
     }
 
-    /// <summary>Updates the current value.</summary>
+    /// <summary>Acknowledges the current in-memory state through the same cancellation check as saving.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -239,7 +239,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         return DeleteAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reverts the current operation.</summary>
+    /// <summary>Checks operation cancellation without restoring earlier values of the referenced saga instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

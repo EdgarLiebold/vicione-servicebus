@@ -13,6 +13,7 @@ internal sealed class ObservableTimeProvider(
     private readonly object _lock = new();
     private readonly Dictionary<int, TaskCompletionSource<bool>> _changeWaiters = [];
     private readonly Dictionary<int, TaskCompletionSource<bool>> _timerWaiters = [];
+    private readonly Dictionary<(TimeSpan DueTime, int MinimumChangeCount), TaskCompletionSource<bool>> _dueTimeWaiters = [];
     private int _activeTimerCount;
     private int _changeCount;
     private int _timerCount;
@@ -130,6 +131,26 @@ internal sealed class ObservableTimeProvider(
         }
     }
 
+    public Task WaitForDueTimeAsync(TimeSpan dueTime, int minimumChangeCount)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(minimumChangeCount);
+
+        lock (_lock)
+        {
+            if (_changeCount >= minimumChangeCount && _lastDueTime == dueTime)
+                return Task.CompletedTask;
+
+            var key = (dueTime, minimumChangeCount);
+            if (!_dueTimeWaiters.TryGetValue(key, out TaskCompletionSource<bool>? waiter))
+            {
+                waiter = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _dueTimeWaiters.Add(key, waiter);
+            }
+
+            return waiter.Task;
+        }
+    }
+
     private void TimerDisposed() => Interlocked.Decrement(ref _activeTimerCount);
 
     private void TimerChanged(TimeSpan dueTime)
@@ -142,10 +163,17 @@ internal sealed class ObservableTimeProvider(
             completedWaiters = _changeWaiters
                 .Where(waiter => waiter.Key <= _changeCount)
                 .Select(waiter => waiter.Value)
+                .Concat(_dueTimeWaiters
+                    .Where(waiter => waiter.Key.MinimumChangeCount <= _changeCount && waiter.Key.DueTime == dueTime)
+                    .Select(waiter => waiter.Value))
                 .ToArray();
 
             foreach (int completedCount in _changeWaiters.Keys.Where(count => count <= _changeCount).ToArray())
                 _changeWaiters.Remove(completedCount);
+
+            foreach (var completedKey in _dueTimeWaiters.Keys
+                         .Where(key => key.MinimumChangeCount <= _changeCount && key.DueTime == dueTime).ToArray())
+                _dueTimeWaiters.Remove(completedKey);
         }
 
         foreach (TaskCompletionSource<bool> waiter in completedWaiters)

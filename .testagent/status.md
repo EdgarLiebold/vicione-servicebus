@@ -1267,3 +1267,28 @@ Final restored build/full Core3,820 rerun passes again, zero skip. All raw hashe
 byte-verified,2,827 requirement tuples unique, Git whitespace clean. Final declared
 method audit corrects the early25/69 estimate to actual24/68; no test dropped/skipped.
 This bounded packet is validated; the original autonomous A+ goal stays active.
+
+The connected context/activity packet adds17 manual foundation methods/53 cases:
+unchanged Base30cases22pass8fail, Scope22cases15pass7fail, then expanded55/55 and
+full Abstractions749/749. Required cache/type/factory inputs reject null before
+self/local/parent paths; optional payload construction, identity and local storage
+isolation remain. First internal review's absent-add isolation gap is closed with
+success and thrown/null recovery oracles. Full Core uncovers a real saga-removal
+test milestone gap, then a leaked fake-clock telemetry operation and tracker idle/
+maximum-duration defects. Four controlled tracker tests fail causally; a repeated
+review's root-start callback child also fails causally and is corrected by assigning
+CreateActivity before Start. Eight manual tracker methods/cases and all30 telemetry
+cases pass. Nine independent compilable context/saga/tracker mutations kill exactly
+1/2/3/3/1/1/1/1/1cases and are independently byte-restored before final builds.
+Final strict Core/Abstractions builds pass zero warnings/errors; full3,828/749 pass
+without skips; Product/Unit targeted format exits0 unchanged with known load warning.
+All25 source/report hashes are byte-verified,2,835/555 requirement tuples unique.
+Native loaded Core graph80.9891%line/73.0589%branch and separate Abstractions
+64.1757%line/62.1829%branch overlap: neither is entire-product/provider coverage,
+and no new CRAP analysis is claimed. Lead personally reads17 runtime files and
+manually updates functional comments. Independent SDK project siblings and provider
+families remain intentional;33sourceprojects, no loose root C# files. Internal Sol
+reviews explicitly release; no external product acceptance or source/test/comment
+generator. Foundation contract boundaries close, while broader subclass/source,
+retry/provider/saga/rolling-timer architecture and wider119 gates remain explicit.
+The original autonomous A+ goal stays active through this validated checkpoint.
