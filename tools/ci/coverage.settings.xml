@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <IncludeTestAssembly>False</IncludeTestAssembly>
+  <CodeCoverage>
+    <SkipAutoProperties>False</SkipAutoProperties>
+    <Attributes mergeDefaults="False">
+      <Exclude />
+    </Attributes>
+    <Sources mergeDefaults="False">
+      <Include>
+        <Source>.*[/\\]src[/\\].*</Source>
+      </Include>
+      <Exclude />
+    </Sources>
+  </CodeCoverage>
+</Configuration>

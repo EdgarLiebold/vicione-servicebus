@@ -1162,3 +1162,29 @@ or present business fault state while an observer error escapes. The finding is 
 nested synchronous, faulted-task, pending, projection, and operation-lifetime evidence before
 final acceptance. The work is secured in a second intermediate checkpoint, not a completed-iteration
 or release-readiness tag. The same overall goal and Iteration119 continue.
+
+The second intermediate commit and tag are verified remotely at
+2968483f0a085cbb9a8362a8d6828b5c84dd9654. All 15 new nested lifecycle cases fail against
+that unchanged source; the previous 35 cases pass. A scoped exact-exception payload and
+operation-lifetime lease correction compiles cleanly and passes 50/50. Projection, reuse,
+nested callback/cancellation evidence, a recognition-removal counterchange, repeated review,
+and full final-source gates remain pending. No final acceptance is claimed.
+
+The extended ordinary RetryFilter lifecycle suite passes 76/76 after red-first callback and
+independent timer-cancellation failures are corrected. Independent projections, actual typed
+dispatch, exact tokens, timer release and sequential create/complete reuse are covered.
+The repeated complete internal review reads 15 C# files and all 33 methods/76 declared cases.
+It confirms the original same-filter observer correction but finds four open related boundaries:
+P1 redelivery composition, P1 disposal replay, P2 policy infrastructure ownership and P2 terminal
+business payload lifetime. They are accepted and documented before another intermediate backup.
+No external acceptance, completed iteration, terminal-reuse assurance or full-product100% claim is made.
+
+Three separate ownership counterchanges are killed (39/76 recognition, exactly2/76 lease reuse,
+exactly1/76 independent source timer cancellation); accepted source hashes are restored independently.
+The restored-source build passes, both format verifications pass, and the explicit src-scoped
+coverage repeat passes3,709/3,709. All four previously hidden retry/redelivery operations are now
+measured. Graph line80.8630%/branch72.9062%, owner80paths/65instrumentable line82.9215%/branch76.6990%.
+This remains the loaded-assembly Core graph, not entire-product/provider coverage. New measured
+redelivery CRAP97.1061/74.4725 establishes substantial risk to address with the four open findings.
+The corrected coverage profile is handwritten; no source/test/comment generator is used.
+Another explicitly intermediate checkpoint secures this coherent tested delta before the next packet.

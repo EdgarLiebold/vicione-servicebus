@@ -2355,3 +2355,31 @@ telemetry, and foundation catalogue rules establish that the DI/telemetry absenc
 both foundation assemblies. The existing foundation/removal anchors already identify both correctly.
 This scope extension strengthens assurance without changing delivery functionality. Protected trees
 remain untouched. Final-source coverage, complete gates, and final publication are still pending.
+
+### Iteration 119 nested lifecycle ownership research
+
+The second checkpoint is verified on origin at 2968483f0a085cbb9a8362a8d6828b5c84dd9654.
+Against that unchanged product source, all 15 new nested observer cases fail while the existing
+35 cases pass. The five-phase matrix includes synchronous throws, faulted tasks, and pending
+barriers, with exact identity/effect/disposal/notification oracles. The first internal payload-and-lease
+correction passes 50/50 after a zero-warning/error build. Ownership is exact-exception scoped,
+not blanket retry suppression, and active leases clear state after operation completion.
+Independent context projections, later reuse of the same context and exception, nested policy
+callbacks, and independent policy cancellation now extend the causal boundary checks.
+Recognition-removal counterchanges, corrected-source review, and final-source acceptance remain open.
+
+The extended 76-case suite first records five causal callback/independent-cancellation failures
+and then passes76/76 after the complete preparation stage is owned. A full read-only internal
+review confirms the original ordinary in-memory observer correction but finds four adjacent open
+boundaries: redelivery composition, cleanup replay, infrastructure ownership and stale terminal
+business payload lifetime. The exact15-file/33-method/76-case scope is recorded in
+ITERATION-119/INTERNAL_NESTED_OWNERSHIP_REVIEW.md. The complete current Core host passes3709/3709.
+
+Three separate compilable counterchanges kill their expected oracles: lifecycle recognition
+39/76, unreleased ownership exactly2/76 reuse variants, and missing independent source delay
+cancellation exactly1/76 timer variant. Each accepted source is restored byte-for-byte.
+Coverage analysis additionally finds default DebuggerNonUserCode exclusions omit critical retry
+and redelivery state machines; the official Microsoft configuration establishes that defaults
+must be explicitly disabled. The handwritten src-scoped coverage profile includes auto-properties
+and all source attributes while excluding test assemblies. The accepted-source expanded-profile
+repeat will determine the new denominator; historical percentages are not directly comparable.

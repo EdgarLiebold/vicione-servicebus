@@ -705,11 +705,13 @@ public sealed class RetryFilterTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
     [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "pending-pre-retry-receives-source-and-policy-cancellation")]
     public async Task PendingPreRetryWork_ReceivesSourceOrPolicyCancellationWithoutAnotherOperationAsync(
-        bool cancelPolicy)
+        bool cancelPolicy, bool nested)
     {
         using var sourceCancellation = new CancellationTokenSource();
         using var policyCancellation = new CancellationTokenSource();
@@ -719,15 +721,24 @@ public sealed class RetryFilterTests
         CancellationToken testCancellation = TestContext.Current.CancellationToken;
         int attempts = 0;
         int disposals = 0;
+        int outerDisposals = 0;
+        var outerObserver = new RecordingRetryObserver();
         CancellationToken callbackToken = default;
         IFilter<TestPipeContext> filter = RetryFilterTestFactory.Create<TestPipeContext>(
             new TrackingRetryPolicy(2, () => disposals++, PreRetryAsync, policyCancellation.Token));
-        Task send = filter.SendAsync(new TestPipeContext(sourceCancellation.Token),
-            Pipe.Execute<TestPipeContext>(_ =>
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            if (nested)
+                configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                    new TrackingRetryPolicy(1, () => outerDisposals++), outerObserver));
+            configuration.UseFilter(filter);
+            configuration.UseExecute(_ =>
             {
                 attempts++;
                 throw new RetryFailureException("business transient");
-            }));
+            });
+        });
+        Task send = pipe.SendAsync(new TestPipeContext(sourceCancellation.Token));
         try
         {
             await entered.Task.WaitAsync(timeout, testCancellation);
@@ -744,6 +755,8 @@ public sealed class RetryFilterTests
             Assert.Equal(cancelPolicy ? policyCancellation.Token : sourceCancellation.Token, actual.CancellationToken);
             Assert.Equal(1, attempts);
             Assert.Equal(1, disposals);
+            Assert.Equal(nested ? 1 : 0, outerDisposals);
+            Assert.Equal(nested ? ["create"] : Array.Empty<string>(), outerObserver.Events);
         }
         finally
         {
@@ -769,6 +782,410 @@ public sealed class RetryFilterTests
             callbackToken = cancellationToken;
             entered.TrySetResult();
             await release.Task.WaitAsync(timeout, cancellationToken);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "nested-pre-retry-callback-failure-is-not-a-business-fault")]
+    public async Task NestedPreRetryCallbackFailure_DoesNotRestartBusinessWorkAsync(bool returnsFaultedTask)
+    {
+        var failure = new RetryFailureException("inner pre-retry callback");
+        var outerObserver = new RecordingRetryObserver();
+        int attempts = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => outerDisposals++), outerObserver));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => innerDisposals++, _ =>
+                    returnsFaultedTask ? Task.FromException(failure) : throw failure)));
+            configuration.UseExecute(_ =>
+            {
+                attempts++;
+                throw new RetryFailureException("business transient");
+            });
+        });
+
+        RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
+            pipe.SendAsync(new TestPipeContext()));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(1, attempts);
+        Assert.Equal(1, innerDisposals);
+        Assert.Equal(1, outerDisposals);
+        Assert.Equal(["create"], outerObserver.Events);
+        Assert.Null(outerObserver.TerminalContext);
+        Assert.Null(outerObserver.TerminalException);
+    }
+
+    [Theory]
+    [InlineData("create", false, false)]
+    [InlineData("create", false, true)]
+    [InlineData("create", true, false)]
+    [InlineData("create", true, true)]
+    [InlineData("complete", false, false)]
+    [InlineData("complete", false, true)]
+    [InlineData("complete", true, false)]
+    [InlineData("complete", true, true)]
+    [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "nested-lifecycle-ownership-crosses-replacement-contexts")]
+    public async Task NestedObserverFailure_PreservesOwnershipAcrossIndependentContextProjectionsAsync(
+        string phase, bool replaceOuter, bool replaceInner)
+    {
+        var failure = new RetryFailureException("projected observer failure");
+        var outerObserver = new RecordingRetryObserver();
+        int attempts = 0;
+        int effects = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        var source = new TestPipeContext();
+        var outerProjection = new TestPipeContext();
+        var innerProjection = new TestPipeContext();
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => outerDisposals++,
+                    projection: replaceOuter ? _ => outerProjection : null), outerObserver));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => innerDisposals++,
+                    projection: replaceInner ? _ => innerProjection : null),
+                new RecordingRetryObserver(phase, failure)));
+            configuration.UseExecute(current =>
+            {
+                Assert.Same(replaceInner ? innerProjection : replaceOuter ? outerProjection : source, current);
+                if (++attempts == 1)
+                    throw new RetryFailureException("business transient");
+                effects++;
+            });
+        });
+
+        RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(source));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(phase == "create" ? 0 : 2, attempts);
+        Assert.Equal(phase == "create" ? 0 : 1, effects);
+        Assert.Equal(1, innerDisposals);
+        Assert.Equal(1, outerDisposals);
+        Assert.Equal(["create"], outerObserver.Events);
+        Assert.Null(outerObserver.TerminalException);
+    }
+
+    [Theory]
+    [InlineData("create")]
+    [InlineData("complete")]
+    [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "lifecycle-ownership-does-not-outlive-the-operation")]
+    public async Task ReusedContextAndException_DoNotSuppressALaterLegitimateBusinessRetryAsync(string phase)
+    {
+        var failure = new RetryFailureException("same instance in a later business operation");
+        var source = new TestPipeContext();
+        var outerObserver = new RecordingRetryObserver();
+        int observerFailures = 0;
+        int attempts = 0;
+        int effects = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        bool laterOperation = false;
+        var innerObserver = new RecordingRetryObserver(phase, failure, failureCallback: () =>
+            ++observerFailures == 1 ? Task.FromException(failure) : Task.CompletedTask);
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => outerDisposals++), outerObserver));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => innerDisposals++), innerObserver));
+            configuration.UseExecute(_ =>
+            {
+                if (++attempts == 1)
+                    throw laterOperation ? failure : new RetryFailureException("business transient");
+                effects++;
+            });
+        });
+
+        RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(source));
+        Assert.Same(failure, actual);
+        Assert.Equal(phase == "create" ? 0 : 2, attempts);
+        Assert.Equal(phase == "create" ? 0 : 1, effects);
+
+        laterOperation = true;
+        attempts = 0;
+        effects = 0;
+        await pipe.SendAsync(source);
+
+        Assert.Equal(2, attempts);
+        Assert.Equal(1, effects);
+        Assert.Equal(2, innerDisposals);
+        Assert.Equal(2, outerDisposals);
+        Assert.Equal(["create", "create"], outerObserver.Events);
+        Assert.Equal(phase == "create"
+            ? ["create", "create", "fault:0", "before:0", "complete:0"]
+            : new[] { "create", "fault:0", "before:0", "complete:0", "create", "fault:0", "before:0", "complete:0" },
+            innerObserver.Events);
+        Assert.Null(outerObserver.TerminalException);
+    }
+
+    [Theory]
+    [InlineData("create", false, 0, 0)]
+    [InlineData("create", true, 0, 0)]
+    [InlineData("fault", false, 1, 0)]
+    [InlineData("fault", true, 1, 0)]
+    [InlineData("before", false, 1, 0)]
+    [InlineData("before", true, 1, 0)]
+    [InlineData("complete", false, 2, 1)]
+    [InlineData("complete", true, 2, 1)]
+    [InlineData("terminal", false, 2, 0)]
+    [InlineData("terminal", true, 2, 0)]
+    [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "nested-lifecycle-faults-do-not-enter-outer-business-retry")]
+    public async Task NestedObserverFailure_DoesNotReplayBusinessWorkOrPublishABusinessFaultAsync(
+        string phase, bool returnsFaultedTask, int expectedAttempts, int expectedEffects)
+    {
+        var failure = new RetryFailureException("inner observer failure");
+        var innerObserver = new RecordingRetryObserver(phase, failure, returnsFaultedTask);
+        var outerObserver = new RecordingRetryObserver();
+        int attempts = 0;
+        int effects = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        IFilter<TestPipeContext> outer = RetryFilterTestFactory.Create<TestPipeContext>(
+            new TrackingRetryPolicy(1, () => outerDisposals++), outerObserver);
+        IFilter<TestPipeContext> inner = RetryFilterTestFactory.Create<TestPipeContext>(
+            new TrackingRetryPolicy(1, () => innerDisposals++), innerObserver);
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseFilter(outer);
+            configuration.UseFilter(inner);
+            configuration.UseExecute(_ =>
+            {
+                if (++attempts == 1 || phase == "terminal")
+                    throw new RetryFailureException("business transient");
+                effects++;
+            });
+        });
+
+        RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
+            pipe.SendAsync(new TestPipeContext()));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(expectedAttempts, attempts);
+        Assert.Equal(expectedEffects, effects);
+        Assert.Equal(1, innerDisposals);
+        Assert.Equal(1, outerDisposals);
+        Assert.Equal(ExpectedInnerObserverEvents(phase), innerObserver.Events);
+        Assert.Equal(["create"], outerObserver.Events);
+        Assert.Null(outerObserver.TerminalContext);
+        Assert.Null(outerObserver.TerminalException);
+    }
+
+    [Theory]
+    [InlineData("create", 0, 0)]
+    [InlineData("fault", 1, 0)]
+    [InlineData("before", 1, 0)]
+    [InlineData("complete", 2, 1)]
+    [InlineData("terminal", 2, 0)]
+    [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "nested-pending-lifecycle-faults-are-awaited-without-business-replay")]
+    public async Task NestedPendingObserverFailure_IsAwaitedWithoutBusinessReplayOrFaultReclassificationAsync(
+        string phase, int expectedAttempts, int expectedEffects)
+    {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var failure = new RetryFailureException("pending inner observer failure");
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellation = TestContext.Current.CancellationToken;
+        var innerObserver = new RecordingRetryObserver(phase, failure, failureCallback: ObserveFailureAsync);
+        var outerObserver = new RecordingRetryObserver();
+        int attempts = 0;
+        int effects = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        IFilter<TestPipeContext> outer = RetryFilterTestFactory.Create<TestPipeContext>(
+            new TrackingRetryPolicy(1, () => outerDisposals++), outerObserver);
+        IFilter<TestPipeContext> inner = RetryFilterTestFactory.Create<TestPipeContext>(
+            new TrackingRetryPolicy(1, () => innerDisposals++), innerObserver);
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseFilter(outer);
+            configuration.UseFilter(inner);
+            configuration.UseExecute(_ =>
+            {
+                if (++attempts == 1 || phase == "terminal")
+                    throw new RetryFailureException("business transient");
+                effects++;
+            });
+        });
+        Task send = pipe.SendAsync(new TestPipeContext());
+        try
+        {
+            await entered.Task.WaitAsync(timeout, testCancellation);
+            Assert.False(send.IsCompleted);
+            Assert.Equal(expectedAttempts, attempts);
+            Assert.Equal(expectedEffects, effects);
+            Assert.Equal(0, innerDisposals);
+            Assert.Equal(0, outerDisposals);
+            release.SetResult();
+
+            RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
+                send.WaitAsync(timeout, testCancellation));
+
+            Assert.Same(failure, actual);
+            Assert.Equal(expectedAttempts, attempts);
+            Assert.Equal(expectedEffects, effects);
+            Assert.Equal(1, innerDisposals);
+            Assert.Equal(1, outerDisposals);
+            Assert.Equal(ExpectedInnerObserverEvents(phase), innerObserver.Events);
+            Assert.Equal(["create"], outerObserver.Events);
+            Assert.Null(outerObserver.TerminalContext);
+        }
+        finally
+        {
+            release.TrySetResult();
+            await Assert.ThrowsAsync<RetryFailureException>(() => send.WaitAsync(timeout, testCancellation));
+        }
+
+        async Task ObserveFailureAsync()
+        {
+            entered.TrySetResult();
+            await release.Task.WaitAsync(timeout, testCancellation);
+            throw failure;
+        }
+    }
+
+    private static string[] ExpectedInnerObserverEvents(string phase) => phase switch
+    {
+        "create" => ["create"],
+        "fault" => ["create", "fault:0"],
+        "before" => ["create", "fault:0", "before:0"],
+        "complete" => ["create", "fault:0", "before:0", "complete:0"],
+        "terminal" => ["create", "fault:0", "before:0", "terminal:1"],
+        _ => throw new ArgumentOutOfRangeException(nameof(phase)),
+    };
+
+    [Theory]
+    [InlineData("create", false)]
+    [InlineData("fault", false)]
+    [InlineData("before", false)]
+    [InlineData("complete", false)]
+    [InlineData("terminal", false)]
+    [InlineData("create", true)]
+    [InlineData("fault", true)]
+    [InlineData("before", true)]
+    [InlineData("complete", true)]
+    [InlineData("terminal", true)]
+    [RequirementCoverage("REQ-VSB-RETRY-DISPATCH", "typed-dispatch-preserves-lifecycle-failure-ownership")]
+    public async Task TypedDispatch_PreservesNestedObserverFailureOwnershipAcrossRetryProjectionsAsync(
+        string phase, bool replaceContexts)
+    {
+        var failure = new RetryFailureException("typed observer failure");
+        var innerObserver = new RecordingRetryObserver(phase, failure);
+        var outerObserver = new RecordingRetryObserver();
+        int attempts = 0;
+        int effects = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        IRetryPolicy outerPolicy = new TrackingRetryPolicy(1, () => outerDisposals++);
+        IRetryPolicy innerPolicy = new TrackingRetryPolicy(1, () => innerDisposals++);
+        if (replaceContexts)
+        {
+            outerPolicy = new ReplacingCommandRetryPolicy(outerPolicy);
+            innerPolicy = new ReplacingCommandRetryPolicy(innerPolicy);
+        }
+        IPipe<CommandContext> pipe = Pipe.New<CommandContext>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<CommandContext>(outerPolicy, outerObserver));
+            configuration.UseDispatch(new PipeContextConverterFactory(), dispatch =>
+            {
+                dispatch.Pipe<CommandContext<SetConcurrencyLimit>>(typed =>
+                {
+                    typed.UseFilter(RetryFilterTestFactory.Create<CommandContext<SetConcurrencyLimit>>(
+                        innerPolicy, innerObserver));
+                    typed.UseExecute(current =>
+                    {
+                        if (replaceContexts)
+                            Assert.IsType<RetryCommandContext<SetConcurrencyLimit>>(current);
+                        if (++attempts == 1 || phase == "terminal")
+                            throw new RetryFailureException("business transient");
+                        effects++;
+                    });
+                });
+            });
+        });
+
+        RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
+            pipe.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(phase == "create" ? 0 : phase is "fault" or "before" ? 1 : 2, attempts);
+        Assert.Equal(phase == "complete" ? 1 : 0, effects);
+        Assert.Equal(1, innerDisposals);
+        Assert.Equal(1, outerDisposals);
+        Assert.Equal(ExpectedInnerObserverEvents(phase), innerObserver.Events);
+        Assert.Equal(["create"], outerObserver.Events);
+        Assert.Null(outerObserver.TerminalContext);
+        Assert.Null(outerObserver.TerminalException);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "independent-source-and-policy-cancellation-release-the-delay")]
+    public async Task IndependentSourceOrPolicyCancellation_ReleasesTheRetryTimerWithoutAdvancingTimeAsync(
+        bool cancelPolicy)
+    {
+        using var sourceCancellation = new CancellationTokenSource();
+        using var policyCancellation = new CancellationTokenSource();
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellation = TestContext.Current.CancellationToken;
+        int attempts = 0;
+        int innerDisposals = 0;
+        int outerDisposals = 0;
+        var outerObserver = new RecordingRetryObserver();
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => outerDisposals++), outerObserver));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(
+                new TrackingRetryPolicy(1, () => innerDisposals++, cancellationToken: policyCancellation.Token,
+                    retryDelay: TimeSpan.FromDays(1))));
+            configuration.UseExecute(_ =>
+            {
+                attempts++;
+                throw new RetryFailureException("business transient");
+            });
+        });
+        var source = new TestPipeContext(sourceCancellation.Token);
+        source.SetTimeProvider(timeProvider);
+        Task send = pipe.SendAsync(source);
+        try
+        {
+            await timeProvider.WaitForTimerCountAsync(1).WaitAsync(timeout, testCancellation);
+            Assert.False(send.IsCompleted);
+            Assert.Equal(1, timeProvider.ActiveTimerCount);
+            Assert.Equal(1, attempts);
+            Assert.Equal(TimeSpan.FromDays(1), timeProvider.LastDueTime);
+
+            if (cancelPolicy)
+                policyCancellation.Cancel();
+            else
+                sourceCancellation.Cancel();
+
+            Assert.Equal(0, timeProvider.ActiveTimerCount);
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                send.WaitAsync(timeout, testCancellation));
+
+            Assert.Equal(cancelPolicy ? policyCancellation.Token : sourceCancellation.Token, actual.CancellationToken);
+            Assert.Equal(1, attempts);
+            Assert.Equal(1, innerDisposals);
+            Assert.Equal(1, outerDisposals);
+            Assert.Equal(["create"], outerObserver.Events);
+            Assert.Null(outerObserver.TerminalException);
+            Assert.Equal(StartTime, timeProvider.GetUtcNow());
+        }
+        finally
+        {
+            policyCancellation.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => send.WaitAsync(timeout, testCancellation));
         }
     }
 
@@ -842,20 +1259,24 @@ public sealed class RetryFilterTests
     }
 
     private sealed class TrackingRetryPolicy(int retryLimit, Action disposed,
-        Func<CancellationToken, Task>? preRetry = null, CancellationToken cancellationToken = default) : IRetryPolicy
+        Func<CancellationToken, Task>? preRetry = null, CancellationToken cancellationToken = default,
+        Func<PipeContext, PipeContext>? projection = null, TimeSpan? retryDelay = null) : IRetryPolicy
     {
         public void Probe(ProbeContext context)
         {
         }
 
         public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
-            where T : class, PipeContext => new TrackingRetryPolicyContext<T>(context, retryLimit, disposed, preRetry, cancellationToken);
+            where T : class, PipeContext => new TrackingRetryPolicyContext<T>(
+                projection == null ? context : projection(context) as T
+                    ?? throw new InvalidOperationException("The test projection does not preserve the requested context type."),
+                retryLimit, disposed, preRetry, cancellationToken, retryDelay);
 
         public bool IsHandled(Exception exception) => true;
     }
 
     private sealed class TrackingRetryPolicyContext<T>(T context, int retryLimit, Action disposed,
-        Func<CancellationToken, Task>? preRetry, CancellationToken policyCancellation) :
+        Func<CancellationToken, Task>? preRetry, CancellationToken policyCancellation, TimeSpan? retryDelay) :
         RetryPolicyContext<T>
         where T : class, PipeContext
     {
@@ -863,7 +1284,7 @@ public sealed class RetryFilterTests
 
         public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
         {
-            retryContext = new TrackingRetryContext<T>(Context, exception, 0, retryLimit, preRetry, policyCancellation);
+            retryContext = new TrackingRetryContext<T>(Context, exception, 0, retryLimit, preRetry, policyCancellation, retryDelay);
             return true;
         }
 
@@ -882,13 +1303,15 @@ public sealed class RetryFilterTests
     }
 
     private sealed class TrackingRetryContext<T>(T context, Exception exception, int retryCount, int retryLimit,
-        Func<CancellationToken, Task>? preRetry, CancellationToken policyCancellation) :
+        Func<CancellationToken, Task>? preRetry, CancellationToken policyCancellation, TimeSpan? retryDelay) :
         BaseRetryContext<T>(context, exception, retryCount, policyCancellation), RetryContext<T>
         where T : class, PipeContext
     {
+        public override TimeSpan? Delay => retryDelay;
+
         public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
         {
-            retryContext = new TrackingRetryContext<T>(Context, exception, RetryCount + 1, retryLimit, preRetry, CancellationToken);
+            retryContext = new TrackingRetryContext<T>(Context, exception, RetryCount + 1, retryLimit, preRetry, CancellationToken, retryDelay);
             return RetryAttempt < retryLimit;
         }
 

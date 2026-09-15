@@ -3895,3 +3895,38 @@ never disable ordinary business classification or fabricate business RetryContex
 Kill a controlled recognition-removal counterchange and rerun the scoped review before the
 remaining final-source gates. Secure the current coherent delta in another explicitly intermediate
 checkpoint without claiming completed Iteration119.
+
+### Iteration 119 nested lifecycle execution follow-up
+
+The original five-phase nested matrix proves 15 causal failures against the unchanged second
+checkpoint and then passes 50/50 with exact-exception operation-lifetime ownership. New independent
+projection and same-context/same-exception reuse oracles pass. Extended nested callback/cancellation
+admission proves three further failures in 64 cases. Actual typed command dispatch with replacement
+initial/retry contexts adds ten passing cases. Two injected-clock timer cancellation oracles prove
+retained source-cancelled timers and outer restarts after policy cancellation; 76 cases record
+71 passes and five causal failures before the next correction. Preparation now links both tokens
+before delay, retains normalized cancellation identity, and marks the entire stage; fault callbacks
+also receive lifecycle ownership. Build, execution, separate internal review, controlled ownership
+counterchanges and the full repository gates remain open. No source generator is used.
+
+The complete repeated internal review confirms the ordinary in-memory observer/preparation
+correction and accepts four adjacent open findings (NN-01 through NN-04). Next coherent packet:
+red-first ordinary/activity redelivery composition in both directions; primary/cleanup exact-identity
+and combined-failure preservation; factory/classifier/null-output admission without outer replay;
+terminal-phase reuse with active-operation business ownership while preserving caller-owned payloads
+and post-failure diagnostics. Also exercise awaited multi-observer and policy fault callback failures.
+Keep all real business retry budgets, filtering, typed context transitions and redelivery capabilities.
+Then repeat scoped review, controlled mutations, both complete formatting/build profiles, fresh
+coverage/CRAP, canonical hosts and package/API gates before final iteration publication.
+The full intermediate-checkpoint Core host passes 3,709/3,709 with no skips. A recognition-removal
+counterchange is being tested separately before restoring the exact accepted source and backup.
+
+The read-only coverage analysis finds an additional author-discovered measurement blind spot:
+built-in DebuggerNonUserCode exclusions omit RetryFilter Send/Attempt and redelivery Send state
+machines from historical default-profile artifacts. A manually authored tools/ci/coverage.settings.xml
+disables built-in attribute exclusions, includes auto-properties and excludes test assemblies.
+All future coverage commands must explicitly use --coverage-settings tools/ci/coverage.settings.xml;
+verify critical operations are included before calculating complete measured-source CRAP.
+Expanded-profile percentages are not directly comparable to the historical denominator.
+The separate recognition-removal mutation kills39/76 and the lease-release omission kills exactly
+the two later-business reuse variants; both sources are independently restored byte-for-byte.

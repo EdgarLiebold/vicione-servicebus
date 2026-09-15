@@ -72,8 +72,8 @@ packages follow the same `ViciOne.ServiceBus.<Capability>` naming convention.
 
 `src/ViciOne.ServiceBus` owns the Core assembly; it is not a container for every ServiceBus
 package. Independently compiled capability and contract projects are sibling directories under
-`src`. External integration projects are grouped by responsibility under `Persistence`,
-`Scheduling`, and `Transports`. These families include provider implementations and adapters,
+`src`. Persistence, scheduling, and transport integration projects are grouped by responsibility
+under `Persistence`, `Scheduling`, and `Transports`. These families include provider implementations and adapters,
 not merely interchangeable implementations of one common adapter contract.
 
 Within each project, files follow their type and namespace, with focused folders for related
