@@ -9,11 +9,11 @@ internal sealed class ExponentialRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
-    readonly int _highInterval;
+    readonly long _upperDeltaTicks;
     readonly TimeSpan[] _intervals;
-    readonly int _lowInterval;
-    readonly int _maxInterval;
-    readonly int _minInterval;
+    readonly long _lowerDeltaTicks;
+    readonly long _maximumIntervalTicks;
+    readonly long _minimumIntervalTicks;
 
     /// <summary>Creates a bounded exponential retry policy.</summary>
     /// <param name="filter">Determines which exceptions are retried.</param>
@@ -38,11 +38,11 @@ internal sealed class ExponentialRetryPolicy :
 
         _filter = filter;
         RetryLimit = retryLimit;
-        _minInterval = (int)minInterval.TotalMilliseconds;
-        _maxInterval = (int)maxInterval.TotalMilliseconds;
+        _minimumIntervalTicks = minInterval.Ticks;
+        _maximumIntervalTicks = maxInterval.Ticks;
 
-        _lowInterval = (int)(intervalDelta.TotalMilliseconds * 0.8);
-        _highInterval = (int)(intervalDelta.TotalMilliseconds * 1.2);
+        _lowerDeltaTicks = Math.Max(1, (long)(intervalDelta.Ticks * 0.8));
+        _upperDeltaTicks = Math.Max(_lowerDeltaTicks + 1, (long)Math.Ceiling(intervalDelta.Ticks * 1.2));
 
         _intervals = CalculateIntervals().ToArray();
     }
@@ -58,10 +58,10 @@ internal sealed class ExponentialRetryPolicy :
         {
             Policy = "Exponential",
             Limit = RetryLimit,
-            Min = _minInterval,
-            Max = _maxInterval,
-            Low = _lowInterval,
-            High = _highInterval
+            Min = TimeSpan.FromTicks(_minimumIntervalTicks).TotalMilliseconds,
+            Max = TimeSpan.FromTicks(_maximumIntervalTicks).TotalMilliseconds,
+            Low = TimeSpan.FromTicks(_lowerDeltaTicks).TotalMilliseconds,
+            High = TimeSpan.FromTicks(_upperDeltaTicks).TotalMilliseconds
         });
 
         _filter.Probe(context);
@@ -93,20 +93,23 @@ internal sealed class ExponentialRetryPolicy :
 
         var interval = retryCount < _intervals.Length ? _intervals[retryCount] : _intervals[_intervals.Length - 1];
         var jitter = Random.Shared.NextDouble() * 0.5 + 0.75;
-        var milliseconds = Math.Clamp(interval.TotalMilliseconds * jitter, _minInterval, _maxInterval);
+        var ticks = Math.Clamp((long)(interval.Ticks * jitter), _minimumIntervalTicks, _maximumIntervalTicks);
 
-        return TimeSpan.FromMilliseconds(milliseconds);
+        return TimeSpan.FromTicks(ticks);
     }
 
     IEnumerable<TimeSpan> CalculateIntervals()
     {
-        var delta = -1;
+        long intervalTicks = -1;
 
-        for (var i = 0; i < RetryLimit && delta < _maxInterval; i++)
+        for (var i = 0; i < RetryLimit && intervalTicks < _maximumIntervalTicks; i++)
         {
-            delta = (int)Math.Min(_minInterval + Math.Pow(2, i) * Random.Shared.Next(_lowInterval, _highInterval), _maxInterval);
+            double exponentialTicks = _minimumIntervalTicks
+                + Math.Pow(2, i) * Random.Shared.NextInt64(_lowerDeltaTicks, _upperDeltaTicks);
+            intervalTicks = Math.Clamp((long)Math.Min(exponentialTicks, _maximumIntervalTicks),
+                _minimumIntervalTicks, _maximumIntervalTicks);
 
-            yield return TimeSpan.FromMilliseconds(delta);
+            yield return TimeSpan.FromTicks(intervalTicks);
         }
     }
 
@@ -114,6 +117,6 @@ internal sealed class ExponentialRetryPolicy :
     /// <returns>The policy name, retry limit, and delay bounds.</returns>
     public override string ToString()
     {
-        return $"Exponential (limit {RetryLimit}, min {_minInterval}ms, max {_maxInterval}ms)";
+        return FormattableString.Invariant($"Exponential (limit {RetryLimit}, min {TimeSpan.FromTicks(_minimumIntervalTicks).TotalMilliseconds}ms, max {TimeSpan.FromTicks(_maximumIntervalTicks).TotalMilliseconds}ms)");
     }
 }

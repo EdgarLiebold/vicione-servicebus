@@ -68,6 +68,19 @@ Harnesses and deterministic test helpers live in `ViciOne.ServiceBus.Testing` an
 Transport, persistence, scheduling, serialization, visualization, SignalR, analyzer, and testing
 packages follow the same `ViciOne.ServiceBus.<Capability>` naming convention.
 
+## Source ownership and navigation
+
+`src/ViciOne.ServiceBus` owns the Core assembly; it is not a container for every ServiceBus
+package. Independently compiled capability and contract projects are sibling directories under
+`src`. External integration projects are grouped by responsibility under `Persistence`,
+`Scheduling`, and `Transports`. These families include provider implementations and adapters,
+not merely interchangeable implementations of one common adapter contract.
+
+Within each project, files follow their type and namespace, with focused folders for related
+functionality. Moving another project beneath the Core project would obscure assembly ownership
+and require exclusions from the SDK's recursive source inclusion. The project boundaries preserve
+optional dependencies and independently selectable package capabilities.
+
 ## Preferred examples
 
 The eighteen files under `samples/DeveloperJourneys` are compiled exclusively against freshly

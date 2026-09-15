@@ -53,19 +53,21 @@ public sealed class GreenfieldApiArchitectureTests
     [RequirementCoverage("REQ-VSB-GREENFIELD-CORE-ADVANCED-API", "retry-implementations-remain-internal")]
     public void RetryImplementationTypes_AreNotPartOfThePublicApi()
     {
-        Assembly core = typeof(IBus).Assembly;
+        Assembly core = ProductAssemblyFacts.Core;
+        Assert.Equal("ViciOne.ServiceBus", core.GetName().Name);
         string[] allowedRetryPolicyTypes =
         [
             typeof(ViciOne.ServiceBus.RetryPolicies.PipeRetryExtensions).FullName
                 ?? throw new InvalidOperationException("The retry extension type has no full name."),
         ];
         string[] leakedCoreTypes = core.ExportedTypes
-            .Where(type => type.Namespace == "ViciOne.ServiceBus.RetryPolicies"
+            .Where(type => (type.Namespace == "ViciOne.ServiceBus.RetryPolicies"
+                    || type.Namespace?.StartsWith("ViciOne.ServiceBus.RetryPolicies.", StringComparison.Ordinal) == true)
                 && !allowedRetryPolicyTypes.Contains(type.FullName, StringComparer.Ordinal))
             .Concat(core.ExportedTypes.Where(type => type.Namespace == "ViciOne.ServiceBus.Middleware.Rescue"))
             .Concat(core.ExportedTypes.Where(type => type.Namespace == "ViciOne.ServiceBus.Middleware"
                 && type.Name is "RetryFilter`1" or "RescueFilter`2" or "RetryBusObserver"
-                    or "RedeliveryRetryFilter`2" or "ActivityRedeliveryRetryFilter`2"))
+                    or "RedeliveryRetryFilter`2" or "ActivityRedeliveryRetryFilter`1"))
             .Select(static type => type.FullName ?? type.Name)
             .Order(StringComparer.Ordinal)
             .ToArray();
@@ -313,10 +315,11 @@ public sealed class GreenfieldApiArchitectureTests
     [RequirementCoverage("REQ-VSB-GREENFIELD-DI-CONFIGURATION", "no-test-only-or-empty-compatibility-api")]
     public void DependencyInjectionConfiguration_HasNoTestOnlyOrEmptyCompatibilityApi()
     {
-        Assembly core = typeof(IBus).Assembly;
-
-        Assert.Null(core.GetType("ViciOne.ServiceBus.Configuration.DependencyInjectionHandlerRegistrationExtensions"));
-        Assert.Null(core.GetType("ViciOne.ServiceBus.Configuration.ITransactionalOutboxConfigurator"));
+        Assert.All(ProductAssemblyFacts.ArchitectureAnchors, static assembly =>
+        {
+            Assert.Null(assembly.GetType("ViciOne.ServiceBus.Configuration.DependencyInjectionHandlerRegistrationExtensions"));
+            Assert.Null(assembly.GetType("ViciOne.ServiceBus.Configuration.ITransactionalOutboxConfigurator"));
+        });
         Assert.DoesNotContain(
             typeof(HandlerRegistrationConfiguratorExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static),
             static method => method.Name == "AddHandler" && method.GetParameters().Length == 1);

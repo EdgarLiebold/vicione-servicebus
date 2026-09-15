@@ -3840,3 +3840,58 @@ corrected build and complete Async scan are rerunning. Final acceptance, final-s
 mutations/coverage, repository/package/API gates, and final publication remain pending.
 An intermediate Git checkpoint secures the remediation without claiming completed acceptance.
 Protected trees remain out of scope and unstaged.
+
+### Iteration 119 internal counterreview remediation
+
+Checkpoint `97c1b364bf37ed48387373f5feee3e23f065fd27` and its annotated checkpoint tag are
+verified on origin without force. The corrected complete Async-name scan passes 1/1, and the
+checkpoint Core/Abstractions hosts pass 3,650/3,650 and 696/696. These results predate the next
+counterreview corrections and are not final-source acceptance.
+
+The separate read-only internal reviewer completely reads all 75 changed production/project paths
+and all 13 changed C# test/helper files. It finds five production defects and one visibility-guard
+gap; the complete scoped report is in
+`evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/INTERNAL_COUNTERREVIEW.md`.
+The review is not represented as an independent external acceptance.
+
+New causal regressions and stronger disposal assertions run against the unchanged product source:
+57 cases execute, 39 pass and 18 fail, with no skip. The CTRF report is
+`/private/tmp/vsb-iteration119-counterreview-red/counterreview-red.ctrf.json`.
+All failures match accepted counterexamples: creation/completion observer faults, pending observer
+faults, callback cancellation admission, tick-precision exponential bounds/growth, missing-context
+disposal, projection failure disposal, and typed/untyped null callback tasks.
+
+Corrections move creation/completion observation outside business-failure classification, retain
+standard using ownership, pass source/policy-linked callback cancellation with original failure-token
+identity, preserve positive exponential growth and bounds in ticks, dispose failed consume wrappers,
+and reject invalid underlying callback results. The visibility guard includes retry child namespaces
+and the actual one-parameter activity filter. The cancellation oracle is strengthened to independent
+source/policy token sources rather than relying on fixture-side linking. Final-source tests,
+counterchanges, coverage, API/format gates and final iteration publication remain pending.
+
+### Iteration 119 counterchange and assembly-anchor follow-up
+
+The corrected three-class selection passes 59/59 after adding both failed-representation
+ownership cases. All nine new method mappings are registered manually. Seven separate runtime
+counterchanges kill exactly their owning cases: completion replay 3/35, creation retry 3/35,
+ignored callback cancellation 2/35, fractional minimum 1/6, zero growth 1/6, missing consume
+error disposal 6/18, and missing null-task diagnostics 4/18. Accepted files are restored byte-for-byte.
+
+The visibility counterchange exposes a further assurance defect: IBus anchors Abstractions,
+not Core. An isolated child-namespace mutant survives the old guard. The corrected guard reuses
+ProductAssemblyFacts.Core and asserts the exact Core identity; its child-namespace counterchange
+now fails 1/1. The activity visibility counterchange is being repeated without overlapping tests,
+source restoration, or builds. Dependency-injection and telemetry absence guards are extended
+to both actual foundation assemblies after complete manual reads. Foundation/removal catalogue
+anchors were already correct. Manual activity comments clarify the actual execution context and
+redelivery responsibility. Full final-source gates and final publication remain open.
+
+The restored-source strict Engineering build passes with zero warnings/errors in 4m29.58s.
+The corrected-source internal review confirms all local accepted axes but establishes one P1
+nested lifecycle ownership defect. Add a five-phase nested observer-failure matrix with exact
+failure/effect/disposal and outer-notification oracles, pending barriers, typed/replacement-context
+propagation, and operation-lifetime coverage. Mark and propagate only the exact lifecycle failure;
+never disable ordinary business classification or fabricate business RetryContext ownership.
+Kill a controlled recognition-removal counterchange and rerun the scoped review before the
+remaining final-source gates. Secure the current coherent delta in another explicitly intermediate
+checkpoint without claiming completed Iteration119.

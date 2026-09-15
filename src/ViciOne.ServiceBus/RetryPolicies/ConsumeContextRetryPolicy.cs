@@ -37,13 +37,25 @@ internal sealed class ConsumeContextRetryPolicy :
         {
             RetryPolicyContext<ConsumeContext> retryPolicyContext = _retryPolicy.CreatePolicyContext(consumeContext)
                 ?? throw new InvalidOperationException("The retry policy returned a null consume policy context.");
-            if (retryPolicyContext.Context == null)
-                throw new InvalidOperationException("The retry policy returned a policy context without a consume context.");
+            ConsumeContextRetryPolicyContext? consumePolicyContext = null;
+            try
+            {
+                if (retryPolicyContext.Context == null)
+                    throw new InvalidOperationException("The retry policy returned a policy context without a consume context.");
 
-            var retryConsumeContext = new RetryConsumeContext(consumeContext, _retryPolicy, null);
-
-            return new ConsumeContextRetryPolicyContext(retryPolicyContext, retryConsumeContext, _cancellationToken) as RetryPolicyContext<T>
-                ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
+                var retryConsumeContext = new RetryConsumeContext(consumeContext, _retryPolicy, null);
+                consumePolicyContext = new ConsumeContextRetryPolicyContext(retryPolicyContext, retryConsumeContext, _cancellationToken);
+                return consumePolicyContext as RetryPolicyContext<T>
+                    ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
+            }
+            catch
+            {
+                if (consumePolicyContext != null)
+                    consumePolicyContext.Dispose();
+                else
+                    retryPolicyContext.Dispose();
+                throw;
+            }
         }
 
         throw new ArgumentException("The argument must be a ConsumeContext", nameof(context));
@@ -104,15 +116,28 @@ internal sealed class ConsumeContextRetryPolicy<TFilter, TContext> :
 
         RetryPolicyContext<TFilter> retryPolicyContext = _retryPolicy.CreatePolicyContext(filterContext)
             ?? throw new InvalidOperationException("The retry policy returned a null consume policy context.");
-        if (retryPolicyContext.Context == null)
-            throw new InvalidOperationException("The retry policy returned a policy context without a consume context.");
+        ConsumeContextRetryPolicyContext<TFilter, TContext>? consumePolicyContext = null;
+        try
+        {
+            if (retryPolicyContext.Context == null)
+                throw new InvalidOperationException("The retry policy returned a policy context without a consume context.");
 
-        var retryConsumeContext = _contextFactory(filterContext, _retryPolicy, null)
-            ?? throw new InvalidOperationException("The consume retry context factory returned null.");
+            var retryConsumeContext = _contextFactory(filterContext, _retryPolicy, null)
+                ?? throw new InvalidOperationException("The consume retry context factory returned null.");
 
-        return new ConsumeContextRetryPolicyContext<TFilter, TContext>(retryPolicyContext, retryConsumeContext,
-                _cancellationToken) as RetryPolicyContext<T>
-            ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
+            consumePolicyContext = new ConsumeContextRetryPolicyContext<TFilter, TContext>(retryPolicyContext, retryConsumeContext,
+                _cancellationToken);
+            return consumePolicyContext as RetryPolicyContext<T>
+                ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
+        }
+        catch
+        {
+            if (consumePolicyContext != null)
+                consumePolicyContext.Dispose();
+            else
+                retryPolicyContext.Dispose();
+            throw;
+        }
     }
 
     /// <summary>Delegates failure classification to the wrapped policy.</summary>

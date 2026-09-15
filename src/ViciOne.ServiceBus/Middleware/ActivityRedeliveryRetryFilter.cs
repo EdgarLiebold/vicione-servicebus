@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Observables;
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>Schedules redelivery for a transport-independent activity pipeline.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TContext">The activity execution context carried through the pipeline.</typeparam>
 internal sealed class ActivityRedeliveryRetryFilter<TContext> :
     IFilter<TContext>
     where TContext : class, Advanced.ActivityContext
@@ -14,9 +14,9 @@ internal sealed class ActivityRedeliveryRetryFilter<TContext> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes the redelivery filter.</summary>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="observers">The observers.</param>
+    /// <summary>Creates a filter that schedules activity redelivery after handled failures.</summary>
+    /// <param name="retryPolicy">The policy that classifies activity failures and schedules redelivery.</param>
+    /// <param name="observers">The observable that publishes retry lifecycle events.</param>
     public ActivityRedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));

@@ -25,7 +25,9 @@ public sealed class ServiceBusTelemetryTests
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-API", "fixed-schema-without-parallel-telemetry-api")]
     public void PublicApi_ExposesFixedOtelActivationAndNoParallelTelemetrySystem()
     {
-        Assembly product = typeof(IBus).Assembly;
+        Assembly[] products = [typeof(IBus).Assembly, typeof(Bus).Assembly];
+        Assert.Equal("ViciOne.ServiceBus.Abstractions", products[0].GetName().Name);
+        Assert.Equal("ViciOne.ServiceBus", products[1].GetName().Name);
         MethodInfo useInstrumentation = Assert.Single(
             typeof(InstrumentationConfigurationExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static),
             method => method.Name == nameof(InstrumentationConfigurationExtensions.UseInstrumentation));
@@ -34,21 +36,24 @@ public sealed class ServiceBusTelemetryTests
         Assert.Equal(typeof(IBusFactoryConfigurator), parameter.ParameterType);
         Assert.Equal(typeof(void), useInstrumentation.ReturnType);
 
-        Assert.Null(product.GetType("ViciOne.ServiceBus.Monitoring.InstrumentationOptions"));
-        Assert.Null(product.GetType("ViciOne.ServiceBus.MetricsContext"));
-        Assert.Null(product.GetType("ViciOne.ServiceBus.MetricsContextExtensions"));
-        Assert.Null(product.GetType("ViciOne.ServiceBus.DependencyInjection.IHandlerConsumerAdapter"));
-        Assert.Null(product.GetType("ViciOne.ServiceBus.Logging.StartedInstrument"));
+        Assert.All(products, static product =>
+        {
+            Assert.Null(product.GetType("ViciOne.ServiceBus.Monitoring.InstrumentationOptions"));
+            Assert.Null(product.GetType("ViciOne.ServiceBus.MetricsContext"));
+            Assert.Null(product.GetType("ViciOne.ServiceBus.MetricsContextExtensions"));
+            Assert.Null(product.GetType("ViciOne.ServiceBus.DependencyInjection.IHandlerConsumerAdapter"));
+            Assert.Null(product.GetType("ViciOne.ServiceBus.Logging.StartedInstrument"));
+        });
         Assert.False(typeof(MetricOperation).IsPublic);
         Assert.False(typeof(LogContextMetricsExtensions).IsPublic);
-        Assert.DoesNotContain(product.GetExportedTypes(), type => type.Namespace is
+        Type[] exportedTypes = products.SelectMany(static product => product.ExportedTypes).ToArray();
+        Assert.DoesNotContain(exportedTypes, type => type.Namespace is
             "ViciOne.ServiceBus.Logging.Diagnostics" or
             "ViciOne.ServiceBus.Logging.Internal" or
             "ViciOne.ServiceBus.Logging.Monitoring");
-        Assert.DoesNotContain(product.GetExportedTypes(), type =>
+        Assert.DoesNotContain(exportedTypes, type =>
             type.Namespace?.StartsWith("ViciOne.ServiceBus.Monitoring.Performance", StringComparison.Ordinal) == true
             || type.Name.Contains("StatsD", StringComparison.OrdinalIgnoreCase));
-
     }
 
     [Fact]

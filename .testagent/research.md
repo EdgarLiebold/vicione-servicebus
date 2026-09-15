@@ -2332,3 +2332,26 @@ is an authoring defect. Both its method name and requirement tuple are corrected
 guard is unchanged. Corrected-source acceptance is rerunning. Final-source mutation/coverage,
 repository and package/API acceptance remain open at the intermediate Git checkpoint.
 No generator rewrites source, tests, or comments.
+
+### Iteration 119 counterreview causal follow-up
+
+The separate internal reviewer reads all 75 changed production/project paths and all 13 changed
+C# test/helper paths at checkpoint 97c1b364bf37ed48387373f5feee3e23f065fd27. It finds five
+production defects and one visibility-guard gap. The unchanged product source executes 57 focused
+cases with 18 exact failures. The corrected source passes 57/57 and then 59/59 with the added
+typed/untyped failed-representation ownership cases. New and strengthened assertions cover exact
+observer failure identity, business/effect counts, pending observation, independent callback
+cancellation, fractional exponential bounds, positive growth, initial ownership failures, removed
+cancellation registrations, and both typed/untyped invalid callback results. Nine new method
+projections are registered manually. The detailed requirement map and controlled-counterchange
+results are in evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/VALIDATION.md.
+
+Seven separate runtime counterchanges each compile and kill their causal oracles. Mutation execution
+also identifies an author-discovered false-confidence defect: the visibility guard obtains Core
+through IBus, which now belongs to Abstractions. An isolated child-namespace visibility mutant survives
+the old guard but fails 1/1 with the existing explicit Core anchor and exact assembly identity.
+The activity counterchange is repeated separately. Complete manual reads of the adjacent DI,
+telemetry, and foundation catalogue rules establish that the DI/telemetry absence checks also need
+both foundation assemblies. The existing foundation/removal anchors already identify both correctly.
+This scope extension strengthens assurance without changing delivery functionality. Protected trees
+remain untouched. Final-source coverage, complete gates, and final publication are still pending.

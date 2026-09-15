@@ -1128,3 +1128,37 @@ tuple are corrected manually; the unchanged guard and corrected build are rerunn
 Final-source coverage/mutations, strict repository/package/API gates, and final publication
 remain pending. The intermediate Git checkpoint is a backup, not completed iteration acceptance.
 Protected `review/` and `TestResults/` remain unchanged and unstaged.
+
+### Iteration 119 counterreview follow-up — in progress
+
+The intermediate checkpoint and peeled tag are verified remotely at
+`97c1b364bf37ed48387373f5feee3e23f065fd27`. Its corrected Async-name scan passes; Core and
+Abstractions pass 3,650 and 696 cases respectively before the counterreview follow-up.
+
+A separate internal read-only review finds five production defects and one visibility-test gap.
+The accepted causal regression run executes 57 cases: 18 exact failures, 39 passes and zero skips.
+Owning-boundary corrections now cover observer-fault replay, fractional exponential bounds/growth,
+pending callback cancellation, failed context acquisition/projection disposal, underlying null callback
+tasks, and the visibility guard's namespace/arity closure. The corrected full Unit build is running.
+No final-source acceptance, completed iteration, provider-wide coverage, or external independent
+verdict is claimed. The overall A+ goal remains active.
+
+The corrected narrow selection passes 59/59 with no skip. Seven separate runtime counterchanges
+produce their exact causal failures, and each accepted source is restored byte-for-byte. Both
+representation-failure paths now verify release of nested state and cancellation registrations.
+The public-visibility mutation finds a seventh, author-discovered assurance issue: the old guard
+uses IBus to identify Core even though that contract belongs to Abstractions. The isolated old
+child-namespace guard survives; after correct Core anchoring the same counterchange fails 1/1.
+The activity repeat and full final-source acceptance are in progress. Adjacent DI/telemetry absence
+guards inspect both Core and Abstractions rather than silently missing Core compatibility identities.
+No final A+ acceptance or full-product 100% coverage claim is made.
+
+The corrected-source strict Engineering build passes with zero warnings and errors in 4m29.58s.
+Both separate visibility mutations now fail their owning guard and are restored. A complete
+corrected-delta internal counterreview reads five production files and six test/helper files,
+accounts for 63 test methods / 80 declared cases, and confirms the local fixes. One P1 remains:
+outer retry filters can reclassify an inner observer lifecycle fault, replay committed effects,
+or present business fault state while an observer error escapes. The finding is accepted for
+nested synchronous, faulted-task, pending, projection, and operation-lifetime evidence before
+final acceptance. The work is secured in a second intermediate checkpoint, not a completed-iteration
+or release-readiness tag. The same overall goal and Iteration119 continue.
