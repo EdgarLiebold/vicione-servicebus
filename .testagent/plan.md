@@ -1,5 +1,34 @@
 # A+ remediation test plan
 
+## Iteration 126 complete consume, request and native transport reading
+
+1. Continue the original goal from remote-secured iteration 125 and unchanged
+   complete authority bindings; preserve all earlier work and findings.
+2. Completely personally read all 60 selected files, including every method,
+   field, fixture, helper, data arrangement and comment. No new Core test
+   design/change or owner acceptance before complete 557-file admission.
+3. Review every existing method, calibrate eight scoped weaknesses against
+   strong adjacent proofs and record independent deferred correction criteria.
+4. Bind all input bytes and prior readings; reconcile 312 methods to 459
+   historical native passed cases. Use physical line counts consistently:
+   the unchanged lock file has one final line without a newline. Handwrite
+   one compact packet; check exact rows, whitespace and source invariance.
+   Do not replay unchanged complete builds/tests for reading-only evidence.
+5. Secure exactly the packet and three history prefixes with normal commit,
+   annotated tag, atomic non-force push and independently keyed remote refs.
+
+Personal reading/review complete: 60 new files / 18,004 lines. Cumulative Core
+owner: 206/557 files / 61,376 lines, 351 remaining. Selected Clients, Consumers,
+Context and InMemoryTransport folder scopes are complete, not the whole owner.
+Settled 0 Critical / 5 High / 2 Medium / 1 Low remain open. Actual input/native
+and corrected prior-physical-line diagnostics terminate 0; the initial newline
+count mismatch is retained and explained, not treated as lost code or a test failure.
+
+Continue larger coherent remaining-owner reading, then independent red/green
+repairs, effective mutations and connected productive contracts. All whole-src
+reading/manual comments, greenfield API/type/file/folder/feature, package/provider
+and current global coverage/CRAP objectives remain in the original goal.
+
 ## Iteration 125 complete middleware, transaction and in-memory saga reading
 
 1. Continue the original goal from actually remote-secured iteration 124;

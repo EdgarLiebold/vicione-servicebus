@@ -1,5 +1,60 @@
 # A+ remediation research
 
+## Iteration 126 complete consume, request and native transport reading
+
+Actually secured input e6ad845133aa67550f52696c63709c5924e58f78 and iteration-125
+annotated tag remain the baseline; complete authority hashes and Core tree
+e3be6b831183b3b65636c3b5e167c165696037d2 are unchanged.
+
+The main completely personally reads 60 new files / 18,004 lines: eleven Clients,
+twenty-one Consumers, twelve Context and sixteen InMemoryTransport files, including
+all fields, test methods, fixtures, helpers, data arrangements and comments.
+All 312 existing methods are manually reviewed and independently reconciled to
+459 historical native passed cases. No advisor substitutes for the main reading;
+no test/code/comment/report generator or partial-owner test design is used.
+
+Five High weaknesses concern effects before rejected work fails, independently
+sorted fields losing their pairing, incomplete argument/overload and pending-task
+forwarding observation, failure-sensitive wait/cleanup bounds, and primary/fallback
+ordering inputs that select the same order. Medium findings concern unrelated
+failure reasons passing a no-pump regression and factory/settings proofs that stop
+at type/non-null observation. One reflection helper is artificially async (Low).
+All eight remain open with exact independent correction criteria after admission.
+
+Strong native proofs include actual durable consumer-completion ownership,
+retained failed/unmatched local outbox records, immutable headers, terminal request
+ordering, losers canceled before disposal, complete drained send/publish matrices,
+500 exact faults, 1,000 identities with a separate late-duplicate recorder, rejected
+batch admission with zero retained/delivered work, and real scoped context isolation.
+Grouped results still need key-to-membership multisets, not disconnected sets.
+Reflection, meaningful identity assertions, legitimate no-op fixtures and configured
+batch time windows are not blanket anti-patterns. Local durable acceptance is not
+real persistent/provider/cloud/recovery acceptance.
+
+The first prior-reading diagnostic terminates 1 solely on newline-byte counting:
+packages.lock.json has 445 newline bytes but 446 physical lines. All prior Git
+byte comparisons succeed. The corrected physical-line diagnostic terminates 0;
+prior 146 / 43,372 plus new 60 / 18,004 gives 206/557 / 61,376, 351 remaining.
+The failed receipt is preserved. There is no lost file, changed lock file, test
+failure or need to repeat compilation to diagnose this accounting issue.
+
+The test-anti-patterns skill and fully read .NET extension guide causal assertions,
+isolation and async-failure review without generating code, comments or dispositions.
+One hand-authored packet binds sorted per-file hashes/lines/methods/cases. Reading
+does not grant full owner admission or whole-source/A+ acceptance; lexical native
+membership reconciliation is not a complete language-parser admission gate.
+No productive/test/project/gate change or fresh full build/test/mutation/provider
+run occurs. Iteration-123 4,007/4,007 Core and 439/439 Architecture stay historical.
+
+The actual src-root tracked tree contains only shared Directory.Build.props as a
+root file, no direct C#. Separate assemblies/projects are deliberate siblings:
+the core ViciOne.ServiceBus folder is not a repository umbrella. Integration
+families stay Persistence/Scheduling/Transports. Each productive type must belong
+to its owning project; namespace sharing does not require physical project nesting.
+No superficial move, recursive compile-glob workaround or feature removal.
+[Detailed packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-126/CONSUME_REQUEST_TRANSPORT_READING_PACKET.md).
+Checkpoint security follows actual normal commit/tag/push/keyed remote verification.
+
 ## Iteration 125 complete middleware, transaction and in-memory saga reading
 
 Input da77c920b0df07bf867b3858176f58b545a0ddc3 and iteration-124 annotated tag

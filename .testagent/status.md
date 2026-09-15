@@ -1,5 +1,43 @@
 # A+ remediation test status
 
+## Iteration 126 consume, request and native transport reading checkpoint
+
+Original whole-product A+ goal remains active. Input e6ad845133aa67550f52696c63709c5924e58f78
+and annotated iteration-125 tag are actually normally pushed and independently
+branch/tag/peeled verified. Complete authority bindings remain unchanged.
+No productive source, test, project, dependency, directive or gate changes.
+
+Main complete personal reads: 60 new files / 18,004 lines, including every method,
+field, fixture, arrangement, helper and comment. Cumulative Core owner: 206/557
+files / 61,376 physical lines, 351 remaining. Four selected folder scopes are
+complete, not the owning project. Every existing one of the 312 methods is
+personally reviewed and exactly reconciled to 459 passed records from the unchanged
+historical iteration-123 native report. This is not fresh iteration-126 execution.
+
+Settled scoped findings: 0 Critical / 5 High / 2 Medium / 1 Low, all open.
+Rejected-work side effects, paired metadata/group membership, complete forwarding
+and pending-task ownership, failure-sensitive waits/cleanup and discriminating
+ordering precedence need correction after owner admission. Failure-reason identity
+and executable factory/configuration observation are Medium; an artificial async
+reflection helper is Low. No candidate mutation is claimed actually executed/killed.
+Native durable integration genuinely uses the production local dispatcher/store;
+it is not persistent provider, cloud or recovery acceptance.
+
+Input/native membership and corrected prior-read physical-line diagnostics
+terminate 0. The initial prior-line check terminates 1 because it counts newline
+bytes rather than the lock file's unterminated final physical line; all 146 prior
+Git byte comparisons succeed. No missing work or repository correction follows.
+One handwritten packet retains exact rows and calibrated independent criteria.
+No unchanged complete build/test replay for reading-only evidence. Security follows
+actual normal commit/tag/push and independent keyed remote observation.
+
+Continue all 351 remaining owning inputs in larger coherent packets, then exact
+independent test repairs, effective mutants and connected runtime/API contracts.
+Keep sibling SDK projects under src; ViciOne.ServiceBus is the core assembly,
+not an umbrella. Persistence/Scheduling/Transports remain integration families.
+All previous findings and whole-product A+ objectives remain active.
+[Detailed packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-126/CONSUME_REQUEST_TRANSPORT_READING_PACKET.md).
+
 ## Iteration 125 middleware, transaction and in-memory saga reading checkpoint
 
 Original whole-product A+ goal remains active. Input da77c920b0df07bf867b3858176f58b545a0ddc3
