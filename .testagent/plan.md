@@ -1,5 +1,35 @@
 # A+ remediation test plan
 
+## Iteration 129 complete connected Core contract reading checkpoint
+
+1. Continue the original goal from actually secured input
+   020c146f8067d8f5bf38ef51aa35344e7dd7709e; preserve all earlier work/findings.
+2. Finish all 59 remaining connected files through EOF personally: 14,429 lines,
+   338 declarations / 398 historical passed cases. Connected packet 102/102,
+   23,480 lines / 508 declarations / 665 historical cases is now fully read.
+3. Bind every new/prior full read to exact input Git bytes and historical metadata.
+   Cumulative Core owner 314/557 / 87,830 lines; 243 remaining. Name reconciliation
+   is not full-parser/effective-project/GitReadSet admission under agreement §4.3.
+4. Handwrite scoped positive observations and 0 Critical / 9 High / 3 Medium /
+   2 Low deferred groups, all open. No new test design/edit, source change,
+   executed mutant, fresh native/coverage/CRAP/provider or A+ acceptance claim.
+5. Preserve all three history tails; manually validate the exact manifest, then
+   normally commit/tag/atomically push four owned files and independently verify
+   branch, annotated tag and peeled commit before claiming remote security.
+
+Seven authority bindings and exact prior DECISIONS reconstruction exit 0. Only
+the fully read Licensing PO-2026-09-15-03 row/section differs; ServiceBus scope and
+the selected Slice remain unchanged. Historical iteration-128 Core build/native
+4,007/4,007 passes remain historical. CS01 fault/mutation/interval proof and all
+earlier findings remain open. No independent counter-review is claimed here.
+
+Next concrete action: remaining 243 Core owner inputs, effective shared project/
+packages/fixtures/data/execution CI, full parser and GitReadSet admission; only
+then new Core test design/edits and effective targeted regressions/mutations.
+Continue the whole-src manual comments/API/architecture and original quality
+goal; do not reopen resolved informational questions.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-129/CORE_COMPOSITION_TELEMETRY_AND_TOPOLOGY_READING_CHECKPOINT.md).
+
 ## Iteration 128 cache initialization repair and connected reading checkpoint
 
 1. Preserve the original goal and all earlier work. Actually verify secured input

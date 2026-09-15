@@ -1,5 +1,32 @@
 # A+ remediation test status
 
+## Iteration 129 connected packet complete; original whole-product goal active
+
+Actually secured input 020c146f8067d8f5bf38ef51aa35344e7dd7709e and exact current
+authority/input bindings are verified before four report/history changes. Only
+the fully read Licensing PO-2026-09-15-03 decision row/section changes authority
+bytes; exact reconstruction matches prior DECISIONS, ServiceBus scope unchanged.
+
+59 new full personal reads / 14,429 lines / 338 declarations / 398 historical
+passed cases. Connected packet 102/102 / 23,480 lines / 508 declarations / 665
+historical cases. Cumulative Core owner 314/557 / 87,830 lines, 243 remaining.
+Read/name/Git diagnostics 0 do not mean complete parser/effective graph/owner
+admission. No new Core test design/edit or productive source/comment change.
+Deferred scoped groups: 0 Critical / 9 High / 3 Medium / 2 Low, all open;
+strong positive controls preserved, no confirmed productive defect/mutant kill.
+
+No fresh build/native/coverage/CRAP/global Async/cloud/provider/counter-review.
+Historical 128 strict Core build and 4,007/4,007 native passes remain historical.
+CS01 implementation is repaired, but targeted fault/mutation/interval proof stays
+open; all earlier findings/quality obligations retain their dispositions.
+
+The four owned files receive normal commit, annotated checkpoint tag, approved
+atomic push and independent keyed branch/tag/peeled verification before security
+is reported. This is not A+ product completion. Continue remaining 243 Core owner
+inputs and effective graph/full parser/GitReadSet, then connected remediation and
+whole productive-src manual reading/comments/API/architecture without feature loss.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-129/CORE_COMPOSITION_TELEMETRY_AND_TOPOLOGY_READING_CHECKPOINT.md).
+
 ## Iteration 128 implementation/read checkpoint; original goal active
 
 Actually secured input 6c0916b20eb5b8f71ca924c84b87b3bca054f50e and unchanged

@@ -1,5 +1,38 @@
 # A+ remediation research
 
+## Iteration 129 full connected existing-contract review
+
+The main personally reads all 59 remaining files / 14,429 physical lines through
+EOF, including every fixture/member/comment. All 338 declarations reconcile with
+398 historical passed cases and unchanged Git input. Prior 255 / 73,401 lines
+also bind exactly. Connected packet 102/102 / 23,480 lines / 508 declarations /
+665 historical cases; cumulative Core owner 314/557 / 87,830 lines, 243 remaining.
+No complete language parser/effective graph/GitReadSet or whole-owner admission.
+Agreement §4.3 still gates new Core test design/editing and full owner acceptance.
+
+Positive actual scope identity, retained NamedEntity order, terminal activity
+delivery, gated active deltas, fixed gauges/hash vectors, and attempted secondary
+logger/factory failures are retained. Narrow deferred gaps concern causal/terminal
+observation, exact ownership/scalars/configured execution, rejected retained state,
+collectible-owner lifetime, cleanup bounds, pending typed forwarding, global
+transition, variants/canonical schema and fixture naming/style. Grouped scoped
+review: 0 Critical / 9 High / 3 Medium / 2 Low, all open, not confirmed productive
+defects or executed mutation kills; overlapping prior findings are not additive.
+
+Input 020c146f8067d8f5bf38ef51aa35344e7dd7709e is actually remote-secured.
+Authority/input diagnostic 0 confirms seven bindings and exact old DECISIONS
+bytes after removing only Licensing PO-2026-09-15-03 row/section. ServiceBus
+authority is unchanged; failed diagnostic probes are not successful receipts.
+No productive source/test/project/dependency/comment changes, no generators,
+fresh build/native/coverage/CRAP/global Async/provider or counter-review here.
+Historical 128 Core 4,007/4,007 passes are not a fresh 129 run or CS01 proof.
+
+Four owned report/history files are manually authored and normally secured after
+strict manifest/tail validation. All old tails and original goal/findings remain.
+Finish the remaining 243 owner inputs and parser/effective graph admission,
+then effective regressions/mutations and whole productive-src quality work.
+[Detailed checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-129/CORE_COMPOSITION_TELEMETRY_AND_TOPOLOGY_READING_CHECKPOINT.md).
+
 ## Iteration 128 actual constructor correction and full connected reads
 
 Input 6c0916b20eb5b8f71ca924c84b87b3bca054f50e is actually remote branch/tag/peeled
