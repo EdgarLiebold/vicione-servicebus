@@ -132,8 +132,9 @@ public interface ConsumeContext :
     /// <param name="context">The typed context that completed successfully.</param>
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
-    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
+    /// <param name="cancellationToken">Cancels notification before the receive pipeline is invoked.</param>
     /// <returns>A task that represents the notification operation.</returns>
+    /// <remarks>Required arguments are validated before cancellation. Once notification starts, observer completion remains part of the returned operation.</remarks>
     Task NotifyConsumedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         CancellationToken cancellationToken = default)
         where TMessage : class;
@@ -144,8 +145,9 @@ public interface ConsumeContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The consumer type name.</param>
     /// <param name="exception">The consumer exception.</param>
-    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
-    /// <returns>A task that represents the notification operation.</returns>
+    /// <param name="cancellationToken">Cancels before fault generation starts and is forwarded to the receive notification after any required generation completes.</param>
+    /// <returns>A task that represents any required fault generation and the receive notification.</returns>
+    /// <remarks>Required arguments are validated before cancellation. Started fault generation follows the delivery cancellation policy and is awaited before receive notification; later caller cancellation does not replace its failure.</remarks>
     Task NotifyFaultedAsync<TMessage>(ConsumeContext<TMessage> context, TimeSpan duration, string consumerType,
         Exception exception, CancellationToken cancellationToken = default)
         where TMessage : class;

@@ -288,14 +288,20 @@ public abstract class BaseConsumeContext :
     /// <param name="context">The typed consume context that completed.</param>
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The diagnostic name of the consumer implementation.</param>
-    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification.</param>
+    /// <param name="cancellationToken">Cancels notification before the receive pipeline is invoked.</param>
     /// <returns>A task that completes when all receive observers have been notified.</returns>
+    /// <remarks>Required arguments are validated synchronously before cancellation. Once notification begins, its actual completion is preserved.</remarks>
     public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
-        return ReceiveContext.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
+
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        return ReceiveContext.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The receive context returned no consume notification task.");
     }
 
     /// <summary>Generates a message fault when appropriate and reports a failed consumer invocation to the receive pipeline.</summary>
@@ -304,15 +310,26 @@ public abstract class BaseConsumeContext :
     /// <param name="duration">The elapsed consumer execution time.</param>
     /// <param name="consumerType">The diagnostic name of the consumer implementation.</param>
     /// <param name="exception">The consumer failure.</param>
-    /// <param name="cancellationToken">The cancellation token forwarded to the receive notification after any required fault generation.</param>
+    /// <param name="cancellationToken">Cancels before fault generation starts and is forwarded to the receive notification after any required generation completes.</param>
     /// <returns>A task that completes when fault generation and observer notification finish.</returns>
-    public virtual async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
+    /// <remarks>Required arguments are validated synchronously before cancellation. Started fault generation uses the delivery context's cancellation policy and is always awaited; its failure is not replaced by later caller cancellation.</remarks>
+    public virtual Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
         ArgumentNullException.ThrowIfNull(exception);
 
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        return NotifyFaultedCoreAsync(context, duration, consumerType, exception, cancellationToken);
+    }
+
+    async Task NotifyFaultedCoreAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
+        CancellationToken cancellationToken)
+        where T : class
+    {
         switch (exception)
         {
             case OperationCanceledException canceled when canceled.CancellationToken == context.CancellationToken:
@@ -320,11 +337,17 @@ public abstract class BaseConsumeContext :
 
             default:
                 if (!context.CancellationToken.IsCancellationRequested)
-                    await GenerateFaultAsync(context, exception).ConfigureAwait(false);
+                {
+                    Task generation = GenerateFaultAsync(context, exception)
+                        ?? throw new InvalidOperationException("The consume context returned no fault-generation task.");
+                    await generation.ConfigureAwait(false);
+                }
                 break;
         }
 
-        await ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
+        Task notification = ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The receive context returned no consume-fault notification task.");
+        await notification.ConfigureAwait(false);
     }
 
     /// <summary>Registers an observer for sends initiated by this consume context.</summary>
