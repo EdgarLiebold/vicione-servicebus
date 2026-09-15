@@ -67,10 +67,11 @@ public class InMemoryOutboxConsumeContext :
             _outboxSchedulerContext?.CreateCheckpoint() ?? default);
     }
 
-    /// <summary>Releases and executes all pending operations.</summary>
+    /// <summary>Releases and executes pending deferred operations, then processes scheduler actions.</summary>
+    /// <remarks>Scheduler-action failures are caught and logged when the warning logger is available.</remarks>
     /// <param name="concurrentMessageDelivery">Whether independent deferred sends may execute concurrently.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes when all deferred operations and cancellations have finished.</returns>
+    /// <param name="cancellationToken">The token forwarded to deferred-operation and scheduler processing.</param>
+    /// <returns>A task representing deferred delivery and subsequent scheduler processing.</returns>
     public virtual async Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default)
     {
         _clearToSend.TrySetResult(this);
@@ -90,9 +91,10 @@ public class InMemoryOutboxConsumeContext :
         }
     }
 
-    /// <summary>Discards every pending operation and cancels every deferred scheduled message.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes after pending operations are discarded and tracked schedules are canceled.</returns>
+    /// <summary>Discards pending deferred operations and requests cancellation of tracked scheduled messages.</summary>
+    /// <remarks>Scheduler-cancellation failures are caught and logged when the warning logger is available.</remarks>
+    /// <param name="cancellationToken">The token supplied to deferred-operation discard and schedule cancellation.</param>
+    /// <returns>A task representing pending-work discard and schedule-cancellation processing.</returns>
     public virtual async Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default)
     {
         _deferredMethods.Discard(cancellationToken);

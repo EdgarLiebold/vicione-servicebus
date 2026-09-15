@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox.InMemory;
 
-/// <summary>Coordinates process-local inbox locking and durable-outbox pipeline execution.</summary>
+/// <summary>Coordinates process-local inbox locking and outbox-aware pipeline execution.</summary>
 internal sealed class InMemoryOutboxContextFactory :
     IOutboxContextFactory<InMemoryOutboxMessageRepository>
 {
@@ -74,8 +74,8 @@ internal sealed class InMemoryOutboxContextFactory :
                         }
                         catch
                         {
-                            // The active delivery failure remains authoritative; observing the completion
-                            // task prevents that failed attempt from affecting the next retry.
+                            // Observe the completion failure without replacing the delivery exception
+                            // that the enclosing catch rethrows.
                         }
                     }
 

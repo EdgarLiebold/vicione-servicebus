@@ -137,7 +137,8 @@ internal sealed class InMemoryDelayProvider :
     }
 
     /// <summary>Cancels pending delays and releases the shared timer.</summary>
-    /// <returns>A value task that completes after every pending delay is canceled and the shared timer is released.</returns>
+    /// <remarks>Repeated or concurrent calls return immediately once disposal has begun and do not await the earlier call.</remarks>
+    /// <returns>A value task representing this call's disposal work.</returns>
     public async ValueTask DisposeAsync()
     {
         ScheduledDelay[] pending;

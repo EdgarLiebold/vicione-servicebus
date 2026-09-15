@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Processes in memory outbox pipeline stages.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <summary>Runs a consume pipeline with deferred outgoing operations and scoped consume-context rebinding.</summary>
+/// <typeparam name="TContext">The incoming pipeline context type.</typeparam>
+/// <typeparam name="TResult">The outbox-decorated consume context passed to the downstream pipeline.</typeparam>
 public class InMemoryOutboxFilter<TContext, TResult> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -16,16 +16,15 @@ public class InMemoryOutboxFilter<TContext, TResult> :
     readonly bool _concurrentMessageDelivery;
     readonly Func<TContext, TResult> _contextFactory;
     /// <summary>
-    /// The bus-bound setter, or nothing at all. The direct configuration has no container, so there
-    /// is no bus-bound scoped context to rebind and this stays absent; the filter then leaves the
-    /// consume context exactly as it found it instead of reaching into some other provider for one.
+    /// Rebinds an existing consume scope to the outbox context when a setter is supplied.
+    /// Without a setter or an IServiceScope payload, no scoped-context rebinding occurs.
     /// </summary>
     readonly ISetScopedConsumeContext? _setter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="setter">The setter.</param>
-    /// <param name="contextFactory">The context factory.</param>
-    /// <param name="concurrentMessageDelivery">The concurrent message delivery.</param>
+    /// <summary>Configures outbox-context creation, optional scoped rebinding and deferred delivery concurrency.</summary>
+    /// <param name="setter">The scoped consume-context setter, or null to leave scoped bindings unchanged.</param>
+    /// <param name="contextFactory">The factory that decorates each incoming context with an outbox.</param>
+    /// <param name="concurrentMessageDelivery">Whether independent deferred operations may execute concurrently.</param>
     public InMemoryOutboxFilter(ISetScopedConsumeContext? setter, Func<TContext, TResult> contextFactory, bool concurrentMessageDelivery)
     {
         _setter = setter;
@@ -33,10 +32,14 @@ public class InMemoryOutboxFilter<TContext, TResult> :
         _concurrentMessageDelivery = concurrentMessageDelivery;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Runs the downstream pipeline, executes deferred work and awaits consume completion.</summary>
+    /// <remarks>
+    /// A pipeline, deferred-delivery or completion failure triggers pending-work discard.
+    /// The scoped-binding handle is disposed on exit. A discard or disposal failure can replace an earlier failure.
+    /// </remarks>
+    /// <param name="context">The incoming context to decorate with an outbox.</param>
+    /// <param name="next">The downstream pipeline that receives the outbox context.</param>
+    /// <returns>A task representing consumption and deferred delivery.</returns>
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var outboxContext = _contextFactory(context);
@@ -66,7 +69,7 @@ public class InMemoryOutboxFilter<TContext, TResult> :
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The probe context to enrich with the in-memory outbox filter.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("outbox");

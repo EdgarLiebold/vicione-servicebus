@@ -1,5 +1,58 @@
 # A+ remediation research
 
+## Iteration 123 complete saga Core reading and outbox source
+
+Input 3bb808bc999141638b1620c4adeb5bc51ceacc86 is actually committed,
+annotated with iteration-122, normally atomically pushed and independently
+reference-keyed verified (actual exits 0, three matching references). All six
+normative hashes and the selected ServiceBus slice are unchanged from complete
+main readings; no new product authority or protected-tree work is introduced.
+
+The main personally completes twenty additional Core-owner files / 6,804 lines,
+including every fixture/helper/field, 93 methods / 137 declared cases. Cumulative
+owner reading is 47/557 files / 13,908 lines; 510 files remain. All forty files in
+the selected saga/job state-machine folders are read, not the whole owner. No new
+Core test design, change or full-owner acceptance before complete admission.
+The handwritten review records 0 Critical / 4 High / 0 Medium / 1 Low: unarranged
+outbox failed response, actual-derived correlation IDs, aliased/incomplete stale
+snapshot and unbounded removed-owner waiter; Legacy label is cosmetic, not a
+reason to remove native saga features. Exact correction targets remain deferred.
+
+Nine productive source files are completely personally read / 1,099 input lines.
+Five files receive manually authored comment-only repairs for actual rebinding,
+deferred delivery, cancellation requests, conditional warning logging, exception
+ordering and repeated disposal. Final lines 1,105; binary non-comment comparison
+is actual 0 with no signature/executable change. No source/comment generator.
+The internal Sol advisor completely reads eight exact sources, yields three
+manually applied qualifications, fully rereads their final versions and finds no
+further mandatory comment fix. It initially enumerates two protected review README
+filenames, without content reads/writes; this reported deviation is explicitly
+preserved rather than claiming perfect exclusion or independent external acceptance.
+
+Structured diagnostic lessons: binary .b equality, not Ruby encoding-sensitive
+String equality, correctly reconciles the unchanged Å partitioner fixture.
+Initial checker 1 is preserved; final exact 47-file read-binding check is 0.
+System Ruby lacks filter_map; initial diagnostic 1/empty raw file is preserved,
+then read-only map/compact succeeds. Neither issue is a product/test failure.
+Known build/host Sandbox IPC is handled by targeted approved execution, strict
+no-restore/no-build-server/single-node/nonshared-compilation flags, not blind reruns.
+
+Final strict Core/Architecture builds are 0, zero warnings/errors (12.60s/4.94s).
+Fresh native unfiltered Core is 0, 4,007/4,007 (22.745s); Architecture is 0,
+439/439 (4m03.398s), zero failures/skips. Actual bidirectional Async case passed
+(204718ms). Independently parsed reports exactly match 93 reviewed methods /
+137 passed cases and the actual unique Async record. Exact five-source format
+is 0 with no output/writes. Focused incremental builds are not global warning
+inventory. No fresh mutation/package/cloud/global coverage claim is made.
+
+The actual source-root tree contains sibling project owners and only the shared
+Directory.Build.props file directly at root. ViciOne.ServiceBus is Core, not an
+umbrella project. Retain sibling capability assemblies and provider/integration
+families; do not nest other SDK projects under Core's recursive source inclusion.
+All runtime/API/metadata/provider/full personal reading/global proof work remains
+in the original active goal. [The bounded packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-123/SAGA_CORE_READING_PACKET.md)
+preserves exact readings, findings, actual final receipts and scope qualifications.
+
 ## Iteration 122 state-accessor source and Core-owner reading
 
 Input e280df694ab9e6c50e3877aebf97882dfeeacb5e is actually committed,

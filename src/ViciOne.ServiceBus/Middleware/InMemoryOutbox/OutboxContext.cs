@@ -29,9 +29,9 @@ public interface OutboxContext
     /// <returns>A task that completes when every pending operation has finished.</returns>
     Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default);
 
-    /// <summary>Discards every pending operation and cancels every tracked scheduled message.</summary>
+    /// <summary>Discards pending operations and requests cancellation of tracked scheduled messages.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes when pending work and tracked schedules have been discarded.</returns>
+    /// <returns>A task representing pending-work discard and schedule-cancellation processing.</returns>
     Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>

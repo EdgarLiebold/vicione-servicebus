@@ -1,5 +1,49 @@
 # A+ remediation test status
 
+## Iteration 123 saga Core-reading and outbox documentation checkpoint
+
+Original whole-product A+ goal: active. Input 3bb808bc999141638b1620c4adeb5bc51ceacc86
+and annotated iteration-122 tag are actually normally atomically pushed and
+independently branch/tag/peeled verified (0, three exact matches). Unchanged
+normative/slice hashes reuse prior complete main readings, not a new authority.
+
+Main full personal productive source reading: nine files / 1,099 input lines.
+Five manually corrected comment-only files / 1,105 final lines clarify actual
+outbox pipeline, cancellation-request, logging, error and repeated disposal
+contracts. All nine binary executable/signature comparisons terminate 0; no
+body/signature/feature/dependency/directive/project change or generator.
+Internal Sol source advisor reads eight exact files, supplies three mandatory
+qualifications, fully rereads those final files and finds no further mandatory
+comment fix. Its initial enumeration of two protected review README filenames
+is documented; no contents/writes. No independent external/product acceptance.
+
+Core owner tree e3be6b831183b3b65636c3b5e167c165696037d2 is unchanged.
+Twenty new complete personal reads / 6,804 lines; cumulative 47/557 files /
+13,908 lines, 510 remain. All forty selected saga/job state-machine folder
+files are read, not the whole Core owner. No new Core test design/change or
+full-owner quality acceptance. All 93 existing methods / 137 cases are reviewed;
+settled findings 0 Critical / 4 High / 0 Medium / 1 Low. Exact correction targets
+are persisted and remain open. Native green is not proof of their weak oracles.
+
+Final strict focused Release builds: Core 0/12.60s, Architecture 0/4.94s,
+zero warnings/errors. Fresh unfiltered native Core 0: 4,007/4,007 passed,
+zero failures/skips / 22.745s. Architecture 0: 439/439 passed, zero failures/skips
+/ 4m03.398s. Actual bidirectional Async case passed / 204718ms. Independently
+parsed reports match exact passed records and all 93 reviewed methods / 137 cases.
+Exact five-source whitespace verification 0/no output or writes. Read-binding
+diagnostic 0 after documented binary encoding correction; native-case diagnostic
+0 after documented system-Ruby compatibility correction. All handles terminal.
+Checkpoint security is credited by actual commit/tag/push/ref observation.
+
+No current runtime mutation, package/cloud acceptance or global coverage/CRAP
+is claimed. Existing package baseline mismatch and historical evidence stay
+separate. Four High test findings, all connected NST/SMR/runtime/API candidates,
+remaining Core/full-src personal reading, manual comments, clean greenfield
+type/file/folder/API/feature equivalence and genuine provider/global proof remain
+in the same original active goal. Source navigation retains sibling package
+owners and Persistence/Scheduling/Transports integrations, not projects nested
+under the Core project. [Detailed current packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-123/SAGA_CORE_READING_PACKET.md).
+
 ## Iteration 122 state-accessor documentation checkpoint
 
 Original whole-product A+ goal: active. Secured input:

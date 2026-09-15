@@ -1,5 +1,43 @@
 # A+ remediation test plan
 
+## Iteration 123 complete saga Core reading and outbox lifecycle source
+
+1. Continue the same original whole-product goal from the actually remote-secured
+   iteration-122 input; reconcile unchanged complete authority bindings.
+2. Complete the twenty remaining selected saga/job state-machine owner files,
+   including all methods, nested fixtures and helpers. Preserve actual read
+   progress; no new Core test design/change before full 557-file admission.
+3. Fully read nine causal source neighbors and manually correct every inaccurate
+   comment after complete understanding. Preserve runtime/API findings as open.
+4. Review all 93 methods / 137 cases, record exact independent correction targets,
+   obtain bounded internal Sol advice, prove final comment-only byte equivalence,
+   strictly build and execute fresh complete Core/Architecture owners, parse actual
+   native case records and verify only five changed source whitespace scopes.
+5. Secure exact owned comments/reading/review/evidence with normal commit,
+   annotated tag, atomic non-force push and independent keyed remote verification.
+
+Steps 1–4 are complete: twenty full personal owner reads / 6,804 lines; cumulative
+47/557 / 13,908 lines, 510 remain. Nine full productive reads / 1,099 input lines;
+five manual comment-only repairs, 1,105 final lines, exact binary equivalence 0.
+Four High test weaknesses and one cosmetic Low naming issue are documented, not
+fixed or accepted merely because their cases pass. Internal eight-file advice
+produces three manually corrected qualifications and final no mandatory comment
+fix; its two protected filename enumerations are documented scope deviations.
+Final strict builds Core/Architecture 0, zero warnings/errors (12.60s/4.94s);
+fresh native complete owners 4,007/4,007 and 439/439, zero failures/skips
+(22.745s/4m03.398s), actual bidirectional Async case passed (204718ms).
+Exact source whitespace 0/no writes, independently parsed native counts and
+93/137 reviewed cases 0. Actual diagnostic failures are resolved and preserved.
+Checkpoint security follows its own actual commit/tag/push/ref outcomes.
+
+Next coherent priority: continue all remaining Core-owner inputs from the bound
+progress until full admission, then address exact independent test oracles and
+connected runtime failure/cancellation/recovery contracts with real red/green and
+effective selected mutations. Preserve sibling assembly and integration-family
+source boundaries. No whole-goal reduction or current global coverage certificate.
+Complete all-source personal reading/manual comments, metadata/package baseline,
+feature equivalence, provider acceptance and whole-product coverage/CRAP remain.
+
 ## Iteration 122 state-accessor source and Core-owner reading
 
 1. Reconcile the secured iteration-121 input and any changed governance binding.
