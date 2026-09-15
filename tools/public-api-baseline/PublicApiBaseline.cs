@@ -75,6 +75,8 @@ internal static class PublicApiBaseline
     /// <returns>Member declarations before the inventory's ordinal ordering.</returns>
     internal static IEnumerable<string> FormatMembers(Type type)
     {
+        // Each enumeration owns the reflection cache and does not share it across package load contexts.
+        NullabilityInfoContext nullability = new();
         if (type.IsGenericTypeDefinition)
         {
             int inheritedParameterCount = type.DeclaringType?.GetGenericArguments().Length ?? 0;
@@ -83,7 +85,7 @@ internal static class PublicApiBaseline
         }
 
         foreach (ConstructorInfo constructor in type.GetConstructors(DeclaredMembers).Where(IsExternallyVisible))
-            yield return $"CTOR {Visibility(constructor)} {FormatType(type)}({FormatParameters(constructor.GetParameters())})";
+            yield return $"CTOR {Visibility(constructor)} {FormatType(type)}({FormatParameters(constructor.GetParameters(), nullability)})";
 
         foreach (MethodInfo method in type.GetMethods(DeclaredMembers)
                      .Where(IsExternallyVisible)
@@ -96,23 +98,27 @@ internal static class PublicApiBaseline
                 ? $" [generic={string.Join(",", method.GetGenericArguments().Select(FormatGenericParameter))}]"
                 : string.Empty;
             yield return $"METHOD {Visibility(method)} {MethodModifiers(method)}{FormatType(method.ReturnType)} "
-                + $"{method.Name}{genericArguments}({FormatParameters(method.GetParameters())}){genericContracts}"
-                + FormatCustomModifiers(method.ReturnParameter.GetRequiredCustomModifiers(), method.ReturnParameter.GetOptionalCustomModifiers(), "return-");
+                + $"{method.Name}{genericArguments}({FormatParameters(method.GetParameters(), nullability)}){genericContracts}"
+                + FormatCustomModifiers(method.ReturnParameter.GetRequiredCustomModifiers(), method.ReturnParameter.GetOptionalCustomModifiers(), "return-")
+                + FormatNullability(nullability.Create(method.ReturnParameter), "return-");
         }
 
         foreach (PropertyInfo property in type.GetProperties(DeclaredMembers).Where(IsExternallyVisible))
         {
             string index = property.GetIndexParameters() is { Length: > 0 } parameters
-                ? $"[{FormatParameters(parameters)}]"
+                ? $"[{FormatParameters(parameters, nullability)}]"
                 : string.Empty;
             yield return $"PROPERTY {FormatType(property.PropertyType)} {property.Name}{index} "
                 + $"{{ {Accessor(property.GetMethod, "get")} {Accessor(property.SetMethod, "set")} }}"
-                + FormatCustomModifiers(property.GetRequiredCustomModifiers(), property.GetOptionalCustomModifiers());
+                + FormatCustomModifiers(property.GetRequiredCustomModifiers(), property.GetOptionalCustomModifiers())
+                + FormatNullability(nullability.Create(property), read: property.GetMethod is { } getter && IsExternallyVisible(getter),
+                    write: property.SetMethod is { } setter && IsExternallyVisible(setter));
         }
 
         foreach (EventInfo @event in type.GetEvents(DeclaredMembers).Where(IsExternallyVisible))
             yield return $"EVENT {FormatType(@event.EventHandlerType!)} {@event.Name} "
-                + $"{{ {Accessor(@event.AddMethod, "add")} {Accessor(@event.RemoveMethod, "remove")} }}";
+                + $"{{ {Accessor(@event.AddMethod, "add")} {Accessor(@event.RemoveMethod, "remove")} }}"
+                + FormatNullability(nullability.Create(@event));
 
         foreach (FieldInfo field in type.GetFields(DeclaredMembers).Where(IsExternallyVisible))
         {
@@ -120,7 +126,8 @@ internal static class PublicApiBaseline
             modifiers += field.IsInitOnly ? "readonly " : string.Empty;
             string value = field.IsLiteral ? $" = {FormatValue(field.GetRawConstantValue())}" : string.Empty;
             yield return $"FIELD {Visibility(field)} {modifiers}{FormatType(field.FieldType)} {field.Name}{value}"
-                + FormatCustomModifiers(field.GetRequiredCustomModifiers(), field.GetOptionalCustomModifiers());
+                + FormatCustomModifiers(field.GetRequiredCustomModifiers(), field.GetOptionalCustomModifiers())
+                + FormatNullability(nullability.Create(field));
         }
     }
 
@@ -295,10 +302,10 @@ internal static class PublicApiBaseline
         => required.Length == 0 && optional.Length == 0 ? string.Empty
             : $" [{prefix}modreq=[{string.Join(",", required.Select(FormatType))}];{prefix}modopt=[{string.Join(",", optional.Select(FormatType))}]]";
 
-    private static string FormatParameters(IEnumerable<ParameterInfo> parameters)
-        => string.Join(", ", parameters.Select(FormatParameter));
+    private static string FormatParameters(IEnumerable<ParameterInfo> parameters, NullabilityInfoContext nullability)
+        => string.Join(", ", parameters.Select(parameter => FormatParameter(parameter, nullability)));
 
-    private static string FormatParameter(ParameterInfo parameter)
+    private static string FormatParameter(ParameterInfo parameter, NullabilityInfoContext nullability)
     {
         IList<CustomAttributeData> attributes = parameter.GetCustomAttributesData();
         bool readOnlyLocation = attributes.Any(attribute => attribute.AttributeType.FullName == "System.Runtime.CompilerServices.RequiresLocationAttribute");
@@ -320,7 +327,35 @@ internal static class PublicApiBaseline
         string direction = !explicitDirection ? string.Empty
             : $" [direction={(parameter.IsIn && parameter.IsOut ? "in&out" : parameter.IsIn ? "in" : "out")}]";
         return $"{collection}{modifier}{FormatType(parameterType)} {parameter.Name}{optional}{direction}"
-            + FormatCustomModifiers(parameter.GetRequiredCustomModifiers(), parameter.GetOptionalCustomModifiers());
+            + FormatCustomModifiers(parameter.GetRequiredCustomModifiers(), parameter.GetOptionalCustomModifiers())
+            + FormatNullability(nullability.Create(parameter));
+    }
+
+    /// <summary>Preserves unknown or refined read/write positions relative to each CLR type's nullability default.</summary>
+    private static string FormatNullability(NullabilityInfo info, string prefix = "", bool read = true, bool write = true)
+        => HasNonDefaultNullability(info, read, write)
+            ? $" [{prefix}nullability={FormatNullabilityNode(info, read, write)}]"
+            : string.Empty;
+
+    private static bool HasNonDefaultNullability(NullabilityInfo info, bool read = true, bool write = true)
+    {
+        Type type = info.Type.IsByRef ? info.Type.GetElementType()! : info.Type;
+        bool reference = type.IsGenericParameter || (!type.IsValueType && !type.IsPointer && !type.IsFunctionPointer);
+        bool nullableValue = Nullable.GetUnderlyingType(type) is not null;
+        NullabilityState defaultState = nullableValue ? NullabilityState.Nullable : NullabilityState.NotNull;
+        return ((reference || nullableValue) && ((read && info.ReadState != defaultState) || (write && info.WriteState != defaultState)))
+            || (info.ElementType is { } element && HasNonDefaultNullability(element))
+            || info.GenericTypeArguments.Any(argument => HasNonDefaultNullability(argument));
+    }
+
+    /// <summary>Preserves child positions even when only one node differs from its CLR type's nullability default.</summary>
+    private static string FormatNullabilityNode(NullabilityInfo info, bool read = true, bool write = true)
+    {
+        string element = info.ElementType is { } child ? $";element={FormatNullabilityNode(child)}" : string.Empty;
+        string arguments = info.GenericTypeArguments.Length == 0 ? string.Empty
+            : $";arguments=[{string.Join(",", info.GenericTypeArguments.Select(argument => FormatNullabilityNode(argument)))}]";
+        // Accessor visibility limits the root contract, not the mutability of returned arrays or generic elements.
+        return $"{{read={(read ? info.ReadState.ToString() : "none")};write={(write ? info.WriteState.ToString() : "none")}{element}{arguments}}}";
     }
 
     /// <summary>Distinguishes typed struct and generic defaults from concrete reference and nullable-value null constants.</summary>

@@ -22,7 +22,10 @@ public sealed class PublicApiMemberModifierTests
     [InlineData(nameof(Parameters.NullableText), "System.String")]
     [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "member-defaults-keep-nullable-and-reference-null")]
     public void ParameterDefaults_KeepNullableAndReferenceNullDefaults(string method, string type)
-        => Assert.Equal($"METHOD public static System.Void {method}({type} value = null)", Method(typeof(Parameters), method));
+    {
+        string nullability = method == nameof(Parameters.NullableText) ? " [nullability={read=Nullable;write=Nullable}]" : string.Empty;
+        Assert.Equal($"METHOD public static System.Void {method}({type} value = null{nullability})", Method(typeof(Parameters), method));
+    }
 
     [Theory]
     [InlineData(nameof(Parameters.Text), "System.String value = \"a\\\"b\\\\c\\n\"")]
@@ -122,17 +125,17 @@ public sealed class PublicApiMemberModifierTests
     }
 
     [Theory]
-    [InlineData(nameof(Parameters.DefaultStruct))]
-    [InlineData(nameof(Parameters.DefaultUnmanaged))]
-    [InlineData(nameof(Parameters.DefaultUnconstrained))]
+    [InlineData(nameof(Parameters.DefaultStruct), "")]
+    [InlineData(nameof(Parameters.DefaultUnmanaged), "")]
+    [InlineData(nameof(Parameters.DefaultUnconstrained), " [nullability={read=Nullable;write=Nullable}]")]
     [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "member-defaults-preserve-typed-generic-defaults")]
-    public void ParameterDefaults_PreserveTypedGenericDefaults(string method)
+    public void ParameterDefaults_PreserveTypedGenericDefaults(string method, string nullability)
     {
         ParameterInfo parameter = typeof(Parameters).GetMethod(method)!.GetParameters()[0];
         Assert.True(parameter.ParameterType.IsGenericParameter);
         Assert.True(parameter.HasDefaultValue);
         Assert.Null(parameter.RawDefaultValue);
-        Assert.StartsWith($"METHOD public static System.Void {method}<T>(T value = default(T)) [generic=", Method(typeof(Parameters), method), StringComparison.Ordinal);
+        Assert.StartsWith($"METHOD public static System.Void {method}<T>(T value = default(T){nullability}) [generic=", Method(typeof(Parameters), method), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -213,7 +216,7 @@ public sealed class PublicApiMemberModifierTests
     [InlineData(typeof(VirtualEvent), "[modifiers=virtual]")]
     [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "member-events-preserve-each-accessor-contract")]
     public void EventAccessors_PreserveEachAccessorContract(Type type, string modifier)
-        => Assert.Equal($"EVENT System.Action Changed {{ public-add{modifier}; public-remove{modifier}; }}", Assert.Single(PublicApiBaseline.FormatMembers(type), row => row.StartsWith("EVENT ", StringComparison.Ordinal)));
+        => Assert.Equal($"EVENT System.Action Changed {{ public-add{modifier}; public-remove{modifier}; }} [nullability={{read=Nullable;write=Nullable}}]", Assert.Single(PublicApiBaseline.FormatMembers(type), row => row.StartsWith("EVENT ", StringComparison.Ordinal)));
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "member-indexers-share-typed-optional-default-contract")]

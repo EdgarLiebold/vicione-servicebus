@@ -1,5 +1,46 @@
 # A+ remediation test plan
 
+## Iteration 121 recursive member nullability
+
+1. Handwrite typed PublicApiMemberNullabilityTests against the unchanged actual
+   tool and map every method to REQ-VSB-PACKED-PUBLIC-API in the exact catalogue.
+   Cover scalar parameter/return, nested generic argument positions, array root/
+   element/jagged/multidimensional nodes, property/field read-write promises,
+   combined indexer value/index parameters, constructor and event contracts,
+   byref elements, generic uses, oblivious versus known references, private
+   accessor exclusion and value-only omission.
+2. Require strict compilation 0, then independent metadata arrangements and
+   functional native assertion failures before implementing the real formatter.
+3. Preserve recursive read/write states in declaration order using a context
+   owned by each member enumeration. Canonically omit only fully known NotNull
+   reference trees; retain Unknown/Nullable and positional child structure.
+   Property-root directions apply only to externally visible accessors.
+4. Manually update any old exact oracle only for the intended new contract,
+   preserving its original modifier/default/shape assertions. Run all inventory
+   and exact requirement projection cases, inspect every assertion and obtain
+   bounded internal Sol advice where useful.
+5. Compile/execute selected one-cause regressions, manually restore exact bytes,
+   then strictly build and run complete affected owners, selected formats and
+   the actual fresh package gate. Keep unchanged baseline mismatch open rather
+   than automatically updating it. Bind only actual outcomes and normally
+   commit/tag/push/independently verify the completed owned checkpoint.
+
+The original whole-product goal stays active. Core runtime test-owner admission,
+all connected behavioral findings and final global coverage/A+ proof remain open.
+
+The handwritten bounded repair and actual validation are complete: 19 methods /
+38 cases, 194 exact tuples, final inventory/projection 123/123 green, selected
+compiled mutations9/9 detected (30 failed cases) and exact source restorations.
+Final strict Architecture build0/zero warnings/errors; fresh unfiltered owner
+439/439 green including the actual bidirectional Async guard. Two scoped read-only
+formats terminate0. Fresh package gate reaches final unchanged baseline comparison
+and terminates1 after31 packages/18 journeys/3 consumers/30 inventories. Exact
+3230-block duplicate-preserving prior/fresh shape comparison terminates0 after
+removing only new nullability metadata. Checkpoint security follows actual Git
+outcomes. Next coherent runtime priority is full personal Core test-owner admission
+before addressing connected saga declaration/cache/configuration failures in the
+real owning tests; metadata, source-reading and global proof obligations stay open.
+
 ## Iteration 120 complete state-machine root source review
 
 1. Completely personally read the central declaration file and selected

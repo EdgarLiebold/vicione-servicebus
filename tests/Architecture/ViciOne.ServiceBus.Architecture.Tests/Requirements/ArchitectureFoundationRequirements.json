@@ -1,5 +1,33 @@
 [
   {
+    "requirementId": "REQ-VSB-PACKED-PUBLIC-API",
+    "variantKey": "member-nullability-preserves-nullable-value-flow-refinements",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests",
+    "testMethod": "NullableValueFlow_PreservesDirectionRefinementsWithoutInventingOrdinaryContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-PACKED-PUBLIC-API",
+    "variantKey": "member-nullability-preserves-only-externally-visible-property-directions",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests",
+    "testMethod": "PropertyNullability_PreservesOnlyExternallyVisibleDirections"
+  },
+  {
+    "requirementId": "REQ-VSB-PACKED-PUBLIC-API",
+    "variantKey": "member-nullability-preserves-parameter-flow-read-and-write-promises",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests",
+    "testMethod": "ParameterNullability_PreservesFlowReadAndWritePromises"
+  },
+  {
+    "requirementId": "REQ-VSB-PACKED-PUBLIC-API",
+    "variantKey": "member-nullability-preserves-return-flow-read-and-write-promises",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests",
+    "testMethod": "ReturnNullability_PreservesFlowReadAndWritePromises"
+  },
+  {
     "requirementId": "REQ-TEST-203",
     "variantKey": "architecture-test-project-single-native-test-entry",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
@@ -324,4 +352,19 @@
   ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-defaults-preserve-typed-generic-defaults", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberModifierTests", "testMethod": "ParameterDefaults_PreserveTypedGenericDefaults" }
   ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-events-preserve-each-accessor-contract", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberModifierTests", "testMethod": "EventAccessors_PreserveEachAccessorContract" }
   ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-indexers-share-typed-optional-default-contract", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberModifierTests", "testMethod": "IndexerDefaults_PreserveTypedOptionalValueDefaults" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-distinguishes-nullable-and-required-parameters", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ParameterNullability_DistinguishesNullableAndRequiredReferences" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-distinguishes-nullable-and-required-returns", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ReturnNullability_DistinguishesNullableAndRequiredReferences" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-nested-generic-argument-positions", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ParameterNullability_PreservesNestedGenericArgumentPositions" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-array-root-and-element-nodes", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ArrayNullability_PreservesRootAndElementNodes" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-jagged-and-multidimensional-array-nodes", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ArrayNullability_PreservesJaggedAndMultidimensionalNodes" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-distinct-property-read-and-write-promises", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "PropertyNullability_PreservesDistinctReadAndWritePromises" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-distinct-field-read-and-write-promises", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "FieldNullability_PreservesDistinctReadAndWritePromises" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-indexer-value-and-index-parameter-contracts", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "IndexerNullability_PreservesValueAndIndexParameterContracts" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-constructor-parameter-contracts", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ConstructorNullability_PreservesParameterContracts" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-event-delegate-and-payload-contracts", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "EventNullability_PreservesDelegateAndPayloadContracts" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-byref-element-contracts", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ByReferenceNullability_PreservesElementContracts" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-preserves-generic-parameter-use-sites", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "GenericParameterNullability_PreservesUseSiteContracts" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-distinguishes-oblivious-and-known-reference-contracts", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ReferenceNullability_DistinguishesObliviousAndKnownContracts" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-excludes-private-property-accessor-promises", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "PropertyNullability_ExcludesPrivateAccessorPromises" }
+  ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-does-not-invent-reference-contracts-for-value-only-members", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ValueOnlyMembers_DoNotInventReferenceNullabilityContracts" }
 ]

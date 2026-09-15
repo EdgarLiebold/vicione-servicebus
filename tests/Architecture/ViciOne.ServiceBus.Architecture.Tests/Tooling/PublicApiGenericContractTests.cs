@@ -76,9 +76,9 @@ public sealed class PublicApiGenericContractTests
         => Assert.Equal(
             [
                 "METHOD public static System.Int32 Ordinary(System.Int32 value)",
-                "METHOD public static T MaybeReference<T>(T value) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[2];unmanaged=false}]",
+                "METHOD public static T MaybeReference<T>(T value [nullability={read=Nullable;write=Nullable}]) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[2];unmanaged=false}] [return-nullability={read=Nullable;write=Nullable}]",
                 "METHOD public static T Pair<T,TValue>(T value, TValue other) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false},TValue{flags=NotNullableValueTypeConstraint&DefaultConstructorConstraint;constraints=[System.ValueType];nullable=[0];unmanaged=false}]",
-                "METHOD public static T Plain<T>(T value) [generic=T{flags=None;constraints=[];nullable=[2];unmanaged=false}]",
+                "METHOD public static T Plain<T>(T value [nullability={read=Nullable;write=Nullable}]) [generic=T{flags=None;constraints=[];nullable=[2];unmanaged=false}] [return-nullability={read=Nullable;write=Nullable}]",
                 "METHOD public static T Reference<T>(T value) [generic=T{flags=ReferenceTypeConstraint&DefaultConstructorConstraint;constraints=[];nullable=[1];unmanaged=false}]",
             ],
             PublicApiBaseline.FormatMembers(typeof(MethodContracts))

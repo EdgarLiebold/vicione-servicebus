@@ -1,0 +1,95 @@
+# Member-nullability checkpoint bindings
+
+Input commit: 197a150e35c542060e8d416a124fc93f49a3ebd9.
+The original whole-product goal remains active. Hashes bind bounded evidence,
+not whole-source reading, current global coverage or independent acceptance.
+
+## Personally read inputs
+
+Paths below are repository-relative.
+
+```text
+a4178ebc8861ef1a029fd28f2107527c88e3978408e1a2b1a2a01d57a305a564  tools/public-api-baseline/PublicApiBaseline.cs
+38765fbdd06f667cbfdd2734149baffca71815acc72ffe9759e9e5dc4e61b206  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs
+65d5804c725d9ec6d6b7106beb56ab2dc4d0bed4a1760338ce221c9d7d5ccec8  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs
+548df903479544026a05c3527f3aa2b677679e26302c6bdd36ad8b6b4ce1aa6c  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/ArchitectureFoundationRequirements.json
+```
+
+## Current owned code and catalogue
+
+```text
+f62b2315d132da62ee743052d8d23c4c99f3fe787a22e12280117032de7e26ed  tools/public-api-baseline/PublicApiBaseline.cs
+727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs
+16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs
+86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs
+47c0c95f146d1b919bba292d1c9be489afa0989f301456e58380effb83bd832c  tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/ArchitectureFoundationRequirements.json
+```
+
+The internal initial four-file review binds Tool272abe05.../Test711a2ce6.../
+Generic16d8a45c.../Modifier86ff1418... before the nullable-value expansion.
+The follow-up binds Tool6d1913c0.../Test727e36c9... before the one-line manual
+comment correction. These are review input/exit hashes, not false final-byte
+claims. Main personal input/current reading and exact restoration are separate.
+
+## Actual terminal raw evidence
+
+All paths below are relative to the owned retained directory
+/private/tmp/vsb-iteration121-member-nullability.XygWpX.
+
+```text
+26111dca02d2cc65e590320b0ab6652cd6b2d89330ab48f0c01490b716c07dd6  red-build.log
+84c068a11b3bf5c00153a219317d819aa40378b91e9de020f332ed397c162380  red-tests.log
+103230197ef6fdf1cb52a6a90e947218093f4967ba82356d8aecb62192e078de  arranged-red-build.log
+b60e5192a8729ace3983145b39ba5e15829732a75c895baff34775785c8e5091  arranged-red-tests.log
+028a142ab17716bebfbda97a43edcd67d177dd8fe71a6399f019d836cf79fe4b  green-tests.log
+08ac2a309507d2873f5b49af2c41aa83542d9f76932ffac9667ccc5ef9015af6  expanded-green-tests.log
+102cbb50314b39cc4cb26c2a8ccd85acbf57ed274c097f2335cb614aa5973ef0  value-flow-red-build.log
+2bb095410cbb371f34a1dd9301db4a262de20901dc66855dc7db26c922972aba  value-flow-red-tests.log
+701bae3078f7189d045d55c5510004ec484e1c5513b8d5b5bc05c3d7d865d95d  value-flow-arranged-red-tests.log
+55e29471ceb6d49fd7f1b1e140b963e827eed82332da2598344c80a83cc1e149  value-flow-green-tests.log
+84f2541b55833dc4906c1b3e848421b4e1dc89bf24e3aab8bf4887e57f0e572d  final-architecture-build.log
+2c317586e1977fb34038ebb3399d7e3d4ee8e1772dda842084dfd0335e8bdb4b  final-architecture-tests.log
+40ec289b782a791074944502ce95d1b76a35d6fef5ecd3bbd9f035de64770e8a  final-architecture-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_53_48.982859.ctrf
+54af71b425d89ddc6bf6e60766ec6816ecd7caa89757ee158df1984a305b2e2a  fresh-package-gate.log
+4148abb6d0912c414a80048cd7e8b993ae66ba31c146564b135bd07d7ca69ce5  fresh-packed-public-api.txt
+33906dfe8d10d35b9fc6a2bf1b1e2477faa22dcd2175aedc3e4c81518bb4cc0c  packed-shape-equivalence.log
+21763938ce18d7ccd11282e7a089169d8b349851ecb2fd93f1e55a4a6bdaf57a  mutation-validation.log
+490b4e76d2cd8fc78c169006a98b0e15dadf75052f7dcc7294382c975e16dee3  assertion-and-projection-analysis.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  test-format.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  tool-format.log
+```
+
+## Nine actual compiled regression bindings
+
+Each native report has 38 cases, positive failed count, zero skipped; each
+strict build has zero warnings/errors. Every command is authoritatively terminal.
+
+```text
+1fb99d7885a490cbe134bec585b22a7f3c1b00f33c6cccdd95a1fdbf6494e4b4  m1-build.log
+65aad0369380764f9eed1f32a4787f19e5b85d6c66f1ff64e83dd6417a40072e  m2-build.log
+4fb5719dbba7c391465216805ae207571b135299455c8b3bbd4131b4243b7493  m3-build.log
+cecc5f7b3820a0ae33afaa3f6f2d15ddf962039a86b11d8da98319d8dd0219e9  m4-build.log
+7f391eec9dc945143990052eb72550ec199e9a58f18d3b6877f6b1301ddee30e  m5-build.log
+b99ccd6e749b23e05e87448215f6ed6c20110c73444a6eb1210fb968ab17b62c  m6-build.log
+549209cde049c0319313889a53307b1b20c25ae7d544571ee060f83752c85957  m7-build.log
+fc6d8ac6c985b7d3c27a2d41a79597c6716f428a4e0e37732a2812f9a8773bdc  m8-build.log
+fed1995313b7b94b9afc5c81928681f378f93b082d1839bde8950148eca9f85a  m9-build.log
+bee6d0c86f25ebe071a09000fe8e6922c65fe4061398c197ffc9abe29094de70  m1-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_41_56.176539.ctrf
+a14170183dac557c4aa262d67db3f7c6ffc6085d426747594c6ccd39d5041039  m2-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_43_22.407398.ctrf
+365dbb7e142f2c347eddaf46e63e99a1ccbcea2c8b6c44031a715e60e3caf69a  m3-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_44_27.993602.ctrf
+cbeea981e2682c5254879203668a8486dae8002037953a517ec89d2710ff7891  m4-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_45_29.823325.ctrf
+e29b05a61127147d2611ad6e774a12cc7f01c7e33906e8b994f33fb8a8225066  m5-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_46_32.630367.ctrf
+0dacd2ed5c60e0a42b88d18d677c286aad470c4798d5136f0d00c9ddeb1eda3d  m6-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_48_16.573035.ctrf
+d5562c9aa0a5c49291d40d4b3b6372533ade8f4a34b010b00e6644823580b4de  m7-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_49_31.277265.ctrf
+d4a18e104b5d1e8fbca13c9aa3924b223e90775d93d9a9b2b21c32d5597f05f4  m8-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_50_28.354920.ctrf
+ee07d5cfced9e50315ba6c08a2188e2e1a4991e08df26ad3b7cb65ba50c2ac5f  m9-tests/edgar.liebold_Edgars-iMac-2_2026-09-15_16_51_41.750485.ctrf
+```
+
+M3–M9 restoration logs each have SHA256
+074939c0e509a6753dd01990981d6f6b558e4d302241bb3efbcdc5529a69622a,
+containing the restored f62b2315... code hash. M1/M2 matching restorations are
+observed in the tool trace. The unchanged committed baseline has SHA256
+59ea05a49d8d99e64715ac60b79bc68f9b657948f0742fd9c3d3e972babd054b;
+the prior real fresh inventory used for shape comparison has SHA256
+ed29376e3e214ede55083913ddd8d12d0dcea080075d7472d0f51ca8b4d7ddde.
+The packet records open coverage, source reading and full-A+ proof gates.

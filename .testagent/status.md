@@ -1,5 +1,67 @@
 # A+ remediation test status
 
+## Iteration 121 recursive member nullability checkpoint
+
+The original whole-product A+ goal remains active. Secured input is
+197a150e35c542060e8d416a124fc93f49a3ebd9 with the iteration-120 annotated tag.
+Architecture owner admission and unchanged normative/policy bindings are reused
+from complete personal reads; Core execution is not new test-owner admission.
+The main completely reads the actual 449-line tool and typed neighboring tests,
+then manually authors the recursive tree formatter and independent native fixtures.
+
+Initial strict red build terminates 0, zero warnings/errors (49.99s). Native red
+terminates 2: 27 cases, 25 failed, two passed, zero skipped (24.383s). Twenty-four
+failures reach actual missing-output assertions; one is an incorrect NotNull
+assumption for the framework's constrained generic-method use-site state.
+Separating Required/Nullable fixtures still yields that Unknown state. Arranged
+strict build terminates 0, native red is 2/25 failures (25.415s). The oracle then
+preserves independently observed Unknown rather than guessing NotNull; separate
+generic declaration flags remain encoded. This is not 25 proved product defects.
+
+First corrected strict build terminates 0; inventory/projection is terminal 2,
+112 cases, 106 passed, six older intended nullability output deltas. All 27 new
+cases pass. Exact old nullable text/events/unconstrained defaults and generic
+uses are manually corrected without discarding their original assertions.
+Ten additional property/parameter/return direction cases strictly compile
+(8.96s, zero warnings/errors); expanded native inventory/projection terminates
+0, 122/122 passed, zero failures/skips (31.655s). Eighteen methods map exactly
+to 193 unique catalogue tuples at this intermediate revision.
+
+The bounded internal Sol counterreview completely reads four entry/exit-matched
+files / 1,209 lines; no mandatory reference-tree correction is found. Its
+nullable-value flow candidate is pursued, not accepted as a permanent exclusion:
+a new handwritten test independently checks DisallowNull/NotNull Guid? states
+and ordinary Guid? omission. Its strict red build is terminal 0 (8.17s). The
+bare-method filter selects zero/native 8 and contributes no proof. Correct
+class-native red is 2: 38 cases, one functional failure, 37 passed (28.438s).
+Handwritten value-root correction strictly builds 0; inventory/projection is
+terminal 0, 123/123 passed, zero failures/skips (28.745s). Nineteen methods /
+38 cases exactly map to 194 unique catalogue tuples. All 63 assertion calls are
+personally reviewed; zero assertion-free/trivial-only/self-referential methods.
+Follow-up internal Sol full read819 finds no executable correction; its concrete
+typed-default comment correction is manually applied.
+
+Nine selected one-cause regressions strictly compile 0, each native run is 2,
+and 30 failed cases detect 9/9 injected changes. Every source restoration equals
+f62b2315d132da62ee743052d8d23c4c99f3fe787a22e12280117032de7e26ed;
+seven persist logs and two are observed in the tool trace. Independent mutation
+validation terminates 0. Final strict Architecture build is 0 (5.97s), zero
+warnings/errors; fresh unfiltered Architecture is terminal 0, 439/439 passed,
+zero failures/skips (3m29.337s overall). Actual bidirectional Async case passes
+(168987ms). Both exact-scope read-only formats terminate 0 without output/writes.
+Fresh package gate terminates 1 only at unchanged baseline comparison after
+31 packages, 18 journeys, three isolated consumers and 30 runtime inventories.
+Fresh 20045-line output SHA4148abb6... is bound in the packet; duplicate-preserving
+per-type shape comparison against real prior output proves 3230 unchanged blocks
+after removing only new nullability payloads. Entire src diff remains empty.
+No new unique personal src read, product signature/body change or feature removal
+is claimed. All owned validation handles are terminal; checkpoint security
+follows its own actual commit/tag/push/ref verification. Conditional flow, exact generic-use metadata,
+tuple/dynamic/function-pointer/constraint binding, all remaining source/runtime
+findings, personal source coverage and global coverage/A+ proof remain open.
+[The detailed packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-121/MEMBER_NULLABILITY_PACKET.md)
+records all typed oracles, causal failures and connected original-goal obligations.
+
 ## Iteration 120 state-machine root and composite source
 
 The original whole-product A+ goal remains active. Input 3a7386ca27250bffaf482b828833be643c554e23

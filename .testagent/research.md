@@ -1,5 +1,39 @@
 # A+ remediation research
 
+## Iteration 121 recursive member nullability contracts
+
+Input 197a150e35c542060e8d416a124fc93f49a3ebd9 is actually remotely secured
+with the iteration-120 annotated tag and independently checked references.
+All seven normative bindings remain unchanged. Complete Architecture-owner
+admission reuses the personally read c0ea82bf915b1f0c744cced8f80215bc6911f81b
+tree plus the personally authored/read 282-line member-modifier test and exact
+20-row catalogue delta. Current owner tree is 69583711d5397f6dd8cf0aa5a0da2b52310c41f4;
+the exact diff from the admitted input has only those two files.
+
+The sole tested source target is the completely personally read 449-line actual
+PublicApiBaseline.cs, SHA256 a4178ebc8861ef1a029fd28f2107527c88e3978408e1a2b1a2a01d57a305a564.
+Its prior safely scoped pairing result is reused, not rediscovered or mislabeled
+as absence of the external Architecture tests. Existing typed inventory tests
+and effective native test/MSBuild policies are read before authoring.
+
+Current signatures omit member nullability: nullable reference roots, nested
+generic/array positions and distinct read/write promises can collide. Official
+NullabilityInfoContext APIs expose parameter/property/field/event trees; the
+runtime property implementation handles getter and setter attributes separately.
+Roslyn metadata distinguishes oblivious, nonnullable and nullable references.
+NullabilityInfoContext is not thread safe and caches reflection members; each
+enumeration must own its own context, not a static cache retaining collectible
+package assemblies. Unknown metadata must never be silently called NotNull.
+
+User obligations remain verbatim: "features dürfen nicht verloren gehen";
+"ich möchte nicht, dass du einen generator nutzt"; "das gilt für den gesamten
+Quelltext unter /src !!!". Tests, tooling and comments are handwritten with
+apply_patch. A narrowly scoped nullable-disabled test fixture intentionally
+exposes oblivious compiler metadata; it is not a product warning bypass.
+Production signatures/behavior remain unchanged. Conditional flow attributes,
+tuple/dynamic/function-pointer metadata and annotated generic-constraint binding
+remain connected obligations, not accepted omissions or whole-API A+ claims.
+
 ## Iteration 120 state-machine declaration and composite source
 
 Input 3a7386ca27250bffaf482b828833be643c554e23 is actually locally committed,
