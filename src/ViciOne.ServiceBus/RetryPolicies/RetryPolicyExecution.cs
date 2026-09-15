@@ -31,7 +31,7 @@ internal static class RetryPolicyExecution
                     ?? throw new InvalidOperationException("The retry policy returned a null policy context."));
                 TContext currentContext = Execute(context, () => policyContext.Context
                     ?? throw new InvalidOperationException("The retry policy returned a policy context without a pipe context."));
-                using IDisposable current = RetryOperationState.Enter(currentContext);
+                using IDisposable current = Execute(context, () => RetryOperationState.Enter(currentContext));
                 await send(policyContext, currentContext).ConfigureAwait(false);
             }
             catch (Exception exception)

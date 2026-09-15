@@ -1,7 +1,10 @@
 # Acquired ownership-scope follow-up
 
-Status: design/test worklist only. The original goal remains active. No implementation
-or acceptance for these additional paths is claimed by this plan.
+Status: the historical worklist below is implemented in ACQUIRED_OWNERSHIP_PACKET.md
+with expanded106/76/23, full Core3,820, Abstractions696, frozen internal counterreview,
+explicit-profile risk analysis and four killed compilable counterchanges. Exact source
+bytes are restored; final post-mutation build/Core3,820 rerun passes. This is bounded
+checkpoint closure, not final119 or overall A+; the original goal remains active.
 
 The immutable de97 internal diagnostic establishes exact callback failures in
 projection/child admission, Mark and post-cleanup Propagate. The tested getter/payload/
@@ -53,3 +56,23 @@ test, comment, namespace or folder generator. Repeat independent compilable muta
 expanded/full Core and proportional all-host/package/API/coverage gates. Submit the
 new frozen packet to internal read-only counterreview, document every remaining
 finding, and secure the coherent iteration/checkpoint without force-pushing.
+
+## Next connected work
+
+- Complete real null-fault-task contracts in initial, terminal retry and nested
+  decision/policy callbacks, including ordered cleanup, exact generated diagnostics,
+  no replay/effects and once-only resource release. Cover genuine initial/current
+  projected cancellation-getter boundaries, not fabricated inactive internal state.
+- Close ordinary/activity redelivery constructor/probe contracts and reassess all13
+  emitted gaps against current source, preserving exact counters and behavior assertions.
+- Foundation: personally read remaining payload-context/cache files and all paired
+  tests; align BasePipeContext cache-constructor null policy and ScopePipeContext
+  runtime-type null validation; manually maintain all comments at each full-file read.
+- Provider: fix actual delayed/RabbitMQ topology/publishing cancellation without
+  replacing provider behavior with recording fixtures. Execute proportional real
+  local-provider acceptance and document any required external/cloud authority.
+- Advance complete source/type/file/folder inventory within independent SDK project
+  boundaries; do not nest independent projects inside the Core compilation tree.
+- Finish broader current all-host/package/API/journey/isolated-consumer and iteration
+  gates after connected corrections. Commit/tag/push checkpoints normally; never
+  declare whole-product A+,100% API correctness or complete reading from this packet.

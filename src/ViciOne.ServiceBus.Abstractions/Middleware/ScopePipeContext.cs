@@ -5,22 +5,22 @@ using ViciOne.ServiceBus.Payloads;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Carries state for scope pipe operations.</summary>
+/// <summary>Provides scope-local payloads with fallback to a parent context and its cancellation token.</summary>
 public class ScopePipeContext
 {
     readonly PipeContext _context;
     IPayloadCache? _payloadCache;
 
-    /// <summary>A pipe using the parent scope cancellationToken.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a scope with no local payloads and cancellation inherited from its parent.</summary>
+    /// <param name="context">The parent context used for payload fallback and cancellation.</param>
     protected ScopePipeContext(PipeContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    /// <summary>A pipe using the parent scope cancellationToken.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="payloads">Loads the payload cache with the specified objects.</param>
+    /// <summary>Creates a scope with optional local payloads and cancellation inherited from its parent.</summary>
+    /// <param name="context">The parent context used for payload fallback and cancellation.</param>
+    /// <param name="payloads">The scope-local payloads, or null to initialize an empty local cache on first use.</param>
     protected ScopePipeContext(PipeContext context, params object[]? payloads)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -29,7 +29,7 @@ public class ScopePipeContext
             _payloadCache = new ListPayloadCache(payloads);
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <summary>Gets the current cancellation token from the parent context.</summary>
     public virtual CancellationToken CancellationToken => _context.CancellationToken;
 
     IPayloadCache PayloadCache
@@ -46,18 +46,18 @@ public class ScopePipeContext
         }
     }
 
-    /// <summary>Determines whether the current value has payload type.</summary>
-    /// <param name="payloadType">The runtime payload type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Searches the scope itself, local payloads and parent context for a compatible payload type.</summary>
+    /// <param name="payloadType">The required runtime payload type.</param>
+    /// <returns>Whether the scope or parent provides a compatible payload.</returns>
     public virtual bool HasPayloadType(Type payloadType)
     {
         return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
     }
 
-    /// <summary>Attempts to get payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payload">Receives the payload produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Returns a compatible scope, otherwise searches local payloads before the parent context.</summary>
+    /// <typeparam name="T">The required payload type.</typeparam>
+    /// <param name="payload">The compatible payload when found; otherwise, null.</param>
+    /// <returns>Whether a compatible payload was found.</returns>
     public virtual bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
@@ -70,10 +70,10 @@ public class ScopePipeContext
         return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
     }
 
-    /// <summary>Gets or add payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payloadFactory">The payload factory.</param>
-    /// <returns>The or add payload.</returns>
+    /// <summary>Reuses a compatible scope or local or parent payload, otherwise creates a local payload.</summary>
+    /// <typeparam name="T">The required payload type.</typeparam>
+    /// <param name="payloadFactory">Creates a scope-local payload when neither scope nor parent provides one.</param>
+    /// <returns>The compatible scope or existing or newly created payload.</returns>
     public virtual T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
         where T : class
     {
@@ -89,11 +89,11 @@ public class ScopePipeContext
         return PayloadCache.GetOrAddPayload(payloadFactory);
     }
 
-    /// <summary>Adds or update payload to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="addFactory">The add factory.</param>
-    /// <param name="updateFactory">The update factory.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <summary>Returns a compatible scope unchanged, otherwise adds or updates a scope-local payload.</summary>
+    /// <typeparam name="T">The required payload type.</typeparam>
+    /// <param name="addFactory">Creates a local payload when neither local nor parent payloads provide one.</param>
+    /// <param name="updateFactory">Updates an existing local payload, or projects a parent payload into local storage.</param>
+    /// <returns>The compatible scope or the added or updated scope-local payload.</returns>
     public virtual T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
         where T : class
     {

@@ -1240,3 +1240,30 @@ Explicit current profile: Core graph80.9597%line/73.0100%branch; selected seven 
 cannot be solved by merely hitting all lines). No provider/full-product/overallA+
 acceptance, no generator, no executable edits during proof/reviewer freeze. Original
 autonomous source-architecture goal stays active through the corrective checkpoint.
+
+The acquired-reference packet executes 104 unchanged-product cases89pass15fail and
+then106cases90pass16fail (armed alias adds the last failure; unarmed alias preserves
+old live-marker semantics). All failures are behavioral, not fixture/compiler errors.
+Human source review corrects admission before Current publication, callback-free
+Mark/recognition/transfer, and alias identity retained until total operation release.
+Marker state stays invocation-local; operation→marker bookkeeping serializes final
+clearing, and actual public diagnostic update failures remain exact owned failures.
+Duplicate generic terminal callbacks share NotifyTerminalAsync; no manual Task.Status
+branches. ScopePipeContext/IPayloadCache/ListPayloadCache are personally read, and
+inaccurate Scope/empty-cache comments are manually rewritten without behavior changes.
+Ownership24methods106cases + existing33/76 + consume11/23 are68methods205cases.
+Full Core3,820 and fresh Abstractions696 pass,0skip; Product/Unit format exits0 with
+known workspace-load warning, no edits. Internal gpt-5.6-sol frozen counterreview
+identifies no new concrete finding in this packet and explicitly RELEASES. Four
+independent compilable omitted-clear/repeated-Mark/repeated-transfer/unguarded-admission
+counterchanges kill exactly2/7/2/2cases; each is restored by exact executable byte hash.
+Current explicit profile: seven kernel files433/449lines96.4365%,193/234branches82.4786%,
+100 emitted methods,0CRAP>30. Attempt complexity32→22,CRAP32.8438→22.3636 reflects actual
+responsibility simplification; changed branch denominator is not called improvement.
+Loaded graph80.9778%line/73.0179%branch is not entire-product/provider coverage. All13
+emitted gaps, genuine null-fault/getter/thin validation, foundation cache/type guards,
+actual provider cancellation and broader source-read/final119gates stay explicit.
+Final restored build/full Core3,820 rerun passes again, zero skip. All raw hashes are
+byte-verified,2,827 requirement tuples unique, Git whitespace clean. Final declared
+method audit corrects the early25/69 estimate to actual24/68; no test dropped/skipped.
+This bounded packet is validated; the original autonomous A+ goal stays active.

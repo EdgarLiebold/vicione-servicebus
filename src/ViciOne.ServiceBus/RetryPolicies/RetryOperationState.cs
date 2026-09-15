@@ -38,9 +38,10 @@ internal sealed class RetryOperationState
 
     static IDisposable Enter(PipeContext context, Operation operation, Operation? previous)
     {
+        RetryOperationState state = operation.FindState(context) ?? operation.Parent?.FindState(context)
+            ?? context.GetOrAddPayload(static () => new RetryOperationState());
+        state = operation.Retain(context, state);
         Current.Value = operation;
-        var state = context.GetOrAddPayload(static () => new RetryOperationState());
-        state.Begin(operation);
         return new Lease(state, operation, previous);
     }
 
@@ -51,7 +52,8 @@ internal sealed class RetryOperationState
     public static bool IsOwned(PipeContext context, Exception exception)
     {
         Operation? operation = Current.Value;
-        if (operation == null || !context.TryGetPayload(out RetryOperationState? state))
+        RetryOperationState? state = operation?.FindState(context);
+        if (operation == null || state == null)
             return false;
         lock (state._sync)
             return state._operations.TryGetValue(operation, out State? current) && current.Failures.Contains(exception);
@@ -62,7 +64,7 @@ internal sealed class RetryOperationState
     /// <param name="exception">The exact lifecycle failure to preserve.</param>
     public static void Mark(PipeContext context, Exception exception)
     {
-        var state = context.GetOrAddPayload(static () => new RetryOperationState());
+        RetryOperationState state = GetRequiredState(context);
         lock (state._sync)
             state.GetCurrent().Failures.Add(exception);
     }
@@ -75,7 +77,7 @@ internal sealed class RetryOperationState
         try
         {
             Exception terminalException = retryContext.Exception;
-            var state = context.GetOrAddPayload(static () => new RetryOperationState());
+            RetryOperationState state = GetRequiredState(context);
             lock (state._sync)
             {
                 State current = state.GetCurrent();
@@ -110,7 +112,8 @@ internal sealed class RetryOperationState
     public static void Propagate(PipeContext context, Exception exception)
     {
         Operation? operation = Current.Value;
-        if (operation?.Parent == null || !context.TryGetPayload(out RetryOperationState? state))
+        RetryOperationState? state = operation?.FindState(context);
+        if (operation?.Parent == null || state == null)
             return;
 
         lock (state._sync)
@@ -137,7 +140,8 @@ internal sealed class RetryOperationState
     public static bool TryGetTerminal(PipeContext context, Exception exception, [NotNullWhen(true)] out RetryContext? retryContext)
     {
         Operation? operation = Current.Value;
-        if (operation != null && context.TryGetPayload(out RetryOperationState? state))
+        RetryOperationState? state = operation?.FindState(context);
+        if (operation != null && state != null)
         {
             lock (state._sync)
             {
@@ -186,6 +190,9 @@ internal sealed class RetryOperationState
         }
     }
 
+    static RetryOperationState GetRequiredState(PipeContext context) => Current.Value?.FindState(context)
+        ?? throw new InvalidOperationException("Retry ownership requires an acquired pipeline context.");
+
     State GetCurrent()
     {
         Operation? operation = Current.Value;
@@ -203,10 +210,45 @@ internal sealed class RetryOperationState
         }
     }
 
+    /// <summary>Retains acquired marker identities independently of individual alias lease lifetimes.</summary>
     sealed class Operation(Operation? parent)
     {
+        readonly Dictionary<PipeContext, RetryOperationState> _contexts = new(ReferenceEqualityComparer.Instance);
+        readonly object _sync = new();
+
         public Operation? Parent { get; } = parent;
         public int ActiveScopes;
+
+        public RetryOperationState? FindState(PipeContext context)
+        {
+            lock (_sync)
+                return _contexts.GetValueOrDefault(context);
+        }
+
+        public RetryOperationState Retain(PipeContext context, RetryOperationState state)
+        {
+            // Bookkeeping always acquires the operation lock before the marker lock.
+            // Payload callbacks run before either lock is acquired.
+            lock (_sync)
+            {
+                if (_contexts.TryGetValue(context, out RetryOperationState? acquired))
+                    state = acquired;
+                else
+                    _contexts.Add(context, state);
+                state.Begin(this);
+                return state;
+            }
+        }
+
+        public void Release(RetryOperationState state)
+        {
+            lock (_sync)
+            {
+                state.End(this);
+                if (Volatile.Read(ref ActiveScopes) == 0)
+                    _contexts.Clear();
+            }
+        }
     }
 
     sealed class State
@@ -226,7 +268,7 @@ internal sealed class RetryOperationState
             RetryOperationState? owner = Interlocked.Exchange(ref _state, null);
             if (owner == null)
                 return;
-            owner.End(operation);
+            operation.Release(owner);
             Current.Value = previous;
         }
     }

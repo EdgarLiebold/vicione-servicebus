@@ -11,7 +11,7 @@ public sealed class ListPayloadCache :
     readonly List<object> _cache;
     readonly object _syncRoot = new();
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty payload cache.</summary>
     public ListPayloadCache()
     {
         _cache = [];

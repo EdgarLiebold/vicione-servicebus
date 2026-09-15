@@ -9,6 +9,63 @@ namespace ViciOne.ServiceBus.Tests.InternalAccess.Retry;
 /// <summary>Creates retry filters without exposing their implementation types as product API.</summary>
 public static class RetryFilterTestFactory
 {
+    /// <summary>Observes marker ownership after one alias lease ends while another alias remains active.</summary>
+    /// <param name="rootContext">The independent root marker that keeps the invocation active.</param>
+    /// <param name="firstAlias">The marker alias whose own lease is released and later acquired again.</param>
+    /// <param name="secondAlias">Another alias that keeps the first alias's marker active.</param>
+    /// <param name="failure">The exact lifecycle failure owned by the parent invocation.</param>
+    /// <param name="terminalContext">The terminal decision published on the shared marker.</param>
+    /// <param name="afterRelease">The callback that arms payload failures after releasing the first alias.</param>
+    /// <returns>Ownership recognition, independent child ownership, and associations retained after final release.</returns>
+    public static (bool LifecycleOwned, bool TerminalOwned, RetryContext? Terminal,
+        bool ReenteredLifecycleOwned, bool IndependentChildOwned, int RetainedAssociations) ObserveReleasedAliasOwnership(
+        PipeContext rootContext, PipeContext firstAlias, PipeContext secondAlias, Exception failure,
+        RetryContext terminalContext, Action afterRelease)
+    {
+        ArgumentNullException.ThrowIfNull(rootContext);
+        ArgumentNullException.ThrowIfNull(firstAlias);
+        ArgumentNullException.ThrowIfNull(secondAlias);
+        ArgumentNullException.ThrowIfNull(failure);
+        ArgumentNullException.ThrowIfNull(terminalContext);
+        ArgumentNullException.ThrowIfNull(afterRelease);
+
+        ICollection associations;
+        bool lifecycleOwned;
+        bool terminalOwned;
+        RetryContext? terminal;
+        bool reenteredLifecycleOwned;
+        bool independentChildOwned;
+        {
+            using IDisposable root = RetryOperationState.BeginPolicy(rootContext);
+            associations = GetActiveAssociationStorage();
+            using IDisposable first = RetryOperationState.Enter(firstAlias);
+            using IDisposable second = RetryOperationState.Enter(secondAlias);
+            RetryOperationState.Mark(firstAlias, failure);
+            RetryOperationState.PublishTerminal(firstAlias, terminalContext);
+            first.Dispose();
+            afterRelease();
+
+            lifecycleOwned = RetryOperationState.IsOwned(firstAlias, failure);
+            terminalOwned = RetryOperationState.TryGetTerminal(firstAlias, failure, out terminal);
+            using IDisposable reentered = RetryOperationState.Enter(firstAlias);
+            reenteredLifecycleOwned = RetryOperationState.IsOwned(firstAlias, failure);
+            using IDisposable child = RetryOperationState.BeginPolicy(firstAlias);
+            independentChildOwned = RetryOperationState.IsOwned(firstAlias, failure);
+        }
+        return (lifecycleOwned, terminalOwned, terminal, reenteredLifecycleOwned, independentChildOwned, associations.Count);
+    }
+
+    static ICollection GetActiveAssociationStorage()
+    {
+        object current = typeof(RetryOperationState).GetField("Current", BindingFlags.NonPublic | BindingFlags.Static)
+            ?.GetValue(null) ?? throw new InvalidOperationException("Retry ownership execution context was not found.");
+        object operation = current.GetType().GetProperty("Value")?.GetValue(current)
+            ?? throw new InvalidOperationException("No retry ownership invocation is active.");
+        return operation.GetType().GetField("_contexts", BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.GetValue(operation) as ICollection
+            ?? throw new InvalidOperationException("Retry ownership association storage was not found.");
+    }
+
     /// <summary>Observes retained active ownership entries without exposing product diagnostics.</summary>
     /// <param name="context">The context whose ownership lifetime is being checked.</param>
     /// <returns>The number of retained policy invocations, including any erroneous completed entries.</returns>
