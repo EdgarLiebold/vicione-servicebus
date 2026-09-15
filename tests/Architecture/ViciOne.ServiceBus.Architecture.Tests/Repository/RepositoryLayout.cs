@@ -5,13 +5,14 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 /// Locates the repository and the project files the evaluated-graph tests inspect.
 /// </summary>
 /// <remarks>
-/// The root is found by walking up from the running artifact until the two marker files that only
-/// the repository root carries are both present. Nothing here is a checked-in path list, and the
-/// tests never write below the located root: the canonical checkout stays read-only to this suite.
+/// Repository markers locate the checkout without a machine-specific path. Project and build-file
+/// inventories derive from the governed code trees and exclude filesystem aliases. Discovery reads
+/// the checkout; isolated scope fixtures are created outside it.
 /// </remarks>
 internal static class RepositoryLayout
 {
     private static readonly Lazy<DirectoryInfo> RootDirectory = new(Locate);
+    private static readonly string[] GovernedTrees = ["src", "tests", "samples", "benchmarks", "tools"];
 
     /// <summary>Absolute path of the repository root.</summary>
     internal static string Root => RootDirectory.Value.FullName;
@@ -54,7 +55,7 @@ internal static class RepositoryLayout
         Root, "tests", "testconfig.json");
 
     /// <summary>
-    /// Every shipped product project, derived from the source tree.
+    /// Product projects discovered below the source tree.
     /// </summary>
     internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src");
 
@@ -65,14 +66,22 @@ internal static class RepositoryLayout
     internal static IReadOnlyList<string> SampleProjects => EnumerateProjects("samples");
 
     /// <summary>Every MSBuild project governed by the repository root build contract.</summary>
-    internal static IReadOnlyList<string> GovernedProjects =>
-    [
-        .. EnumerateProjects("src"),
-        .. EnumerateProjects("tests"),
-        .. EnumerateProjects("samples"),
-        .. EnumerateProjects("benchmarks"),
-        .. EnumerateProjects("tools"),
-    ];
+    internal static IReadOnlyList<string> GovernedProjects => GovernedTrees
+        .SelectMany(EnumerateProjects)
+        .ToArray();
+
+    /// <summary>Top-level build policies and files below governed code trees, excluding filesystem aliases.</summary>
+    internal static IReadOnlyList<string> GovernedBuildFiles => EnumerateGovernedBuildFiles(Root);
+
+    /// <summary>Enumerates build policies and projects for an explicitly supplied repository root.</summary>
+    /// <param name="root">The root containing the governed code trees and top-level build policies.</param>
+    /// <returns>Build-file paths in ordinal order, without entering ungoverned trees or filesystem aliases.</returns>
+    internal static IReadOnlyList<string> EnumerateGovernedBuildFiles(string root) =>
+        EnumerateScopedFiles(root, "*", recursive: false)
+            .Concat(GovernedTrees.SelectMany(tree => EnumerateScopedFiles(Path.Combine(root, tree), "*", recursive: true)))
+            .Where(IsBuildPolicyFile)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
 
     /// <summary>Samples intentionally compiled only against freshly packed packages by their dedicated gate.</summary>
     internal static IReadOnlyList<string> PackageConsumerProjects => SampleProjects
@@ -92,10 +101,22 @@ internal static class RepositoryLayout
         Path.GetRelativePath(Root, path).Replace('\\', '/');
 
     private static IReadOnlyList<string> EnumerateProjects(string directory) =>
-        Directory.GetFiles(Path.Combine(Root, directory), "*.csproj", SearchOption.AllDirectories)
-            .Where(path => !RelativeToRoot(path).StartsWith("artifacts/", StringComparison.Ordinal))
+        EnumerateScopedFiles(Path.Combine(Root, directory), "*.csproj", recursive: true)
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
+
+    private static IEnumerable<string> EnumerateScopedFiles(string directory, string pattern, bool recursive) =>
+        Directory.EnumerateFiles(directory, pattern, new EnumerationOptions
+        {
+            RecurseSubdirectories = recursive,
+            IgnoreInaccessible = false,
+            AttributesToSkip = FileAttributes.ReparsePoint,
+        });
+
+    private static bool IsBuildPolicyFile(string path) =>
+        path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase)
+        || path.EndsWith(".props", StringComparison.OrdinalIgnoreCase)
+        || path.EndsWith(".targets", StringComparison.OrdinalIgnoreCase);
 
     private static DirectoryInfo Locate()
     {

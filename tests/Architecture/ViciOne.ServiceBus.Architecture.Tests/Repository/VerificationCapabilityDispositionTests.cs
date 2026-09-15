@@ -126,8 +126,7 @@ public sealed class VerificationCapabilityDispositionTests
         string[] buildPolicyFiles =
         [
             Path.Combine(RepositoryLayout.Root, "Directory.Packages.props"),
-            .. Directory.GetFiles(RepositoryLayout.Root, "*.csproj", SearchOption.AllDirectories)
-                .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}artifacts{Path.DirectorySeparatorChar}", StringComparison.Ordinal)),
+            .. RepositoryLayout.GovernedProjects,
         ];
         Assert.All(buildPolicyFiles, path =>
         {

@@ -28,13 +28,7 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void EveryRepositoryProject_HasARestoreGraphBesideIt()
     {
-        var projects = Directory.GetFiles(
-            RepositoryLayout.Root,
-            "*.csproj",
-            SearchOption.AllDirectories)
-            .Where(project => !RepositoryLayout.RelativeToRoot(project)
-                .StartsWith("artifacts/", StringComparison.Ordinal))
-            .ToArray();
+        var projects = RepositoryLayout.GovernedProjects;
 
         Assert.NotEmpty(projects);
 
@@ -84,13 +78,7 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void RepositoryDeclaresNoExactLanguageVersionPin()
     {
-        var buildFiles = Directory.EnumerateFiles(RepositoryLayout.Root, "*", SearchOption.AllDirectories)
-            .Where(path =>
-                path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
-                path.EndsWith(".props", StringComparison.OrdinalIgnoreCase) ||
-                path.EndsWith(".targets", StringComparison.OrdinalIgnoreCase))
-            .Where(path => !RepositoryLayout.RelativeToRoot(path)
-                .StartsWith("artifacts/", StringComparison.Ordinal));
+        var buildFiles = RepositoryLayout.GovernedBuildFiles;
 
         var actualPins = buildFiles
             .SelectMany(path => XDocument.Load(path).Descendants("LangVersion")

@@ -33,7 +33,7 @@ internal static class MsBuildEvaluation
         "Configuration;TargetPath;AssemblyName;TargetFramework;RootNamespace;PackageId;Description;IsTestProject;IsPackable;IncludeBuildOutput;SignAssembly;AssemblyOriginatorKeyFile;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;InvariantGlobalization;DebugType;_DebugSymbolsProduced;LangVersion;DefineConstants;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;ViciOnePackageConsumer;UserSecretsId;ManagePackageVersionsCentrally;CentralPackageTransitivePinningEnabled";
 
     private const string Items =
-        "Compile;Using;PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";
+        "Compile;Using;PackageReference;ProjectReference;FrameworkReference;Content;ViciOneForbiddenNativeTestPackage";
 
     /// <summary>Evaluates a project once and returns the parsed MSBuild output.</summary>
     internal static JsonElement Evaluate(string projectPath, string? configuration = null)

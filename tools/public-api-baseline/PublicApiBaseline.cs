@@ -70,8 +70,18 @@ internal static class PublicApiBaseline
         return 0;
     }
 
-    private static IEnumerable<string> FormatMembers(Type type)
+    /// <summary>Formats a type's own generic contracts and its declared public and protected members.</summary>
+    /// <param name="type">The type whose declared API is inventoried.</param>
+    /// <returns>Member declarations before the inventory's ordinal ordering.</returns>
+    internal static IEnumerable<string> FormatMembers(Type type)
     {
+        if (type.IsGenericTypeDefinition)
+        {
+            int inheritedParameterCount = type.DeclaringType?.GetGenericArguments().Length ?? 0;
+            foreach (Type parameter in type.GetGenericArguments().Skip(inheritedParameterCount))
+                yield return $"GENERIC {FormatGenericParameter(parameter)}";
+        }
+
         foreach (ConstructorInfo constructor in type.GetConstructors(DeclaredMembers).Where(IsExternallyVisible))
             yield return $"CTOR {Visibility(constructor)} {FormatType(type)}({FormatParameters(constructor.GetParameters())})";
 
@@ -82,8 +92,11 @@ internal static class PublicApiBaseline
             string genericArguments = method.IsGenericMethodDefinition
                 ? $"<{string.Join(",", method.GetGenericArguments().Select(static argument => argument.Name))}>"
                 : string.Empty;
+            string genericContracts = method.IsGenericMethodDefinition
+                ? $" [generic={string.Join(",", method.GetGenericArguments().Select(FormatGenericParameter))}]"
+                : string.Empty;
             yield return $"METHOD {Visibility(method)} {MethodModifiers(method)}{FormatType(method.ReturnType)} "
-                + $"{method.Name}{genericArguments}({FormatParameters(method.GetParameters())})";
+                + $"{method.Name}{genericArguments}({FormatParameters(method.GetParameters())}){genericContracts}";
         }
 
         foreach (PropertyInfo property in type.GetProperties(DeclaredMembers).Where(IsExternallyVisible))
@@ -106,6 +119,46 @@ internal static class PublicApiBaseline
             string value = field.IsLiteral ? $" = {FormatValue(field.GetRawConstantValue())}" : string.Empty;
             yield return $"FIELD {Visibility(field)} {modifiers}{FormatType(field.FieldType)} {field.Name}{value}";
         }
+    }
+
+    private static string FormatGenericParameter(Type parameter)
+    {
+        string flags = parameter.GenericParameterAttributes.ToString().Replace(", ", "&", StringComparison.Ordinal);
+        string constraints = string.Join("&", parameter.GetGenericParameterConstraints()
+            .Select(FormatType)
+            .Order(StringComparer.Ordinal));
+        bool unmanaged = parameter.GetCustomAttributesData().Any(attribute =>
+            attribute.AttributeType.FullName == "System.Runtime.CompilerServices.IsUnmanagedAttribute");
+
+        return $"{parameter.Name}{{flags={flags};constraints=[{constraints}];nullable={FormatGenericNullability(parameter)};unmanaged={FormatValue(unmanaged)}}}";
+    }
+
+    private static string FormatGenericNullability(Type parameter)
+    {
+        CustomAttributeData? annotation = parameter.GetCustomAttributesData().SingleOrDefault(attribute =>
+            attribute.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
+        if (annotation is not null)
+        {
+            object? value = annotation.ConstructorArguments.Single().Value;
+            return value is IEnumerable<CustomAttributeTypedArgument> flags
+                ? $"[{string.Join(",", flags.Select(flag => FormatValue(flag.Value)))}]"
+                : $"[{FormatValue(value)}]";
+        }
+
+        if ((parameter.GenericParameterAttributes & GenericParameterAttributes.NotNullableValueTypeConstraint) != 0)
+            return "[0]";
+
+        for (MemberInfo? scope = parameter.DeclaringMethod ?? (MemberInfo?)parameter.DeclaringType;
+             scope is not null;
+             scope = scope.DeclaringType)
+        {
+            CustomAttributeData? context = scope.GetCustomAttributesData().SingleOrDefault(attribute =>
+                attribute.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
+            if (context is not null)
+                return $"[{FormatValue(context.ConstructorArguments.Single().Value)}]";
+        }
+
+        return "[0]";
     }
 
     private static bool IsExternallyVisible(Type type)

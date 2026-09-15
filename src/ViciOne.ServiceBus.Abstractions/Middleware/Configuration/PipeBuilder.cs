@@ -7,35 +7,35 @@ namespace ViciOne.ServiceBus.Configuration;
 public partial class PipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Builds pipe components.</summary>
+    /// <summary>Accumulates filters and composes them in registration order.</summary>
     public class PipeBuilder :
         IPipeBuilder<TContext>
     {
         readonly List<IFilter<TContext>> _filters;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="capacity">The capacity.</param>
+        /// <summary>Creates an empty builder with the requested initial filter capacity.</summary>
+        /// <param name="capacity">The initial capacity of the filter collection.</param>
         public PipeBuilder(int capacity = 16)
         {
             _filters = new List<IFilter<TContext>>(capacity);
         }
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="filters">The filters.</param>
+        /// <summary>Creates a builder by copying the supplied filters in execution order.</summary>
+        /// <param name="filters">The initial filter collection.</param>
         public PipeBuilder(params IFilter<TContext>[] filters)
         {
             _filters = new List<IFilter<TContext>>(filters);
         }
 
-        /// <summary>Adds filter to the configuration.</summary>
-        /// <param name="filter">The filter to add to the pipeline.</param>
+        /// <summary>Appends a filter to the configured execution order.</summary>
+        /// <param name="filter">The filter included in subsequent pipeline builds.</param>
         public void AddFilter(IFilter<TContext> filter)
         {
             _filters.Add(filter);
         }
 
-        /// <summary>Builds the configured component.</summary>
-        /// <returns>The configured component.</returns>
+        /// <summary>Composes the registered filters in execution order with an empty terminating continuation.</summary>
+        /// <returns>The composed pipeline, or the cached empty pipeline when no filters are registered.</returns>
         public IPipe<TContext> Build()
         {
             if (_filters.Count == 0)
@@ -58,7 +58,7 @@ public partial class PipeConfigurator<TContext>
     }
 
 
-    /// <summary>Executes the pipeline for empty.</summary>
+    /// <summary>Terminates a pipeline with a completed task and no probe entries.</summary>
     public class EmptyPipe :
         IPipe<TContext>
     {
@@ -74,33 +74,33 @@ public partial class PipeConfigurator<TContext>
     }
 
 
-    /// <summary>Executes the pipeline for filter.</summary>
+    /// <summary>Invokes one filter with an explicit continuation pipeline.</summary>
     public class FilterPipe :
         IPipe<TContext>
     {
         readonly IFilter<TContext> _filter;
         readonly IPipe<TContext> _next;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="filter">The filter to add to the pipeline.</param>
-        /// <param name="next">The next pipeline stage to invoke.</param>
+        /// <summary>Associates a filter with the continuation passed to it.</summary>
+        /// <param name="filter">The filter invoked for each context.</param>
+        /// <param name="next">The continuation passed to the filter.</param>
         public FilterPipe(IFilter<TContext> filter, IPipe<TContext> next)
         {
             _filter = filter;
             _next = next;
         }
 
-        /// <summary>Writes diagnostic information to the probe context.</summary>
-        /// <param name="context">The context associated with the operation.</param>
+        /// <summary>Writes probe entries for the filter and its continuation.</summary>
+        /// <param name="context">The probe receiving both pipeline stages' entries.</param>
         public void Probe(ProbeContext context)
         {
             _filter.Probe(context);
             _next.Probe(context);
         }
 
-        /// <summary>Sends a message to the configured destination.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Passes the context and continuation to the filter.</summary>
+        /// <param name="context">The context handled by the filter.</param>
+        /// <returns>The task returned by the filter.</returns>
         [DebuggerStepThrough]
         public Task SendAsync(TContext context)
         {
@@ -109,29 +109,29 @@ public partial class PipeConfigurator<TContext>
     }
 
 
-    /// <summary>The last pipe in a pipeline is always an end pipe that does nothing and returns synchronously.</summary>
+    /// <summary>Invokes the last registered filter with the cached terminating continuation.</summary>
     public class LastPipe :
         IPipe<TContext>
     {
         readonly IFilter<TContext> _filter;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="filter">The filter to add to the pipeline.</param>
+        /// <summary>Associates the final filter with the terminating continuation.</summary>
+        /// <param name="filter">The filter invoked before the pipeline terminates.</param>
         public LastPipe(IFilter<TContext> filter)
         {
             _filter = filter;
         }
 
-        /// <summary>Writes diagnostic information to the probe context.</summary>
-        /// <param name="context">The context associated with the operation.</param>
+        /// <summary>Writes probe entries for the final filter.</summary>
+        /// <param name="context">The probe receiving the filter's entries.</param>
         public void Probe(ProbeContext context)
         {
             _filter.Probe(context);
         }
 
-        /// <summary>Sends a message to the configured destination.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Passes the context and terminating continuation to the final filter.</summary>
+        /// <param name="context">The context handled by the filter.</param>
+        /// <returns>The task returned by the filter.</returns>
         [DebuggerStepThrough]
         public Task SendAsync(TContext context)
         {

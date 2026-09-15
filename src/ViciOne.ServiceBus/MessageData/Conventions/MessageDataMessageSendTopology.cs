@@ -19,7 +19,7 @@ internal sealed class MessageDataMessageSendTopology<T> :
         _transformFilter = new TransformFilter<T>(initializer ?? throw new ArgumentNullException(nameof(initializer)));
     }
 
-    /// <summary>Adds the storage transform unless another implementation already owns the send pipe.</summary>
+    /// <summary>Adds the storage transform only when the builder is not marked as implemented.</summary>
     /// <param name="builder">The send-topology pipe builder.</param>
     public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
     {

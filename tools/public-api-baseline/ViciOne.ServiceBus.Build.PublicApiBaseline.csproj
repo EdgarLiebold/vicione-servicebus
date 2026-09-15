@@ -6,6 +6,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Reflecting the SignalR package requires its ASP.NET Core shared-framework types. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Architecture.Tests" />
   </ItemGroup>
 </Project>

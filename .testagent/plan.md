@@ -1,5 +1,43 @@
 # A+ remediation test plan
 
+## Iteration 119 governed traversal and generic API contracts
+
+Before the pending checkpoint, close the real inventory-host runtime failure:
+request FrameworkReference items in the existing evaluation helper, use the
+executing test assembly's explicit configuration, obtain two functional red
+runtime tests against the unchanged Console project, then add the required
+versionless ASP.NET Core framework reference. Rebuild, run bounded and complete
+Architecture tests, and rerun the real fresh package gate. Preserve the initial
+arrangement errors and native 134 as failed attempts, never acceptance evidence.
+
+1. Extract the existing broad build-file walk into a parameterized internal
+   helper without executing it at the real repository root. Manually author
+   exact isolated-fixture membership tests and observe functional red results.
+2. Replace the extracted walk with top-level policies plus the five canonical
+   governed roots; fail on inaccessible owned trees and never follow aliases.
+   Wire both build-policy consumers and the restore-lock guard to scoped truth.
+   Prove the direct fixture and the previously unsafe real-root methods green.
+3. Add direct type/method generic contract oracles before correcting inventory
+   emission: inherited/own generic parameters, variance, class/struct/new(),
+   base/interface/parameter constraints, deterministic order and no duplicates.
+4. Review assertions and real compiled one-cause candidates, restore exact bytes,
+   then run the full safe Architecture owner. Reconcile actual fresh package API
+   differences manually; never relabel baseline comparison failure as success.
+5. Commit/tag/push the proved owned checkpoint and report all remaining original
+   goal obligations. The original whole-product goal is not narrowed or closed.
+
+Steps 1–3 and the direct empirical review are proved: original traversal 3/3
+functional failures; corrected expanded traversal 7/7 green; original generic
+contracts 14 failures/15; combined 47/47 green. Four traversal and six generic
+single-cause candidates compile and are killed, then byte-restored. First
+Architecture owner 356/356 green and three scoped whitespace checks exit 0.
+The real native-134 shared-framework regression is causally closed: locked
+restore/build 0, corrected bounded 48/48 and final unfiltered 358/358 green,
+155 projection tuples and updated whitespace checks 0. The actual fresh gate
+now exits 1 only at baseline comparison, thirty runtime APIs / 20,045 lines.
+Collision-preserving diagnostics retain all old blocks; reviewed baseline
+disposition remains connected follow-up, not implied by Architecture green.
+
 ## Iteration 119 packed API type identity
 
 1. Migrate the existing formatter into a regular SDK console project without

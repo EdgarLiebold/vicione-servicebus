@@ -1,5 +1,67 @@
 # A+ remediation test status
 
+## Iteration 119 — governed traversal and generic API contracts
+
+The original whole-product goal remains active. The source/project organization
+question is answered without moving independent projects into Core. Current
+implementation repairs unsafe root-recursive Architecture discovery and missing
+generic contracts in the real packed API inventory, without production signature
+or executable-statement changes. Six production files receive manually written
+functional comments after ten complete source reads (888 starting lines).
+
+Complete Architecture personal reading reuses verified 42-file/9,013-line inputs
+plus every manually authored/read delta. Current owner includes 45 files / 42 C#
+files / 9,300 lines, including three new test files. Thirteen new test methods / 24
+cases contain 26 meaningful physical assertions and thirteen catalogue bindings
+(155 tuples). Scope-limited static pairing reports no in-scope test; the real
+typed Architecture tests are outside that safe analyzer root and execute normally.
+
+Functional red evidence: unsafe traversal three failures/three; absent generic
+contracts 14 failures/15. Corrected combined native 47/47 green. Four traversal
+and six generic candidates are individually strictly compiled (all exit 0, zero
+warnings/errors), empirically killed (all native exit 2), then byte-restored.
+Ten selected kills / seventeen failed cases are not exhaustive mutation coverage.
+
+The first complete strict owner build exits 0, zero warnings/errors. Complete Architecture
+native run exits 0: 356/356 passed, zero failures/skips, 2m 51.072s. All new cases,
+previously unsafe real-root consumers, projection and existing bidirectional
+async convention test execute. Three scoped whitespace checks exit 0 without
+writes or log output; tracked diff-check 0. No new directive or warning suppression.
+Only actual terminal process observations count; the lost-observation earlier
+build is not given an invented native exit.
+
+The actual fresh package gate exits 134 on missing SignalR shared-framework
+types. Two initial runtime test failures are setup errors, not causal evidence;
+after item-query/configuration correction, strict compilation exits 0 and both
+tests fail functionally on the actual absent ASP.NET Core framework. One explicit
+versionless FrameworkReference is added to the ordinary Console inventory host.
+Locked restore exits 0, both tracked lock graphs unchanged. Strict corrected-host
+build exits 0, zero warnings/errors; bounded formatter/traversal/runtime tests
+exit 0, 48/48 green. An incorrect additional projection-class filter contributes
+no test and is not credited. Final strict owner build after the fresh gate exits
+0, zero warnings/errors (46.44s); unfiltered native owner exits 0, 358/358 green,
+zero failures/skips (2m 48.352s), including the 155-tuple projection and
+bidirectional async naming. Updated scoped formats exit 0. The actual fresh gate reaches
+comparison after thirty runtime assemblies are inventoried (20,045 lines) and
+exits 1 on the deliberately unchanged baseline, not runtime loading. No package
+gate green is claimed. The earlier 356-case run does not certify this subsequent
+change. Navigation root discovery and a lossy old-collision dictionary diagnostic
+are explicitly qualified in the packet; neither is acceptance evidence.
+The corrected diagnostic preserves all 3,287 old / 3,230 fresh blocks, with six
+old collision families / 25 extra colliding blocks. Shared singleton diagnostics
+find 1,587 identical, 1,602 generic-metadata-only and one other nested identity
+change. These counts are not full manual baseline acceptance. A partial 230-line
+DynamicFilter read is not counted as a complete source/comment audit.
+
+[Detailed bounded proof](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/GOVERNED_TRAVERSAL_GENERIC_CONTRACTS_PACKET.md)
+records exact names, assertions, source/read scope, empirical outcomes and
+remaining requirements. Actual fresh package/baseline execution is separate
+from the now-green full Architecture owner. Complete C# API metadata, manual
+baseline reconciliation, builder input/validation contracts, saga cancellation/
+unwind/rollback/Undo, timer/retry/provider acceptance, all-source/comment/type/
+file/folder/legacy/dummy/directive reviews and global coverage/A+ gates remain
+open. No whole-product correctness/coverage/cloud/external acceptance is claimed.
+
 ## Iteration 119 — bounded packed API type identity checkpoint
 
 The original goal remains active. The complete 41-file tracked Architecture

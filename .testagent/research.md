@@ -1,5 +1,73 @@
 # A+ remediation research
 
+## Iteration 119 governed traversal and generic API contracts
+
+The intervening folder explanation is navigation, not implementation progress.
+The real fresh package gate subsequently exits 134 when the Console inventory
+host reflects SignalR without Microsoft.AspNetCore.App. The first two new
+runtime tests have arrangement failures, not causal red evidence: the helper
+does not request FrameworkReference items, and its default Debug TargetPath
+does not match the executing Release assembly. Correct both arrangements before
+observing the unchanged host fail on its actual missing shared framework.
+Use an explicit versionless FrameworkReference, not Web SDK, a NuGet substitute,
+warning suppression or a machine-specific shared-framework path.
+
+One navigation rg --files command incorrectly started at the product root with
+filename filters: it could walk protected names even though no protected match
+or content was returned. This procedural deviation is recorded, not disguised
+as safe scoping; subsequent file discovery stays at explicit governed owners.
+
+Corrected runtime host bounded tests pass 48/48; the additional projection filter
+was misnamed and contributes no test. Fresh package execution now reaches final
+comparison and exits 1 with thirty reflected assemblies / 20,045 lines. Output
+diagnostics reveal 25 colliding old type identities. A dictionary that overwrites
+such keys cannot prove full pairing: use collision-preserving reconciliation
+and manual actual-contract review before baseline disposition.
+
+The previous implementation checkpoint is authoritative progress: 18 owned
+files committed, tagged and remote-verified at
+`1e86575a712c5fe590f1b808eb592943d102f7ea`. The starting tracked tree was clean;
+normative agreement/glossary/decisions/current order/findings/slice
+hashes match the personally read bindings. Licensing exceptions do not apply.
+
+The complete personally read Architecture inventory now binds 42 tracked files
+at tree `f2c09ba1c51b57d51e9bd404eccfd0911bbb2086`, 39 C# files / 9,013 lines:
+the prior complete read plus manually authored/reviewed checkpoint deltas.
+Relevant traversal consumers, effective test/build/package detection and the
+new direct formatter tests are reopened. No whole-product reading is claimed.
+
+Root-recursive project/build discovery must not enter protected review/result/
+artifact trees. Preserve the five governed roots and top-level build policies,
+derive all traversal from one scoped helper and verify exact owned membership,
+recursion, extensions, ordering and exclusions using an isolated temp fixture.
+Do not run the existing unsafe real-root methods until correction is verified.
+
+The prescribed Roslyn pairing analyzer is executed once only at the tool root;
+it cannot include the external Architecture test project in that safe scope.
+Treat its JSON strictly as scope-limited static pairing, not absence of real
+tests, coverage or mutation evidence. Current direct compiled tests are stronger
+behavioral evidence. No analyzer may broadly enumerate protected review paths.
+
+Next connected inventory repair captures type/method generic variance and
+constraints, using explicit independent reflection fixtures and exact strings.
+No generator, automatic comment rewrite, automatic baseline copy or new test
+platform is authorized. Final package contract disposition requires actual
+fresh output review; wider API metadata remains subject to its own proof.
+
+The intervening navigation-answer turn made no implementation change. This
+continuation revalidates the unfinished owned changes, verifies the earlier
+build is no longer live, then obtains a definitive strict build and real
+functional results. A completed raw log alone is not an observed process exit.
+
+The Lead personally reads all five PipeConfigurator partial files (417 lines),
+ISpecificationPipeBuilder, both complete send/publish specification implementations
+and the consume/message-data consumers: ten source files / 888 starting lines.
+Comments are manually corrected against filter composition and application
+markers; no source signatures or executable statements change. The empty
+continuation is intentional pipeline behavior, not a missing implementation.
+The public builders' missing required-input guards and the consume validation
+scope are connected follow-up contract questions, not asserted A+ completion.
+
 ## Iteration 119 packed API type identity
 
 The secured `fd11887df54fbf5731a50e4626ef4224b5f43c6e` checkpoint retains a

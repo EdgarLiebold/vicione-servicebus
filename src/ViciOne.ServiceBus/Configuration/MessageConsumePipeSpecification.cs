@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for message consume pipe.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Composes parent-message, message-specific and base consume specifications.</summary>
+/// <typeparam name="TMessage">The message contract handled by the consume pipeline.</typeparam>
 public class MessageConsumePipeSpecification<TMessage> :
     IMessageConsumePipeSpecification<TMessage>,
     IMessageConsumePipeSpecification
@@ -16,7 +16,7 @@ public class MessageConsumePipeSpecification<TMessage> :
     readonly List<ISpecificationPipeSpecification<ConsumeContext<TMessage>>> _parentMessageSpecifications;
     readonly List<IPipeSpecification<ConsumeContext<TMessage>>> _specifications;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty configuration for each consume specification layer.</summary>
     public MessageConsumePipeSpecification()
     {
         _specifications = new List<IPipeSpecification<ConsumeContext<TMessage>>>();
@@ -24,8 +24,8 @@ public class MessageConsumePipeSpecification<TMessage> :
         _parentMessageSpecifications = new List<ISpecificationPipeSpecification<ConsumeContext<TMessage>>>();
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Appends a base consume-context specification.</summary>
+    /// <param name="specification">The specification applied after message-specific filters unless the builder is marked implemented.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext> specification)
     {
         _baseSpecifications.Add(specification);
@@ -39,22 +39,22 @@ public class MessageConsumePipeSpecification<TMessage> :
         throw new ArgumentException($"The expected message type was invalid: {TypeCache<T>.ShortName}");
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Appends a specification for this message's consume context.</summary>
+    /// <param name="specification">The specification applied after parent-message specifications.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
     {
         _specifications.Add(specification);
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Enumerates validation results from the message-specific specifications.</summary>
+    /// <returns>The results produced by the message-specific layer, in registration order.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _specifications.SelectMany(x => x.Validate());
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Applies parent and message specifications, then base specifications when the builder is not marked implemented.</summary>
+    /// <param name="builder">The builder receiving each specification's filters.</param>
     public void Apply(ISpecificationPipeBuilder<ConsumeContext<TMessage>> builder)
     {
         var parentCount = _parentMessageSpecifications.Count;
@@ -81,9 +81,9 @@ public class MessageConsumePipeSpecification<TMessage> :
         }
     }
 
-    /// <summary>Builds message pipe.</summary>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <returns>The configured message pipe.</returns>
+    /// <summary>Builds the consume specification layers before the supplied continuation.</summary>
+    /// <param name="pipe">The continuation invoked after the configured filters.</param>
+    /// <returns>The composed pipeline, or the supplied continuation when no filters are registered.</returns>
     public IPipe<ConsumeContext<TMessage>> BuildMessagePipe(IPipe<ConsumeContext<TMessage>> pipe)
     {
         var pipeBuilder = new PipeConfigurator<ConsumeContext<TMessage>>.SpecificationPipeBuilder();
@@ -93,8 +93,8 @@ public class MessageConsumePipeSpecification<TMessage> :
         return pipeBuilder.Build(pipe);
     }
 
-    /// <summary>Adds parent message specification to the configuration.</summary>
-    /// <param name="parentSpecification">The parent specification.</param>
+    /// <summary>Appends a parent-message specification applied through a delegated builder.</summary>
+    /// <param name="parentSpecification">The specification applied before this message's own specifications.</param>
     public void AddParentMessageSpecification(ISpecificationPipeSpecification<ConsumeContext<TMessage>> parentSpecification)
     {
         _parentMessageSpecifications.Add(parentSpecification);

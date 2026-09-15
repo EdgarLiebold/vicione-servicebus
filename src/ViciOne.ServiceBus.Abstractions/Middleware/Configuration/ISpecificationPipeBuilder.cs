@@ -1,28 +1,26 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Builds specification pipe components.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Appends filters while tracking which message specification layers may be applied.</summary>
+/// <typeparam name="T">The pipeline context contract.</typeparam>
 public interface ISpecificationPipeBuilder<T> :
     IPipeBuilder<T>
     where T : class, PipeContext
 {
     /// <summary>
-    /// If true, this is a delegated builder, and implemented message types
-    /// and/or topology items should not be applied.
+    /// Gets whether implemented-message-type specifications are suppressed for this builder.
     /// </summary>
     bool IsDelegated { get; }
 
     /// <summary>
-    /// If true, this is a builder for implemented types, so don't go down
-    /// the rabbit hole twice.
+    /// Gets whether base message specifications are suppressed for this builder.
     /// </summary>
     bool IsImplemented { get; }
 
-    /// <summary>Creates delegated builder.</summary>
-    /// <returns>The created delegated builder.</returns>
+    /// <summary>Creates a delegated builder while preserving the implemented marker.</summary>
+    /// <returns>A builder that suppresses implemented-message-type specifications.</returns>
     ISpecificationPipeBuilder<T> CreateDelegatedBuilder();
 
-    /// <summary>Creates implemented builder.</summary>
-    /// <returns>The created implemented builder.</returns>
+    /// <summary>Creates an implemented builder while preserving the delegated marker.</summary>
+    /// <returns>A builder that suppresses base message specifications.</returns>
     ISpecificationPipeBuilder<T> CreateImplementedBuilder();
 }

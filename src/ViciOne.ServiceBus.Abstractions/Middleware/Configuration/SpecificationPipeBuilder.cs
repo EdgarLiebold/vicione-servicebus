@@ -5,46 +5,46 @@ namespace ViciOne.ServiceBus.Configuration;
 public partial class PipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Builds specification pipe components.</summary>
+    /// <summary>Accumulates specification filters and composes them in registration order.</summary>
     public class SpecificationPipeBuilder :
         ISpecificationPipeBuilder<TContext>
     {
         readonly List<IFilter<TContext>> _filters;
 
-        /// <summary>Initializes a new instance.</summary>
+        /// <summary>Creates an empty builder without delegated or implemented application markers.</summary>
         public SpecificationPipeBuilder()
         {
             _filters = new List<IFilter<TContext>>(16);
         }
 
-        /// <summary>Adds filter to the configuration.</summary>
-        /// <param name="filter">The filter to add to the pipeline.</param>
+        /// <summary>Appends a filter to the configured execution order.</summary>
+        /// <param name="filter">The filter included in subsequent pipeline builds.</param>
         public void AddFilter(IFilter<TContext> filter)
         {
             _filters.Add(filter);
         }
 
-        /// <summary>Gets a value indicating whether delegated.</summary>
+        /// <summary>Gets false because this builder does not suppress implemented-message-type specifications.</summary>
         public bool IsDelegated => false;
-        /// <summary>Gets a value indicating whether implemented.</summary>
+        /// <summary>Gets false because this builder does not suppress base message specifications.</summary>
         public bool IsImplemented => false;
 
-        /// <summary>Creates delegated builder.</summary>
-        /// <returns>The created delegated builder.</returns>
+        /// <summary>Creates a delegated wrapper while preserving the implemented marker.</summary>
+        /// <returns>A wrapper that appends filters here and suppresses implemented-message-type specifications.</returns>
         public ISpecificationPipeBuilder<TContext> CreateDelegatedBuilder()
         {
             return new ChildSpecificationPipeBuilder(this, IsImplemented, true);
         }
 
-        /// <summary>Creates implemented builder.</summary>
-        /// <returns>The created implemented builder.</returns>
+        /// <summary>Creates an implemented wrapper while preserving the delegated marker.</summary>
+        /// <returns>A wrapper that appends filters here and suppresses base message specifications.</returns>
         public ISpecificationPipeBuilder<TContext> CreateImplementedBuilder()
         {
             return new ChildSpecificationPipeBuilder(this, true, IsDelegated);
         }
 
-        /// <summary>Builds the configured component.</summary>
-        /// <returns>The configured component.</returns>
+        /// <summary>Composes the registered filters in execution order with an empty terminating continuation.</summary>
+        /// <returns>The composed pipeline, or the cached empty pipeline when no filters are registered.</returns>
         public IPipe<TContext> Build()
         {
             if (_filters.Count == 0)
@@ -58,9 +58,9 @@ public partial class PipeConfigurator<TContext>
             return current;
         }
 
-        /// <summary>Builds the configured component.</summary>
-        /// <param name="lastPipe">The last pipe.</param>
-        /// <returns>The configured component.</returns>
+        /// <summary>Composes the registered filters in execution order before the supplied continuation.</summary>
+        /// <param name="lastPipe">The pipeline invoked after the registered filters.</param>
+        /// <returns>The composed pipeline, or the supplied continuation unchanged when no filters are registered.</returns>
         public IPipe<TContext> Build(IPipe<TContext> lastPipe)
         {
             if (_filters.Count == 0)
