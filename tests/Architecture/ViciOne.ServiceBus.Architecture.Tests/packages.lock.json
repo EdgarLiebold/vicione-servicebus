@@ -372,6 +372,9 @@
           "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.build.publicapibaseline": {
+        "type": "Project"
+      },
       "vicione.servicebus.courier": {
         "type": "Project",
         "dependencies": {

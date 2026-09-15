@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures pipe.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <summary>Accumulates pipe specifications and builds them in registration order.</summary>
+/// <typeparam name="TContext">The context contract handled by every registered specification.</typeparam>
 public partial class PipeConfigurator<TContext> :
     IBuildPipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
     readonly List<IPipeSpecification<TContext>> _specifications;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty configuration with no registered pipe specifications.</summary>
     public PipeConfigurator()
     {
         _specifications = new List<IPipeSpecification<TContext>>(16);
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Enumerates the validation results of the registered specifications in registration order.</summary>
+    /// <returns>Each result yielded by a registered specification, or an empty sequence when none are registered.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_specifications.Count == 0)
@@ -31,8 +31,8 @@ public partial class PipeConfigurator<TContext> :
         }
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Appends a required specification to the configured pipeline.</summary>
+    /// <param name="specification">The specification whose filters and validation results are included in the pipeline.</param>
     public void AddPipeSpecification(IPipeSpecification<TContext> specification)
     {
         if (specification == null)
@@ -41,8 +41,8 @@ public partial class PipeConfigurator<TContext> :
         _specifications.Add(specification);
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
+    /// <summary>Builds the registered specifications in registration order, or returns an empty pipeline when none are registered.</summary>
+    /// <returns>The pipeline produced by the registered specifications, or an empty pipeline.</returns>
     public IPipe<TContext> Build()
     {
         if (_specifications.Count == 0)

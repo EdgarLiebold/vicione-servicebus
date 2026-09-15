@@ -203,8 +203,18 @@ restore_package_consumer "$public_api_consumer_project"
   -p:RestoreLockedMode=true \
   -p:TreatWarningsAsErrors=true
 
+"$dotnet_cli" build "$repository_root/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj" \
+  --configuration Release \
+  --no-restore \
+  "${build_server_arguments[@]}" \
+  -p:RestoreLockedMode=true \
+  -p:TreatWarningsAsErrors=true
+
 "$dotnet_cli" run \
-  --file "$repository_root/tools/public-api-baseline/PublicApiBaseline.cs" \
+  --project "$repository_root/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj" \
+  --configuration Release \
+  --no-build \
+  --no-restore \
   -- \
   "$global_packages" \
   "$package_feed" \

@@ -45,6 +45,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- The durable architecture requirement projection is part of the test project itself. -->
     <None Remove="Requirements/ArchitectureFoundationRequirements.json" />
     <EmbeddedResource

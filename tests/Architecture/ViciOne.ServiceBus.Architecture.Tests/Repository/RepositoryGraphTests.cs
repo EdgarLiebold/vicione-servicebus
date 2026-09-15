@@ -239,6 +239,7 @@ public sealed class RepositoryGraphTests
                 "tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj",
                 "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
                 "tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj",
+                "tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj",
             ],
             actual);
     }

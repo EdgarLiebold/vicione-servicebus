@@ -1,8 +1,3 @@
-#:sdk Microsoft.NET.Sdk.Web
-#:property TargetFramework=net10.0
-#:property PublishAot=false
-#:property NoWarn=IL2026;IL2070
-
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Security.Cryptography;
@@ -19,7 +14,7 @@ internal static class PublicApiBaseline
     {
         if (args.Length != 3)
         {
-            Console.Error.WriteLine("Usage: PublicApiBaseline.cs <global-packages> <package-feed> <output-file>");
+            Console.Error.WriteLine("Usage: ViciOne.ServiceBus.Build.PublicApiBaseline <global-packages> <package-feed> <output-file>");
             return 2;
         }
 
@@ -224,24 +219,44 @@ internal static class PublicApiBaseline
         return $"{modifier}{FormatType(parameterType)} {parameter.Name}{optional}";
     }
 
-    private static string FormatType(Type type)
+    /// <summary>Formats the CLR type identity used by public API declarations and member signatures.</summary>
+    /// <param name="type">The reflected type, including any generic arguments or element-type modifiers.</param>
+    /// <returns>The namespace-qualified type name and its arguments or element-type modifiers.</returns>
+    internal static string FormatType(Type type)
     {
         if (type.IsByRef)
             return $"{FormatType(type.GetElementType()!)}&";
         if (type.IsPointer)
             return $"{FormatType(type.GetElementType()!)}*";
         if (type.IsArray)
-            return $"{FormatType(type.GetElementType()!)}[{new string(',', type.GetArrayRank() - 1)}]";
+        {
+            string dimensions = type.GetArrayRank() == 1 && !type.IsSZArray
+                ? "*"
+                : new string(',', type.GetArrayRank() - 1);
+            return $"{FormatType(type.GetElementType()!)}[{dimensions}]";
+        }
         if (type.IsGenericParameter)
             return type.Name;
         if (!type.IsGenericType)
             return (type.FullName ?? type.Name).Replace('+', '.');
 
-        string definitionName = (type.GetGenericTypeDefinition().FullName ?? type.Name).Replace('+', '.');
-        int tick = definitionName.IndexOf('`');
-        if (tick >= 0)
-            definitionName = definitionName[..tick];
-        return $"{definitionName}<{string.Join(",", type.GetGenericArguments().Select(FormatType))}>";
+        string[] segments = (type.GetGenericTypeDefinition().FullName ?? type.Name).Split('+');
+        Type[] arguments = type.GetGenericArguments();
+        int argumentIndex = 0;
+        for (int segmentIndex = 0; segmentIndex < segments.Length; segmentIndex++)
+        {
+            string segment = segments[segmentIndex];
+            int tick = segment.IndexOf('`');
+            if (tick < 0)
+                continue;
+
+            int arity = int.Parse(segment.AsSpan(tick + 1), System.Globalization.CultureInfo.InvariantCulture);
+            string ownArguments = string.Join(",", arguments[argumentIndex..(argumentIndex + arity)].Select(FormatType));
+            segments[segmentIndex] = $"{segment[..tick]}<{ownArguments}>";
+            argumentIndex += arity;
+        }
+
+        return string.Join('.', segments);
     }
 
     private static string FormatValue(object? value)

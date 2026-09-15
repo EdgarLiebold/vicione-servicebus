@@ -1,5 +1,30 @@
 # A+ remediation research
 
+## Iteration 119 packed API type identity
+
+The secured `fd11887df54fbf5731a50e4626ef4224b5f43c6e` checkpoint retains a
+failing package-baseline comparison. Its reflection formatter truncates generic
+metadata names at the first backtick, losing nested names and assigning inherited
+arguments to the wrong declaring type. Rank-one non-vector arrays also collide
+with vectors. Both are inventory defects, not reasons to weaken the package gate.
+
+Before test edits, the Lead personally read the complete tracked Architecture
+project: 38 C# files (8,900 lines), its project, 287-line requirement catalogue and
+617-line lock graph. Effective root/test build policy, central package policy,
+native test configuration/workflow, Unit/Engineering solutions and the complete
+318-line formatter and 226-line package-gate script were read. Truncated outputs
+were reread in smaller ranges. This is not a claim of complete product reading.
+
+Use an ordinary nonpackable console project with no additional NuGet dependency,
+retaining the existing manually authored CLI. An internal friend seam allows
+direct exact-string xUnit oracles without copying its implementation into tests.
+No source/comment generator or automatic baseline replacement is permitted.
+
+The complete test-project read also found root-recursive build-policy discovery
+in RepositoryGraphTests and VerificationCapabilityDispositionTests. Those paths
+can enter protected review inputs. Do not execute those methods or claim a full
+Architecture run until governed-root discovery is corrected and proved.
+
 ## Iteration 119 saga query/index integrity
 
 Complete personal source reads and secured baseline establish predicate-null,

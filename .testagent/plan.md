@@ -1,5 +1,29 @@
 # A+ remediation test plan
 
+## Iteration 119 packed API type identity
+
+1. Migrate the existing formatter into a regular SDK console project without
+   changing its faulty rendering; bind Architecture tests and both engineering
+   solution closures to the real tool. Preserve strict package comparison.
+2. Manually author independent exact-string tests for open/closed nested types,
+   inherited/own arity, nongeneric children, three levels, recursive arguments,
+   distinct child/parent identities, generic parameters and CLR modifiers.
+   Compile successfully and observe functional red tests before correction.
+3. Preserve each metadata segment and distribute the leaf's actual generic
+   arguments by each segment's own arity. Distinguish vectors from non-vector
+   rank-one arrays. Run direct green tests, review assertions and compiled
+   one-cause mutations, restoring exact source bytes after every candidate.
+4. Correct protected-input traversal before full Architecture execution. Review
+   actual newly packed API differences before any manual baseline disposition;
+   do not use the automatic baseline-update switch as acceptance.
+5. Record exact bounded proof and remaining whole-goal obligations, then commit,
+   tag and push normally at the completed checkpoint. Iteration 119 stays open.
+
+Steps 1–3 are causally proved: original 14 failures/24, final 31/31 bounded,
+three compiled single-cause kills with exact restorations. Steps 4 and wider API
+constraint/variance inventory remain connected follow-up work, not failed gates
+to suppress. The bounded checkpoint is not the whole iteration's acceptance.
+
 ## Iteration 119 saga query/index integrity
 
 Continue from the secured ownership checkpoint using

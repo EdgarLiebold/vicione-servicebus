@@ -141,6 +141,7 @@ public sealed class DeveloperJourneyArchitectureTests
     {
         string verifier = Path.Combine(RepositoryLayout.Root, "tools", "ci", "verify_developer_journeys.sh");
         string generator = Path.Combine(RepositoryLayout.Root, "tools", "public-api-baseline", "PublicApiBaseline.cs");
+        string toolProject = Path.Combine(RepositoryLayout.Root, "tools", "public-api-baseline", "ViciOne.ServiceBus.Build.PublicApiBaseline.csproj");
         string baseline = Path.Combine(RepositoryLayout.Root, "docs", "api", "packed-public-api.txt");
         string consumer = Path.Combine(
             RepositoryLayout.Root,
@@ -150,12 +151,17 @@ public sealed class DeveloperJourneyArchitectureTests
             "ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.csproj");
 
         Assert.True(File.Exists(generator));
+        Assert.True(File.Exists(toolProject));
+        XDocument inventoryProject = XDocument.Load(toolProject);
+        Assert.Equal("Microsoft.NET.Sdk", inventoryProject.Root!.Attribute("Sdk")!.Value);
+        Assert.Equal("false", inventoryProject.Descendants("IsPackable").Single().Value);
+        Assert.Empty(inventoryProject.Descendants("PackageReference"));
         Assert.True(File.Exists(baseline));
         Assert.True(new FileInfo(baseline).Length > 1_000);
         Assert.True(File.Exists(consumer));
         string script = File.ReadAllText(verifier);
         Assert.Contains("PUBLIC_API_CONTRACT_OUTPUT", script, StringComparison.Ordinal);
-        Assert.Contains("--file \"$repository_root/tools/public-api-baseline/PublicApiBaseline.cs\"", script, StringComparison.Ordinal);
+        Assert.Contains("--project \"$repository_root/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj\"", script, StringComparison.Ordinal);
         Assert.Contains("\"$global_packages\"", script, StringComparison.Ordinal);
         Assert.Contains("\"$package_feed\"", script, StringComparison.Ordinal);
         Assert.Contains("docs/api/packed-public-api.txt", script, StringComparison.Ordinal);
