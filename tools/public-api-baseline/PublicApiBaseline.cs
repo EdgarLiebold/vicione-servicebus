@@ -96,7 +96,8 @@ internal static class PublicApiBaseline
                 ? $" [generic={string.Join(",", method.GetGenericArguments().Select(FormatGenericParameter))}]"
                 : string.Empty;
             yield return $"METHOD {Visibility(method)} {MethodModifiers(method)}{FormatType(method.ReturnType)} "
-                + $"{method.Name}{genericArguments}({FormatParameters(method.GetParameters())}){genericContracts}";
+                + $"{method.Name}{genericArguments}({FormatParameters(method.GetParameters())}){genericContracts}"
+                + FormatCustomModifiers(method.ReturnParameter.GetRequiredCustomModifiers(), method.ReturnParameter.GetOptionalCustomModifiers(), "return-");
         }
 
         foreach (PropertyInfo property in type.GetProperties(DeclaredMembers).Where(IsExternallyVisible))
@@ -105,7 +106,8 @@ internal static class PublicApiBaseline
                 ? $"[{FormatParameters(parameters)}]"
                 : string.Empty;
             yield return $"PROPERTY {FormatType(property.PropertyType)} {property.Name}{index} "
-                + $"{{ {Accessor(property.GetMethod, "get")} {Accessor(property.SetMethod, "set")} }}";
+                + $"{{ {Accessor(property.GetMethod, "get")} {Accessor(property.SetMethod, "set")} }}"
+                + FormatCustomModifiers(property.GetRequiredCustomModifiers(), property.GetOptionalCustomModifiers());
         }
 
         foreach (EventInfo @event in type.GetEvents(DeclaredMembers).Where(IsExternallyVisible))
@@ -117,7 +119,8 @@ internal static class PublicApiBaseline
             string modifiers = field.IsLiteral ? "const " : field.IsStatic ? "static " : string.Empty;
             modifiers += field.IsInitOnly ? "readonly " : string.Empty;
             string value = field.IsLiteral ? $" = {FormatValue(field.GetRawConstantValue())}" : string.Empty;
-            yield return $"FIELD {Visibility(field)} {modifiers}{FormatType(field.FieldType)} {field.Name}{value}";
+            yield return $"FIELD {Visibility(field)} {modifiers}{FormatType(field.FieldType)} {field.Name}{value}"
+                + FormatCustomModifiers(field.GetRequiredCustomModifiers(), field.GetOptionalCustomModifiers());
         }
     }
 
@@ -243,8 +246,22 @@ internal static class PublicApiBaseline
             modifiers.Add("static");
         if (method.IsAbstract)
             modifiers.Add("abstract");
-        else if (method.IsVirtual && method.GetBaseDefinition() == method)
-            modifiers.Add("virtual");
+        if (method.IsVirtual)
+        {
+            if (method.GetBaseDefinition() != method)
+            {
+                if (method.IsFinal)
+                    modifiers.Add("sealed");
+                modifiers.Add("override");
+            }
+            else
+            {
+                if (!method.IsAbstract)
+                    modifiers.Add("virtual");
+                if (method.IsFinal)
+                    modifiers.Add("final");
+            }
+        }
         string formatted = string.Join(' ', modifiers);
         return formatted.Length == 0 ? string.Empty : formatted + " ";
     }
@@ -256,21 +273,62 @@ internal static class PublicApiBaseline
         => field.IsPublic ? "public" : field.IsFamily ? "protected" : "protected-internal";
 
     private static string Accessor(MethodInfo? method, string name)
-        => method is null || !IsExternallyVisible(method) ? string.Empty : $"{Visibility(method)}-{name};";
+    {
+        if (method is null || !IsExternallyVisible(method))
+            return string.Empty;
+
+        Type[] required = method.ReturnParameter.GetRequiredCustomModifiers();
+        if (name == "set" && required.Any(type => type.FullName == "System.Runtime.CompilerServices.IsExternalInit"))
+            name = "init";
+
+        string modifiers = MethodModifiers(method).TrimEnd();
+        string methodContract = modifiers.Length == 0 ? string.Empty : $"[modifiers={modifiers}]";
+        string returnContract = FormatCustomModifiers(required, method.ReturnParameter.GetOptionalCustomModifiers(), "return-").TrimStart();
+        string parameterContracts = string.Join(",", method.GetParameters().Select(parameter =>
+            FormatCustomModifiers(parameter.GetRequiredCustomModifiers(), parameter.GetOptionalCustomModifiers()).TrimStart()));
+        string parameters = parameterContracts.Trim(',').Length == 0 ? string.Empty : $"[parameter-modifiers=[{parameterContracts}]]";
+        return $"{Visibility(method)}-{name}{methodContract}{returnContract}{parameters};";
+    }
+
+    /// <summary>Preserves ordered required and optional CLR modifiers without conflating either list.</summary>
+    private static string FormatCustomModifiers(Type[] required, Type[] optional, string prefix = "")
+        => required.Length == 0 && optional.Length == 0 ? string.Empty
+            : $" [{prefix}modreq=[{string.Join(",", required.Select(FormatType))}];{prefix}modopt=[{string.Join(",", optional.Select(FormatType))}]]";
 
     private static string FormatParameters(IEnumerable<ParameterInfo> parameters)
         => string.Join(", ", parameters.Select(FormatParameter));
 
     private static string FormatParameter(ParameterInfo parameter)
     {
-        string modifier = parameter.IsOut ? "out "
-            : parameter.ParameterType.IsByRef && parameter.IsIn ? "in "
-            : parameter.ParameterType.IsByRef ? "ref "
-            : string.Empty;
+        IList<CustomAttributeData> attributes = parameter.GetCustomAttributesData();
+        bool readOnlyLocation = attributes.Any(attribute => attribute.AttributeType.FullName == "System.Runtime.CompilerServices.RequiresLocationAttribute");
+        bool readOnlyInput = attributes.Any(attribute => attribute.AttributeType.FullName == "System.Runtime.CompilerServices.IsReadOnlyAttribute");
+        bool byReference = parameter.ParameterType.IsByRef;
+        string modifier = !byReference ? string.Empty
+            : readOnlyLocation ? "ref readonly "
+            : readOnlyInput ? "in "
+            : parameter.IsOut && !parameter.IsIn ? "out "
+            : "ref ";
         Type parameterType = parameter.ParameterType.IsByRef ? parameter.ParameterType.GetElementType()! : parameter.ParameterType;
-        string optional = parameter.HasDefaultValue ? $" = {FormatValue(parameter.DefaultValue)}" : string.Empty;
-        return $"{modifier}{FormatType(parameterType)} {parameter.Name}{optional}";
+        bool parameterCollection = attributes.Any(attribute =>
+            attribute.AttributeType.FullName is "System.ParamArrayAttribute" or "System.Runtime.CompilerServices.ParamCollectionAttribute");
+        string collection = parameterCollection ? "params " : string.Empty;
+        string optional = parameter.HasDefaultValue
+            ? $" = {FormatParameterDefault(parameter, parameterType)}" + (parameter.IsOptional ? string.Empty : " [required]")
+            : parameter.IsOptional ? " [optional]" : string.Empty;
+        bool explicitDirection = (parameter.IsIn || parameter.IsOut) && (!byReference || modifier == "ref ");
+        string direction = !explicitDirection ? string.Empty
+            : $" [direction={(parameter.IsIn && parameter.IsOut ? "in&out" : parameter.IsIn ? "in" : "out")}]";
+        return $"{collection}{modifier}{FormatType(parameterType)} {parameter.Name}{optional}{direction}"
+            + FormatCustomModifiers(parameter.GetRequiredCustomModifiers(), parameter.GetOptionalCustomModifiers());
     }
+
+    /// <summary>Distinguishes typed struct and generic defaults from concrete reference and nullable-value null constants.</summary>
+    private static string FormatParameterDefault(ParameterInfo parameter, Type parameterType)
+        => parameter.RawDefaultValue is null && (parameterType.IsGenericParameter
+            || (parameterType.IsValueType && Nullable.GetUnderlyingType(parameterType) is null))
+            ? $"default({FormatType(parameterType)})"
+            : FormatValue(parameter.RawDefaultValue);
 
     /// <summary>Formats the CLR type identity used by public API declarations and member signatures.</summary>
     /// <param name="type">The reflected type, including any generic arguments or element-type modifiers.</param>
@@ -317,7 +375,7 @@ internal static class PublicApiBaseline
         {
             null => "null",
             string text => $"\"{Escape(text)}\"",
-            char character => $"'{Escape(character.ToString())}'",
+            char character => $"'{Escape(character.ToString()).Replace("'", "\\'", StringComparison.Ordinal)}'",
             bool boolean => boolean ? "true" : "false",
             _ => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? "null",
         };

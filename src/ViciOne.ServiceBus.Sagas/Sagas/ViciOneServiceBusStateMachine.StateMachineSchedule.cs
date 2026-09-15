@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Defines the schedule for state machine.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <summary>Describes a saga message schedule and the property that stores its cancellation token ID.</summary>
+    /// <typeparam name="TMessage">The scheduled message contract.</typeparam>
     public class StateMachineSchedule<TMessage> :
         ISchedule<TInstance, TMessage>
         where TMessage : class
@@ -19,10 +19,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly IScheduleSettings<TInstance, TMessage> _settings;
         readonly IWriteProperty<TInstance, Guid?> _write;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="name">The name.</param>
-        /// <param name="tokenIdExpression">The token id expression.</param>
-        /// <param name="settings">The settings that control the operation.</param>
+        /// <summary>Configures the schedule's name, delay provider and readable/writable token-ID property.</summary>
+        /// <param name="name">The schedule's state-machine name.</param>
+        /// <param name="tokenIdExpression">The saga property used to store the scheduled message's token ID.</param>
+        /// <param name="settings">The settings supplying the schedule's delay provider.</param>
         public StateMachineSchedule(string name, Expression<Func<TInstance, Guid?>> tokenIdExpression, IScheduleSettings<TInstance, TMessage> settings)
         {
             _name = name;
@@ -35,29 +35,29 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         string ISchedule<TInstance>.Name => _name;
-        /// <summary>Gets or sets the received.</summary>
+        /// <summary>Gets or sets the correlated scheduled-message event assigned during schedule configuration.</summary>
         public IEvent<TMessage> Received { get; set; } = null!;
-        /// <summary>Gets or sets the any received.</summary>
+        /// <summary>Gets or sets the general scheduled-message event assigned during schedule configuration.</summary>
         public IEvent<TMessage> AnyReceived { get; set; } = null!;
-        /// <summary>Gets delay.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>The delay.</returns>
+        /// <summary>Evaluates the configured delay provider for the current saga context.</summary>
+        /// <param name="context">The saga and event used by the delay provider.</param>
+        /// <returns>The configured provider's delay.</returns>
         public TimeSpan GetDelay(IBehaviorContext<TInstance> context)
         {
             return _settings.DelayProvider(context);
         }
 
-        /// <summary>Gets token id.</summary>
-        /// <param name="instance">The instance.</param>
-        /// <returns>The token id.</returns>
+        /// <summary>Reads the scheduled-message token ID from the configured saga property.</summary>
+        /// <param name="instance">The saga whose token-ID property is read.</param>
+        /// <returns>The property's token ID, or <see langword="null" /> when it is unset.</returns>
         public Guid? GetTokenId(TInstance instance)
         {
             return _read.Get(instance);
         }
 
-        /// <summary>Sets token id.</summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="tokenId">The token id.</param>
+        /// <summary>Writes or clears the scheduled-message token ID in the configured saga property.</summary>
+        /// <param name="instance">The saga whose token-ID property is written.</param>
+        /// <param name="tokenId">The token ID to store, or <see langword="null" /> to clear it.</param>
         public void SetTokenId(TInstance instance, Guid? tokenId)
         {
             _write.Set(instance, tokenId);

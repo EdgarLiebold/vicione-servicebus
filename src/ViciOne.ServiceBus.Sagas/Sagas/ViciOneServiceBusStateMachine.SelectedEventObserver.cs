@@ -6,25 +6,25 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Observes selected event events.</summary>
+    /// <summary>Forwards notifications only when the context's event equals the selected event.</summary>
     public class SelectedEventObserver :
         IEventObserver<TInstance>
     {
         readonly IEvent _event;
         readonly IEventObserver<TInstance> _observer;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="event">The event.</param>
-        /// <param name="observer">The observer to connect.</param>
+        /// <summary>Selects the event whose notifications are forwarded to an observer.</summary>
+        /// <param name="event">The event matched against each notification's context.</param>
+        /// <param name="observer">The observer that receives matching notifications.</param>
         public SelectedEventObserver(IEvent @event, IEventObserver<TInstance> observer)
         {
             _event = @event;
             _observer = observer;
         }
 
-        /// <summary>Runs before execute.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards a pre-execution notification for the selected event.</summary>
+        /// <param name="context">The saga and event being observed.</param>
+        /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task PreExecuteAsync(IBehaviorContext<TInstance> context)
         {
             return _event.Equals(context.Event)
@@ -32,10 +32,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : Task.CompletedTask;
         }
 
-        /// <summary>Runs before execute.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards a message pre-execution notification for the selected event.</summary>
+        /// <typeparam name="T">The event's message contract.</typeparam>
+        /// <param name="context">The saga, event and message being observed.</param>
+        /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task PreExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
@@ -44,9 +44,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : Task.CompletedTask;
         }
 
-        /// <summary>Runs after execute.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards a post-execution notification for the selected event.</summary>
+        /// <param name="context">The saga and event being observed.</param>
+        /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task PostExecuteAsync(IBehaviorContext<TInstance> context)
         {
             return _event.Equals(context.Event)
@@ -54,10 +54,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : Task.CompletedTask;
         }
 
-        /// <summary>Runs after execute.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards a message post-execution notification for the selected event.</summary>
+        /// <typeparam name="T">The event's message contract.</typeparam>
+        /// <param name="context">The saga, event and message being observed.</param>
+        /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task PostExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
@@ -66,10 +66,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : Task.CompletedTask;
         }
 
-        /// <summary>Executes fault.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards an execution failure for the selected event.</summary>
+        /// <param name="context">The saga and event whose execution failed.</param>
+        /// <param name="exception">The execution failure supplied to the observer.</param>
+        /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task ExecuteFaultAsync(IBehaviorContext<TInstance> context, Exception exception)
         {
             return _event.Equals(context.Event)
@@ -77,11 +77,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : Task.CompletedTask;
         }
 
-        /// <summary>Executes fault.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards a message execution failure for the selected event.</summary>
+        /// <typeparam name="T">The event's message contract.</typeparam>
+        /// <param name="context">The saga, event and message whose execution failed.</param>
+        /// <param name="exception">The execution failure supplied to the observer.</param>
+        /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task ExecuteFaultAsync<T>(IBehaviorContext<TInstance, T> context, Exception exception)
             where T : class
         {

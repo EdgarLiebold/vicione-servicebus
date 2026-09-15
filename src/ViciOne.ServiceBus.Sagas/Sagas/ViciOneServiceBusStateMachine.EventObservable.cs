@@ -7,61 +7,61 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Publishes observations for event.</summary>
+    /// <summary>Forwards event execution notifications to the connected saga observers.</summary>
     public class EventObservable :
         Connectable<IEventObserver<TInstance>>,
         IEventObserver<TInstance>
     {
-        /// <summary>Runs before execute.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Notifies connected observers before the event's behavior executes.</summary>
+        /// <param name="context">The saga and event being observed.</param>
+        /// <returns>The task for forwarding the notification.</returns>
         public Task PreExecuteAsync(IBehaviorContext<TInstance> context)
         {
             return ForEachAsync(x => x.PreExecuteAsync(context));
         }
 
-        /// <summary>Runs before execute.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Notifies connected observers before the message event's behavior executes.</summary>
+        /// <typeparam name="T">The event's message contract.</typeparam>
+        /// <param name="context">The saga, event and message being observed.</param>
+        /// <returns>The task for forwarding the notification.</returns>
         public Task PreExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
             return ForEachAsync(x => x.PreExecuteAsync(context));
         }
 
-        /// <summary>Runs after execute.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Notifies connected observers after the event's behavior executes successfully.</summary>
+        /// <param name="context">The saga and event being observed.</param>
+        /// <returns>The task for forwarding the notification.</returns>
         public Task PostExecuteAsync(IBehaviorContext<TInstance> context)
         {
             return ForEachAsync(x => x.PostExecuteAsync(context));
         }
 
-        /// <summary>Runs after execute.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Notifies connected observers after the message event's behavior executes successfully.</summary>
+        /// <typeparam name="T">The event's message contract.</typeparam>
+        /// <param name="context">The saga, event and message being observed.</param>
+        /// <returns>The task for forwarding the notification.</returns>
         public Task PostExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
             return ForEachAsync(x => x.PostExecuteAsync(context));
         }
 
-        /// <summary>Executes fault.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards an event execution failure to the connected observers.</summary>
+        /// <param name="context">The saga and event whose execution failed.</param>
+        /// <param name="exception">The execution failure supplied to the observers.</param>
+        /// <returns>The task for forwarding the notification.</returns>
         public Task ExecuteFaultAsync(IBehaviorContext<TInstance> context, Exception exception)
         {
             return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
         }
 
-        /// <summary>Executes fault.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Forwards a message event execution failure to the connected observers.</summary>
+        /// <typeparam name="T">The event's message contract.</typeparam>
+        /// <param name="context">The saga, event and message whose execution failed.</param>
+        /// <param name="exception">The execution failure supplied to the observers.</param>
+        /// <returns>The task for forwarding the notification.</returns>
         public Task ExecuteFaultAsync<T>(IBehaviorContext<TInstance, T> context, Exception exception)
             where T : class
         {

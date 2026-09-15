@@ -1,5 +1,56 @@
 # A+ remediation test plan
 
+## Iteration 119 member modifiers and optional parameter contracts
+
+1. Manually author PublicApiMemberModifierTests against unchanged tooling;
+   bind every test method to REQ-VSB-PACKED-PUBLIC-API in the exact catalogue.
+2. Observe successful strict compilation followed by functional native red
+   assertions, distinguishing arrangement/compiler errors from causal evidence.
+3. Correct the shared parameter/default/custom-modifier/accessor/override
+   formatters manually. Re-run all inventory tests and the exact projection.
+4. Review every assertion and connected gap; empirically compile and execute
+   selected one-cause regressions, restore exact source bytes, then validate
+   the complete Architecture owner and affected existing product owners.
+5. Finish the nine personally read source partials' manual comment corrections;
+   prove no executable/signature changes there. Record unresolved runtime and
+   inventory findings. Secure only actually proved owned changes with a normal
+   commit, annotated tag, push and independent remote reference verification.
+
+The test names in PublicApiMemberModifierTests map to the bounded checklist:
+ParameterDefaults_PreserveTypedValueDefaults;
+ParameterDefaults_KeepNullableAndReferenceNullDefaults;
+ParameterDefaults_EscapeLiteralsAndFormatConstantsInvariantly;
+ParameterOptionality_PreserveOptionalWithoutDefault;
+ParameterOptionality_DistinguishOptionalFromRequired;
+ParameterArrays_PreserveParamsApartFromOrdinaryArrays;
+PropertyAccessors_DistinguishInitFromSet;
+ReturnModifiers_DistinguishReadonlyFromWritableReferences;
+FieldModifiers_PreserveVolatileFieldContracts;
+MethodModifiers_DistinguishOrdinaryAndSealedOverrides;
+AccessorModifiers_PreserveStaticVirtualAndAbstractContracts.
+The internal counterreview's expanded exact oracles add:
+ParameterOptionality_KeepDefaultConstantIndependentOfOptionalFlag;
+ParameterModifiers_DistinguishRefInReadonlyAndOut;
+ParameterModifiers_PreserveVirtualReadonlyLocationContract;
+ParameterDirections_DoNotInventByReferenceOrReadonlyContracts;
+ParameterDefaults_PreserveTypedGenericDefaults;
+ConstructorDefaults_PreserveTypedOptionalValueDefaults;
+LiteralFields_KeepCharacterAndStringDelimitersDistinct;
+EventAccessors_PreserveEachAccessorContract;
+IndexerDefaults_PreserveTypedOptionalValueDefaults.
+All 20 methods / 43 cases have exact catalogue bindings (175 overall). Initial
+functional red 15/22, expanded red 7/43 and corrected inventory/projection 83/83
+are terminal. Ten selected one-cause mutations strictly compile, fail natively
+(20 failed cases total), and are manually restored byte-for-byte. Final strict
+Architecture/Core/Abstractions builds and full Core 4,007 / Abstractions 749 native
+regression are terminal green; three selected read-only formats terminate 0.
+Unfiltered Architecture is terminal green, 401/401, including the actual
+bidirectional Async guard. Fresh package execution terminates 1 only at the
+unchanged baseline comparison, after all packing/journey/consumer stages and
+30 inventories; the 20,045-line fresh output is checksum-bound in the report.
+All validation handles are terminal. Capture outcomes follow actual observation.
+The original whole-product goal remains active, with all connected gates open.
+
 ## Iteration 119 nested API source reconciliation
 
 1. Personally read the complete DynamicFilter/SagaConnector/StateMachineInterfaceType

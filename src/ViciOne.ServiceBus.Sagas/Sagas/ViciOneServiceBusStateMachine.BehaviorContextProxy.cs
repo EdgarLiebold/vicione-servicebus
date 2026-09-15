@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Forwards behavior context operations to an underlying context.</summary>
+    /// <summary>Exposes a state-machine event over the selected saga consume context.</summary>
     public class BehaviorContextProxy :
         ConsumeContextProxy,
         IBehaviorContext<TInstance>
@@ -16,10 +16,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly SagaConsumeContext<TInstance> _context;
         readonly IEvent _event;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="machine">The machine.</param>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="event">The event.</param>
+        /// <summary>Associates a state machine and event with the selected saga consume context.</summary>
+        /// <param name="machine">The state machine executing raised events.</param>
+        /// <param name="context">The saga consume context providing instance state, completion and messaging operations.</param>
+        /// <param name="event">The event represented by this behavior context.</param>
         public BehaviorContextProxy(IStateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, IEvent @event)
             : base(context)
         {
@@ -28,41 +28,41 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _event = @event;
         }
 
-        /// <summary>Gets the state machine.</summary>
+        /// <summary>Gets the state machine executing events raised from this context.</summary>
         public IStateMachine<TInstance> StateMachine { get; }
 
-        /// <summary>Gets the correlation id.</summary>
+        /// <summary>Gets the selected saga instance's correlation identifier.</summary>
         public override Guid? CorrelationId => Saga.CorrelationId;
 
-        /// <summary>Gets the saga.</summary>
+        /// <summary>Gets the saga instance selected by the underlying consume context.</summary>
         public TInstance Saga => _context.Saga;
 
-        /// <summary>Sets completed.</summary>
-        /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Marks the underlying saga consume context as completed.</summary>
+        /// <param name="cancellationToken">The cancellation token forwarded to saga completion.</param>
+        /// <returns>The underlying saga completion task.</returns>
         public Task SetCompletedAsync(CancellationToken cancellationToken = default)
         {
             return _context.SetCompletedAsync(cancellationToken: cancellationToken);
         }
 
-        /// <summary>Gets a value indicating whether completed.</summary>
+        /// <summary>Gets whether the underlying saga consume context is completed.</summary>
         public bool IsCompleted => _context.IsCompleted;
 
-        /// <summary>Raises the configured event.</summary>
-        /// <param name="event">The event.</param>
-        /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Raises another event using the same saga consume context.</summary>
+        /// <param name="event">The event raised on the associated state machine.</param>
+        /// <param name="cancellationToken">The cancellation token forwarded to event execution.</param>
+        /// <returns>The state machine's event execution task.</returns>
         public Task RaiseAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
             return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
 
-        /// <summary>Raises the configured event.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Raises a message event using the same saga and a consume-context view of the supplied message.</summary>
+        /// <typeparam name="T">The message contract carried by the raised event.</typeparam>
+        /// <param name="event">The message event raised on the associated state machine.</param>
+        /// <param name="data">The message supplied to the raised event.</param>
+        /// <param name="cancellationToken">The cancellation token forwarded to event execution.</param>
+        /// <returns>The state machine's message-event execution task.</returns>
         public Task RaiseAsync<T>(IEvent<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
@@ -76,22 +76,22 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         IEvent IBehaviorContext<TInstance>.Event => _event;
 
-        /// <summary>Gets the instance.</summary>
+        /// <summary>Gets the selected saga instance through the state-machine instance contract.</summary>
         public TInstance Instance => _context.Saga;
 
-        /// <summary>Creates proxy.</summary>
-        /// <param name="event">The event.</param>
-        /// <returns>The created proxy.</returns>
+        /// <summary>Creates a behavior context for another event over the same saga consume context.</summary>
+        /// <param name="event">The event represented by the new context.</param>
+        /// <returns>A behavior context sharing the selected saga and underlying consume context.</returns>
         public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
 
-        /// <summary>Creates proxy.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>The created proxy.</returns>
+        /// <summary>Creates a message-event behavior context with a message view over the same saga consume context.</summary>
+        /// <typeparam name="T">The message contract carried by the new event context.</typeparam>
+        /// <param name="event">The event represented by the new context.</param>
+        /// <param name="data">The message exposed by the new context.</param>
+        /// <returns>A message behavior context sharing the selected saga and underlying consume context.</returns>
         public IBehaviorContext<TInstance, T> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {
@@ -100,8 +100,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     }
 
 
-    /// <summary>Forwards behavior context operations to an underlying context.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <summary>Exposes a state-machine message event over separate saga and message consume-context views.</summary>
+    /// <typeparam name="TMessage">The message contract exposed by the behavior context.</typeparam>
     public class BehaviorContextProxy<TMessage> :
         ConsumeContextProxy<TMessage>,
         IBehaviorContext<TInstance, TMessage>
@@ -110,11 +110,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly SagaConsumeContext<TInstance> _context;
         readonly IEvent<TMessage> _event;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="machine">The machine.</param>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="consumeContext">The consume context.</param>
-        /// <param name="event">The event.</param>
+        /// <summary>Associates a state-machine event with its selected saga and message consume contexts.</summary>
+        /// <param name="machine">The state machine executing raised events.</param>
+        /// <param name="context">The saga consume context providing the selected instance and completion state.</param>
+        /// <param name="consumeContext">The message consume context providing message data and messaging operations.</param>
+        /// <param name="event">The message event represented by this behavior context.</param>
         public BehaviorContextProxy(IStateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, ConsumeContext<TMessage> consumeContext,
             IEvent<TMessage> @event)
             : base(consumeContext)
@@ -124,41 +124,41 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _event = @event;
         }
 
-        /// <summary>Gets the state machine.</summary>
+        /// <summary>Gets the state machine executing events raised from this context.</summary>
         public IStateMachine<TInstance> StateMachine { get; }
 
-        /// <summary>Gets the correlation id.</summary>
+        /// <summary>Gets the selected saga instance's correlation identifier.</summary>
         public override Guid? CorrelationId => Saga.CorrelationId;
 
-        /// <summary>Gets the saga.</summary>
+        /// <summary>Gets the saga instance selected by the underlying saga consume context.</summary>
         public TInstance Saga => _context.Saga;
 
-        /// <summary>Sets completed.</summary>
-        /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Marks the underlying saga consume context as completed.</summary>
+        /// <param name="cancellationToken">The cancellation token forwarded to saga completion.</param>
+        /// <returns>The underlying saga completion task.</returns>
         public Task SetCompletedAsync(CancellationToken cancellationToken = default)
         {
             return _context.SetCompletedAsync(cancellationToken: cancellationToken);
         }
 
-        /// <summary>Gets a value indicating whether completed.</summary>
+        /// <summary>Gets whether the underlying saga consume context is completed.</summary>
         public bool IsCompleted => _context.IsCompleted;
 
-        /// <summary>Raises the configured event.</summary>
-        /// <param name="event">The event.</param>
-        /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Raises another event using the same selected saga consume context.</summary>
+        /// <param name="event">The event raised on the associated state machine.</param>
+        /// <param name="cancellationToken">The cancellation token forwarded to event execution.</param>
+        /// <returns>The state machine's event execution task.</returns>
         public Task RaiseAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
             return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
 
-        /// <summary>Raises the configured event.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Raises a message event with the same saga and a consume-context view of the supplied message.</summary>
+        /// <typeparam name="T">The message contract carried by the raised event.</typeparam>
+        /// <param name="event">The message event raised on the associated state machine.</param>
+        /// <param name="data">The message supplied to the raised event.</param>
+        /// <param name="cancellationToken">The cancellation token forwarded to event execution.</param>
+        /// <returns>The state machine's message-event execution task.</returns>
         public Task RaiseAsync<T>(IEvent<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
@@ -175,27 +175,27 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
-        /// <summary>Gets the data.</summary>
+        /// <summary>Gets the message exposed by the underlying message consume context.</summary>
         public TMessage Data => Message;
         IEvent IBehaviorContext<TInstance>.Event => _event;
         IEvent<TMessage> IBehaviorContext<TInstance, TMessage>.Event => _event;
 
-        /// <summary>Gets the instance.</summary>
+        /// <summary>Gets the selected saga instance through the state-machine instance contract.</summary>
         public TInstance Instance => _context.Saga;
 
-        /// <summary>Creates proxy.</summary>
-        /// <param name="event">The event.</param>
-        /// <returns>The created proxy.</returns>
+        /// <summary>Creates an event behavior context over the same selected saga consume context.</summary>
+        /// <param name="event">The event represented by the new context.</param>
+        /// <returns>A behavior context sharing the selected saga and underlying saga consume context.</returns>
         public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
 
-        /// <summary>Creates proxy.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>The created proxy.</returns>
+        /// <summary>Creates a message-event behavior context with a new message view over the same saga consume context.</summary>
+        /// <typeparam name="T">The message contract carried by the new event context.</typeparam>
+        /// <param name="event">The event represented by the new context.</param>
+        /// <param name="data">The message exposed by the new context.</param>
+        /// <returns>A message behavior context sharing the selected saga and underlying saga consume context.</returns>
         public IBehaviorContext<TInstance, T> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {

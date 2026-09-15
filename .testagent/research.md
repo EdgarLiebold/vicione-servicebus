@@ -1,5 +1,37 @@
 # A+ remediation research
 
+## Iteration 119 member modifiers and optional parameter contracts
+
+The remote-secured input is 9990fe12490d2330964c4e53945097c0688fbff6.
+The main personally reopens the complete 391-line PublicApiBaseline.cs and
+all three neighboring typed inventory test files. Architecture owner reading
+reuses the verified complete tree c0ea82bf915b1f0c744cced8f80215bc6911f81b;
+subsequent manually authored files are personally read. Core test execution is
+not mistaken for complete personal Core test-owner admission.
+
+Bounded implementation checklist: typed struct defaults versus real null;
+invariant and escaped literals; optional metadata without a constant; params
+versus ordinary arrays; init versus set; readonly versus writable reference
+returns; volatile field custom modifiers; ordinary versus sealed overrides;
+static/virtual/abstract accessor contracts. Typed fixtures and exact independent
+expected records exercise the actual formatter, not a duplicate implementation.
+Tests and comments are written manually with apply_patch. The testing pipeline
+is executed inline under the user's explicit no-generator requirement.
+
+User obligations remain verbatim: "features dürfen nicht verloren gehen";
+"ich möchte nicht, dass du einen generator nutzt"; "das gilt für den gesamten
+Quelltext unter /src !!!". This bounded tooling repair does not certify full
+feature equivalence or the original whole-product A+ goal. Member nullability,
+conditional flow, function pointers, tuple/dynamic annotations and bound generic
+constraint nullability remain connected inventory obligations, not exclusions.
+
+Nine complete state-machine partial files / 1,164 starting lines are personally
+read. Their comments are corrected only after reading and understanding the
+complete corresponding file. Missing correlation is a deliberate validation
+failure, and request-ID storage can deliberately fall back to the saga ID.
+Late event initialization, input guards, observer error preservation and state
+hierarchy consistency require behavioral disposition in the real owning tests.
+
 ## Iteration 119 nested API source reconciliation
 
 The secured e282 input preserves the failed API-baseline comparison. Completely

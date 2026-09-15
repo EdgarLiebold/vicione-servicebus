@@ -1,5 +1,51 @@
 # A+ remediation test status
 
+## Iteration 119 member API modifier/default contracts
+
+The original whole-product A+ goal remains active. The main personally completes
+nine state-machine partial reads / 1,164 lines and manually corrects comments in
+all nine files. The nine exact input/current SHA256 and line bindings independently
+match; XML-line-stripped comparison proves no executable/signature change. The
+remaining 13 collision-corrected nested declarations bring the connected personal
+source coverage of that exact 35-identity set to 35/35, not all source or all APIs.
+
+The actual packed API formatter is manually corrected for struct/generic defaults,
+raw enum/literal constants, optional-versus-required flags, params, direction versus
+byref/readonly, custom modifiers, init, ref returns, volatile and override/accessor
+shape. A separate internal Sol counterreview supplies three concrete follow-ups,
+not external acceptance. Typed hand-authored oracles grow to 20 methods / 43 cases
+and 175 exact catalogue tuples. All 54 physical assertion calls are reviewed;
+none of the methods is assertion-free, trivial-only or self-referential.
+
+Initial strict compilation terminates 0, zero warnings/errors, then original Tool
+fails 15/22 cases functionally (native 2). Initial corrected 62/62 is terminal 0.
+Expanded final strict red build terminates 0, zero warnings/errors; expanded native
+red terminates 2 with 7/43 functional failures. Corrected strict build terminates
+0, zero warnings/errors; inventory/projection regression terminates 0, 83/83 green,
+zero skips. Struct/unmanaged constrained generic cases already passed; only the
+unconstrained generic case supplied that causal red. A guessed unexecuted virtual
+modopt oracle is corrected before execution from actual official/compiled metadata.
+
+Ten selected compiled single-cause mutation checks terminate successfully as
+causal checks: every build is 0/zero warnings/errors, every native run is 2, with
+20 failed cases total; every candidate is manually restored to exact a4178ebc....
+This is not exhaustive mutation coverage. Standard test whitespace formatting
+produces no byte changes. Final strict Architecture/Core/Abstractions builds
+terminate 0, zero warnings/errors; fresh complete Core 4,007/4,007 and Abstractions
+749/749 terminate 0, zero failures/skips. All three scoped formats terminate 0.
+Fresh unfiltered Architecture terminates 0, 401/401 passed, zero failures/skips
+(3m 47.726s); the actual bidirectional Async test passes (193,678ms).
+The three complete selected owners total 5,157 passed cases, not all product
+owners. The fresh package gate terminates 1 only at the unchanged baseline
+comparison after 31 packages, 18 journeys, three isolated consumers and 30
+runtime inventories. Fresh output is 20,045 lines / SHA256 ed29376e3e214ede55083913ddd8d12d0dcea080075d7472d0f51ca8b4d7ddde.
+All owned validation handles are terminal. Checkpoint/remote security is credited
+only after its own actual terminal outcomes.
+[The bounded report](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/MEMBER_API_CONTRACTS_PACKET.md)
+records all open source/runtime/inventory/coverage/losslessness obligations. No
+automatic baseline update, source/test/comment generator, new directive or warning
+suppression. No whole-goal completion or current global coverage claim.
+
 ## Iteration 119 — nested API source reconciliation
 
 The original whole-product A+ goal remains active. From the remote-secured

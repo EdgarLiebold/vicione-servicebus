@@ -5,8 +5,8 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Forwards behavior exception context operations to an underlying context.</summary>
-    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <summary>Associates an exception with an event behavior context while preserving its saga consume operations.</summary>
+    /// <typeparam name="TException">The exception carried by the behavior context.</typeparam>
     public class BehaviorExceptionContextProxy<TException> :
         BehaviorContextProxy,
         IBehaviorExceptionContext<TInstance, TException>
@@ -14,9 +14,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     {
         readonly IBehaviorContext<TInstance> _context;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
+        /// <summary>Creates an exception behavior context over the supplied event context.</summary>
+        /// <param name="context">The context supplying the state machine, selected saga and event.</param>
+        /// <param name="exception">The exception exposed by this context and its typed message proxies.</param>
         public BehaviorExceptionContextProxy(IBehaviorContext<TInstance> context, TException exception)
             : base(context.StateMachine, context, context.Event)
         {
@@ -24,14 +24,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             Exception = exception;
         }
 
-        /// <summary>Gets the exception.</summary>
+        /// <summary>Gets the exception associated with the behavior context.</summary>
         public TException Exception { get; }
 
-        /// <summary>Creates proxy.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>The created proxy.</returns>
+        /// <summary>Creates a typed message-event proxy retaining the same exception and selected saga.</summary>
+        /// <typeparam name="T">The message contract exposed by the new proxy.</typeparam>
+        /// <param name="event">The event represented by the new proxy.</param>
+        /// <param name="data">The message exposed by the new proxy.</param>
+        /// <returns>A message exception context retaining the current exception.</returns>
         public new IBehaviorExceptionContext<TInstance, T, TException> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {
@@ -40,9 +40,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     }
 
 
-    /// <summary>Forwards behavior exception context operations to an underlying context.</summary>
-    /// <typeparam name="TData">The data type.</typeparam>
-    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <summary>Associates an exception with a message-event behavior context and preserves its saga and message views.</summary>
+    /// <typeparam name="TData">The message contract exposed by the behavior context.</typeparam>
+    /// <typeparam name="TException">The exception carried by the behavior context.</typeparam>
     public class BehaviorExceptionContextProxy<TData, TException> :
         BehaviorContextProxy<TData>,
         IBehaviorExceptionContext<TInstance, TData, TException>
@@ -51,9 +51,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     {
         readonly IBehaviorContext<TInstance, TData> _context;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
+        /// <summary>Creates an exception behavior context over the supplied message-event context.</summary>
+        /// <param name="context">The context supplying the state machine, selected saga, message and event.</param>
+        /// <param name="exception">The exception exposed by this context and its message proxies.</param>
         public BehaviorExceptionContextProxy(IBehaviorContext<TInstance, TData> context, TException exception)
             : base(context.StateMachine, context, context, context.Event)
         {
@@ -61,14 +61,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             Exception = exception;
         }
 
-        /// <summary>Gets the exception.</summary>
+        /// <summary>Gets the exception associated with the message-event behavior context.</summary>
         public TException Exception { get; }
 
-        /// <summary>Creates proxy.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>The created proxy.</returns>
+        /// <summary>Creates another typed message-event proxy retaining the same exception and selected saga.</summary>
+        /// <typeparam name="T">The message contract exposed by the new proxy.</typeparam>
+        /// <param name="event">The event represented by the new proxy.</param>
+        /// <param name="data">The message exposed by the new proxy.</param>
+        /// <returns>A message exception context retaining the current exception.</returns>
         public new IBehaviorExceptionContext<TInstance, T, TException> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {

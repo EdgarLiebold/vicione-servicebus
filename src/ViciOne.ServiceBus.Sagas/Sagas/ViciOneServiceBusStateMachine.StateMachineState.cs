@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Carries state for state machine.</summary>
+    /// <summary>Stores a named saga state's event behaviors, ignored events and state hierarchy.</summary>
     public class StateMachineState :
         IState<TInstance>,
         IEquatable<IState>
@@ -20,11 +20,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly HashSet<IState<TInstance>> _subStates;
         readonly StateMachineUnhandledEventCallback<TInstance> _unhandledEventCallback;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="unhandledEventCallback">The unhandled event callback.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="observer">The observer to connect.</param>
-        /// <param name="superState">The super state.</param>
+        /// <summary>Creates the state's transition events and registers it with an optional parent state.</summary>
+        /// <param name="unhandledEventCallback">The callback used when neither this state nor its parent handles an event.</param>
+        /// <param name="name">The state's name and prefix for its transition event names.</param>
+        /// <param name="observer">The observer notified around execution of a bound event behavior.</param>
+        /// <param name="superState">The parent state, or <see langword="null" /> for a top-level state.</param>
         public StateMachineState(StateMachineUnhandledEventCallback<TInstance> unhandledEventCallback, string name, IEventObserver<TInstance> observer,
             IState<TInstance>? superState = null)
         {
@@ -51,30 +51,30 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             superState?.AddSubstate(this);
         }
 
-        /// <summary>Determines whether this instance equals the supplied value.</summary>
-        /// <param name="other">The other.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Compares state names using ordinal equality, treating a missing other name as an empty string.</summary>
+        /// <param name="other">The state whose name is compared.</param>
+        /// <returns>Whether this state's name equals the other name or its empty-string fallback.</returns>
         public bool Equals(IState? other)
         {
             return string.CompareOrdinal(Name, other?.Name ?? "") == 0;
         }
 
-        /// <inheritdoc />
+        /// <summary>Gets the parent state, or <see langword="null" /> for a top-level state.</summary>
         public IState<TInstance>? SuperState { get; }
-        /// <summary>Gets the name.</summary>
+        /// <summary>Gets the name used for state equality, ordering and transition-event names.</summary>
         public string Name { get; }
 
-        /// <summary>Gets the enter.</summary>
+        /// <summary>Gets the trigger event associated with entering this state.</summary>
         public IEvent Enter { get; }
-        /// <summary>Gets the leave.</summary>
+        /// <summary>Gets the trigger event associated with leaving this state.</summary>
         public IEvent Leave { get; }
-        /// <summary>Gets the before enter.</summary>
+        /// <summary>Gets the before-enter event carrying state data for the transition.</summary>
         public IEvent<IState> BeforeEnter { get; }
-        /// <summary>Gets the after leave.</summary>
+        /// <summary>Gets the after-leave event carrying state data for the transition.</summary>
         public IEvent<IState> AfterLeave { get; }
 
-        /// <summary>Accepts the supplied value.</summary>
-        /// <param name="visitor">The visitor.</param>
+        /// <summary>Visits this state and the events and behaviors bound directly to it.</summary>
+        /// <param name="visitor">The visitor receiving the state, bound events and behavior graph.</param>
         public void Accept(IStateMachineVisitor visitor)
         {
             visitor.Visit(this, _ =>
@@ -87,8 +87,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             });
         }
 
-        /// <summary>Writes diagnostic information to the probe context.</summary>
-        /// <param name="context">The context associated with the operation.</param>
+        /// <summary>Reports the state's name, substates, bound behaviors and ignored non-transition events.</summary>
+        /// <param name="context">The parent diagnostic scope in which the state scope is created.</param>
         public void Probe(ProbeContext context)
         {
             var scope = context.CreateScope("state");
@@ -214,9 +214,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        /// <summary>Binds the configured entities.</summary>
-        /// <param name="event">The event.</param>
-        /// <param name="activity">The activity.</param>
+        /// <summary>Appends an activity to the behavior bound directly to an event in this state.</summary>
+        /// <param name="event">The event whose behavior receives the activity.</param>
+        /// <param name="activity">The activity appended to that event's behavior builder.</param>
         public void Bind(IEvent @event, IStateMachineActivity<TInstance> activity)
         {
             if (!_behaviors.TryGetValue(@event, out ActivityBehaviorBuilder<TInstance>? builder))
@@ -228,25 +228,25 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             builder.Add(activity);
         }
 
-        /// <summary>Ignores the selected event or message.</summary>
-        /// <param name="event">The event.</param>
+        /// <summary>Configures an event to be ignored when no behavior is bound directly to it.</summary>
+        /// <param name="event">The event whose unbound occurrences are ignored.</param>
         public void Ignore(IEvent @event)
         {
             _ignoredEvents[@event] = new AllStateEventFilter<TInstance>();
         }
 
-        /// <summary>Ignores the selected event or message.</summary>
+        /// <summary>Configures unbound occurrences of a message event to be ignored when a condition matches.</summary>
         /// <typeparam name="T">The message contract carried by the event.</typeparam>
-        /// <param name="event">The event.</param>
-        /// <param name="filter">The filter to add to the pipeline.</param>
+        /// <param name="event">The message event whose unbound occurrences are filtered.</param>
+        /// <param name="filter">The condition deciding whether an occurrence is ignored.</param>
         public void Ignore<T>(IEvent<T> @event, StateMachineCondition<TInstance, T> filter)
             where T : class
         {
             _ignoredEvents[@event] = new SelectedStateEventFilter<TInstance, T>(filter);
         }
 
-        /// <summary>Adds substate to the configuration.</summary>
-        /// <param name="subState">The sub state.</param>
+        /// <summary>Adds a substate unless its name equals this state's name.</summary>
+        /// <param name="subState">The state added to this state's substate set.</param>
         public void AddSubstate(IState<TInstance> subState)
         {
             if (subState == null)
@@ -258,33 +258,33 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _subStates.Add(subState);
         }
 
-        /// <summary>Determines whether the current value has state.</summary>
-        /// <param name="state">The state.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Searches this state and its descendants for a state with the supplied name.</summary>
+        /// <param name="state">The state supplying the name to find.</param>
+        /// <returns>Whether this state or a descendant has the supplied name.</returns>
         public bool HasState(IState<TInstance> state)
         {
             return Name.Equals(state.Name) || _subStates.Any(s => s.HasState(state));
         }
 
-        /// <summary>Determines whether state of.</summary>
-        /// <param name="state">The state.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Searches this state and its ancestors for a state with the supplied name.</summary>
+        /// <param name="state">The state supplying the name to find.</param>
+        /// <returns>Whether this state or an ancestor has the supplied name.</returns>
         public bool IsStateOf(IState<TInstance> state)
         {
             return Name.Equals(state.Name) || (SuperState != null && SuperState.IsStateOf(state));
         }
 
-        /// <inheritdoc />
+        /// <summary>Gets distinct non-transition events from this state and its ancestors.</summary>
         public IEnumerable<IEvent> Events => SuperState != null ? SuperState.Events.Union(GetStateEvents()).Distinct() : GetStateEvents();
 
-        /// <inheritdoc />
+        /// <summary>Gets directly bound events and ignored non-transition events without inherited events.</summary>
         public IEnumerable<IEvent> DeclaredEvents => _behaviors.Keys
             .Union(_ignoredEvents.Keys.Where(IsRealEvent))
             .Distinct();
 
-        /// <summary>Compares this instance with the supplied value.</summary>
-        /// <param name="other">The other.</param>
-        /// <returns>The int produced by the operation.</returns>
+        /// <summary>Orders states by ordinal name comparison, after a <see langword="null" /> state.</summary>
+        /// <param name="other">The state whose name is compared, or <see langword="null" />.</param>
+        /// <returns>A negative, zero or positive value indicating name order; one for <see langword="null" />.</returns>
         public int CompareTo(IState? other)
         {
             return other == null ? 1 : string.CompareOrdinal(Name, other.Name);
@@ -306,9 +306,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 .Distinct();
         }
 
-        /// <summary>Determines whether this instance equals the supplied value.</summary>
-        /// <param name="obj">The obj.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Compares a non-null state object with this state using ordinal name equality.</summary>
+        /// <param name="obj">The object compared with this state.</param>
+        /// <returns>Whether the object is this instance or a state with the same name.</returns>
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
@@ -319,69 +319,69 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return other != null && Equals(other);
         }
 
-        /// <summary>Gets hash code.</summary>
+        /// <summary>Gets the state name's hash code, or zero when the name is absent.</summary>
         /// <returns>The hash code for this instance.</returns>
         public override int GetHashCode()
         {
             return Name?.GetHashCode() ?? 0;
         }
 
-        /// <summary>Applies the <c>==</c> operator.</summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Compares a saga state with this concrete state using object equality.</summary>
+        /// <param name="left">The saga state on the left.</param>
+        /// <param name="right">The concrete state on the right.</param>
+        /// <returns>Whether object equality considers the two states equal.</returns>
         public static bool operator ==(IState<TInstance> left, StateMachineState right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>Applies the <c>!=</c> operator.</summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Negates object equality between a saga state and this concrete state.</summary>
+        /// <param name="left">The saga state on the left.</param>
+        /// <param name="right">The concrete state on the right.</param>
+        /// <returns>Whether object equality considers the two states unequal.</returns>
         public static bool operator !=(IState<TInstance> left, StateMachineState right)
         {
             return !Equals(left, right);
         }
 
-        /// <summary>Applies the <c>==</c> operator.</summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Compares this concrete state with a saga state using object equality.</summary>
+        /// <param name="left">The concrete state on the left.</param>
+        /// <param name="right">The saga state on the right.</param>
+        /// <returns>Whether object equality considers the two states equal.</returns>
         public static bool operator ==(StateMachineState left, IState<TInstance> right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>Applies the <c>!=</c> operator.</summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Negates object equality between this concrete state and a saga state.</summary>
+        /// <param name="left">The concrete state on the left.</param>
+        /// <param name="right">The saga state on the right.</param>
+        /// <returns>Whether object equality considers the two states unequal.</returns>
         public static bool operator !=(StateMachineState left, IState<TInstance> right)
         {
             return !Equals(left, right);
         }
 
-        /// <summary>Applies the <c>==</c> operator.</summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Compares two concrete states using object equality.</summary>
+        /// <param name="left">The concrete state on the left.</param>
+        /// <param name="right">The concrete state on the right.</param>
+        /// <returns>Whether object equality considers the two states equal.</returns>
         public static bool operator ==(StateMachineState left, StateMachineState right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>Applies the <c>!=</c> operator.</summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+        /// <summary>Negates object equality between two concrete states.</summary>
+        /// <param name="left">The concrete state on the left.</param>
+        /// <param name="right">The concrete state on the right.</param>
+        /// <returns>Whether object equality considers the two states unequal.</returns>
         public static bool operator !=(StateMachineState left, StateMachineState right)
         {
             return !Equals(left, right);
         }
 
-        /// <summary>Returns the string representation of this instance.</summary>
-        /// <returns>The converted string.</returns>
+        /// <summary>Returns the state's name followed by its state marker.</summary>
+        /// <returns>The display text in the form <c>Name (State)</c>.</returns>
         public override string ToString()
         {
             return $"{Name} (State)";
