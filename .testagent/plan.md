@@ -1,5 +1,34 @@
 # A+ remediation test plan
 
+## Iteration 131 complete Core directory reading and source-contract checkpoint
+
+1. Continue the original goal from secured input
+   4ac87c03b95c07bf0414434c031a45fb57d904b6 and unchanged bound authorities.
+2. Complete all remaining 150 personally read Core inputs / 32,604 physical lines:
+   Initializers46, Mediator14, MessageData13, Requirements1, Serialization48,
+   Transformation1, Transports27. Cumulative directory 557/557 / 143,127 lines.
+   Every 2,922 JSON record is semantically read in a strictly reconstructed lossless
+   data view, not claimed as raw physical-character display or generated review.
+3. Verify exact sorted Git/read path union and all input bytes, hashes/line counts.
+   Additionally read nine productive sources/1,510 lines, every comment, and five
+   graph inputs/443 lines. Manually correct only the buffer ownership comment;
+   exact two-line derivative verified, no executable/API/test change.
+4. Retain MD01 global mutable Mediator MIME, MD02 notification consistency and PA01
+   writer reservation/encoded-size contracts OPEN. Record five High/two Medium/two
+   Low existing-test groups OPEN; preserve actual strong controls and all older
+   findings. Correct EV01/EV02 reading attribution without inventing stale builds.
+5. Preserve history tails and manually validate the complete manifest. Secure five
+   owned paths using normal commit/new annotated tag/approved atomic push and
+   independent keyed branch/tag-object/peeled refs before remote-security claims.
+
+Next: complete effective shared graph/packages/fixtures/data/execution CI and full
+language-parser/GitReadSet admission, then coherent source/regression/mutation work.
+Directory reading is not yet full effective-project acceptance; no premature new
+Core test design/edit, generator, duplicate native/coverage/CRAP/global Async/cloud
+or independent external acceptance. Historical128 4,007 passes stay historical.
+Continue every original whole-src manual comment/API/architecture obligation.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-131/CORE_OWNER_READING_COMPLETION_AND_SOURCE_CONTRACT_REVIEW.md).
+
 ## Iteration 130 connected Courier/Futures/Scheduling/Retry/Harness checkpoint
 
 1. Continue the unchanged original goal from secured input

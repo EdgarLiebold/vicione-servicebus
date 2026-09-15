@@ -26,8 +26,8 @@ internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationB
         _maximumBytes = maximumBytes;
         _stage = stage;
         _rejectionObserver = rejectionObserver;
-        // Serializers can reserve for worst-case expansion. Exposing the complete bounded region
-        // keeps an exact-size payload admissible without allocating beyond the hard maximum.
+        // Every returned memory region stays within the hard ownership limit, including
+        // reservations for worst-case serializer expansion.
         _buffer = new byte[maximumBytes];
     }
 

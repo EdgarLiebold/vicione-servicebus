@@ -1,5 +1,40 @@
 # A+ remediation research
 
+## Iteration 131 Core directory EOF and connected source contracts
+
+All remaining150 owner inputs/32,604 lines are fully personally read, including
+every helper/comment. The JSON duplicate-field negative control/schema/nonempty
+strings/input bytes and exact ordered reconstruction pass; the main reads every
+five-field association through EOF:2,922 records,527 types,5,143 lossless view lines.
+This data presentation generates no source, comment, assertion or report.
+Cumulative Core directory557/557/143,127 physical input lines; final sorted Git/read
+path union and binary reconciliation exit0. Full effective graph/language-parser/
+GitReadSet admission remains required before new Core test design/edit or acceptance.
+
+Nine complete productive reads/1,510 lines expose global mutable Mediator ContentType
+(MD01), notification validation/invalid observer task inconsistency (MD02), and encoded
+payload versus hard writer reservation semantics (PA01). Only the inaccurate buffer
+constructor comment is manually corrected; exact two-line derivative and input/final
+hashes verify. All three source contracts stay OPEN. Five High/two Medium/two Low
+existing-test groups cover exact forwarding/order, failure cleanup/ambient state,
+terminal ledgers, timing/overlap, independent security rejection, state/boundaries,
+producer-derived or selected-surface expectations and naming/file/style. Strong real
+held tasks, literal wire values, defensive MIME exports, post-stop counts, original
+failures and independent state/content controls retain their actual stronger status.
+
+EV01 neighboring raw-body data attribution and EV02 exact KillSwitch-name ambiguity
+are resolved by exact current/Git/structured historical rows, not new product fixes.
+The separate empty Mediator body-type set is genuinely asserted. Failed binary/text
+encoding and shell-quoting probes are corrected diagnostics, never successful receipts;
+truncated output gets no credit. Five extra shared build/project reads total443 lines
+but do not constitute the entire effective execution/dependency closure.
+
+Report and prefixes are handwritten; old tails unchanged. Normal five-path Git/tag/
+atomic remote security precedes coherent admission/remediation/mutation work. No new
+native/coverage/CRAP/global Async/provider/external review or final A+ acceptance;
+historical128 4,007 passes and all earlier open findings remain explicit.
+[Detailed checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-131/CORE_OWNER_READING_COMPLETION_AND_SOURCE_CONTRACT_REVIEW.md).
+
 ## Iteration 130 complete connected execution/provider/harness reads
 
 The main fully personally reads all 93 selected files / 22,693 lines, including

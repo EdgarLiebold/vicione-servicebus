@@ -1,5 +1,35 @@
 # A+ remediation test status
 
+## Iteration 131 complete Core directory read; original whole-product goal active
+
+Secured input4ac87c03b95c07bf0414434c031a45fb57d904b6 and unchanged authorities.
+Remaining150 files/32,604 lines completely personally read; cumulative Core directory
+557/557/143,127 physical input lines. The catalogue's2,922 ordered five-field records
+are personally read losslessly with whole strict JSON/reconstruction evidence, not
+raw-character or generated-report claims. Exact sorted Git/read path union and all
+Core bytes reconcile exit0. Full effective-project/parser admission still remains.
+
+Nine productive sources/1,510 lines and five shared graph inputs/443 lines fully read;
+every source comment manually checked. Only the buffer's overstated exact-admission
+comment is manually corrected, exact derivative byte-verified. No executable, API,
+test, feature, package or directive change. MD01 mutable Mediator MIME, MD02 notification
+consistency and PA01 writer ownership versus wire-size semantics remain OPEN.
+Nine grouped existing-test quality items remain OPEN:0Critical/5High/2Medium/2Low,
+not additive production-defect counts or executed mutant results. Actual strong
+causal/wire/identity/terminal controls and all older dispositions are preserved.
+
+EV01/EV02 reading ambiguities are corrected without false stale-build/discovery
+findings. Failed/truncated diagnostics get no credit. No generator or fresh native,
+coverage/CRAP/global Async/real provider/independent external Red Team acceptance.
+Historical128 4,007 passes stay historical; CS01 regression/mutation/interval proof
+and all original whole-src/API/architecture obligations remain open.
+
+Five exact owned paths receive scoped normal commit/new annotated tag/approved atomic
+push; remote security requires independently keyed branch/tag/peeled refs and clean
+owned HEAD/index/work. Next complete effective graph/full language parsers/GitReadSet,
+then coherent causal source/test/mutation remediation without feature loss.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-131/CORE_OWNER_READING_COMPLETION_AND_SOURCE_CONTRACT_REVIEW.md).
+
 ## Iteration 130 full connected packet complete; whole-product goal active
 
 Secured input 311a2bea237e77dad480217631a9cdeb5f0a061d and seven unchanged
