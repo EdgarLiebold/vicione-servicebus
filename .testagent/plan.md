@@ -1,5 +1,31 @@
 # A+ remediation test plan
 
+## Iteration 128 cache initialization repair and connected reading checkpoint
+
+1. Preserve the original goal and all earlier work. Actually verify secured input
+   6c0916b20eb5b8f71ca924c84b87b3bca054f50e and unchanged authority before edits.
+2. Fully personally read the constructor/cleanup/disposal path, manually repair
+   failure cleanup without changing the public API or losing a feature.
+3. Continue connected Core reading: 43 complete new files / 9,051 lines;
+   170 declarations / 267 historical and fresh passed cases. Cumulative owner
+   255/557 / 73,401 lines; 302 remaining. No partial-owner test design/edit/admission.
+4. Strict fresh Core Release build and native 4,007/4,007 pass, zero warnings/errors
+   and failed/skipped/pending/other records. Exact source/read/native diagnostics 0.
+5. Handwrite the report and preserve history tails. Normally secure five owned
+   files with commit, annotated tag, atomic push and independent keyed refs.
+
+CS01 ownership implementation is repaired but its fault regression, effective
+cleanup mutants and portable interval contract remain open. Scoped existing-test
+review has 0 Critical / 8 High / 2 Medium / 1 Low, all eleven open. The attempted
+internal advisor provides no admitted source judgment or independent acceptance.
+This is an intermediate checkpoint, not a completed whole-product iteration.
+
+Next concrete continuation: DI ConfigurationContract line 236 through EOF, then
+the remaining 59 connected inputs and complete owner/parser/GitReadSet admission.
+Do not reopen resolved informational questions. The original whole-src manual
+comments/API/architecture/feature/provider/coverage/CRAP goal remains active.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-128/CACHE_INITIALIZATION_REPAIR_AND_CORE_READING_CHECKPOINT.md).
+
 ## Iteration 127 intermediate Cache source-structure checkpoint
 
 1. Continue the original goal from actually remote-secured iteration 126 and

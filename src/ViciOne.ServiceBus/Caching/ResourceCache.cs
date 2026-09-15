@@ -52,12 +52,24 @@ public sealed partial class ResourceCache<TValue> :
         _entries = new Dictionary<long, ResourceCacheEntry<TValue>>();
         _indices = new Dictionary<string, ResourceCacheIndexBase<TValue>>(StringComparer.Ordinal);
         _observers = new List<IResourceCacheObserver<TValue>>();
-        _observerDispatchGate = new SemaphoreSlim(1, 1);
         _observerDispatchScope = new AsyncLocal<ObserverDispatchScope?>();
         _pendingCreations = new HashSet<PendingResourceCreation<TValue>>();
-        _lifetimeCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(_options.LifetimeCancellationToken);
-        _lifetimeCancellationToken = _lifetimeCancellationSource.Token;
-        _cleanupTimer = _options.TimeProvider.CreateTimer(TriggerCleanup, null, _options.CleanupInterval, _options.CleanupInterval);
+        _observerDispatchGate = new SemaphoreSlim(1, 1);
+
+        CancellationTokenSource? lifetimeCancellationSource = null;
+        try
+        {
+            lifetimeCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(_options.LifetimeCancellationToken);
+            _lifetimeCancellationSource = lifetimeCancellationSource;
+            _lifetimeCancellationToken = lifetimeCancellationSource.Token;
+            _cleanupTimer = _options.TimeProvider.CreateTimer(TriggerCleanup, null, _options.CleanupInterval, _options.CleanupInterval);
+        }
+        catch
+        {
+            lifetimeCancellationSource?.Dispose();
+            _observerDispatchGate.Dispose();
+            throw;
+        }
     }
 
     /// <summary>Gets a point-in-time snapshot of cache statistics.</summary>

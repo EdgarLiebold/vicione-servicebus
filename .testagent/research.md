@@ -1,5 +1,39 @@
 # A+ remediation research
 
+## Iteration 128 actual constructor correction and full connected reads
+
+Input 6c0916b20eb5b8f71ca924c84b87b3bca054f50e is actually remote branch/tag/peeled
+verified before edits. Complete authority hashes and Core tree are unchanged.
+ResourceCache constructor now disposes acquired linked cancellation source and
+observer semaphore on linking/timer initialization failure, preserving the original
+exception. Successful timer/token/API behavior is retained. One productive file
+is manually edited; 17 other Cache files are exactly input-byte equal.
+CS01 remains open pending independent fault regression, effective counter-mutants
+and a verified portable interval contract; existing passes do not close it.
+
+43 new files / 9,051 physical lines are fully personally read, including every
+member/fixture/arrangement/assertion/comment. All 170 declarations reconcile to
+267 historical and 267 fresh passed cases. Cumulative owner 255/557 / 73,401 lines,
+302 remaining. Connected packet 43/102 complete; DI contract lines 1–235 remain
+partial and uncredited. No new Core test design, edits or owner acceptance.
+Eleven settled scoped review findings: 0 Critical / 8 High / 2 Medium / 1 Low,
+all open, with independent deferred criteria and strong adjacent proofs retained.
+
+Fresh strict Core build: zero warnings/errors, 62.65s. Fresh native Core exits 0,
+4,007/4,007 passed, no failed/skipped/pending/other records, including all 105 Cache
+cases. Source/read/native diagnostics exit 0. No new coverage/CRAP, cloud/provider,
+mutation kill or fresh Architecture execution claim. Test-review/run-tests skills
+guide actual inspection and native MTP command detection, never generated code.
+
+The attempted internal Sol counter-review is unadmitted: mandatory authority output
+truncates, zero source reads/hashes/judgments. It initially enumerates protected
+legacy AGENTS names, with no protected contents read or changes; that violation
+is documented and receives no clean-scope or independent-acceptance credit.
+Main resumption erroneously repeats an already answered informational question
+despite its summary marking it closed. Continue the concrete unfinished file,
+not that discussion; preserve the original goal and all prior work.
+[Detailed checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-128/CACHE_INITIALIZATION_REPAIR_AND_CORE_READING_CHECKPOINT.md).
+
 ## Iteration 127 intermediate Cache source-structure and reading checkpoint
 
 Input cabe618cae88992da2409781a5ed7e8eba001675 and iteration-126 annotated tag are

@@ -1,5 +1,32 @@
 # A+ remediation test status
 
+## Iteration 128 implementation/read checkpoint; original goal active
+
+Actually secured input 6c0916b20eb5b8f71ca924c84b87b3bca054f50e and unchanged
+authority are verified before the one-file ResourceCache constructor repair.
+Acquired cancellation/semaphore state is released on initialization failure;
+public API and successful behavior retained. CS01 is not closed: targeted fault
+regression, effective cleanup counter-mutants and interval policy remain pending.
+
+43 new owning files / 9,051 lines completely personally read; 170 methods / 267
+historical and fresh passed cases. Core cumulative 255/557 / 73,401 lines, 302
+remaining. Connected 43/102 complete; DI contract 1–235 partial and uncredited.
+No partial-owner test design, change, full-parser admission or A+ certificate.
+Existing-test scoped findings 0 Critical / 8 High / 2 Medium / 1 Low, all open.
+
+Fresh strict Core Release build and native execution exit 0: zero warnings/errors;
+4,007/4,007 passed, failed/skipped/pending/other 0, all 105 Cache cases included.
+Source/read/native diagnostics exit 0. No new mutation/coverage/CRAP/provider or
+fresh Architecture claim. Internal advisor yields no admitted source review or
+independent acceptance; its protected-path-name enumeration is retained honestly.
+
+Five owned files receive a handwritten intermediate checkpoint and normal scoped
+commit/tag/atomic push/keyed remote verification before security is reported.
+Resume DI contract line 236 and the remaining connected/whole-owner inputs;
+do not repeat resolved information. All original manual-src/comments, greenfield
+API/architecture, feature, mutation, provider and global coverage obligations stay.
+[Checkpoint](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-128/CACHE_INITIALIZATION_REPAIR_AND_CORE_READING_CHECKPOINT.md).
+
 ## Iteration 127 intermediate Cache source-structure checkpoint
 
 Original whole-product A+ goal remains active. Input cabe618cae88992da2409781a5ed7e8eba001675
