@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Reflection;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.RetryPolicies;
@@ -7,6 +9,23 @@ namespace ViciOne.ServiceBus.Tests.InternalAccess.Retry;
 /// <summary>Creates retry filters without exposing their implementation types as product API.</summary>
 public static class RetryFilterTestFactory
 {
+    /// <summary>Observes retained active ownership entries without exposing product diagnostics.</summary>
+    /// <param name="context">The context whose ownership lifetime is being checked.</param>
+    /// <returns>The number of retained policy invocations, including any erroneous completed entries.</returns>
+    public static int GetRetainedOperationCount(PipeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        if (!context.TryGetPayload(out RetryOperationState? state))
+            return 0;
+
+        object sync = typeof(RetryOperationState).GetField("_sync", BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.GetValue(state) ?? throw new InvalidOperationException("Retry ownership synchronization was not found.");
+        object operations = typeof(RetryOperationState).GetField("_operations", BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.GetValue(state) ?? throw new InvalidOperationException("Retry ownership storage was not found.");
+        lock (sync)
+            return ((ICollection)operations).Count;
+    }
+
     /// <summary>Creates a retry filter and optionally connects one lifecycle observer.</summary>
     /// <typeparam name="TContext">The pipeline context type.</typeparam>
     /// <param name="retryPolicy">The retry policy to execute.</param>

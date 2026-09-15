@@ -44,6 +44,8 @@ internal sealed class RetryFilter<TContext> :
             (policyContext, currentContext) => SendPolicyAsync(context, policyContext, currentContext, next));
     }
 
+    [DebuggerNonUserCode]
+    [DebuggerStepThrough]
     async Task SendPolicyAsync(TContext context, RetryPolicyContext<TContext> policyContext,
         TContext currentContext, IPipe<TContext> next)
     {
@@ -75,7 +77,7 @@ internal sealed class RetryFilter<TContext> :
             currentContext.CancellationToken.ThrowIfCancellationRequested();
 
             if (await PropagateNestedRetryFailureAsync(context, currentContext, exception,
-                    () => policyContext.RetryFaultedAsync(exception)).ConfigureAwait(false))
+                    token => policyContext.RetryFaultedAsync(exception, token)).ConfigureAwait(false))
                 throw;
 
             if (!RetryPolicyExecution.CanRetry(context, policyContext, exception, out RetryContext<TContext> retryContext))
@@ -84,7 +86,8 @@ internal sealed class RetryFilter<TContext> :
                 {
                     RetryOperationState.PublishTerminal(context, retryContext);
 
-                    Task retryFaultedTask = RetryOperationState.ExecuteAsync(context, () => retryContext.RetryFaultedAsync(exception)
+                    Task retryFaultedTask = RetryPolicyExecution.ExecuteLifecycleAsync(context, retryContext,
+                        token => retryContext.RetryFaultedAsync(exception, token)
                         ?? throw new InvalidOperationException("The retry context returned a null fault task."));
                     if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                         await retryFaultedTask.ConfigureAwait(false);
@@ -117,9 +120,11 @@ internal sealed class RetryFilter<TContext> :
     {
         while (true)
         {
-            TContext currentContext = RetryPolicyExecution.Execute(context, () => retryContext.Context);
+            TContext currentContext = RetryPolicyExecution.Execute(context, () => retryContext.Context
+                ?? throw new InvalidOperationException("The retry policy returned a retry context without a pipe context."));
             using IDisposable currentLifecycle = RetryOperationState.Enter(currentContext);
-            await RetryOperationState.ExecuteAsync(context, () => PrepareRetryAsync(context, retryContext)).ConfigureAwait(false);
+            await RetryPolicyExecution.ExecuteLifecycleAsync(context, retryContext,
+                token => PrepareRetryAsync(context, retryContext, token)).ConfigureAwait(false);
 
             try
             {
@@ -146,7 +151,7 @@ internal sealed class RetryFilter<TContext> :
                 context.CancellationToken.ThrowIfCancellationRequested();
 
                 if (await PropagateNestedRetryFailureAsync(context, currentContext, exception,
-                        () => retryContext.RetryFaultedAsync(exception)).ConfigureAwait(false))
+                        token => retryContext.RetryFaultedAsync(exception, token)).ConfigureAwait(false))
                     throw;
 
                 if (!RetryPolicyExecution.CanRetry(context, retryContext, exception, out RetryContext<TContext> nextRetryContext))
@@ -155,7 +160,8 @@ internal sealed class RetryFilter<TContext> :
                     {
                         RetryOperationState.PublishTerminal(context, nextRetryContext);
 
-                        Task retryFaultedTask = RetryOperationState.ExecuteAsync(context, () => nextRetryContext.RetryFaultedAsync(exception)
+                        Task retryFaultedTask = RetryPolicyExecution.ExecuteLifecycleAsync(context, nextRetryContext,
+                            token => nextRetryContext.RetryFaultedAsync(exception, token)
                             ?? throw new InvalidOperationException("The retry context returned a null fault task."));
                         if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                             await retryFaultedTask.ConfigureAwait(false);
@@ -189,42 +195,23 @@ internal sealed class RetryFilter<TContext> :
         }
     }
 
-    async Task PrepareRetryAsync(TContext context, RetryContext<TContext> retryContext)
+    async Task PrepareRetryAsync(TContext context, RetryContext<TContext> retryContext, CancellationToken cancellationToken)
     {
-        CancellationToken retryToken = retryContext.CancellationToken;
-        using CancellationTokenSource? linkedCancellation = context.CancellationToken.CanBeCanceled
-            && retryToken.CanBeCanceled && context.CancellationToken != retryToken
-                ? CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken, retryToken)
-                : null;
-        CancellationToken preparationToken = linkedCancellation?.Token
-            ?? (retryToken.CanBeCanceled ? retryToken : context.CancellationToken);
-        try
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-            retryToken.ThrowIfCancellationRequested();
+        TimeSpan? delay = retryContext.Delay;
+        if (delay.HasValue)
+            await Task.Delay(delay.Value, context.GetTimeProvider(), cancellationToken).ConfigureAwait(false);
 
-            if (retryContext.Delay.HasValue)
-                await Task.Delay(retryContext.Delay.Value, context.GetTimeProvider(), preparationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        Task preRetryContextTask = retryContext.PreRetryAsync(cancellationToken)
+            ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
+        await preRetryContextTask.ConfigureAwait(false);
 
-            Task preRetryContextTask = retryContext.PreRetryAsync(preparationToken)
-                ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
-            await preRetryContextTask.ConfigureAwait(false);
-
-            if (_observers.Count > 0)
-                await _observers.PreRetryAsync(retryContext).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
-        {
-            throw new OperationCanceledException(context.CancellationToken);
-        }
-        catch (OperationCanceledException) when (retryToken.IsCancellationRequested)
-        {
-            throw new OperationCanceledException(retryToken);
-        }
+        if (_observers.Count > 0)
+            await _observers.PreRetryAsync(retryContext).ConfigureAwait(false);
     }
 
     async Task<bool> PropagateNestedRetryFailureAsync(TContext rootContext, PipeContext currentContext,
-        Exception exception, Func<Task> notifyPolicyFault)
+        Exception exception, Func<CancellationToken, Task> notifyPolicyFault)
     {
         // Active terminal ownership propagates the downstream decision without starting another
         // retry budget. Retained diagnostics do not govern a later operation on the same context.
@@ -236,7 +223,8 @@ internal sealed class RetryFilter<TContext> :
 
         RetryOperationState.PublishTerminal(rootContext, nestedRetryContext);
 
-        Task policyFaultTask = RetryOperationState.ExecuteAsync(rootContext, () => notifyPolicyFault()
+        Task policyFaultTask = RetryPolicyExecution.ExecuteLifecycleAsync(rootContext, nestedRetryContext,
+            token => notifyPolicyFault(token)
             ?? throw new InvalidOperationException("The retry policy returned a null fault task."));
         if (policyFaultTask.Status != TaskStatus.RanToCompletion)
             await policyFaultTask.ConfigureAwait(false);
@@ -250,5 +238,4 @@ internal sealed class RetryFilter<TContext> :
 
         return true;
     }
-
 }

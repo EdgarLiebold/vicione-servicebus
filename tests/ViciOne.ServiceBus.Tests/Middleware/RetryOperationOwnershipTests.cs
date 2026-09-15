@@ -303,6 +303,514 @@ public sealed class RetryOperationOwnershipTests
         Assert.Equal(["create"], outer.Events);
     }
 
+    [Theory]
+    [InlineData("initial")]
+    [InlineData("attempt")]
+    [InlineData("message")]
+    [InlineData("activity")]
+    [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "terminal-decision-getter-failure-remains-infrastructure-owned")]
+    public async Task TerminalDecisionGetterFailure_DoesNotRestartBusinessWorkAsync(string family)
+    {
+        var failure = new OwnershipFailureException("terminal exception getter");
+        var policy = new FaultingPolicy(family == "attempt" ? Advanced.Retry.Immediate(1) : Advanced.Retry.None,
+            "decision-exception", failure);
+        int expectedAttempts = family == "attempt" ? 2 : 1;
+        if (family is "initial" or "attempt")
+        {
+            await AssertDecisionGetterFailureAsync(new TestPipeContext(TestContext.Current.CancellationToken),
+                RetryFilterTestFactory.Create<TestPipeContext>, policy, failure, expectedAttempts);
+        }
+        else
+        {
+            ConsumeContext<TestMessage> source = InMemoryOutboxTestContextFactory.Create(new TestMessage(),
+                cancellationToken: TestContext.Current.CancellationToken);
+            if (family == "activity")
+                await AssertDecisionGetterFailureAsync<Advanced.ActivityContext>(new TestActivityContext(source.Advanced()),
+                    RetryFilterTestFactory.CreateActivityRedelivery, policy, failure, expectedAttempts);
+            else
+                await AssertDecisionGetterFailureAsync(source, RetryFilterTestFactory.CreateRedelivery<TestMessage>,
+                    policy, failure, expectedAttempts);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "actual-retry-context-acquisition-is-validated-within-ownership")]
+    public async Task InvalidActualRetryContext_IsRejectedWithoutConsumingAnOuterBusinessBudgetAsync()
+    {
+        var policy = new FaultingPolicy(Advanced.Retry.Immediate(1), "null-actual-context");
+        var outer = new LifecycleObserver();
+        int attempts = 0;
+        IPipe<TestPipeContext> pipe = CreateNestedPipe(policy, outer, new LifecycleObserver(), () =>
+        {
+            attempts++;
+            throw new OwnershipFailureException("business failure");
+        });
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            pipe.SendAsync(new TestPipeContext(TestContext.Current.CancellationToken)));
+
+        Assert.Equal("The retry policy returned a retry context without a pipe context.", actual.Message);
+        Assert.Equal(1, attempts);
+        Assert.Equal(1, policy.FactoryCalls);
+        Assert.Equal(1, policy.Disposals);
+        Assert.Equal(["create"], outer.Events);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-COMPOSITION", "independent-children-under-an-active-parent-keep-failure-ownership-separate")]
+    public async Task IndependentChildOperations_UnderAnActiveParentDoNotSuppressLegitimateBusinessRetryAsync(bool parallel)
+    {
+        var source = new TestPipeContext(TestContext.Current.CancellationToken);
+        var shared = new OwnershipFailureException("caught child observer then independent child business failure");
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        IPipe<TestPipeContext> first = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseRetry(retry => retry.Immediate(1));
+            if (parallel)
+                configuration.UseFilter(new HoldingFailureFilter(shared, entered, release));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(Advanced.Retry.Immediate(1),
+                new LifecycleObserver("create", shared)));
+            configuration.UseExecute(_ => throw new InvalidOperationException("The failed child must not execute business work."));
+        });
+        int childAttempts = 0;
+        int childEffects = 0;
+        IPipe<TestPipeContext> second = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseRetry(retry => retry.Immediate(1));
+            configuration.UseExecute(_ =>
+            {
+                if (++childAttempts == 1)
+                    throw shared;
+                childEffects++;
+            });
+        });
+        var observer = new LifecycleObserver();
+        int parentAttempts = 0;
+        IPipe<TestPipeContext> parent = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseRetry(retry =>
+            {
+                retry.Immediate(1);
+                retry.ConnectRetryObserver(observer);
+            });
+            configuration.UseExecuteAwaited(async current =>
+            {
+                parentAttempts++;
+                Task? pending = null;
+                try
+                {
+                    if (parallel)
+                    {
+                        pending = first.SendAsync(current);
+                        await entered.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+                        Assert.False(pending.IsCompleted);
+                    }
+                    else
+                        Assert.Same(shared, await Assert.ThrowsAsync<OwnershipFailureException>(() => first.SendAsync(current)));
+
+                    await second.SendAsync(current);
+                    Assert.Equal(2, childAttempts);
+                    Assert.Equal(1, childEffects);
+                }
+                finally
+                {
+                    release.TrySetResult();
+                    if (pending != null)
+                        Assert.Same(shared, await Assert.ThrowsAsync<OwnershipFailureException>(() =>
+                            pending.WaitAsync(OperationTimeout(), CancellationToken.None)));
+                }
+            });
+        });
+
+        await parent.SendAsync(source);
+
+        Assert.Equal(1, parentAttempts);
+        Assert.Equal(2, childAttempts);
+        Assert.Equal(1, childEffects);
+        Assert.Equal(["create"], observer.Events);
+    }
+
+    [Theory]
+    [InlineData(false, false, "schedule")]
+    [InlineData(false, true, "schedule")]
+    [InlineData(true, false, "schedule")]
+    [InlineData(true, true, "schedule")]
+    [InlineData(false, false, "acknowledge")]
+    [InlineData(false, true, "acknowledge")]
+    [InlineData(true, false, "acknowledge")]
+    [InlineData(true, true, "acknowledge")]
+    [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "pending-redelivery-and-acknowledgment-receive-source-and-policy-cancellation")]
+    public async Task PendingRedeliveryLifecycle_ReceivesSourceOrPolicyCancellationWithoutSchedulingAgainAsync(
+        bool activity, bool cancelPolicy, string stage)
+    {
+        using var sourceCancellation = new CancellationTokenSource();
+        var policy = new FaultingPolicy(Advanced.Retry.Immediate(1));
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationToken supplied = default;
+        int acknowledgments = 0;
+        int attempts = 0;
+        Task ObserveAsync(CancellationToken token)
+        {
+            supplied = token;
+            Task work = release.Task.WaitAsync(token);
+            entered.TrySetResult();
+            return work;
+        }
+        var redelivery = new RecordingRedelivery(stage == "schedule" ? ObserveAsync : null);
+        Task AcknowledgeAsync(CancellationToken token)
+        {
+            acknowledgments++;
+            return stage == "acknowledge" ? ObserveAsync(token) : Task.CompletedTask;
+        }
+        ConsumeContext<TestMessage> consume = InMemoryOutboxTestContextFactory.Create(new TestMessage(),
+            cancellationToken: sourceCancellation.Token, receiveElapsedTime: TimeSpan.FromSeconds(3));
+        consume.GetOrAddPayload<MessageRedeliveryContext>(() => redelivery);
+        Task SendAsync<T>(T context, IFilter<T> filter) where T : class, PipeContext => Pipe.New<T>(configuration =>
+        {
+            configuration.UseFilter(filter);
+            configuration.UseExecute(_ =>
+            {
+                attempts++;
+                throw new OwnershipFailureException("business failure");
+            });
+        }).SendAsync(context);
+        Task operation = activity
+            ? SendAsync<Advanced.ActivityContext>(new TestActivityContext(consume.Advanced(), AcknowledgeAsync),
+                RetryFilterTestFactory.CreateActivityRedelivery(policy))
+            : SendAsync<ConsumeContext<TestMessage>>(new AcknowledgingConsumeContext(consume, AcknowledgeAsync),
+                RetryFilterTestFactory.CreateRedelivery<TestMessage>(policy));
+        try
+        {
+            await entered.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+            Assert.False(operation.IsCompleted);
+            CancellationToken expected = cancelPolicy ? policy.LastDecisionToken : sourceCancellation.Token;
+            if (cancelPolicy)
+                policy.CancelActiveContext();
+            else
+                sourceCancellation.Cancel();
+
+            Assert.True(supplied.IsCancellationRequested);
+            OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                operation.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+            Assert.Equal(expected, actual.CancellationToken);
+            Assert.Equal(1, attempts);
+            Assert.Equal(1, redelivery.Scheduled);
+            Assert.Equal(stage == "schedule" ? 0 : 1, acknowledgments);
+            Assert.Equal(TimeSpan.Zero, redelivery.LastDelay);
+            Assert.Equal(1, policy.FactoryCalls);
+            Assert.Equal(1, policy.Disposals);
+        }
+        finally
+        {
+            sourceCancellation.Cancel();
+            release.TrySetResult();
+            await DrainAsync(operation);
+        }
+    }
+
+    [Theory]
+    [InlineData("initial", false)]
+    [InlineData("initial", true)]
+    [InlineData("attempt", false)]
+    [InlineData("attempt", true)]
+    [InlineData("nested", false)]
+    [InlineData("nested", true)]
+    [InlineData("message", false)]
+    [InlineData("message", true)]
+    [InlineData("activity", false)]
+    [InlineData("activity", true)]
+    [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "terminal-and-nested-direct-fault-callbacks-receive-operation-cancellation")]
+    public async Task PendingDirectFaultCallback_ReceivesSourceOrSelectedPolicyCancellationAsync(string family, bool cancelPolicy)
+    {
+        using var sourceCancellation = new CancellationTokenSource();
+        using var nestedDecisionCancellation = new CancellationTokenSource();
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationToken supplied = default;
+        int callbacks = 0;
+        int attempts = 0;
+        Task FaultAsync(CancellationToken token)
+        {
+            callbacks++;
+            supplied = token;
+            Task work = release.Task.WaitAsync(token);
+            entered.TrySetResult();
+            return work;
+        }
+        var policy = new FaultingPolicy(family == "attempt" ? Advanced.Retry.Immediate(1) : Advanced.Retry.None)
+        {
+            FaultCallback = FaultAsync
+        };
+        var nestedPolicy = new FaultingPolicy(Advanced.Retry.Immediate(1))
+        {
+            DecisionCancellationToken = nestedDecisionCancellation.Token
+        };
+        Task SendAsync<T>(T context, IFilter<T> filter) where T : class, PipeContext => Pipe.New<T>(configuration =>
+        {
+            configuration.UseFilter(filter);
+            if (family == "nested")
+                configuration.UseFilter(RetryFilterTestFactory.Create<T>(nestedPolicy));
+            configuration.UseExecute(_ =>
+            {
+                attempts++;
+                throw new OwnershipFailureException("terminal business failure");
+            });
+        }).SendAsync(context);
+        Task operation;
+        if (family is "message" or "activity")
+        {
+            ConsumeContext<TestMessage> consume = InMemoryOutboxTestContextFactory.Create(new TestMessage(),
+                cancellationToken: sourceCancellation.Token);
+            operation = family == "message"
+                ? SendAsync(consume, RetryFilterTestFactory.CreateRedelivery<TestMessage>(policy))
+                : SendAsync<Advanced.ActivityContext>(new TestActivityContext(consume.Advanced()),
+                    RetryFilterTestFactory.CreateActivityRedelivery(policy));
+        }
+        else
+            operation = SendAsync(new TestPipeContext(sourceCancellation.Token), RetryFilterTestFactory.Create<TestPipeContext>(policy));
+        try
+        {
+            await entered.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+            Assert.False(operation.IsCompleted);
+            FaultingPolicy cancellationOwner = family == "nested" ? nestedPolicy : policy;
+            CancellationToken expected = cancelPolicy ? cancellationOwner.LastDecisionToken : sourceCancellation.Token;
+            if (cancelPolicy && family == "nested")
+                nestedDecisionCancellation.Cancel();
+            else if (cancelPolicy)
+                cancellationOwner.CancelActiveContext();
+            else
+                sourceCancellation.Cancel();
+
+            Assert.True(supplied.IsCancellationRequested);
+            OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                operation.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+            Assert.Equal(expected, actual.CancellationToken);
+            Assert.Equal(family is "attempt" or "nested" ? 2 : 1, attempts);
+            Assert.Equal(1, callbacks);
+            Assert.Equal(1, policy.FactoryCalls);
+            Assert.Equal(1, policy.Disposals);
+            if (family == "nested")
+            {
+                Assert.Equal(1, nestedPolicy.FactoryCalls);
+                Assert.Equal(1, nestedPolicy.Disposals);
+            }
+        }
+        finally
+        {
+            sourceCancellation.Cancel();
+            release.TrySetResult();
+            await DrainAsync(operation);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "consume-boundary-elapsed-metadata-is-explicit-and-valid")]
+    public void ConsumeBoundaryElapsedTime_IsExactAndRejectsNegativeValues()
+    {
+        ConsumeContext<TestMessage> context = InMemoryOutboxTestContextFactory.Create(new TestMessage(),
+            cancellationToken: TestContext.Current.CancellationToken, receiveElapsedTime: TimeSpan.FromTicks(7));
+        Assert.Equal(TimeSpan.FromTicks(7), context.Advanced().ReceiveContext.ElapsedTime);
+        Assert.Equal("receiveElapsedTime", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            InMemoryOutboxTestContextFactory.Create(new TestMessage(), cancellationToken: TestContext.Current.CancellationToken,
+                receiveElapsedTime: TimeSpan.FromTicks(-1))).ParamName);
+    }
+
+    [Theory]
+    [InlineData(false, "success")]
+    [InlineData(true, "success")]
+    [InlineData(false, "business")]
+    [InlineData(true, "business")]
+    [InlineData(false, "observer")]
+    [InlineData(true, "observer")]
+    [InlineData(false, "factory")]
+    [InlineData(true, "factory")]
+    [InlineData(false, "cleanup")]
+    [InlineData(true, "cleanup")]
+    [InlineData(false, "compound")]
+    [InlineData(true, "compound")]
+    [RequirementCoverage("REQ-VSB-RETRY-POLICY", "operation-ownership-storage-is-released-after-success-and-every-failure-boundary")]
+    public async Task CompletedOperation_ReleasesAllOwnershipEntriesAsync(bool nested, string boundary)
+    {
+        var context = new TestPipeContext(TestContext.Current.CancellationToken);
+        var primary = new OwnershipFailureException("primary operation failure");
+        var cleanup = new OwnershipFailureException("policy cleanup failure");
+        var policy = new FaultingPolicy(Advanced.Retry.None, boundary == "factory" ? "factory" : null,
+            primary, boundary is "cleanup" or "compound" ? cleanup : null);
+        var outerPolicy = new FaultingPolicy(Advanced.Retry.None);
+        var observer = new LifecycleObserver(boundary is "observer" or "compound" ? "create" : null, primary);
+        int attempts = 0;
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            if (nested)
+                configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(outerPolicy));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(policy, observer));
+            configuration.UseExecute(current =>
+            {
+                attempts++;
+                Assert.Equal(nested ? 2 : 1, RetryFilterTestFactory.GetRetainedOperationCount(current));
+                if (boundary == "business")
+                    throw primary;
+            });
+        });
+
+        Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(context));
+        Exception? actual = await Record.ExceptionAsync(() => pipe.SendAsync(context));
+
+        if (boundary == "success")
+            Assert.Null(actual);
+        else if (boundary == "compound")
+            Assert.Collection(Assert.IsType<AggregateException>(actual).InnerExceptions,
+                failure => Assert.Same(primary, failure), failure => Assert.Same(cleanup, failure));
+        else
+            Assert.Same(boundary == "cleanup" ? cleanup : primary, actual);
+        Assert.Equal(boundary is "success" or "business" or "cleanup" ? 1 : 0, attempts);
+        Assert.Equal(1, policy.FactoryCalls);
+        Assert.Equal(boundary == "factory" ? 0 : 1, policy.Disposals);
+        Assert.Equal(nested ? 1 : 0, outerPolicy.FactoryCalls);
+        Assert.Equal(nested ? 1 : 0, outerPolicy.Disposals);
+        Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(context));
+    }
+
+    [Theory]
+    [InlineData(false, "success")]
+    [InlineData(true, "success")]
+    [InlineData(false, "schedule-failure")]
+    [InlineData(true, "schedule-failure")]
+    [InlineData(false, "acknowledgment-failure")]
+    [InlineData(true, "acknowledgment-failure")]
+    [InlineData(false, "null-acknowledgment")]
+    [InlineData(true, "null-acknowledgment")]
+    [InlineData(false, "foreign-cancellation")]
+    [InlineData(true, "foreign-cancellation")]
+    [InlineData(false, "after-schedule-cancellation")]
+    [InlineData(true, "after-schedule-cancellation")]
+    [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "redelivery-success-and-stage-failures-preserve-acknowledgment-and-exact-failure-ownership")]
+    public async Task RedeliveryStages_PreserveSuccessfulSchedulingAndDistinctFailureSemanticsAsync(bool activity, string outcome)
+    {
+        using var sourceCancellation = new CancellationTokenSource();
+        using var foreignCancellation = new CancellationTokenSource();
+        foreignCancellation.Cancel();
+        var business = new OwnershipFailureException("original business failure");
+        Exception failure = outcome == "foreign-cancellation"
+            ? new OperationCanceledException(foreignCancellation.Token) : new OwnershipFailureException("delivery stage failure");
+        int acknowledgments = 0;
+        int attempts = 0;
+        CancellationToken acknowledgmentToken = default;
+        var redelivery = new RecordingRedelivery(_ =>
+        {
+            if (outcome is "schedule-failure" or "foreign-cancellation")
+                throw failure;
+            if (outcome == "after-schedule-cancellation")
+                sourceCancellation.Cancel();
+            return Task.CompletedTask;
+        });
+        Task AcknowledgeAsync(CancellationToken token)
+        {
+            acknowledgments++;
+            acknowledgmentToken = token;
+            return outcome switch
+            {
+                "acknowledgment-failure" => throw failure,
+                "null-acknowledgment" => null!,
+                _ => Task.CompletedTask
+            };
+        }
+        var policy = new FaultingPolicy(Advanced.Retry.Immediate(1));
+        var outer = new FaultingPolicy(Advanced.Retry.Immediate(1));
+        var observers = new LifecycleObserver();
+        var outerObservers = new LifecycleObserver();
+        ConsumeContext<TestMessage> consume = InMemoryOutboxTestContextFactory.Create(new TestMessage(),
+            cancellationToken: sourceCancellation.Token, receiveElapsedTime: TimeSpan.FromSeconds(2));
+        consume.GetOrAddPayload<MessageRedeliveryContext>(() => redelivery);
+        Task SendAsync<T>(T context, IFilter<T> filter) where T : class, PipeContext => Pipe.New<T>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<T>(outer, outerObservers));
+            configuration.UseFilter(filter);
+            configuration.UseExecute(_ =>
+            {
+                attempts++;
+                throw business;
+            });
+        }).SendAsync(context);
+        Task operation = activity
+            ? SendAsync<Advanced.ActivityContext>(new TestActivityContext(consume.Advanced(), AcknowledgeAsync),
+                RetryFilterTestFactory.CreateActivityRedelivery(policy, observers))
+            : SendAsync<ConsumeContext<TestMessage>>(new AcknowledgingConsumeContext(consume, AcknowledgeAsync),
+                RetryFilterTestFactory.CreateRedelivery<TestMessage>(policy, observers));
+
+        Exception? actual = await Record.ExceptionAsync(() => operation);
+
+        if (outcome == "success")
+            Assert.Null(actual);
+        else if (outcome is "schedule-failure" or "foreign-cancellation")
+        {
+            TransportException transport = Assert.IsType<TransportException>(actual);
+            Assert.Collection(Assert.IsType<AggregateException>(transport.InnerException).InnerExceptions,
+                error => Assert.Same(failure, error), error => Assert.Same(business, error));
+        }
+        else if (outcome == "after-schedule-cancellation")
+            Assert.Equal(sourceCancellation.Token, Assert.IsType<OperationCanceledException>(actual).CancellationToken);
+        else if (outcome == "null-acknowledgment")
+            Assert.Equal("The redelivery acknowledgment returned a null task.", Assert.IsType<InvalidOperationException>(actual).Message);
+        else
+            Assert.Same(failure, actual);
+        Assert.Equal(1, attempts);
+        Assert.Equal(1, redelivery.Scheduled);
+        Assert.Equal(TimeSpan.Zero, redelivery.LastDelay);
+        Assert.True(redelivery.LastToken.CanBeCanceled);
+        Assert.Equal(outcome is "success" or "acknowledgment-failure" or "null-acknowledgment" ? 1 : 0, acknowledgments);
+        if (acknowledgments > 0)
+            Assert.Equal(redelivery.LastToken, acknowledgmentToken);
+        Assert.Equal(["create", "fault"], observers.Events);
+        Assert.Equal(["create"], outerObservers.Events);
+        Assert.Equal(1, policy.FactoryCalls);
+        Assert.Equal(1, policy.Disposals);
+        Assert.Equal(1, outer.FactoryCalls);
+        Assert.Equal(1, outer.Disposals);
+        Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(consume));
+    }
+
+    private static async Task DrainAsync(Task operation)
+    {
+        try
+        {
+            await operation.WaitAsync(OperationTimeout(), CancellationToken.None);
+        }
+        catch (Exception exception) when (exception is not TimeoutException)
+        {
+            // Teardown observes terminal faults while releasing pending test work.
+        }
+    }
+
+    private static async Task AssertDecisionGetterFailureAsync<T>(T context,
+        Func<IRetryPolicy, IRetryObserver?, IFilter<T>> create, FaultingPolicy policy, Exception expected, int expectedAttempts)
+        where T : class, PipeContext
+    {
+        var outer = new LifecycleObserver();
+        int attempts = 0;
+        IPipe<T> pipe = Pipe.New<T>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<T>(Advanced.Retry.Immediate(1), outer));
+            configuration.UseFilter(create(policy, new LifecycleObserver()));
+            configuration.UseExecute(_ =>
+            {
+                attempts++;
+                throw new OwnershipFailureException("business failure");
+            });
+        });
+
+        Assert.Same(expected, await Assert.ThrowsAsync<OwnershipFailureException>(() => pipe.SendAsync(context)));
+        Assert.Equal(expectedAttempts, attempts);
+        Assert.Equal(1, policy.FactoryCalls);
+        Assert.Equal(1, policy.FailureCalls);
+        Assert.Equal(1, policy.Disposals);
+        Assert.Equal(["create"], outer.Events);
+    }
+
     private static async Task AssertCrossFilterFailureAsync<T>(T source,
         Func<IRetryPolicy, IRetryObserver?, IFilter<T>> createRedelivery,
         bool innerImmediateRetry, string phase, int expectedAttempts, int expectedEffects)
@@ -364,25 +872,39 @@ public sealed class RetryOperationOwnershipTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private sealed class TestPipeContext : BasePipeContext;
+    private sealed class TestPipeContext : BasePipeContext
+    {
+        public TestPipeContext()
+        {
+        }
+
+        public TestPipeContext(CancellationToken cancellationToken) : base(cancellationToken)
+        {
+        }
+    }
 
     public sealed class TestMessage;
 
     private sealed class OwnershipFailureException(string message) : Exception(message);
 
-    private sealed class RecordingRedelivery : MessageRedeliveryContext
+    private sealed class RecordingRedelivery(Func<CancellationToken, Task>? schedule = null) : MessageRedeliveryContext
     {
         public int Scheduled { get; private set; }
+        public CancellationToken LastToken { get; private set; }
+        public TimeSpan LastDelay { get; private set; }
 
         public Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null,
             CancellationToken cancellationToken = default)
         {
             Scheduled++;
-            return Task.CompletedTask;
+            LastToken = cancellationToken;
+            LastDelay = delay;
+            return schedule == null ? Task.CompletedTask : schedule(cancellationToken);
         }
     }
 
-    private sealed class TestActivityContext(ConsumeContext context) : ConsumeContextProxy(context), Advanced.ActivityContext
+    private sealed class TestActivityContext(ConsumeContext context, Func<CancellationToken, Task>? acknowledge = null) :
+        ConsumeContextProxy(context), Advanced.ActivityContext
     {
         public IReadOnlyDictionary<string, object> Variables { get; } = new Dictionary<string, object>();
         public Guid TrackingNumber { get; } = Guid.NewGuid();
@@ -392,7 +914,15 @@ public sealed class RetryOperationOwnershipTests
         public TimeSpan Elapsed => TimeSpan.Zero;
 
         public Task NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default) =>
-            throw new InvalidOperationException("Lifecycle failure must not acknowledge an activity delivery.");
+            acknowledge == null ? throw new InvalidOperationException("Lifecycle failure must not acknowledge an activity delivery.")
+                : acknowledge(cancellationToken);
+    }
+
+    private sealed class AcknowledgingConsumeContext(ConsumeContext<TestMessage> context,
+        Func<CancellationToken, Task> acknowledge) : ConsumeContextProxy<TestMessage>(context)
+    {
+        public override Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType,
+            CancellationToken cancellationToken = default) => acknowledge(cancellationToken);
     }
 
     private sealed class HoldingFailureFilter(Exception expected, TaskCompletionSource entered, TaskCompletionSource release) : IFilter<TestPipeContext>
@@ -445,9 +975,16 @@ public sealed class RetryOperationOwnershipTests
     {
         private readonly string? _failurePhase = failurePhase;
         private readonly Exception? _cleanupFailure = cleanupFailure;
+        private Action? _cancelActiveContext;
         public int FactoryCalls { get; private set; }
         public int FailureCalls { get; private set; }
         public int Disposals { get; private set; }
+        public CancellationToken LastDecisionToken { get; private set; }
+        public CancellationToken? DecisionCancellationToken { get; init; }
+        public Func<CancellationToken, Task>? FaultCallback { get; init; }
+
+        public void CancelActiveContext() => (_cancelActiveContext
+            ?? throw new InvalidOperationException("No policy context has been acquired.")).Invoke();
 
         public void Probe(ProbeContext context) => policy.Probe(context);
 
@@ -455,7 +992,11 @@ public sealed class RetryOperationOwnershipTests
         {
             FactoryCalls++;
             Fail("factory");
-            return _failurePhase == "null-policy" ? null! : new PolicyContext<T>(policy.CreatePolicyContext(context), this);
+            if (_failurePhase == "null-policy")
+                return null!;
+            RetryPolicyContext<T> acquired = policy.CreatePolicyContext(context);
+            _cancelActiveContext = acquired.Cancel;
+            return new PolicyContext<T>(acquired, this);
         }
 
         public bool IsHandled(Exception exception)
@@ -483,6 +1024,7 @@ public sealed class RetryOperationOwnershipTests
             {
                 owner.Fail("initial-decision");
                 bool allowed = context.CanRetry(exception, out RetryContext<T> decision);
+                owner.LastDecisionToken = owner.DecisionCancellationToken ?? decision.CancellationToken;
                 retryContext = new Decision<T>(decision, owner);
                 if (owner._failurePhase is "null-initial-allowed" or "null-initial-denied")
                 {
@@ -493,7 +1035,8 @@ public sealed class RetryOperationOwnershipTests
             }
 
             public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) =>
-                context.RetryFaultedAsync(exception, cancellationToken);
+                owner.FaultCallback == null ? context.RetryFaultedAsync(exception, cancellationToken)
+                    : owner.FaultCallback(cancellationToken);
             public void Cancel() => context.Cancel();
 
             public void Dispose()
@@ -508,9 +1051,18 @@ public sealed class RetryOperationOwnershipTests
         private sealed class Decision<T>(RetryContext<T> context, FaultingPolicy owner) : RetryContext<T>
             where T : class, PipeContext
         {
-            public T Context => context.Context;
-            public CancellationToken CancellationToken => context.CancellationToken;
-            public Exception Exception => context.Exception;
+            private int _contextReads;
+
+            public T Context => owner._failurePhase == "null-actual-context" && ++_contextReads > 1 ? null! : context.Context;
+            public CancellationToken CancellationToken => owner.DecisionCancellationToken ?? context.CancellationToken;
+            public Exception Exception
+            {
+                get
+                {
+                    owner.Fail("decision-exception");
+                    return context.Exception;
+                }
+            }
             public int RetryAttempt => context.RetryAttempt;
             public int RetryCount => context.RetryCount;
             public TimeSpan? Delay => context.Delay;
@@ -520,6 +1072,7 @@ public sealed class RetryOperationOwnershipTests
             {
                 owner.Fail("next-decision");
                 bool allowed = context.CanRetry(exception, out RetryContext<T> decision);
+                owner.LastDecisionToken = owner.DecisionCancellationToken ?? decision.CancellationToken;
                 retryContext = new Decision<T>(decision, owner);
                 if (owner._failurePhase is "null-next-allowed" or "null-next-denied")
                 {
@@ -530,7 +1083,8 @@ public sealed class RetryOperationOwnershipTests
             }
 
             public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) =>
-                context.RetryFaultedAsync(exception, cancellationToken);
+                owner.FaultCallback == null ? context.RetryFaultedAsync(exception, cancellationToken)
+                    : owner.FaultCallback(cancellationToken);
             public Task PreRetryAsync(CancellationToken cancellationToken = default) => context.PreRetryAsync(cancellationToken);
         }
     }

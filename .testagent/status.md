@@ -1201,3 +1201,21 @@ axes but finds four new source-derived boundaries: scheduling/ack cancellation P
 fault-callback cancellation P2, custom-decision acquisition/publication P2, and independent
 children under an active ambient parent P2. All are accepted openly before an intermediate
 backup. No final119/full-product/A+ acceptance is claimed; the original goal continues.
+
+The next coherent packet causally fails25 new negative cases against unchanged4e
+source after correcting a disposed-policy test misuse. Shared linked lifecycle
+cancellation, guarded decision publication/admission and fresh child frames correct
+these cases. Additional24 success/stage-fault/resource proofs pass:85/85 packet,
+old76/76,full Core3,794/3,794,zero skips. Four separate compilable single-cause
+counterchanges are killed by exactly5,9,24,4 cases, each independently restored by SHA.
+Strict restored build passes zero warnings/errors; supported Product/Unit format
+verification completes exit0 without edits (only the known workspace-load warning).
+Explicit-profile coverage measures loaded graph80.9551%line/73.0106%branch and six
+kernel files93.3162%line/81.1224%branch,82 methods with one CRAP>30 (Attempt32.2018).
+These are not entire-product/provider metrics or acceptance. Full internal read-only
+review covers49 methods/161 cases and accepts the bounded corrected axes but finds
+one High token-getter failure swallowed by a CLR exception filter. It is accepted
+openly for immediate causal regression/correction, alongside actual provider publish
+token and factory compound-cleanup boundaries. All source freezes/processes are
+released/terminal before further edits. No source/test/comment generator is used;
+the original autonomous A+ goal stays active through this intermediate checkpoint.

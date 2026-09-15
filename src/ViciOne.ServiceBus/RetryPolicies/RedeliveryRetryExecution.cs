@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Observables;
 
@@ -18,14 +20,15 @@ internal static class RedeliveryRetryExecution
     /// <returns>A task that completes after processing, terminal failure, or redelivery scheduling.</returns>
     public static Task ExecuteAsync<TContext>(TContext context, IPipe<TContext> next, IRetryPolicy policy,
         RetryObservable observers, Func<int> previousDeliveryCount,
-        Func<RetryContext<TContext>, Exception, Task> redeliver)
+        Func<RetryContext<TContext>, Exception, CancellationToken, Task> redeliver)
         where TContext : class, PipeContext => RetryPolicyExecution.ExecuteAsync(context, policy,
             (policyContext, currentContext) => SendPolicyAsync(context, currentContext, next, policyContext,
                 policy, observers, previousDeliveryCount, redeliver));
 
+    [DebuggerNonUserCode]
     static async Task SendPolicyAsync<TContext>(TContext context, TContext currentContext, IPipe<TContext> next,
         RetryPolicyContext<TContext> policyContext, IRetryPolicy policy, RetryObservable observers,
-        Func<int> previousDeliveryCount, Func<RetryContext<TContext>, Exception, Task> redeliver)
+        Func<int> previousDeliveryCount, Func<RetryContext<TContext>, Exception, CancellationToken, Task> redeliver)
         where TContext : class, PipeContext
     {
         if (observers.Count > 0)
@@ -74,7 +77,8 @@ internal static class RedeliveryRetryExecution
             if (observers.Count > 0)
                 await RetryOperationState.ExecuteAsync(context, () => observers.PostFaultAsync(retryContext)).ConfigureAwait(false);
 
-            await RetryOperationState.ExecuteAsync(context, () => redeliver(retryContext, exception)).ConfigureAwait(false);
+            await RetryPolicyExecution.ExecuteLifecycleAsync(context, retryContext,
+                token => redeliver(retryContext, exception, token)).ConfigureAwait(false);
         }
     }
 
@@ -86,7 +90,8 @@ internal static class RedeliveryRetryExecution
             return;
 
         RetryOperationState.PublishTerminal(context, retryContext);
-        await RetryOperationState.ExecuteAsync(context, () => retryContext.RetryFaultedAsync(exception)).ConfigureAwait(false);
+        await RetryPolicyExecution.ExecuteLifecycleAsync(context, retryContext,
+            token => retryContext.RetryFaultedAsync(exception, token)).ConfigureAwait(false);
         if (observers.Count > 0)
             await RetryOperationState.ExecuteAsync(context, () => observers.RetryFaultAsync(retryContext)).ConfigureAwait(false);
     }
@@ -96,14 +101,21 @@ internal static class RedeliveryRetryExecution
     /// <param name="retryContext">The selected redelivery delay.</param>
     /// <param name="exception">The original business failure retained when scheduling fails.</param>
     /// <param name="notifyConsumed">Acknowledges the delivery after scheduling succeeds.</param>
+    /// <param name="cancellationToken">The combined source and selected-decision token that cancels both stages.</param>
     /// <returns>A task that preserves scheduling or acknowledgment failure without scheduling again.</returns>
     public static async Task ScheduleAsync(ConsumeContext context, RetryContext retryContext,
-        Exception exception, Func<Task> notifyConsumed)
+        Exception exception, Func<CancellationToken, Task> notifyConsumed, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             MessageRedeliveryContext redeliveryContext = context.GetPayload<MessageRedeliveryContext>();
-            await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero).ConfigureAwait(false);
+            await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception redeliveryException)
         {
@@ -111,7 +123,8 @@ internal static class RedeliveryRetryExecution
                 new AggregateException(redeliveryException, exception));
         }
 
-        Task notification = notifyConsumed()
+        cancellationToken.ThrowIfCancellationRequested();
+        Task notification = notifyConsumed(cancellationToken)
             ?? throw new InvalidOperationException("The redelivery acknowledgment returned a null task.");
         await notification.ConfigureAwait(false);
     }

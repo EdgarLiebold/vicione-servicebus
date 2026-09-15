@@ -6,13 +6,24 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Separates active retry ownership from retained terminal diagnostics on a pipeline context.</summary>
+/// <summary>Separates invocation-scoped retry ownership from retained terminal diagnostics on a pipeline context.</summary>
 internal sealed class RetryOperationState
 {
     static readonly AsyncLocal<Operation?> Current = new();
     readonly Dictionary<Operation, State> _operations = new(ReferenceEqualityComparer.Instance);
     readonly object _sync = new();
     RetryContext? _publishedDiagnostic;
+
+    /// <summary>Creates independent policy ownership while retaining its active caller association.</summary>
+    /// <param name="context">The input context governed by this policy invocation.</param>
+    /// <returns>A lease that releases this invocation's ownership.</returns>
+    public static IDisposable BeginPolicy(PipeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        Operation? previous = Current.Value;
+        var operation = new Operation(previous != null && Volatile.Read(ref previous.ActiveScopes) > 0 ? previous : null);
+        return Enter(context, operation, previous);
+    }
 
     /// <summary>Retains lifecycle ownership for the active use of a pipeline context.</summary>
     /// <param name="context">The context that carries ownership for the current asynchronous operation.</param>
@@ -21,7 +32,12 @@ internal sealed class RetryOperationState
     {
         ArgumentNullException.ThrowIfNull(context);
         Operation? previous = Current.Value;
-        Operation operation = previous != null && Volatile.Read(ref previous.ActiveScopes) > 0 ? previous : new Operation();
+        Operation operation = previous != null && Volatile.Read(ref previous.ActiveScopes) > 0 ? previous : new Operation(null);
+        return Enter(context, operation, previous);
+    }
+
+    static IDisposable Enter(PipeContext context, Operation operation, Operation? previous)
+    {
         Current.Value = operation;
         var state = context.GetOrAddPayload(static () => new RetryOperationState());
         state.Begin(operation);
@@ -56,27 +72,61 @@ internal sealed class RetryOperationState
     /// <param name="retryContext">The exact terminal decision owned by the current operation.</param>
     public static void PublishTerminal(PipeContext context, RetryContext retryContext)
     {
-        var state = context.GetOrAddPayload(static () => new RetryOperationState());
+        try
+        {
+            Exception terminalException = retryContext.Exception;
+            var state = context.GetOrAddPayload(static () => new RetryOperationState());
+            lock (state._sync)
+            {
+                State current = state.GetCurrent();
+                current.TerminalContext = retryContext;
+                current.TerminalException = terminalException;
+            }
+
+            // Payload-cache updates serialize diagnostic replacement. Only the previously published
+            // diagnostic belongs to this owner; unrelated caller-owned payloads remain unchanged.
+            context.AddOrUpdatePayload<RetryContext>(() =>
+            {
+                state._publishedDiagnostic = retryContext;
+                return retryContext;
+            }, existing =>
+            {
+                if (!ReferenceEquals(existing, state._publishedDiagnostic))
+                    return existing;
+                state._publishedDiagnostic = retryContext;
+                return retryContext;
+            });
+        }
+        catch (Exception exception)
+        {
+            Mark(context, exception);
+            throw;
+        }
+    }
+
+    /// <summary>Transfers an actually escaping decision or lifecycle failure to its active policy caller.</summary>
+    /// <param name="context">The child input context already associated with the calling policy.</param>
+    /// <param name="exception">The exact failure that escapes after child processing and cleanup.</param>
+    public static void Propagate(PipeContext context, Exception exception)
+    {
+        Operation? operation = Current.Value;
+        if (operation?.Parent == null || !context.TryGetPayload(out RetryOperationState? state))
+            return;
+
         lock (state._sync)
         {
-            State current = state.GetCurrent();
-            current.TerminalContext = retryContext;
-            current.TerminalException = retryContext.Exception;
-        }
+            if (!state._operations.TryGetValue(operation, out State? child)
+                || !state._operations.TryGetValue(operation.Parent, out State? parent))
+                return;
 
-        // Payload-cache updates serialize diagnostic replacement. Only the previously published
-        // diagnostic belongs to this owner; unrelated caller-owned payloads remain unchanged.
-        context.AddOrUpdatePayload<RetryContext>(() =>
-        {
-            state._publishedDiagnostic = retryContext;
-            return retryContext;
-        }, existing =>
-        {
-            if (!ReferenceEquals(existing, state._publishedDiagnostic))
-                return existing;
-            state._publishedDiagnostic = retryContext;
-            return retryContext;
-        });
+            if (child.Failures.Contains(exception))
+                parent.Failures.Add(exception);
+            if (ReferenceEquals(child.TerminalException, exception))
+            {
+                parent.TerminalContext = child.TerminalContext;
+                parent.TerminalException = child.TerminalException;
+            }
+        }
     }
 
     /// <summary>Looks up terminal business ownership for the exact failure in the current operation.</summary>
@@ -153,8 +203,9 @@ internal sealed class RetryOperationState
         }
     }
 
-    sealed class Operation
+    sealed class Operation(Operation? parent)
     {
+        public Operation? Parent { get; } = parent;
         public int ActiveScopes;
     }
 

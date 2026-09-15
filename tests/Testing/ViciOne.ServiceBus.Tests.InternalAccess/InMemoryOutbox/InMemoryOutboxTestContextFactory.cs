@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 /// <summary>
-/// Creates the minimal real consume-context boundary needed by in-memory-outbox tests. The factory
-/// supplies transport plumbing only; product checkpoints, rollback decisions and assertions remain
-/// owned by the source-mirrored executable tests.
+/// Creates consume contexts with controllable delivery metadata, transport endpoints and scheduling payloads.
 /// </summary>
 public static class InMemoryOutboxTestContextFactory
 {
@@ -27,10 +25,13 @@ public static class InMemoryOutboxTestContextFactory
         Guid? requestId = null,
         IServiceProvider? serviceProvider = null,
         Uri? sourceAddress = null,
-        Guid? correlationId = null)
+        Guid? correlationId = null,
+        TimeSpan? receiveElapsedTime = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(message);
+        if (receiveElapsedTime < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(receiveElapsedTime), "Receive elapsed time must not be negative.");
 
         ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, ReceiveContextProxy>();
         ((ReceiveContextProxy)(object)receiveContext).Configure(
@@ -38,7 +39,8 @@ public static class InMemoryOutboxTestContextFactory
             cancellationToken,
             outgoingMessages,
             transportSequenceNumber,
-            isDelivered);
+            isDelivered,
+            receiveElapsedTime);
         serializerContext ??= DispatchProxy.Create<SerializerContext, SerializerContextProxy>();
         TestConsumeContext<T> consumeContext = DispatchProxy.Create<TestConsumeContext<T>, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)consumeContext).Configure(
@@ -202,6 +204,7 @@ public static class InMemoryOutboxTestContextFactory
         private CancellationToken _cancellationToken;
         private Uri _inputAddress = null!;
         private bool _isDelivered;
+        private TimeSpan? _elapsedTime;
         private ITransportSequenceNumber? _transportSequenceNumber;
 
         public void Configure(
@@ -209,11 +212,13 @@ public static class InMemoryOutboxTestContextFactory
             CancellationToken cancellationToken,
             OutgoingMessageRecorder? outgoingMessages,
             ulong? transportSequenceNumber,
-            bool isDelivered)
+            bool isDelivered,
+            TimeSpan? elapsedTime)
         {
             _inputAddress = inputAddress;
             _cancellationToken = cancellationToken;
             _isDelivered = isDelivered;
+            _elapsedTime = elapsedTime;
             _transportSequenceNumber = transportSequenceNumber.HasValue
                 ? new TransportSequenceNumber(transportSequenceNumber.Value)
                 : null;
@@ -241,6 +246,7 @@ public static class InMemoryOutboxTestContextFactory
                 "get_CancellationToken" => _cancellationToken,
                 "get_TransportHeaders" => EmptyHeaders.Instance,
                 "get_IsDelivered" => _isDelivered,
+                "get_ElapsedTime" when _elapsedTime.HasValue => _elapsedTime.Value,
                 "get_PublishEndpointProvider" => _publishEndpointProvider,
                 "get_SendEndpointProvider" => _sendEndpointProvider,
                 "HasPayloadType" => _transportSequenceNumber != null
@@ -429,7 +435,7 @@ public static class InMemoryOutboxTestContextFactory
     }
 }
 
-/// <summary>Records messages emitted while a state-machine test executes its outgoing activities.</summary>
+/// <summary>Records outgoing messages and send metadata in emission order.</summary>
 public sealed class OutgoingMessageRecorder
 {
     private readonly List<object> _messages = [];

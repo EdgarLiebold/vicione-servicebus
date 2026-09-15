@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
@@ -19,45 +20,88 @@ internal static class RetryPolicyExecution
         Func<RetryPolicyContext<TContext>, TContext, Task> send)
         where TContext : class, PipeContext
     {
-        using IDisposable root = RetryOperationState.Enter(context);
-        RetryPolicyContext<TContext>? policyContext = null;
-        Exception? primaryFailure = null;
+        using IDisposable root = RetryOperationState.BeginPolicy(context);
         try
         {
-            policyContext = Execute(context, () => policy.CreatePolicyContext(context)
-                ?? throw new InvalidOperationException("The retry policy returned a null policy context."));
-            TContext currentContext = Execute(context, () => policyContext.Context
-                ?? throw new InvalidOperationException("The retry policy returned a policy context without a pipe context."));
-            using IDisposable current = RetryOperationState.Enter(currentContext);
-            await send(policyContext, currentContext).ConfigureAwait(false);
+            RetryPolicyContext<TContext>? policyContext = null;
+            Exception? primaryFailure = null;
+            try
+            {
+                policyContext = Execute(context, () => policy.CreatePolicyContext(context)
+                    ?? throw new InvalidOperationException("The retry policy returned a null policy context."));
+                TContext currentContext = Execute(context, () => policyContext.Context
+                    ?? throw new InvalidOperationException("The retry policy returned a policy context without a pipe context."));
+                using IDisposable current = RetryOperationState.Enter(currentContext);
+                await send(policyContext, currentContext).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                primaryFailure = exception;
+                throw;
+            }
+            finally
+            {
+                if (policyContext != null)
+                {
+                    try
+                    {
+                        policyContext.Dispose();
+                    }
+                    catch (Exception cleanupFailure)
+                    {
+                        if (primaryFailure == null)
+                        {
+                            RetryOperationState.Mark(context, cleanupFailure);
+                            throw;
+                        }
+
+                        var combinedFailure = new AggregateException("Retry processing and policy cleanup both failed.",
+                            primaryFailure, cleanupFailure);
+                        RetryOperationState.Mark(context, combinedFailure);
+                        throw combinedFailure;
+                    }
+                }
+            }
         }
         catch (Exception exception)
         {
-            primaryFailure = exception;
+            RetryOperationState.Propagate(context, exception);
             throw;
         }
-        finally
-        {
-            if (policyContext != null)
-            {
-                try
-                {
-                    policyContext.Dispose();
-                }
-                catch (Exception cleanupFailure)
-                {
-                    if (primaryFailure == null)
-                    {
-                        RetryOperationState.Mark(context, cleanupFailure);
-                        throw;
-                    }
+    }
 
-                    var combinedFailure = new AggregateException("Retry processing and policy cleanup both failed.",
-                        primaryFailure, cleanupFailure);
-                    RetryOperationState.Mark(context, combinedFailure);
-                    throw combinedFailure;
-                }
-            }
+    /// <summary>Awaits lifecycle work canceled by either the input operation or its selected policy decision.</summary>
+    /// <param name="context">The input operation that owns lifecycle failures and source cancellation.</param>
+    /// <param name="retryContext">The decision whose token independently cancels policy work.</param>
+    /// <param name="execute">The lifecycle work that observes the effective cancellation token.</param>
+    /// <returns>A task that preserves failures and identifies requested cancellation by its original token.</returns>
+    public static Task ExecuteLifecycleAsync(PipeContext context, RetryContext retryContext,
+        Func<CancellationToken, Task> execute) => RetryOperationState.ExecuteAsync(context,
+            () => ExecuteCancelableAsync(context, retryContext, execute));
+
+    static async Task ExecuteCancelableAsync(PipeContext context, RetryContext retryContext,
+        Func<CancellationToken, Task> execute)
+    {
+        CancellationToken sourceToken = context.CancellationToken;
+        CancellationToken retryToken = retryContext.CancellationToken;
+        using CancellationTokenSource? linkedCancellation = sourceToken.CanBeCanceled && retryToken.CanBeCanceled
+            && sourceToken != retryToken ? CancellationTokenSource.CreateLinkedTokenSource(sourceToken, retryToken) : null;
+        CancellationToken effectiveToken = linkedCancellation?.Token ?? (retryToken.CanBeCanceled ? retryToken : sourceToken);
+        try
+        {
+            sourceToken.ThrowIfCancellationRequested();
+            retryToken.ThrowIfCancellationRequested();
+            Task work = execute(effectiveToken)
+                ?? throw new InvalidOperationException("The retry lifecycle work returned a null task.");
+            await work.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (sourceToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(sourceToken);
+        }
+        catch (OperationCanceledException) when (retryToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(retryToken);
         }
     }
 

@@ -41,8 +41,8 @@ internal sealed class ActivityRedeliveryRetryFilter<TContext> :
 
         return RedeliveryRetryExecution.ExecuteAsync(context, next, _retryPolicy, _observers,
             () => context.GetRedeliveryCount(),
-            (retryContext, exception) => RedeliveryRetryExecution.ScheduleAsync(context, retryContext, exception,
-                () => context.NotifyActivityConsumedAsync(context.ReceiveContext.ElapsedTime,
-                    TypeCache<ActivityRedeliveryRetryFilter<TContext>>.ShortName)));
+            (retryContext, exception, cancellationToken) => RedeliveryRetryExecution.ScheduleAsync(context, retryContext, exception,
+                token => context.NotifyActivityConsumedAsync(context.ReceiveContext.ElapsedTime,
+                    TypeCache<ActivityRedeliveryRetryFilter<TContext>>.ShortName, token), cancellationToken));
     }
 }
