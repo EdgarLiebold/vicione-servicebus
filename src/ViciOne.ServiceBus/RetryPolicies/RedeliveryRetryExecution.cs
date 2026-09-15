@@ -38,24 +38,11 @@ internal static class RedeliveryRetryExecution
         {
             await next.SendAsync(currentContext).ConfigureAwait(false);
         }
-        catch (Exception exception) when (RetryOperationState.IsOwned(currentContext, exception))
-        {
-            RetryOperationState.Mark(context, exception);
-            throw;
-        }
-        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-            throw;
-        }
-        catch (OperationCanceledException exception) when (exception.CancellationToken.IsCancellationRequested
-            && exception.CancellationToken == currentContext.CancellationToken)
-        {
-            throw;
-        }
         catch (Exception exception)
         {
-            currentContext.CancellationToken.ThrowIfCancellationRequested();
+            if (RetryPolicyExecution.ShouldPropagate(context, currentContext, exception,
+                    () => currentContext.CancellationToken))
+                throw;
 
             if (!RetryPolicyExecution.CanRetry(context, policyContext, exception, out RetryContext<TContext> retryContext))
             {

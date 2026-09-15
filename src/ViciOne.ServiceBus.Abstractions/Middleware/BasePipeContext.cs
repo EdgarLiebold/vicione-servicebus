@@ -6,22 +6,22 @@ using ViciOne.ServiceBus.Payloads;
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
-/// The base for a pipe context, with the underlying support for managing payloads (out-of-band data
-/// that is carried along with the context).
+/// Carries pipeline cancellation and lazily initialized supplemental payloads.
+/// A compatible request for the context itself takes precedence over its payload cache.
 /// </summary>
 public abstract class BasePipeContext :
     PipeContext
 {
     IPayloadCache? _payloadCache;
 
-    /// <summary>A pipe with no cancellation support.</summary>
+    /// <summary>Creates a context without cancellation or initial supplemental payloads.</summary>
     protected BasePipeContext()
     {
         CancellationToken = CancellationToken.None;
     }
 
-    /// <summary>A pipe with no cancellation support.</summary>
-    /// <param name="payloads">Loads the payload cache with the specified objects.</param>
+    /// <summary>Creates a context without cancellation and with optional initial payloads.</summary>
+    /// <param name="payloads">The initial payloads, or null to initialize an empty cache on first use.</param>
     protected BasePipeContext(params object[]? payloads)
     {
         CancellationToken = CancellationToken.None;
@@ -30,16 +30,16 @@ public abstract class BasePipeContext :
             _payloadCache = new ListPayloadCache(payloads);
     }
 
-    /// <summary>A pipe using the specified <paramref name="cancellationToken" />.</summary>
-    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <summary>Creates a context with the supplied cancellation token and no initial payloads.</summary>
+    /// <param name="cancellationToken">The token that cancels the pipeline operation.</param>
     protected BasePipeContext(CancellationToken cancellationToken)
     {
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>A pipe using the specified <paramref name="cancellationToken" />.</summary>
-    /// <param name="cancellationToken">A cancellation token.</param>
-    /// <param name="payloads">Loads the payload cache with the specified objects.</param>
+    /// <summary>Creates a context with cancellation and optional initial payloads.</summary>
+    /// <param name="cancellationToken">The token that cancels the pipeline operation.</param>
+    /// <param name="payloads">The initial payloads, or null to initialize an empty cache on first use.</param>
     protected BasePipeContext(CancellationToken cancellationToken, params object[]? payloads)
     {
         CancellationToken = cancellationToken;
@@ -48,8 +48,8 @@ public abstract class BasePipeContext :
             _payloadCache = new ListPayloadCache(payloads);
     }
 
-    /// <summary>A pipe with no cancellation support, using the specified <paramref name="payloadCache" />.</summary>
-    /// <param name="payloadCache">The payload cache.</param>
+    /// <summary>Creates a context with a required payload cache and no cancellation.</summary>
+    /// <param name="payloadCache">The cache that stores supplemental payloads.</param>
     protected BasePipeContext(IPayloadCache payloadCache)
     {
         _payloadCache = payloadCache ?? throw new ArgumentNullException(nameof(payloadCache));
@@ -57,9 +57,9 @@ public abstract class BasePipeContext :
         CancellationToken = CancellationToken.None;
     }
 
-    /// <summary>A pipe using the specified <paramref name="cancellationToken" /> and <paramref name="payloadCache" />.</summary>
-    /// <param name="payloadCache">A payload cache.</param>
-    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <summary>Creates a context with a payload cache and cancellation token.</summary>
+    /// <param name="payloadCache">The supplied cache; a null value is initialized lazily on first payload access.</param>
+    /// <param name="cancellationToken">The token that cancels the pipeline operation.</param>
     protected BasePipeContext(IPayloadCache payloadCache, CancellationToken cancellationToken)
     {
         CancellationToken = cancellationToken;
@@ -67,7 +67,7 @@ public abstract class BasePipeContext :
         _payloadCache = payloadCache;
     }
 
-    /// <summary>Gets the payload cache.</summary>
+    /// <summary>Gets the supplied cache or atomically initializes an empty cache on first access.</summary>
     protected IPayloadCache PayloadCache
     {
         get
@@ -82,21 +82,21 @@ public abstract class BasePipeContext :
         }
     }
 
-    /// <summary>Returns the CancellationToken for the context (implicit interface).</summary>
+    /// <summary>Gets the token that cancels the pipeline operation.</summary>
     public virtual CancellationToken CancellationToken { get; }
 
-    /// <summary>Returns true if the payload type is included with or supported by the context type.</summary>
-    /// <param name="payloadType">The runtime payload type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Checks whether the context itself or a cached payload is assignable to a runtime type.</summary>
+    /// <param name="payloadType">The required runtime payload type.</param>
+    /// <returns>Whether the context or cache provides a compatible payload.</returns>
     public virtual bool HasPayloadType(Type payloadType)
     {
         return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType);
     }
 
-    /// <summary>Attempts to get the specified payload type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payload">Receives the payload produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Returns the context itself when compatible, otherwise searches the payload cache.</summary>
+    /// <typeparam name="T">The required payload type.</typeparam>
+    /// <param name="payload">The compatible context or cached payload when found; otherwise, null.</param>
+    /// <returns>Whether a compatible payload was found.</returns>
     public virtual bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
@@ -109,10 +109,10 @@ public abstract class BasePipeContext :
         return PayloadCache.TryGetPayload(out payload);
     }
 
-    /// <summary>Get or add a payload to the context, using the provided payload factory.</summary>
-    /// <typeparam name="T">The payload type.</typeparam>
-    /// <param name="payloadFactory">The payload factory, which is only invoked if the payload is not present.</param>
-    /// <returns>The or add payload.</returns>
+    /// <summary>Returns a compatible context or cached payload, creating a cached payload when absent.</summary>
+    /// <typeparam name="T">The required payload type.</typeparam>
+    /// <param name="payloadFactory">Creates the cached payload when no compatible value exists.</param>
+    /// <returns>The context itself or the existing or newly cached payload.</returns>
     public virtual T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
         where T : class
     {
@@ -122,11 +122,11 @@ public abstract class BasePipeContext :
         return PayloadCache.GetOrAddPayload(payloadFactory);
     }
 
-    /// <summary>Either adds a new payload, or updates an existing payload.</summary>
-    /// <typeparam name="T">The payload type.</typeparam>
-    /// <param name="addFactory">The payload factory called if the payload is not present.</param>
-    /// <param name="updateFactory">The payload factory called if the payload already exists.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <summary>Returns a compatible context unchanged, otherwise adds or updates a cached payload.</summary>
+    /// <typeparam name="T">The required payload type.</typeparam>
+    /// <param name="addFactory">Creates the cached payload when none exists.</param>
+    /// <param name="updateFactory">Replaces a compatible existing cached payload.</param>
+    /// <returns>The context itself or the resulting cached payload.</returns>
     public virtual T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
         where T : class
     {

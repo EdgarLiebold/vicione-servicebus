@@ -56,25 +56,11 @@ internal sealed class RetryFilter<TContext> :
         {
             await next.SendAsync(currentContext).ConfigureAwait(false);
         }
-        catch (Exception exception) when (RetryOperationState.IsOwned(currentContext, exception))
-        {
-            RetryOperationState.Mark(context, exception);
-            throw;
-        }
-        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-            throw;
-        }
-        catch (OperationCanceledException exception)
-            when (exception.CancellationToken.IsCancellationRequested
-                && exception.CancellationToken == currentContext.CancellationToken)
-        {
-            throw;
-        }
         catch (Exception exception)
         {
-            currentContext.CancellationToken.ThrowIfCancellationRequested();
+            if (RetryPolicyExecution.ShouldPropagate(context, currentContext, exception,
+                    () => currentContext.CancellationToken))
+                throw;
 
             if (await PropagateNestedRetryFailureAsync(context, currentContext, exception,
                     token => policyContext.RetryFaultedAsync(exception, token)).ConfigureAwait(false))
@@ -130,25 +116,11 @@ internal sealed class RetryFilter<TContext> :
             {
                 await next.SendAsync(currentContext).ConfigureAwait(false);
             }
-            catch (Exception exception) when (RetryOperationState.IsOwned(currentContext, exception))
-            {
-                RetryOperationState.Mark(context, exception);
-                throw;
-            }
-            catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
-                throw;
-            }
-            catch (OperationCanceledException exception)
-                when (exception.CancellationToken.IsCancellationRequested
-                    && exception.CancellationToken == retryContext.CancellationToken)
-            {
-                throw;
-            }
             catch (Exception exception)
             {
-                context.CancellationToken.ThrowIfCancellationRequested();
+                if (RetryPolicyExecution.ShouldPropagate(context, currentContext, exception,
+                        () => retryContext.CancellationToken))
+                    throw;
 
                 if (await PropagateNestedRetryFailureAsync(context, currentContext, exception,
                         token => retryContext.RetryFaultedAsync(exception, token)).ConfigureAwait(false))
@@ -215,7 +187,9 @@ internal sealed class RetryFilter<TContext> :
     {
         // Active terminal ownership propagates the downstream decision without starting another
         // retry budget. Retained diagnostics do not govern a later operation on the same context.
-        if (!RetryOperationState.TryGetTerminal(currentContext, exception, out RetryContext? nestedRetryContext))
+        RetryContext? nestedRetryContext = RetryPolicyExecution.Execute(rootContext,
+            () => RetryOperationState.TryGetTerminal(currentContext, exception, out RetryContext? terminal) ? terminal : null);
+        if (nestedRetryContext == null)
             return false;
 
         if (!RetryPolicyExecution.Execute(rootContext, () => _retryPolicy.IsHandled(exception)))

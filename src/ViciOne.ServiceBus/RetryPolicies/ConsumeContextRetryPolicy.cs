@@ -48,12 +48,10 @@ internal sealed class ConsumeContextRetryPolicy :
                 return consumePolicyContext as RetryPolicyContext<T>
                     ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
             }
-            catch
+            catch (Exception primaryFailure)
             {
-                if (consumePolicyContext != null)
-                    consumePolicyContext.Dispose();
-                else
-                    retryPolicyContext.Dispose();
+                RetryPolicyExecution.DisposeAfterFactoryFailure(consumePolicyContext ?? (IDisposable)retryPolicyContext,
+                    primaryFailure);
                 throw;
             }
         }
@@ -130,12 +128,10 @@ internal sealed class ConsumeContextRetryPolicy<TFilter, TContext> :
             return consumePolicyContext as RetryPolicyContext<T>
                 ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
         }
-        catch
+        catch (Exception primaryFailure)
         {
-            if (consumePolicyContext != null)
-                consumePolicyContext.Dispose();
-            else
-                retryPolicyContext.Dispose();
+            RetryPolicyExecution.DisposeAfterFactoryFailure(consumePolicyContext ?? (IDisposable)retryPolicyContext,
+                primaryFailure);
             throw;
         }
     }

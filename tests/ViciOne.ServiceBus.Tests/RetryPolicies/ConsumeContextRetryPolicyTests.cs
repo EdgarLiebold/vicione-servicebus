@@ -219,6 +219,57 @@ public sealed class ConsumeContextRetryPolicyTests
         Assert.Equal(0, cancellations);
     }
 
+    [Theory]
+    [InlineData(false, "admission")]
+    [InlineData(true, "admission")]
+    [InlineData(true, "projection")]
+    [InlineData(false, "representation")]
+    [InlineData(true, "representation")]
+    [RequirementCoverage("REQ-VSB-MESSAGE-RETRY-CONTRACT", "failed-consume-policy-acquisition-preserves-primary-and-cleanup-identities")]
+    public void FailedPolicyAcquisition_PreservesPrimaryAndCleanupAndReleasesRegistration(bool typed, string phase)
+    {
+        var primary = new RetryFailureException("consume policy acquisition failure");
+        var cleanup = new RetryFailureException("acquired policy cleanup failure");
+        int disposals = 0;
+        int cancellations = 0;
+        using var cancellation = new CancellationTokenSource();
+        var inner = new CallbackPolicy(false, false, () =>
+        {
+            disposals++;
+            throw cleanup;
+        }, () => cancellations++, phase == "admission" ? primary : null);
+        IRetryPolicy policy = phase == "projection"
+            ? RetryFilterTestFactory.CreateProjectedConsumeContextPolicy<object>(inner,
+                _ => throw primary, cancellation.Token)
+            : typed
+                ? RetryFilterTestFactory.CreateTypedConsumeContextPolicy<object>(inner, cancellation.Token)
+                : RetryFilterTestFactory.CreateConsumeContextPolicy(inner, cancellation.Token);
+        ConsumeContext<object> source = InMemoryOutboxTestContextFactory.Create(new object(), TestContext.Current.CancellationToken);
+
+        AggregateException actual = Assert.Throws<AggregateException>(() =>
+        {
+            if (phase == "representation" ? !typed : typed)
+                policy.CreatePolicyContext(source);
+            else
+                policy.CreatePolicyContext((ConsumeContext)source);
+        });
+        cancellation.Cancel();
+
+        Assert.Collection(actual.InnerExceptions, exception =>
+        {
+            if (phase == "representation")
+            {
+                InvalidOperationException representation = Assert.IsType<InvalidOperationException>(exception);
+                Assert.StartsWith("The retry policy context cannot be represented as ", representation.Message, StringComparison.Ordinal);
+            }
+            else
+                Assert.Same(primary, exception);
+        }, exception => Assert.Same(cleanup, exception));
+        Assert.Equal(1, inner.FactoryCalls);
+        Assert.Equal(1, disposals);
+        Assert.Equal(0, cancellations);
+    }
+
     private static async Task AssertNullCallbackAsync<TContext>(IRetryPolicy policy, TContext source,
         Exception failure, bool nullPreRetry)
         where TContext : class, PipeContext
@@ -234,24 +285,29 @@ public sealed class ConsumeContextRetryPolicyTests
     }
 
     private sealed class CallbackPolicy(bool nullPreRetry, bool nullFault, Action? disposed = null,
-        Action? canceled = null) : IRetryPolicy
+        Action? canceled = null, Exception? contextFailure = null) : IRetryPolicy
     {
         private readonly IRetryPolicy _inner = Retry.Immediate(1);
+        public int FactoryCalls { get; private set; }
 
         public void Probe(ProbeContext context) => _inner.Probe(context);
 
         public bool IsHandled(Exception exception) => _inner.IsHandled(exception);
 
         public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
-            where T : class, PipeContext =>
-            new CallbackPolicyContext<T>(_inner.CreatePolicyContext(context), nullPreRetry, nullFault, disposed, canceled);
+            where T : class, PipeContext
+        {
+            FactoryCalls++;
+            return new CallbackPolicyContext<T>(_inner.CreatePolicyContext(context), nullPreRetry, nullFault,
+                disposed, canceled, contextFailure);
+        }
     }
 
     private sealed class CallbackPolicyContext<T>(RetryPolicyContext<T> inner,
-        bool nullPreRetry, bool nullFault, Action? disposed, Action? canceled) : RetryPolicyContext<T>
+        bool nullPreRetry, bool nullFault, Action? disposed, Action? canceled, Exception? contextFailure) : RetryPolicyContext<T>
         where T : class, PipeContext
     {
-        public T Context => inner.Context;
+        public T Context => contextFailure == null ? inner.Context : throw contextFailure;
 
         public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
         {

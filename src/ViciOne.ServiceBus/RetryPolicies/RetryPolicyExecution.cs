@@ -70,6 +70,51 @@ internal static class RetryPolicyExecution
         }
     }
 
+    /// <summary>Releases acquired policy state after failed admission without discarding a cleanup failure.</summary>
+    /// <param name="policyContext">The acquired wrapper or underlying policy state whose admission failed.</param>
+    /// <param name="primaryFailure">The exact admission, projection or representation failure.</param>
+    /// <exception cref="AggregateException">Admission and cleanup both failed, in that order.</exception>
+    public static void DisposeAfterFactoryFailure(IDisposable policyContext, Exception primaryFailure)
+    {
+        try
+        {
+            policyContext.Dispose();
+        }
+        catch (Exception cleanupFailure)
+        {
+            throw new AggregateException("Retry policy admission and cleanup both failed.", primaryFailure, cleanupFailure);
+        }
+    }
+
+    /// <summary>Protects lifecycle failures and requested cancellation before evaluating a business retry.</summary>
+    /// <param name="context">The input operation that owns infrastructure failures and source cancellation.</param>
+    /// <param name="currentContext">The downstream context that carries escaped lifecycle ownership.</param>
+    /// <param name="exception">The failure raised by the downstream operation.</param>
+    /// <param name="getRetryToken">Reads the applicable policy or current-context cancellation token.</param>
+    /// <returns>Whether the original failure must propagate rather than consume a business retry budget.</returns>
+    public static bool ShouldPropagate(PipeContext context, PipeContext currentContext, Exception exception,
+        Func<CancellationToken> getRetryToken)
+    {
+        if (Execute(context, () => RetryOperationState.IsOwned(currentContext, exception)))
+        {
+            RetryOperationState.Mark(context, exception);
+            return true;
+        }
+
+        CancellationToken sourceToken = Execute(context, () => context.CancellationToken);
+        sourceToken.ThrowIfCancellationRequested();
+        if (exception is OperationCanceledException cancellation && cancellation.CancellationToken.IsCancellationRequested)
+        {
+            CancellationToken retryToken = Execute(context, getRetryToken);
+            if (cancellation.CancellationToken == retryToken)
+                return true;
+        }
+
+        CancellationToken currentToken = Execute(context, () => currentContext.CancellationToken);
+        currentToken.ThrowIfCancellationRequested();
+        return false;
+    }
+
     /// <summary>Awaits lifecycle work canceled by either the input operation or its selected policy decision.</summary>
     /// <param name="context">The input operation that owns lifecycle failures and source cancellation.</param>
     /// <param name="retryContext">The decision whose token independently cancels policy work.</param>

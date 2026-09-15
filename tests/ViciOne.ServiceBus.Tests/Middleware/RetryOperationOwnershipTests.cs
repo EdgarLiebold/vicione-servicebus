@@ -774,6 +774,118 @@ public sealed class RetryOperationOwnershipTests
         Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(consume));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "policy-token-getter-failure-is-not-swallowed-by-cancellation-classification")]
+    public async Task RetryCancellationClassification_PreservesTokenGetterFailureWithoutAnotherBusinessAttemptAsync(bool nested)
+    {
+        using var foreignCancellation = new CancellationTokenSource();
+        foreignCancellation.Cancel();
+        var failure = new OwnershipFailureException("selected policy token getter failure");
+        var policy = new FaultingPolicy(Advanced.Retry.Immediate(2), "decision-token", failure)
+        {
+            DecisionCancellationToken = CancellationToken.None
+        };
+        var outerPolicy = new FaultingPolicy(Advanced.Retry.Immediate(1));
+        var observers = new LifecycleObserver();
+        var outerObservers = new LifecycleObserver();
+        var source = new TestPipeContext();
+        int attempts = 0;
+        int effects = 0;
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            if (nested)
+                configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(outerPolicy, outerObservers));
+            configuration.UseFilter(RetryFilterTestFactory.Create<TestPipeContext>(policy, observers));
+            configuration.UseExecute(_ =>
+            {
+                if (++attempts == 1)
+                    throw new OwnershipFailureException("initial transient business failure");
+                if (attempts == 2)
+                    throw new OperationCanceledException(foreignCancellation.Token);
+                effects++;
+            });
+        });
+
+        OwnershipFailureException actual = await Assert.ThrowsAsync<OwnershipFailureException>(() => pipe.SendAsync(source));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(2, attempts);
+        Assert.Equal(0, effects);
+        Assert.Equal(2, policy.DecisionTokenReads);
+        Assert.Equal(1, policy.FailureCalls);
+        Assert.Equal(0, policy.NextDecisionCalls);
+        Assert.Equal(1, policy.FactoryCalls);
+        Assert.Equal(1, policy.Disposals);
+        Assert.Equal(["create", "fault", "before"], observers.Events);
+        Assert.Equal(nested ? new[] { "create" } : [], outerObservers.Events);
+        Assert.Equal(nested ? 1 : 0, outerPolicy.FactoryCalls);
+        Assert.Equal(nested ? 1 : 0, outerPolicy.Disposals);
+        Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(source));
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "projected-terminal-payload-failure-retains-infrastructure-and-cleanup-ownership")]
+    public async Task TerminalPayloadFailure_PreservesInfrastructureAndCleanupWithoutOuterBusinessReplayAsync(
+        bool afterRetry, bool cleanupFails)
+    {
+        var failure = new OwnershipFailureException("projected terminal payload lookup failure");
+        var cleanup = new OwnershipFailureException("projected policy cleanup failure");
+        var projected = new PayloadLookupFailureContext(afterRetry ? 4 : 2, failure);
+        var policy = new FaultingPolicy(afterRetry ? Advanced.Retry.Immediate(1) : Advanced.Retry.None,
+            cleanupFailure: cleanupFails ? cleanup : null)
+        {
+            ProjectedContext = projected
+        };
+        var outerPolicy = new FaultingPolicy(Advanced.Retry.Immediate(1));
+        var observer = new LifecycleObserver();
+        var outerObserver = new LifecycleObserver();
+        var source = new TestPipeContext();
+        int attempts = 0;
+        int effects = 0;
+        IPipe<BasePipeContext> pipe = Pipe.New<BasePipeContext>(configuration =>
+        {
+            configuration.UseFilter(RetryFilterTestFactory.Create<BasePipeContext>(outerPolicy, outerObserver));
+            configuration.UseFilter(RetryFilterTestFactory.Create<BasePipeContext>(policy, observer));
+            configuration.UseExecute(_ =>
+            {
+                if (++attempts <= (afterRetry ? 2 : 1))
+                    throw new OwnershipFailureException("transient projected business failure");
+                effects++;
+            });
+        });
+
+        if (cleanupFails)
+        {
+            AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() => pipe.SendAsync(source));
+            Assert.Collection(actual.InnerExceptions,
+                exception => Assert.Same(failure, exception), exception => Assert.Same(cleanup, exception));
+        }
+        else
+        {
+            OwnershipFailureException actual = await Assert.ThrowsAsync<OwnershipFailureException>(() => pipe.SendAsync(source));
+            Assert.Same(failure, actual);
+        }
+
+        Assert.Equal(afterRetry ? 2 : 1, attempts);
+        Assert.Equal(0, effects);
+        Assert.Equal(afterRetry ? 4 : 2, projected.LookupCalls);
+        Assert.Equal(0, policy.NextDecisionCalls);
+        Assert.Equal(1, policy.FactoryCalls);
+        Assert.Equal(1, policy.Disposals);
+        Assert.Equal(afterRetry ? new[] { "create", "fault", "before" } : ["create"], observer.Events);
+        Assert.Equal(["create"], outerObserver.Events);
+        Assert.Equal(1, outerPolicy.FactoryCalls);
+        Assert.Equal(1, outerPolicy.Disposals);
+        Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(source));
+        Assert.Equal(0, RetryFilterTestFactory.GetRetainedOperationCount(projected));
+    }
+
     private static async Task DrainAsync(Task operation)
     {
         try
@@ -883,6 +995,19 @@ public sealed class RetryOperationOwnershipTests
         }
     }
 
+    private sealed class PayloadLookupFailureContext(int failureLookup, Exception failure) : BasePipeContext
+    {
+        public int LookupCalls { get; private set; }
+
+        public override bool TryGetPayload<T>([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T? payload)
+            where T : class
+        {
+            if (++LookupCalls == failureLookup)
+                throw failure;
+            return base.TryGetPayload(out payload);
+        }
+    }
+
     public sealed class TestMessage;
 
     private sealed class OwnershipFailureException(string message) : Exception(message);
@@ -979,8 +1104,11 @@ public sealed class RetryOperationOwnershipTests
         public int FactoryCalls { get; private set; }
         public int FailureCalls { get; private set; }
         public int Disposals { get; private set; }
+        public int DecisionTokenReads { get; private set; }
+        public int NextDecisionCalls { get; private set; }
         public CancellationToken LastDecisionToken { get; private set; }
         public CancellationToken? DecisionCancellationToken { get; init; }
+        public PipeContext? ProjectedContext { get; init; }
         public Func<CancellationToken, Task>? FaultCallback { get; init; }
 
         public void CancelActiveContext() => (_cancelActiveContext
@@ -1018,7 +1146,8 @@ public sealed class RetryOperationOwnershipTests
         private sealed class PolicyContext<T>(RetryPolicyContext<T> context, FaultingPolicy owner) : RetryPolicyContext<T>
             where T : class, PipeContext
         {
-            public T Context => owner._failurePhase == "null-context" ? null! : context.Context;
+            public T Context => owner._failurePhase == "null-context" ? null!
+                : owner.ProjectedContext == null ? context.Context : (T)owner.ProjectedContext;
 
             public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
             {
@@ -1053,8 +1182,18 @@ public sealed class RetryOperationOwnershipTests
         {
             private int _contextReads;
 
-            public T Context => owner._failurePhase == "null-actual-context" && ++_contextReads > 1 ? null! : context.Context;
-            public CancellationToken CancellationToken => owner.DecisionCancellationToken ?? context.CancellationToken;
+            public T Context => owner._failurePhase == "null-actual-context" && ++_contextReads > 1 ? null!
+                : owner.ProjectedContext == null ? context.Context : (T)owner.ProjectedContext;
+            public CancellationToken CancellationToken
+            {
+                get
+                {
+                    owner.DecisionTokenReads++;
+                    if (owner._failurePhase == "decision-token" && owner.DecisionTokenReads == 2)
+                        owner.Fail("decision-token");
+                    return owner.DecisionCancellationToken ?? context.CancellationToken;
+                }
+            }
             public Exception Exception
             {
                 get
@@ -1070,6 +1209,7 @@ public sealed class RetryOperationOwnershipTests
 
             public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
             {
+                owner.NextDecisionCalls++;
                 owner.Fail("next-decision");
                 bool allowed = context.CanRetry(exception, out RetryContext<T> decision);
                 owner.LastDecisionToken = owner.DecisionCancellationToken ?? decision.CancellationToken;

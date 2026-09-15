@@ -1219,3 +1219,24 @@ openly for immediate causal regression/correction, alongside actual provider pub
 token and factory compound-cleanup boundaries. All source freezes/processes are
 released/terminal before further edits. No source/test/comment generator is used;
 the original autonomous A+ goal stays active through this intermediate checkpoint.
+
+The next coherent getter/payload/factory packet adds11 manual cases: two selected
+token-getter cases fail causally against unchangedde97; two non-compound projected
+terminal lookup cases fail against the token-corrected source, while both compound
+positive guards pass; all five consume-factory acquisition/cleanup cases fail because
+cleanup replaces primary. Guarded catch-body token/ownership and terminal lookup plus
+shared ordered factory cleanup correct these failures. Expanded91/23/76 pass, full
+Core3,805/3,805 zero skip, strict restored build zero warnings/errors, Product/Unit
+format and Git whitespace pass. Three independent compilable counterchanges are
+killed by exactly2/2/5 cases and restored by source SHA. Internal review accounts for
+62methods190cases and accepts the local correction without new findings. It separately
+establishes three open immutable-source payload callback failures in admission/Mark/
+Propagate; acquired ownership-scope architecture and meaningful Attempt simplification
+are the next connected packet. All BasePipeContext comments are manually rewritten
+after complete source reading; its cache-constructor null-policy consistency remains
+open, as do actual provider publishing tokens and broader119completion gates.
+Explicit current profile: Core graph80.9597%line/73.0100%branch; selected seven files
+95.5157%line/83.0579%branch,99emitted methods, one CRAP>30 (Attempt32.8438; complexity32
+cannot be solved by merely hitting all lines). No provider/full-product/overallA+
+acceptance, no generator, no executable edits during proof/reviewer freeze. Original
+autonomous source-architecture goal stays active through the corrective checkpoint.
