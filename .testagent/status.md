@@ -1,5 +1,34 @@
 # A+ remediation test status
 
+## Iteration 120 state-machine root and composite source
+
+The original whole-product A+ goal remains active. Input 3a7386ca27250bffaf482b828833be643c554e23
+and its annotated iteration-119 member-contract tag are actually secured remotely,
+with independent branch/tag/peeled validation. Six complete personal source reads
+cover 2,747 starting lines; all relevant root/composite comments are manually
+corrected, and the other four files' existing comments require no change.
+The bounded internal Sol counterreview reads all six current files / 2,708 lines,
+matches entry/exit hashes and finds no mandatory comment correction. Four medium
+static source priorities and nine connected findings remain open, not fabricated
+runtime failures or closed A+ defects. No new test, tuple, mutation, directive,
+dependency, signature or executable statement is introduced.
+
+Strict affected Architecture/Core builds terminate 0, zero warnings/errors,
+52.05s / 34.21s. Fresh complete Core terminates 0, 4,007/4,007 passed, zero
+failures/skips (22.348s). The exact six-row comparison terminates 0 with two
+comment-only changed files and no executable/signature/hash/line mismatches.
+Selected two-source whitespace terminates 0 without output/writes. Fresh
+unfiltered Architecture terminates 0, 401/401, zero failures/skips (2m 55.903s
+overall); the actual bidirectional Async test passes (139,076ms). The two complete
+selected owners total 4,408 passing cases, not all product owners. All owned
+validation handles are terminal. Checkpoint security follows actual outcomes.
+The previous fresh package gate remains 1 only at unchanged
+baseline comparison; it is not newly executed/reclassified by this source pass.
+Current global coverage, remaining personal source/test-owner reading, feature
+equivalence and full multidimensional A+ acceptance remain open.
+[The source packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-120/STATE_MACHINE_SOURCE_PACKET.md)
+binds the exact scope and remaining work; no whole-goal completion is claimed.
+
 ## Iteration 119 member API modifier/default contracts
 
 The original whole-product A+ goal remains active. The main personally completes

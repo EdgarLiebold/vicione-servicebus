@@ -1,5 +1,34 @@
 # A+ remediation test plan
 
+## Iteration 120 complete state-machine root source review
+
+1. Completely personally read the central declaration file and selected
+   accessor/observer/composite/transition neighbors; manually update all relevant
+   comments only after understanding the complete corresponding file.
+2. Recheck every changed comment against its actual overload and helper flow.
+   Prove exact comment-only executable/signature equivalence. Retain connected
+   runtime findings instead of disguising them as documentation fixes.
+3. Obtain a bounded internal read-only Sol source/comment counterreview with
+   exact six-file checksums; never call it external acceptance or executed proof.
+4. Strictly build affected Architecture/Core owners, run existing complete native
+   owners using confirmed .NET-10 MTP syntax, verify selected source whitespace
+   without writes and bind only actually terminal outcomes.
+5. Normally commit/tag/push only owned files and independently verify remote
+   references. Continue the original unbounded whole-product A+ goal with full
+   test-owner admission before new owning runtime tests or behavioral changes.
+
+Steps 1–3 are complete: six personal reads / 2,747 starting lines, two manual
+comment-only source corrections, six matched internal read bindings and no
+mandatory comment correction. Nine connected findings remain open. Strict
+Architecture/Core builds terminate 0, zero warnings/errors (52.05s / 34.21s).
+Fresh complete Core is terminal green, 4,007/4,007, zero failures/skips (22.348s).
+Exact six-row comment-only/input/current comparison terminates 0 with two changed
+files and zero mismatches; scoped two-source whitespace terminates 0 without
+writes/output. Fresh unfiltered Architecture terminates 0, 401/401 passed,
+zero failures/skips (2m 55.903s overall); the actual bidirectional Async test
+passes (139,076ms). All owned validation handles are terminal; capture follows
+actual observation. No current whole-product coverage/acceptance is claimed.
+
 ## Iteration 119 member modifiers and optional parameter contracts
 
 1. Manually author PublicApiMemberModifierTests against unchanged tooling;

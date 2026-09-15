@@ -1,5 +1,28 @@
 # A+ remediation research
 
+## Iteration 120 state-machine declaration and composite source
+
+Input 3a7386ca27250bffaf482b828833be643c554e23 is actually locally committed,
+annotated, normally atomically pushed and independently verified remotely.
+The main personally completely reads the 2,266-line state-machine root and
+five complete neighbors (481 lines), then manually corrects relevant comments
+in the root and CompositeEventActivity. All six input/current hashes and counts
+are bound in the new packet; no internal advisor reading substitutes for this
+personal source obligation. The other four files' comments are inspected and
+require no change. No generator writes source, tests or comments.
+
+Concrete declaration/cache identity, mutation/snapshot boundary, caught-failure
+partial configuration, required input/optional callback, separate cancellation
+owner, scheduled-token, composite repetition/recovery, hierarchy progression and
+configured/probe-identity concerns remain connected behavioral obligations.
+The internal Sol counterreview completely reads the exact six current files
+(2,708 lines), finds no mandatory comment correction and qualifies four medium
+static priorities without executing tests or claiming external acceptance.
+Core test-owner execution is not full personal admission for new runtime tests.
+This documentation-only pass changes no test, tuple, directive, dependency,
+signature or executable statement and closes no runtime defect by comments.
+The original whole-product A+ goal and all remaining proof gates stay active.
+
 ## Iteration 119 member modifiers and optional parameter contracts
 
 The remote-secured input is 9990fe12490d2330964c4e53945097c0688fbff6.
