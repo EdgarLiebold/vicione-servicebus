@@ -80,7 +80,7 @@ public sealed class TestingServiceProviderExtensionsTests
     [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "publish-handler-ready-timeout")]
     public async Task ConnectPublishHandler_TimesOutOnTheHarnessClockWhenTheEndpointCannotBecomeReadyAsync()
     {
-        var timeProvider = new FakeTimeProvider(new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero));
+        var timeProvider = new ReadinessTimeProvider();
         var endpointHandle = new PendingEndpointHandle();
         IBus bus = DispatchProxy.Create<IBus, PendingBusProxy>();
         ((PendingBusProxy)(object)bus).EndpointHandle = endpointHandle;
@@ -91,14 +91,34 @@ public sealed class TestingServiceProviderExtensionsTests
             harness.ObservePublishedMessageAsync<PublishedMessage>(
                 _ => true,
                 cancellationToken: TestContext.Current.CancellationToken);
-        Assert.False(connection.IsCompleted);
+        var timeout = TimeSpan.FromSeconds(10);
+        try
+        {
+            Assert.False(connection.IsCompleted);
+            Assert.False(endpointHandle.Ready.IsCompleted);
+            Assert.Equal(0, endpointHandle.StopCount);
+            Assert.Equal(1, timeProvider.CreateTimerCount);
+            Assert.Equal(TimeSpan.FromSeconds(1), timeProvider.DueTime);
+            Assert.Equal(Timeout.InfiniteTimeSpan, timeProvider.Period);
 
-        timeProvider.Advance(TimeSpan.FromSeconds(1));
-        await Task.Yield();
-        await Task.Yield();
+            timeProvider.Advance(TimeSpan.FromSeconds(1));
 
-        Assert.True(connection.IsCompleted);
-        await Assert.ThrowsAsync<TimeoutException>(() => connection);
+            await Assert.ThrowsAsync<TimeoutException>(() => connection.WaitAsync(timeout, TestContext.Current.CancellationToken));
+            Assert.True(connection.IsFaulted);
+            Assert.False(endpointHandle.Ready.IsCompleted);
+            Assert.Equal(1, endpointHandle.StopCount);
+        }
+        finally
+        {
+            endpointHandle.CancelReadiness();
+            await Record.ExceptionAsync(() => connection.WaitAsync(timeout, CancellationToken.None));
+            Assert.True(connection.IsCompleted, "The temporary endpoint connection must be observed before cleanup completes.");
+            if (connection.IsCompletedSuccessfully)
+            {
+                IPublishMessageObservation<PublishedMessage> observation = await connection;
+                await observation.DisposeAsync().AsTask().WaitAsync(timeout, CancellationToken.None);
+            }
+        }
     }
 
     [Fact]
@@ -168,16 +188,53 @@ public sealed class TestingServiceProviderExtensionsTests
 
     private sealed record PublishedMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
+    private sealed class ReadinessTimeProvider : TimeProvider
+    {
+        private readonly FakeTimeProvider _time = new(new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero));
+
+        public int CreateTimerCount { get; private set; }
+        public TimeSpan DueTime { get; private set; }
+        public TimeSpan Period { get; private set; }
+
+        public override long TimestampFrequency => _time.TimestampFrequency;
+
+        public override long GetTimestamp() => _time.GetTimestamp();
+
+        public override DateTimeOffset GetUtcNow() => _time.GetUtcNow();
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            CreateTimerCount++;
+            DueTime = dueTime;
+            Period = period;
+            return _time.CreateTimer(callback, state, dueTime, period);
+        }
+
+        public void Advance(TimeSpan elapsed) => _time.Advance(elapsed);
+    }
+
     private sealed class PendingEndpointHandle : IHostReceiveEndpointHandle
     {
         private readonly TaskCompletionSource<ReceiveEndpointReady> _ready =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _stopCount;
+
+        public int StopCount => Volatile.Read(ref _stopCount);
 
         public IReceiveEndpoint ReceiveEndpoint => throw new NotSupportedException();
 
         public Task<ReceiveEndpointReady> Ready => _ready.Task;
 
-        public Task StopAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public void CancelReadiness() => _ready.TrySetCanceled();
+
+        public Task StopAsync(CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+
+            Interlocked.Increment(ref _stopCount);
+            return Task.CompletedTask;
+        }
     }
 
     private class PendingBusProxy : DispatchProxy

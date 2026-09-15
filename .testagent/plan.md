@@ -1,5 +1,35 @@
 # A+ remediation test plan
 
+## Iteration 132 connected ownership and liveness package
+
+1. Complete main FULL shared support/graph reading and exact sorted Git/read/parser
+   admission before new Core tests. Accepted at secured input 3e4eae03435f3b7343bb63a1eac66eeca2269139:
+   557 Core inputs plus 43 support inputs and effective graph, 621 distinct paths.
+2. Manually implement and inline-review these focused requirement mappings:
+   - CS01 -> TimerCreationFailure_ReleasesAllocatedOwnershipAndPreservesTheOriginalException
+     (linked and unlinked lifetime rows), plus
+     SuccessfulConstruction_ForwardsCleanupPolicyAndDisposesItsTimerExactlyOnceAsync.
+   - MD01 -> ContentTypeMutation_IsIsolatedAcrossReadsDeliveriesAndMessageContractsAsync;
+     remove the unused global mutable holder and return a fresh canonical MIME value.
+   - H01 -> SnapshotFilter_DoesNotBlockAConcurrentProducer; bounded join while the
+     predicate is active, captured producer fault and final post-predicate join.
+   - H02 -> ConnectPublishHandler_TimesOutOnTheHarnessClockWhenTheEndpointCannotBecomeReadyAsync;
+     configured-clock timer identity/policy, exact terminal fault and endpoint stop.
+3. Preserve features and all previous names/cases. Compile with warnings-as-errors;
+   correct fixture mistakes without weakening productive policy or using pragmas.
+   Fresh focused 25/25 passes are actual. Internal read-only counterreview is done.
+4. Actual separate CTS/gate/shared-MIME/wrong-clock/producer-monitor counterchanges
+   compile exit0 and fail exactly the intended cases/assertions. Every source SHA
+   is restored; no surviving mutant reaches the final package.
+5. Final restored build exits0, zero warnings/errors. Unfiltered Core4,011/4,011
+   passes strictly; the same run collects nine productive modules' coverage:
+   78.3794% lines/71.7960% branches, not whole-product coverage. Handwritten report
+   and dispositions are complete; secure exact owned paths using normal commit,
+   new annotated tag/approved atomic push and separately keyed three-ref checks.
+
+All broader A+ axes and prior qualified proof gaps remain active. No duplicate
+full coverage/cloud claim or external independent acceptance is inferred.
+
 ## Iteration 131 complete Core directory reading and source-contract checkpoint
 
 1. Continue the original goal from secured input

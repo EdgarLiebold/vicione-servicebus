@@ -199,20 +199,40 @@ public sealed class AsyncElementListTests
     {
         var messages = CreateList();
         Add(messages, new MessageA("first"));
-
-        ISentMessage<MessageA> first = messages.Snapshot<MessageA>(
-            message =>
+        var timeout = TimeSpan.FromSeconds(5);
+        Exception? producerException = null;
+        var producer = new Thread(() =>
+        {
+            try
             {
-                var producer = new Thread(() => Add(messages, new MessageB("second")))
-                {
-                    IsBackground = true,
-                };
-                producer.Start();
-                producer.Join();
+                Add(messages, new MessageB("second"));
+            }
+            catch (Exception exception)
+            {
+                producerException = exception;
+            }
+        })
+        {
+            IsBackground = true,
+        };
 
+        ISentMessage<MessageA> first;
+        try
+        {
+            first = messages.Snapshot<MessageA>(message =>
+            {
+                producer.Start();
+                Assert.True(producer.Join(timeout), "The producer must finish while the snapshot filter is still running.");
                 return message.Context.Message.Value == "first";
             }).Single();
+        }
+        finally
+        {
+            if (producer.IsAlive)
+                Assert.True(producer.Join(timeout), "The producer must be joined after the snapshot filter exits.");
+        }
 
+        Assert.Null(producerException);
         ISentMessage<MessageB> second = messages
             .Snapshot<MessageB>()
             .Single();

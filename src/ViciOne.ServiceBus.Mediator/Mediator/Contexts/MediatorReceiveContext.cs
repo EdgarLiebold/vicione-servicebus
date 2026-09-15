@@ -10,12 +10,6 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-static class MediatorReceiveContext
-{
-    const string ContentTypeHeaderValue = "application/json";
-    internal static readonly ContentType JsonContentType = new(ContentTypeHeaderValue);
-}
-
 /// <summary>Represents an in-process delivery as a receive context without creating a transport envelope.</summary>
 /// <typeparam name="TMessage">The in-process message contract being received.</typeparam>
 internal sealed class MediatorReceiveContext<TMessage> :
@@ -168,7 +162,7 @@ internal sealed class MediatorReceiveContext<TMessage> :
     /// <inheritdoc />
     public Uri InputAddress => _inputAddress;
     /// <inheritdoc />
-    public ContentType ContentType => MediatorReceiveContext.JsonContentType;
+    public ContentType ContentType => new(SystemTextJsonRawMessageSerializer.JsonMediaType);
 
     sealed class FaultContext :
         ConsumerFaultContext

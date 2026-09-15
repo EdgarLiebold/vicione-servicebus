@@ -1,5 +1,45 @@
 # A+ remediation test status
 
+## Iteration 132 connected ownership/liveness package complete; original goal active
+
+Input3e4eae03435f3b7343bb63a1eac66eeca2269139 is secured before edits. Main
+completes43 support inputs/4,311 lines and effective graph; sorted621 distinct
+Git/read paths/bytes, full language parsers and strict Core compiler admission
+succeed before new tests. EvaluatedCompile matches all553 tracked Core C# inputs.
+Seven repository-owned imports are personally FULL read;142 external/generated
+inputs are separately hash-bound, not claimed as main SDK implementation reads.
+
+Closed specific findings: CS01 failed-constructor allocation/regression ownership,
+MD01 shared mutable Mediator MIME, H01 unbounded producer test join, H02 two-Yield
+readiness assumption. New cache theory2+positive fact1+MIME fact1 add4 cases and
+three handwritten requirement bindings, 2,925 catalogue records; no feature loss.
+Nine productive source files/1,848 current lines are fully read, every comment
+manually checked; no comment rewrite needed. No authoring generator or pragma.
+
+Five separately compiled semantic mutants (CTS/gate/MIME/clock/producer-monitor)
+are killed by exact intended assertions; sources SHA-restored. Final restored
+Release compiler exit0, zero warnings/errors; fresh focused25/25 and unfiltered
+Core4,011/4,011 exit0, no failed/skipped/pending/other cases. Same full run collects
+nine productive observed modules:50,608/64,568 lines=78.3794%;17,445/24,298
+branches=71.7960%. These are not entire-product metrics or comparable historical
+denominators without reconciliation. New whole-product CRAP is not calculated.
+Internal Lead counterreview0 concrete defects is not external team acceptance.
+Initial analyzer/fixture/stale-DLL diagnostic failures get no acceptance credit.
+
+BD01 depot fixture same-instance stop gap is confirmed; outbox pipe/value/address,
+broker loser-task/input shapes, cleanup/ambient/transaction/observer-generation
+and helper documentation/type gaps remain qualified OPEN. Rider32-start real
+gate and initializer lifecycle positive controls are preserved. MD02/PA01, other
+CS/CT and grouped findings, whole-src/API/architecture/comment/Async/naming/
+format/directive/dummy/legacy axes, full API/parameter metrics and actual cloud
+provider acceptance remain active. No broader A+ completion/100% guarantee.
+
+Ten exact paths receive normal commit/new annotated2026-09-16 tag/approved atomic
+push; separately keyed branch/tag-object/peeled refs and owned cleanliness are
+required before remote-security claims. Prior history tails and unrelated work,
+review/ and TestResults/ are preserved.
+[Detailed evidence](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-132/CONNECTED_OWNERSHIP_AND_LIVENESS_REMEDIATION.md).
+
 ## Iteration 131 complete Core directory read; original whole-product goal active
 
 Secured input4ac87c03b95c07bf0414434c031a45fb57d904b6 and unchanged authorities.

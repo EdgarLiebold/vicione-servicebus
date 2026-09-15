@@ -10,6 +10,67 @@ namespace ViciOne.ServiceBus.Tests.Mediator.Contexts;
 public sealed class MediatorReceiveContextContractTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-RECEIVE-CONTEXT", "content-type-is-owned-across-reads-deliveries-and-message-contracts")]
+    public async Task ContentTypeMutation_IsIsolatedAcrossReadsDeliveriesAndMessageContractsAsync()
+    {
+        var receives = new List<ReceiveContext>();
+        IMediator mediator = MediatorFactory.Create(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.Handler<ContextMessage>(context =>
+            {
+                receives.Add(context.Advanced().ReceiveContext);
+                return Task.CompletedTask;
+            });
+            configuration.Handler<OtherContextMessage>(context =>
+            {
+                receives.Add(context.Advanced().ReceiveContext);
+                return Task.CompletedTask;
+            });
+        });
+
+        try
+        {
+            CancellationToken token = TestContext.Current.CancellationToken;
+            var timeout = TimeSpan.FromSeconds(10);
+            await mediator.SendAsync(new ContextMessage("first"), token).WaitAsync(timeout, token);
+            await mediator.SendAsync(new ContextMessage("second"), token).WaitAsync(timeout, token);
+            await mediator.SendAsync(new OtherContextMessage("other"), token).WaitAsync(timeout, token);
+            Assert.Equal(3, receives.Count);
+            var owned = receives[0].ContentType;
+
+            try
+            {
+                owned.MediaType = "text/plain";
+                owned.Parameters["profile"] = "caller-only";
+
+                Assert.Equal("text/plain", owned.MediaType);
+                Assert.Equal("caller-only", owned.Parameters["profile"]);
+                foreach (ReceiveContext receive in receives)
+                {
+                    var firstRead = receive.ContentType;
+                    var secondRead = receive.ContentType;
+                    Assert.NotSame(owned, firstRead);
+                    Assert.NotSame(firstRead, secondRead);
+                    Assert.Equal("application/json", firstRead.MediaType);
+                    Assert.Equal("application/json", secondRead.MediaType);
+                    Assert.Null(firstRead.Parameters["profile"]);
+                    Assert.Null(secondRead.Parameters["profile"]);
+                }
+            }
+            finally
+            {
+                owned.MediaType = "application/json";
+                owned.Parameters.Remove("profile");
+            }
+        }
+        finally
+        {
+            await mediator.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-RECEIVE-CONTEXT", "metadata-body-and-owned-completion")]
     public async Task MaterializedContext_ExposesExactMetadataAndAwaitsAttachedWorkAsync()
     {
@@ -112,4 +173,5 @@ public sealed class MediatorReceiveContextContractTests
     }
 
     private sealed record ContextMessage(string Value);
+    private sealed record OtherContextMessage(string Value);
 }

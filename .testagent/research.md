@@ -1,5 +1,37 @@
 # A+ remediation research
 
+## Iteration 132 connected ownership and liveness remediation
+
+The original goal and secured input 3e4eae03435f3b7343bb63a1eac66eeca2269139
+remain unchanged. Main personally completes all 43 shared support inputs/4,311
+physical lines and the effective Core build/package/execution graph. The exact
+sorted 621-path Git/read set and bytes reconcile; XML/JSON parsers and the strict
+Core Release compiler succeed. Evaluated Compile matches all 553 tracked Core
+C# inputs; seven repository-owned imports are fully read. External SDK/package/
+generated imports are hash-bound separately, not claimed as personally read.
+
+Focused targets: CS01 failed cache-constructor allocation ownership, MD01 mutable
+Mediator MIME exports, H01 synchronous filter liveness and H02 readiness-clock
+causality. Required discriminators are exact primary fault identity, independent
+CTS/semaphore disposal with linked/unlinked lifetime tokens, literal timer policy,
+one terminal timer release, fresh MIME identities and unshared media/parameters
+across reads/deliveries/contract types, producer completion within the filter, and
+actual configured-clock timer allocation plus fault/underlying-ready/stop state.
+New waits/cleanup are bounded; requirements gain three manually authored bindings.
+
+Final restored compiler succeeds with zero warnings/errors. Fresh focused native
+25/25 and unfiltered Core 4,011/4,011 pass strict zero-tests/fail-skips/fail-warns
+policy. Five separately compiled CTS/gate/MIME/clock/monitor mutants fail exactly
+the intended assertions and their sources are SHA-restored. Internal Lead review
+finds zero concrete current defects, not external product-team acceptance. Initial
+fixture mistakes and the accidentally launched stale-DLL diagnostic are rejected.
+Current nine observed productive modules measure 50,608/64,568 lines (78.3794%)
+and 17,445/24,298 branches (71.7960%); neither number is whole-product coverage.
+
+MD02/PA01, other cache/test findings, whole-product coverage/CRAP, real cloud
+acceptance and the original whole-src manual architecture/comment obligations
+remain open. No source/comment/test/report generator or shared-helper runtime edit.
+
 ## Iteration 131 Core directory EOF and connected source contracts
 
 All remaining150 owner inputs/32,604 lines are fully personally read, including
