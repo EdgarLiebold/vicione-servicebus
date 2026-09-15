@@ -1,27 +1,29 @@
+using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Rescue;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for consume context rescue pipe.</summary>
-public class ConsumeContextRescuePipeSpecification :
+/// <summary>Builds the rescue branch for consumed-message failures.</summary>
+internal sealed class ConsumeContextRescuePipeSpecification :
     ExceptionSpecification,
     IPipeSpecification<ConsumeContext>
 {
     readonly IPipe<ExceptionConsumeContext> _rescuePipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <summary>Creates a specification for the supplied consume-failure pipe.</summary>
+    /// <param name="rescuePipe">The pipe that handles selected consume failures.</param>
     public ConsumeContextRescuePipeSpecification(IPipe<ExceptionConsumeContext> rescuePipe)
     {
-        _rescuePipe = rescuePipe;
+        _rescuePipe = rescuePipe ?? throw new ArgumentNullException(nameof(rescuePipe));
     }
 
     /// <summary>Applies this specification to the target builder.</summary>
     /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ConsumeContext> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
         builder.AddFilter(new RescueFilter<ConsumeContext, ExceptionConsumeContext>(_rescuePipe, Filter,
             (context, ex) => new RescueExceptionConsumeContext(context, ex)));
     }
@@ -30,32 +32,32 @@ public class ConsumeContextRescuePipeSpecification :
     /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
-        if (_rescuePipe == null)
-            yield return this.Failure("RescuePipe", "must not be null");
+        yield break;
     }
 }
 
 
-/// <summary>Describes requirements for consume context rescue pipe.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class ConsumeContextRescuePipeSpecification<T> :
+/// <summary>Builds the rescue branch for failures of a typed consumed message.</summary>
+/// <typeparam name="T">The consumed message type.</typeparam>
+internal sealed class ConsumeContextRescuePipeSpecification<T> :
     ExceptionSpecification,
     IPipeSpecification<ConsumeContext<T>>
     where T : class
 {
     readonly IPipe<ExceptionConsumeContext<T>> _rescuePipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <summary>Creates a specification for the supplied typed consume-failure pipe.</summary>
+    /// <param name="rescuePipe">The pipe that handles selected consume failures.</param>
     public ConsumeContextRescuePipeSpecification(IPipe<ExceptionConsumeContext<T>> rescuePipe)
     {
-        _rescuePipe = rescuePipe;
+        _rescuePipe = rescuePipe ?? throw new ArgumentNullException(nameof(rescuePipe));
     }
 
     /// <summary>Applies this specification to the target builder.</summary>
     /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
         builder.AddFilter(new RescueFilter<ConsumeContext<T>, ExceptionConsumeContext<T>>(_rescuePipe, Filter,
             (context, ex) => new RescueExceptionConsumeContext<T>(context, ex)));
     }
@@ -64,7 +66,6 @@ public class ConsumeContextRescuePipeSpecification<T> :
     /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
-        if (_rescuePipe == null)
-            yield return this.Failure("RescuePipe", "must not be null");
+        yield break;
     }
 }

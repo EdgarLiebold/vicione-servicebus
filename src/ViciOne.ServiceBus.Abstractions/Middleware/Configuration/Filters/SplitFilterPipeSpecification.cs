@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Middleware;
 
@@ -6,9 +7,9 @@ namespace ViciOne.ServiceBus.Configuration;
 public partial class PipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Adds an arbitrary filter to the pipe.</summary>
-    /// <typeparam name="TFilter">The filter type.</typeparam>
-    public class SplitFilterPipeSpecification<TFilter> :
+    /// <summary>Adapts an inner pipeline specification to a different context contract.</summary>
+    /// <typeparam name="TFilter">The inner pipeline context contract.</typeparam>
+    public sealed class SplitFilterPipeSpecification<TFilter> :
         IPipeSpecification<TContext>
         where TFilter : class, PipeContext
     {
@@ -16,39 +17,38 @@ public partial class PipeConfigurator<TContext>
         readonly FilterContextProvider<TFilter, TContext> _inputContextProvider;
         readonly IPipeSpecification<TFilter> _specification;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="specification">The specification.</param>
-        /// <param name="contextProvider">The context provider.</param>
-        /// <param name="inputContextProvider">The input context provider.</param>
+        /// <summary>Creates a specification with explicit projections between the two context contracts.</summary>
+        /// <param name="specification">The inner specification whose filters and validation results are preserved.</param>
+        /// <param name="contextProvider">Reconstructs the outer context when an inner filter continues the pipeline.</param>
+        /// <param name="inputContextProvider">Projects the outer context into the inner pipeline.</param>
         public SplitFilterPipeSpecification(IPipeSpecification<TFilter> specification, MergeFilterContextProvider<TContext, TFilter> contextProvider,
             FilterContextProvider<TFilter, TContext> inputContextProvider)
         {
-            _specification = specification;
-            _contextProvider = contextProvider;
-            _inputContextProvider = inputContextProvider;
+            _specification = specification ?? throw new ArgumentNullException(nameof(specification));
+            _contextProvider = contextProvider ?? throw new ArgumentNullException(nameof(contextProvider));
+            _inputContextProvider = inputContextProvider ?? throw new ArgumentNullException(nameof(inputContextProvider));
         }
 
         /// <summary>Applies this specification to the target builder.</summary>
         /// <param name="builder">The builder that receives the configuration.</param>
         public void Apply(IPipeBuilder<TContext> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
             var splitBuilder = new Builder(builder, _contextProvider, _inputContextProvider);
 
             _specification.Apply(splitBuilder);
         }
 
-        /// <summary>Validates the current configuration.</summary>
-        /// <returns>The validation failures.</returns>
+        /// <summary>Returns the validation results owned by the inner specification.</summary>
+        /// <returns>The complete inner validation sequence.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
-            if (_specification == null)
-                yield return this.Failure("Specification", "must not be null");
-            if (_contextProvider == null)
-                yield return this.Failure("ContextProvider", "must not be null");
+            return _specification.Validate()
+                ?? throw new InvalidOperationException("The inner pipe specification returned null validation results.");
         }
 
 
-        class Builder :
+        sealed class Builder :
             IPipeBuilder<TFilter>
         {
             readonly IPipeBuilder<TContext> _builder;
@@ -65,6 +65,7 @@ public partial class PipeConfigurator<TContext>
 
             public void AddFilter(IFilter<TFilter> filter)
             {
+                ArgumentNullException.ThrowIfNull(filter);
                 var splitFilter = new SplitFilter<TContext, TFilter>(filter, _contextProvider, _inputContextProvider);
 
                 _builder.AddFilter(splitFilter);

@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Provides immutable retry-policy state for a pipeline context.</summary>
 /// <typeparam name="TContext">The pipeline context type governed by the policy.</typeparam>
-public class BaseRetryContext<TContext> :
+internal class BaseRetryContext<TContext> :
     RetryContext
     where TContext : class, PipeContext
 {
@@ -17,6 +17,10 @@ public class BaseRetryContext<TContext> :
     /// <param name="cancellationToken">The token that cancels retry processing.</param>
     protected BaseRetryContext(TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(exception);
+        ArgumentOutOfRangeException.ThrowIfNegative(retryCount);
+
         Context = context;
         Exception = exception;
         CancellationToken = cancellationToken;

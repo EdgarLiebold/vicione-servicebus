@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Represents the method that handles retry policy factory.</summary>
-/// <param name="filter">The filter to add to the pipeline.</param>
-/// <returns>The value produced by the operation.</returns>
+/// <summary>Creates a retry policy from the exception filter configured for a pipeline.</summary>
+/// <param name="filter">The immutable exception filter for the policy.</param>
+/// <returns>The configured retry policy.</returns>
 public delegate IRetryPolicy RetryPolicyFactory(IExceptionFilter filter);

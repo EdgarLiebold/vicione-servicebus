@@ -3,37 +3,43 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for exponential retry operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ExponentialRetryContext<TContext> :
+/// <summary>Represents a decision in a bounded exponential retry schedule.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class ExponentialRetryContext<TContext> :
     BaseRetryContext<TContext>,
     RetryContext<TContext>
     where TContext : class, PipeContext
 {
-    readonly TimeSpan _delay;
+    readonly TimeSpan? _delay;
     readonly ExponentialRetryPolicy _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryCount">The retry count.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    public ExponentialRetryContext(ExponentialRetryPolicy policy, TContext context, Exception exception, int retryCount,
+    /// <summary>Creates a retry decision for a failed attempt.</summary>
+    /// <param name="policy">The exponential retry policy.</param>
+    /// <param name="context">The failed pipeline context.</param>
+    /// <param name="exception">The most recent failure.</param>
+    /// <param name="retryCount">The number of retry attempts already completed.</param>
+    /// <param name="delay">The delay before the represented retry, or <see langword="null" /> when no retry is scheduled.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
+    public ExponentialRetryContext(ExponentialRetryPolicy policy, TContext context, Exception exception, int retryCount, TimeSpan? delay,
         CancellationToken cancellationToken)
         : base(context, exception, retryCount, cancellationToken)
     {
-        _policy = policy;
-        _delay = policy.GetRetryInterval(retryCount);
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        _delay = delay;
     }
 
-    /// <summary>Gets the delay.</summary>
+    /// <summary>Gets the delay before the represented retry, or <see langword="null" /> for a terminal decision.</summary>
     public override TimeSpan? Delay => _delay;
 
     bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
     {
-        retryContext = new ExponentialRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
+        ArgumentNullException.ThrowIfNull(exception);
 
-        return RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
+        var nextRetryCount = RetryCount + 1;
+        var canRetry = RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
+        TimeSpan? nextDelay = canRetry ? _policy.GetRetryInterval(nextRetryCount) : null;
+        retryContext = new ExponentialRetryContext<TContext>(_policy, Context, exception, nextRetryCount, nextDelay, CancellationToken);
+
+        return canRetry;
     }
 }

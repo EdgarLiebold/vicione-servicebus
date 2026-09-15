@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.ExceptionFilters;
 
-class CompositePredicate<T>
+sealed class CompositePredicate<T>
 {
     readonly List<Func<T, bool>> _list = new List<Func<T, bool>>();
     Func<T, bool> _matchesAll = x => true;
@@ -13,6 +13,8 @@ class CompositePredicate<T>
 
     public void Add(Func<T, bool> filter)
     {
+        ArgumentNullException.ThrowIfNull(filter);
+
         _matchesAll = x => _list.All(predicate => predicate(x));
         _matchesAny = x => _list.Any(predicate => predicate(x));
         _matchesNone = x => !MatchesAny(x);

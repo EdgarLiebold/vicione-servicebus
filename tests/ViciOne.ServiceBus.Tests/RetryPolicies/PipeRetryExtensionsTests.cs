@@ -216,6 +216,169 @@ public sealed class PipeRetryExtensionsTests
         Assert.Equal("The retry policy returned a policy context without a pipe context.", actual.Message);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "null-operation-task-rejected")]
+    public async Task Operation_RejectsANullTaskForVoidAndResultOverloadsAsync()
+    {
+        InvalidOperationException missingVoidTask = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Retry.None.RetryAsync((Func<Task>)(() => null!), TestContext.Current.CancellationToken));
+        InvalidOperationException missingResultTask = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Retry.None.RetryAsync((Func<Task<int>>)(() => null!), TestContext.Current.CancellationToken));
+
+        Assert.Equal("The retry operation returned a null task.", missingVoidTask.Message);
+        Assert.Equal("The retry operation returned a null task.", missingResultTask.Message);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "log-switch-overloads-preserve-retry-and-result")]
+    public async Task LogSwitchOverloads_PreserveRetryExecutionAndTheSuccessfulResultAsync(bool log)
+    {
+        var voidAttempts = 0;
+        var resultAttempts = 0;
+
+        await Retry.Immediate(1).RetryAsync(() =>
+        {
+            if (++voidAttempts == 1)
+                throw new RetryFailureException("void failure");
+
+            return Task.CompletedTask;
+        }, log, TestContext.Current.CancellationToken);
+        int result = await Retry.Immediate(1).RetryAsync(() =>
+        {
+            if (++resultAttempts == 1)
+                throw new RetryFailureException("result failure");
+
+            return Task.FromResult(42);
+        }, log, TestContext.Current.CancellationToken);
+
+        Assert.Equal(2, voidAttempts);
+        Assert.Equal(2, resultAttempts);
+        Assert.Equal(42, result);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "operation-owned-cancellation-is-not-retried")]
+    public async Task OperationOwnedCancellation_IsNotRetriedAndPreservesItsIdentityAsync()
+    {
+        using var operationCancellation = new CancellationTokenSource();
+        operationCancellation.Cancel();
+        var expected = new OperationCanceledException("operation stopped", operationCancellation.Token);
+        var attempts = 0;
+
+        OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            Retry.Immediate(2).RetryAsync(() =>
+            {
+                attempts++;
+                return Task.FromException<int>(expected);
+            }, false, TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+        Assert.Equal(operationCancellation.Token, actual.CancellationToken);
+        Assert.Equal(1, attempts);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "asynchronous-pre-retry-callback-is-awaited")]
+    public async Task PreRetryCallback_IsAwaitedBeforeTheNextOperationAsync()
+    {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var trace = new List<string>();
+        var attempts = 0;
+        var policy = new TrackingRetryPolicy(trace, 1, cancellationToken =>
+        {
+            entered.TrySetResult();
+            return release.Task.WaitAsync(cancellationToken);
+        });
+
+        Task<int> operation = policy.RetryAsync(() =>
+        {
+            if (Interlocked.Increment(ref attempts) == 1)
+                throw new RetryFailureException("initial");
+
+            return Task.FromResult(42);
+        }, false, TestContext.Current.CancellationToken);
+        try
+        {
+            await entered.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+            Assert.False(operation.IsCompleted);
+            Assert.Equal(1, attempts);
+            Assert.Equal(["before:1"], trace);
+        }
+        finally
+        {
+            release.TrySetResult();
+        }
+
+        Assert.Equal(42, await operation.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+        Assert.Equal(2, attempts);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "asynchronous-terminal-callback-is-awaited")]
+    public async Task TerminalCallback_IsAwaitedAndReceivesTheExactFailureAndTokenAsync()
+    {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var trace = new List<string>();
+        var expected = new RetryFailureException("terminal");
+        Exception? observedFailure = null;
+        CancellationToken observedToken = default;
+        var policy = new TrackingRetryPolicy(trace, 0, terminal: (exception, cancellationToken) =>
+        {
+            observedFailure = exception;
+            observedToken = cancellationToken;
+            entered.TrySetResult();
+            return release.Task.WaitAsync(cancellationToken);
+        });
+
+        Task operation = policy.RetryAsync(() => Task.FromException(expected), false,
+            TestContext.Current.CancellationToken);
+        try
+        {
+            await entered.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+            Assert.False(operation.IsCompleted);
+            Assert.Same(expected, observedFailure);
+            Assert.Equal(TestContext.Current.CancellationToken, observedToken);
+            Assert.Equal(["terminal:terminal"], trace);
+        }
+        finally
+        {
+            release.TrySetResult();
+        }
+
+        RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
+            operation.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+        Assert.Same(expected, actual);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "null-callback-tasks-are-rejected")]
+    public async Task CallbackTask_RejectsANullPreRetryOrTerminalTaskAsync(bool terminal)
+    {
+        var trace = new List<string>();
+        var policy = new TrackingRetryPolicy(trace, terminal ? 0 : 1,
+            beforeRetry: terminal ? null : _ => null!,
+            terminal: terminal ? (_, _) => null! : null);
+        var attempts = 0;
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            policy.RetryAsync(() =>
+            {
+                attempts++;
+                return Task.FromException(new RetryFailureException("failure"));
+            }, false, TestContext.Current.CancellationToken));
+
+        Assert.Equal(terminal
+            ? "The retry context returned a null fault task."
+            : "The retry context returned a null pre-retry task.", actual.Message);
+        Assert.Equal(1, attempts);
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -255,7 +418,13 @@ public sealed class PipeRetryExtensionsTests
             return true;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -288,7 +457,13 @@ public sealed class PipeRetryExtensionsTests
             return false;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -298,14 +473,16 @@ public sealed class PipeRetryExtensionsTests
         }
     }
 
-    private sealed class TrackingRetryPolicy(List<string> trace, int retryLimit) : IRetryPolicy
+    private sealed class TrackingRetryPolicy(List<string> trace, int retryLimit,
+        Func<CancellationToken, Task>? beforeRetry = null,
+        Func<Exception, CancellationToken, Task>? terminal = null) : IRetryPolicy
     {
         public void Probe(ProbeContext context)
         {
         }
 
         public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
-            where T : class, PipeContext => new TrackingPolicyContext<T>(context, trace, retryLimit);
+            where T : class, PipeContext => new TrackingPolicyContext<T>(context, trace, retryLimit, beforeRetry, terminal);
 
         public bool IsHandled(Exception exception) => true;
     }
@@ -315,23 +492,34 @@ public sealed class PipeRetryExtensionsTests
     {
         private readonly int _retryLimit;
         private readonly List<string> _trace;
+        private readonly Func<CancellationToken, Task>? _beforeRetry;
+        private readonly Func<Exception, CancellationToken, Task>? _terminal;
 
-        public TrackingPolicyContext(T context, List<string> trace, int retryLimit)
+        public TrackingPolicyContext(T context, List<string> trace, int retryLimit,
+            Func<CancellationToken, Task>? beforeRetry, Func<Exception, CancellationToken, Task>? terminal)
         {
             Context = context;
             _trace = trace;
             _retryLimit = retryLimit;
+            _beforeRetry = beforeRetry;
+            _terminal = terminal;
         }
 
         public T Context { get; }
 
         public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
         {
-            retryContext = new TrackingRetryContext<T>(Context, exception, 0, _trace, _retryLimit);
+            retryContext = new TrackingRetryContext<T>(Context, exception, 0, _trace, _retryLimit, _beforeRetry, _terminal);
             return _retryLimit > 0;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -346,29 +534,41 @@ public sealed class PipeRetryExtensionsTests
     {
         private readonly int _retryLimit;
         private readonly List<string> _trace;
+        private readonly Func<CancellationToken, Task>? _beforeRetry;
+        private readonly Func<Exception, CancellationToken, Task>? _terminal;
 
-        public TrackingRetryContext(T context, Exception exception, int retryCount, List<string> trace, int retryLimit)
+        public TrackingRetryContext(T context, Exception exception, int retryCount, List<string> trace, int retryLimit,
+            Func<CancellationToken, Task>? beforeRetry, Func<Exception, CancellationToken, Task>? terminal)
             : base(context, exception, retryCount, CancellationToken.None)
         {
             _trace = trace;
             _retryLimit = retryLimit;
+            _beforeRetry = beforeRetry;
+            _terminal = terminal;
         }
 
         public override Task PreRetryAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _trace.Add($"before:{RetryAttempt}");
-            return Task.CompletedTask;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+
+            _trace.Add($"before:{RetryAttempt}");
+            return _beforeRetry is null ? Task.CompletedTask : _beforeRetry(cancellationToken);
         }
 
         public override Task RetryFaultedAsync(Exception terminalException, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _trace.Add($"terminal:{terminalException.Message}");
-            return Task.CompletedTask;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+
+            _trace.Add($"terminal:{terminalException.Message}");
+            return _terminal is null ? Task.CompletedTask : _terminal(terminalException, cancellationToken);
         }
 
         public bool CanRetry(Exception terminalException, out RetryContext<T> retryContext)
         {
-            retryContext = new TrackingRetryContext<T>(Context, terminalException, RetryCount + 1, _trace, _retryLimit);
+            retryContext = new TrackingRetryContext<T>(Context, terminalException, RetryCount + 1, _trace, _retryLimit,
+                _beforeRetry, _terminal);
             return RetryAttempt < _retryLimit;
         }
     }

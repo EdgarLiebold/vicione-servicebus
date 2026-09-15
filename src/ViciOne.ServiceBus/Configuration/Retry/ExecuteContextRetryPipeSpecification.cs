@@ -8,9 +8,9 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for execute context retry pipe.</summary>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
-public class ExecuteContextRetryPipeSpecification<TArguments> :
+/// <summary>Builds retry middleware for an activity execution pipeline.</summary>
+/// <typeparam name="TArguments">The activity argument type.</typeparam>
+internal sealed class ExecuteContextRetryPipeSpecification<TArguments> :
     ExceptionSpecification,
     IRetryConfigurator,
     IPipeSpecification<ExecuteContext<TArguments>>
@@ -18,10 +18,10 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
 {
     readonly CancellationToken _cancellationToken;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory = null!;
+    RetryPolicyFactory? _policyFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates an activity execution retry specification.</summary>
+    /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
     public ExecuteContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
         _cancellationToken = cancellationToken;
@@ -52,8 +52,8 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <summary>Sets the factory that combines exception selection with retry timing.</summary>
+    /// <param name="factory">The retry-policy factory.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));

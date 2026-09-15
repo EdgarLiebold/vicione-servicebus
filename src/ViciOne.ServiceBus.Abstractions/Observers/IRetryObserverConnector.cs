@@ -1,10 +1,10 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by retry observer connector.</summary>
+/// <summary>Registers observers for retry lifecycle notifications.</summary>
 public interface IRetryObserverConnector
 {
-    /// <summary>Connect an observer to the filter and/or pipe.</summary>
-    /// <param name="observer">The observer to connect.</param>
+    /// <summary>Connects an observer to the configured retry pipeline.</summary>
+    /// <param name="observer">The observer to register.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     ConnectHandle ConnectRetryObserver(IRetryObserver observer);
 }

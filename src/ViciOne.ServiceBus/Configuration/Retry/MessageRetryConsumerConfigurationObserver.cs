@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Adds retry specifications to the message pipelines of one consumer type.</summary>
 /// <typeparam name="TConsumer">The consumer type.</typeparam>
-public class MessageRetryConsumerConfigurationObserver<TConsumer> :
+internal sealed class MessageRetryConsumerConfigurationObserver<TConsumer> :
     IConsumerConfigurationObserver
     where TConsumer : class
 {
@@ -29,10 +29,13 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
 
     void IConsumerConfigurationObserver.ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
     {
+        // Retry is attached to each message pipeline by ConsumerMessageConfigured.
     }
 
     void IConsumerConfigurationObserver.ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(IMessageBatch<>), out Type[] types))
         {
             var method = typeof(MessageRetryConsumerConfigurationObserver<TConsumer>)
@@ -60,9 +63,9 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     public void BatchConsumerConfigured<TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
         where TMessage : class
     {
-        var consumerSpecification = configurator as IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>>;
-        if (consumerSpecification == null)
-            throw new ArgumentException("The configurator must be a consumer specification");
+        ArgumentNullException.ThrowIfNull(configurator);
+        if (configurator is not IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>> consumerSpecification)
+            throw new ArgumentException("The configurator must implement the consumer message specification contract.", nameof(configurator));
 
         var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>, RetryConsumeContext<IMessageBatch<TMessage>>>(Factory,
             _cancellationToken);

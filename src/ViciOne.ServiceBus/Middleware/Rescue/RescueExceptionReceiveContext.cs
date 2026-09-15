@@ -6,39 +6,39 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 
-/// <summary>Carries state for rescue exception receive operations.</summary>
-public class RescueExceptionReceiveContext :
+/// <summary>Projects a failed receive context and its exception into a rescue pipeline.</summary>
+internal sealed class RescueExceptionReceiveContext :
     ReceiveContextProxy,
     ExceptionReceiveContext
 {
     readonly DictionarySendHeaders _headers;
-    ExceptionInfo _exceptionInfo = null!;
+    ExceptionInfo? _exceptionInfo;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Creates a rescue projection for a failed receive operation.</summary>
+    /// <param name="context">The failed receive context.</param>
+    /// <param name="exception">The failure exposed to the rescue pipeline.</param>
     public RescueExceptionReceiveContext(ReceiveContext context, Exception exception)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        Exception = exception;
-        ExceptionTimestamp = context.GetTimeProvider().GetUtcNow().UtcDateTime;
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+        ExceptionTimestamp = context.GetTimeProvider().GetUtcNow();
 
         _headers = new DictionarySendHeaders();
 
         _headers.SetExceptionHeaders(this);
     }
 
-    /// <summary>Gets the exception.</summary>
+    /// <summary>Gets the failure exposed to the rescue pipeline.</summary>
     public Exception Exception { get; }
-    /// <summary>Gets the exception timestamp.</summary>
+    /// <summary>Gets the timestamp captured when the rescue projection was created.</summary>
     public DateTimeOffset ExceptionTimestamp { get; }
 
-    /// <summary>Gets the exception info.</summary>
+    /// <summary>Gets the structured snapshot of the failure.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
     }
 
-    /// <summary>Gets the exception headers.</summary>
+    /// <summary>Gets the transport headers derived from the failure.</summary>
     public SendHeaders ExceptionHeaders => _headers;
 }

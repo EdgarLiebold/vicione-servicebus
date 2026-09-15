@@ -39,7 +39,7 @@ internal sealed class PendingFaultCollection
 
     /// <summary>Notifies the owning context of every collected consumer fault.</summary>
     /// <param name="consumeContext">The context that owns the observer pipeline.</param>
-    /// <param name="cancellationToken">The token used to cancel the notifications.</param>
+    /// <param name="cancellationToken">The token that cancels pending-fault notification.</param>
     /// <returns>A task that completes after every pending fault notification completes.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="consumeContext" /> is <see langword="null" />.</exception>
     /// <exception cref="InvalidOperationException">Notification has already started.</exception>

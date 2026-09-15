@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.ExceptionFilters;
 
-class CompositeFilter<T>
+sealed class CompositeFilter<T>
 {
     readonly CompositePredicate<T> _excludes = new CompositePredicate<T>();
     readonly CompositePredicate<T> _includes = new CompositePredicate<T>();

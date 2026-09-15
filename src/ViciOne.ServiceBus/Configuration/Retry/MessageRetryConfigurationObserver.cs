@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.RetryPolicies;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Adds retry specifications to configured message, batch, and activity pipelines.</summary>
-public class MessageRetryConfigurationObserver :
+internal sealed class MessageRetryConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
 {
@@ -16,7 +16,7 @@ public class MessageRetryConfigurationObserver :
     /// <param name="receiveEndpointConfigurator">The consume pipeline whose configurations are observed.</param>
     /// <param name="cancellationToken">The token observed while retry delays are pending.</param>
     /// <param name="configure">The callback applied to each retry policy.</param>
-    public MessageRetryConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, CancellationToken cancellationToken,
+    MessageRetryConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
         : base(receiveEndpointConfigurator ?? throw new ArgumentNullException(nameof(receiveEndpointConfigurator)))
     {
@@ -24,8 +24,17 @@ public class MessageRetryConfigurationObserver :
 
         _cancellationToken = cancellationToken;
         _configure = configure;
+    }
 
-        Connect(this);
+    /// <summary>Attaches retry configuration to all current and future message pipelines.</summary>
+    /// <param name="configurator">The consume pipeline whose component configurations are observed.</param>
+    /// <param name="cancellationToken">The token observed while retry delays are pending.</param>
+    /// <param name="configure">The callback applied to each retry policy.</param>
+    public static void Attach(IConsumePipeConfigurator configurator, CancellationToken cancellationToken,
+        Action<IRetryConfigurator> configure)
+    {
+        var observer = new MessageRetryConfigurationObserver(configurator, cancellationToken, configure);
+        observer.Connect(observer);
     }
 
     /// <summary>Adds retry handling to a configured message pipeline.</summary>
@@ -34,6 +43,8 @@ public class MessageRetryConfigurationObserver :
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<TMessage>, RetryConsumeContext<TMessage>>(Factory, _cancellationToken);
 
         _configure(specification);
@@ -47,9 +58,9 @@ public class MessageRetryConfigurationObserver :
     /// <param name="configurator">The configured batch-consumer pipeline.</param>
     public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, IMessageBatch<TMessage>> configurator)
     {
-        var consumerSpecification = configurator as IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>>;
-        if (consumerSpecification == null)
-            throw new ArgumentException("The configurator must be a consumer specification");
+        ArgumentNullException.ThrowIfNull(configurator);
+        if (configurator is not IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>> consumerSpecification)
+            throw new ArgumentException("The configurator must implement the consumer message specification contract.", nameof(configurator));
 
         var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<IMessageBatch<TMessage>>, RetryConsumeContext<IMessageBatch<TMessage>>>(Factory,
             _cancellationToken);
@@ -62,10 +73,13 @@ public class MessageRetryConfigurationObserver :
     /// <summary>Adds retry handling to a configured activity execution pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="compensateAddress">The compensate address.</param>
+    /// <param name="configurator">The activity execution pipeline.</param>
+    /// <param name="compensateAddress">The address used if the activity is later compensated.</param>
     public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(compensateAddress);
+
         var specification = new ExecuteContextRetryPipeSpecification<TArguments>(_cancellationToken);
 
         _configure(specification);
@@ -76,9 +90,11 @@ public class MessageRetryConfigurationObserver :
     /// <summary>Adds retry handling to a configured execute-activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The execute-only activity pipeline.</param>
     public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         var specification = new ExecuteContextRetryPipeSpecification<TArguments>(_cancellationToken);
 
         _configure(specification);
@@ -89,9 +105,11 @@ public class MessageRetryConfigurationObserver :
     /// <summary>Adds retry handling to a configured compensate-activity pipeline.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The activity compensation pipeline.</param>
     public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         var specification = new CompensateContextRetryPipeSpecification<TLog>(_cancellationToken);
 
         _configure(specification);

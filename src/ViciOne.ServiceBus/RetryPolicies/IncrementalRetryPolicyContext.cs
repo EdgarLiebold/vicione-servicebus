@@ -3,29 +3,32 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for incremental retry policy operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class IncrementalRetryPolicyContext<TContext> :
+/// <summary>Creates initial decisions for a linearly increasing retry schedule.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class IncrementalRetryPolicyContext<TContext> :
     BaseRetryPolicyContext<TContext>
     where TContext : class, PipeContext
 {
     readonly IncrementalRetryPolicy _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates operation-scoped state for an incremental retry policy.</summary>
+    /// <param name="policy">The incremental retry policy.</param>
+    /// <param name="context">The pipeline context governed by the policy.</param>
     public IncrementalRetryPolicyContext(IncrementalRetryPolicy policy, TContext context)
         : base(policy, context)
     {
         _policy = policy;
     }
 
-    /// <summary>Creates retry context.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created retry context.</returns>
-    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
+    /// <summary>Creates the initial incremental decision.</summary>
+    /// <param name="exception">The initial failure.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
+    /// <param name="isRetryScheduled"><see langword="true" /> when another attempt is scheduled.</param>
+    /// <returns>The initial retry state.</returns>
+    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken,
+        bool isRetryScheduled)
     {
-        return new IncrementalRetryContext<TContext>(_policy, Context, exception, 0, _policy.InitialInterval, _policy.IntervalIncrement, cancellationToken);
+        TimeSpan? delay = isRetryScheduled ? _policy.InitialInterval : null;
+        return new IncrementalRetryContext<TContext>(_policy, Context, exception, 0, delay, _policy.IntervalIncrement, cancellationToken);
     }
 }

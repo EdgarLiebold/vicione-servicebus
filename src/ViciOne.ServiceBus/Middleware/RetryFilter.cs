@@ -5,21 +5,18 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Uses a retry policy to handle exceptions, retrying the operation in according
-/// with the policy.
-/// </summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class RetryFilter<TContext> :
+/// <summary>Repeats a pipeline operation according to a retry policy and publishes its lifecycle.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class RetryFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="observers">The observers.</param>
+    /// <summary>Creates a retry filter for a policy and its lifecycle observers.</summary>
+    /// <param name="retryPolicy">The policy that classifies failures and schedules retries.</param>
+    /// <param name="observers">The observable that publishes retry lifecycle events.</param>
     public RetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
@@ -28,6 +25,7 @@ public class RetryFilter<TContext> :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateFilterScope("retry");
 
         _retryPolicy.Probe(scope);
@@ -86,7 +84,8 @@ public class RetryFilter<TContext> :
                 {
                     context.GetOrAddPayload(() => retryContext);
 
-                    var retryFaultedTask = retryContext.RetryFaultedAsync(exception);
+                    Task retryFaultedTask = retryContext.RetryFaultedAsync(exception)
+                        ?? throw new InvalidOperationException("The retry context returned a null fault task.");
                     if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                         await retryFaultedTask.ConfigureAwait(false);
 
@@ -143,7 +142,8 @@ public class RetryFilter<TContext> :
                 }
             }
 
-            var preRetryContextTask = retryContext.PreRetryAsync();
+            Task preRetryContextTask = retryContext.PreRetryAsync()
+                ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
             if (preRetryContextTask.Status != TaskStatus.RanToCompletion)
                 await preRetryContextTask.ConfigureAwait(false);
 
@@ -194,7 +194,8 @@ public class RetryFilter<TContext> :
                     {
                         context.GetOrAddPayload(() => nextRetryContext);
 
-                        var retryFaultedTask = nextRetryContext.RetryFaultedAsync(exception);
+                        Task retryFaultedTask = nextRetryContext.RetryFaultedAsync(exception)
+                            ?? throw new InvalidOperationException("The retry context returned a null fault task.");
                         if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                             await retryFaultedTask.ConfigureAwait(false);
 
@@ -226,10 +227,8 @@ public class RetryFilter<TContext> :
     async Task<bool> PropagateNestedRetryFailureAsync(TContext rootContext, PipeContext currentContext,
         Exception exception, Func<Task> notifyPolicyFault)
     {
-        // A downstream retry owns the exception once its context is present. The outer retry
-        // reports the terminal fault but must not start a second retry budget. The non-generic
-        // payload is deliberate: dispatch may change the concrete PipeContext type, while
-        // RetryContext.ContextType retains the exact type required by observer callbacks.
+        // A downstream retry owns an exception once its context is present. The outer retry
+        // propagates that exact terminal context without starting a second retry budget.
         if (!currentContext.TryGetPayload(out RetryContext? nestedRetryContext))
             return false;
 

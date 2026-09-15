@@ -4,28 +4,28 @@ using ViciOne.ServiceBus.Events.Faults;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 
-/// <summary>Carries state for rescue exception consume operations.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class RescueExceptionConsumeContext<TMessage> :
+/// <summary>Projects a failed typed consume context and its exception into a rescue pipeline.</summary>
+/// <typeparam name="TMessage">The consumed message type.</typeparam>
+internal sealed class RescueExceptionConsumeContext<TMessage> :
     ConsumeContextProxy<TMessage>,
     ExceptionConsumeContext<TMessage>
     where TMessage : class
 {
-    ExceptionInfo _exceptionInfo = null!;
+    ExceptionInfo? _exceptionInfo;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Creates a typed rescue projection for a failed consume operation.</summary>
+    /// <param name="context">The failed consume context.</param>
+    /// <param name="exception">The failure exposed to the rescue pipeline.</param>
     public RescueExceptionConsumeContext(ConsumeContext<TMessage> context, Exception exception)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        Exception = exception;
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
     }
 
-    /// <summary>Gets the exception.</summary>
+    /// <summary>Gets the failure exposed to the rescue pipeline.</summary>
     public Exception Exception { get; }
 
-    /// <summary>Gets the exception info.</summary>
+    /// <summary>Gets the structured snapshot of the failure.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
@@ -33,26 +33,26 @@ public class RescueExceptionConsumeContext<TMessage> :
 }
 
 
-/// <summary>Carries state for rescue exception consume operations.</summary>
-public class RescueExceptionConsumeContext :
+/// <summary>Projects a failed untyped consume context and its exception into a rescue pipeline.</summary>
+internal sealed class RescueExceptionConsumeContext :
     ConsumeContextProxy,
     ExceptionConsumeContext
 {
-    ExceptionInfo _exceptionInfo = null!;
+    ExceptionInfo? _exceptionInfo;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Creates an untyped rescue projection for a failed consume operation.</summary>
+    /// <param name="context">The failed consume context.</param>
+    /// <param name="exception">The failure exposed to the rescue pipeline.</param>
     public RescueExceptionConsumeContext(ConsumeContext context, Exception exception)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        Exception = exception;
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
     }
 
-    /// <summary>Gets the exception.</summary>
+    /// <summary>Gets the failure exposed to the rescue pipeline.</summary>
     public Exception Exception { get; }
 
-    /// <summary>Gets the exception info.</summary>
+    /// <summary>Gets the structured snapshot of the failure.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }

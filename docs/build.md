@@ -58,9 +58,9 @@ dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 tools/ci/verify_developer_journeys.sh
 ```
 
-The second command creates a temporary feed, packs all thirty delivery packages, restores the
+The second command creates a temporary feed, packs all thirty-one delivery packages, restores the
 package-only samples, and compiles all eighteen journeys plus three isolated provider-testing
-consumers with warnings as errors. A dedicated package-only API consumer restores all twenty-nine
+consumers with warnings as errors. A dedicated package-only API consumer restores all thirty
 runtime packages. The gate reflects their complete public surface, writes the deterministic
 inventory under `artifacts/verification`, and compares it byte-for-byte with the committed
 `docs/api/packed-public-api.txt` contract.

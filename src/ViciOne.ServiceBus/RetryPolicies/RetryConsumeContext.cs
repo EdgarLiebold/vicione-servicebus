@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Context;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Scopes a consume context with retry counters and deferred fault notifications.</summary>
-public class RetryConsumeContext :
+internal class RetryConsumeContext :
     ConsumeContextScope,
     ConsumeRetryContext
 {
@@ -17,9 +17,9 @@ public class RetryConsumeContext :
     /// <param name="retryPolicy">The policy that classifies retryable failures.</param>
     /// <param name="retryContext">The active retry state, or <see langword="null" /> before the first retry.</param>
     public RetryConsumeContext(ConsumeContext context, IRetryPolicy retryPolicy, RetryContext? retryContext)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        RetryPolicy = retryPolicy;
+        RetryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
         _context = context;
 
         if (retryContext != null)
@@ -52,7 +52,9 @@ public class RetryConsumeContext :
     public virtual TContext CreateNext<TContext>(RetryContext retryContext)
         where TContext : class, ConsumeRetryContext
     {
-        throw new InvalidOperationException("This is only supported by a derived type");
+        ArgumentNullException.ThrowIfNull(retryContext);
+        throw new InvalidOperationException(
+            $"The untyped retry context cannot create {TypeCache<TContext>.ShortName}.");
     }
 
     /// <summary>Notifies registered observers about pending faults.</summary>
@@ -75,6 +77,12 @@ public class RetryConsumeContext :
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        if (duration < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(duration), duration, "The fault duration cannot be negative.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        ArgumentNullException.ThrowIfNull(exception);
+
         if (RetryPolicy.IsHandled(exception))
         {
             _pendingFaults.Add(context, duration, consumerType, exception);
@@ -90,6 +98,7 @@ public class RetryConsumeContext :
     /// <returns>A scope that shares the original consume context and retry policy.</returns>
     public RetryConsumeContext CreateNext(RetryContext retryContext)
     {
+        ArgumentNullException.ThrowIfNull(retryContext);
         return new RetryConsumeContext(_context, RetryPolicy, retryContext);
     }
 }
@@ -97,7 +106,7 @@ public class RetryConsumeContext :
 
 /// <summary>Scopes a typed consume context with retry counters and deferred fault notifications.</summary>
 /// <typeparam name="TMessage">The consumed message type.</typeparam>
-public class RetryConsumeContext<TMessage> :
+internal class RetryConsumeContext<TMessage> :
     RetryConsumeContext,
     ConsumeContext<TMessage>
     where TMessage : class
@@ -109,7 +118,7 @@ public class RetryConsumeContext<TMessage> :
     /// <param name="retryPolicy">The policy that classifies retryable failures.</param>
     /// <param name="retryContext">The active retry state, or <see langword="null" /> before the first retry.</param>
     public RetryConsumeContext(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
-        : base(context.Advanced(), retryPolicy, retryContext)
+        : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced(), retryPolicy, retryContext)
     {
         _context = context;
     }
@@ -143,7 +152,10 @@ public class RetryConsumeContext<TMessage> :
     /// <returns>The next typed consume-retry context.</returns>
     public override TContext CreateNext<TContext>(RetryContext retryContext)
     {
+        ArgumentNullException.ThrowIfNull(retryContext);
+
         return new RetryConsumeContext<TMessage>(_context, RetryPolicy, retryContext) as TContext
-            ?? throw new ArgumentException($"The context type is not valid: {TypeCache<TMessage>.ShortName}");
+            ?? throw new ArgumentException(
+                $"The retry context cannot be represented as {TypeCache<TContext>.ShortName}.", nameof(TContext));
     }
 }

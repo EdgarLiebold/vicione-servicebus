@@ -8,9 +8,9 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for compensate context retry pipe.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
-public class CompensateContextRetryPipeSpecification<TLog> :
+/// <summary>Builds retry middleware for an activity compensation pipeline.</summary>
+/// <typeparam name="TLog">The compensation log type.</typeparam>
+internal sealed class CompensateContextRetryPipeSpecification<TLog> :
     ExceptionSpecification,
     IRetryConfigurator,
     IPipeSpecification<CompensateContext<TLog>>
@@ -18,10 +18,10 @@ public class CompensateContextRetryPipeSpecification<TLog> :
 {
     readonly CancellationToken _cancellationToken;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory = null!;
+    RetryPolicyFactory? _policyFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates an activity compensation retry specification.</summary>
+    /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
     public CompensateContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
         _cancellationToken = cancellationToken;
@@ -52,8 +52,8 @@ public class CompensateContextRetryPipeSpecification<TLog> :
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <summary>Sets the factory that combines exception selection with retry timing.</summary>
+    /// <param name="factory">The retry-policy factory.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));

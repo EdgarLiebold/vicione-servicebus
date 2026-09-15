@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Combines retry-policy state with consume-specific pending-fault handling.</summary>
-public class ConsumeContextRetryContext :
+internal sealed class ConsumeContextRetryContext :
     RetryContext<ConsumeContext>
 {
     readonly RetryConsumeContext _context;
@@ -16,8 +16,8 @@ public class ConsumeContextRetryContext :
     /// <param name="context">The consume-retry context that owns pending faults.</param>
     public ConsumeContextRetryContext(RetryContext<ConsumeContext> retryContext, RetryConsumeContext context)
     {
-        _retryContext = retryContext;
-        _context = context;
+        _retryContext = retryContext ?? throw new ArgumentNullException(nameof(retryContext));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Gets the token that cancels retry processing.</summary>
@@ -66,7 +66,10 @@ public class ConsumeContextRetryContext :
     /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         var canRetry = _retryContext.CanRetry(exception, out RetryContext<ConsumeContext> policyRetryContext);
+        if (policyRetryContext == null)
+            throw new InvalidOperationException("The retry policy returned a null retry context.");
 
         retryContext = new ConsumeContextRetryContext(policyRetryContext, canRetry ? _context.CreateNext(policyRetryContext) : _context);
 
@@ -78,7 +81,7 @@ public class ConsumeContextRetryContext :
 /// <summary>Combines retry-policy state with a consume-retry context exposed as a filter contract.</summary>
 /// <typeparam name="TFilter">The pipeline contract presented to the retry filter.</typeparam>
 /// <typeparam name="TContext">The consume-retry context implementation.</typeparam>
-public class ConsumeContextRetryContext<TFilter, TContext> :
+internal sealed class ConsumeContextRetryContext<TFilter, TContext> :
     RetryContext<TFilter>
     where TFilter : class, PipeContext
     where TContext : class, TFilter, ConsumeRetryContext
@@ -91,8 +94,8 @@ public class ConsumeContextRetryContext<TFilter, TContext> :
     /// <param name="context">The consume-retry context that owns pending faults.</param>
     public ConsumeContextRetryContext(RetryContext<TFilter> retryContext, TContext context)
     {
-        _retryContext = retryContext;
-        _context = context;
+        _retryContext = retryContext ?? throw new ArgumentNullException(nameof(retryContext));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Gets the token that cancels retry processing.</summary>
@@ -141,10 +144,17 @@ public class ConsumeContextRetryContext<TFilter, TContext> :
     /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         var canRetry = _retryContext.CanRetry(exception, out RetryContext<TFilter> policyRetryContext);
+        if (policyRetryContext == null)
+            throw new InvalidOperationException("The retry policy returned a null retry context.");
 
-        retryContext = new ConsumeContextRetryContext<TFilter, TContext>(policyRetryContext,
-            canRetry ? _context.CreateNext<TContext>(policyRetryContext) : _context);
+        TContext nextContext = canRetry
+            ? _context.CreateNext<TContext>(policyRetryContext)
+                ?? throw new InvalidOperationException("The consume retry context returned a null next context.")
+            : _context;
+
+        retryContext = new ConsumeContextRetryContext<TFilter, TContext>(policyRetryContext, nextContext);
 
         return canRetry;
     }

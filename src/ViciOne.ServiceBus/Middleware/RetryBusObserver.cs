@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Observes retry bus events.</summary>
-public class RetryBusObserver :
+/// <summary>Cancels bus-scoped retry delays when the bus stops or cannot start.</summary>
+internal sealed class RetryBusObserver :
     IBusObserver,
     IDisposable
 {
@@ -13,7 +13,7 @@ public class RetryBusObserver :
     readonly CancellationTokenSource _stopping;
     bool _disposed;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an observer with an active stopping token.</summary>
     public RetryBusObserver()
     {
         _lock = new object();
@@ -21,43 +21,43 @@ public class RetryBusObserver :
         Stopping = _stopping.Token;
     }
 
-    /// <summary>Gets the stopping.</summary>
+    /// <summary>Gets the token canceled when retry processing must stop.</summary>
     public CancellationToken Stopping { get; }
 
-    /// <summary>Runs after create.</summary>
-    /// <param name="bus">The bus.</param>
+    /// <summary>Leaves retry processing active after bus creation.</summary>
+    /// <param name="bus">The created bus.</param>
     public void PostCreate(IBus bus)
     {
     }
 
-    /// <summary>Creates faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Cancels retry processing when bus creation fails.</summary>
+    /// <param name="exception">The bus-creation failure.</param>
     public void CreateFaulted(Exception exception)
     {
         Dispose();
     }
 
-    /// <summary>Runs before start.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Leaves retry processing active before the bus starts.</summary>
+    /// <param name="bus">The bus being started.</param>
+    /// <returns>A completed task.</returns>
     public Task PreStartAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>Runs after start.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="busReady">The bus ready.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Leaves retry processing active after the bus starts.</summary>
+    /// <param name="bus">The started bus.</param>
+    /// <param name="busReady">The task that reports bus readiness.</param>
+    /// <returns>A completed task.</returns>
     public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>Starts faulted.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Cancels retry processing when bus startup fails.</summary>
+    /// <param name="bus">The bus that failed to start.</param>
+    /// <param name="exception">The startup failure.</param>
+    /// <returns>A completed task.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         Dispose();
@@ -65,9 +65,9 @@ public class RetryBusObserver :
         return Task.CompletedTask;
     }
 
-    /// <summary>Runs before stop.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Cancels pending retry delays before the bus stops.</summary>
+    /// <param name="bus">The bus being stopped.</param>
+    /// <returns>A completed task.</returns>
     public Task PreStopAsync(IBus bus)
     {
         Cancel();
@@ -75,9 +75,9 @@ public class RetryBusObserver :
         return Task.CompletedTask;
     }
 
-    /// <summary>Runs after stop.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Releases retry-cancellation resources after the bus stops.</summary>
+    /// <param name="bus">The stopped bus.</param>
+    /// <returns>A completed task.</returns>
     public Task PostStopAsync(IBus bus)
     {
         Dispose();
@@ -85,10 +85,10 @@ public class RetryBusObserver :
         return Task.CompletedTask;
     }
 
-    /// <summary>Stops faulted.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Releases retry-cancellation resources when bus shutdown fails.</summary>
+    /// <param name="bus">The bus that failed to stop.</param>
+    /// <param name="exception">The shutdown failure.</param>
+    /// <returns>A completed task.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         Dispose();
@@ -120,5 +120,4 @@ public class RetryBusObserver :
                 _stopping.Cancel();
         }
     }
-
 }

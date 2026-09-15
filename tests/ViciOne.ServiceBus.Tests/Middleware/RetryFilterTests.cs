@@ -1,10 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Middleware;
-using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.RetryPolicies;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Retry;
 using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
 
@@ -471,9 +471,8 @@ public sealed class RetryFilterTests
         CancellationToken testCancellationToken = TestContext.Current.CancellationToken;
         using var dependencyCancellation = new CancellationTokenSource();
         var attempts = 0;
-        IFilter<TestPipeContext> filter = new RetryFilter<TestPipeContext>(
-            new RetryTokenPolicy(dependencyCancellation.Token, retryLimit: 2),
-            new RetryObservable());
+        IFilter<TestPipeContext> filter = RetryFilterTestFactory.Create<TestPipeContext>(
+            new RetryTokenPolicy(dependencyCancellation.Token, retryLimit: 2));
         IPipe<TestPipeContext> next = Pipe.Execute<TestPipeContext>(_ =>
         {
             int attempt = Interlocked.Increment(ref attempts);
@@ -543,16 +542,15 @@ public sealed class RetryFilterTests
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-collaborators-rejected")]
     public void Constructor_RejectsNullCollaborators()
     {
-        var observable = new RetryObservable();
-        Assert.Throws<ArgumentNullException>(() => new RetryFilter<TestPipeContext>(null!, observable));
-        Assert.Throws<ArgumentNullException>(() => new RetryFilter<TestPipeContext>(Retry.None, null!));
+        Assert.Throws<ArgumentNullException>(RetryFilterTestFactory.ConstructWithoutPolicy<TestPipeContext>);
+        Assert.Throws<ArgumentNullException>(RetryFilterTestFactory.ConstructWithoutObservers<TestPipeContext>);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-send-arguments-rejected")]
     public async Task Send_RejectsANullContextAndNullNextPipeAsync()
     {
-        IFilter<TestPipeContext> filter = new RetryFilter<TestPipeContext>(Retry.None, new RetryObservable());
+        IFilter<TestPipeContext> filter = RetryFilterTestFactory.Create<TestPipeContext>(Retry.None);
 
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
             filter.SendAsync(null!, Pipe.Empty<TestPipeContext>()));
@@ -564,8 +562,7 @@ public sealed class RetryFilterTests
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-policy-context-rejected")]
     public async Task Send_RejectsANullPolicyContextAsync()
     {
-        IFilter<TestPipeContext> filter =
-            new RetryFilter<TestPipeContext>(new NullPolicyContextPolicy(), new RetryObservable());
+        IFilter<TestPipeContext> filter = RetryFilterTestFactory.Create<TestPipeContext>(new NullPolicyContextPolicy());
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             filter.SendAsync(new TestPipeContext(), Pipe.Empty<TestPipeContext>()));
@@ -577,8 +574,7 @@ public sealed class RetryFilterTests
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-replacement-context-rejected")]
     public async Task Send_RejectsAPolicyContextWithoutAPipeContextAsync()
     {
-        IFilter<TestPipeContext> filter =
-            new RetryFilter<TestPipeContext>(new NullPipeContextPolicy(), new RetryObservable());
+        IFilter<TestPipeContext> filter = RetryFilterTestFactory.Create<TestPipeContext>(new NullPipeContextPolicy());
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             filter.SendAsync(new TestPipeContext(), Pipe.Empty<TestPipeContext>()));
@@ -590,8 +586,7 @@ public sealed class RetryFilterTests
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-retry-context-rejected")]
     public async Task Send_RejectsANullRetryContextAsync()
     {
-        IFilter<TestPipeContext> filter =
-            new RetryFilter<TestPipeContext>(new NullRetryContextPolicy(), new RetryObservable());
+        IFilter<TestPipeContext> filter = RetryFilterTestFactory.Create<TestPipeContext>(new NullRetryContextPolicy());
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             filter.SendAsync(new TestPipeContext(), Pipe.Execute<TestPipeContext>(_ =>
@@ -678,7 +673,13 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -722,7 +723,13 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -812,7 +819,13 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -844,7 +857,13 @@ public sealed class RetryFilterTests
             return false;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }
@@ -865,7 +884,13 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+        }
+
         public void Cancel()
         {
         }

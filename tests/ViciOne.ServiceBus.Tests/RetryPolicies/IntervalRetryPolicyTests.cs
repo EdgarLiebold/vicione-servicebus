@@ -66,6 +66,7 @@ public sealed class IntervalRetryPolicyTests
         Assert.Equal(expectedDelays[1], second.Delay);
         Assert.False(second.CanRetry(failure, out RetryContext<TestPipeContext> terminal));
         Assert.Equal(2, terminal.RetryCount);
+        Assert.Null(terminal.Delay);
     }
 
     private sealed class TestPipeContext : BasePipeContext;

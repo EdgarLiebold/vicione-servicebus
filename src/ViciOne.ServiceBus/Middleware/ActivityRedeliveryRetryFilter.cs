@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>Schedules redelivery for a transport-independent activity pipeline.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public sealed class ActivityRedeliveryRetryFilter<TContext> :
+internal sealed class ActivityRedeliveryRetryFilter<TContext> :
     IFilter<TContext>
     where TContext : class, Advanced.ActivityContext
 {
@@ -19,12 +19,13 @@ public sealed class ActivityRedeliveryRetryFilter<TContext> :
     /// <param name="observers">The observers.</param>
     public ActivityRedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
-        _retryPolicy = retryPolicy;
-        _observers = observers;
+        _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
+        _observers = observers ?? throw new ArgumentNullException(nameof(observers));
     }
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateFilterScope("retry");
         scope.Add("type", "activityRedelivery");
         _retryPolicy.Probe(scope);
@@ -34,7 +35,13 @@ public sealed class ActivityRedeliveryRetryFilter<TContext> :
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
-        using RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        using RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context)
+            ?? throw new InvalidOperationException("The retry policy returned a null policy context.");
+        if (policyContext.Context == null)
+            throw new InvalidOperationException("The retry policy returned a policy context without a pipe context.");
 
         if (_observers.Count > 0)
             await _observers.PostCreateAsync(policyContext).ConfigureAwait(false);
@@ -60,6 +67,8 @@ public sealed class ActivityRedeliveryRetryFilter<TContext> :
 
             if (!policyContext.CanRetry(exception, out RetryContext<TContext> retryContext))
             {
+                EnsureRetryContext(retryContext);
+
                 if (_retryPolicy.IsHandled(exception))
                 {
                     context.GetOrAddPayload(() => retryContext);
@@ -75,8 +84,15 @@ public sealed class ActivityRedeliveryRetryFilter<TContext> :
             int previousDeliveryCount = context.Advanced().GetRedeliveryCount();
             for (var retryIndex = 0; retryIndex < previousDeliveryCount; retryIndex++)
             {
-                if (retryContext.CanRetry(exception, out retryContext))
+                if (retryContext.CanRetry(exception, out RetryContext<TContext> nextRetryContext))
+                {
+                    EnsureRetryContext(nextRetryContext);
+                    retryContext = nextRetryContext;
                     continue;
+                }
+
+                EnsureRetryContext(nextRetryContext);
+                retryContext = nextRetryContext;
 
                 if (_retryPolicy.IsHandled(exception))
                 {
@@ -106,5 +122,11 @@ public sealed class ActivityRedeliveryRetryFilter<TContext> :
                     "The message delivery could not be rescheduled", new AggregateException(redeliveryException, exception));
             }
         }
+    }
+
+    static void EnsureRetryContext(RetryContext<TContext> retryContext)
+    {
+        if (retryContext == null)
+            throw new InvalidOperationException("The retry policy returned a null retry context.");
     }
 }

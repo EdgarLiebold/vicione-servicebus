@@ -4,19 +4,16 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Configures a message retry for a handler, on the handler configurator, which is constrained to
-/// the message types for that handler, and only applies to the handler.
-/// </summary>
-public class MessageRetryHandlerConfigurationObserver :
+/// <summary>Adds retry middleware to the message pipeline of one handler.</summary>
+internal sealed class MessageRetryHandlerConfigurationObserver :
     IHandlerConfigurationObserver
 {
     readonly CancellationToken _cancellationToken;
     readonly Action<IRetryConfigurator> _configure;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Creates an observer for handler pipelines and a shared retry policy callback.</summary>
+    /// <param name="cancellationToken">The token observed while retry delays are pending.</param>
+    /// <param name="configure">The callback applied to each retry policy.</param>
     public MessageRetryHandlerConfigurationObserver(CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
     {
@@ -26,6 +23,8 @@ public class MessageRetryHandlerConfigurationObserver :
 
     void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory, _cancellationToken);
 
         _configure(specification);

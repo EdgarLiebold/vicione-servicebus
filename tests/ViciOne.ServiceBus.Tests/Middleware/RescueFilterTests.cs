@@ -121,6 +121,82 @@ public sealed class RescueFilterTests
         Assert.Equal("The rescue context factory returned null.", invalid.Message);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "send-boundary-rejects-null-arguments-before-rescue")]
+    public async Task Send_RejectsNullArgumentsBeforeEnteringTheRescuePathAsync()
+    {
+        IFilter<TestPipeContext> filter = new RescueFilter<TestPipeContext, TestPipeContext>(
+            Pipe.Empty<TestPipeContext>(),
+            Retry.All(),
+            (context, _) => context);
+
+        ArgumentNullException missingContext = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            filter.SendAsync(null!, Pipe.Empty<TestPipeContext>()));
+        ArgumentNullException missingNext = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            filter.SendAsync(new TestPipeContext(), null!));
+
+        Assert.Equal("context", missingContext.ParamName);
+        Assert.Equal("next", missingNext.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "context-pipe-preserves-the-rescue-projection")]
+    public async Task ContextPipe_PreservesTheRescueProjectionAcrossTheSplitBoundaryAsync()
+    {
+        ITestPipeContext? contextPipeInput = null;
+        RescueContext? typedInput = null;
+        var source = new TestPipeContext();
+        var failure = new HandledException("handled");
+        IPipe<ITestPipeContext> pipe = Pipe.New<ITestPipeContext>(configuration =>
+        {
+            configuration.UseRescue<ITestPipeContext, RescueContext>(
+                (context, exception) => new RescueContext(context, exception), rescue =>
+                {
+                    rescue.ContextPipe.UseExecute(context => contextPipeInput = context);
+                    rescue.UseExecute(context => typedInput = context);
+                });
+            configuration.UseExecute(_ => throw failure);
+        });
+
+        await pipe.SendAsync(source);
+
+        Assert.NotNull(typedInput);
+        Assert.Same(typedInput, contextPipeInput);
+        Assert.Same(source, typedInput.Source);
+        Assert.Same(failure, typedInput.Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "context-pipe-rejects-null-specification")]
+    public void ContextPipe_RejectsANullSpecificationAtRegistration()
+    {
+        ArgumentNullException actual = Assert.Throws<ArgumentNullException>(() =>
+            Pipe.New<ITestPipeContext>(configuration =>
+                configuration.UseRescue<ITestPipeContext, RescueContext>(
+                    (context, exception) => new RescueContext(context, exception), rescue =>
+                        rescue.ContextPipe.AddPipeSpecification(null!))));
+
+        Assert.Equal("specification", actual.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "context-pipe-forwards-inner-validation-failures")]
+    public void ContextPipe_RejectsInnerValidationFailuresBeforeApplyingTheSpecification()
+    {
+        var inner = new InvalidRescueSpecification();
+
+        ConfigurationException actual = Assert.Throws<ConfigurationException>(() =>
+            Pipe.New<ITestPipeContext>(configuration =>
+                configuration.UseRescue<ITestPipeContext, RescueContext>(
+                    (context, exception) => new RescueContext(context, exception), rescue =>
+                        rescue.ContextPipe.AddPipeSpecification(inner))));
+
+        ValidationResult result = Assert.Single(actual.Results);
+        Assert.Equal("InnerRescue", result.Key);
+        Assert.Equal("invalid inner rescue configuration", result.Message);
+        Assert.False(inner.Applied);
+    }
+
     private interface ITestPipeContext : PipeContext;
 
     private sealed class TestPipeContext : BasePipeContext, ITestPipeContext;
@@ -136,4 +212,20 @@ public sealed class RescueFilterTests
     private sealed class HandledException(string message) : Exception(message);
 
     private sealed class RescueFailedException(string message) : Exception(message);
+
+    private sealed class InvalidRescueSpecification : IPipeSpecification<ITestPipeContext>
+    {
+        public bool Applied { get; private set; }
+
+        public void Apply(IPipeBuilder<ITestPipeContext> builder)
+        {
+            ArgumentNullException.ThrowIfNull(builder);
+            Applied = true;
+        }
+
+        public IEnumerable<ValidationResult> Validate()
+        {
+            yield return this.Failure("InnerRescue", "invalid inner rescue configuration");
+        }
+    }
 }

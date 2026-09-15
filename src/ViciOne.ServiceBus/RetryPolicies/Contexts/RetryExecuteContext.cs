@@ -42,10 +42,10 @@ internal sealed class RetryExecuteContext<TArguments> :
         }
     }
 
-    /// <summary>Gets the retry attempt.</summary>
+    /// <summary>Gets the one-based retry attempt represented by this context.</summary>
     public int RetryAttempt { get; }
 
-    /// <summary>Gets the retry count.</summary>
+    /// <summary>Gets the number of retry attempts completed before this context.</summary>
     public int RetryCount { get; }
 
     /// <summary>Creates the next execute retry context and restores any pre-retry result.</summary>

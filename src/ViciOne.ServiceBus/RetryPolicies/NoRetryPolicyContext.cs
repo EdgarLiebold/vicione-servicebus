@@ -3,24 +3,24 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for no retry policy operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class NoRetryPolicyContext<TContext> :
+/// <summary>Creates terminal retry state for a policy that never retries.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class NoRetryPolicyContext<TContext> :
     BaseRetryPolicyContext<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates operation-scoped state for the supplied no-retry policy.</summary>
+    /// <param name="policy">The no-retry policy.</param>
+    /// <param name="context">The pipeline context governed by the policy.</param>
     public NoRetryPolicyContext(IRetryPolicy policy, TContext context)
         : base(policy, context)
     {
     }
 
-    /// <summary>Determines whether the current value can retry.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates terminal state for the supplied failure.</summary>
+    /// <param name="exception">The most recent failure.</param>
+    /// <param name="retryContext">The terminal retry state.</param>
+    /// <returns>Always <see langword="false" />.</returns>
     public override bool CanRetry(Exception exception, out RetryContext<TContext> retryContext)
     {
         retryContext = new NoRetryContext<TContext>(Context, exception, CancellationToken);
@@ -28,11 +28,13 @@ public class NoRetryPolicyContext<TContext> :
         return false;
     }
 
-    /// <summary>Creates retry context.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created retry context.</returns>
-    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
+    /// <summary>Creates the initial terminal state.</summary>
+    /// <param name="exception">The initial failure.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
+    /// <param name="isRetryScheduled">Always <see langword="false" /> for this policy.</param>
+    /// <returns>The terminal retry state.</returns>
+    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken,
+        bool isRetryScheduled)
     {
         return new NoRetryContext<TContext>(Context, exception, cancellationToken);
     }

@@ -19,7 +19,10 @@ public interface RetryContext
     /// <summary>Gets the number of retry attempts completed before this decision.</summary>
     int RetryCount { get; }
 
-    /// <summary>Gets the delay before the retry, or <see langword="null" /> for an immediate retry.</summary>
+    /// <summary>
+    /// Gets the delay before the represented retry, or <see langword="null" /> when the retry is immediate
+    /// or the decision is terminal.
+    /// </summary>
     TimeSpan? Delay { get; }
 
     /// <summary>Gets the pipeline context type governed by the retry policy.</summary>
@@ -49,7 +52,7 @@ public interface RetryContext<TContext> :
 
     /// <summary>Determines whether an exception permits another retry attempt.</summary>
     /// <param name="exception">The exception raised by the failed attempt.</param>
-    /// <param name="retryContext">The state for the next retry attempt.</param>
+    /// <param name="retryContext">The state for the resulting retry or terminal decision.</param>
     /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     bool CanRetry(Exception exception, out RetryContext<TContext> retryContext);
 }

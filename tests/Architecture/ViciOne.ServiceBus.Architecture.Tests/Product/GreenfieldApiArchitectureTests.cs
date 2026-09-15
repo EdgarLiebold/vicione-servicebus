@@ -50,6 +50,38 @@ public sealed class GreenfieldApiArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-CORE-ADVANCED-API", "retry-implementations-remain-internal")]
+    public void RetryImplementationTypes_AreNotPartOfThePublicApi()
+    {
+        Assembly core = typeof(IBus).Assembly;
+        string[] allowedRetryPolicyTypes =
+        [
+            typeof(ViciOne.ServiceBus.RetryPolicies.PipeRetryExtensions).FullName
+                ?? throw new InvalidOperationException("The retry extension type has no full name."),
+        ];
+        string[] leakedCoreTypes = core.ExportedTypes
+            .Where(type => type.Namespace == "ViciOne.ServiceBus.RetryPolicies"
+                && !allowedRetryPolicyTypes.Contains(type.FullName, StringComparer.Ordinal))
+            .Concat(core.ExportedTypes.Where(type => type.Namespace == "ViciOne.ServiceBus.Middleware.Rescue"))
+            .Concat(core.ExportedTypes.Where(type => type.Namespace == "ViciOne.ServiceBus.Middleware"
+                && type.Name is "RetryFilter`1" or "RescueFilter`2" or "RetryBusObserver"
+                    or "RedeliveryRetryFilter`2" or "ActivityRedeliveryRetryFilter`2"))
+            .Select(static type => type.FullName ?? type.Name)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assembly abstractions = typeof(ViciOne.ServiceBus.Advanced.Middleware.RetryContext).Assembly;
+        Type? retryObservable = abstractions.GetType("ViciOne.ServiceBus.Observables.RetryObservable");
+        Type? retryFaultObserverCache = abstractions.GetType("ViciOne.ServiceBus.Observables.RetryFaultObserverCache");
+
+        Assert.Empty(leakedCoreTypes);
+        Assert.NotNull(retryObservable);
+        Assert.False(retryObservable.IsVisible);
+        Assert.NotNull(retryFaultObserverCache);
+        Assert.False(retryFaultObserverCache.IsVisible);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-SAGA-API", "interfaces-use-dotnet-prefix")]
     public void SagaInterfaces_UseTheDotNetInterfacePrefix()
     {

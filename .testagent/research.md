@@ -2292,3 +2292,43 @@ clean. The sole product `NotImplementedException` occurrence classifies the real
 non-retryable; RabbitMQ's `NotImplemented` constant is broker reply code 540, not placeholder code.
 Protected `review/` and `TestResults/` remain unchanged and unstaged. The overall A+ goal remains
 active for the remaining source owners.
+
+## Iteration 119 interim retry/rescue research
+
+Direct consume-policy tests prove that the untyped wrapper previously reported a null context as
+the wrong-type `ArgumentException`. Both typed and untyped wrappers now reject null before type
+projection. Missing custom policy contexts and missing nested consume contexts have independent
+typed/untyped checks. The shared in-memory test fixture also exposed an inaccessible private
+DispatchProxy interface; that test-only interface is now publicly accessible to the dynamic proxy.
+
+Four direct rescue-projection cases preserve message, consumer, exception identity, cached failure
+snapshots, injected UTC time, and fault headers, and reject every null constructor dependency.
+Every concrete rescue projection reaches 100% line and branch execution in the accepted Core run.
+The expanded retry-helper suite checks both log-switch overloads, operation-owned cancellation,
+asynchronous pre-retry and terminal notification ordering, exact token/failure propagation, and
+null callback tasks. Bypassing each asynchronous wait kills exactly its owning test among 19 cases;
+both controlled edits are restored byte-for-byte before subsequent cleanup.
+
+Two full Core runs initially report 3,646/3,647 because the requirements projection correctly rejects
+22 not-yet-registered new methods. A CTRF report identifies that exact verifier and all tuples;
+the projection is updated manually. Subsequent accepted Core runs pass 3,647/3,647 with no skip.
+The v4 artifact predates the later shared Split correction and is not a final-source acceptance.
+It records owner line 1,213/1,476 (82.1816%), branch 497/638 (77.8997%), and maximum CRAP 30.
+The instrumented Core graph is 77.5322% line and 70.2701% branch; no provider-wide coverage claim
+is inferred from that one host.
+
+The residual configuration gap reveals a causally related Abstractions defect in
+`SplitFilterPipeSpecification`: the adapter never delegates `Validate` to its inner specification.
+A public rescue ContextPipe regression is red because invalid inner configuration is applied
+without exception. The corrected adapter preserves the exact inner validation sequence, rejects
+null sequences and all required input references, and validates builder/filter admission. Its
+entire source and all comments are read and corrected manually. Scope includes four new direct
+Abstractions tests and three rescue configuration tests. The serial Unit build passes with zero
+warnings and errors, and the direct suites pass 9/9 and 4/4. The complete canonical run executes
+23 hosts and 6,682 cases: 6,681 pass, one fails, none skip. All 23 CTRF summaries agree. The sole
+failure identifies the new asynchronous test
+`HandledFailures_ProduceConsumeAwareStateAndTerminalNotification`, whose missing `Async` suffix
+is an authoring defect. Both its method name and requirement tuple are corrected manually; the
+guard is unchanged. Corrected-source acceptance is rerunning. Final-source mutation/coverage,
+repository and package/API acceptance remain open at the intermediate Git checkpoint.
+No generator rewrites source, tests, or comments.

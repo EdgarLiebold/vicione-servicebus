@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for rescue pipe.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="TRescue">The rescue type.</typeparam>
-public class RescuePipeSpecification<TContext, TRescue> :
+/// <summary>Builds a rescue filter from a context projection and the configured rescue branches.</summary>
+/// <typeparam name="TContext">The original pipeline context type.</typeparam>
+/// <typeparam name="TRescue">The context type supplied to the rescue branch.</typeparam>
+internal sealed class RescuePipeSpecification<TContext, TRescue> :
     ExceptionSpecification,
     IPipeSpecification<TContext>,
     IRescueConfigurator<TContext, TRescue>
@@ -17,11 +18,11 @@ public class RescuePipeSpecification<TContext, TRescue> :
     readonly IBuildPipeConfigurator<TRescue> _pipeConfigurator;
     readonly RescueContextFactory<TContext, TRescue> _rescueContextFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="rescueContextFactory">The rescue context factory.</param>
+    /// <summary>Creates a rescue specification for the supplied context projection.</summary>
+    /// <param name="rescueContextFactory">Creates the rescue context after a selected failure.</param>
     public RescuePipeSpecification(RescueContextFactory<TContext, TRescue> rescueContextFactory)
     {
-        _rescueContextFactory = rescueContextFactory;
+        _rescueContextFactory = rescueContextFactory ?? throw new ArgumentNullException(nameof(rescueContextFactory));
 
         _pipeConfigurator = new PipeConfigurator<TRescue>();
         _contextPipeConfigurator = new ContextPipeConfigurator(_pipeConfigurator);
@@ -31,6 +32,8 @@ public class RescuePipeSpecification<TContext, TRescue> :
     /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<TContext> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         IPipe<TRescue> rescuePipe = _pipeConfigurator.Build();
 
         builder.AddFilter(new RescueFilter<TContext, TRescue>(rescuePipe, Filter, _rescueContextFactory));
@@ -40,9 +43,6 @@ public class RescuePipeSpecification<TContext, TRescue> :
     /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
-        if (_rescueContextFactory == null)
-            yield return this.Failure("RescueContextFactory", "must not be null");
-
         foreach (var result in _pipeConfigurator.Validate())
             yield return result;
     }
@@ -51,22 +51,24 @@ public class RescuePipeSpecification<TContext, TRescue> :
 
     void IPipeConfigurator<TRescue>.AddPipeSpecification(IPipeSpecification<TRescue> specification)
     {
+        ArgumentNullException.ThrowIfNull(specification);
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
 
-    class ContextPipeConfigurator :
+    sealed class ContextPipeConfigurator :
         IPipeConfigurator<TContext>
     {
         readonly IPipeConfigurator<TRescue> _configurator;
 
         public ContextPipeConfigurator(IPipeConfigurator<TRescue> configurator)
         {
-            _configurator = configurator;
+            _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
         }
 
         public void AddPipeSpecification(IPipeSpecification<TContext> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
             _configurator.AddPipeSpecification(new PipeConfigurator<TRescue>.SplitFilterPipeSpecification<TContext>(specification, InputContext, Context));
         }
 

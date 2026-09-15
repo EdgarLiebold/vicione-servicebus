@@ -5,7 +5,7 @@ using System.Linq;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Retries handled failures according to an explicit delay schedule.</summary>
-public sealed class IntervalRetryPolicy :
+internal sealed class IntervalRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
@@ -50,9 +50,9 @@ public sealed class IntervalRetryPolicy :
         return new IntervalRetryPolicyContext<T>(this, context);
     }
 
-    /// <summary>Determines whether handled.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the configured exception filter handles a failure.</summary>
+    /// <param name="exception">The failure to classify.</param>
+    /// <returns><see langword="true" /> when the failure is eligible for retry; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
@@ -60,8 +60,8 @@ public sealed class IntervalRetryPolicy :
         return _filter.Match(exception);
     }
 
-    /// <summary>Returns the string representation of this instance.</summary>
-    /// <returns>The converted string.</returns>
+    /// <summary>Returns a diagnostic description of the interval schedule.</summary>
+    /// <returns>The policy name, retry limit, and first configured intervals.</returns>
     public override string ToString()
     {
         return $"Interval (limit {Intervals.Count}, intervals {string.Join(";", Intervals.Take(5).Select(x => x.ToString()))})";

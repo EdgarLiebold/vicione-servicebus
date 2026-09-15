@@ -5,18 +5,18 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for retry pipe.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class RetryPipeSpecification<TContext> :
+/// <summary>Builds retry middleware for an arbitrary pipeline context.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class RetryPipeSpecification<TContext> :
     ExceptionSpecification,
     IRetryConfigurator,
     IPipeSpecification<TContext>
     where TContext : class, PipeContext
 {
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory = null!;
+    RetryPolicyFactory? _policyFactory;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty retry specification.</summary>
     public RetryPipeSpecification()
     {
         _observers = new RetryObservable();
@@ -44,15 +44,15 @@ public class RetryPipeSpecification<TContext> :
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <summary>Sets the factory that combines exception selection with retry timing.</summary>
+    /// <param name="factory">The retry-policy factory.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
     }
 
-    /// <summary>Connects retry observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
+    /// <summary>Connects an observer to this retry pipeline.</summary>
+    /// <param name="observer">The observer to register.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
     {

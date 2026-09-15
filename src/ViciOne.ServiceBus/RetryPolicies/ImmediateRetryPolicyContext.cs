@@ -3,28 +3,30 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for immediate retry policy operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ImmediateRetryPolicyContext<TContext> :
+/// <summary>Creates initial decisions for an immediate retry policy.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class ImmediateRetryPolicyContext<TContext> :
     BaseRetryPolicyContext<TContext>
     where TContext : class, PipeContext
 {
     readonly ImmediateRetryPolicy _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates operation-scoped state for an immediate retry policy.</summary>
+    /// <param name="policy">The immediate retry policy.</param>
+    /// <param name="context">The pipeline context governed by the policy.</param>
     public ImmediateRetryPolicyContext(ImmediateRetryPolicy policy, TContext context)
         : base(policy, context)
     {
         _policy = policy;
     }
 
-    /// <summary>Creates retry context.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created retry context.</returns>
-    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
+    /// <summary>Creates the initial immediate decision.</summary>
+    /// <param name="exception">The initial failure.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
+    /// <param name="isRetryScheduled"><see langword="true" /> when another attempt is scheduled.</param>
+    /// <returns>The initial retry state.</returns>
+    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken,
+        bool isRetryScheduled)
     {
         return new ImmediateRetryContext<TContext>(_policy, Context, exception, 0, cancellationToken);
     }

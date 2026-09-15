@@ -57,7 +57,7 @@ public static class InMemoryOutboxTestContextFactory
         return consumeContext;
     }
 
-    private interface TestConsumeContext<out T> :
+    public interface TestConsumeContext<out T> :
         ConsumeContext<T>,
         ConsumeContext
         where T : class;

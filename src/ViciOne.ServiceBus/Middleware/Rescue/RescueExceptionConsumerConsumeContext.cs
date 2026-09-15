@@ -4,33 +4,33 @@ using ViciOne.ServiceBus.Events.Faults;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 
-/// <summary>Carries state for rescue exception consumer consume operations.</summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-public class RescueExceptionConsumerConsumeContext<TConsumer> :
+/// <summary>Projects a failed consumer context and its exception into a rescue pipeline.</summary>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
+internal sealed class RescueExceptionConsumerConsumeContext<TConsumer> :
     ConsumeContextProxy,
     ExceptionConsumerConsumeContext<TConsumer>
     where TConsumer : class
 {
     readonly ConsumerConsumeContext<TConsumer> _context;
-    ExceptionInfo _exceptionInfo = null!;
+    ExceptionInfo? _exceptionInfo;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Creates a rescue projection for a failed consumer operation.</summary>
+    /// <param name="context">The failed consumer context.</param>
+    /// <param name="exception">The failure exposed to the rescue pipeline.</param>
     public RescueExceptionConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, Exception exception)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
-        Exception = exception;
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
     }
 
-    /// <summary>Gets the consumer.</summary>
+    /// <summary>Gets the consumer instance associated with the failed operation.</summary>
     public TConsumer Consumer => _context.Consumer;
 
-    /// <summary>Gets the exception.</summary>
+    /// <summary>Gets the failure exposed to the rescue pipeline.</summary>
     public Exception Exception { get; }
 
-    /// <summary>Gets the exception info.</summary>
+    /// <summary>Gets the structured snapshot of the failure.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }

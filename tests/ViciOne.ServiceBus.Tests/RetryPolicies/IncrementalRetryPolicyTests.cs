@@ -38,7 +38,20 @@ public sealed class IncrementalRetryPolicyTests
         Assert.True(second.CanRetry(failure, out RetryContext<TestPipeContext> third));
         Assert.Equal(TimeSpan.FromSeconds(8), third.Delay);
         Assert.False(third.CanRetry(failure, out RetryContext<TestPipeContext> terminal));
-        Assert.Equal(TimeSpan.FromSeconds(11), terminal.Delay);
+        Assert.Null(terminal.Delay);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-POLICY", "incremental-terminal-decision-does-not-overflow")]
+    public void ExhaustingAValidMaximumDelay_DoesNotCalculateAnUnusedInterval()
+    {
+        IRetryPolicy policy = Retry.Incremental(1, TimeSpan.MaxValue, TimeSpan.FromTicks(1));
+        using RetryPolicyContext<TestPipeContext> policyContext = policy.CreatePolicyContext(new TestPipeContext());
+
+        Assert.True(policyContext.CanRetry(new RetryFailureException(), out RetryContext<TestPipeContext> first));
+        Assert.Equal(TimeSpan.MaxValue, first.Delay);
+        Assert.False(first.CanRetry(new RetryFailureException(), out RetryContext<TestPipeContext> terminal));
+        Assert.Null(terminal.Delay);
     }
 
     private sealed class TestPipeContext : BasePipeContext;

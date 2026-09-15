@@ -3,31 +3,34 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for immediate retry operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ImmediateRetryContext<TContext> :
+/// <summary>Represents an immediate retry decision.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class ImmediateRetryContext<TContext> :
     BaseRetryContext<TContext>,
     RetryContext<TContext>
     where TContext : class, PipeContext
 {
     readonly ImmediateRetryPolicy _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryCount">The retry count.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates an immediate decision for a failed attempt.</summary>
+    /// <param name="policy">The immediate retry policy.</param>
+    /// <param name="context">The failed pipeline context.</param>
+    /// <param name="exception">The most recent failure.</param>
+    /// <param name="retryCount">The number of retry attempts already completed.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
     public ImmediateRetryContext(ImmediateRetryPolicy policy, TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
         : base(context, exception, retryCount, cancellationToken)
     {
-        _policy = policy;
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
     }
 
     bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
     {
-        retryContext = new ImmediateRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
+        ArgumentNullException.ThrowIfNull(exception);
 
-        return RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
+        var canRetry = RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
+        retryContext = new ImmediateRetryContext<TContext>(_policy, Context, exception, RetryCount + 1, CancellationToken);
+
+        return canRetry;
     }
 }

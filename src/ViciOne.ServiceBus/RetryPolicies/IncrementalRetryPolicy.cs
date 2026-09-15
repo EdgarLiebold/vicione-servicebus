@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Retries handled failures with a linearly increasing delay.</summary>
-public sealed class IncrementalRetryPolicy :
+internal sealed class IncrementalRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
@@ -44,7 +44,7 @@ public sealed class IncrementalRetryPolicy :
         IntervalIncrement = intervalIncrement;
     }
 
-    /// <summary>Gets the retry limit.</summary>
+    /// <summary>Gets the maximum number of retry attempts.</summary>
     public int RetryLimit { get; }
 
     /// <summary>Gets the initial interval.</summary>
@@ -75,9 +75,9 @@ public sealed class IncrementalRetryPolicy :
         return new IncrementalRetryPolicyContext<T>(this, context);
     }
 
-    /// <summary>Determines whether handled.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the configured exception filter handles a failure.</summary>
+    /// <param name="exception">The failure to classify.</param>
+    /// <returns><see langword="true" /> when the failure is eligible for retry; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);

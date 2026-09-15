@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
 /// <summary>Applies a predicate when an exception chain contains the configured exception type.</summary>
 /// <typeparam name="T">The exception type inspected by the predicate.</typeparam>
-public sealed class FilterExceptionFilter<T> :
+internal sealed class FilterExceptionFilter<T> :
     IExceptionFilter
     where T : Exception
 {

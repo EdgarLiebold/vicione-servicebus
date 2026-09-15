@@ -5,15 +5,15 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for message retry configuration.</summary>
+/// <summary>Adds retry policies to consumer, handler, saga, batch, and activity message pipelines.</summary>
 public static class MessageRetryConfigurationExtensions
 {
     /// <summary>
     /// Configures retry once for every message type handled by a consumer, handler, or saga. The retry
     /// filter runs before the consumer factory or saga repository.
     /// </summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="configurator">The consume-pipeline configurator.</param>
+    /// <param name="configure">Configures exception selection and retry timing.</param>
     public static void UseMessageRetry(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -27,16 +27,16 @@ public static class MessageRetryConfigurationExtensions
             stoppingToken = retryObserver.Stopping;
         }
 
-        var _ = new MessageRetryConfigurationObserver(configurator, stoppingToken, configure);
+        MessageRetryConfigurationObserver.Attach(configurator, stoppingToken, configure);
     }
 
     /// <summary>
     /// Configures retry once for every message type handled by a consumer, handler, or saga. The retry
     /// filter runs before the consumer factory or saga repository and is cancelled when the bus stops.
     /// </summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="connector">The bus factory configurator, to connect the observer, to cancel retries if the bus is stopped.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="configurator">The consume-pipeline configurator.</param>
+    /// <param name="connector">The bus factory used to cancel pending retry delays during shutdown.</param>
+    /// <param name="configure">Configures exception selection and retry timing.</param>
     public static void UseMessageRetry(this IConsumePipeConfigurator configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
     {
@@ -47,13 +47,13 @@ public static class MessageRetryConfigurationExtensions
         var retryObserver = new RetryBusObserver();
         connector.ConnectBusObserver(retryObserver);
 
-        var _ = new MessageRetryConfigurationObserver(configurator, retryObserver.Stopping, configure);
+        MessageRetryConfigurationObserver.Attach(configurator, retryObserver.Stopping, configure);
     }
 
     /// <summary>Configures retry for every message type handled by the consumer.</summary>
-    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <typeparam name="TConsumer">The consumer type.</typeparam>
+    /// <param name="configurator">The consumer configurator.</param>
+    /// <param name="configure">Configures exception selection and retry timing.</param>
     public static void UseMessageRetry<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IRetryConfigurator> configure)
         where TConsumer : class
     {
@@ -65,10 +65,10 @@ public static class MessageRetryConfigurationExtensions
     }
 
     /// <summary>Configures retry for every message type handled by the consumer and cancels it when the bus stops.</summary>
-    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="busFactoryConfigurator">The bus factory configurator, to connect the observer, to cancel retries if the bus is stopped.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <typeparam name="TConsumer">The consumer type.</typeparam>
+    /// <param name="configurator">The consumer configurator.</param>
+    /// <param name="busFactoryConfigurator">The bus factory used to cancel pending retry delays during shutdown.</param>
+    /// <param name="configure">Configures exception selection and retry timing.</param>
     public static void UseMessageRetry<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, IBusFactoryConfigurator busFactoryConfigurator,
         Action<IRetryConfigurator> configure)
         where TConsumer : class
@@ -85,9 +85,9 @@ public static class MessageRetryConfigurationExtensions
     }
 
     /// <summary>Configures retry for the handler's message type.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <typeparam name="TMessage">The handled message type.</typeparam>
+    /// <param name="configurator">The handler configurator.</param>
+    /// <param name="configure">Configures exception selection and retry timing.</param>
     public static void UseMessageRetry<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IRetryConfigurator> configure)
         where TMessage : class
     {
@@ -99,10 +99,10 @@ public static class MessageRetryConfigurationExtensions
     }
 
     /// <summary>Configures retry for the handler's message type and cancels it when the bus stops.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="busFactoryConfigurator">The bus factory configurator, to connect the observer, to cancel retries if the bus is stopped.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <typeparam name="TMessage">The handled message type.</typeparam>
+    /// <param name="configurator">The handler configurator.</param>
+    /// <param name="busFactoryConfigurator">The bus factory used to cancel pending retry delays during shutdown.</param>
+    /// <param name="configure">Configures exception selection and retry timing.</param>
     public static void UseMessageRetry<TMessage>(this IHandlerConfigurator<TMessage> configurator, IBusFactoryConfigurator busFactoryConfigurator,
         Action<IRetryConfigurator> configure)
         where TMessage : class

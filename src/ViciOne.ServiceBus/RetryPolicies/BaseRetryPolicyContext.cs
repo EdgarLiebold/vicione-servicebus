@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for base retry policy operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public abstract class BaseRetryPolicyContext<TContext> :
+/// <summary>Owns cancellation and initial decision creation for one retry operation.</summary>
+/// <typeparam name="TContext">The governed pipeline context type.</typeparam>
+internal abstract class BaseRetryPolicyContext<TContext> :
     RetryPolicyContext<TContext>
     where TContext : class, PipeContext
 {
     readonly IRetryPolicy _policy;
     readonly Lazy<CancellationTokenSource> _cancellationTokenSource;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates operation-scoped state for a policy and pipeline context.</summary>
+    /// <param name="policy">The retry policy.</param>
+    /// <param name="context">The pipeline context governed by the policy.</param>
     protected BaseRetryPolicyContext(IRetryPolicy policy, TContext context)
     {
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
@@ -24,29 +24,34 @@ public abstract class BaseRetryPolicyContext<TContext> :
             LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <summary>Gets the token canceled by the source context or an explicit policy cancellation.</summary>
     protected CancellationToken CancellationToken => _cancellationTokenSource.Value.Token;
 
-    /// <summary>Gets the context.</summary>
+    /// <summary>Gets the pipeline context governed by the policy.</summary>
     public TContext Context { get; }
 
-    /// <summary>Determines whether the current value can retry.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Evaluates the initial failure and creates the resulting retry state.</summary>
+    /// <param name="exception">The exception raised by the initial attempt.</param>
+    /// <param name="retryContext">The state for the resulting decision.</param>
+    /// <returns><see langword="true" /> when another attempt is permitted; otherwise, <see langword="false" />.</returns>
     public virtual bool CanRetry(Exception exception, out RetryContext<TContext> retryContext)
     {
-        retryContext = CreateRetryContext(exception, CancellationToken);
+        ArgumentNullException.ThrowIfNull(exception);
+        var canRetry = _policy.IsHandled(exception) && !_cancellationTokenSource.Value.IsCancellationRequested;
+        retryContext = CreateRetryContext(exception, CancellationToken, canRetry);
 
-        return _policy.IsHandled(exception) && !_cancellationTokenSource.Value.IsCancellationRequested;
+        return canRetry;
     }
 
     Task RetryPolicyContext<TContext>.RetryFaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        ArgumentNullException.ThrowIfNull(exception);
+        return cancellationToken.IsCancellationRequested
+            ? Task.FromCanceled(cancellationToken)
+            : Task.CompletedTask;
     }
 
-    /// <summary>Determines whether the current value can cel.</summary>
+    /// <summary>Cancels pending and subsequent retries for this operation.</summary>
     public void Cancel()
     {
         _cancellationTokenSource.Value.Cancel();
@@ -58,11 +63,13 @@ public abstract class BaseRetryPolicyContext<TContext> :
             _cancellationTokenSource.Value.Dispose();
     }
 
-    /// <summary>Creates retry context.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created retry context.</returns>
-    protected abstract RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken);
+    /// <summary>Creates the initial decision for the concrete timing policy.</summary>
+    /// <param name="exception">The exception raised by the initial attempt.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
+    /// <param name="isRetryScheduled"><see langword="true" /> when the decision schedules another attempt.</param>
+    /// <returns>The initial retry state.</returns>
+    protected abstract RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken,
+        bool isRetryScheduled);
 
     CancellationTokenSource CreateCancellationTokenSource()
     {

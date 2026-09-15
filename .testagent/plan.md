@@ -3751,3 +3751,92 @@ directives, old Topology names and paths, SDK patch pinning, empty directories, 
 whitespace are clean. Protected `review/` and `TestResults/` remain unchanged and unstaged. The
 overall A+ goal continues with the remaining complete source owners and the final repository-wide
 audit.
+
+## Iteration 119 Core retry and rescue plan
+
+Iteration 119 reviews the complete provider-neutral retry and rescue capability: 78 production
+files and 5,430 initial lines spanning public policy and observer abstractions, exception filters,
+retry and rescue configuration, runtime middleware, retry-context projections, policy algorithms,
+pending-fault coordination, and the Core host retry boundary. The capability is reviewed as one
+execution chain rather than as unrelated directory fragments. Every source file and every source
+comment is read manually; no generator may create or rewrite source, tests, comments, namespaces,
+filenames, or directories.
+
+Public contracts remain in the independently packaged `ViciOne.ServiceBus.Abstractions` project.
+Provider-neutral implementations remain in the `ViciOne.ServiceBus` Core project. Saga, Courier,
+scheduler, and transport-specific retry integrations remain with their independently delivered
+owners and are exercised as consumers where needed; they are not moved into Core.
+
+The accepted pre-change native-MTP baseline passes 116/116 focused Retry, Rescue, and
+ExceptionFilter cases without failure or skip.
+
+### Iteration 119 requirement-to-test map
+
+| Requirement | Planned evidence |
+|---|---|
+| Exception filters compose predictably across type hierarchies and predicates | exact handle, ignore, composite, null, ordering, inheritance, and predicate-failure behavior |
+| Retry algorithms produce valid and deterministic schedules | boundary counts, interval sequences, exponential and incremental arithmetic, overflow, jitter, and cancellation behavior |
+| Retry contexts preserve message and execution identity | payload, headers, retry count, exception, delay, cancellation token, consumer/activity context, and redelivery projection evidence |
+| Retry and rescue filters preserve pipeline semantics | success, handled failure, exhausted failure, observer failure, cancellation, payload restoration, and pending-fault completion paths |
+| Configuration APIs fail at their owning boundary | every required configurator, factory, predicate, callback, interval sequence, and policy result has exact validation evidence |
+| Technical retry policy is explicit and conservative | every classified failure kind, nested exception form, override, delay, exhaustion, and host startup path has exact tests |
+| Navigation and API are Greenfield coherent | full manual comment review plus exact type, filename, namespace, folder, visibility, naming, and packed API checks |
+| Tests detect meaningful defects | red-first regressions, controlled counterchanges, focused/full coverage and CRAP, assertion-quality review, full build, package/API, requirements, Async, and hygiene gates |
+
+### Iteration 119 validation
+
+1. Read the complete 78-file production owner, all comments, direct tests, and runtime consumers.
+2. Record source-to-test coverage and identify untested branches and shallow assertions before edits.
+3. Add deterministic red-first tests only for independently justified defects or missing contracts.
+4. Correct each defect at its owning boundary without compatibility-only API or feature loss.
+5. Kill meaningful controlled counterchanges and restore every accepted source byte-for-byte.
+6. Audit all changed tests for causal assertions, determinism, isolation, and test smells.
+7. Measure focused and complete-host coverage and calculate owner CRAP risk.
+8. Run locked restores, both format gates, the serial warnings-as-errors build, all canonical hosts,
+   requirements, bidirectional Async, source-layout, package/API, directive, dummy, empty-folder,
+   and Git-whitespace gates.
+9. Commit, annotate Iteration 119, push without force, and verify remote hashes.
+
+### Iteration 119 progress — 2026-09-15
+
+The complete planned retry/rescue source owner and its comments have been read manually. Direct
+consumers were also read before changing observer attachment. Core and Abstractions remain sibling
+assembly owners; Persistence, Scheduling, and Transports remain integration families under `src`.
+The Advanced retry-context extension was moved into its namespace-aligned Abstractions folder.
+
+Confirmed behavior corrections cover current-exception identity, terminal and unhandled-initial
+null delays, interval exhaustion, incremental terminal overflow, null policy/context/task guards,
+and rescue admission guards. Implementation-only retry and rescue types are internal, while the
+cross-assembly `PipeRetryExtensions` execution capability remains public. Observer attachment now
+uses an explicit `Attach` operation rather than construction for a discarded result.
+
+Direct untyped consume-policy tests exposed both a null-context exception-contract defect and an
+inaccessible DispatchProxy interface in the shared test fixture. Both were corrected. The expanded
+consume-policy suite passes 10/10; direct rescue projections pass 4/4; retry-helper tests pass 19/19.
+Pre-retry and terminal-await counterchanges each produce exactly one causal failure and are restored
+to SHA-256 `89ad6463d637636c2a3dd71f9f6a3a686a66ab77c48c9b7b689bf9a5b2a694b7` before the later
+behavior-preserving callback/cancellation refactor.
+
+The accepted pre-Split-remediation Core run passes 3,647/3,647. Its coverage artifact is
+`/private/tmp/vsb-iteration119-core-v4/iteration119-core-v4.cobertura.xml`, SHA-256
+`8b216b3acb05484631a6348772ca90b7d85e878166f6613e7a45f17f6c672e3a`; CTRF SHA-256 is
+`08a401858a38b7901b25e93f9aee3a6b5a077a6c7a268d4c9b8caf89a23ea53c`. The explicitly selected
+Core/Abstractions coverage cut contains 79 current paths and 65 instrumented source files: 82.1816%
+line and 77.8997% branch. All four rescue projections have 100% line and branch execution.
+`ExecuteAsync` is fully executed with CRAP 26; the functionally grouped classifier is fully
+executed with maximum CRAP 30. The instrumented Core graph records 77.5322% line and 70.2701%
+branch, not complete provider-wide ServiceBus coverage.
+
+The next direct configuration test exposes a related shared-adapter defect: Split specifications
+discard inner validation results. The 9-case rescue suite produces exactly one red-first failure.
+The shared adapter has now been read completely and corrected, including explicit required-input
+guards and manually rewritten comments. Four direct Abstractions tests and three public rescue
+configuration tests cover this extension of scope. The complete serial Unit build passes with
+zero warnings and errors; the direct rescue and shared Split suites pass 9/9 and 4/4.
+The canonical run executes all 23 hosts: 6,681/6,682 pass, with zero skips. Its sole failure is
+the bidirectional Async guard, which identifies the missing suffix on a new asynchronous test.
+The method and its requirement tuple are corrected manually without weakening the guard; the
+corrected build and complete Async scan are rerunning. Final acceptance, final-source
+mutations/coverage, repository/package/API gates, and final publication remain pending.
+An intermediate Git checkpoint secures the remediation without claiming completed acceptance.
+Protected trees remain out of scope and unstaged.

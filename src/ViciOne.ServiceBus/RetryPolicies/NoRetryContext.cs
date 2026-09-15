@@ -3,17 +3,17 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Carries state for no retry operations.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class NoRetryContext<TContext> :
+/// <summary>Represents the terminal state produced by a policy that never retries.</summary>
+/// <typeparam name="TContext">The pipeline context type.</typeparam>
+internal sealed class NoRetryContext<TContext> :
     BaseRetryContext<TContext>,
     RetryContext<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a terminal state for the failed operation.</summary>
+    /// <param name="context">The failed pipeline context.</param>
+    /// <param name="exception">The most recent failure.</param>
+    /// <param name="cancellationToken">The token that cancels retry processing.</param>
     public NoRetryContext(TContext context, Exception exception, CancellationToken cancellationToken)
         : base(context, exception, 0, cancellationToken)
     {
@@ -21,7 +21,11 @@ public class NoRetryContext<TContext> :
 
     bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
     {
-        retryContext = this;
+        ArgumentNullException.ThrowIfNull(exception);
+
+        retryContext = ReferenceEquals(exception, Exception)
+            ? this
+            : new NoRetryContext<TContext>(Context, exception, CancellationToken);
 
         return false;
     }

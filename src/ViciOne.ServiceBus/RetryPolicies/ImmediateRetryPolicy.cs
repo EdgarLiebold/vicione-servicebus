@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Retries handled failures without a delay.</summary>
-public sealed class ImmediateRetryPolicy :
+internal sealed class ImmediateRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
@@ -19,7 +19,7 @@ public sealed class ImmediateRetryPolicy :
         RetryLimit = retryLimit;
     }
 
-    /// <summary>Gets the retry limit.</summary>
+    /// <summary>Gets the maximum number of retry attempts.</summary>
     public int RetryLimit { get; }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -42,9 +42,9 @@ public sealed class ImmediateRetryPolicy :
         return new ImmediateRetryPolicyContext<T>(this, context);
     }
 
-    /// <summary>Determines whether handled.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the configured exception filter handles a failure.</summary>
+    /// <param name="exception">The failure to classify.</param>
+    /// <returns><see langword="true" /> when the failure is eligible for retry; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);

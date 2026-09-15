@@ -5,7 +5,7 @@ using System.Linq;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Retries handled failures with bounded exponentially increasing jittered delays.</summary>
-public sealed class ExponentialRetryPolicy :
+internal sealed class ExponentialRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
@@ -47,7 +47,7 @@ public sealed class ExponentialRetryPolicy :
         _intervals = CalculateIntervals().ToArray();
     }
 
-    /// <summary>Gets the retry limit.</summary>
+    /// <summary>Gets the maximum number of retry attempts.</summary>
     public int RetryLimit { get; }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -74,9 +74,9 @@ public sealed class ExponentialRetryPolicy :
         return new ExponentialRetryPolicyContext<T>(this, context);
     }
 
-    /// <summary>Determines whether handled.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the configured exception filter handles a failure.</summary>
+    /// <param name="exception">The failure to classify.</param>
+    /// <returns><see langword="true" /> when the failure is eligible for retry; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
@@ -110,8 +110,8 @@ public sealed class ExponentialRetryPolicy :
         }
     }
 
-    /// <summary>Returns the string representation of this instance.</summary>
-    /// <returns>The converted string.</returns>
+    /// <summary>Returns a diagnostic description of the exponential schedule.</summary>
+    /// <returns>The policy name, retry limit, and delay bounds.</returns>
     public override string ToString()
     {
         return $"Exponential (limit {RetryLimit}, min {_minInterval}ms, max {_maxInterval}ms)";

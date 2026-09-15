@@ -3,16 +3,16 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Defines policy for consume context retry.</summary>
-public class ConsumeContextRetryPolicy :
+/// <summary>Adds consume-specific cancellation and deferred-fault state to a retry policy.</summary>
+internal sealed class ConsumeContextRetryPolicy :
     IRetryPolicy
 {
     readonly CancellationToken _cancellationToken;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a consume-aware wrapper for a retry policy.</summary>
+    /// <param name="retryPolicy">The retry policy to wrap.</param>
+    /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
     public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken)
     {
         _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
@@ -20,9 +20,10 @@ public class ConsumeContextRetryPolicy :
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The probe context that receives the nested policy scope.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateScope("retry-consumeContext");
 
         _retryPolicy.Probe(scope);
@@ -30,10 +31,14 @@ public class ConsumeContextRetryPolicy :
 
     RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (context is ConsumeContext consumeContext)
         {
             RetryPolicyContext<ConsumeContext> retryPolicyContext = _retryPolicy.CreatePolicyContext(consumeContext)
                 ?? throw new InvalidOperationException("The retry policy returned a null consume policy context.");
+            if (retryPolicyContext.Context == null)
+                throw new InvalidOperationException("The retry policy returned a policy context without a consume context.");
 
             var retryConsumeContext = new RetryConsumeContext(consumeContext, _retryPolicy, null);
 
@@ -44,20 +49,21 @@ public class ConsumeContextRetryPolicy :
         throw new ArgumentException("The argument must be a ConsumeContext", nameof(context));
     }
 
-    /// <summary>Determines whether handled.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Delegates failure classification to the wrapped policy.</summary>
+    /// <param name="exception">The failure to classify.</param>
+    /// <returns><see langword="true" /> when the failure is eligible for retry; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         return _retryPolicy.IsHandled(exception);
     }
 }
 
 
-/// <summary>Defines policy for consume context retry.</summary>
-/// <typeparam name="TFilter">The filter type.</typeparam>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ConsumeContextRetryPolicy<TFilter, TContext> :
+/// <summary>Adds a specialized consume context projection to a retry policy.</summary>
+/// <typeparam name="TFilter">The pipeline contract exposed to the retry filter.</typeparam>
+/// <typeparam name="TContext">The consume-retry context implementation.</typeparam>
+internal sealed class ConsumeContextRetryPolicy<TFilter, TContext> :
     IRetryPolicy
     where TFilter : class, PipeContext
     where TContext : class, TFilter, ConsumeRetryContext
@@ -66,10 +72,10 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
     readonly Func<TFilter, IRetryPolicy, RetryContext?, TContext> _contextFactory;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="contextFactory">The context factory.</param>
+    /// <summary>Creates a consume-aware wrapper with a context projection.</summary>
+    /// <param name="retryPolicy">The retry policy to wrap.</param>
+    /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
+    /// <param name="contextFactory">Creates consume-aware state for the initial attempt.</param>
     public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken,
         Func<TFilter, IRetryPolicy, RetryContext?, TContext> contextFactory)
     {
@@ -79,9 +85,10 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The probe context that receives the nested policy scope.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateScope("retry-consumeContext");
 
         _retryPolicy.Probe(scope);
@@ -89,12 +96,16 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
 
     RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var filterContext = context as TFilter;
         if (filterContext == null)
             throw new ArgumentException($"The argument must be a {typeof(TFilter).Name}", nameof(context));
 
         RetryPolicyContext<TFilter> retryPolicyContext = _retryPolicy.CreatePolicyContext(filterContext)
             ?? throw new InvalidOperationException("The retry policy returned a null consume policy context.");
+        if (retryPolicyContext.Context == null)
+            throw new InvalidOperationException("The retry policy returned a policy context without a consume context.");
 
         var retryConsumeContext = _contextFactory(filterContext, _retryPolicy, null)
             ?? throw new InvalidOperationException("The consume retry context factory returned null.");
@@ -104,11 +115,12 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
             ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
     }
 
-    /// <summary>Determines whether handled.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Delegates failure classification to the wrapped policy.</summary>
+    /// <param name="exception">The failure to classify.</param>
+    /// <returns><see langword="true" /> when the failure is eligible for retry; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         return _retryPolicy.IsHandled(exception);
     }
 }

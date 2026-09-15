@@ -2,22 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>
-/// A retry policy determines how exceptions are handled, and whether or not the
-/// remaining filters should be retried.
-/// </summary>
+/// <summary>Creates per-operation retry state and classifies failures for that state.</summary>
 public interface IRetryPolicy :
     IProbeSite
 {
-    /// <summary>Creates a retry policy context for the retry, which initiates the exception tracking.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The created policy context.</returns>
+    /// <summary>Creates isolated retry state for one pipeline operation.</summary>
+    /// <typeparam name="T">The pipeline context type.</typeparam>
+    /// <param name="context">The pipeline context governed by the policy.</param>
+    /// <returns>The retry state for the operation.</returns>
     RetryPolicyContext<T> CreatePolicyContext<T>(T context)
         where T : class, PipeContext;
 
-    /// <summary>If the retry policy handles the exception, should return true.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether an exception is eligible for this policy.</summary>
+    /// <param name="exception">The exception to classify.</param>
+    /// <returns><see langword="true" /> when the policy handles the exception; otherwise, <see langword="false" />.</returns>
     bool IsHandled(Exception exception);
 }

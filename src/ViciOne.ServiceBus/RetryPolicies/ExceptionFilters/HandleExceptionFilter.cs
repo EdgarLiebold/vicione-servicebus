@@ -4,7 +4,7 @@ using System.Linq;
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
 /// <summary>Handles only the configured exception types.</summary>
-public sealed class HandleExceptionFilter :
+internal sealed class HandleExceptionFilter :
     IExceptionFilter
 {
     readonly Type[] _exceptionTypes;

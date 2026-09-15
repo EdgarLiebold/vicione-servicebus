@@ -5,10 +5,10 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Uses the message redelivery mechanism, if available, to delay a retry without blocking message delivery.</summary>
-/// <typeparam name="TContext">The context type.</typeparam>
-/// <typeparam name="TMessage">The message type.</typeparam>
-public class RedeliveryRetryFilter<TContext, TMessage> :
+/// <summary>Schedules broker redelivery for handled failures instead of holding the current delivery.</summary>
+/// <typeparam name="TContext">The consume context type.</typeparam>
+/// <typeparam name="TMessage">The consumed message type.</typeparam>
+internal sealed class RedeliveryRetryFilter<TContext, TMessage> :
     IFilter<TContext>
     where TContext : class, ConsumeContext<TMessage>
     where TMessage : class
@@ -16,32 +16,40 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="observers">The observers.</param>
+    /// <summary>Creates a redelivery filter for a policy and its lifecycle observers.</summary>
+    /// <param name="retryPolicy">The policy that selects and schedules redelivery attempts.</param>
+    /// <param name="observers">The observable that publishes retry lifecycle events.</param>
     public RedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
-        _retryPolicy = retryPolicy;
-        _observers = observers;
+        _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
+        _observers = observers ?? throw new ArgumentNullException(nameof(observers));
     }
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateFilterScope("retry");
         scope.Add("type", "redelivery");
 
         _retryPolicy.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Invokes the pipeline and schedules redelivery when a handled failure permits another attempt.</summary>
+    /// <param name="context">The current message delivery.</param>
+    /// <param name="next">The next consume-pipeline stage.</param>
+    /// <returns>A task that completes after delivery, terminal failure, or redelivery scheduling.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
-        using (RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context))
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        using (RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context)
+            ?? throw new InvalidOperationException("The retry policy returned a null policy context."))
         {
+            if (policyContext.Context == null)
+                throw new InvalidOperationException("The retry policy returned a policy context without a pipe context.");
+
             if (_observers.Count > 0)
             {
                 var postCreateTask = _observers.PostCreateAsync(policyContext);
@@ -70,6 +78,8 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
 
                 if (!policyContext.CanRetry(exception, out RetryContext<TContext> retryContext))
                 {
+                    EnsureRetryContext(retryContext);
+
                     if (_retryPolicy.IsHandled(exception))
                     {
                         context.GetOrAddPayload(() => retryContext);
@@ -94,6 +104,8 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
                 {
                     if (!retryContext.CanRetry(exception, out retryContext))
                     {
+                        EnsureRetryContext(retryContext);
+
                         if (_retryPolicy.IsHandled(exception))
                         {
                             context.GetOrAddPayload(() => retryContext);
@@ -113,6 +125,8 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
                         throw;
                     }
                 }
+
+                EnsureRetryContext(retryContext);
 
                 if (_observers.Count > 0)
                 {
@@ -139,5 +153,11 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
                 }
             }
         }
+    }
+
+    static void EnsureRetryContext(RetryContext<TContext> retryContext)
+    {
+        if (retryContext == null)
+            throw new InvalidOperationException("The retry policy returned a null retry context.");
     }
 }

@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
 /// <summary>Matches every exception.</summary>
-public sealed class AllExceptionFilter :
+internal sealed class AllExceptionFilter :
     IExceptionFilter
 {
     void IProbeSite.Probe(ProbeContext context)

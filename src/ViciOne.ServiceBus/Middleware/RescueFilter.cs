@@ -4,13 +4,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Rescue catches an exception, and if the exception matches the exception filter,
-/// passes control to the rescue pipe.
-/// </summary>
-/// <typeparam name="TContext">The context type.</typeparam>
-/// <typeparam name="TRescueContext">The rescue context type.</typeparam>
-public class RescueFilter<TContext, TRescueContext> :
+/// <summary>Routes selected pipeline failures through a projected rescue context.</summary>
+/// <typeparam name="TContext">The original pipeline context type.</typeparam>
+/// <typeparam name="TRescueContext">The context type supplied to the rescue pipe.</typeparam>
+internal sealed class RescueFilter<TContext, TRescueContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
     where TRescueContext : class, PipeContext
@@ -19,10 +16,10 @@ public class RescueFilter<TContext, TRescueContext> :
     readonly RescueContextFactory<TContext, TRescueContext> _rescueContextFactory;
     readonly IPipe<TRescueContext> _rescuePipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="rescuePipe">The rescue pipe.</param>
-    /// <param name="exceptionFilter">The exception filter.</param>
-    /// <param name="rescueContextFactory">The rescue context factory.</param>
+    /// <summary>Creates a filter that projects selected failures into a rescue pipeline.</summary>
+    /// <param name="rescuePipe">The pipeline that handles projected failures.</param>
+    /// <param name="exceptionFilter">The filter that selects failures for rescue.</param>
+    /// <param name="rescueContextFactory">Creates a rescue context from the failed context and exception.</param>
     public RescueFilter(IPipe<TRescueContext> rescuePipe, IExceptionFilter exceptionFilter,
         RescueContextFactory<TContext, TRescueContext> rescueContextFactory)
     {
@@ -33,6 +30,7 @@ public class RescueFilter<TContext, TRescueContext> :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateFilterScope("rescue");
 
         _rescuePipe.Probe(scope);
@@ -41,6 +39,9 @@ public class RescueFilter<TContext, TRescueContext> :
     [DebuggerNonUserCode]
     async Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         try
         {
             await next.SendAsync(context).ConfigureAwait(false);

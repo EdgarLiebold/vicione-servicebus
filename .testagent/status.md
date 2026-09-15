@@ -1104,3 +1104,27 @@ bidirectional Async semantics, source layout, comments, directives, old Topology
 pinning, empty directories, formatting, and Git whitespace pass. Protected trees remain unchanged
 and unstaged. The overall A+ goal remains active for the remaining complete source owners and the
 final repository-wide audit.
+
+## Iteration 119 — in progress
+
+The complete planned Core retry/rescue source owner and every comment have been read manually.
+Behavior fixes preserve latest failure identity, valid terminal delay semantics, exhaustion and
+overflow boundaries, callback/policy result validation, and rescue admission. Implementation-only
+types are internal, legitimate cross-assembly execution remains available, observer attachment is
+explicit, and the Advanced extension folder now matches its namespace.
+
+The expanded direct suites pass consume policy 10/10, rescue projections 4/4, and retry helper 19/19.
+Both asynchronous-wait counterchanges are killed exactly and restored. Accepted Core coverage
+passes 3,647/3,647 before the next shared-adapter remediation: owner 82.1816% line, 77.8997% branch,
+all concrete rescue projections 100% line/branch, retry execution CRAP 26, maximum owner CRAP 30.
+This is not final provider-wide coverage or completed iteration acceptance.
+
+A red-first public rescue configuration test finds discarded inner validation in the common Split
+adapter. That related source is fully read and corrected manually; four direct Abstractions tests
+and three rescue configuration tests are added. The serial Unit build passes with zero warnings
+and errors; the direct suites pass 9/9 and 4/4. All 23 canonical hosts execute 6,682 cases, with
+6,681 passes, one Async-name failure and zero skips. That missing suffix and its requirement
+tuple are corrected manually; the unchanged guard and corrected build are rerunning.
+Final-source coverage/mutations, strict repository/package/API gates, and final publication
+remain pending. The intermediate Git checkpoint is a backup, not completed iteration acceptance.
+Protected `review/` and `TestResults/` remain unchanged and unstaged.

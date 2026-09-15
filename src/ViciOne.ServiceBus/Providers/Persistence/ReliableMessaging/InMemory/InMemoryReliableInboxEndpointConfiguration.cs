@@ -22,7 +22,7 @@ internal sealed class InMemoryReliableInboxEndpointConfiguration<TBus>(
         ArgumentNullException.ThrowIfNull(configurator);
         if (_maximumDeliveryAttempts > 1)
         {
-            _ = new MessageRetryConfigurationObserver(
+            MessageRetryConfigurationObserver.Attach(
                 configurator,
                 CancellationToken.None,
                 retry =>

@@ -9,7 +9,9 @@ public static class RetryContextExtensions
     public static int GetRetryAttempt(this ConsumeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return context.TryGetPayload(out ConsumeRetryContext? retryContext) ? retryContext!.RetryAttempt : 0;
+        return context.TryGetPayload(out ConsumeRetryContext? retryContext) && retryContext is not null
+            ? retryContext.RetryAttempt
+            : 0;
     }
 
     /// <summary>Gets the number of retry attempts completed before the current attempt.</summary>
@@ -18,7 +20,9 @@ public static class RetryContextExtensions
     public static int GetRetryCount(this ConsumeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return context.TryGetPayload(out ConsumeRetryContext? retryContext) ? retryContext!.RetryCount : 0;
+        return context.TryGetPayload(out ConsumeRetryContext? retryContext) && retryContext is not null
+            ? retryContext.RetryCount
+            : 0;
     }
 
     /// <summary>Gets the broker-independent redelivery count from envelope or transport metadata.</summary>

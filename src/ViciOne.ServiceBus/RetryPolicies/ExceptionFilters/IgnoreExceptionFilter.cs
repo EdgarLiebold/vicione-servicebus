@@ -4,7 +4,7 @@ using System.Linq;
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
 /// <summary>Handles every exception except the configured exception types.</summary>
-public sealed class IgnoreExceptionFilter :
+internal sealed class IgnoreExceptionFilter :
     IExceptionFilter
 {
     readonly Type[] _exceptionTypes;

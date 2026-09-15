@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.RetryPolicies;
 /// Conservatively classifies technical failures. Only failures with an explicit transient contract are
 /// retried; structural, programming, security and serialization failures are terminal.
 /// </summary>
-public sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClassifier
+internal sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClassifier
 {
     /// <inheritdoc />
     public RetryFailureKind Classify(Exception exception)
@@ -71,37 +71,41 @@ public sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClassif
             ConnectionException connectionException => connectionException.IsTransient
                 ? RetryFailureKind.Transient
                 : RetryFailureKind.NonRetryable,
-            ConcurrencyException => RetryFailureKind.Transient,
-            TransportUnavailableException => RetryFailureKind.Transient,
-            TimeoutException => RetryFailureKind.Transient,
-            CircuitBreakerOpenException => RetryFailureKind.Transient,
+            ConcurrencyException or TransportUnavailableException or TimeoutException or CircuitBreakerOpenException
+                => RetryFailureKind.Transient,
             InvalidOperationException { InnerException: DbException { IsTransient: true } } => RetryFailureKind.Transient,
             DbException dbException => dbException.IsTransient
                 ? RetryFailureKind.Transient
                 : RetryFailureKind.Unclassified,
 
-            OperationCanceledException => RetryFailureKind.NonRetryable,
-            ConfigurationException => RetryFailureKind.NonRetryable,
-            PipeConfigurationException => RetryFailureKind.NonRetryable,
-            MessageException => RetryFailureKind.NonRetryable,
-            PayloadException => RetryFailureKind.NonRetryable,
-            UnknownStateException => RetryFailureKind.NonRetryable,
-            UnknownEventException => RetryFailureKind.NonRetryable,
-            UnhandledEventException => RetryFailureKind.NonRetryable,
-            SerializationException => RetryFailureKind.NonRetryable,
-            JsonException => RetryFailureKind.NonRetryable,
-            SecurityException => RetryFailureKind.NonRetryable,
-            UnauthorizedAccessException => RetryFailureKind.NonRetryable,
-            ArgumentException => RetryFailureKind.NonRetryable,
-            ObjectDisposedException => RetryFailureKind.NonRetryable,
-            InvalidOperationException => RetryFailureKind.NonRetryable,
-            NotSupportedException => RetryFailureKind.NonRetryable,
-            NotImplementedException => RetryFailureKind.NonRetryable,
-            NullReferenceException => RetryFailureKind.NonRetryable,
-            IndexOutOfRangeException => RetryFailureKind.NonRetryable,
-            FormatException => RetryFailureKind.NonRetryable,
-            OverflowException => RetryFailureKind.NonRetryable,
+            _ when IsNonRetryable(exception) => RetryFailureKind.NonRetryable,
             _ => RetryFailureKind.Unclassified,
         };
+    }
+
+    static bool IsNonRetryable(Exception exception)
+    {
+        return exception is OperationCanceledException
+            || IsContractFailure(exception)
+            || IsSerializationOrSecurityFailure(exception)
+            || IsProgrammingFailure(exception);
+    }
+
+    static bool IsContractFailure(Exception exception)
+    {
+        return exception is ConfigurationException or PipeConfigurationException or MessageException
+            or PayloadException or UnknownStateException or UnknownEventException or UnhandledEventException;
+    }
+
+    static bool IsSerializationOrSecurityFailure(Exception exception)
+    {
+        return exception is SerializationException or JsonException or SecurityException or UnauthorizedAccessException;
+    }
+
+    static bool IsProgrammingFailure(Exception exception)
+    {
+        return exception is ArgumentException or ObjectDisposedException or InvalidOperationException
+            or NotSupportedException or NotImplementedException or NullReferenceException
+            or IndexOutOfRangeException or FormatException or OverflowException;
     }
 }

@@ -1,69 +1,78 @@
+using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Observables;
 
-/// <summary>Publishes observations for retry.</summary>
-public class RetryObservable :
+/// <summary>Publishes retry lifecycle notifications to a stable observer snapshot.</summary>
+internal sealed class RetryObservable :
     Connectable<IRetryObserver>,
     IRetryObserver
 {
-    /// <summary>Runs after create.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers after an operation acquires retry-policy state.</summary>
+    /// <typeparam name="T">The pipeline context type.</typeparam>
+    /// <param name="context">The operation's retry-policy state.</param>
+    /// <returns>A task that completes after every observer callback.</returns>
     public Task PostCreateAsync<T>(RetryPolicyContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.PostCreateAsync(context));
+        ArgumentNullException.ThrowIfNull(context);
+        return ForEachAsync(observer => observer.PostCreateAsync(context));
     }
 
-    /// <summary>Runs after fault.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers that a handled failure will be retried.</summary>
+    /// <typeparam name="T">The pipeline context type.</typeparam>
+    /// <param name="context">The scheduled retry state.</param>
+    /// <returns>A task that completes after every observer callback.</returns>
     public Task PostFaultAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.PostFaultAsync(context));
+        ArgumentNullException.ThrowIfNull(context);
+        return ForEachAsync(observer => observer.PostFaultAsync(context));
     }
 
-    /// <summary>Runs before retry.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers immediately before a retry attempt begins.</summary>
+    /// <typeparam name="T">The pipeline context type.</typeparam>
+    /// <param name="context">The retry state for the attempt.</param>
+    /// <returns>A task that completes after every observer callback.</returns>
     public Task PreRetryAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.PreRetryAsync(context));
+        ArgumentNullException.ThrowIfNull(context);
+        return ForEachAsync(observer => observer.PreRetryAsync(context));
     }
 
-    /// <summary>Retries fault.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers that the retry policy reached a terminal failure.</summary>
+    /// <typeparam name="T">The pipeline context type.</typeparam>
+    /// <param name="context">The terminal retry state.</param>
+    /// <returns>A task that completes after every observer callback.</returns>
     public Task RetryFaultAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.RetryFaultAsync(context));
+        ArgumentNullException.ThrowIfNull(context);
+        return ForEachAsync(observer => observer.RetryFaultAsync(context));
     }
 
-    /// <summary>Retries complete.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers that a retry attempt completed successfully.</summary>
+    /// <typeparam name="T">The pipeline context type.</typeparam>
+    /// <param name="context">The successful retry state.</param>
+    /// <returns>A task that completes after every observer callback.</returns>
     public Task RetryCompleteAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.RetryCompleteAsync(context));
+        ArgumentNullException.ThrowIfNull(context);
+        return ForEachAsync(observer => observer.RetryCompleteAsync(context));
     }
 
-    /// <summary>Retries fault.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers of terminal state when only its runtime context type is known.</summary>
+    /// <param name="context">The terminal retry state.</param>
+    /// <param name="cancellationToken">The token that cancels notification.</param>
+    /// <returns>A task that completes after every observer callback.</returns>
     public Task RetryFaultAsync(RetryContext context, CancellationToken cancellationToken = default)
     {
-        return ForEachAsync(x => RetryFaultObserverCache.RetryFaultAsync(x, context, context.ContextType, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(context);
+        return ForEachAsync(
+            observer => RetryFaultObserverCache.RetryFaultAsync(observer, context, context.ContextType, cancellationToken),
+            cancellationToken);
     }
 }

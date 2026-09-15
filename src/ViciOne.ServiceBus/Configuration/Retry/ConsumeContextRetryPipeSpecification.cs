@@ -7,18 +7,18 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for consume context retry pipe.</summary>
-public class ConsumeContextRetryPipeSpecification :
+/// <summary>Builds retry middleware for the untyped consume pipeline.</summary>
+internal sealed class ConsumeContextRetryPipeSpecification :
     ExceptionSpecification,
     IRetryConfigurator,
     IPipeSpecification<ConsumeContext>
 {
     readonly CancellationToken _cancellationToken;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory = null!;
+    RetryPolicyFactory? _policyFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a consume retry specification.</summary>
+    /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
     public ConsumeContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
         _observers = new RetryObservable();
@@ -50,8 +50,8 @@ public class ConsumeContextRetryPipeSpecification :
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <summary>Sets the factory that combines exception selection with retry timing.</summary>
+    /// <param name="factory">The retry-policy factory.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
@@ -66,10 +66,10 @@ public class ConsumeContextRetryPipeSpecification :
 }
 
 
-/// <summary>Describes requirements for consume context retry pipe.</summary>
-/// <typeparam name="TFilter">The filter type.</typeparam>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
+/// <summary>Builds consume-aware retry middleware for a specialized pipeline contract.</summary>
+/// <typeparam name="TFilter">The pipeline contract exposed to the filter.</typeparam>
+/// <typeparam name="TContext">The consume-retry context implementation.</typeparam>
+internal sealed class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
     ExceptionSpecification,
     IRetryConfigurator,
     IPipeSpecification<TFilter>
@@ -79,11 +79,11 @@ public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
     readonly CancellationToken _cancellationToken;
     readonly Func<TFilter, IRetryPolicy, RetryContext?, TContext> _contextFactory;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory = null!;
+    RetryPolicyFactory? _policyFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="contextFactory">The context factory.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a consume retry specification with its retry-context projection.</summary>
+    /// <param name="contextFactory">Creates consume-aware context state for each attempt.</param>
+    /// <param name="cancellationToken">The token that cancels pending retry delays.</param>
     public ConsumeContextRetryPipeSpecification(Func<TFilter, IRetryPolicy, RetryContext?, TContext> contextFactory,
         CancellationToken cancellationToken = default)
     {
@@ -117,8 +117,8 @@ public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <summary>Sets the factory that combines exception selection with retry timing.</summary>
+    /// <param name="factory">The retry-policy factory.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
