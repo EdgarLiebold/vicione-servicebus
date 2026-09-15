@@ -1,5 +1,32 @@
 # A+ remediation research
 
+## Iteration 119 nested API source reconciliation
+
+The secured e282 input preserves the failed API-baseline comparison. Completely
+reading 24 selected source files (1,872 starting lines) shows that correct nested
+names alone do not confer A+ contracts. Manual comments now distinguish converted
+context key selection, saga versus outer-message middleware, zero-output/multi-output
+continuations, partial existing correlation retention and actual policy behavior.
+Only XML documentation changes; no source generator/script writes source/tests/comments.
+
+Connected follow-up observations are NST-01–NST-10 in
+[the packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/NESTED_API_SOURCE_RECONCILIATION_PACKET.md):
+rollback disposal/fault-observer primary error preservation, nullable callbacks
+and missing-pipeline chains, required SPI inputs/results, dynamic probe concurrency,
+correlation naming, public generic container/repeated builder semantics, redundant
+keyed allocation and custom retry extension equivalence. These are static source
+observations, not fabricated runtime failures or automatically inferred missing tests.
+
+The internal Sol advisor reads 50 implementation files / 3,531 lines and 19
+retained public source files / 1,381 lines. All 57 implementation types remain
+internal. The main detects/corrects checksum-manifest transcription order and
+exact generic identity errors through read-only comparison against real inputs;
+final 57 recorded identities equal the actual selected old-only key set. An
+unchecked manually transcribed name list is not accepted as API proof either.
+The advisor's reads do not substitute for personal main source reading or
+external/runtime/package/cloud acceptance. Protected review/result trees stay
+outside current exact scope; the older root-discovery deviations remain recorded.
+
 ## Iteration 119 governed traversal and generic API contracts
 
 The intervening folder explanation is navigation, not implementation progress.

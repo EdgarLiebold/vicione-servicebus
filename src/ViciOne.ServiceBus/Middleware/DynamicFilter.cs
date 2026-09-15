@@ -8,25 +8,24 @@ using ViciOne.ServiceBus.Observables;
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
-/// Dispatches an inbound pipe to one or more output pipes based on a dispatch
-/// type.
+/// Dispatches an input context to the registered output-context pipelines.
 /// </summary>
-/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TInput">The context contract shared by the output pipelines.</typeparam>
 public class DynamicFilter<TInput> :
     IDynamicFilter<TInput>
     where TInput : class, PipeContext
 {
     readonly IPipe<TInput> _empty;
     readonly Dictionary<Type, IOutputFilter> _outputPipes;
-    /// <summary>Exposes the converter factory used by the containing type.</summary>
+    /// <summary>The factory supplying converters for registered output-context contracts.</summary>
     protected readonly IPipeContextConverterFactory<TInput> ConverterFactory;
-    /// <summary>Exposes the observers used by the containing type.</summary>
+    /// <summary>The observers notified across all output-context contracts.</summary>
     protected readonly FilterObservable Observers;
 
     IOutputFilter[] _outputPipeArray;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="converterFactory">The converter factory.</param>
+    /// <summary>Creates an empty dispatcher with the required context-converter factory.</summary>
+    /// <param name="converterFactory">The factory supplying a converter for each connected output-context contract.</param>
     public DynamicFilter(IPipeContextConverterFactory<TInput> converterFactory)
     {
         ConverterFactory = converterFactory ?? throw new ArgumentNullException(nameof(converterFactory));
@@ -48,9 +47,9 @@ public class DynamicFilter<TInput> :
         return Observers.Connect(observer);
     }
 
-    /// <summary>Connects pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Registers a pipeline for a compatible output-context contract.</summary>
+    /// <typeparam name="T">The output-context contract extending the input contract.</typeparam>
+    /// <param name="pipe">The required pipeline receiving successfully converted contexts.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
         where T : class, PipeContext
@@ -69,10 +68,11 @@ public class DynamicFilter<TInput> :
             pipe.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Dispatches the context through the current output-pipeline array.</summary>
+    /// <param name="context">The input context offered to each output pipeline.</param>
+    /// <param name="next">The continuation passed directly to one output, or invoked after multiple outputs succeed.</param>
+    /// <returns>A completed task for no outputs, one output's task, or the task awaiting all outputs and the continuation.</returns>
+    /// <remarks>With no registered outputs, dispatch completes without invoking the continuation. Multiple outputs receive an empty continuation.</remarks>
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     public Task SendAsync(TInput context, IPipe<TInput> next)
@@ -104,10 +104,10 @@ public class DynamicFilter<TInput> :
         return SendAsync();
     }
 
-    /// <summary>Gets pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
-    /// <returns>The pipe.</returns>
+    /// <summary>Gets or creates the output filter and requests its underlying connector contract.</summary>
+    /// <typeparam name="T">The output-context contract extending the input contract.</typeparam>
+    /// <typeparam name="TResult">The connector contract required from the output filter.</typeparam>
+    /// <returns>The underlying filter implementing the requested connector contract.</returns>
     protected TResult GetPipe<T, TResult>()
         where T : class, PipeContext
         where TResult : class
@@ -115,9 +115,9 @@ public class DynamicFilter<TInput> :
         return GetPipe<T>().As<TResult>();
     }
 
-    /// <summary>Gets pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The pipe.</returns>
+    /// <summary>Gets or creates one output filter per output-context contract under the registration lock.</summary>
+    /// <typeparam name="T">The output-context contract extending the input contract.</typeparam>
+    /// <returns>The existing or newly registered output filter.</returns>
     protected IOutputFilter GetPipe<T>()
         where T : class, PipeContext
     {
@@ -136,9 +136,9 @@ public class DynamicFilter<TInput> :
         }
     }
 
-    /// <summary>Creates output pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The created output pipe.</returns>
+    /// <summary>Creates a compatible output filter using the context-converter factory.</summary>
+    /// <typeparam name="T">The output-context contract extending the input contract.</typeparam>
+    /// <returns>An output filter that converts contexts and dispatches them to connected pipelines.</returns>
     protected virtual IOutputFilter CreateOutputPipe<T>()
         where T : class, PipeContext
     {
@@ -151,8 +151,8 @@ public class DynamicFilter<TInput> :
             ?? throw new InvalidOperationException($"The output filter could not be created for context type {TypeCache<T>.ShortName}."));
     }
 
-    /// <summary>Ensures compatible output type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Rejects an output-context contract that does not extend the input-context contract.</summary>
+    /// <typeparam name="T">The output-context contract to check.</typeparam>
     protected static void EnsureCompatibleOutputType<T>()
         where T : class, PipeContext
     {
@@ -165,33 +165,33 @@ public class DynamicFilter<TInput> :
     }
 
 
-    /// <summary>Processes output pipeline stages.</summary>
+    /// <summary>Combines input-context dispatch, observer registration and access to an underlying connector.</summary>
     protected interface IOutputFilter :
         IFilter<TInput>,
         IFilterObserverConnector
     {
-        /// <summary>Projects the current value as the requested type.</summary>
-        /// <typeparam name="TResult">The result produced by the operation.</typeparam>
-        /// <returns>The t result produced by the operation.</returns>
+        /// <summary>Requests a connector contract implemented by the underlying output filter.</summary>
+        /// <typeparam name="TResult">The required connector contract.</typeparam>
+        /// <returns>The underlying filter implementing the requested contract.</returns>
         TResult As<TResult>()
             where TResult : class;
     }
 
 
-    /// <summary>Processes output pipeline stages.</summary>
-    /// <typeparam name="TOutput">The output type.</typeparam>
+    /// <summary>Adapts one output-context pipeline to input-context dispatch and observer registration.</summary>
+    /// <typeparam name="TOutput">The output-context contract extending the input contract.</typeparam>
     protected class OutputFilter<TOutput> :
         IOutputFilter
         where TOutput : class, TInput
     {
-        /// <summary>Exposes the context converter used by the containing type.</summary>
+        /// <summary>The converter producing the output context from the input context.</summary>
         protected readonly IPipeContextConverter<TInput, TOutput> ContextConverter;
-        /// <summary>Exposes the observers used by the containing type.</summary>
+        /// <summary>The observers shared with the containing dispatcher.</summary>
         protected readonly FilterObservable Observers;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="observers">The observers.</param>
-        /// <param name="contextConverter">The context converter.</param>
+        /// <summary>Creates an output-context filter with an unkeyed tee and shared observers.</summary>
+        /// <param name="observers">The dispatcher observers notified by the output filter.</param>
+        /// <param name="contextConverter">The converter producing this output-context contract.</param>
         public OutputFilter(FilterObservable observers, IPipeContextConverter<TInput, TOutput> contextConverter)
         {
             ContextConverter = contextConverter;
@@ -200,7 +200,7 @@ public class DynamicFilter<TInput> :
             Filter = new OutputPipeFilter<TInput, TOutput>(ContextConverter, Observers, new TeeFilter<TOutput>());
         }
 
-        /// <summary>Gets the filter.</summary>
+        /// <summary>Gets the filter responsible for conversion, observation and output-pipeline dispatch.</summary>
         protected virtual IOutputPipeFilter<TInput, TOutput> Filter { get; }
 
         TResult IOutputFilter.As<TResult>()
@@ -217,25 +217,25 @@ public class DynamicFilter<TInput> :
             throw new ArgumentException($"The filter is not of the specified type: {typeof(T).Name}", nameof(observer));
         }
 
-        /// <summary>Connects observer.</summary>
-        /// <param name="observer">The observer to connect.</param>
+        /// <summary>Registers an observer shared across the dispatcher's output-context contracts.</summary>
+        /// <param name="observer">The observer receiving output-filter notifications.</param>
         /// <returns>A handle that disconnects the registration.</returns>
         public ConnectHandle ConnectObserver(IFilterObserver observer)
         {
             return Observers.Connect(observer);
         }
 
-        /// <summary>Sends a message to the configured destination.</summary>
-        /// <param name="context">The context associated with the operation.</param>
-        /// <param name="next">The next pipeline stage to invoke.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Delegates context conversion and dispatch to the underlying output filter.</summary>
+        /// <param name="context">The input context offered to the converter.</param>
+        /// <param name="next">The continuation supplied to the underlying output filter.</param>
+        /// <returns>The task returned by the underlying output filter.</returns>
         public Task SendAsync(TInput context, IPipe<TInput> next)
         {
             return Filter.SendAsync(context, next);
         }
 
-        /// <summary>Writes diagnostic information to the probe context.</summary>
-        /// <param name="context">The context associated with the operation.</param>
+        /// <summary>Delegates diagnostic probing to the underlying output filter.</summary>
+        /// <param name="context">The probe receiving the output-filter entries.</param>
         public void Probe(ProbeContext context)
         {
             Filter.Probe(context);
@@ -244,9 +244,9 @@ public class DynamicFilter<TInput> :
 }
 
 
-/// <summary>Processes dynamic pipeline stages.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <summary>Dispatches input contexts to output pipelines registered for a selected key.</summary>
+/// <typeparam name="TInput">The context contract shared by the output pipelines.</typeparam>
+/// <typeparam name="TKey">The key selected from each converted output context through its input-context contract.</typeparam>
 public class DynamicFilter<TInput, TKey> :
     DynamicFilter<TInput>,
     IDynamicFilter<TInput, TKey>
@@ -255,19 +255,19 @@ public class DynamicFilter<TInput, TKey> :
 {
     readonly KeyAccessor<TInput, TKey> _keyAccessor;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="converterFactory">The converter factory.</param>
-    /// <param name="keyAccessor">The key accessor.</param>
+    /// <summary>Creates an empty keyed dispatcher with the required converter factory and key accessor.</summary>
+    /// <param name="converterFactory">The factory supplying a converter for each connected output-context contract.</param>
+    /// <param name="keyAccessor">The accessor selecting a dispatch key from each converted output context.</param>
     public DynamicFilter(IPipeContextConverterFactory<TInput> converterFactory, KeyAccessor<TInput, TKey> keyAccessor)
         : base(converterFactory)
     {
         _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
     }
 
-    /// <summary>Connects pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Registers an output-context pipeline for a dispatch key.</summary>
+    /// <typeparam name="T">The output-context contract extending the input contract.</typeparam>
+    /// <param name="key">The selected key that routes contexts to this pipeline.</param>
+    /// <param name="pipe">The required pipeline receiving matching converted contexts.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
@@ -280,9 +280,9 @@ public class DynamicFilter<TInput, TKey> :
         return pipeConnector.ConnectPipe(key, pipe);
     }
 
-    /// <summary>Creates output pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The created output pipe.</returns>
+    /// <summary>Creates a compatible keyed output filter using the converter factory and key accessor.</summary>
+    /// <typeparam name="T">The output-context contract extending the input contract.</typeparam>
+    /// <returns>An output filter that converts contexts and dispatches them by their selected key.</returns>
     protected override IOutputFilter CreateOutputPipe<T>()
     {
         EnsureCompatibleOutputType<T>();
@@ -297,23 +297,23 @@ public class DynamicFilter<TInput, TKey> :
     }
 
 
-    /// <summary>Processes key output pipeline stages.</summary>
-    /// <typeparam name="TOutput">The output type.</typeparam>
+    /// <summary>Adapts keyed output-context dispatch to the containing input-context dispatcher.</summary>
+    /// <typeparam name="TOutput">The output-context contract extending the input contract.</typeparam>
     protected class KeyOutputFilter<TOutput> :
         OutputFilter<TOutput>
         where TOutput : class, TInput
     {
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="observers">The observers.</param>
-        /// <param name="contextConverter">The context converter.</param>
-        /// <param name="keyAccessor">The key accessor.</param>
+        /// <summary>Creates an output filter whose tee routes converted contexts by key.</summary>
+        /// <param name="observers">The dispatcher observers notified by the output filter.</param>
+        /// <param name="contextConverter">The converter producing this output-context contract.</param>
+        /// <param name="keyAccessor">The accessor selecting the dispatch key from the converted output context.</param>
         public KeyOutputFilter(FilterObservable observers, IPipeContextConverter<TInput, TOutput> contextConverter, KeyAccessor<TInput, TKey> keyAccessor)
             : base(observers, contextConverter)
         {
             Filter = new OutputPipeFilter<TInput, TOutput, TKey>(ContextConverter, Observers, keyAccessor);
         }
 
-        /// <summary>Gets the filter.</summary>
+        /// <summary>Gets the keyed filter responsible for conversion, observation and output-pipeline dispatch.</summary>
         protected override IOutputPipeFilter<TInput, TOutput> Filter { get; }
     }
 }

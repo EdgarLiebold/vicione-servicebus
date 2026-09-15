@@ -7,28 +7,28 @@ public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    /// <summary>Describes requirements for saga message split filter.</summary>
+    /// <summary>Adapts message-context filters into a saga/message-context pipeline.</summary>
     public class SagaMessageSplitFilterSpecification :
         IPipeSpecification<SagaConsumeContext<TSaga, TMessage>>
     {
         readonly IPipeSpecification<ConsumeContext<TMessage>> _specification;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Associates the message-context specification to adapt.</summary>
+        /// <param name="specification">The specification supplying filters and validation results.</param>
         public SagaMessageSplitFilterSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
         {
             _specification = specification;
         }
 
-        /// <summary>Applies this specification to the target builder.</summary>
-        /// <param name="builder">The builder that receives the configuration.</param>
+        /// <summary>Applies the wrapped specification through a builder that adds saga-message split filters.</summary>
+        /// <param name="builder">The saga/message-context builder receiving the adapted filters.</param>
         public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
         {
             _specification.Apply(new BuilderProxy(builder));
         }
 
-        /// <summary>Validates the current configuration.</summary>
-        /// <returns>The validation failures.</returns>
+        /// <summary>Enumerates validation results from the wrapped message specification.</summary>
+        /// <returns>The wrapped specification's results in their original order.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
             foreach (var validationResult in _specification.Validate())

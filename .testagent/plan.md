@@ -1,5 +1,38 @@
 # A+ remediation test plan
 
+## Iteration 119 nested API source reconciliation
+
+1. Personally read the complete DynamicFilter/SagaConnector/StateMachineInterfaceType
+   source families and immediate selected dependencies, updating comments manually
+   only after understanding each complete file. Preserve the product assembly
+   ownership structure and no-generator requirement.
+2. Obtain an internal read-only Sol counterreview distinguishing all corrected
+   nested identities from actual prior visibility retirements, preserving every
+   old colliding block. Verify exact implementation/interface checksum scope and
+   actual full generic identities; qualify static-only extension equivalence.
+3. Strictly build and execute existing Core/Abstractions/Architecture owners,
+   verify whitespace without writes and observe the actual fresh package gate.
+   Record the unchanged baseline mismatch rather than suppressing comparison.
+4. Secure the bounded owned source/comment/evidence checkpoint normally with an
+   annotated tag, atomic push and independent exact remote verification.
+5. Continue remaining state-machine personal reads and the packet's connected
+   behavior/API findings with proper test-owner admission, causal tests and
+   compiled one-cause checks. Complete original whole-product gates iteratively.
+
+Steps 1–2 produce 24 complete main reads / 1,872 starting lines, 23 manually edited
+documentation-only files, 22/35 newly qualified nested source identities covered
+including prior PipeConfigurator reads, and a separate static 69-file advisor
+scope. Ten concrete follow-up findings stay open. Core 4,007/4,007, Abstractions
+749/749 and all three strict Release builds are terminal green; all three selected
+formats terminate 0. Unfiltered Architecture terminates 0 with 358/358 passed,
+zero skips/failures, including the actual bidirectional Async guard. The initial
+109 source/raw bindings match. No new test methods/tuples/mutations are claimed.
+Actual fresh package execution terminates 1 only at unchanged baseline comparison:
+31 packages, 18 journeys, three isolated consumers and 30 runtime inventories
+complete first; fresh output matches the secured fresh API bytes. Git capture
+is bound only after actual outcomes. The original whole-product goal is neither
+narrowed nor completed.
+
 ## Iteration 119 governed traversal and generic API contracts
 
 Before the pending checkpoint, close the real inventory-host runtime failure:

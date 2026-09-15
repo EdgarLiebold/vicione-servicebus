@@ -5,34 +5,34 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Connects multiple output pipes to a single input pipe.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <summary>Dispatches a context to connected output pipelines before invoking the continuation.</summary>
+/// <typeparam name="TContext">The context contract accepted by the connected pipelines.</typeparam>
 public class TeeFilter<TContext> :
     ITeeFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly Connectable<IPipe<TContext>> _connections;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a dispatcher with no connected output pipelines.</summary>
     public TeeFilter()
     {
         _connections = new Connectable<IPipe<TContext>>();
     }
 
-    /// <summary>Gets the count.</summary>
+    /// <summary>Gets the number of directly connected output pipelines.</summary>
     public int Count => _connections.Count;
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Probes each connected output pipeline.</summary>
+    /// <param name="context">The diagnostic context shared with the connected pipelines.</param>
     public void Probe(ProbeContext context)
     {
         _connections.ForEach(pipe => pipe.Probe(context));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Awaits connected pipeline dispatch and invokes the continuation only after successful completion.</summary>
+    /// <param name="context">The context dispatched to every connected pipeline and the continuation.</param>
+    /// <param name="next">The continuation invoked after all connected pipelines complete successfully.</param>
+    /// <returns>The task covering connected pipeline dispatch and continuation execution.</returns>
     [DebuggerNonUserCode]
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -50,8 +50,8 @@ public class TeeFilter<TContext> :
         return SendAsync();
     }
 
-    /// <summary>Connects pipe.</summary>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Registers an output pipeline for context dispatch.</summary>
+    /// <param name="pipe">The output pipeline receiving dispatched contexts.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe(IPipe<TContext> pipe)
     {
@@ -60,9 +60,9 @@ public class TeeFilter<TContext> :
 }
 
 
-/// <summary>Connects multiple output pipes to a single input pipe.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="TKey">The key type.</typeparam>
+/// <summary>Adds key-selected output registration to a dispatcher that also supports directly connected pipelines.</summary>
+/// <typeparam name="TContext">The context contract used to select a routing key.</typeparam>
+/// <typeparam name="TKey">The routing key identifying selected output pipelines.</typeparam>
 public class TeeFilter<TContext, TKey> :
     TeeFilter<TContext>,
     ITeeFilter<TContext, TKey>
@@ -72,8 +72,8 @@ public class TeeFilter<TContext, TKey> :
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly Lazy<IKeyPipeConnector<TKey>> _keyConnections;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="keyAccessor">The key accessor.</param>
+    /// <summary>Creates a keyed dispatcher whose key-routing pipeline is connected on first keyed registration.</summary>
+    /// <param name="keyAccessor">The required accessor selecting a routing key from each dispatched context.</param>
     public TeeFilter(KeyAccessor<TContext, TKey> keyAccessor)
     {
         _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
@@ -81,10 +81,10 @@ public class TeeFilter<TContext, TKey> :
         _keyConnections = new Lazy<IKeyPipeConnector<TKey>>(ConnectKeyFilter);
     }
 
-    /// <summary>Connects pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Registers an output pipeline for contexts routed to the specified key.</summary>
+    /// <typeparam name="T">The context contract accepted by the keyed output pipeline.</typeparam>
+    /// <param name="key">The routing key selecting the output pipeline.</param>
+    /// <param name="pipe">The keyed output pipeline receiving matching contexts.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext

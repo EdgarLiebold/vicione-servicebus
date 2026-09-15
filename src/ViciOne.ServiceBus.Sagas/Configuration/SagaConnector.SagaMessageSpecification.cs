@@ -9,9 +9,7 @@ public partial class SagaConnector<TSaga, TMessage>
     where TMessage : class
 {
     /// <summary>
-    /// Configures the pipe for a Saga/message combination within a Saga configuration
-    /// block. Does not add any handlers to the message pipe standalone, everything is within
-    /// the Saga pipe segment.
+    /// Configures separate message-context and saga/message-context pipelines and notifies saga configuration observers.
     /// </summary>
     public class SagaMessageSpecification :
         ISagaMessageSpecification<TSaga, TMessage>
@@ -21,7 +19,7 @@ public partial class SagaConnector<TSaga, TMessage>
         readonly SagaConfigurationObservable _observers;
         readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-        /// <summary>Initializes a new instance.</summary>
+        /// <summary>Creates empty message and saga pipelines with a configuration-observer collection.</summary>
         public SagaMessageSpecification()
         {
             _configurator = new PipeConfigurator<SagaConsumeContext<TSaga, TMessage>>();
@@ -29,8 +27,8 @@ public partial class SagaConnector<TSaga, TMessage>
             _observers = new SagaConfigurationObservable();
         }
 
-        /// <summary>Validates the current configuration.</summary>
-        /// <returns>The validation failures.</returns>
+        /// <summary>Ensures configuration observers are notified, then materializes validation from both pipelines.</summary>
+        /// <returns>Saga-pipeline results followed by message-pipeline results.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
             _configurationNotification.EnsureNotified(() =>
@@ -41,7 +39,7 @@ public partial class SagaConnector<TSaga, TMessage>
                 .ToArray();
         }
 
-        /// <summary>Gets the message type.</summary>
+        /// <summary>Gets the message contract configured by this specification.</summary>
         public Type MessageType => typeof(TMessage);
 
         ISagaMessageSpecification<TSaga, T> ISagaMessageSpecification<TSaga>.GetMessageSpecification<T>()
@@ -52,23 +50,23 @@ public partial class SagaConnector<TSaga, TMessage>
             throw new ArgumentException($"The message type was invalid: {TypeCache<T>.ShortName}");
         }
 
-        /// <summary>Adds pipe specification to the configuration.</summary>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Appends a saga/message-context specification to the saga-specific pipeline.</summary>
+        /// <param name="specification">The specification applied after the saga instance is selected.</param>
         public void AddPipeSpecification(IPipeSpecification<SagaConsumeContext<TSaga, TMessage>> specification)
         {
             _configurator.AddPipeSpecification(specification);
         }
 
-        /// <summary>Adds pipe specification to the configuration.</summary>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Appends a message-context specification to the message pipeline.</summary>
+        /// <param name="specification">The specification applied before saga repository dispatch.</param>
         public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
         {
             _messagePipeConfigurator.AddPipeSpecification(specification);
         }
 
-        /// <summary>Builds consumer pipe.</summary>
-        /// <param name="consumeFilter">The consume filter.</param>
-        /// <returns>The configured consumer pipe.</returns>
+        /// <summary>Appends the required consume filter and builds the saga-specific pipeline.</summary>
+        /// <param name="consumeFilter">The filter appended after previously registered saga specifications.</param>
+        /// <returns>The pipeline handling the selected saga/message context.</returns>
         public IPipe<SagaConsumeContext<TSaga, TMessage>> BuildConsumerPipe(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter)
         {
             ArgumentNullException.ThrowIfNull(consumeFilter);
@@ -78,9 +76,9 @@ public partial class SagaConnector<TSaga, TMessage>
             return _configurator.Build();
         }
 
-        /// <summary>Builds message pipe.</summary>
-        /// <param name="configure">The callback used to configure the component.</param>
-        /// <returns>The configured message pipe.</returns>
+        /// <summary>Applies a supplied callback to the message configuration and builds the message pipeline.</summary>
+        /// <param name="configure">The callback appending message filters; a null callback adds no configuration.</param>
+        /// <returns>The pipeline composed from the accumulated message specifications.</returns>
         public IPipe<ConsumeContext<TMessage>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<TMessage>>> configure)
         {
             configure?.Invoke(_messagePipeConfigurator);
@@ -88,23 +86,23 @@ public partial class SagaConnector<TSaga, TMessage>
             return _messagePipeConfigurator.Build();
         }
 
-        /// <summary>Adds pipe specification to the configuration.</summary>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Adapts a saga-context specification into the saga/message-context pipeline.</summary>
+        /// <param name="specification">The specification whose filters receive the saga-only context view.</param>
         public void AddPipeSpecification(IPipeSpecification<SagaConsumeContext<TSaga>> specification)
         {
             _configurator.AddPipeSpecification(new SagaPipeSpecificationProxy(specification));
         }
 
-        /// <summary>Connects saga configuration observer.</summary>
-        /// <param name="observer">The observer to connect.</param>
+        /// <summary>Registers an observer for saga-message configuration notification.</summary>
+        /// <param name="observer">The observer receiving this message specification when configuration is validated.</param>
         /// <returns>A handle that disconnects the registration.</returns>
         public ConnectHandle ConnectSagaConfigurationObserver(ISagaConfigurationObserver observer)
         {
             return _observers.Connect(observer);
         }
 
-        /// <summary>Applies the message configuration.</summary>
-        /// <param name="configure">The callback used to configure the component.</param>
+        /// <summary>Applies a supplied callback through a message-context adapter into the saga-specific pipeline.</summary>
+        /// <param name="configure">The callback adding adapted filters; a null callback adds no configuration.</param>
         public void Message(Action<ISagaMessageConfigurator<TMessage>> configure)
         {
             configure?.Invoke(new SagaMessageConfigurator(_configurator));

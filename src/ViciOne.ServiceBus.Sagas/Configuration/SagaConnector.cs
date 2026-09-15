@@ -6,15 +6,15 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Connects saga to the service bus pipeline.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Discovers a saga's supported message contracts and connects their repository pipelines.</summary>
+/// <typeparam name="TSaga">The saga state implementing supported saga message contracts.</typeparam>
 public sealed class SagaConnector<TSaga> :
     ISagaConnector
     where TSaga : class, ISaga
 {
     readonly List<ISagaMessageConnector<TSaga>> _connectors;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Discovers message connectors in category precedence order and rejects a saga with no supported contracts.</summary>
     public SagaConnector()
     {
         try
@@ -45,7 +45,7 @@ public sealed class SagaConnector<TSaga> :
         }
     }
 
-    /// <summary>Gets the connectors.</summary>
+    /// <summary>Gets one connector per message contract, in initiation, orchestration, combined and observation category order.</summary>
     public IEnumerable<ISagaMessageConnector> Connectors => _connectors;
 
     ISagaSpecification<T> ISagaConnector.CreateSagaSpecification<T>()

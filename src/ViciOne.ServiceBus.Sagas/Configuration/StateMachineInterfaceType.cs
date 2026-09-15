@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Creates message connectors for a correlated state-machine event.</summary>
-/// <typeparam name="TInstance">The instance type.</typeparam>
-/// <typeparam name="TData">The data type.</typeparam>
+/// <typeparam name="TInstance">The saga state handled by the state machine.</typeparam>
+/// <typeparam name="TData">The message contract carried by the correlated event.</typeparam>
 public partial class StateMachineInterfaceType<TInstance, TData> :
     IStateMachineInterfaceType
     where TInstance : class, ISaga, ISagaStateMachineInstance
@@ -10,9 +10,9 @@ public partial class StateMachineInterfaceType<TInstance, TData> :
 {
     readonly ISagaConnectorFactory _connectorFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="machine">The machine.</param>
-    /// <param name="correlation">The correlation.</param>
+    /// <summary>Creates a connector factory from the state machine and event correlation.</summary>
+    /// <param name="machine">The state machine consuming the correlated saga event.</param>
+    /// <param name="correlation">The correlation supplying repository policy and message-dispatch filters.</param>
     public StateMachineInterfaceType(ISagaStateMachine<TInstance> machine, IEventCorrelation<TInstance, TData> correlation)
     {
         _connectorFactory = new StateMachineEventConnectorFactory(machine, correlation);

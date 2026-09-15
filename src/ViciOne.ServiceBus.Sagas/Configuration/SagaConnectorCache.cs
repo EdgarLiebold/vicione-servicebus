@@ -2,8 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Caches the saga connectors for the saga.</summary>
-/// <typeparam name="TSaga">The saga type.</typeparam>
+/// <summary>Provides one lazily initialized connector for each closed saga state type.</summary>
+/// <typeparam name="TSaga">The saga state whose message connectors are cached.</typeparam>
 public class SagaConnectorCache<TSaga> :
     ISagaConnectorCache
     where TSaga : class, ISaga
@@ -15,7 +15,7 @@ public class SagaConnectorCache<TSaga> :
         _connector = new Lazy<SagaConnector<TSaga>>(() => new SagaConnector<TSaga>());
     }
 
-    /// <summary>Gets the connector.</summary>
+    /// <summary>Gets the cached connector, initializing it on first access.</summary>
     public static ISagaConnector Connector => Cached.Instance.Value.Connector;
 
     ISagaConnector ISagaConnectorCache.Connector => _connector.Value;

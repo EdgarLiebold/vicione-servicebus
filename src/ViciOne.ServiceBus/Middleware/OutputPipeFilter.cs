@@ -4,9 +4,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Converts an inbound context type to a pipe context type post-dispatch.</summary>
-/// <typeparam name="TInput">The pipe context type.</typeparam>
-/// <typeparam name="TOutput">The subsequent pipe context type.</typeparam>
+/// <summary>Converts input contexts and dispatches successful conversions through an observed output tee.</summary>
+/// <typeparam name="TInput">The input-context contract.</typeparam>
+/// <typeparam name="TOutput">The output-context contract extending the input contract.</typeparam>
 public class OutputPipeFilter<TInput, TOutput> :
     IOutputPipeFilter<TInput, TOutput>
     where TInput : class, PipeContext
@@ -17,10 +17,10 @@ public class OutputPipeFilter<TInput, TOutput> :
     readonly FilterObservable _outerObservers;
     readonly ITeeFilter<TOutput> _output;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="contextConverter">The context converter.</param>
-    /// <param name="observers">The observers.</param>
-    /// <param name="outputFilter">The output filter.</param>
+    /// <summary>Creates an output adapter with required conversion, shared observation and tee dispatch.</summary>
+    /// <param name="contextConverter">The converter selecting contexts compatible with the output contract.</param>
+    /// <param name="observers">The observers shared across output contracts.</param>
+    /// <param name="outputFilter">The tee receiving converted contexts and the continuation.</param>
     public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput> outputFilter)
     {
         _outerObservers = observers ?? throw new ArgumentNullException(nameof(observers));
@@ -116,10 +116,10 @@ public class OutputPipeFilter<TInput, TOutput> :
 }
 
 
-/// <summary>Processes output pipe pipeline stages.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-/// <typeparam name="TOutput">The output type.</typeparam>
-/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <summary>Converts input contexts and dispatches them through an observed keyed output tee.</summary>
+/// <typeparam name="TInput">The input-context contract.</typeparam>
+/// <typeparam name="TOutput">The output-context contract extending the input contract.</typeparam>
+/// <typeparam name="TKey">The key selecting connected output pipelines.</typeparam>
 public class OutputPipeFilter<TInput, TOutput, TKey> :
     OutputPipeFilter<TInput, TOutput>,
     IOutputPipeFilter<TInput, TOutput, TKey>
@@ -129,29 +129,29 @@ public class OutputPipeFilter<TInput, TOutput, TKey> :
 {
     readonly ITeeFilter<TOutput, TKey> _outputFilter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="contextConverter">The context converter.</param>
-    /// <param name="observers">The observers.</param>
-    /// <param name="keyAccessor">The key accessor.</param>
+    /// <summary>Creates an output adapter with a keyed tee and shared observers.</summary>
+    /// <param name="contextConverter">The converter selecting contexts compatible with the output contract.</param>
+    /// <param name="observers">The observers shared across output contracts.</param>
+    /// <param name="keyAccessor">The accessor selecting a key from the converted context.</param>
     public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, KeyAccessor<TInput, TKey> keyAccessor)
         : this(contextConverter, observers, new TeeFilter<TOutput, TKey>(keyAccessor))
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="contextConverter">The context converter.</param>
-    /// <param name="observers">The observers.</param>
-    /// <param name="outputFilter">The output filter.</param>
+    /// <summary>Creates an output adapter using a supplied keyed tee.</summary>
+    /// <param name="contextConverter">The converter selecting contexts compatible with the output contract.</param>
+    /// <param name="observers">The observers shared across output contracts.</param>
+    /// <param name="outputFilter">The keyed tee receiving converted contexts and the continuation.</param>
     protected OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput, TKey> outputFilter)
         : base(contextConverter, observers, outputFilter)
     {
         _outputFilter = outputFilter;
     }
 
-    /// <summary>Connects pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Registers a pipeline with the keyed output tee.</summary>
+    /// <typeparam name="T">The pipeline context contract accepted by the keyed tee.</typeparam>
+    /// <param name="key">The key selecting this pipeline.</param>
+    /// <param name="pipe">The pipeline receiving matching converted contexts.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext

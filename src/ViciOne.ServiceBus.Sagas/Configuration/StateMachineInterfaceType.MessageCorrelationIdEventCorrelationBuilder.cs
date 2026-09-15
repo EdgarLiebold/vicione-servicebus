@@ -4,16 +4,16 @@ namespace ViciOne.ServiceBus.Configuration;
 
 public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    /// <summary>Builds message correlation id event correlation components.</summary>
+    /// <summary>Builds event correlation using an identifier extracted from the event message.</summary>
     public class MessageCorrelationIdEventCorrelationBuilder :
         IEventCorrelationBuilder
     {
         readonly ViciOneServiceBusEventCorrelationConfigurator _configurator;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="machine">The machine.</param>
-        /// <param name="event">The event.</param>
-        /// <param name="messageCorrelationId">The message correlation id.</param>
+        /// <summary>Configures identifier correlation and rejects messages without an extractable identifier during dispatch.</summary>
+        /// <param name="machine">The state machine handling the correlated event.</param>
+        /// <param name="event">The event carrying the message to correlate.</param>
+        /// <param name="messageCorrelationId">The extractor supplying the saga correlation identifier from each message.</param>
         public MessageCorrelationIdEventCorrelationBuilder(ISagaStateMachine<TInstance> machine, IEvent<TData> @event,
             IMessageCorrelationId<TData> messageCorrelationId)
         {
@@ -26,8 +26,8 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             _configurator = configurator;
         }
 
-        /// <summary>Builds the configured component.</summary>
-        /// <returns>The configured component.</returns>
+        /// <summary>Builds the configured message-event correlation.</summary>
+        /// <returns>The correlation using the message identifier extractor.</returns>
         public IEventCorrelation Build()
         {
             return _configurator.Build();

@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Creates a new or uses an existing saga instance.</summary>
-/// <typeparam name="TSaga">The saga type.</typeparam>
-/// <typeparam name="TMessage">The message type.</typeparam>
+/// <summary>Dispatches to existing saga instances or creates missing instances through a saga factory.</summary>
+/// <typeparam name="TSaga">The saga state supplied by existing instances or the factory.</typeparam>
+/// <typeparam name="TMessage">The message contract used for saga dispatch and creation.</typeparam>
 public class NewOrExistingSagaPolicy<TSaga, TMessage> :
     ISagaPolicy<TSaga, TMessage>
     where TSaga : class, ISaga
@@ -13,22 +13,22 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
     readonly bool _insertOnInitial;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="sagaFactory">The saga factory.</param>
-    /// <param name="insertOnInitial">The insert on initial.</param>
+    /// <summary>Configures factory-based saga creation and optional repository pre-insertion.</summary>
+    /// <param name="sagaFactory">The factory creating and dispatching missing saga instances.</param>
+    /// <param name="insertOnInitial">Whether the repository's pre-insertion check creates an instance.</param>
     public NewOrExistingSagaPolicy(ISagaFactory<TSaga, TMessage> sagaFactory, bool insertOnInitial)
     {
         _sagaFactory = sagaFactory;
         _insertOnInitial = insertOnInitial;
     }
 
-    /// <summary>Gets a value indicating whether read only.</summary>
+    /// <summary>Gets false because this policy permits saga creation and mutation.</summary>
     public bool IsReadOnly => false;
 
-    /// <summary>Runs before insert instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="instance">Receives the instance produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Creates an instance through the factory when repository pre-insertion is enabled.</summary>
+    /// <param name="context">The message context passed to the saga factory.</param>
+    /// <param name="instance">Receives the factory-created instance, or null when pre-insertion is disabled.</param>
+    /// <returns>True when pre-insertion is enabled; otherwise false.</returns>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
         if (_insertOnInitial)

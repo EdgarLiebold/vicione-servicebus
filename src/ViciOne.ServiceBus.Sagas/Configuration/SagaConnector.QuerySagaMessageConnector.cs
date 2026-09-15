@@ -6,17 +6,17 @@ public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    /// <summary>Connects query saga message to the service bus pipeline.</summary>
+    /// <summary>Dispatches messages to saga instances selected by a query factory.</summary>
     public class QuerySagaMessageConnector :
         SagaMessageConnector
     {
         readonly ISagaPolicy<TSaga, TMessage> _policy;
         readonly ISagaQueryFactory<TSaga, TMessage> _queryFactory;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="consumeFilter">The consume filter.</param>
-        /// <param name="policy">The policy.</param>
-        /// <param name="queryFactory">The query factory.</param>
+        /// <summary>Associates the saga consume filter, repository policy and query factory.</summary>
+        /// <param name="consumeFilter">The filter appended to the saga consume pipeline.</param>
+        /// <param name="policy">The policy governing existing and missing saga instances.</param>
+        /// <param name="queryFactory">The factory creating a saga query from each message context.</param>
         public QuerySagaMessageConnector(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter, ISagaPolicy<TSaga, TMessage> policy,
             ISagaQueryFactory<TSaga, TMessage> queryFactory)
             : base(consumeFilter)
@@ -25,10 +25,10 @@ public partial class SagaConnector<TSaga, TMessage>
             _queryFactory = queryFactory;
         }
 
-        /// <summary>Configures message pipe.</summary>
-        /// <param name="configurator">The configurator to update.</param>
-        /// <param name="repository">The repository.</param>
-        /// <param name="sagaPipe">The saga pipe.</param>
+        /// <summary>Appends saga repository dispatch using the configured query factory.</summary>
+        /// <param name="configurator">The message pipeline receiving the query filter.</param>
+        /// <param name="repository">The repository locating matching saga instances.</param>
+        /// <param name="sagaPipe">The pipeline invoked with each matched saga context.</param>
         protected override void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TMessage>> configurator, ISagaRepository<TSaga> repository,
             IPipe<SagaConsumeContext<TSaga, TMessage>> sagaPipe)
         {

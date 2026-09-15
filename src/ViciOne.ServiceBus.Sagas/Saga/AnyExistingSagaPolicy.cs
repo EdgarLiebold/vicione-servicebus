@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Sends the message to any existing saga instances, failing silently if no saga instances are found.</summary>
-/// <typeparam name="TSaga">The saga type.</typeparam>
-/// <typeparam name="TMessage">The message type.</typeparam>
+/// <summary>Dispatches to existing saga instances and uses a configurable message pipeline when no instance is found.</summary>
+/// <typeparam name="TSaga">The saga state accepted by existing-instance dispatch.</typeparam>
+/// <typeparam name="TMessage">The message contract used for existing- and missing-instance dispatch.</typeparam>
 public class AnyExistingSagaPolicy<TSaga, TMessage> :
     ISagaPolicy<TSaga, TMessage>
     where TSaga : class, ISaga
@@ -12,22 +12,22 @@ public class AnyExistingSagaPolicy<TSaga, TMessage> :
 {
     readonly IPipe<ConsumeContext<TMessage>> _missingPipe;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="missingPipe">The missing pipe.</param>
-    /// <param name="readOnly">The read only.</param>
+    /// <summary>Configures existing-instance dispatch, defaulting missing-instance handling to an empty pipeline.</summary>
+    /// <param name="missingPipe">The optional message pipeline invoked when no instance is found; null selects an empty pipeline.</param>
+    /// <param name="readOnly">Whether the repository should treat existing-instance dispatch as read-only.</param>
     public AnyExistingSagaPolicy(IPipe<ConsumeContext<TMessage>>? missingPipe = null, bool readOnly = false)
     {
         IsReadOnly = readOnly;
         _missingPipe = missingPipe ?? Pipe.Empty<ConsumeContext<TMessage>>();
     }
 
-    /// <summary>Gets a value indicating whether read only.</summary>
+    /// <summary>Gets whether existing-instance dispatch uses a read-only repository policy.</summary>
     public bool IsReadOnly { get; }
 
-    /// <summary>Runs before insert instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="instance">Receives the instance produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Declines pre-insertion because this policy never creates saga instances.</summary>
+    /// <param name="context">The message context for the repository's pre-insertion check.</param>
+    /// <param name="instance">Receives null because this policy does not create an instance.</param>
+    /// <returns>Always false.</returns>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
         instance = null;

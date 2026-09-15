@@ -4,16 +4,16 @@ namespace ViciOne.ServiceBus.Configuration;
 
 public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    /// <summary>Builds message correlation id fault event correlation components.</summary>
+    /// <summary>Builds fault-event correlation using the identifier of the enclosed original message.</summary>
     public class MessageCorrelationIdFaultEventCorrelationBuilder :
         IEventCorrelationBuilder
     {
         readonly StateMachineInterfaceType<TInstance, Fault<TData>>.ViciOneServiceBusEventCorrelationConfigurator _configurator;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="machine">The machine.</param>
-        /// <param name="event">The event.</param>
-        /// <param name="messageCorrelationId">The message correlation id.</param>
+        /// <summary>Configures identifier correlation for original messages carried by faults.</summary>
+        /// <param name="machine">The state machine handling the correlated fault event.</param>
+        /// <param name="event">The event carrying the fault and its original message.</param>
+        /// <param name="messageCorrelationId">The extractor supplying an identifier from each fault's original message.</param>
         public MessageCorrelationIdFaultEventCorrelationBuilder(ISagaStateMachine<TInstance> machine, IEvent<Fault<TData>> @event,
             IMessageCorrelationId<TData> messageCorrelationId)
         {
@@ -26,8 +26,8 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             _configurator = configurator;
         }
 
-        /// <summary>Builds the configured component.</summary>
-        /// <returns>The configured component.</returns>
+        /// <summary>Builds the configured fault-message event correlation.</summary>
+        /// <returns>The correlation using the enclosed message's identifier.</returns>
         public IEventCorrelation Build()
         {
             return _configurator.Build();

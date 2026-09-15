@@ -1,5 +1,48 @@
 # A+ remediation test status
 
+## Iteration 119 — nested API source reconciliation
+
+The original whole-product A+ goal remains active. From the remote-secured
+`e282a224f1f5f8a6ced6b7162e27bb16997575b7` checkpoint, the main Lead personally
+reads 24 complete source files / 1,872 starting lines and manually updates all
+comments requiring correction in 23 files. A read-only XML-line-stripped
+comparison verifies zero non-documentation changes: no executable statement,
+signature, visibility, directive, dependency or project change.
+
+This pass supplies complete personal source reads for 15 newly qualified nested
+identities; with the previous PipeConfigurator reads, 22/35 nested identities have
+complete personal source disposition. This is not a whole-goal percentage. A
+separate internal Sol advisor fully reads 50 retired-implementation files and 19
+retained entrypoint/interface files. All 57 actual implementation retirements
+remain internal source; built-in capabilities retain public entrypoints. Direct
+construction/subclassing genuinely changes; equivalent specialized custom retry
+projection/deferred-fault composition remains unproved. Static advice is not
+external acceptance, executed package-only evidence or overall losslessness proof.
+
+Three strict Release owner builds terminate successfully, zero warnings/errors:
+Architecture 54.48s, Core 36.36s, Abstractions 5.92s. Fresh native Core terminates
+0 with 4,007/4,007 passed, zero failures/skips (25.752s); Abstractions terminates
+0 with 749/749 passed, zero failures/skips (1.165s). Three selected whitespace
+checks terminate 0 for all 23 edited sources without writes or warnings.
+Fresh unfiltered Architecture terminates 0, 358/358 passed, zero failures/skips
+(3m 12.174s); the actual bidirectional Async method passes (149,072ms). Initial
+109 input/raw bindings match, including 93 complete selected source/checksum rows.
+Actual fresh package gate terminates 1 only at unchanged baseline comparison,
+after 31 packages, 18 journeys, three isolated consumers and 30 runtime assembly
+inventories. Fresh output 20,045 lines / SHA256 96436e3b... matches the secured
+input's fresh API byte-for-byte: no current comment-only API delta. No package
+gate green/cloud acceptance is claimed. Final 118 bindings match with zero
+missing/hash mismatches; diff-check 0 and repeated no-non-XML source comparison 0.
+All owned validation handles are terminal before Git capture. Checkpoint capture
+is reported only after its actual terminal outcomes.
+
+[The bounded packet](../evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-119/NESTED_API_SOURCE_RECONCILIATION_PACKET.md)
+records ten connected nullable/input/cleanup/concurrency/API/extension findings,
+source/checksum scope and evidence transcription corrections. None is silently
+closed by updated comments or regression tests. No new test, catalogue tuple or
+mutation is added. The committed API baseline is unchanged; global coverage,
+remaining source reads and the original final multidimensional A+ gates remain open.
+
 ## Iteration 119 — governed traversal and generic API contracts
 
 The original whole-product goal remains active. The source/project organization

@@ -5,15 +5,15 @@ namespace ViciOne.ServiceBus.Configuration;
 
 public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    /// <summary>Creates state machine event connector instances.</summary>
+    /// <summary>Provides a saga message connector composed from a state-machine event correlation.</summary>
     public class StateMachineEventConnectorFactory :
         ISagaConnectorFactory
     {
         readonly ISagaMessageConnector<TInstance> _connector;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="stateMachine">The state machine.</param>
-        /// <param name="correlation">The correlation.</param>
+        /// <summary>Composes the state-machine consume filter with the event correlation's repository dispatch.</summary>
+        /// <param name="stateMachine">The state machine consuming the correlated saga event.</param>
+        /// <param name="correlation">The correlation supplying event, policy, filters and topology selection.</param>
         public StateMachineEventConnectorFactory(ISagaStateMachine<TInstance> stateMachine, IEventCorrelation<TInstance, TData> correlation)
         {
             var consumeFilter = new StateMachineSagaMessageFilter<TInstance, TData>(stateMachine, correlation.Event);

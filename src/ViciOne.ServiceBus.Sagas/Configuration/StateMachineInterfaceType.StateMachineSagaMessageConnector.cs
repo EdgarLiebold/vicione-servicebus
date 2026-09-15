@@ -2,7 +2,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    /// <summary>Connects state machine saga message to the service bus pipeline.</summary>
+    /// <summary>Connects a state-machine event's message pipeline to correlated saga repository dispatch.</summary>
     public class StateMachineSagaMessageConnector :
         SagaConnector<TInstance, TData>.SagaMessageConnector
     {
@@ -10,12 +10,12 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         readonly ISagaPolicy<TInstance, TData> _policy;
         readonly SagaFilterFactory<TInstance, TData>? _sagaFilterFactory;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="consumeFilter">The consume filter.</param>
-        /// <param name="policy">The policy.</param>
-        /// <param name="sagaFilterFactory">The saga filter factory.</param>
-        /// <param name="messageFilter">The message filter.</param>
-        /// <param name="configureConsumeTopology">The configure consume topology.</param>
+        /// <summary>Associates state-machine consumption with the required repository policy and optional dispatch filters.</summary>
+        /// <param name="consumeFilter">The filter executing the state-machine event in a saga context.</param>
+        /// <param name="policy">The existing/missing-instance policy; a missing policy is rejected.</param>
+        /// <param name="sagaFilterFactory">The correlation factory required when the message pipeline is connected.</param>
+        /// <param name="messageFilter">The optional filter applied before saga repository dispatch.</param>
+        /// <param name="configureConsumeTopology">Whether connecting the message pipeline configures consume topology.</param>
         public StateMachineSagaMessageConnector(IFilter<SagaConsumeContext<TInstance, TData>> consumeFilter, ISagaPolicy<TInstance, TData>? policy,
             SagaFilterFactory<TInstance, TData>? sagaFilterFactory, IFilter<ConsumeContext<TData>>? messageFilter, bool configureConsumeTopology)
             : base(consumeFilter)
@@ -26,13 +26,13 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             _messageFilter = messageFilter;
         }
 
-        /// <summary>Gets the configure consume topology.</summary>
+        /// <summary>Gets the correlation's selection for consume-topology configuration.</summary>
         protected override bool ConfigureConsumeTopology { get; }
 
-        /// <summary>Configures message pipe.</summary>
-        /// <param name="configurator">The configurator to update.</param>
-        /// <param name="repository">The repository.</param>
-        /// <param name="sagaPipe">The saga pipe.</param>
+        /// <summary>Appends an optional message filter and the required correlated saga-dispatch filter.</summary>
+        /// <param name="configurator">The message pipeline receiving the dispatch filters.</param>
+        /// <param name="repository">The repository locating or creating saga instances under the configured policy.</param>
+        /// <param name="sagaPipe">The pipeline invoking the state machine with the selected saga context.</param>
         protected override void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TData>> configurator, ISagaRepository<TInstance> repository,
             IPipe<SagaConsumeContext<TInstance, TData>> sagaPipe)
         {

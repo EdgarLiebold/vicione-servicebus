@@ -7,14 +7,14 @@ public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    /// <summary>Forwards saga pipe specification operations to an underlying context.</summary>
+    /// <summary>Adapts saga-only or message-only specifications into a saga/message-context pipeline.</summary>
     public class SagaPipeSpecificationProxy :
         IPipeSpecification<SagaConsumeContext<TSaga, TMessage>>
     {
         readonly IPipeSpecification<SagaConsumeContext<TSaga, TMessage>> _specification;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Creates a proxy using a required saga-context specification.</summary>
+        /// <param name="specification">The specification whose filters receive the saga-only context view.</param>
         public SagaPipeSpecificationProxy(IPipeSpecification<SagaConsumeContext<TSaga>> specification)
         {
             if (specification == null)
@@ -23,8 +23,8 @@ public partial class SagaConnector<TSaga, TMessage>
             _specification = new SagaSplitFilterSpecification(specification);
         }
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Creates a proxy using a required message-context specification.</summary>
+        /// <param name="specification">The specification whose filters receive the message-only context view.</param>
         public SagaPipeSpecificationProxy(IPipeSpecification<ConsumeContext<TMessage>> specification)
         {
             if (specification == null)
@@ -33,15 +33,15 @@ public partial class SagaConnector<TSaga, TMessage>
             _specification = new SagaMessageSplitFilterSpecification(specification);
         }
 
-        /// <summary>Applies this specification to the target builder.</summary>
-        /// <param name="builder">The builder that receives the configuration.</param>
+        /// <summary>Applies the selected split-filter specification to the saga/message builder.</summary>
+        /// <param name="builder">The builder receiving adapted context filters.</param>
         public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
         {
             _specification.Apply(builder);
         }
 
-        /// <summary>Validates the current configuration.</summary>
-        /// <returns>The validation failures.</returns>
+        /// <summary>Returns validation from the selected split-filter specification.</summary>
+        /// <returns>The underlying specification's validation sequence.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
             return _specification.Validate();

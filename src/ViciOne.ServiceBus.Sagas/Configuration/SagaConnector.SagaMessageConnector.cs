@@ -6,37 +6,37 @@ public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    /// <summary>Connects saga message to the service bus pipeline.</summary>
+    /// <summary>Composes saga and message pipelines and connects them to the consume pipeline.</summary>
     public abstract class SagaMessageConnector :
         ISagaMessageConnector<TSaga>
     {
         const ConnectPipeOptions NotConfigureConsumeTopology = ConnectPipeOptions.All & ~ConnectPipeOptions.ConfigureConsumeTopology;
         readonly IFilter<SagaConsumeContext<TSaga, TMessage>> _consumeFilter;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="consumeFilter">The consume filter.</param>
+        /// <summary>Associates the consume filter appended to the saga-specific pipeline.</summary>
+        /// <param name="consumeFilter">The filter handling the saga/message consume context.</param>
         protected SagaMessageConnector(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter)
         {
             _consumeFilter = consumeFilter;
         }
 
-        /// <summary>Gets the configure consume topology.</summary>
+        /// <summary>Gets whether connecting this message pipeline also configures consume topology.</summary>
         protected virtual bool ConfigureConsumeTopology { get; } = true;
 
-        /// <summary>Gets the message type.</summary>
+        /// <summary>Gets the message contract connected by this connector.</summary>
         public Type MessageType => typeof(TMessage);
 
-        /// <summary>Creates saga message specification.</summary>
-        /// <returns>The created saga message specification.</returns>
+        /// <summary>Creates an empty specification for this saga/message pair.</summary>
+        /// <returns>The specification configuring the saga-specific and message pipelines.</returns>
         public ISagaMessageSpecification<TSaga> CreateSagaMessageSpecification()
         {
             return new SagaMessageSpecification();
         }
 
-        /// <summary>Connects saga.</summary>
-        /// <param name="consumePipe">The consume pipe.</param>
-        /// <param name="repository">The repository.</param>
-        /// <param name="specification">The specification.</param>
+        /// <summary>Builds the configured message and saga pipelines and connects the message pipeline for consumption.</summary>
+        /// <param name="consumePipe">The connector receiving the completed message pipeline.</param>
+        /// <param name="repository">The saga repository used by the message-dispatch filters.</param>
+        /// <param name="specification">The saga configuration supplying message-specific and shared specifications.</param>
         /// <returns>A handle that disconnects the registration.</returns>
         public ConnectHandle ConnectSaga(IConsumePipeConnector consumePipe, ISagaRepository<TSaga> repository, ISagaSpecification<TSaga> specification)
         {
@@ -56,10 +56,10 @@ public partial class SagaConnector<TSaga, TMessage>
                 : consumePipe.ConnectConsumePipe(messagePipe, NotConfigureConsumeTopology);
         }
 
-        /// <summary>Configure the message pipe that is prior to the saga repository.</summary>
-        /// <param name="configurator">The pipe configurator.</param>
-        /// <param name="repository">The repository.</param>
-        /// <param name="sagaPipe">The saga pipe.</param>
+        /// <summary>Appends message-dispatch filters that enter the saga repository before the saga-specific pipeline.</summary>
+        /// <param name="configurator">The message pipeline receiving the dispatch filters.</param>
+        /// <param name="repository">The saga repository used by the dispatch filters.</param>
+        /// <param name="sagaPipe">The pipeline invoked with the selected saga context.</param>
         protected abstract void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TMessage>> configurator, ISagaRepository<TSaga> repository,
             IPipe<SagaConsumeContext<TSaga, TMessage>> sagaPipe);
     }

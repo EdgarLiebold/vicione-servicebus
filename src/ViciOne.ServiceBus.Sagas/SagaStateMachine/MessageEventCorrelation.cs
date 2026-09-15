@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>Defines correlation for message event.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Associates a state-machine message event with correlation filters and lazily selected saga repository policy.</summary>
+/// <typeparam name="TSaga">The saga state handled by the state machine.</typeparam>
+/// <typeparam name="TMessage">The message contract carried by the correlated event.</typeparam>
 public class MessageEventCorrelation<TSaga, TMessage> :
     IEventCorrelation<TSaga, TMessage>
     where TSaga : class, ISagaStateMachineInstance
@@ -21,16 +21,16 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     readonly bool _readOnly;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="machine">The machine.</param>
-    /// <param name="event">The event.</param>
-    /// <param name="sagaFilterFactory">The saga filter factory.</param>
-    /// <param name="messageFilter">The message filter.</param>
-    /// <param name="missingPipe">The missing pipe.</param>
-    /// <param name="sagaFactory">The saga factory.</param>
-    /// <param name="insertOnInitial">The insert on initial.</param>
-    /// <param name="readOnly">The read only.</param>
-    /// <param name="configureConsumeTopology">The configure consume topology.</param>
+    /// <summary>Stores event correlation configuration and defers state-machine policy selection until it is needed.</summary>
+    /// <param name="machine">The state machine determining whether the event is handled in its initial state.</param>
+    /// <param name="event">The event receiving the correlated message.</param>
+    /// <param name="sagaFilterFactory">The optional factory composing correlated repository dispatch.</param>
+    /// <param name="messageFilter">The optional message filter applied before repository dispatch.</param>
+    /// <param name="missingPipe">The message pipeline used when existing-instance dispatch finds no saga.</param>
+    /// <param name="sagaFactory">The factory creating saga instances for initial-state dispatch.</param>
+    /// <param name="insertOnInitial">Whether initial-state dispatch requests saga creation before repository dispatch.</param>
+    /// <param name="readOnly">Whether existing-instance dispatch uses a read-only repository policy.</param>
+    /// <param name="configureConsumeTopology">Whether connecting the event's message pipeline configures consume topology.</param>
     public MessageEventCorrelation(ISagaStateMachine<TSaga> machine, IEvent<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
         IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
         bool insertOnInitial, bool readOnly, bool configureConsumeTopology)
@@ -49,26 +49,26 @@ public class MessageEventCorrelation<TSaga, TMessage> :
         _includesInitial = new Lazy<bool>(() => IncludesInitial());
     }
 
-    /// <summary>Gets the configure consume topology.</summary>
+    /// <summary>Gets whether connecting the event's message pipeline configures consume topology.</summary>
     public bool ConfigureConsumeTopology { get; }
 
-    /// <summary>Gets the filter factory.</summary>
+    /// <summary>Gets the optional factory composing correlated saga repository dispatch.</summary>
     public SagaFilterFactory<TSaga, TMessage>? FilterFactory { get; }
 
-    /// <summary>Gets the event.</summary>
+    /// <summary>Gets the state-machine event receiving correlated messages.</summary>
     public IEvent<TMessage> Event { get; }
 
-    /// <summary>Gets the data type.</summary>
+    /// <summary>Gets the message contract carried by the event.</summary>
     public Type DataType => typeof(TMessage);
 
-    /// <summary>Gets the message filter.</summary>
+    /// <summary>Gets the optional filter applied to messages before saga repository dispatch.</summary>
     public IFilter<ConsumeContext<TMessage>>? MessageFilter { get; }
 
-    /// <summary>Gets the policy.</summary>
+    /// <summary>Gets a creation-capable policy for initial-state events or an existing-instance policy for other events.</summary>
     public ISagaPolicy<TSaga, TMessage> Policy => _policy.Value;
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Rejects read-only configuration combined with pre-insertion or initial-state event handling.</summary>
+    /// <returns>The failures for incompatible read-only policy settings.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_insertOnInitial && _readOnly)
