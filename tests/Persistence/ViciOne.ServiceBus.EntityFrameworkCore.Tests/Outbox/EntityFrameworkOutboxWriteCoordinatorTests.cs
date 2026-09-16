@@ -19,6 +19,41 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-WRITE-COORDINATOR", "required-actions-fail-at-boundary")]
+    public async Task Coordinator_RejectsMissingActionsAsync()
+    {
+        using var coordinator = new EntityFrameworkOutboxWriteCoordinator();
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            coordinator.ExecuteAsync(null!, TestContext.Current.CancellationToken));
+        Assert.Throws<ArgumentNullException>(() => coordinator.ExecuteSynchronous(null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-WRITE-COORDINATOR", "synchronous-disposal-cannot-race-an-async-write")]
+    public async Task Coordinator_RejectsSynchronousMutationWhileAsyncWorkOwnsTheSessionAsync()
+    {
+        using var coordinator = new EntityFrameworkOutboxWriteCoordinator();
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task operation = coordinator.ExecuteAsync(
+            async () =>
+            {
+                entered.SetResult();
+                await release.Task;
+            },
+            TestContext.Current.CancellationToken);
+        await entered.Task;
+
+        InvalidOperationException failure = Assert.Throws<InvalidOperationException>(() =>
+            coordinator.ExecuteSynchronous(() => { }));
+        release.SetResult();
+        await operation;
+
+        Assert.Contains("busy", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "commit-persists-business-and-intent")]
     public async Task Commit_PersistsBusinessDataAndOutboxIntentThroughTheSameContextAsync()
     {
