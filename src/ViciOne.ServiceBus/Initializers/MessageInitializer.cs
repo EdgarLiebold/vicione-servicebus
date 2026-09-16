@@ -39,6 +39,10 @@ public static class MessageInitializer
 /// <summary>Creates a message and populates its properties and outgoing headers from a typed input object.</summary>
 /// <typeparam name="TMessage">The message contract produced by the initializer.</typeparam>
 /// <typeparam name="TInput">The input-object type consumed by the initializer.</typeparam>
+/// <remarks>Callbacks start in snapshot order and may complete concurrently. Each batch observes every
+/// returned callback task before completing, including when another callback throws synchronously.
+/// Ordinary callback failures take precedence over canceled callbacks in the same batch.
+/// Cancellation is checked before initialization and forwarded to callbacks without abandoning a started batch.</remarks>
 internal sealed class MessageInitializer<TMessage, TInput> :
     IMessageInitializer<TMessage>
     where TMessage : class
@@ -113,7 +117,11 @@ internal sealed class MessageInitializer<TMessage, TInput> :
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return PrepareInitializedMessageAsync(Create(context), RequireInput(input), pipe, cancellationToken);
+        TInput typedInput = RequireInput(input);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>(cancellationToken);
+
+        return PrepareInitializedMessageAsync(Create(context), typedInput, pipe, cancellationToken);
     }
 
     /// <summary>Creates a message and prepares its initialized-header pipe without inheriting another context.</summary>
@@ -124,7 +132,11 @@ internal sealed class MessageInitializer<TMessage, TInput> :
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(pipe);
-        return PrepareInitializedMessageAsync(Create(cancellationToken), RequireInput(input), pipe, cancellationToken);
+        TInput typedInput = RequireInput(input);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>(cancellationToken);
+
+        return PrepareInitializedMessageAsync(Create(cancellationToken), typedInput, pipe, cancellationToken);
     }
 
     /// <summary>Creates a message, applies multiple input objects, and prepares its initialized-header pipe.</summary>
@@ -134,16 +146,25 @@ internal sealed class MessageInitializer<TMessage, TInput> :
     /// <param name="pipe">Additional send-pipeline stages associated with the initialized message.</param>
     /// <param name="cancellationToken">The token that cancels property initialization.</param>
     /// <returns>A task containing the populated message and its send pipe.</returns>
-    public async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
+    public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         TInput primaryInput = RequireInput(input);
         ArgumentNullException.ThrowIfNull(moreInputs);
         object?[] additionalInputs = [.. moreInputs];
-        cancellationToken.ThrowIfCancellationRequested();
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>(cancellationToken);
 
-        InitializeContext<TMessage> initializeContext = Create(context);
+        return InitializeInputsAsync(Create(context), primaryInput, additionalInputs, pipe, cancellationToken);
+    }
 
+    async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeInputsAsync(
+        InitializeContext<TMessage> initializeContext,
+        TInput primaryInput,
+        object?[] additionalInputs,
+        IPipe<SendContext<TMessage>>? pipe,
+        CancellationToken cancellationToken)
+    {
         for (var i = 0; i < additionalInputs.Length; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -153,13 +174,11 @@ internal sealed class MessageInitializer<TMessage, TInput> :
                 IMessageInitializer<TMessage> initializer = MessageInitializerCache<TMessage>.GetInitializer(moreInput.GetType());
 
                 initializeContext = await initializer.InitializeAsync(initializeContext, moreInput, cancellationToken: cancellationToken)
-                    .WaitAsync(cancellationToken)
                     .ConfigureAwait(false);
             }
         }
 
         return await PrepareInitializedMessageAsync(initializeContext, primaryInput, pipe, cancellationToken)
-            .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -172,7 +191,6 @@ internal sealed class MessageInitializer<TMessage, TInput> :
             ?? throw new InvalidOperationException($"The message factory for '{typeof(TMessage)}' returned null.");
 
         return await InitializeMessageAsync(messageContext, input, cancellationToken)
-            .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -184,10 +202,7 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         cancellationToken.ThrowIfCancellationRequested();
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => RequireInitializerTaskAsync(
-                x.ApplyAsync(inputContext, cancellationToken),
-                "property")))
-            .WaitAsync(cancellationToken)
+        await Task.WhenAll(_initializers.Select(x => ApplyPropertyInitializerAsync(x, inputContext, cancellationToken)))
             .ConfigureAwait(false);
 
         return messageContext;
@@ -202,10 +217,7 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         cancellationToken.ThrowIfCancellationRequested();
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => RequireInitializerTaskAsync(
-                x.ApplyAsync(inputContext, cancellationToken),
-                "property")))
-            .WaitAsync(cancellationToken)
+        await Task.WhenAll(_initializers.Select(x => ApplyPropertyInitializerAsync(x, inputContext, cancellationToken)))
             .ConfigureAwait(false);
 
         return _headerInitializers.Length > 0
@@ -243,7 +255,28 @@ internal sealed class MessageInitializer<TMessage, TInput> :
             new InvalidOperationException($"A {initializerKind} initializer returned a null task."));
     }
 
-    /// <summary>Applies initialized headers before forwarding the send context to its configured pipeline.</summary>
+    /// <summary>Captures one property callback's invocation and task outcome for the owning parallel batch.</summary>
+    static async Task ApplyPropertyInitializerAsync(
+        IPropertyInitializer<TMessage, TInput> initializer,
+        InitializeContext<TMessage, TInput> context,
+        CancellationToken cancellationToken)
+    {
+        await RequireInitializerTaskAsync(initializer.ApplyAsync(context, cancellationToken), "property")
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>Captures one header callback's invocation and task outcome for the owning parallel batch.</summary>
+    static async Task ApplyHeaderInitializerAsync(
+        IHeaderInitializer<TMessage, TInput> initializer,
+        InitializeContext<TMessage, TInput> initializeContext,
+        SendContext sendContext,
+        CancellationToken cancellationToken)
+    {
+        await RequireInitializerTaskAsync(initializer.ApplyAsync(initializeContext, sendContext, cancellationToken), "header")
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>Owns the initialized-header batch before forwarding the accepted send configuration to its pipeline.</summary>
     class InitializerSendContextPipe :
         IPipe<SendContext<TMessage>>,
         ISendPipe
@@ -270,10 +303,7 @@ internal sealed class MessageInitializer<TMessage, TInput> :
         {
             ArgumentNullException.ThrowIfNull(context);
             context.CancellationToken.ThrowIfCancellationRequested();
-            await Task.WhenAll(_initializers.Select(x => RequireInitializerTaskAsync(
-                    x.ApplyAsync(_context, context, context.CancellationToken),
-                    "header")))
-                .WaitAsync(context.CancellationToken)
+            await Task.WhenAll(_initializers.Select(x => ApplyHeaderInitializerAsync(x, _context, context, context.CancellationToken)))
                 .ConfigureAwait(false);
 
             if (_pipe != null && _pipe.IsNotEmpty())
@@ -293,6 +323,7 @@ internal sealed class MessageInitializer<TMessage, TInput> :
 
             return _pipe is ISendContextPipe sendContextPipe
                 ? sendContextPipe.SendAsync(context, cancellationToken)
+                    ?? throw new InvalidOperationException("The initialized general send pipe returned no configuration task.")
                 : Task.CompletedTask;
         }
     }

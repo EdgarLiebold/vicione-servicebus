@@ -5,6 +5,10 @@ namespace ViciOne.ServiceBus.Initializers;
 
 /// <summary>Creates and populates messages from runtime input objects.</summary>
 /// <typeparam name="TMessage">The message contract produced by the initializer.</typeparam>
+/// <remarks>Required arguments are validated before initialization starts. Cancellation is checked before
+/// each input application and forwarded to its callbacks. An accepted callback batch is observed to its
+/// original completion; cancellation does not abandon callbacks that are still modifying the message.
+/// Ordinary callback failures take precedence over canceled callbacks in the same batch.</remarks>
 public interface IMessageInitializer<TMessage>
     where TMessage : class
 {

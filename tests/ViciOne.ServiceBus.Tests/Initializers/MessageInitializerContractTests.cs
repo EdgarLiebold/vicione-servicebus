@@ -92,12 +92,24 @@ public sealed class MessageInitializerContractTests
         MessageInitializer<TestMessage, TestInput> initializer = Create(propertyInitializer: propertyInitializer);
 
         Task<InitializeContext<TestMessage>> result = initializer.InitializeAsync(new TestInput(), cancellation.Token);
-        cancellation.Cancel();
-
-        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            result.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
-        Assert.Equal(cancellation.Token, exception.CancellationToken);
-        Assert.False(propertyInitializer.Task.IsCompleted);
+        try
+        {
+            cancellation.Cancel();
+            Assert.Equal(cancellation.Token, propertyInitializer.CancellationToken);
+            Assert.False(result.IsCompleted);
+            Assert.False(propertyInitializer.Task.IsCompleted);
+            propertyInitializer.Cancel(cancellation.Token);
+            OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                result.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+            Assert.Equal(cancellation.Token, exception.CancellationToken);
+            Assert.True(propertyInitializer.Task.IsCanceled);
+        }
+        finally
+        {
+            propertyInitializer.Release();
+            await ObserveAsync(propertyInitializer.Task);
+            await ObserveAsync(result);
+        }
     }
 
     [Fact]
@@ -115,12 +127,24 @@ public sealed class MessageInitializerContractTests
         ((SendContextProxy)(object)sendContext).CancellationToken = cancellation.Token;
 
         Task result = initialized.Pipe.SendAsync(sendContext);
-        cancellation.Cancel();
-
-        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            result.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
-        Assert.Equal(cancellation.Token, exception.CancellationToken);
-        Assert.False(headerInitializer.Task.IsCompleted);
+        try
+        {
+            cancellation.Cancel();
+            Assert.Equal(cancellation.Token, headerInitializer.CancellationToken);
+            Assert.False(result.IsCompleted);
+            Assert.False(headerInitializer.Task.IsCompleted);
+            headerInitializer.Cancel(cancellation.Token);
+            OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                result.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+            Assert.Equal(cancellation.Token, exception.CancellationToken);
+            Assert.True(headerInitializer.Task.IsCanceled);
+        }
+        finally
+        {
+            headerInitializer.Release();
+            await ObserveAsync(headerInitializer.Task);
+            await ObserveAsync(result);
+        }
     }
 
     [Fact]
@@ -323,12 +347,21 @@ public sealed class MessageInitializerContractTests
             messageContext.CreateInputContext(new AsyncTestInput(source.Task));
 
         Task result = initializer.ApplyAsync(inputContext, cancellation.Token);
-        cancellation.Cancel();
-
-        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            result.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
-        Assert.Equal(cancellation.Token, exception.CancellationToken);
-        Assert.False(source.Task.IsCompleted);
+        try
+        {
+            cancellation.Cancel();
+            OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                result.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+            Assert.Equal(cancellation.Token, exception.CancellationToken);
+            Assert.False(source.Task.IsCompleted);
+            Assert.Null(messageContext.Message.ObjectValue);
+        }
+        finally
+        {
+            source.TrySetResult("cleanup");
+            await ObserveAsync(source.Task);
+            await ObserveAsync(result);
+        }
     }
 
     [Fact]
@@ -468,6 +501,12 @@ public sealed class MessageInitializerContractTests
     private static void AssertCacheNull(string parameterName, Action operation) =>
         Assert.Equal(parameterName, Assert.Throws<ArgumentNullException>(operation).ParamName);
 
+    private static async Task ObserveAsync(Task task)
+    {
+        await Record.ExceptionAsync(() => task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
+        Assert.True(task.IsCompleted);
+    }
+
     private sealed class TestMessage
     {
         public object? ObjectValue { get; set; }
@@ -518,8 +557,18 @@ public sealed class MessageInitializerContractTests
 
         public Task Task => _completion.Task;
 
+        public CancellationToken CancellationToken { get; private set; }
+
+        public void Cancel(CancellationToken token) => _completion.TrySetCanceled(token);
+
+        public void Release() => _completion.TrySetResult();
+
         public Task ApplyAsync(InitializeContext<TestMessage, TestInput> context,
-            CancellationToken cancellationToken = default) => _completion.Task;
+            CancellationToken cancellationToken = default)
+        {
+            CancellationToken = cancellationToken;
+            return _completion.Task;
+        }
     }
 
     private sealed class PendingHeaderInitializer : IHeaderInitializer<TestMessage, TestInput>
@@ -528,8 +577,18 @@ public sealed class MessageInitializerContractTests
 
         public Task Task => _completion.Task;
 
+        public CancellationToken CancellationToken { get; private set; }
+
+        public void Cancel(CancellationToken token) => _completion.TrySetCanceled(token);
+
+        public void Release() => _completion.TrySetResult();
+
         public Task ApplyAsync(InitializeContext<TestMessage, TestInput> context, SendContext sendContext,
-            CancellationToken cancellationToken = default) => _completion.Task;
+            CancellationToken cancellationToken = default)
+        {
+            CancellationToken = cancellationToken;
+            return _completion.Task;
+        }
     }
 
     private sealed class NullTaskPropertyInitializer : IPropertyInitializer<TestMessage, TestInput>
