@@ -10,6 +10,10 @@ using ViciOne.ServiceBus.Internals.Dispatching;
 namespace ViciOne.ServiceBus.Transports;
 
 /// <summary>Applies endpoint serialization and addressing before dispatching through a send transport.</summary>
+/// <remarks>
+/// Required arguments are validated before cancellation. Started transport operations and endpoint configuration
+/// stages retain their original outcomes; caller cancellation does not detach them or settle caller-owned input values.
+/// </remarks>
 internal sealed class SendEndpoint :
     ITransportSendEndpoint,
     IAsyncDisposable
@@ -74,7 +78,8 @@ internal sealed class SendEndpoint :
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         ArgumentNullException.ThrowIfNull(observer);
-        return _transport.ConnectSendObserver(observer);
+        return _transport.ConnectSendObserver(observer)
+            ?? throw new InvalidOperationException("The send transport returned no observer connection handle.");
     }
 
     /// <inheritdoc />
@@ -84,8 +89,25 @@ internal sealed class SendEndpoint :
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(pipe);
         cancellationToken.ThrowIfCancellationRequested();
-        return _transport.CreateSendContextAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken)
+        Task<SendContext<T>> creation = _transport.CreateSendContextAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken)
             ?? throw new InvalidOperationException("The send transport returned no context-creation task.");
+
+        if (creation.IsCompleted)
+        {
+            if (creation.IsCompletedSuccessfully && creation.Result is null)
+                throw new InvalidOperationException("The send transport created no send context.");
+
+            return creation;
+        }
+
+        return AwaitCreatedContextAsync(creation);
+    }
+
+    static async Task<SendContext<T>> AwaitCreatedContextAsync<T>(Task<SendContext<T>> creation)
+        where T : class
+    {
+        return await creation.ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The send transport created no send context.");
     }
 
     /// <inheritdoc />
@@ -168,47 +190,49 @@ internal sealed class SendEndpoint :
     }
 
     /// <inheritdoc />
-    public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
+    public Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(values);
         cancellationToken.ThrowIfCancellationRequested();
 
-        (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessageAsync(values, new SendEndpointPipe<T>(this), cancellationToken).ConfigureAwait(false);
-
-        await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        return SendInitializedAsync(values, new SendEndpointPipe<T>(this), cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(pipe);
         cancellationToken.ThrowIfCancellationRequested();
 
-        (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessageAsync(values, new SendEndpointPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
-
-        await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        return SendInitializedAsync(values, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(pipe);
         cancellationToken.ThrowIfCancellationRequested();
 
-        (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessageAsync(values, new SendEndpointPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
-
-        await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        return SendInitializedAsync(values, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
+    async Task SendInitializedAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+        where T : class
+    {
+        (var message, IPipe<SendContext<T>> sendPipe) =
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
+        Task sendTask = _transport.SendAsync(message, sendPipe, cancellationToken)
+            ?? throw new InvalidOperationException("The send transport returned no send task.");
+        await sendTask.ConfigureAwait(false);
+    }
+
+    /// <summary>Projects endpoint metadata, configures general and typed stages, and preserves conversation identity.</summary>
     sealed class SendEndpointPipe<T> :
         IPipe<SendContext<T>>
         where T : class
@@ -249,12 +273,22 @@ internal sealed class SendEndpoint :
                 context.SourceAddress = _endpoint.SourceAddress;
 
             if (_sendContextPipe != null)
-                await _sendContextPipe.SendAsync(context).ConfigureAwait(false);
+            {
+                Task generalConfiguration = _sendContextPipe.SendAsync(context, context.CancellationToken)
+                    ?? throw new InvalidOperationException("The general send-context pipe returned no configuration task.");
+                await generalConfiguration.ConfigureAwait(false);
+            }
 
-            await _endpoint._sendPipe.SendAsync(context).ConfigureAwait(false);
+            Task endpointConfiguration = _endpoint._sendPipe.SendAsync(context, context.CancellationToken)
+                ?? throw new InvalidOperationException("The endpoint send pipe returned no configuration task.");
+            await endpointConfiguration.ConfigureAwait(false);
 
             if (_pipe != null && _pipe.IsNotEmpty())
-                await _pipe.SendAsync(context).ConfigureAwait(false);
+            {
+                Task additionalConfiguration = _pipe.SendAsync(context)
+                    ?? throw new InvalidOperationException("The additional send pipe returned no configuration task.");
+                await additionalConfiguration.ConfigureAwait(false);
+            }
 
             context.ConversationId ??= NewId.NextGuid();
         }

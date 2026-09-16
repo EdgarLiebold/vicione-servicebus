@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Defines the operations required by send pipe.</summary>
+/// <summary>Configures typed send contexts through an endpoint-level pipeline with diagnostic probing.</summary>
 public interface ISendPipe :
     ISendContextPipe,
     IProbeSite

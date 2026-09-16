@@ -243,7 +243,7 @@ internal sealed class MessageInitializer<TMessage, TInput> :
             new InvalidOperationException($"A {initializerKind} initializer returned a null task."));
     }
 
-
+    /// <summary>Applies initialized headers before forwarding the send context to its configured pipeline.</summary>
     class InitializerSendContextPipe :
         IPipe<SendContext<TMessage>>,
         ISendPipe
@@ -277,7 +277,11 @@ internal sealed class MessageInitializer<TMessage, TInput> :
                 .ConfigureAwait(false);
 
             if (_pipe != null && _pipe.IsNotEmpty())
-                await _pipe.SendAsync(context).WaitAsync(context.CancellationToken).ConfigureAwait(false);
+            {
+                Task configuration = _pipe.SendAsync(context)
+                    ?? throw new InvalidOperationException("The initialized send pipe returned no configuration task.");
+                await configuration.ConfigureAwait(false);
+            }
         }
 
         public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
