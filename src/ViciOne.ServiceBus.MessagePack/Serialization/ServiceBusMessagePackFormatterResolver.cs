@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using MessagePack;
 using MessagePack.Formatters;
@@ -22,7 +22,7 @@ internal sealed class ServiceBusMessagePackFormatterResolver :
 
     readonly Dictionary<Type, Type> _mappedNonGenericTypes;
     readonly Dictionary<Type, Type> _mappedGenericTypes;
-    readonly ConcurrentDictionary<Type, Lazy<IMessagePackFormatter>> _cachedFormatters;
+    readonly ConditionalWeakTable<Type, Lazy<IMessagePackFormatter>> _cachedFormatters;
 
     ServiceBusMessagePackFormatterResolver()
     {
@@ -56,7 +56,7 @@ internal sealed class ServiceBusMessagePackFormatterResolver :
             },
         };
 
-        _cachedFormatters = new ConcurrentDictionary<Type, Lazy<IMessagePackFormatter>>();
+        _cachedFormatters = [];
     }
 
     /// <summary>Gets the owned formatter for a contract, or defers unsupported concrete types to the next resolver.</summary>
@@ -68,19 +68,18 @@ internal sealed class ServiceBusMessagePackFormatterResolver :
 
         if (TryGetMappedType(contractType, out Type? formatterType))
         {
-            Lazy<IMessagePackFormatter> mapped = _cachedFormatters.GetOrAdd(
+            Lazy<IMessagePackFormatter> mapped = _cachedFormatters.GetValue(
                 contractType,
-                static (_, type) => new Lazy<IMessagePackFormatter>(
-                    () => CreateMappedFormatter(type),
-                    LazyThreadSafetyMode.ExecutionAndPublication),
-                formatterType);
+                _ => new Lazy<IMessagePackFormatter>(
+                    () => CreateMappedFormatter(formatterType),
+                    LazyThreadSafetyMode.ExecutionAndPublication));
             return (IMessagePackFormatter<T>)mapped.Value;
         }
 
         if (!contractType.IsInterface)
             return null;
 
-        Lazy<IMessagePackFormatter> concrete = _cachedFormatters.GetOrAdd(
+        Lazy<IMessagePackFormatter> concrete = _cachedFormatters.GetValue(
             contractType,
             static _ => new Lazy<IMessagePackFormatter>(
                 static () => new InterfaceMessagePackFormatter<T>(),

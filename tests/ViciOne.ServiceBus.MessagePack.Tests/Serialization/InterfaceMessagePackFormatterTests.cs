@@ -260,6 +260,18 @@ public sealed class InterfaceMessagePackFormatterTests
         Assert.All(formatters, candidate => Assert.Same(formatter, candidate));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "resolver-weak-key")]
+    public void Resolver_DoesNotKeepCollectibleClosedGenericContractAlive()
+    {
+        (WeakReference contract, WeakReference assembly) = ResolveCollectibleMessageDataContract();
+
+        Collect(contract, assembly);
+
+        Assert.False(contract.IsAlive);
+        Assert.False(assembly.IsAlive);
+    }
+
     private static ICached RoundTrip(ICached source)
     {
         var options = MessagePackSerializerOptions.Standard
@@ -298,14 +310,35 @@ public sealed class InterfaceMessagePackFormatterTests
         return formatter.Deserialize(ref reader, options);
     }
 
-    private static void Collect(WeakReference reference)
+    private static void Collect(params WeakReference[] references)
     {
-        for (var attempt = 0; attempt < 20 && reference.IsAlive; attempt++)
+        for (var attempt = 0; attempt < 20 && references.Any(reference => reference.IsAlive); attempt++)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static (WeakReference Contract, WeakReference Assembly) ResolveCollectibleMessageDataContract()
+    {
+        var assembly = AssemblyBuilder.DefineDynamicAssembly(
+            new AssemblyName($"CollectibleMessageData-{Guid.NewGuid():N}"),
+            AssemblyBuilderAccess.RunAndCollect);
+        Type argumentType = assembly.DefineDynamicModule("main")
+            .DefineType("CollectiblePayload", TypeAttributes.Public | TypeAttributes.Sealed)
+            .CreateType()!;
+        Type contractType = typeof(ViciOne.ServiceBus.Advanced.Serialization.MessageData<>)
+            .MakeGenericType(argumentType);
+        MethodInfo getFormatter = typeof(ServiceBusMessagePackFormatterResolver)
+            .GetMethod(nameof(IFormatterResolver.GetFormatter))!
+            .MakeGenericMethod(contractType);
+
+        object? formatter = getFormatter.Invoke(ServiceBusMessagePackFormatterResolver.Instance, null);
+
+        Assert.NotNull(formatter);
+        return (new WeakReference(contractType), new WeakReference(assembly));
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
