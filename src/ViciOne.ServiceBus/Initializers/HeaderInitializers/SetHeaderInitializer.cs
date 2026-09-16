@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
 
 /// <summary>Sets a named outgoing header from an initializer property provider.</summary>
+/// <remarks>
+/// The original provider operation remains observed after caller cancellation. Successful
+/// resolution assigns the header; provider failure or cancellation leaves its prior value unchanged.
+/// </remarks>
 /// <typeparam name="TMessage">The initialized message contract.</typeparam>
 /// <typeparam name="TInput">The input object used to resolve the header.</typeparam>
 /// <typeparam name="THeader">The header value type.</typeparam>
@@ -30,7 +34,7 @@ internal sealed class SetHeaderInitializer<TMessage, TInput, THeader> :
     /// <summary>Resolves and assigns the named outgoing header.</summary>
     /// <param name="context">The initialized message and input object.</param>
     /// <param name="sendContext">The outgoing context whose header is assigned.</param>
-    /// <param name="cancellationToken">The token that cancels value resolution.</param>
+    /// <param name="cancellationToken">The token forwarded for cooperative value-resolution cancellation.</param>
     /// <returns>A task that completes after the header value has been resolved and assigned.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
@@ -49,7 +53,7 @@ internal sealed class SetHeaderInitializer<TMessage, TInput, THeader> :
 
         async Task SetHeaderAsync()
         {
-            var value = await propertyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            var value = await propertyTask.ConfigureAwait(false);
 
             sendContext.Headers.Set(_headerName, value);
         }

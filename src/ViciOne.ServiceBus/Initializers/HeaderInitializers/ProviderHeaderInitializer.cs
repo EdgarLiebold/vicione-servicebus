@@ -6,6 +6,10 @@ using ViciOne.ServiceBus.Internals.Reflection;
 namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
 
 /// <summary>Populates one send-context property from a message-initializer value provider.</summary>
+/// <remarks>
+/// Started value resolution is observed to its original completion. Caller cancellation is
+/// forwarded cooperatively and cannot detach the provider or conceal its original failure.
+/// </remarks>
 /// <typeparam name="TMessage">The message contract being initialized.</typeparam>
 /// <typeparam name="TInput">The input-object type.</typeparam>
 /// <typeparam name="TProperty">The send-context property type.</typeparam>
@@ -36,7 +40,7 @@ internal sealed class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
     /// <summary>Resolves and assigns the send-context property.</summary>
     /// <param name="context">The initialized message and input object used by the property provider.</param>
     /// <param name="sendContext">The outgoing context whose property is assigned.</param>
-    /// <param name="cancellationToken">The token that cancels value resolution.</param>
+    /// <param name="cancellationToken">The token forwarded for cooperative value-resolution cancellation.</param>
     /// <returns>A task that completes after property resolution and assignment.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
@@ -53,12 +57,16 @@ internal sealed class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
             return Task.CompletedTask;
         }
 
-        return ApplyAsync(sendContext, propertyTask, cancellationToken);
+        return ApplyAsync(sendContext, propertyTask);
     }
 
-    async Task ApplyAsync(SendContext sendContext, Task<TProperty?> propertyTask, CancellationToken cancellationToken)
+    /// <summary>Assigns the send-context property after the accepted provider task succeeds.</summary>
+    /// <param name="sendContext">The destination of the resolved property value.</param>
+    /// <param name="propertyTask">The original provider operation whose outcome is observed.</param>
+    /// <returns>A task representing original value resolution and successful assignment.</returns>
+    async Task ApplyAsync(SendContext sendContext, Task<TProperty?> propertyTask)
     {
-        var propertyValue = await propertyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        var propertyValue = await propertyTask.ConfigureAwait(false);
 
         _messageProperty.Set(sendContext, propertyValue!);
     }

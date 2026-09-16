@@ -165,10 +165,25 @@ public sealed class PropertyInitializerContractTests
         var cancelingInitializer = new ProviderPropertyInitializer<TestMessage, TestInput, string?>(cancelingProvider, property);
         Task canceled = cancelingInitializer.ApplyAsync(
             CreateContext(new TestMessage(), new TestInput("input", 1)), cancellation.Token);
-        cancellation.Cancel();
-        OperationCanceledException canceledFailure = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceled);
-        Assert.Equal(cancellation.Token, canceledFailure.CancellationToken);
-        Assert.False(neverCompletes.Task.IsCompleted);
+        try
+        {
+            cancellation.Cancel();
+            Assert.Equal(cancellation.Token, cancelingProvider.Token);
+            await Assert.ThrowsAsync<TimeoutException>(() =>
+                canceled.WaitAsync(TimeSpan.FromMilliseconds(25), TestContext.Current.CancellationToken));
+            Assert.False(canceled.IsCompleted);
+            Assert.False(neverCompletes.Task.IsCompleted);
+            neverCompletes.SetCanceled(cancellation.Token);
+            OperationCanceledException canceledFailure = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceled);
+            Assert.Equal(cancellation.Token, canceledFailure.CancellationToken);
+            Assert.True(canceled.IsCanceled);
+        }
+        finally
+        {
+            neverCompletes.TrySetResult(null);
+            await ObserveAsync(neverCompletes.Task);
+            await ObserveAsync(canceled);
+        }
     }
 
     [Fact]
@@ -213,6 +228,18 @@ public sealed class PropertyInitializerContractTests
         OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             copy.ApplyAsync(throwingContext, cancellation.Token));
         Assert.Equal(cancellation.Token, canceled.CancellationToken);
+    }
+
+    static async Task ObserveAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+        }
+        catch (Exception) when (task.IsCompleted)
+        {
+        }
+        Assert.True(task.IsCompleted);
     }
 
     static InitializeContext<TMessage, TInput> CreateContext<TMessage, TInput>(TMessage message, TInput input)
