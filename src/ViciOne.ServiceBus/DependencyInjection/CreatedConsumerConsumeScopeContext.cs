@@ -12,8 +12,7 @@ public class CreatedConsumerConsumeScopeContext<TConsumer, T> :
     where TConsumer : class
     where T : class
 {
-    readonly IDisposable _disposable;
-    readonly IServiceScope _scope;
+    readonly ConsumeScopeLifetime _lifetime;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="scope">The scope.</param>
@@ -21,9 +20,9 @@ public class CreatedConsumerConsumeScopeContext<TConsumer, T> :
     /// <param name="disposable">The disposable.</param>
     public CreatedConsumerConsumeScopeContext(IServiceScope scope, ConsumerConsumeContext<TConsumer, T> context, IDisposable disposable)
     {
-        _scope = scope;
-        _disposable = disposable;
-        Context = context;
+        ArgumentNullException.ThrowIfNull(scope);
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)), scope);
     }
 
     /// <summary>Gets the context.</summary>
@@ -31,14 +30,5 @@ public class CreatedConsumerConsumeScopeContext<TConsumer, T> :
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-
-        if (_scope is IAsyncDisposable asyncDisposable)
-            return asyncDisposable.DisposeAsync();
-
-        _scope?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 }

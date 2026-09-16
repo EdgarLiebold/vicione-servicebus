@@ -8,15 +8,15 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 public class ExistingConsumeScopeContext :
     IConsumeScopeContext
 {
-    readonly IDisposable _disposable;
+    readonly ConsumeScopeLifetime _lifetime;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="disposable">The disposable.</param>
     public ExistingConsumeScopeContext(ConsumeContext context, IDisposable disposable)
     {
-        _disposable = disposable;
-        Context = context;
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)));
     }
 
     /// <summary>Gets the context.</summary>
@@ -24,11 +24,7 @@ public class ExistingConsumeScopeContext :
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 }
 
 
@@ -38,7 +34,7 @@ public class ExistingConsumeScopeContext<TMessage> :
     IConsumeScopeContext<TMessage>
     where TMessage : class
 {
-    readonly IDisposable _disposable;
+    readonly ConsumeScopeLifetime _lifetime;
     readonly IServiceScope _scope;
     readonly ISetScopedConsumeContext _setter;
 
@@ -49,19 +45,15 @@ public class ExistingConsumeScopeContext<TMessage> :
     /// <param name="setter">The setter.</param>
     public ExistingConsumeScopeContext(ConsumeContext<TMessage> context, IServiceScope scope, IDisposable disposable, ISetScopedConsumeContext setter)
     {
-        Context = context;
-        _scope = scope;
-        _disposable = disposable;
-        _setter = setter;
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _scope = scope ?? throw new ArgumentNullException(nameof(scope));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)));
+        _setter = setter ?? throw new ArgumentNullException(nameof(setter));
     }
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 
     /// <summary>Gets service.</summary>
     /// <typeparam name="T">The value type.</typeparam>
@@ -79,6 +71,7 @@ public class ExistingConsumeScopeContext<TMessage> :
     public T CreateInstance<T>(params object[] arguments)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(arguments);
         return ActivatorUtilities.CreateInstance<T>(_scope.ServiceProvider, arguments);
     }
 
@@ -87,6 +80,7 @@ public class ExistingConsumeScopeContext<TMessage> :
     /// <returns>The disposable produced by the operation.</returns>
     public IDisposable PushConsumeContext(ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _setter.PushContext(_scope, context);
     }
 

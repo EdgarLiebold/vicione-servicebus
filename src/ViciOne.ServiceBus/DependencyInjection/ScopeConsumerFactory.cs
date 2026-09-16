@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
@@ -14,7 +15,7 @@ public class ScopeConsumerFactory<TConsumer> :
     /// <param name="scopeProvider">The scope provider.</param>
     public ScopeConsumerFactory(IConsumeScopeProvider scopeProvider)
     {
-        _scopeProvider = scopeProvider;
+        _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
@@ -25,6 +26,9 @@ public class ScopeConsumerFactory<TConsumer> :
     public async Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScopeAsync<TConsumer, TMessage>(context);
 
         await next.SendAsync(scope.Context).ConfigureAwait(false);
@@ -32,6 +36,7 @@ public class ScopeConsumerFactory<TConsumer> :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateConsumerFactoryScope<TConsumer>("scope");
         _scopeProvider.Probe(scope);
     }

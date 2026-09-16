@@ -11,15 +11,15 @@ public class ExistingConsumerConsumeScopeContext<TConsumer, T> :
     where TConsumer : class
     where T : class
 {
-    readonly IDisposable _disposable;
+    readonly ConsumeScopeLifetime _lifetime;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="disposable">The disposable.</param>
     public ExistingConsumerConsumeScopeContext(ConsumerConsumeContext<TConsumer, T> context, IDisposable disposable)
     {
-        _disposable = disposable;
-        Context = context;
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)));
     }
 
     /// <summary>Gets the context.</summary>
@@ -27,9 +27,5 @@ public class ExistingConsumerConsumeScopeContext<TConsumer, T> :
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 }

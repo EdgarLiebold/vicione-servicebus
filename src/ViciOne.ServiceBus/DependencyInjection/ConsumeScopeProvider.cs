@@ -30,6 +30,7 @@ public class ConsumeScopeProvider :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("provider", "dependencyInjection");
     }
 
@@ -39,7 +40,11 @@ public class ConsumeScopeProvider :
     /// <returns>A task that produces the requested value.</returns>
     public ValueTask<IConsumeScopeContext> GetScopeAsync(ConsumeContext context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext>(cancellationToken); return GetScopeContextAsync(context, ExistingScopeContextFactory, CreatedScopeContextFactory, PipeContextFactory);
+        ArgumentNullException.ThrowIfNull(context);
+
+        return cancellationToken.IsCancellationRequested
+            ? ValueTask.FromCanceled<IConsumeScopeContext>(cancellationToken)
+            : GetScopeContextAsync(context, ExistingScopeContextFactory, CreatedScopeContextFactory, PipeContextFactory);
     }
 
     /// <summary>Gets scope.</summary>
@@ -50,7 +55,11 @@ public class ConsumeScopeProvider :
     public ValueTask<IConsumeScopeContext<T>> GetScopeAsync<T>(ConsumeContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext<T>>(cancellationToken); return GetScopeContextAsync(context, ExistingScopeContextFactory, CreatedScopeContextFactory, PipeContextFactory);
+        ArgumentNullException.ThrowIfNull(context);
+
+        return cancellationToken.IsCancellationRequested
+            ? ValueTask.FromCanceled<IConsumeScopeContext<T>>(cancellationToken)
+            : GetScopeContextAsync(context, ExistingScopeContextFactory, CreatedScopeContextFactory, PipeContextFactory);
     }
 
     /// <summary>Gets scope.</summary>
@@ -63,7 +72,11 @@ public class ConsumeScopeProvider :
         where TConsumer : class
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.DependencyInjection.IConsumerConsumeScopeContext<TConsumer, T>>(cancellationToken); return GetScopeContextAsync(context, ExistingScopeContextFactory<TConsumer, T>, CreatedScopeContextFactory<TConsumer, T>, PipeContextFactory);
+        ArgumentNullException.ThrowIfNull(context);
+
+        return cancellationToken.IsCancellationRequested
+            ? ValueTask.FromCanceled<IConsumerConsumeScopeContext<TConsumer, T>>(cancellationToken)
+            : GetScopeContextAsync(context, ExistingScopeContextFactory<TConsumer, T>, CreatedScopeContextFactory<TConsumer, T>, PipeContextFactory);
     }
 
     static ConsumeContext PipeContextFactory(ConsumeContext consumeContext, IServiceScope serviceScope, IServiceProvider serviceProvider)

@@ -8,8 +8,7 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 public class CreatedConsumeScopeContext :
     IConsumeScopeContext
 {
-    readonly IDisposable _disposable;
-    readonly IServiceScope _scope;
+    readonly ConsumeScopeLifetime _lifetime;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="scope">The scope.</param>
@@ -17,9 +16,9 @@ public class CreatedConsumeScopeContext :
     /// <param name="disposable">The disposable.</param>
     public CreatedConsumeScopeContext(IServiceScope scope, ConsumeContext context, IDisposable disposable)
     {
-        _scope = scope;
-        _disposable = disposable;
-        Context = context;
+        ArgumentNullException.ThrowIfNull(scope);
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)), scope);
     }
 
     /// <summary>Gets the context.</summary>
@@ -27,16 +26,7 @@ public class CreatedConsumeScopeContext :
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-
-        if (_scope is IAsyncDisposable asyncDisposable)
-            return asyncDisposable.DisposeAsync();
-
-        _scope?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 }
 
 
@@ -46,7 +36,7 @@ public class CreatedConsumeScopeContext<TMessage> :
     IConsumeScopeContext<TMessage>
     where TMessage : class
 {
-    readonly IDisposable _disposable;
+    readonly ConsumeScopeLifetime _lifetime;
     readonly IServiceScope _scope;
     readonly ISetScopedConsumeContext _setter;
 
@@ -57,10 +47,10 @@ public class CreatedConsumeScopeContext<TMessage> :
     /// <param name="setter">The setter.</param>
     public CreatedConsumeScopeContext(IServiceScope scope, ConsumeContext<TMessage> context, IDisposable disposable, ISetScopedConsumeContext setter)
     {
-        _scope = scope;
-        _disposable = disposable;
-        _setter = setter;
-        Context = context;
+        _scope = scope ?? throw new ArgumentNullException(nameof(scope));
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)), scope);
+        _setter = setter ?? throw new ArgumentNullException(nameof(setter));
     }
 
     /// <summary>Gets the context.</summary>
@@ -82,6 +72,7 @@ public class CreatedConsumeScopeContext<TMessage> :
     public T CreateInstance<T>(params object[] arguments)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(arguments);
         return ActivatorUtilities.CreateInstance<T>(_scope.ServiceProvider, arguments);
     }
 
@@ -90,19 +81,11 @@ public class CreatedConsumeScopeContext<TMessage> :
     /// <returns>The disposable produced by the operation.</returns>
     public IDisposable PushConsumeContext(ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _setter.PushContext(_scope, context);
     }
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-
-        if (_scope is IAsyncDisposable asyncDisposable)
-            return asyncDisposable.DisposeAsync();
-
-        _scope?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 }
