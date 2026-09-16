@@ -2,6 +2,7 @@ using System.Data;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -151,15 +152,76 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         SourceSnapshot removed = await environment.ReadSnapshotAsync();
         Assert.Null(removed.State);
         Assert.Equal(0, removed.MessageCount);
-        Assert.False(await source.DeliverDueBatchAsync(TestContext.Current.CancellationToken));
+        bool madeProgress = await source.DeliverDueBatchAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken);
+
+        Assert.False(madeProgress);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "concurrent-claim-loss-is-normal-no-progress")]
+    public async Task DueBatch_ConcurrencyLossReturnsNoProgressAndPreservesTheOutboxAsync()
+    {
+        await using SourceEnvironment environment = await SourceEnvironment.CreateAsync(failClaimSaveWithConcurrency: true);
+        await environment.SeedPendingOutboxAsync(1);
+        EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext> source = environment.CreateSource();
+
+        bool madeProgress = await source.DeliverDueBatchAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken);
+
+        Assert.False(madeProgress);
+
+        SourceSnapshot snapshot = await environment.ReadSnapshotAsync();
+        Assert.Equal(OutboxDeliveryStatus.Pending, snapshot.State?.Status);
+        Assert.Equal(Guid.Empty, snapshot.State?.LockId);
+        Assert.Equal(1, snapshot.MessageCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "foreign-lock-row-fails-closed-and-rolls-back")]
+    public async Task DueBatch_ForeignLockRowFailsClosedAndPreservesTheOutboxAsync()
+    {
+        await using SourceEnvironment environment = await SourceEnvironment.CreateAsync();
+        await environment.SeedPendingOutboxAsync(1, busKey: "foreign");
+        EntityFrameworkOutboxOptions<SourceDbContext> persistenceOptions = CreatePersistenceOptions();
+        persistenceOptions.LockStatementProvider = new ForeignRowLockStatementProvider();
+        EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext> source =
+            environment.CreateSource(persistenceOptions: persistenceOptions);
+
+        bool madeProgress = await source.DeliverDueBatchAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken);
+
+        Assert.False(madeProgress);
+
+        SourceSnapshot snapshot = await environment.ReadSnapshotAsync();
+        Assert.Equal("foreign", snapshot.State?.BusKey);
+        Assert.Equal(OutboxDeliveryStatus.Pending, snapshot.State?.Status);
+        Assert.Equal(Guid.Empty, snapshot.State?.LockId);
+        Assert.Equal(1, snapshot.MessageCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "rollback-failure-does-not-mask-primary-failure")]
+    public async Task RollbackTransaction_SuppressesASecondaryRollbackFailureAsync()
+    {
+        IDbContextTransaction transaction = DispatchProxy.Create<IDbContextTransaction, FailingRollbackTransactionProxy>();
+        var proxy = (FailingRollbackTransactionProxy)(object)transaction;
+        MethodInfo rollbackMethod = typeof(EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext>)
+            .GetMethod("RollbackTransactionAsync", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        Task rollback = (Task)rollbackMethod.Invoke(null, [transaction])!;
+
+        await rollback;
+        Assert.Equal(1, proxy.RollbackCalls);
     }
 
     private static EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext> CreateSource(
         IServiceProvider provider,
         RecordingNotification? notification = null,
-        OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, SourceDbContext>>? deliveryOptions = null) => new(
+        OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, SourceDbContext>>? deliveryOptions = null,
+        EntityFrameworkOutboxOptions<SourceDbContext>? persistenceOptions = null) => new(
             Options.Create(deliveryOptions ?? CreateDeliveryOptions()),
-            Options.Create(CreatePersistenceOptions()),
+            Options.Create(persistenceOptions ?? CreatePersistenceOptions()),
             notification ?? new RecordingNotification(),
             [],
             NullLogger<EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext>>.Instance,
@@ -230,6 +292,22 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         }
     }
 
+    private class FailingRollbackTransactionProxy : DispatchProxy
+    {
+        public int RollbackCalls { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == nameof(IDbContextTransaction.RollbackAsync))
+            {
+                RollbackCalls++;
+                return Task.FromException(new InvalidOperationException("Secondary rollback failure."));
+            }
+
+            throw new InvalidOperationException($"Unexpected transaction member: {targetMethod?.Name ?? "<null>"}.");
+        }
+    }
+
     private sealed class TypedNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<ISecondaryBus, SourceDbContext>>
     {
         public Task WaitForDeliveryAsync(CancellationToken cancellationToken) => Task.CompletedTask;
@@ -254,9 +332,21 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         }
     }
 
-    private sealed class SourceDbContext(DbContextOptions<SourceDbContext> options) : DbContext(options)
+    private class SourceDbContext(DbContextOptions<SourceDbContext> options) : DbContext(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.AddTransactionalOutboxEntities();
+    }
+
+    private sealed class ConcurrencyFailingSourceDbContext(DbContextOptions<SourceDbContext> options) : SourceDbContext(options)
+    {
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
+            Task.FromException<int>(new DbUpdateConcurrencyException("The outbox claim was won by another worker."));
+    }
+
+    private sealed class ForeignRowLockStatementProvider : SqliteLockStatementProvider
+    {
+        public override string GetOutboxStatement(DbContext context) =>
+            "SELECT * FROM \"OutboxState\" ORDER BY \"Created\" LIMIT 1";
     }
 
     private sealed class SourceEnvironment : IAsyncDisposable
@@ -278,7 +368,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
             _provider = provider;
         }
 
-        public static async Task<SourceEnvironment> CreateAsync()
+        public static async Task<SourceEnvironment> CreateAsync(bool failClaimSaveWithConcurrency = false)
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -291,7 +381,9 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
             ServiceProvider provider = new ServiceCollection()
                 .AddSingleton<IBus>(bus)
                 .AddSingleton(bus)
-                .AddScoped(_ => new SourceDbContext(dbContextOptions))
+                .AddScoped<SourceDbContext>(_ => failClaimSaveWithConcurrency
+                    ? new ConcurrencyFailingSourceDbContext(dbContextOptions)
+                    : new SourceDbContext(dbContextOptions))
                 .BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
 
             await bus.StartAsync(TestContext.Current.CancellationToken);
@@ -299,16 +391,20 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         }
 
         public EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext> CreateSource(
-            OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, SourceDbContext>>? options = null) =>
-            EntityFrameworkTransactionalOutboxSourceTests.CreateSource(_provider, deliveryOptions: options);
+            OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, SourceDbContext>>? options = null,
+            EntityFrameworkOutboxOptions<SourceDbContext>? persistenceOptions = null) =>
+            EntityFrameworkTransactionalOutboxSourceTests.CreateSource(
+                _provider,
+                deliveryOptions: options,
+                persistenceOptions: persistenceOptions);
 
-        public async Task SeedPendingOutboxAsync(int messageCount)
+        public async Task SeedPendingOutboxAsync(int messageCount, string busKey = "source")
         {
             await using var dbContext = new SourceDbContext(_dbContextOptions);
             var state = new OutboxState
             {
                 OutboxId = Guid.NewGuid(),
-                BusKey = "source",
+                BusKey = busKey,
                 Created = Now.UtcDateTime,
                 Status = OutboxDeliveryStatus.Pending,
             };

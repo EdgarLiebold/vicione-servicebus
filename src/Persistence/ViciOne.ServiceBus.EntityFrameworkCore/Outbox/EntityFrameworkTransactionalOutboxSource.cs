@@ -85,7 +85,9 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
                 .Take(limit)
                 .AsNoTracking());
 
-        _operationalRetryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
+        _operationalRetryPolicy = Retry
+            .Except<DbUpdateConcurrencyException, OutboxOwnershipException>()
+            .Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
     }
 
     public async Task<bool> DeliverDueBatchAsync(CancellationToken cancellationToken = default)
@@ -152,7 +154,8 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
                     return -1;
 
                 if (!StringComparer.Ordinal.Equals(outboxState.BusKey, _busKey))
-                    throw new InvalidOperationException($"Outbox lock returned a row owned by bus '{outboxState.BusKey}' instead of '{_busKey}'.");
+                    throw new OutboxOwnershipException(
+                        $"Outbox lock returned a row owned by bus '{outboxState.BusKey}' instead of '{_busKey}'.");
 
                 outboxState.LockId = NewId.NextGuid();
                 dbContext.Update(outboxState);
@@ -528,6 +531,8 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
     }
 
     static string GetExceptionType(Exception exception) => exception.GetType().FullName ?? exception.GetType().Name;
+
+    private sealed class OutboxOwnershipException(string message) : InvalidOperationException(message);
 
     static async Task RollbackTransactionAsync(IDbContextTransaction transaction)
     {
