@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
@@ -94,6 +95,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement> :
 /// <typeparam name="TKey">The dictionary key type.</typeparam>
 /// <typeparam name="TElement">The result value type.</typeparam>
 /// <typeparam name="TInputElement">The source value type.</typeparam>
+/// <remarks>Each accepted value conversion is observed before traversal or a shape adapter completes.</remarks>
 internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TKey, TInputElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TKey, TInputElement>>>,
@@ -135,7 +137,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement>
 
         async Task<IDictionary<TKey, TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -155,7 +157,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement>
 
         async Task<IEnumerable<KeyValuePair<TKey, TElement>>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -174,7 +176,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement>
 
         async Task<IReadOnlyDictionary<TKey, TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -205,7 +207,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement>
             {
                 try
                 {
-                    var element = await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    var element = await elementTask.ConfigureAwait(false);
 
                     results.Add(asyncEnumerator.Current.Key, element!);
 
@@ -219,7 +221,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement>
                             results.Add(current.Key, elementTask.GetAwaiter().GetResult()!);
                         else
                         {
-                            element = await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                            element = await elementTask.ConfigureAwait(false);
 
                             results.Add(asyncEnumerator.Current.Key, element!);
                         }
@@ -269,6 +271,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputElement>
 /// <typeparam name="TElement">The result value type.</typeparam>
 /// <typeparam name="TInputKey">The source key type.</typeparam>
 /// <typeparam name="TInputElement">The source value type.</typeparam>
+/// <remarks>Both conversions for an accepted entry are observed, with key outcomes retaining priority.</remarks>
 internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TInputElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TInputElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TInputElement>>>,
@@ -314,7 +317,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TIn
 
         async Task<IDictionary<TKey, TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -334,7 +337,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TIn
 
         async Task<IEnumerable<KeyValuePair<TKey, TElement>>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -354,7 +357,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TIn
 
         async Task<IReadOnlyDictionary<TKey, TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -385,12 +388,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TIn
             {
                 try
                 {
-                    var key = keyTask.IsCompletedSuccessfully
-                        ? keyTask.GetAwaiter().GetResult()
-                        : await keyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
-                    var element = elementTask.IsCompletedSuccessfully
-                        ? elementTask.GetAwaiter().GetResult()
-                        : await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    (TKey? key, TElement? element) = await OwnEntryAsync(keyTask, elementTask).ConfigureAwait(false);
 
                     results.Add(RequireKey(key), element!);
 
@@ -402,12 +400,7 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TIn
                         keyTask = ConvertKeyAsync(context, current.Key, cancellationToken);
                         elementTask = ConvertElementAsync(context, current.Value, cancellationToken);
 
-                        key = keyTask.IsCompletedSuccessfully
-                            ? keyTask.GetAwaiter().GetResult()
-                            : await keyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
-                        element = elementTask.IsCompletedSuccessfully
-                            ? elementTask.GetAwaiter().GetResult()
-                            : await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                        (key, element) = await OwnEntryAsync(keyTask, elementTask).ConfigureAwait(false);
 
                         results.Add(RequireKey(key), element!);
                     }
@@ -450,13 +443,51 @@ internal sealed class DictionaryPropertyConverter<TKey, TElement, TInputKey, TIn
         return key ?? throw new InvalidOperationException("A dictionary key converter returned null.");
     }
 
+    static async Task<(TKey? Key, TElement? Element)> OwnEntryAsync(Task<TKey?> keyTask, Task<TElement?> elementTask)
+    {
+        TKey? key = default;
+        ExceptionDispatchInfo? keyFailure = null;
+        try
+        {
+            key = await keyTask.ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            keyFailure = ExceptionDispatchInfo.Capture(exception);
+        }
+
+        if (keyFailure == null)
+            return (key, await elementTask.ConfigureAwait(false));
+
+        try
+        {
+            await elementTask.ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            // The key outcome has deterministic priority, but the accepted value conversion is still observed.
+        }
+
+        return Rethrow<(TKey? Key, TElement? Element)>(keyFailure);
+    }
+
+    static TResult Rethrow<TResult>(ExceptionDispatchInfo failure)
+    {
+        failure.Throw();
+        return default!;
+    }
+
     Task<TKey?> ConvertKeyAsync<TMessage>(InitializeContext<TMessage> context, TInputKey input,
         CancellationToken cancellationToken)
         where TMessage : class => _keyConverter.ConvertAsync(context, input, cancellationToken)
             ?? throw new InvalidOperationException("The dictionary key converter returned a null task.");
 
-    Task<TElement?> ConvertElementAsync<TMessage>(InitializeContext<TMessage> context, TInputElement input,
+    async Task<TElement?> ConvertElementAsync<TMessage>(InitializeContext<TMessage> context, TInputElement input,
         CancellationToken cancellationToken)
-        where TMessage : class => _elementConverter.ConvertAsync(context, input, cancellationToken)
+        where TMessage : class
+    {
+        Task<TElement?> task = _elementConverter.ConvertAsync(context, input, cancellationToken)
             ?? throw new InvalidOperationException("The dictionary element converter returned a null task.");
+        return await task.ConfigureAwait(false);
+    }
 }

@@ -107,6 +107,7 @@ internal sealed class ListPropertyConverter<TElement> :
 /// <summary>Converts each source element and exposes the results through list-shaped collection contracts.</summary>
 /// <typeparam name="TElement">The result element type.</typeparam>
 /// <typeparam name="TInputElement">The source element type.</typeparam>
+/// <remarks>Each accepted element conversion is observed before traversal or a shape adapter completes.</remarks>
 internal sealed class ListPropertyConverter<TElement, TInputElement> :
     IPropertyConverter<List<TElement>, IEnumerable<TInputElement>>,
     IPropertyConverter<IList<TElement>, IEnumerable<TInputElement>>,
@@ -137,7 +138,7 @@ internal sealed class ListPropertyConverter<TElement, TInputElement> :
 
         async Task<ICollection<TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -156,7 +157,7 @@ internal sealed class ListPropertyConverter<TElement, TInputElement> :
 
         async Task<IEnumerable<TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -175,7 +176,7 @@ internal sealed class ListPropertyConverter<TElement, TInputElement> :
 
         async Task<IList<TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -194,7 +195,7 @@ internal sealed class ListPropertyConverter<TElement, TInputElement> :
 
         async Task<IReadOnlyList<TElement>?> ConvertAsync()
         {
-            return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await resultTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
@@ -234,7 +235,7 @@ internal sealed class ListPropertyConverter<TElement, TInputElement> :
             {
                 try
                 {
-                    var element = await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    var element = await elementTask.ConfigureAwait(false);
 
                     results.Add(element!);
 
@@ -248,7 +249,7 @@ internal sealed class ListPropertyConverter<TElement, TInputElement> :
                             results.Add(elementTask.GetAwaiter().GetResult()!);
                         else
                         {
-                            element = await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                            element = await elementTask.ConfigureAwait(false);
 
                             results.Add(element!);
                         }

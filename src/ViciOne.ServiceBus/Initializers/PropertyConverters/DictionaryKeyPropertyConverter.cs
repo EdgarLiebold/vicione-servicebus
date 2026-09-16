@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 /// <typeparam name="TKey">The key used for lookup.</typeparam>
 /// <typeparam name="TInputKey">The input key type.</typeparam>
 /// <typeparam name="TElement">The element type.</typeparam>
+/// <remarks>Each accepted key conversion is observed before traversal or a shape adapter completes.</remarks>
 internal sealed class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TElement>>>,
@@ -48,10 +49,10 @@ internal sealed class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> 
         if (resultTask.IsCompletedSuccessfully)
             return Task.FromResult<IDictionary<TKey, TElement>?>(resultTask.GetAwaiter().GetResult());
 
-        return AwaitResultAsync(resultTask, cancellationToken);
+        return AwaitResultAsync(resultTask);
 
-        static async Task<IDictionary<TKey, TElement>?> AwaitResultAsync(Task<Dictionary<TKey, TElement>?> task,
-            CancellationToken token) => await task.WaitAsync(token).ConfigureAwait(false);
+        static async Task<IDictionary<TKey, TElement>?> AwaitResultAsync(Task<Dictionary<TKey, TElement>?> task) =>
+            await task.ConfigureAwait(false);
     }
 
     Task<IEnumerable<KeyValuePair<TKey, TElement>>?>
@@ -67,10 +68,10 @@ internal sealed class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> 
         if (resultTask.IsCompletedSuccessfully)
             return Task.FromResult<IEnumerable<KeyValuePair<TKey, TElement>>?>(resultTask.GetAwaiter().GetResult());
 
-        return AwaitResultAsync(resultTask, cancellationToken);
+        return AwaitResultAsync(resultTask);
 
-        static async Task<IEnumerable<KeyValuePair<TKey, TElement>>?> AwaitResultAsync(Task<Dictionary<TKey, TElement>?> task,
-            CancellationToken token) => await task.WaitAsync(token).ConfigureAwait(false);
+        static async Task<IEnumerable<KeyValuePair<TKey, TElement>>?> AwaitResultAsync(Task<Dictionary<TKey, TElement>?> task) =>
+            await task.ConfigureAwait(false);
     }
 
     Task<IReadOnlyDictionary<TKey, TElement>?> IPropertyConverter<IReadOnlyDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TElement>>>.
@@ -85,10 +86,10 @@ internal sealed class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> 
         if (resultTask.IsCompletedSuccessfully)
             return Task.FromResult<IReadOnlyDictionary<TKey, TElement>?>(resultTask.GetAwaiter().GetResult());
 
-        return AwaitResultAsync(resultTask, cancellationToken);
+        return AwaitResultAsync(resultTask);
 
-        static async Task<IReadOnlyDictionary<TKey, TElement>?> AwaitResultAsync(Task<Dictionary<TKey, TElement>?> task,
-            CancellationToken token) => await task.WaitAsync(token).ConfigureAwait(false);
+        static async Task<IReadOnlyDictionary<TKey, TElement>?> AwaitResultAsync(Task<Dictionary<TKey, TElement>?> task) =>
+            await task.ConfigureAwait(false);
     }
 
     Task<Dictionary<TKey, TElement>?> ConvertCoreAsync<TMessage>(InitializeContext<TMessage> context,
@@ -140,13 +141,13 @@ internal sealed class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> 
     {
         try
         {
-            results.Add(RequireKey(await keyTask.WaitAsync(cancellationToken).ConfigureAwait(false)), enumerator.Current.Value);
+            results.Add(RequireKey(await keyTask.ConfigureAwait(false)), enumerator.Current.Value);
             while (enumerator.MoveNext())
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 KeyValuePair<TInputKey, TElement> current = enumerator.Current;
                 keyTask = ConvertKeyAsync(context, current.Key, cancellationToken);
-                results.Add(RequireKey(await keyTask.WaitAsync(cancellationToken).ConfigureAwait(false)), current.Value);
+                results.Add(RequireKey(await keyTask.ConfigureAwait(false)), current.Value);
             }
 
             return results;

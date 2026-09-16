@@ -34,6 +34,7 @@ internal sealed class ArrayPropertyConverter<TElement> :
 /// <summary>Converts each source element and materializes the results as an array.</summary>
 /// <typeparam name="TElement">The result element type.</typeparam>
 /// <typeparam name="TInputElement">The source element type.</typeparam>
+/// <remarks>Each accepted element conversion is observed before traversal completes or releases its enumerator.</remarks>
 internal sealed class ArrayPropertyConverter<TElement, TInputElement> :
     IPropertyConverter<TElement[], IEnumerable<TInputElement>>
 {
@@ -82,7 +83,7 @@ internal sealed class ArrayPropertyConverter<TElement, TInputElement> :
             {
                 try
                 {
-                    var element = await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    var element = await elementTask.ConfigureAwait(false);
 
                     results.Add(element!);
 
@@ -96,7 +97,7 @@ internal sealed class ArrayPropertyConverter<TElement, TInputElement> :
                             results.Add(elementTask.GetAwaiter().GetResult()!);
                         else
                         {
-                            element = await elementTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                            element = await elementTask.ConfigureAwait(false);
 
                             results.Add(element!);
                         }
