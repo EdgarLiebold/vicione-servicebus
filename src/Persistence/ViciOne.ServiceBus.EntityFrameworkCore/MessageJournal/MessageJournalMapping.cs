@@ -21,7 +21,7 @@ public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJour
             : RelationalIdentifierValidator.Validate(schemaName, nameof(schemaName));
     }
 
-    /// <summary>Configures keys, indexes, required fields, and the target table.</summary>
+    /// <summary>Configures keys, UTC-tick time persistence, indexes, required fields, and the target table.</summary>
     /// <param name="builder">The journal-record entity builder.</param>
     public void Configure(EntityTypeBuilder<MessageJournalRecord> builder)
     {
@@ -33,6 +33,10 @@ public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJour
 
         builder.HasKey(record => record.EntryId);
         builder.Property(record => record.EntryId).ValueGeneratedNever();
+        builder.Property(record => record.ObservedAt)
+            .HasConversion(
+                observedAt => observedAt.UtcTicks,
+                utcTicks => new DateTimeOffset(utcTicks, TimeSpan.Zero));
         builder.HasIndex(record => new { record.ObservedAt, record.EntryId });
 
         builder.Property(record => record.Operation).IsRequired();

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using ViciOne.ServiceBus.Configuration;
@@ -52,6 +53,26 @@ public sealed class EntityFrameworkMessageJournalModelTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-MAPPING", "model-cache-overloads-preserve-runtime-and-design-time-identity")]
+    public void ModelCacheKey_OverloadsPreserveRuntimeAndDesignTimeIdentity()
+    {
+        DbContextOptions<MessageJournalDbContext> journalOptions =
+            new DbContextOptionsBuilder<MessageJournalDbContext>()
+                .UseSqlite("Data Source=:memory:")
+                .Options;
+        DbContextOptions<JournalProbeContext> probeOptions = new DbContextOptionsBuilder<JournalProbeContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options;
+        using var journalContext = new MessageJournalDbContext(journalOptions, "JournalOne", "north");
+        using var probeContext = new JournalProbeContext(probeOptions);
+        var cacheKeys = new MessageJournalModelCacheKeyFactory();
+
+        Assert.Equal(cacheKeys.Create(journalContext, designTime: false), cacheKeys.Create(journalContext));
+        Assert.NotEqual(cacheKeys.Create(journalContext), cacheKeys.Create(journalContext, designTime: true));
+        Assert.Equal(cacheKeys.Create(probeContext, designTime: false), cacheKeys.Create(probeContext));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-BOUNDS", "store-declares-explicit-finite-limits")]
     public void Store_PreservesTheExactFiniteLimitsWithoutConnectingToADatabase()
     {
@@ -63,6 +84,149 @@ public sealed class EntityFrameworkMessageJournalModelTests
             limits);
 
         Assert.Same(limits, store.Limits);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-BOUNDS", "sqlite-append-enforces-retention-and-capacity")]
+    public async Task Append_PersistsAndBoundsEntriesWithoutAnExternalProviderAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(cancellationToken);
+        DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(connection).Options;
+        await EnsureJournalCreatedAsync(options, cancellationToken);
+        var limits = new MessageJournalStoreLimits(4096, 2, TimeSpan.FromDays(1));
+        var store = new EntityFrameworkMessageJournalStore(options, "MessageJournal", limits);
+        var now = new DateTimeOffset(2030, 1, 10, 12, 0, 0, TimeSpan.Zero);
+        MessageJournalEntry expired = CreateEntry(Guid.Parse("00000000-0000-0000-0000-000000000001"), now.AddDays(-3));
+        MessageJournalEntry oldest = CreateEntry(Guid.Parse("00000000-0000-0000-0000-000000000002"), now.AddHours(-12));
+        MessageJournalEntry retained = CreateEntry(Guid.Parse("00000000-0000-0000-0000-000000000003"), now.AddHours(-6));
+        MessageJournalEntry appended = CreateEntry(Guid.Parse("00000000-0000-0000-0000-000000000004"), now);
+
+        await store.AppendAsync(expired, cancellationToken);
+        await store.AppendAsync(oldest, cancellationToken);
+        await store.AppendAsync(retained, cancellationToken);
+        await store.AppendAsync(appended, cancellationToken);
+
+        await using var context = new MessageJournalDbContext(options, "MessageJournal");
+        MessageJournalRecord[] actual = await context.Entries.AsNoTracking()
+            .OrderBy(record => record.ObservedAt)
+            .ToArrayAsync(cancellationToken);
+        Assert.Equal([retained.EntryId, appended.EntryId], actual.Select(record => record.EntryId));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-RETENTION", "sqlite-append-removes-expired-without-capacity-pressure")]
+    public async Task Append_RemovesExpiredEntriesWithoutCapacityPressureAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(cancellationToken);
+        DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(connection).Options;
+        await EnsureJournalCreatedAsync(options, cancellationToken);
+        var store = new EntityFrameworkMessageJournalStore(
+            options,
+            "MessageJournal",
+            new MessageJournalStoreLimits(4096, 10, TimeSpan.FromDays(1)));
+        var now = new DateTimeOffset(2030, 1, 10, 12, 0, 0, TimeSpan.Zero);
+        MessageJournalEntry expired = CreateEntry(Guid.Parse("00000000-0000-0000-0000-000000000008"), now.AddDays(-2));
+        MessageJournalEntry retained = CreateEntry(Guid.Parse("00000000-0000-0000-0000-000000000009"), now);
+
+        await store.AppendAsync(expired, cancellationToken);
+        await store.AppendAsync(retained, cancellationToken);
+
+        await using var context = new MessageJournalDbContext(options, "MessageJournal");
+        Assert.Equal(
+            retained.EntryId,
+            Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken)).EntryId);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-BOUNDS", "append-rejects-invalid-input-before-commit")]
+    public async Task Append_RejectsMissingOversizedAndCanceledInputsAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(cancellationToken);
+        DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(connection).Options;
+        await EnsureJournalCreatedAsync(options, cancellationToken);
+        var store = new EntityFrameworkMessageJournalStore(
+            options,
+            "MessageJournal",
+            new MessageJournalStoreLimits(1, 2, TimeSpan.FromDays(1)));
+        MessageJournalEntry oversized = CreateEntry(
+            Guid.Parse("00000000-0000-0000-0000-000000000005"),
+            new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero),
+            "oversized"u8.ToArray());
+        using var canceled = new CancellationTokenSource();
+        canceled.Cancel();
+
+        ArgumentNullException missing = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await store.AppendAsync(null!, cancellationToken));
+        ArgumentOutOfRangeException tooLarge = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await store.AppendAsync(oversized, cancellationToken));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await new EntityFrameworkMessageJournalStore(
+                    options,
+                    "MessageJournal",
+                    new MessageJournalStoreLimits(4096, 2, TimeSpan.FromDays(1)))
+                .AppendAsync(oversized, canceled.Token));
+
+        Assert.Equal("entry", missing.ParamName);
+        Assert.Equal("entry", tooLarge.ParamName);
+        Assert.Equal(oversized.ContentSizeInBytes, tooLarge.ActualValue);
+        await using var context = new MessageJournalDbContext(options, "MessageJournal");
+        Assert.Empty(await context.Entries.AsNoTracking().ToListAsync(cancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-PERSISTENCE", "duplicate-identity-rolls-back-without-replacement")]
+    public async Task Append_DuplicateIdentityRollsBackWithoutReplacingTheExistingEntryAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(cancellationToken);
+        DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(connection).Options;
+        await EnsureJournalCreatedAsync(options, cancellationToken);
+        var store = new EntityFrameworkMessageJournalStore(
+            options,
+            "MessageJournal",
+            new MessageJournalStoreLimits(4096, 10, TimeSpan.FromDays(1)));
+        Guid entryId = Guid.Parse("00000000-0000-0000-0000-000000000006");
+        DateTimeOffset observedAt = new(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        MessageJournalEntry original = CreateEntry(entryId, observedAt, "original"u8.ToArray());
+        MessageJournalEntry duplicate = CreateEntry(entryId, observedAt, "replacement"u8.ToArray());
+
+        await store.AppendAsync(original, cancellationToken);
+        await Assert.ThrowsAsync<DbUpdateException>(async () =>
+            await store.AppendAsync(duplicate, cancellationToken));
+
+        await using var context = new MessageJournalDbContext(options, "MessageJournal");
+        MessageJournalRecord actual = Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken));
+        Assert.Equal(original.Body.ToArray(), actual.Body);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-RETENTION", "sqlite-minimum-timestamp-does-not-underflow")]
+    public async Task MaximumRetention_AcceptsEarliestObservationWithoutUnderflowAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(cancellationToken);
+        DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(connection).Options;
+        await EnsureJournalCreatedAsync(options, cancellationToken);
+        var store = new EntityFrameworkMessageJournalStore(
+            options,
+            "MessageJournal",
+            new MessageJournalStoreLimits(4096, 2, TimeSpan.MaxValue));
+        MessageJournalEntry entry = CreateEntry(
+            Guid.Parse("00000000-0000-0000-0000-000000000007"),
+            DateTimeOffset.MinValue.AddDays(1));
+
+        await store.AppendAsync(entry, cancellationToken);
+
+        await using var context = new MessageJournalDbContext(options, "MessageJournal");
+        Assert.Equal(entry.EntryId, Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken)).EntryId);
     }
 
     [Fact]
@@ -328,6 +492,15 @@ public sealed class EntityFrameworkMessageJournalModelTests
         public IMessageJournalConfigurator Policy(IMessageJournalPolicy policy) => this;
 
         public IMessageJournalConfigurator Options(MessageJournalOptions options) => this;
+    }
+
+    private static MessageJournalEntry CreateEntry(Guid id, DateTimeOffset observedAt, byte[]? body = null) =>
+        MessageJournalEntryTestFactory.Create(id, observedAt, body: body ?? "redacted"u8.ToArray());
+
+    private static async Task EnsureJournalCreatedAsync(DbContextOptions options, CancellationToken cancellationToken)
+    {
+        await using var context = new MessageJournalDbContext(options, "MessageJournal");
+        Assert.True(await context.Database.EnsureCreatedAsync(cancellationToken));
     }
 
     private static DbContextOptions CreateOptions(string provider)

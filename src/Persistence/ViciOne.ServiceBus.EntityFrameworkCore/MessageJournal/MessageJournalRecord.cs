@@ -59,5 +59,4 @@ public sealed class MessageJournalRecord
             ContentSizeInBytes = entry.ContentSizeInBytes,
         };
     }
-
 }

@@ -200,13 +200,19 @@ public sealed class EntityFrameworkMessageJournalStoreTests
             MessageJournalCapture capture,
             CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.MessageJournal.MessageJournalProjection?>(cancellationToken); return ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
-            MessageJournalDataClassification.Internal,
-            capture.ContentType,
-            capture.MessageTypes,
-            capture.Metadata,
-            capture.Headers,
-            capture.Body));
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return global::System.Threading.Tasks.ValueTask
+                    .FromCanceled<global::ViciOne.ServiceBus.MessageJournal.MessageJournalProjection?>(cancellationToken);
+            }
+
+            return ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
+                MessageJournalDataClassification.Internal,
+                capture.ContentType,
+                capture.MessageTypes,
+                capture.Metadata,
+                capture.Headers,
+                capture.Body));
         }
     }
 
