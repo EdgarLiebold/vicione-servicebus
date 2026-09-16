@@ -1,5 +1,7 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -9,6 +11,151 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
 
 public sealed class EntityFrameworkScopedBusContextProviderTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "selector-rejects-missing-inputs-and-registration")]
+    public void Provider_RejectsMissingInputsAndAnEmptyRegistrationSet()
+    {
+        using ServiceProvider services = new ServiceCollection().BuildServiceProvider();
+
+        Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkScopedBusContextProvider<IBus>(null!, services));
+        Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkScopedBusContextProvider<IBus>([], null!));
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            new EntityFrameworkScopedBusContextProvider<IBus>([], services));
+
+        Assert.Contains("No Entity Framework bus outbox", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "factory-metadata-and-provider-boundary")]
+    public void Factories_ExposeExactContextIdentityAndRejectAMissingProvider()
+    {
+        var reliable = new EntityFrameworkScopedBusContextFactory<IBus, FirstDbContext>(isDefault: true);
+        var transactional = new EntityFrameworkTransactionalScopedBusContextFactory<IBus, SecondDbContext>(isDefault: false);
+
+        Assert.Equal(typeof(FirstDbContext), reliable.DbContextType);
+        Assert.True(reliable.IsDefault);
+        Assert.Throws<ArgumentNullException>(() => reliable.Create(null!));
+        Assert.Equal(typeof(SecondDbContext), transactional.DbContextType);
+        Assert.False(transactional.IsDefault);
+        Assert.Throws<ArgumentNullException>(() => transactional.Create(null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "transactional-session-is-reused-per-scope")]
+    public void TransactionalFactory_ReusesTheRegistrySessionWithinOneScope()
+    {
+        var services = new ServiceCollection();
+        services.AddScoped(_ => new FirstDbContext());
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.ConfigureEntityFrameworkTransactionalStore<FirstDbContext>(outbox =>
+            {
+                outbox.UseSqlite();
+                outbox.DisableInboxCleanupService();
+                outbox.EnableTransactionalOutbox(delivery => delivery.DisableDeliveryService());
+            });
+            bus.UsingInMemory();
+        });
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        EntityFrameworkBusOutboxSessionRegistry<IBus> registry = scope.ServiceProvider
+            .GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<IBus>>();
+        EntityFrameworkTransactionalScopedBusContext<IBus, FirstDbContext> first = registry
+            .GetOrCreateTransactional<FirstDbContext>(scope.ServiceProvider);
+        EntityFrameworkTransactionalScopedBusContext<IBus, FirstDbContext> second = registry
+            .GetOrCreateTransactional<FirstDbContext>(scope.ServiceProvider);
+        IEntityFrameworkScopedBusContextFactory<IBus> factory = Assert.Single(
+            provider.GetServices<IEntityFrameworkScopedBusContextFactory<IBus>>());
+
+        Assert.Same(first, second);
+        Assert.Same(first, factory.Create(scope.ServiceProvider));
+        Assert.Same(first, scope.ServiceProvider
+            .GetRequiredService<IEntityFrameworkTransactionalOutbox<IBus, FirstDbContext>>());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "concurrent-session-resolution-has-one-winner")]
+    public async Task TransactionalRegistry_ConcurrentResolutionReturnsOneSessionAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddScoped(_ => new FirstDbContext());
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.ConfigureEntityFrameworkTransactionalStore<FirstDbContext>(outbox =>
+            {
+                outbox.UseSqlite();
+                outbox.DisableInboxCleanupService();
+                outbox.EnableTransactionalOutbox(delivery => delivery.DisableDeliveryService());
+            });
+            bus.UsingInMemory();
+        });
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        EntityFrameworkBusOutboxSessionRegistry<IBus> registry = scope.ServiceProvider
+            .GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<IBus>>();
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<EntityFrameworkTransactionalScopedBusContext<IBus, FirstDbContext>>[] resolutions = Enumerable
+            .Range(0, 16)
+            .Select(async _ =>
+            {
+                await release.Task;
+                return registry.GetOrCreateTransactional<FirstDbContext>(scope.ServiceProvider);
+            })
+            .ToArray();
+
+        release.SetResult();
+        EntityFrameworkTransactionalScopedBusContext<IBus, FirstDbContext>[] contexts =
+            await Task.WhenAll(resolutions);
+
+        EntityFrameworkTransactionalScopedBusContext<IBus, FirstDbContext> expected = Assert.Single(
+            contexts.Distinct());
+        Assert.All(contexts, context => Assert.Same(expected, context));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "transactional-factory-preserves-ambient-consume-context")]
+    public void TransactionalFactory_PreservesAnAmbientConsumeContext()
+    {
+        var services = new ServiceCollection();
+        services.AddScoped(_ => new FirstDbContext());
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.ConfigureEntityFrameworkTransactionalStore<FirstDbContext>(outbox =>
+            {
+                outbox.UseSqlite();
+                outbox.DisableInboxCleanupService();
+                outbox.EnableTransactionalOutbox(delivery => delivery.DisableDeliveryService());
+            });
+            bus.UsingInMemory();
+        });
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        IEntityFrameworkScopedBusContextFactory<IBus> factory = Assert.Single(
+            provider.GetServices<IEntityFrameworkScopedBusContextFactory<IBus>>());
+        IScopedConsumeContextProvider contextProvider = scope.ServiceProvider
+            .GetRequiredService<Bind<IBus, IScopedConsumeContextProvider>>()
+            .Value;
+        ConsumeContext ambient = DispatchProxy.Create<ConsumeContext, PassiveConsumeContextProxy>();
+
+        using (contextProvider.PushContext(ambient))
+        {
+            Assert.IsType<ConsumeContextScopedBusContext>(factory.Create(scope.ServiceProvider));
+            using EntityFrameworkTransactionalScopedBusContext<IBus, FirstDbContext> explicitContext =
+                EntityFrameworkTransactionalScopedBusContextFactory<IBus, FirstDbContext>
+                    .CreateTransactionalContext(scope.ServiceProvider);
+            Assert.IsType<EntityFrameworkTransactionalConsumeContextScopedBusContext<IBus, FirstDbContext>>(
+                explicitContext);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "single-dbcontext-is-implicit-default")]
     public void SingleRegistration_IsSelectedWithoutAnExplicitDefault()
@@ -119,5 +266,13 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
         public ISendEndpointProvider SendEndpointProvider => null!;
         public IPublishEndpoint PublishEndpoint => null!;
         public IScopedClientFactory ClientFactory => null!;
+    }
+
+    private class PassiveConsumeContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.ReturnType.IsValueType == true
+                ? Activator.CreateInstance(targetMethod.ReturnType)
+                : null;
     }
 }

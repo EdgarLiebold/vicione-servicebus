@@ -1,8 +1,10 @@
+using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -109,6 +111,60 @@ public sealed class EntityFrameworkReliableMessagingRegistrationTests
         Assert.Contains("already has a persistence store", exception.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "reliable-session-is-reused-per-scope")]
+    public async Task ReliableFactory_ReusesTheRegistrySessionWithinOneScopeAsync()
+    {
+        string connectionString = $"Data Source={Path.Combine(Path.GetTempPath(), $"vicione-reliable-session-{Guid.NewGuid():N}.db")};Pooling=False";
+        try
+        {
+            await using ServiceProvider provider = BuildProvider(connectionString);
+            await using AsyncServiceScope scope = provider.CreateAsyncScope();
+            EntityFrameworkBusOutboxSessionRegistry<ISecondaryBus> registry = scope.ServiceProvider
+                .GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<ISecondaryBus>>();
+            EntityFrameworkScopedBusContext<ISecondaryBus, ReliableDbContext> first = registry
+                .GetOrCreate<ReliableDbContext>(scope.ServiceProvider);
+            EntityFrameworkScopedBusContext<ISecondaryBus, ReliableDbContext> second = registry
+                .GetOrCreate<ReliableDbContext>(scope.ServiceProvider);
+            IEntityFrameworkScopedBusContextFactory<ISecondaryBus> factory = Assert.Single(
+                provider.GetServices<IEntityFrameworkScopedBusContextFactory<ISecondaryBus>>());
+
+            Assert.Same(first, second);
+            Assert.Same(first, factory.Create(scope.ServiceProvider));
+            Assert.Same(first, scope.ServiceProvider
+                .GetRequiredService<IEntityFrameworkTransactionalOutbox<ISecondaryBus, ReliableDbContext>>());
+        }
+        finally
+        {
+            DeleteDatabase(connectionString);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "reliable-factory-preserves-ambient-consume-context")]
+    public async Task ReliableFactory_PreservesAnAmbientConsumeContextAsync()
+    {
+        string connectionString = $"Data Source={Path.Combine(Path.GetTempPath(), $"vicione-reliable-ambient-{Guid.NewGuid():N}.db")};Pooling=False";
+        try
+        {
+            await using ServiceProvider provider = BuildProvider(connectionString);
+            await using AsyncServiceScope scope = provider.CreateAsyncScope();
+            IEntityFrameworkScopedBusContextFactory<ISecondaryBus> factory = Assert.Single(
+                provider.GetServices<IEntityFrameworkScopedBusContextFactory<ISecondaryBus>>());
+            IScopedConsumeContextProvider contextProvider = scope.ServiceProvider
+                .GetRequiredService<Bind<ISecondaryBus, IScopedConsumeContextProvider>>()
+                .Value;
+            ConsumeContext ambient = DispatchProxy.Create<ConsumeContext, PassiveConsumeContextProxy>();
+
+            using (contextProvider.PushContext(ambient))
+                Assert.IsType<ConsumeContextScopedBusContext>(factory.Create(scope.ServiceProvider));
+        }
+        finally
+        {
+            DeleteDatabase(connectionString);
+        }
+    }
+
     private static ServiceProvider BuildProvider(string connectionString)
     {
         var services = new ServiceCollection();
@@ -166,5 +222,13 @@ public sealed class EntityFrameworkReliableMessagingRegistrationTests
     private sealed class ReliableDbContext(DbContextOptions<ReliableDbContext> options) : DbContext(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.AddViciOneReliableMessaging();
+    }
+
+    private class PassiveConsumeContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.ReturnType.IsValueType == true
+                ? Activator.CreateInstance(targetMethod.ReturnType)
+                : null;
     }
 }
