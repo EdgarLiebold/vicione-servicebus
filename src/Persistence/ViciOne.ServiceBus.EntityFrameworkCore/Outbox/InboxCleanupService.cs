@@ -148,17 +148,22 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
             }
             catch
             {
-                try
-                {
-                    await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
-                }
-                catch
-                {
-                    // The primary cleanup failure remains authoritative; transaction disposal follows immediately.
-                }
-
+                await RollbackTransactionAsync(transaction).ConfigureAwait(false);
                 throw;
             }
+        }
+    }
+
+    internal static async Task RollbackTransactionAsync(IDbContextTransaction transaction)
+    {
+        ArgumentNullException.ThrowIfNull(transaction);
+        try
+        {
+            await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+        catch
+        {
+            // The primary cleanup failure remains authoritative; transaction disposal follows immediately.
         }
     }
 

@@ -1,6 +1,8 @@
 using System.Data;
+using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -95,6 +97,44 @@ public sealed class InboxCleanupServiceTests
         Assert.Contains(expired, await environment.ReadMessageIdsAsync());
     }
 
+    [Theory]
+    [InlineData("SELECT NULL")]
+    [InlineData("SELECT 1 WHERE 0")]
+    [InlineData("SELECT 2")]
+    [RequirementCoverage("REQ-VSB-EF-INBOX-CLEANUP", "nonowner-lock-results-preserve-rows")]
+    public async Task Cleanup_WhenLockResultDoesNotGrantOwnershipPreservesEveryRowAsync(string lockStatement)
+    {
+        await using CleanupEnvironment environment = await CleanupEnvironment.CreateAsync(lockStatement);
+        Guid expired = await environment.SeedAsync(Now - TimeSpan.FromMinutes(12));
+        InboxCleanupService<CleanupDbContext> service = environment.CreateService();
+
+        int removed = await service.CleanUpInboxStateAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(0, removed);
+        Assert.Equal([expired], await environment.ReadMessageIdsAsync());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-INBOX-CLEANUP", "rollback-failure-does-not-mask-primary-failure")]
+    public async Task RollbackTransaction_RejectsMissingTransactionAndSuppressesSecondaryFailureAsync()
+    {
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            InboxCleanupService<CleanupDbContext>.RollbackTransactionAsync(null!));
+        IDbContextTransaction successfulTransaction = DispatchProxy.Create<IDbContextTransaction, TrackingRollbackTransactionProxy>();
+        var successfulProxy = (TrackingRollbackTransactionProxy)(object)successfulTransaction;
+
+        await InboxCleanupService<CleanupDbContext>.RollbackTransactionAsync(successfulTransaction);
+
+        Assert.Equal(1, successfulProxy.RollbackCalls);
+        IDbContextTransaction failingTransaction = DispatchProxy.Create<IDbContextTransaction, TrackingRollbackTransactionProxy>();
+        var failingProxy = (TrackingRollbackTransactionProxy)(object)failingTransaction;
+        failingProxy.ShouldFail = true;
+
+        await InboxCleanupService<CleanupDbContext>.RollbackTransactionAsync(failingTransaction);
+
+        Assert.Equal(1, failingProxy.RollbackCalls);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-INBOX-CLEANUP", "caller-cancellation-remains-observable")]
     public async Task Cleanup_CallerCancellationRemainsObservableAsync()
@@ -167,6 +207,26 @@ public sealed class InboxCleanupServiceTests
         public string GetOutboxStatement(DbContext context) => throw new NotSupportedException();
 
         public string GetInboxCleanupLockStatement(DbContext context) => statement;
+    }
+
+    private class TrackingRollbackTransactionProxy : DispatchProxy
+    {
+        public int RollbackCalls { get; private set; }
+
+        public bool ShouldFail { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == nameof(IDbContextTransaction.RollbackAsync))
+            {
+                RollbackCalls++;
+                return ShouldFail
+                    ? Task.FromException(new InvalidOperationException("Secondary rollback failure."))
+                    : Task.CompletedTask;
+            }
+
+            throw new InvalidOperationException($"Unexpected transaction member: {targetMethod?.Name ?? "<null>"}.");
+        }
     }
 
     private sealed class CleanupEnvironment : IAsyncDisposable
