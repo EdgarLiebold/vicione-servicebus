@@ -66,7 +66,6 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-
     /// <summary>Selects SQL Server lock statements for the outbox.</summary>
     /// <param name="configurator">The outbox configuration on which SQL Server locking is selected.</param>
     /// <returns>The same outbox configurator.</returns>

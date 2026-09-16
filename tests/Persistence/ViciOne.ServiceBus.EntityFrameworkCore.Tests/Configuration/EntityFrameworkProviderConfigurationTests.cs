@@ -211,6 +211,108 @@ public sealed class EntityFrameworkProviderConfigurationTests
     }
 
     [Theory]
+    [InlineData(InvalidOutboxSetting.DuplicateDetectionWindow, "DuplicateDetectionWindow")]
+    [InlineData(InvalidOutboxSetting.QueryDelay, "QueryDelay")]
+    [InlineData(InvalidOutboxSetting.QueryMessageLimit, "QueryMessageLimit")]
+    [InlineData(InvalidOutboxSetting.QueryTimeout, "QueryTimeout")]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-CONFIGURATION", "invalid-persistence-settings-fail-at-registration")]
+    public void OutboxConfiguration_RejectsEveryInvalidPersistenceBoundary(
+        InvalidOutboxSetting setting,
+        string expectedSetting)
+    {
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
+                {
+                    outbox.UseSqlite();
+                    switch (setting)
+                    {
+                        case InvalidOutboxSetting.DuplicateDetectionWindow:
+                            outbox.DuplicateDetectionWindow = TimeSpan.Zero;
+                            break;
+                        case InvalidOutboxSetting.QueryDelay:
+                            outbox.QueryDelay = TimeSpan.Zero;
+                            break;
+                        case InvalidOutboxSetting.QueryMessageLimit:
+                            outbox.QueryMessageLimit = 0;
+                            break;
+                        case InvalidOutboxSetting.QueryTimeout:
+                            outbox.QueryTimeout = TimeSpan.Zero;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(setting), setting, null);
+                    }
+                })));
+
+        Assert.Contains(expectedSetting, failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-CONFIGURATION", "transactional-outbox-is-enabled-once")]
+    public void OutboxConfiguration_RejectsDuplicateTransactionalOutboxEnablement()
+    {
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
+                {
+                    outbox.UseSqlite();
+                    outbox.EnableTransactionalOutbox();
+                    outbox.EnableTransactionalOutbox();
+                })));
+
+        Assert.Contains("only be configured once", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-CONFIGURATION", "bus-and-dbcontext-registration-is-unique")]
+    public void BusOutboxConfiguration_RejectsDuplicateBusAndDbContextRegistration()
+    {
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+            {
+                AddBusOutbox<ConfigurationDbContext>(configuration);
+                AddBusOutbox<ConfigurationDbContext>(configuration);
+            }));
+
+        Assert.Contains("already configured", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "typed-registration-propagates-one-explicit-default")]
+    public void TypedBusOutboxRegistration_PropagatesOneExplicitDefaultAcrossDbContexts()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBus<IConfigurationBus>("configuration-v1", configuration =>
+        {
+            AddBusOutbox<ConfigurationDbContext>(configuration);
+            AddBusOutbox<SecondConfigurationDbContext>(configuration, useAsDefault: true);
+        });
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IEntityFrameworkScopedBusContextFactory<IConfigurationBus>[] factories = provider
+            .GetServices<IEntityFrameworkScopedBusContextFactory<IConfigurationBus>>()
+            .ToArray();
+
+        Assert.Equal(2, factories.Length);
+        Assert.False(Assert.Single(factories, factory => factory.DbContextType == typeof(ConfigurationDbContext)).IsDefault);
+        Assert.True(Assert.Single(factories, factory => factory.DbContextType == typeof(SecondConfigurationDbContext)).IsDefault);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "multiple-explicit-defaults-fail-at-registration")]
+    public void BusOutboxConfiguration_RejectsMultipleExplicitDefaults()
+    {
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+            {
+                AddBusOutbox<ConfigurationDbContext>(configuration, useAsDefault: true);
+                AddBusOutbox<SecondConfigurationDbContext>(configuration, useAsDefault: true);
+            }));
+
+        Assert.Contains("Exactly one default", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]
@@ -386,6 +488,50 @@ public sealed class EntityFrameworkProviderConfigurationTests
         MaximumRetryDelay
     }
 
+    public enum InvalidOutboxSetting
+    {
+        DuplicateDetectionWindow,
+        QueryDelay,
+        QueryMessageLimit,
+        QueryTimeout
+    }
+
+    private static void AddBusOutbox<TDbContext>(
+        IBusRegistrationConfigurator configuration,
+        bool useAsDefault = false)
+        where TDbContext : DbContext
+    {
+        configuration.ConfigureEntityFrameworkTransactionalStore<TDbContext>(outbox =>
+        {
+            outbox.UseSqlite();
+            outbox.DisableInboxCleanupService();
+            outbox.EnableTransactionalOutbox(busOutbox =>
+            {
+                busOutbox.DisableDeliveryService();
+                if (useAsDefault)
+                    busOutbox.UseAsDefault();
+            });
+        });
+    }
+
+    private static void AddBusOutbox<TDbContext>(
+        IBusRegistrationConfigurator<IConfigurationBus> configuration,
+        bool useAsDefault = false)
+        where TDbContext : DbContext
+    {
+        configuration.ConfigureEntityFrameworkTransactionalStore<IConfigurationBus, TDbContext>(outbox =>
+        {
+            outbox.UseSqlite();
+            outbox.DisableInboxCleanupService();
+            outbox.EnableTransactionalOutbox(busOutbox =>
+            {
+                busOutbox.DisableDeliveryService();
+                if (useAsDefault)
+                    busOutbox.UseAsDefault();
+            });
+        });
+    }
+
     public sealed class ConfigurationSaga : ISaga
     {
         public Guid CorrelationId { get; set; }
@@ -397,6 +543,15 @@ public sealed class EntityFrameworkProviderConfigurationTests
         {
         }
     }
+
+    public sealed class SecondConfigurationDbContext(DbContextOptions<SecondConfigurationDbContext> options) : DbContext(options)
+    {
+        public SecondConfigurationDbContext() : this(new DbContextOptionsBuilder<SecondConfigurationDbContext>().Options)
+        {
+        }
+    }
+
+    public interface IConfigurationBus : IBus;
 
     private sealed class RecordingOutboxConfigurator : IEntityFrameworkOutboxConfigurator
     {
