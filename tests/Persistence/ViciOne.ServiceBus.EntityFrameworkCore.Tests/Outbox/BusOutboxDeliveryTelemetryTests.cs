@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics.Metrics;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -28,12 +29,16 @@ public sealed class BusOutboxDeliveryTelemetryTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var entered = new TaskCompletionSource<ILogContext>(TaskCreationOptions.RunContinuationsAsynchronously);
         var measurements = new ConcurrentQueue<object?>();
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(cancellationToken);
+        DbContextOptions<RecordingDbContext> dbContextOptions =
+            new DbContextOptionsBuilder<RecordingDbContext>().UseSqlite(connection).Options;
+        await using (var setupContext = new RecordingDbContext(dbContextOptions))
+            await setupContext.Database.EnsureCreatedAsync(cancellationToken);
 
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration => configuration.SetTestTimeouts(timeout, timeout))
-            .AddScoped(_ => new RecordingDbContext(
-                new DbContextOptionsBuilder<RecordingDbContext>().Options,
-                entered))
+            .AddScoped(_ => new RecordingDbContext(dbContextOptions, entered))
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         IMeterFactory meterFactory = provider.GetRequiredService<IMeterFactory>();
         using var listener = new MeterListener();
@@ -51,7 +56,10 @@ public sealed class BusOutboxDeliveryTelemetryTests
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var service = new EntityFrameworkTransactionalOutboxSource<IBus, RecordingDbContext>(
             Options.Create(new OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>()),
-            Options.Create(new EntityFrameworkOutboxOptions<RecordingDbContext>()),
+            Options.Create(new EntityFrameworkOutboxOptions<RecordingDbContext>
+            {
+                LockStatementProvider = new SqliteLockStatementProvider(),
+            }),
             new NoNotification(),
             [],
             NullLogger<EntityFrameworkTransactionalOutboxSource<IBus, RecordingDbContext>>.Instance,
@@ -61,15 +69,13 @@ public sealed class BusOutboxDeliveryTelemetryTests
 
         try
         {
-            using var deliveryCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            Task<bool> delivery = service.DeliverDueBatchAsync(deliveryCancellation.Token);
+            Task<bool> delivery = service.DeliverDueBatchAsync(cancellationToken);
             ILogContext deliveryLogContext = await entered.Task.WaitAsync(timeout, cancellationToken);
 
             OutboxTelemetryTestDriver.RecordDelivery(deliveryLogContext);
 
             Assert.Same(meterFactory, Assert.Single(measurements));
-            deliveryCancellation.Cancel();
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => delivery);
+            Assert.False(await delivery);
         }
         finally
         {
@@ -81,12 +87,17 @@ public sealed class BusOutboxDeliveryTelemetryTests
     {
         public RecordingDbContext(
             DbContextOptions<RecordingDbContext> options,
-            TaskCompletionSource<ILogContext> entered)
+            TaskCompletionSource<ILogContext>? entered = null)
             : base(options)
         {
-            entered.TrySetResult(LogContext.Current
-                ?? throw new Xunit.Sdk.XunitException("Expected the outbox delivery log context to be available."));
+            if (entered != null)
+            {
+                entered.TrySetResult(LogContext.Current
+                    ?? throw new Xunit.Sdk.XunitException("Expected the outbox delivery log context to be available."));
+            }
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.AddTransactionalOutboxEntities();
     }
 
     private sealed class NoNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>

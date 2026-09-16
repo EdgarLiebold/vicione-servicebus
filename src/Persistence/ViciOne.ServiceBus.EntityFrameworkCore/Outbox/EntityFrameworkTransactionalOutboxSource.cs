@@ -68,8 +68,15 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _failureClassifiers = failureClassifiers.ToArray();
         _options = options.Value;
-        _lockStatementProvider = outboxOptions.Value.LockStatementProvider;
-        _isolationLevel = outboxOptions.Value.IsolationLevel;
+        EntityFrameworkOutboxOptions<TDbContext> persistenceOptions = outboxOptions.Value;
+        _lockStatementProvider = persistenceOptions.LockStatementProvider
+            ?? throw new ArgumentException("A lock-statement provider is required.", nameof(outboxOptions));
+        _isolationLevel = Enum.IsDefined(persistenceOptions.IsolationLevel)
+            ? persistenceOptions.IsolationLevel
+            : throw new ArgumentOutOfRangeException(
+                nameof(outboxOptions),
+                persistenceOptions.IsolationLevel,
+                "The transaction isolation level is undefined.");
 
         _outboxMessagesQuery = EF.CompileAsyncQuery((TDbContext context, Guid outboxId, long lastSequenceNumber, int limit) =>
             context.Set<OutboxMessage>()
@@ -218,84 +225,23 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         for (; messageIndex < messages.Count && messageCount < messageLimit; messageIndex++)
         {
             var message = messages[messageIndex];
-            try
+            Uri? destinationAddress = PrepareMessage(outboxState, message);
+            if (destinationAddress == null
+                || !await TrySendMessageAsync(outboxState, message, destinationAddress, cancellationToken).ConfigureAwait(false))
             {
-                message.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
-            }
-            catch (Exception exception)
-            {
-                RecordTerminalAttempt(outboxState);
-                Quarantine(
-                    outboxState,
-                    message,
-                    OutboxFailureKind.InvariantViolation,
-                    OutboxFailureCode.MetadataDeserializationFailed,
-                    GetExceptionType(exception));
-                _logger.LogError(exception,
-                    "Outbox message quarantined after persisted metadata failure: {BusKey} {OutboxId} {SequenceNumber}",
-                    _busKey, outboxState.OutboxId, message.SequenceNumber);
                 saveChanges = true;
                 break;
             }
 
-            if (message.DestinationAddress == null)
-            {
-                RecordTerminalAttempt(outboxState);
-                Quarantine(
-                    outboxState,
-                    message,
-                    OutboxFailureKind.InvariantViolation,
-                    OutboxFailureCode.MissingDestinationAddress);
-                saveChanges = true;
-                break;
-            }
+            sentSequenceNumber = message.SequenceNumber;
+            dbContext.Remove(message);
+            outboxState.Status = OutboxDeliveryStatus.Pending;
+            ResetFailure(outboxState);
+            saveChanges = true;
+            messageCount++;
 
-            try
-            {
-                using var sendTimeout = new CancellationTokenSource(_options.MessageDeliveryTimeout, _timeProvider);
-                using var sendToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sendTimeout.Token);
-
-                var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
-                var endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: sendToken.Token).ConfigureAwait(false);
-                StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);
-                var instrument = LogContext.Current?.TryStartOutboxDeliveryMetrics();
-
-                try
-                {
-                    await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, sendToken.Token).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    activity?.AddExceptionEvent(ex);
-                    instrument?.RecordException(ex);
-                    throw;
-                }
-                finally
-                {
-                    activity?.Stop();
-                    instrument?.Complete();
-                }
-
-                sentSequenceNumber = message.SequenceNumber;
-                dbContext.Remove(message);
-                outboxState.Status = OutboxDeliveryStatus.Pending;
-                ResetFailure(outboxState);
-                saveChanges = true;
-                messageCount++;
-
-                LogContext.Debug?.Log("Outbox sent: {BusKey} {OutboxId} {SequenceNumber} {MessageId}", _busKey, message.OutboxId,
-                    message.SequenceNumber, message.MessageId);
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (Exception exception)
-            {
-                ApplyDeliveryFailure(outboxState, message, exception);
-                saveChanges = true;
-                break;
-            }
+            LogContext.Debug?.Log("Outbox sent: {BusKey} {OutboxId} {SequenceNumber} {MessageId}", _busKey, message.OutboxId,
+                message.SequenceNumber, message.MessageId);
         }
 
         if (sentSequenceNumber > 0)
@@ -305,32 +251,129 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
             saveChanges = true;
         }
 
-        if (outboxState.Status != OutboxDeliveryStatus.Quarantined
-            && outboxState.Status != OutboxDeliveryStatus.RetryScheduled
-            && messageIndex == messages.Count
-            && messages.Count < messageLimit)
+        if (TryCompleteOutbox(dbContext, outboxState, messages, messageIndex, messageLimit, hasLastSequenceNumber))
         {
-            outboxState.Status = OutboxDeliveryStatus.Delivered;
-            outboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
-            ResetFailure(outboxState);
-
-            if (!hasLastSequenceNumber)
-            {
-                dbContext.Remove(outboxState);
-                dbContext.RemoveRange(messages);
-            }
-            else
-                dbContext.Update(outboxState);
-
             saveChanges = true;
             completedOutbox = true;
-            LogContext.Debug?.Log("Outbox delivered: {BusKey} {OutboxId} {Delivered}", _busKey, outboxState.OutboxId, outboxState.Delivered);
         }
 
         if (saveChanges)
             await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return messageCount > 0 || !completedOutbox ? messageCount : 1;
+    }
+
+    Uri? PrepareMessage(OutboxState outboxState, OutboxMessage message)
+    {
+        try
+        {
+            message.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
+        }
+        catch (Exception exception)
+        {
+            RecordTerminalAttempt(outboxState);
+            Quarantine(
+                outboxState,
+                message,
+                OutboxFailureKind.InvariantViolation,
+                OutboxFailureCode.MetadataDeserializationFailed,
+                GetExceptionType(exception));
+            _logger.LogError(exception,
+                "Outbox message quarantined after persisted metadata failure: {BusKey} {OutboxId} {SequenceNumber}",
+                _busKey, outboxState.OutboxId, message.SequenceNumber);
+            return null;
+        }
+
+        if (message.DestinationAddress != null)
+            return message.DestinationAddress;
+
+        RecordTerminalAttempt(outboxState);
+        Quarantine(
+            outboxState,
+            message,
+            OutboxFailureKind.InvariantViolation,
+            OutboxFailureCode.MissingDestinationAddress);
+        return null;
+    }
+
+    async Task<bool> TrySendMessageAsync(
+        OutboxState outboxState,
+        OutboxMessage message,
+        Uri destinationAddress,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await SendMessageAsync(message, destinationAddress, cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            ApplyDeliveryFailure(outboxState, message, exception);
+            return false;
+        }
+    }
+
+    async Task SendMessageAsync(OutboxMessage message, Uri destinationAddress, CancellationToken cancellationToken)
+    {
+        using var sendTimeout = new CancellationTokenSource(_options.MessageDeliveryTimeout, _timeProvider);
+        using var sendToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sendTimeout.Token);
+
+        var pipe = new OutboxMessageSendPipe(message, destinationAddress);
+        var endpoint = await _bus.GetSendEndpointAsync(destinationAddress, cancellationToken: sendToken.Token).ConfigureAwait(false);
+        StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);
+        var instrument = LogContext.Current?.TryStartOutboxDeliveryMetrics();
+
+        try
+        {
+            await endpoint.SendAsync(SerializedTransportMessage.Instance, pipe, sendToken.Token).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            activity?.AddExceptionEvent(exception);
+            instrument?.RecordException(exception);
+            throw;
+        }
+        finally
+        {
+            activity?.Stop();
+            instrument?.Complete();
+        }
+    }
+
+    bool TryCompleteOutbox(
+        TDbContext dbContext,
+        OutboxState outboxState,
+        IList<OutboxMessage> messages,
+        int messageIndex,
+        int messageLimit,
+        bool hasLastSequenceNumber)
+    {
+        if (outboxState.Status is OutboxDeliveryStatus.Quarantined or OutboxDeliveryStatus.RetryScheduled
+            || messageIndex != messages.Count
+            || messages.Count >= messageLimit)
+        {
+            return false;
+        }
+
+        outboxState.Status = OutboxDeliveryStatus.Delivered;
+        outboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
+        ResetFailure(outboxState);
+
+        if (hasLastSequenceNumber)
+            dbContext.Update(outboxState);
+        else
+        {
+            dbContext.Remove(outboxState);
+            dbContext.RemoveRange(messages);
+        }
+
+        LogContext.Debug?.Log("Outbox delivered: {BusKey} {OutboxId} {Delivered}", _busKey, outboxState.OutboxId, outboxState.Delivered);
+        return true;
     }
 
     internal void ApplyDeliveryFailure(OutboxState state, OutboxMessage message, Exception exception)

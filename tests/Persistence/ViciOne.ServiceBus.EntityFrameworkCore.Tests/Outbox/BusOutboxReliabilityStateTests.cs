@@ -44,6 +44,23 @@ public sealed class BusOutboxReliabilityStateTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "transient-failure-is-persisted-for-retry")]
+    public void TransientFailure_SchedulesTheNextAttemptWithAnExplicitClassification()
+    {
+        using ServiceProvider provider = CreateProvider();
+        var service = CreateService(provider, maximumAttempts: 3, initialDelay: TimeSpan.FromSeconds(2));
+        var state = CreateState();
+        var message = CreateMessage(state.OutboxId, 19);
+
+        service.ApplyDeliveryFailure(state, message, new TimeoutException("temporarily unavailable"));
+
+        Assert.Equal(OutboxDeliveryStatus.RetryScheduled, state.Status);
+        Assert.Equal(1, state.DeliveryAttempts);
+        Assert.Equal(OutboxFailureKind.Transient, state.LastFailureKind);
+        Assert.Equal((Now + TimeSpan.FromSeconds(2)).UtcDateTime, state.NextDeliveryTime);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "retry-budget-exhaustion-is-terminal")]
     public void RetryBudgetExhaustion_TransitionsToTerminalQuarantine()
     {
@@ -102,14 +119,16 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(typeof(FaultingDescriptionException).FullName, state.LastExceptionType);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(int.MaxValue)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "corrupt-attempt-count-is-quarantined")]
-    public void CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoop()
+    public void CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoop(int invalidAttempts)
     {
         using ServiceProvider provider = CreateProvider();
         var service = CreateService(provider);
         var state = CreateState();
-        state.DeliveryAttempts = int.MaxValue;
+        state.DeliveryAttempts = invalidAttempts;
         var message = CreateMessage(state.OutboxId, 29);
 
         service.ApplyDeliveryFailure(state, message, new TimeoutException("timeout"));
@@ -117,6 +136,7 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Quarantined, state.Status);
         Assert.Equal(OutboxFailureKind.InvariantViolation, state.LastFailureKind);
         Assert.Equal(OutboxFailureCode.InvalidDeliveryAttemptCount, state.LastFailureCode);
+        Assert.Equal(invalidAttempts, state.DeliveryAttempts);
         Assert.Null(state.LastExceptionType);
         Assert.Null(state.NextDeliveryTime);
     }
@@ -141,11 +161,22 @@ public sealed class BusOutboxReliabilityStateTests
         using ServiceProvider provider = CreateProvider();
         var service = CreateService(provider);
 
+        Assert.Equal(TransportSendFailureKind.Transient, service.Classify(new ConnectionException("transient", isTransient: true)));
+        Assert.Equal(TransportSendFailureKind.Permanent, service.Classify(new ConnectionException("permanent", isTransient: false)));
         Assert.Equal(TransportSendFailureKind.Transient, service.Classify(new TimeoutException()));
         Assert.Equal(TransportSendFailureKind.Transient, service.Classify(new OperationCanceledException()));
         Assert.Equal(TransportSendFailureKind.Permanent, service.Classify(new ConfigurationException("invalid")));
+        Assert.Equal(TransportSendFailureKind.Permanent, service.Classify(new NotSupportedException()));
+        Assert.Equal(TransportSendFailureKind.Permanent, service.Classify(new ArgumentException()));
         Assert.Equal(TransportSendFailureKind.Permanent, service.Classify(new UnauthorizedAccessException()));
+        Assert.Equal(TransportSendFailureKind.Permanent, service.Classify(new UriFormatException()));
         Assert.Equal(TransportSendFailureKind.Unclassified, service.Classify(new TestTransportException()));
+
+        var decliningService = CreateService(provider, classifiers: [new DecliningClassifier()]);
+        Assert.Equal(TransportSendFailureKind.Transient, decliningService.Classify(new TimeoutException()));
+
+        var nullClassifierService = CreateService(provider, classifiers: [null!]);
+        Assert.Equal(TransportSendFailureKind.Transient, nullClassifierService.Classify(new TimeoutException()));
     }
 
     [Theory]
@@ -192,12 +223,16 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(-1, -1)]
+    [InlineData(int.MaxValue, int.MaxValue)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-QUARANTINE", "corrupt-metadata-is-retained")]
-    public async Task CorruptPersistedMetadata_IsQuarantinedInsteadOfHotLoopingAsync()
+    public async Task CorruptPersistedMetadata_IsQuarantinedInsteadOfHotLoopingAsync(int initialAttempts, int expectedAttempts)
     {
         await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         OutboxState state = CreateState();
+        state.DeliveryAttempts = initialAttempts;
         OutboxMessage message = CreatePersistableMessage(state.OutboxId, new Uri("loopback://localhost/valid"));
         message.Headers = "{";
         fixture.DbContext.AddRange(state, message);
@@ -213,7 +248,7 @@ public sealed class BusOutboxReliabilityStateTests
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
         Assert.Equal(0, delivered);
         Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
-        Assert.Equal(1, persisted.DeliveryAttempts);
+        Assert.Equal(expectedAttempts, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.InvariantViolation, persisted.LastFailureKind);
         Assert.Equal(OutboxFailureCode.MetadataDeserializationFailed, persisted.LastFailureCode);
         Assert.Equal(typeof(System.Text.Json.JsonException).FullName, persisted.LastExceptionType);
@@ -261,9 +296,71 @@ public sealed class BusOutboxReliabilityStateTests
         var service = CreateService(provider);
 
         int delivered = await service.DeliverOutboxMessagesAsync(fixture.DbContext, state, CancellationToken.None);
+        fixture.DbContext.ChangeTracker.Clear();
 
         Assert.Equal(1, delivered);
         Assert.True(busProxy.EndpointResolutionToken.CanBeCanceled);
+        Assert.Empty(await fixture.DbContext.Set<OutboxState>().ToListAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "transient-send-failure-is-retained-and-persisted")]
+    public async Task TransientSendFailure_RetainsTheMessageAndPersistsRetryStateAsync()
+    {
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
+        OutboxState state = CreateState();
+        OutboxMessage message = CreatePersistableMessage(state.OutboxId, new Uri("loopback://localhost/failing-delivery"));
+        fixture.DbContext.AddRange(state, message);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        fixture.DbContext.ChangeTracker.Clear();
+        state = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+        IBus bus = DispatchProxy.Create<IBus, RecordingBusProxy>();
+        var busProxy = (RecordingBusProxy)(object)bus;
+        busProxy.SendFailure = new TimeoutException("transport unavailable");
+        using ServiceProvider provider = CreateProvider(bus);
+        var service = CreateService(provider);
+
+        int delivered = await service.DeliverOutboxMessagesAsync(fixture.DbContext, state, TestContext.Current.CancellationToken);
+        fixture.DbContext.ChangeTracker.Clear();
+
+        OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(0, delivered);
+        Assert.Equal(OutboxDeliveryStatus.RetryScheduled, persisted.Status);
+        Assert.Equal(1, persisted.DeliveryAttempts);
+        Assert.Equal(OutboxFailureKind.Transient, persisted.LastFailureKind);
+        Assert.Equal(message.SequenceNumber, persisted.FailedSequenceNumber);
+        Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "caller-cancellation-interrupts-active-send")]
+    public async Task CallerCancellation_InterruptsAnActiveSendWithoutChangingPersistentStateAsync()
+    {
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
+        OutboxState state = CreateState();
+        OutboxMessage message = CreatePersistableMessage(state.OutboxId, new Uri("loopback://localhost/blocked-delivery"));
+        fixture.DbContext.AddRange(state, message);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        fixture.DbContext.ChangeTracker.Clear();
+        state = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+        IBus bus = DispatchProxy.Create<IBus, RecordingBusProxy>();
+        var busProxy = (RecordingBusProxy)(object)bus;
+        busProxy.BlockSend = true;
+        using ServiceProvider provider = CreateProvider(bus);
+        var service = CreateService(provider);
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+
+        Task<int> delivery = service.DeliverOutboxMessagesAsync(fixture.DbContext, state, cancellation.Token);
+        await busProxy.SendEntered.Task.WaitAsync(TestContext.Current.CancellationToken);
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => delivery);
+        fixture.DbContext.ChangeTracker.Clear();
+        OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(OutboxDeliveryStatus.Pending, persisted.Status);
+        Assert.Equal(0, persisted.DeliveryAttempts);
+        Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
     }
 
     private static EntityFrameworkTransactionalOutboxSource<IBus, DeliveryDbContext> CreateService(
@@ -351,6 +448,15 @@ public sealed class BusOutboxReliabilityStateTests
         }
     }
 
+    private sealed class DecliningClassifier : ITransportSendFailureClassifier
+    {
+        public bool TryClassify(Exception exception, out TransportSendFailureKind failureKind)
+        {
+            failureKind = default;
+            return false;
+        }
+    }
+
     private sealed class PermanentClassifier : ITransportSendFailureClassifier
     {
         public bool TryClassify(Exception exception, out TransportSendFailureKind failureKind)
@@ -362,16 +468,22 @@ public sealed class BusOutboxReliabilityStateTests
 
     private class RecordingBusProxy : DispatchProxy
     {
-        private static readonly ISendEndpoint Endpoint = DispatchProxy.Create<TestSendEndpoint, SuccessfulSendEndpointProxy>();
-
+        public bool BlockSend { get; set; }
         public CancellationToken EndpointResolutionToken { get; private set; }
+        public Exception? SendFailure { get; set; }
+        public TaskCompletionSource SendEntered { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             if (targetMethod?.Name == nameof(ISendEndpointProvider.GetSendEndpointAsync))
             {
                 EndpointResolutionToken = (CancellationToken)args![1]!;
-                return Task.FromResult(Endpoint);
+                TestSendEndpoint endpoint = DispatchProxy.Create<TestSendEndpoint, ConfigurableSendEndpointProxy>();
+                var proxy = (ConfigurableSendEndpointProxy)(object)endpoint;
+                proxy.BlockSend = BlockSend;
+                proxy.Failure = SendFailure;
+                proxy.SendEntered = SendEntered;
+                return Task.FromResult<ISendEndpoint>(endpoint);
             }
 
             throw new InvalidOperationException($"Unexpected bus member: {targetMethod?.Name ?? "<null>"}.");
@@ -380,12 +492,28 @@ public sealed class BusOutboxReliabilityStateTests
 
     private interface TestSendEndpoint : ISendEndpoint, ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint;
 
-    private class SuccessfulSendEndpointProxy : DispatchProxy
+    private class ConfigurableSendEndpointProxy : DispatchProxy
     {
+        public bool BlockSend { get; set; }
+        public Exception? Failure { get; set; }
+        public TaskCompletionSource SendEntered { get; set; } = null!;
+
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             if (targetMethod?.Name == "SendAsync" && targetMethod.ReturnType == typeof(Task))
+            {
+                SendEntered.TrySetResult();
+                if (BlockSend)
+                {
+                    CancellationToken cancellationToken = args!.OfType<CancellationToken>().Single();
+                    return Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+                }
+
+                if (Failure != null)
+                    return Task.FromException(Failure);
+
                 return Task.CompletedTask;
+            }
 
             throw new InvalidOperationException($"Unexpected send-endpoint member: {targetMethod?.Name ?? "<null>"}.");
         }
