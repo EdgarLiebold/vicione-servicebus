@@ -22,6 +22,14 @@ public class ScopedBusContextProvider<TBus> :
         IScopedConsumeContextProvider globalConsumeContextProvider,
         IServiceProvider provider)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(clientFactory);
+        ArgumentNullException.ThrowIfNull(busConsumeContextProvider);
+        ArgumentNullException.ThrowIfNull(globalConsumeContextProvider);
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(clientFactory.Value, nameof(clientFactory));
+        ArgumentNullException.ThrowIfNull(busConsumeContextProvider.Value, nameof(busConsumeContextProvider));
+
         if (busConsumeContextProvider.Value.HasContext)
             Context = new ConsumeContextScopedBusContext(busConsumeContextProvider.Value.GetContext(), clientFactory.Value);
         else if (globalConsumeContextProvider.HasContext)

@@ -11,16 +11,13 @@ internal abstract class DeferredBusScopedContextProvider<TBus> :
         Bind<TBus, IScopedConsumeContextProvider> consumeContextProvider, IScopedConsumeContextProvider globalConsumeContextProvider,
         IServiceProvider provider)
     {
-        if (bus == null)
-            throw new ArgumentNullException(nameof(bus));
-        if (clientFactory == null)
-            throw new ArgumentNullException(nameof(clientFactory));
-        if (consumeContextProvider == null)
-            throw new ArgumentNullException(nameof(consumeContextProvider));
-        if (globalConsumeContextProvider == null)
-            throw new ArgumentNullException(nameof(globalConsumeContextProvider));
-        if (provider == null)
-            throw new ArgumentNullException(nameof(provider));
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(clientFactory);
+        ArgumentNullException.ThrowIfNull(consumeContextProvider);
+        ArgumentNullException.ThrowIfNull(globalConsumeContextProvider);
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(clientFactory.Value, nameof(clientFactory));
+        ArgumentNullException.ThrowIfNull(consumeContextProvider.Value, nameof(consumeContextProvider));
 
         if (consumeContextProvider.Value.HasContext)
         {
