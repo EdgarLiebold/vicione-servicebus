@@ -12,7 +12,7 @@ internal sealed class ExistingExecuteActivityScopeContext<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    readonly IDisposable _disposable;
+    readonly ActivityScopeLifetime _lifetime;
     readonly IServiceScope _scope;
 
     /// <summary>Creates a view over an already active activity scope.</summary>
@@ -23,7 +23,7 @@ internal sealed class ExistingExecuteActivityScopeContext<TActivity, TArguments>
     {
         Context = context ?? throw new ArgumentNullException(nameof(context));
         _scope = scope ?? throw new ArgumentNullException(nameof(scope));
-        _disposable = disposable ?? throw new ArgumentNullException(nameof(disposable));
+        _lifetime = new ActivityScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)));
     }
 
     /// <summary>Gets the execution context containing the resolved activity.</summary>
@@ -31,11 +31,7 @@ internal sealed class ExistingExecuteActivityScopeContext<TActivity, TArguments>
 
     /// <summary>Restores the prior consume context without disposing the borrowed scope.</summary>
     /// <returns>A completed task.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 
     /// <summary>Resolves a service from the activity scope, creating an instance when necessary.</summary>
     /// <typeparam name="T">The service type.</typeparam>
