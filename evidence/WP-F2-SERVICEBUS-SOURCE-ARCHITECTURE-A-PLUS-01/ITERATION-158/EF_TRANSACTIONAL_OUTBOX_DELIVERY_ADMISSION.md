@@ -24,7 +24,7 @@ The test manifest contains `BusOutboxDeliveryTelemetryTests.cs`,
 content hashes `2c746bb1071327ae4af830f20d3008204af0889fd8366bc6f1d208f240857f01`,
 `40e8991c9ee2d7e4d7f11928980bb3eade1b8c78ddd50b8ade891ab32d8accf2` and
 `358a821e648f54dae43696f102e185fa879feb0e1a9288ab4e4794a80bb3df67`.
-Cumulative personal source admission is 277/4,659 current C# files.
+Cumulative personal source admission is 277/4,116 current C# files.
 
 ## Proof
 
