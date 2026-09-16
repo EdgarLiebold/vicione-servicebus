@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Internals.Dispatching;
 
-/// <summary>Maps runtime response contracts to the consume context's generic operations.</summary>
+/// <summary>Maps live runtime response contracts to generic consume-context operations without retaining collectible types.</summary>
 internal static class ResponseEndpointDispatcher
 {
-    static readonly ConcurrentDictionary<Type, Lazy<IResponseEndpointConverter>> Converters = new();
+    static readonly ConditionalWeakTable<Type, Lazy<IResponseEndpointConverter>> Converters = new();
 
     /// <summary>Sends a response using an explicit runtime contract type.</summary>
     /// <param name="consumeContext">The consume context that sends the response.</param>
@@ -42,7 +42,7 @@ internal static class ResponseEndpointDispatcher
     {
         ValidateMessageType(messageType);
 
-        return Converters.GetOrAdd(messageType, CreateTypeConverter).Value;
+        return Converters.GetValue(messageType, CreateTypeConverter).Value;
     }
 
     static Lazy<IResponseEndpointConverter> CreateTypeConverter(Type type)

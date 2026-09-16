@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Internals.Dispatching;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -14,6 +16,21 @@ public sealed class EndpointDispatcherTests
         AssertInternalStatic(typeof(SendEndpointDispatcher));
         AssertInternalStatic(typeof(PublishEndpointDispatcher));
         AssertInternalStatic(typeof(ResponseEndpointDispatcher));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-RUNTIME-DISPATCH", "collectible-contract-caches-do-not-pin")]
+    public void RuntimeDispatcherCaches_DoNotRetainCollectibleContractTypes(int dispatcher)
+    {
+        CollectibleReferences references = PopulateRuntimeDispatcherCache(dispatcher);
+
+        CollectUntilReleased(references);
+
+        Assert.False(references.Type.IsAlive);
+        Assert.False(references.Assembly.IsAlive);
     }
 
     [Fact]
@@ -232,6 +249,54 @@ public sealed class EndpointDispatcherTests
         recorder.Invocations.Clear();
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static CollectibleReferences PopulateRuntimeDispatcherCache(int dispatcher)
+    {
+        var name = new AssemblyName($"ViciOne.RuntimeDispatcher.{dispatcher}.{Guid.NewGuid():N}");
+        AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(name, AssemblyBuilderAccess.RunAndCollect);
+        ModuleBuilder module = assembly.DefineDynamicModule(name.Name!);
+        TypeBuilder builder = module.DefineType("RuntimeContract", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed);
+        builder.DefineDefaultConstructor(MethodAttributes.Public);
+        Type runtimeType = builder.CreateType()!;
+        object message = Activator.CreateInstance(runtimeType)!;
+
+        RecordingProxy recorder;
+        Task returned;
+        switch (dispatcher)
+        {
+            case 0:
+                ISendEndpoint sendEndpoint = CreateProxy<IAdvancedSendEndpoint>(out recorder);
+                returned = SendEndpointDispatcher.SendAsync(sendEndpoint, message, runtimeType, CancellationToken.None);
+                break;
+            case 1:
+                IPublishEndpoint publishEndpoint = CreateProxy<IAdvancedPublishEndpoint>(out recorder);
+                returned = PublishEndpointDispatcher.PublishAsync(publishEndpoint, message, runtimeType, CancellationToken.None);
+                break;
+            case 2:
+                ConsumeContext consumeContext = CreateProxy<ConsumeContext>(out recorder);
+                returned = ResponseEndpointDispatcher.RespondAsync(consumeContext, message, runtimeType);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(dispatcher));
+        }
+
+        Assert.Same(recorder.ReturnTask, returned);
+        Assert.Single(recorder.Invocations);
+        recorder.Invocations.Clear();
+        return new CollectibleReferences(new WeakReference(runtimeType), new WeakReference(assembly));
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void CollectUntilReleased(CollectibleReferences references)
+    {
+        for (var attempt = 0; attempt < 20 && (references.Type.IsAlive || references.Assembly.IsAlive); attempt++)
+        {
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+        }
+    }
+
     private static void AssertParameter(string parameterName, Func<Task> operation) =>
         Assert.Equal(parameterName, Assert.Throws<ArgumentNullException>(() =>
         {
@@ -267,6 +332,8 @@ public sealed class EndpointDispatcherTests
     }
 
     private sealed record Invocation(MethodInfo Method, object?[] Arguments);
+
+    private sealed record CollectibleReferences(WeakReference Type, WeakReference Assembly);
 
     private class RecordingProxy : DispatchProxy
     {

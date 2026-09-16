@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Internals.Dispatching;
 
-/// <summary>Maps runtime publish contracts to the endpoint's generic operations.</summary>
+/// <summary>Maps live runtime publish contracts to the endpoint's generic operations without retaining collectible types.</summary>
 internal static class PublishEndpointDispatcher
 {
-    static readonly ConcurrentDictionary<Type, Lazy<IPublishEndpointConverter>> Converters = new();
+    static readonly ConditionalWeakTable<Type, Lazy<IPublishEndpointConverter>> Converters = new();
 
     /// <summary>Publishes a message using an explicit runtime contract type.</summary>
     /// <param name="endpoint">The publish endpoint.</param>
@@ -77,7 +77,7 @@ internal static class PublishEndpointDispatcher
     {
         ValidateMessageType(messageType);
 
-        return Converters.GetOrAdd(messageType, CreateTypeConverter).Value;
+        return Converters.GetValue(messageType, CreateTypeConverter).Value;
     }
 
     static Lazy<IPublishEndpointConverter> CreateTypeConverter(Type type)

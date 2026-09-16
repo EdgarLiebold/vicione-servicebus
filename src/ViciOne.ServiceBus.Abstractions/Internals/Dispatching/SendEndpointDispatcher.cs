@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Internals.Dispatching;
 
-/// <summary>Maps runtime send contracts to the endpoint's generic operations.</summary>
+/// <summary>Maps live runtime send contracts to the endpoint's generic operations without retaining collectible types.</summary>
 internal static class SendEndpointDispatcher
 {
-    static readonly ConcurrentDictionary<Type, Lazy<ISendEndpointConverter>> Converters = new();
+    static readonly ConditionalWeakTable<Type, Lazy<ISendEndpointConverter>> Converters = new();
 
     /// <summary>Sends a message using an explicit runtime contract type.</summary>
     /// <param name="endpoint">The send endpoint.</param>
@@ -77,7 +77,7 @@ internal static class SendEndpointDispatcher
     {
         ValidateMessageType(messageType);
 
-        return Converters.GetOrAdd(messageType, CreateTypeConverter).Value;
+        return Converters.GetValue(messageType, CreateTypeConverter).Value;
     }
 
     static Lazy<ISendEndpointConverter> CreateTypeConverter(Type type)
