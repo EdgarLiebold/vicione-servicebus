@@ -35,6 +35,8 @@ public sealed class CompensateScopeProvider<TLog> :
     public ValueTask<ICompensateScopeContext<TLog>> GetScopeAsync(CompensateContext<TLog> context,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (cancellationToken.IsCancellationRequested)
             return ValueTask.FromCanceled<ICompensateScopeContext<TLog>>(cancellationToken);
 
@@ -44,6 +46,7 @@ public sealed class CompensateScopeProvider<TLog> :
     /// <inheritdoc />
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("provider", "dependencyInjection");
     }
 

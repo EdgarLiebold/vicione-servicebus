@@ -21,7 +21,7 @@ public class FilterScopeProvider<TFilter, TContext> :
     /// <param name="serviceProvider">The service provider.</param>
     public FilterScopeProvider(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
 
     /// <summary>Creates the requested value.</summary>
@@ -29,6 +29,7 @@ public class FilterScopeProvider<TFilter, TContext> :
     /// <returns>The newly created instance.</returns>
     public IFilterScopeContext<TContext> Create(TContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return new DependencyInjectionFilterScopeContext(context, _serviceProvider);
     }
 
@@ -36,6 +37,7 @@ public class FilterScopeProvider<TFilter, TContext> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("filter", TypeCache<TFilter>.ShortName);
     }
 
@@ -43,6 +45,7 @@ public class FilterScopeProvider<TFilter, TContext> :
     class DependencyInjectionFilterScopeContext :
         IFilterScopeContext<TContext>
     {
+        readonly ServiceScopeLifetime _lifetime;
         readonly IServiceScope _scope;
         TFilter _filter = null!;
 
@@ -51,19 +54,12 @@ public class FilterScopeProvider<TFilter, TContext> :
             Context = context;
             _scope = context.TryGetPayload(out IServiceProvider? provider)
                 || (context.TryGetPayload(out ConsumeContext? consumeContext) && consumeContext.TryGetPayload(out provider))
-                    ? new NoopScope(provider)
-                    : serviceProvider.CreateScope();
+                ? new NoopScope(provider)
+                : serviceProvider.CreateScope();
+            _lifetime = new ServiceScopeLifetime(_scope);
         }
 
-        public ValueTask DisposeAsync()
-        {
-            if (_scope is IAsyncDisposable asyncDisposable)
-                return asyncDisposable.DisposeAsync();
-
-            _scope.Dispose();
-
-            return default;
-        }
+        public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 
         public IFilter<TContext> Filter => _filter ??= ActivatorUtilities.GetServiceOrCreateInstance<TFilter>(_scope.ServiceProvider);
 
@@ -75,7 +71,7 @@ public class FilterScopeProvider<TFilter, TContext> :
         {
             public NoopScope(IServiceProvider serviceProvider)
             {
-                ServiceProvider = serviceProvider;
+                ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             }
 
             public void Dispose()

@@ -35,6 +35,8 @@ public sealed class ExecuteScopeProvider<TArguments> :
     public ValueTask<IExecuteScopeContext<TArguments>> GetScopeAsync(ExecuteContext<TArguments> context,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (cancellationToken.IsCancellationRequested)
             return ValueTask.FromCanceled<IExecuteScopeContext<TArguments>>(cancellationToken);
 
@@ -44,6 +46,7 @@ public sealed class ExecuteScopeProvider<TArguments> :
     /// <inheritdoc />
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("provider", "dependencyInjection");
     }
 

@@ -10,7 +10,7 @@ public class ExistingCompensateScopeContext<TLog> :
     ICompensateScopeContext<TLog>
     where TLog : class
 {
-    readonly IDisposable _disposable;
+    readonly ConsumeScopeLifetime _lifetime;
     readonly IServiceScope _scope;
 
     /// <summary>Initializes a new instance.</summary>
@@ -19,9 +19,9 @@ public class ExistingCompensateScopeContext<TLog> :
     /// <param name="disposable">The disposable.</param>
     public ExistingCompensateScopeContext(CompensateContext<TLog> context, IServiceScope scope, IDisposable disposable)
     {
-        _scope = scope;
-        _disposable = disposable;
-        Context = context;
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _scope = scope ?? throw new ArgumentNullException(nameof(scope));
+        _lifetime = new ConsumeScopeLifetime(disposable ?? throw new ArgumentNullException(nameof(disposable)));
     }
 
     /// <summary>Gets the context.</summary>
@@ -29,11 +29,7 @@ public class ExistingCompensateScopeContext<TLog> :
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask DisposeAsync()
-    {
-        _disposable?.Dispose();
-        return default;
-    }
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync();
 
     /// <summary>Gets service.</summary>
     /// <typeparam name="T">The value type.</typeparam>
