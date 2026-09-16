@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
@@ -13,7 +13,7 @@ internal sealed class ObjectPropertyProvider<TInput, TProperty> :
     where TInput : class
     where TProperty : class
 {
-    readonly ConcurrentDictionary<Type, Converter> _converters;
+    readonly ConditionalWeakTable<Type, IObjectConverter> _converters;
     readonly IPropertyProviderFactory<TInput> _factory;
     readonly IPropertyProvider<TInput, object> _provider;
 
@@ -25,13 +25,13 @@ internal sealed class ObjectPropertyProvider<TInput, TProperty> :
         _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
-        _converters = new ConcurrentDictionary<Type, Converter>();
+        _converters = new ConditionalWeakTable<Type, IObjectConverter>();
     }
 
-    /// <summary>Resolves the object and applies the converter selected for its runtime type.</summary>
+    /// <summary>Preserves assignable values or applies the converter selected for the source runtime type.</summary>
     /// <typeparam name="T">The message contract being initialized.</typeparam>
     /// <param name="context">The message and input object used for value resolution.</param>
-    /// <param name="cancellationToken">The token that cancels source resolution and conversion.</param>
+    /// <param name="cancellationToken">The token forwarded to source resolution and conversion.</param>
     /// <returns>A task containing the converted value, or <see langword="null" /> for a null source.</returns>
     public async Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
@@ -41,35 +41,36 @@ internal sealed class ObjectPropertyProvider<TInput, TProperty> :
 
         Task<object?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The object property provider returned null.");
-        var propertyValue = await propertyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        var propertyValue = await propertyTask.ConfigureAwait(false);
         if (propertyValue == null)
             return null;
 
-        var converter = _converters.GetOrAdd(propertyValue.GetType(), CreateConverter);
+        if (propertyValue is TProperty assignableValue)
+            return assignableValue;
+
+        IObjectConverter converter = _converters.GetValue(propertyValue.GetType(), CreateConverter);
         Task<TProperty?> conversionTask = converter.ConvertAsync(context, propertyValue, cancellationToken)
             ?? throw new InvalidOperationException("The runtime property converter returned null.");
-        return await conversionTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await conversionTask.ConfigureAwait(false);
     }
 
-    Converter CreateConverter(Type type)
+    IObjectConverter CreateConverter(Type type)
     {
         Type converterType = typeof(ObjectConverter<>).MakeGenericType(typeof(TInput), typeof(TProperty), type);
 
-        return (Converter)(Activator.CreateInstance(converterType, _factory)
+        return (IObjectConverter)(Activator.CreateInstance(converterType, _factory)
             ?? throw new InvalidOperationException($"The runtime property converter '{converterType}' could not be activated."));
     }
 
-
-    interface Converter
+    interface IObjectConverter
     {
         Task<TProperty?> ConvertAsync<T>(InitializeContext<T, TInput> context, object propertyValue,
             CancellationToken cancellationToken)
             where T : class;
     }
 
-
     sealed class ObjectConverter<TObject> :
-        Converter
+        IObjectConverter
     {
         readonly IPropertyConverter<TProperty, TObject>? _converter;
 

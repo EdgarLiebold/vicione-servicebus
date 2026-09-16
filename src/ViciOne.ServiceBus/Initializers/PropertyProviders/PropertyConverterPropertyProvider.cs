@@ -30,10 +30,10 @@ internal sealed class PropertyConverterPropertyProvider<TInput, TProperty, TInpu
         _inputProvider = inputProvider;
     }
 
-    /// <summary>Awaits the input provider and converter with caller cancellation.</summary>
+    /// <summary>Forwards caller cancellation and observes each accepted source and conversion operation to completion.</summary>
     /// <typeparam name="T">The message contract being initialized.</typeparam>
     /// <param name="context">The message and input object used for value resolution.</param>
-    /// <param name="cancellationToken">The token that cancels source resolution and conversion.</param>
+    /// <param name="cancellationToken">The token forwarded to source resolution and conversion.</param>
     /// <returns>A task containing the converted property value.</returns>
     public async Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
@@ -45,9 +45,9 @@ internal sealed class PropertyConverterPropertyProvider<TInput, TProperty, TInpu
 
         Task<TInputProperty?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The input property provider returned null.");
-        var inputValue = await inputTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        var inputValue = await inputTask.ConfigureAwait(false);
         Task<TProperty?> conversionTask = _converter.ConvertAsync(context, inputValue, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The property converter returned null.");
-        return await conversionTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await conversionTask.ConfigureAwait(false);
     }
 }

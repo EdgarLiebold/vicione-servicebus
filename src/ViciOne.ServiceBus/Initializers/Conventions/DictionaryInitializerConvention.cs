@@ -32,19 +32,7 @@ internal sealed class DictionaryInitializerConvention<TMessage, TInput, TValue> 
             return true;
         }
 
-        if (_providerFactory.TryGetPropertyConverter(out IPropertyConverter<TProperty, TValue>? converter))
-        {
-            var providerType = typeof(InputDictionaryPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TValue));
-
-            var provider = (IPropertyProvider<TInput, TValue>)(Activator.CreateInstance(providerType, key) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
-
-            var convertProvider = new PropertyConverterPropertyProvider<TInput, TProperty, TValue>(converter, provider);
-
-            initializer = new ProviderPropertyInitializer<TMessage, TInput, TProperty>(convertProvider, propertyInfo);
-            return true;
-        }
-
-        if (typeof(TValue) == typeof(object))
+        if (typeof(TValue) == typeof(object) && !typeof(TProperty).IsValueType)
         {
             var inputProviderType = typeof(InputDictionaryPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TValue));
 
@@ -55,6 +43,18 @@ internal sealed class DictionaryInitializerConvention<TMessage, TInput, TValue> 
             var provider = (IPropertyProvider<TInput, TProperty>)(Activator.CreateInstance(providerType, _providerFactory, valueProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             initializer = new ProviderPropertyInitializer<TMessage, TInput, TProperty>(provider, propertyInfo);
+            return true;
+        }
+
+        if (_providerFactory.TryGetPropertyConverter(out IPropertyConverter<TProperty, TValue>? converter))
+        {
+            var providerType = typeof(InputDictionaryPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TValue));
+
+            var provider = (IPropertyProvider<TInput, TValue>)(Activator.CreateInstance(providerType, key) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+
+            var convertProvider = new PropertyConverterPropertyProvider<TInput, TProperty, TValue>(converter, provider);
+
+            initializer = new ProviderPropertyInitializer<TMessage, TInput, TProperty>(convertProvider, propertyInfo);
             return true;
         }
 

@@ -20,10 +20,10 @@ internal sealed class VariablePropertyProvider<TInput, TProperty, TValue> :
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
-    /// <summary>Resolves the variable value with caller cancellation.</summary>
+    /// <summary>Forwards caller cancellation and observes each accepted provider and variable operation to completion.</summary>
     /// <typeparam name="T">The message contract being initialized.</typeparam>
     /// <param name="context">The message and input object available to the variable.</param>
-    /// <param name="cancellationToken">The token that cancels provider and variable resolution.</param>
+    /// <param name="cancellationToken">The token forwarded to provider and variable resolution.</param>
     /// <returns>A task containing the variable's value, or the default value when no variable is available.</returns>
     public async Task<TValue?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
@@ -35,12 +35,12 @@ internal sealed class VariablePropertyProvider<TInput, TProperty, TValue> :
 
         Task<TProperty?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The variable property provider returned null.");
-        TProperty? property = await propertyTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        TProperty? property = await propertyTask.ConfigureAwait(false);
         if (property == null)
             return default;
 
         Task<TValue> valueTask = property.GetValueAsync(context, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The initializer variable returned null.");
-        return await valueTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await valueTask.ConfigureAwait(false);
     }
 }
