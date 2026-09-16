@@ -12,10 +12,10 @@ public class BusScopedBusContext<TBus> :
 {
     readonly TBus _bus;
     readonly IClientFactory _clientFactory;
+    readonly Lazy<IScopedClientFactory> _scopedClientFactory;
+    readonly Lazy<IPublishEndpoint> _publishEndpoint;
     readonly IServiceProvider _provider;
-    IPublishEndpoint? _publishEndpoint;
-    IScopedClientFactory? _scopedClientFactory;
-    ISendEndpointProvider? _sendEndpointProvider;
+    readonly Lazy<ISendEndpointProvider> _sendEndpointProvider;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="bus">The bus.</param>
@@ -23,31 +23,37 @@ public class BusScopedBusContext<TBus> :
     /// <param name="provider">The service provider used to resolve dependencies.</param>
     public BusScopedBusContext(TBus bus, IClientFactory clientFactory, IServiceProvider provider)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(clientFactory);
+        ArgumentNullException.ThrowIfNull(provider);
+
         _bus = bus;
         _clientFactory = clientFactory;
         _provider = provider;
+        _sendEndpointProvider = new Lazy<ISendEndpointProvider>(
+            () => new ScopedSendEndpointProvider(_bus, _provider));
+        _publishEndpoint = new Lazy<IPublishEndpoint>(
+            () => new PublishEndpoint(new ScopedPublishEndpointProvider(_bus, _provider)));
+        _scopedClientFactory = new Lazy<IScopedClientFactory>(
+            () => new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null));
     }
 
     /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider
     {
-        get { return _sendEndpointProvider ??= new ScopedSendEndpointProvider(_bus, _provider); }
+        get { return _sendEndpointProvider.Value; }
     }
 
     /// <summary>Gets the publish endpoint.</summary>
     public IPublishEndpoint PublishEndpoint
     {
-        get { return _publishEndpoint ??= new PublishEndpoint(new ScopedPublishEndpointProvider(_bus, _provider)); }
+        get { return _publishEndpoint.Value; }
     }
 
     /// <summary>Gets the client factory.</summary>
     public IScopedClientFactory ClientFactory
     {
-        get
-        {
-            return _scopedClientFactory ??=
-                new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
-        }
+        get { return _scopedClientFactory.Value; }
     }
 }
 
@@ -57,9 +63,9 @@ public class BusScopedBusContext :
     ScopedBusContext
 {
     readonly IClientFactory _clientFactory;
+    readonly Lazy<IScopedClientFactory> _scopedClientFactory;
     readonly IServiceProvider _provider;
     readonly ScopedBusContext _scopedBusContext;
-    IScopedClientFactory? _scopedClientFactory;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="scopedBusContext">The scoped bus context.</param>
@@ -67,9 +73,15 @@ public class BusScopedBusContext :
     /// <param name="provider">The service provider used to resolve dependencies.</param>
     public BusScopedBusContext(ScopedBusContext scopedBusContext, IClientFactory clientFactory, IServiceProvider provider)
     {
+        ArgumentNullException.ThrowIfNull(scopedBusContext);
+        ArgumentNullException.ThrowIfNull(clientFactory);
+        ArgumentNullException.ThrowIfNull(provider);
+
         _scopedBusContext = scopedBusContext;
         _clientFactory = clientFactory;
         _provider = provider;
+        _scopedClientFactory = new Lazy<IScopedClientFactory>(
+            () => new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null));
     }
 
     /// <summary>Gets the send endpoint provider.</summary>
@@ -81,10 +93,6 @@ public class BusScopedBusContext :
     /// <summary>Gets the client factory.</summary>
     public IScopedClientFactory ClientFactory
     {
-        get
-        {
-            return _scopedClientFactory ??=
-                new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
-        }
+        get { return _scopedClientFactory.Value; }
     }
 }

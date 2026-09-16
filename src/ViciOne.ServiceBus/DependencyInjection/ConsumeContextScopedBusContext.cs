@@ -16,6 +16,9 @@ public class ConsumeContextScopedBusContext :
     /// <param name="clientFactory">The client factory.</param>
     public ConsumeContextScopedBusContext(ConsumeContext context, IClientFactory clientFactory)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(clientFactory);
+
         _context = context;
         _clientFactory = new ScopedClientFactory(clientFactory, context);
     }
@@ -40,9 +43,9 @@ public class ConsumeContextScopedBusContext<TBus> :
     readonly TBus _bus;
     readonly ScopedClientFactory _clientFactory;
     readonly ConsumeContext _context;
+    readonly Lazy<IPublishEndpoint> _publishEndpoint;
     readonly IServiceProvider _provider;
-    IPublishEndpoint? _publishEndpoint;
-    ISendEndpointProvider? _sendEndpointProvider;
+    readonly Lazy<ISendEndpointProvider> _sendEndpointProvider;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="bus">The bus.</param>
@@ -51,22 +54,31 @@ public class ConsumeContextScopedBusContext<TBus> :
     /// <param name="provider">The service provider used to resolve dependencies.</param>
     public ConsumeContextScopedBusContext(TBus bus, ConsumeContext context, IClientFactory clientFactory, IServiceProvider provider)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(clientFactory);
+        ArgumentNullException.ThrowIfNull(provider);
+
         _bus = bus;
         _context = context;
         _provider = provider;
         _clientFactory = new ScopedClientFactory(clientFactory, context);
+        _sendEndpointProvider = new Lazy<ISendEndpointProvider>(
+            () => new ScopedConsumeSendEndpointProvider(_bus, _context, _provider));
+        _publishEndpoint = new Lazy<IPublishEndpoint>(
+            () => new PublishEndpoint(new ScopedConsumePublishEndpointProvider(_bus, _context, _provider)));
     }
 
     /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider
     {
-        get { return _sendEndpointProvider ??= new ScopedConsumeSendEndpointProvider(_bus, _context, _provider); }
+        get { return _sendEndpointProvider.Value; }
     }
 
     /// <summary>Gets the publish endpoint.</summary>
     public IPublishEndpoint PublishEndpoint
     {
-        get { return _publishEndpoint ??= new PublishEndpoint(new ScopedConsumePublishEndpointProvider(_bus, _context, _provider)); }
+        get { return _publishEndpoint.Value; }
     }
 
     /// <summary>Gets the client factory.</summary>
