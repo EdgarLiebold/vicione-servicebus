@@ -17,6 +17,8 @@ public class ScopedSendPipeAdapter<TMessage> :
     public ScopedSendPipeAdapter(IServiceProvider provider, IPipe<SendContext<TMessage>>? pipe)
         : base(pipe)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+
         _provider = provider;
     }
 

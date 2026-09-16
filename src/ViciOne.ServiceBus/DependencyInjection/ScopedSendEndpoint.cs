@@ -15,6 +15,8 @@ public class ScopedSendEndpoint :
     public ScopedSendEndpoint(ISendEndpoint endpoint, IServiceProvider scope)
         : base(endpoint)
     {
+        ArgumentNullException.ThrowIfNull(scope);
+
         _scope = scope;
     }
 
