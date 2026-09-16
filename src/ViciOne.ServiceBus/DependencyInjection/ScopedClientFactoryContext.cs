@@ -14,6 +14,9 @@ public class ScopedClientFactoryContext :
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedClientFactoryContext(IClientFactory clientFactory, IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(clientFactory);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         _clientFactory = clientFactory;
         _serviceProvider = serviceProvider;
     }

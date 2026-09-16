@@ -18,6 +18,9 @@ public class ScopedRequestSendEndpoint<TRequest> :
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedRequestSendEndpoint(IRequestSendEndpoint<TRequest> endpoint, IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(endpoint);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         _endpoint = endpoint;
         _serviceProvider = serviceProvider;
     }
