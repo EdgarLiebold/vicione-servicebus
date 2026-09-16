@@ -17,6 +17,7 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
     where TLog : class
 {
     readonly List<Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>> _compensateActions;
+    readonly Lock _definitionLock = new();
     readonly List<Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>> _executeActions;
     readonly IContainerSelector _selector;
     IActivityDefinition<TActivity, TArguments, TLog> _definition = null!;
@@ -79,6 +80,8 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
 
     IActivityDefinition IActivityRegistration.GetDefinition(IRegistrationContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return GetActivityDefinition(context);
     }
 
@@ -145,21 +148,29 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
 
     IActivityDefinition<TActivity, TArguments, TLog> GetActivityDefinition(IServiceProvider provider)
     {
-        if (_definition != null)
-            return _definition;
+        ArgumentNullException.ThrowIfNull(provider);
 
-        _definition = _selector.GetDefinition<IActivityDefinition<TActivity, TArguments, TLog>>(provider)
-            ?? new DefaultActivityDefinition<TActivity, TArguments, TLog>();
+        lock (_definitionLock)
+        {
+            if (_definition != null)
+                return _definition;
 
-        IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
-            _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
-        if (executeEndpointDefinition != null)
-            _definition.ExecuteEndpointDefinition = executeEndpointDefinition;
+            IActivityDefinition<TActivity, TArguments, TLog> definition =
+                _selector.GetDefinition<IActivityDefinition<TActivity, TArguments, TLog>>(provider)
+                ?? new DefaultActivityDefinition<TActivity, TArguments, TLog>();
 
-        IEndpointDefinition<ICompensateActivity<TLog>>? compensateEndpointDefinition = _selector.GetEndpointDefinition<ICompensateActivity<TLog>>(provider);
-        if (compensateEndpointDefinition != null)
-            _definition.CompensateEndpointDefinition = compensateEndpointDefinition;
+            IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
+                _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
+            if (executeEndpointDefinition != null)
+                definition.ExecuteEndpointDefinition = executeEndpointDefinition;
 
-        return _definition;
+            IEndpointDefinition<ICompensateActivity<TLog>>? compensateEndpointDefinition =
+                _selector.GetEndpointDefinition<ICompensateActivity<TLog>>(provider);
+            if (compensateEndpointDefinition != null)
+                definition.CompensateEndpointDefinition = compensateEndpointDefinition;
+
+            _definition = definition;
+            return definition;
+        }
     }
 }

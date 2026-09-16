@@ -15,6 +15,7 @@ internal sealed class ExecuteActivityRegistration<TActivity, TArguments> :
     where TArguments : class
 {
     readonly List<Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>> _configureActions;
+    readonly Lock _definitionLock = new();
     readonly IContainerSelector _selector;
     IExecuteActivityDefinition<TActivity, TArguments> _definition = null!;
 
@@ -69,22 +70,31 @@ internal sealed class ExecuteActivityRegistration<TActivity, TArguments> :
 
     IExecuteActivityDefinition IExecuteActivityRegistration.GetDefinition(IRegistrationContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return GetActivityDefinition(context);
     }
 
     IExecuteActivityDefinition<TActivity, TArguments> GetActivityDefinition(IServiceProvider provider)
     {
-        if (_definition != null)
-            return _definition;
+        ArgumentNullException.ThrowIfNull(provider);
 
-        _definition = _selector.GetDefinition<IExecuteActivityDefinition<TActivity, TArguments>>(provider)
-            ?? new DefaultExecuteActivityDefinition<TActivity, TArguments>();
+        lock (_definitionLock)
+        {
+            if (_definition != null)
+                return _definition;
 
-        IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
-            _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
-        if (executeEndpointDefinition != null)
-            _definition.ExecuteEndpointDefinition = executeEndpointDefinition;
+            IExecuteActivityDefinition<TActivity, TArguments> definition =
+                _selector.GetDefinition<IExecuteActivityDefinition<TActivity, TArguments>>(provider)
+                ?? new DefaultExecuteActivityDefinition<TActivity, TArguments>();
 
-        return _definition;
+            IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
+                _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
+            if (executeEndpointDefinition != null)
+                definition.ExecuteEndpointDefinition = executeEndpointDefinition;
+
+            _definition = definition;
+            return definition;
+        }
     }
 }
