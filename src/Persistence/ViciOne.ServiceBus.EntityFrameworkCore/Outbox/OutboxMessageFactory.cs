@@ -20,14 +20,16 @@ internal static class OutboxMessageFactory
         ArgumentNullException.ThrowIfNull(deserializer);
         ArgumentNullException.ThrowIfNull(timeProvider);
 
-        if (context.MessageId.HasValue == false)
-            throw new MessageException(typeof(T), "The SendContext MessageId must be present");
+        if (context.MessageId is not { } messageId || messageId == Guid.Empty)
+            throw new MessageException(typeof(T), "The SendContext MessageId must be present and nonempty");
+
+        ValidateOwner(inboxMessageId, inboxConsumerId, outboxId);
 
         var body = context.Serializer.GetMessageBody(context);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         var outboxMessage = new OutboxMessage
         {
-            MessageId = context.MessageId.Value,
+            MessageId = messageId,
             ConversationId = context.ConversationId,
             CorrelationId = context.CorrelationId,
             InitiatorId = context.InitiatorId,
@@ -61,5 +63,21 @@ internal static class OutboxMessageFactory
         }
 
         return outboxMessage;
+    }
+
+    static void ValidateOwner(Guid? inboxMessageId, Guid? inboxConsumerId, Guid? outboxId)
+    {
+        if (inboxMessageId == Guid.Empty)
+            throw new ArgumentException("The inbox message identifier must be nonempty.", nameof(inboxMessageId));
+        if (inboxConsumerId == Guid.Empty)
+            throw new ArgumentException("The inbox consumer identifier must be nonempty.", nameof(inboxConsumerId));
+        if (outboxId == Guid.Empty)
+            throw new ArgumentException("The transactional outbox identifier must be nonempty.", nameof(outboxId));
+
+        bool hasInboxOwner = inboxMessageId.HasValue && inboxConsumerId.HasValue;
+        if (inboxMessageId.HasValue != inboxConsumerId.HasValue)
+            throw new ArgumentException("Inbox ownership requires both the message and consumer identifiers.");
+        if (hasInboxOwner == outboxId.HasValue)
+            throw new ArgumentException("An outbox message must have exactly one inbox or transactional-outbox owner.");
     }
 }
