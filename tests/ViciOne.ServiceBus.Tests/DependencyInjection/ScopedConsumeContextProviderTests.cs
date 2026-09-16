@@ -10,6 +10,49 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 public sealed class ScopedConsumeContextProviderTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-CONTAINER-SCOPED-CONSUME-CONTEXT", "nullable-atomic-context-snapshot-contract")]
+    public void Contract_DeclaresNullableContextAndReturnsOnlyAvailableSnapshots()
+    {
+        MethodInfo getContext = typeof(IScopedConsumeContextProvider).GetMethod(nameof(IScopedConsumeContextProvider.GetContext))!;
+        MethodInfo implementationGetContext = typeof(ScopedConsumeContextProvider)
+            .GetMethod(nameof(ScopedConsumeContextProvider.GetContext))!;
+        var nullabilityContext = new NullabilityInfoContext();
+        var provider = new ScopedConsumeContextProvider();
+        ConsumeContext context = Proxy<ConsumeContext>();
+
+        Assert.Equal(NullabilityState.Nullable, nullabilityContext.Create(getContext.ReturnParameter).ReadState);
+        Assert.Equal(NullabilityState.Nullable, nullabilityContext.Create(implementationGetContext.ReturnParameter).ReadState);
+        Assert.False(provider.TryGetContext(out ConsumeContext? missing));
+        Assert.Null(missing);
+
+        using (provider.PushContext(UnavailableConsumeContext.Instance))
+        {
+            Assert.False(provider.TryGetContext(out ConsumeContext? unavailable));
+            Assert.Null(unavailable);
+        }
+
+        using (provider.PushContext(context))
+        {
+            Assert.True(provider.TryGetContext(out ConsumeContext? available));
+            Assert.Same(context, available);
+        }
+
+        IScopedConsumeContextProvider defaultImplementation = new RecordingProvider();
+        Assert.False(defaultImplementation.TryGetContext(out ConsumeContext? defaultMissing));
+        Assert.Null(defaultMissing);
+        using (defaultImplementation.PushContext(UnavailableConsumeContext.Instance))
+        {
+            Assert.False(defaultImplementation.TryGetContext(out ConsumeContext? defaultUnavailable));
+            Assert.Null(defaultUnavailable);
+        }
+        using (defaultImplementation.PushContext(context))
+        {
+            Assert.True(defaultImplementation.TryGetContext(out ConsumeContext? defaultAvailable));
+            Assert.Same(context, defaultAvailable);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-SCOPED-CONSUME-CONTEXT", "constructor-and-push-boundaries-before-side-effects")]
     public void ConstructorsAndPushMethods_RejectMissingDependenciesBeforeSideEffects()
     {
@@ -147,7 +190,7 @@ public sealed class ScopedConsumeContextProviderTests
 
         public int DisposeCount { get; private set; }
 
-        public ConsumeContext GetContext() => _context!;
+        public ConsumeContext? GetContext() => _context;
 
         public IDisposable PushContext(ConsumeContext context)
         {

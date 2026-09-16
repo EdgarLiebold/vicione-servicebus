@@ -64,6 +64,28 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "factories-use-atomic-consume-context-snapshot")]
+    public void Factories_UseTheAtomicConsumeContextSnapshot()
+    {
+        ConsumeContext ambient = DispatchProxy.Create<ConsumeContext, PassiveConsumeContextProxy>();
+        IClientFactory clientFactory = DispatchProxy.Create<IClientFactory, PassiveConsumeContextProxy>();
+        var contextProvider = new TryOnlyConsumeContextProvider(ambient);
+        var services = new ServiceCollection();
+        services.AddSingleton(Bind<IBus>.Create(clientFactory));
+        services.AddSingleton(Bind<IBus>.Create<IScopedConsumeContextProvider>(contextProvider));
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        var reliable = new EntityFrameworkScopedBusContextFactory<IBus, FirstDbContext>(isDefault: true);
+        var transactional = new EntityFrameworkTransactionalScopedBusContextFactory<IBus, FirstDbContext>(isDefault: true);
+
+        var reliableContext = Assert.IsType<ConsumeContextScopedBusContext>(reliable.Create(provider));
+        var transactionalContext = Assert.IsType<ConsumeContextScopedBusContext>(transactional.Create(provider));
+
+        Assert.Same(ambient, reliableContext.SendEndpointProvider);
+        Assert.Same(ambient, transactionalContext.SendEndpointProvider);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "transactional-session-is-reused-per-scope")]
     public void TransactionalFactory_ReusesTheRegistrySessionWithinOneScope()
     {
@@ -287,6 +309,15 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
         public ISendEndpointProvider SendEndpointProvider => null!;
         public IPublishEndpoint PublishEndpoint => null!;
         public IScopedClientFactory ClientFactory => null!;
+    }
+
+    private sealed class TryOnlyConsumeContextProvider(ConsumeContext context) : IScopedConsumeContextProvider
+    {
+        public bool HasContext => throw new InvalidOperationException("The factory must use the atomic snapshot API.");
+
+        public ConsumeContext GetContext() => context;
+
+        public IDisposable PushContext(ConsumeContext pushedContext) => throw new NotSupportedException();
     }
 
     private class PassiveConsumeContextProxy : DispatchProxy

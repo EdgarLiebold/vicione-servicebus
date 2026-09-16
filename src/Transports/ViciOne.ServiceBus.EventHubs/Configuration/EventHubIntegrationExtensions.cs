@@ -46,8 +46,8 @@ public static class EventHubIntegrationExtensions
         var contextProvider = provider.GetService<IScopedConsumeContextProvider>();
         if (contextProvider != null)
         {
-            return contextProvider.HasContext
-                ? rider.GetProducerProvider(contextProvider.GetContext())
+            return contextProvider.TryGetContext(out var context)
+                ? rider.GetProducerProvider(context)
                 : rider.GetProducerProvider();
         }
 

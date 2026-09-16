@@ -27,8 +27,8 @@ internal sealed class EntityFrameworkTransactionalScopedBusContextFactory<TBus, 
 
         var clientFactory = provider.GetRequiredService<Bind<TBus, IClientFactory>>().Value;
         var consumeContextProvider = provider.GetRequiredService<Bind<TBus, IScopedConsumeContextProvider>>().Value;
-        if (consumeContextProvider.HasContext)
-            return new ConsumeContextScopedBusContext(consumeContextProvider.GetContext(), clientFactory);
+        if (consumeContextProvider.TryGetContext(out var context))
+            return new ConsumeContextScopedBusContext(context, clientFactory);
 
         return provider.GetRequiredService<EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext>>();
     }
@@ -46,7 +46,7 @@ internal sealed class EntityFrameworkTransactionalScopedBusContextFactory<TBus, 
         var timeProvider = provider.GetRequiredService<TimeProvider>();
         var persistenceIdentity = provider.GetRequiredService<BusPersistenceIdentity<TBus>>();
 
-        if (globalConsumeContextProvider.HasContext)
+        if (globalConsumeContextProvider.TryGetContext(out var context))
         {
             return new EntityFrameworkTransactionalConsumeContextScopedBusContext<TBus, TDbContext>(
                 bus,
@@ -54,7 +54,7 @@ internal sealed class EntityFrameworkTransactionalScopedBusContextFactory<TBus, 
                 notification,
                 clientFactory,
                 provider,
-                globalConsumeContextProvider.GetContext(),
+                context,
                 timeProvider,
                 persistenceIdentity);
         }

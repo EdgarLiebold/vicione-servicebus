@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using ViciOne.ServiceBus.Context;
 
@@ -15,14 +16,19 @@ public class ScopedConsumeContextProvider :
     readonly object _syncRoot = new();
 
     /// <summary>Gets a value indicating whether this instance has context.</summary>
-    public bool HasContext
-    {
-        get
-        {
-            var context = Volatile.Read(ref _context);
+    public bool HasContext => TryGetContext(out _);
 
-            return context != null && context is not UnavailableConsumeContext;
-        }
+    /// <summary>Tries to get the current available context as one atomic snapshot.</summary>
+    /// <param name="context">The current context when one is available; otherwise, <see langword="null" />.</param>
+    /// <returns><see langword="true" /> when an available context was captured.</returns>
+    public bool TryGetContext([NotNullWhen(true)] out ConsumeContext? context)
+    {
+        context = Volatile.Read(ref _context);
+        if (context != null && context is not UnavailableConsumeContext)
+            return true;
+
+        context = null;
+        return false;
     }
 
     /// <summary>Pushes context.</summary>
@@ -43,10 +49,10 @@ public class ScopedConsumeContextProvider :
     }
 
     /// <summary>Gets context.</summary>
-    /// <returns>The context.</returns>
-    public ConsumeContext GetContext()
+    /// <returns>The current context, or <see langword="null" /> when no context is active.</returns>
+    public ConsumeContext? GetContext()
     {
-        return Volatile.Read(ref _context)!;
+        return Volatile.Read(ref _context);
     }
 
     void PopContext(ConsumeContext context, ConsumeContext? originalContext)

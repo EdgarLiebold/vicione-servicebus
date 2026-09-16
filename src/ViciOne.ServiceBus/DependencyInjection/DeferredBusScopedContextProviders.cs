@@ -19,16 +19,16 @@ internal abstract class DeferredBusScopedContextProvider<TBus> :
         ArgumentNullException.ThrowIfNull(clientFactory.Value, nameof(clientFactory));
         ArgumentNullException.ThrowIfNull(consumeContextProvider.Value, nameof(consumeContextProvider));
 
-        if (consumeContextProvider.Value.HasContext)
+        if (consumeContextProvider.Value.TryGetContext(out var context))
         {
             Context = new ConsumeContextScopedBusContext<IBus>(
                 bus,
-                consumeContextProvider.Value.GetContext(),
+                context,
                 clientFactory.Value,
                 provider);
         }
-        else if (globalConsumeContextProvider.HasContext)
-            Context = new ConsumeContextScopedBusContext<IBus>(bus, globalConsumeContextProvider.GetContext(), clientFactory.Value, provider);
+        else if (globalConsumeContextProvider.TryGetContext(out context))
+            Context = new ConsumeContextScopedBusContext<IBus>(bus, context, clientFactory.Value, provider);
         else
             Context = new BusScopedBusContext<IBus>(bus, clientFactory.Value, provider);
     }

@@ -29,8 +29,8 @@ internal sealed class EntityFrameworkScopedBusContextFactory<TBus, TDbContext> :
         var consumeContextProvider = provider.GetRequiredService<Bind<TBus, IScopedConsumeContextProvider>>().Value;
 
         // Sends performed while consuming on this same bus belong to the receive pipeline/outbox.
-        if (consumeContextProvider.HasContext)
-            return new ConsumeContextScopedBusContext(consumeContextProvider.GetContext(), clientFactory);
+        if (consumeContextProvider.TryGetContext(out var context))
+            return new ConsumeContextScopedBusContext(context, clientFactory);
 
         return provider.GetRequiredService<EntityFrameworkScopedBusContext<TBus, TDbContext>>();
     }
@@ -47,10 +47,10 @@ internal sealed class EntityFrameworkScopedBusContextFactory<TBus, TDbContext> :
         var timeProvider = provider.GetRequiredService<TimeProvider>();
         var persistenceIdentity = provider.GetRequiredService<BusPersistenceIdentity<TBus>>();
 
-        if (globalConsumeContextProvider.HasContext)
+        if (globalConsumeContextProvider.TryGetContext(out var context))
         {
             return new EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory, provider,
-                globalConsumeContextProvider.GetContext(), timeProvider, persistenceIdentity);
+                context, timeProvider, persistenceIdentity);
         }
 
         return new EntityFrameworkScopedBusContext<TBus, TDbContext>(

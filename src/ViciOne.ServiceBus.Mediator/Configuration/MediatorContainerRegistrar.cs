@@ -54,8 +54,8 @@ internal sealed class MediatorContainerRegistrar :
         var clientFactory = provider.GetRequiredService<IScopedMediator>();
         var consumeContextProvider = provider.GetRequiredService<Bind<IMediator, IScopedConsumeContextProvider>>().Value;
 
-        return consumeContextProvider.HasContext
-            ? new ScopedClientFactory(clientFactory, consumeContextProvider.GetContext())
+        return consumeContextProvider.TryGetContext(out var context)
+            ? new ScopedClientFactory(clientFactory, context)
             : new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(clientFactory, provider)), null);
     }
 }

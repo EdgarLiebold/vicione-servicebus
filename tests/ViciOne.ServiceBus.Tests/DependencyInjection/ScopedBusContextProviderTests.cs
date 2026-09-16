@@ -81,14 +81,14 @@ public sealed class ScopedBusContextProviderTests
         var specific = new ScopedBusContextProvider<IBus>(
             bus,
             clientBinding,
-            Bind<IBus>.Create<IScopedConsumeContextProvider>(new RecordingConsumeContextProvider(specificContext)),
+            Bind<IBus>.Create<IScopedConsumeContextProvider>(new TryOnlyConsumeContextProvider(specificContext)),
             new RecordingConsumeContextProvider(globalContext),
             provider);
         var global = new ScopedBusContextProvider<IBus>(
             bus,
             clientBinding,
             Bind<IBus>.Create<IScopedConsumeContextProvider>(new RecordingConsumeContextProvider(null)),
-            new RecordingConsumeContextProvider(globalContext),
+            new TryOnlyConsumeContextProvider(globalContext),
             provider);
         var root = new ScopedBusContextProvider<IBus>(
             bus,
@@ -118,14 +118,14 @@ public sealed class ScopedBusContextProviderTests
         Bind<IBus, IAmbientTransactionBus> ambientBinding = Bind<IBus>.Create(ambientBus);
         Bind<IBus, IBufferedBus> bufferedBinding = Bind<IBus>.Create(bufferedBus);
         Bind<IBus, IScopedConsumeContextProvider> specificBinding = Bind<IBus>.Create<IScopedConsumeContextProvider>(
-            new RecordingConsumeContextProvider(specificContext));
+            new TryOnlyConsumeContextProvider(specificContext));
         Bind<IBus, IScopedConsumeContextProvider> absentBinding = Bind<IBus>.Create<IScopedConsumeContextProvider>(
             new RecordingConsumeContextProvider(null));
 
         var specific = new AmbientTransactionScopedBusContextProvider<IBus>(
             ambientBinding, clientBinding, specificBinding, new RecordingConsumeContextProvider(globalContext), provider);
         var global = new BufferedBusScopedBusContextProvider<IBus>(
-            bufferedBinding, clientBinding, absentBinding, new RecordingConsumeContextProvider(globalContext), provider);
+            bufferedBinding, clientBinding, absentBinding, new TryOnlyConsumeContextProvider(globalContext), provider);
         var root = new AmbientTransactionScopedBusContextProvider<IBus>(
             ambientBinding, clientBinding, absentBinding, new RecordingConsumeContextProvider(null), provider);
 
@@ -148,7 +148,16 @@ public sealed class ScopedBusContextProviderTests
     {
         public bool HasContext => context is not null;
 
-        public ConsumeContext GetContext() => context ?? throw new InvalidOperationException("No context is present.");
+        public ConsumeContext? GetContext() => context;
+
+        public IDisposable PushContext(ConsumeContext pushedContext) => throw new NotSupportedException();
+    }
+
+    private sealed class TryOnlyConsumeContextProvider(ConsumeContext context) : IScopedConsumeContextProvider
+    {
+        public bool HasContext => throw new InvalidOperationException("The consumer must use the atomic snapshot API.");
+
+        public ConsumeContext GetContext() => context;
 
         public IDisposable PushContext(ConsumeContext pushedContext) => throw new NotSupportedException();
     }
@@ -157,7 +166,7 @@ public sealed class ScopedBusContextProviderTests
     {
         public bool HasContext => throw new InvalidOperationException("The selector inspected context before validating its bindings.");
 
-        public ConsumeContext GetContext() => throw new NotSupportedException();
+        public ConsumeContext? GetContext() => throw new NotSupportedException();
 
         public IDisposable PushContext(ConsumeContext context) => throw new NotSupportedException();
     }
