@@ -17,6 +17,10 @@ public class ScopedConsumePublishEndpointProvider :
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedConsumePublishEndpointProvider(IPublishEndpointProvider provider, ConsumeContext consumeContext, IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         _provider = provider;
         _consumeContext = consumeContext;
         _serviceProvider = serviceProvider;
@@ -30,7 +34,10 @@ public class ScopedConsumePublishEndpointProvider :
     async Task<ISendEndpoint> IPublishEndpointProvider.GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken)
         where T : class
     {
-        var endpoint = await _provider.GetPublishEndpointAsync<T>(_consumeContext, default).ConfigureAwait(false);
+        var endpoint = await _provider.GetPublishEndpointAsync<T>(
+            _consumeContext,
+            requestId: null,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new ScopedSendEndpoint(endpoint, _serviceProvider);
     }

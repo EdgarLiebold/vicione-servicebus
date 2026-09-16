@@ -18,6 +18,10 @@ public class ScopedConsumeSendEndpointProvider :
     /// <param name="scope">The scope.</param>
     public ScopedConsumeSendEndpointProvider(ISendEndpointProvider provider, ConsumeContext consumeContext, IServiceProvider scope)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(scope);
+
         _provider = provider;
         _consumeContext = consumeContext;
         _scope = scope;
@@ -32,7 +36,11 @@ public class ScopedConsumeSendEndpointProvider :
 
     async Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpointAsync(Uri address, CancellationToken cancellationToken)
     {
-        var endpoint = await _provider.GetSendEndpointAsync(_consumeContext, address, default).ConfigureAwait(false);
+        var endpoint = await _provider.GetSendEndpointAsync(
+            _consumeContext,
+            address,
+            requestId: null,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new ScopedSendEndpoint(endpoint, _scope);
     }
