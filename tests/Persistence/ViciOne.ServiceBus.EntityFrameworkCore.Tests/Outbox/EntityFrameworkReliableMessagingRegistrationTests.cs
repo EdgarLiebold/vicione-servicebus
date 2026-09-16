@@ -141,6 +141,41 @@ public sealed class EntityFrameworkReliableMessagingRegistrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "concurrent-reliable-session-resolution-has-one-winner")]
+    public async Task ReliableRegistry_ConcurrentResolutionReturnsOneSessionAsync()
+    {
+        string connectionString = $"Data Source={Path.Combine(Path.GetTempPath(), $"vicione-reliable-concurrent-session-{Guid.NewGuid():N}.db")};Pooling=False";
+        try
+        {
+            await using ServiceProvider provider = BuildProvider(connectionString);
+            await using AsyncServiceScope scope = provider.CreateAsyncScope();
+            EntityFrameworkBusOutboxSessionRegistry<ISecondaryBus> registry = scope.ServiceProvider
+                .GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<ISecondaryBus>>();
+            var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            Task<EntityFrameworkScopedBusContext<ISecondaryBus, ReliableDbContext>>[] resolutions = Enumerable
+                .Range(0, 16)
+                .Select(async _ =>
+                {
+                    await release.Task;
+                    return registry.GetOrCreate<ReliableDbContext>(scope.ServiceProvider);
+                })
+                .ToArray();
+
+            release.SetResult();
+            EntityFrameworkScopedBusContext<ISecondaryBus, ReliableDbContext>[] contexts =
+                await Task.WhenAll(resolutions);
+
+            EntityFrameworkScopedBusContext<ISecondaryBus, ReliableDbContext> expected = Assert.Single(
+                contexts.Distinct());
+            Assert.All(contexts, context => Assert.Same(expected, context));
+        }
+        finally
+        {
+            DeleteDatabase(connectionString);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "reliable-factory-preserves-ambient-consume-context")]
     public async Task ReliableFactory_PreservesAnAmbientConsumeContextAsync()
     {
