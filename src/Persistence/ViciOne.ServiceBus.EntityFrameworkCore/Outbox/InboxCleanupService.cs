@@ -45,8 +45,15 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(outboxOptions);
         _options = options.Value;
-        _isolationLevel = outboxOptions.Value.IsolationLevel;
-        _lockStatementProvider = outboxOptions.Value.LockStatementProvider;
+        EntityFrameworkOutboxOptions<TDbContext> persistenceOptions = outboxOptions.Value;
+        _lockStatementProvider = persistenceOptions.LockStatementProvider
+            ?? throw new ArgumentException("A lock-statement provider is required.", nameof(outboxOptions));
+        _isolationLevel = Enum.IsDefined(persistenceOptions.IsolationLevel)
+            ? persistenceOptions.IsolationLevel
+            : throw new ArgumentOutOfRangeException(
+                nameof(outboxOptions),
+                persistenceOptions.IsolationLevel,
+                "The transaction isolation level is undefined.");
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -81,7 +88,7 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
         }
     }
 
-    async Task<int> CleanUpInboxStateAsync(CancellationToken cancellationToken)
+    internal async Task<int> CleanUpInboxStateAsync(CancellationToken cancellationToken)
     {
         await using var scope = _provider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
@@ -106,12 +113,31 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
                 }
 
                 DateTime removeTimestamp = _timeProvider.GetUtcNow().UtcDateTime - _options.DuplicateDetectionWindow;
-                int count = await dbContext.Set<InboxState>()
-                    .Where(x => x.Delivered != null && x.Delivered.Value < removeTimestamp)
-                    .OrderBy(x => x.Delivered)
+                IQueryable<InboxState> deliveredQuery = dbContext.Set<InboxState>()
+                    .AsNoTracking()
+                    .Where(x => x.Delivered != null);
+
+                // SQLite stores the UTC-normalized value as canonical text and cannot compare or order
+                // DateTimeOffset expressions. Ordering that representation keeps the candidate query bounded.
+                IOrderedQueryable<InboxState> orderedQuery = dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite"
+                    ? deliveredQuery.OrderBy(x => x.Delivered.ToString()).ThenBy(x => x.Id)
+                    : deliveredQuery.OrderBy(x => x.Delivered).ThenBy(x => x.Id);
+
+                var candidates = await orderedQuery
                     .Take(_options.QueryMessageLimit)
-                    .ExecuteDeleteAsync(queryToken.Token)
+                    .Select(x => new { x.Id, x.Delivered })
+                    .ToListAsync(queryToken.Token)
                     .ConfigureAwait(false);
+                long[] expiredIds = candidates
+                    .Where(x => x.Delivered!.Value < removeTimestamp)
+                    .Select(x => x.Id)
+                    .ToArray();
+                int count = expiredIds.Length == 0
+                    ? 0
+                    : await dbContext.Set<InboxState>()
+                        .Where(x => expiredIds.Contains(x.Id))
+                        .ExecuteDeleteAsync(queryToken.Token)
+                        .ConfigureAwait(false);
 
                 await transaction.CommitAsync(queryToken.Token).ConfigureAwait(false);
 
