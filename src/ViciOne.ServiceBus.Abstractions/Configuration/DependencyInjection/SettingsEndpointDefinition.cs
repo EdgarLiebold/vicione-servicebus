@@ -8,6 +8,7 @@ public abstract class SettingsEndpointDefinition<TRegistration> :
     IEndpointDefinition<TRegistration>
     where TRegistration : class
 {
+    readonly Lock _endpointNameLock = new();
     readonly IEndpointSettings<IEndpointDefinition<TRegistration>> _settings;
     string? _endpointName;
 
@@ -27,16 +28,23 @@ public abstract class SettingsEndpointDefinition<TRegistration> :
     {
         ArgumentNullException.ThrowIfNull(formatter);
 
-        string FormatName()
+        lock (_endpointNameLock)
         {
-            return string.IsNullOrWhiteSpace(_settings.Name)
-                ? FormatEndpointName(formatter)
-                : _settings.Name!;
-        }
+            if (_endpointName != null)
+                return _endpointName;
 
-        return _endpointName ??= string.IsNullOrWhiteSpace(_settings.InstanceId)
-            ? FormatName()
-            : formatter.SanitizeName(FormatName() + formatter.Separator + _settings.InstanceId);
+            string FormatName()
+            {
+                return string.IsNullOrWhiteSpace(_settings.Name)
+                    ? FormatEndpointName(formatter)
+                    : _settings.Name!;
+            }
+
+            _endpointName = string.IsNullOrWhiteSpace(_settings.InstanceId)
+                ? FormatName()
+                : formatter.SanitizeName(FormatName() + formatter.Separator + _settings.InstanceId);
+            return _endpointName;
+        }
     }
 
     /// <summary>Gets whether the endpoint and its broker resources are removed when the endpoint stops.</summary>
@@ -55,6 +63,8 @@ public abstract class SettingsEndpointDefinition<TRegistration> :
     public void Configure<TEndpointConfigurator>(TEndpointConfigurator configurator, IRegistrationContext? context)
         where TEndpointConfigurator : IReceiveEndpointConfigurator
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         _settings.ConfigureEndpoint(configurator, context);
     }
 
