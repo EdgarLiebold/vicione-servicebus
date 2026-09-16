@@ -192,7 +192,14 @@ public sealed class EntityFrameworkReliableMessagingRegistrationTests
             ConsumeContext ambient = DispatchProxy.Create<ConsumeContext, PassiveConsumeContextProxy>();
 
             using (contextProvider.PushContext(ambient))
+            {
                 Assert.IsType<ConsumeContextScopedBusContext>(factory.Create(scope.ServiceProvider));
+                using EntityFrameworkScopedBusContext<ISecondaryBus, ReliableDbContext> explicitContext =
+                    EntityFrameworkScopedBusContextFactory<ISecondaryBus, ReliableDbContext>
+                        .CreateTransactionalContext(scope.ServiceProvider);
+                Assert.IsType<EntityFrameworkConsumeContextScopedBusContext<ISecondaryBus, ReliableDbContext>>(
+                    explicitContext);
+            }
         }
         finally
         {
