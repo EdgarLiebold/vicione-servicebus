@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
@@ -12,6 +13,8 @@ public class TypedScopedConsumeContextProvider :
     /// <param name="global">The global.</param>
     public TypedScopedConsumeContextProvider(IScopedConsumeContextProvider global)
     {
+        ArgumentNullException.ThrowIfNull(global);
+
         _global = global;
     }
 
@@ -20,14 +23,17 @@ public class TypedScopedConsumeContextProvider :
     /// <returns>The disposable produced by the operation.</returns>
     public override IDisposable PushContext(ConsumeContext context)
     {
-        return new CombinedDisposable(_global.PushContext(context), base.PushContext(context));
+        ArgumentNullException.ThrowIfNull(context);
+
+        var globalContext = _global.PushContext(context);
+        return new CombinedDisposable(base.PushContext(context), globalContext);
     }
 
 
-    class CombinedDisposable :
+    sealed class CombinedDisposable :
         IDisposable
     {
-        readonly IDisposable[] _disposables;
+        IDisposable[]? _disposables;
 
         public CombinedDisposable(params IDisposable[] disposables)
         {
@@ -36,8 +42,12 @@ public class TypedScopedConsumeContextProvider :
 
         public void Dispose()
         {
-            for (var i = 0; i < _disposables.Length; i++)
-                _disposables[i].Dispose();
+            var disposables = Interlocked.Exchange(ref _disposables, null);
+            if (disposables == null)
+                return;
+
+            for (var i = 0; i < disposables.Length; i++)
+                disposables[i].Dispose();
         }
     }
 }

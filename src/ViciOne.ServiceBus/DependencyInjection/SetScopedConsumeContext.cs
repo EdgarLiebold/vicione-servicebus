@@ -13,6 +13,8 @@ public class SetScopedConsumeContext :
     /// <param name="setterProvider">The setter provider.</param>
     public SetScopedConsumeContext(Func<IServiceProvider, IScopedConsumeContextProvider> setterProvider)
     {
+        ArgumentNullException.ThrowIfNull(setterProvider);
+
         _setterProvider = setterProvider;
     }
 
@@ -22,6 +24,9 @@ public class SetScopedConsumeContext :
     /// <returns>The disposable produced by the operation.</returns>
     public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(scope);
+        ArgumentNullException.ThrowIfNull(context);
+
         return _setterProvider(scope.ServiceProvider).PushContext(context);
     }
 }
@@ -39,6 +44,8 @@ public class SetScopedConsumeContext<TBus> :
     /// <param name="setterProvider">The setter provider.</param>
     public SetScopedConsumeContext(Func<IServiceProvider, IScopedConsumeContextProvider> setterProvider)
     {
+        ArgumentNullException.ThrowIfNull(setterProvider);
+
         _setterProvider = setterProvider;
     }
 
@@ -48,6 +55,9 @@ public class SetScopedConsumeContext<TBus> :
     /// <returns>The disposable produced by the operation.</returns>
     public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
     {
+        ArgumentNullException.ThrowIfNull(scope);
+        ArgumentNullException.ThrowIfNull(context);
+
         return _setterProvider(scope.ServiceProvider).PushContext(context);
     }
 }

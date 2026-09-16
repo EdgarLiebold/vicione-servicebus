@@ -11,24 +11,32 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 public class ScopedConsumeContextProvider :
     IScopedConsumeContextProvider
 {
-    ConsumeContext _context = null!;
+    ConsumeContext? _context;
+    readonly object _syncRoot = new();
 
     /// <summary>Gets a value indicating whether this instance has context.</summary>
-    public bool HasContext => _context != null && _context is not UnavailableConsumeContext;
+    public bool HasContext
+    {
+        get
+        {
+            var context = Volatile.Read(ref _context);
+
+            return context != null && context is not UnavailableConsumeContext;
+        }
+    }
 
     /// <summary>Pushes context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>The disposable produced by the operation.</returns>
     public virtual IDisposable PushContext(ConsumeContext context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
-        lock (this)
+        lock (_syncRoot)
         {
-            var originalContext = _context;
+            var originalContext = Volatile.Read(ref _context);
 
-            _context = context;
+            Volatile.Write(ref _context, context);
 
             return new PushedContext(this, context, originalContext);
         }
@@ -38,23 +46,23 @@ public class ScopedConsumeContextProvider :
     /// <returns>The context.</returns>
     public ConsumeContext GetContext()
     {
-        return _context;
+        return Volatile.Read(ref _context)!;
     }
 
-    void PopContext(ConsumeContext context, ConsumeContext originalContext)
+    void PopContext(ConsumeContext context, ConsumeContext? originalContext)
     {
         Interlocked.CompareExchange(ref _context, originalContext, context);
     }
 
 
-    class PushedContext :
+    sealed class PushedContext :
         IDisposable
     {
-        readonly ConsumeContext _context = null!;
-        readonly ConsumeContext _originalContext;
+        readonly ConsumeContext _context;
+        readonly ConsumeContext? _originalContext;
         readonly ScopedConsumeContextProvider _provider;
 
-        public PushedContext(ScopedConsumeContextProvider provider, ConsumeContext context, ConsumeContext originalContext)
+        public PushedContext(ScopedConsumeContextProvider provider, ConsumeContext context, ConsumeContext? originalContext)
         {
             _provider = provider;
             _context = context;
