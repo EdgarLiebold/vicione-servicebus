@@ -232,7 +232,10 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
         public override Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); RollbackCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken);
+
+            RollbackCount++;
             return Task.FromException(CleanupFailure);
         }
     }

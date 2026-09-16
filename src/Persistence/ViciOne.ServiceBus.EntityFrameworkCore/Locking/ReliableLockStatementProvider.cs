@@ -17,7 +17,19 @@ internal sealed class ReliableLockStatementProvider : ILockStatementProvider
     static ILockStatementProvider Select(DbContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return context.Database.ProviderName switch
+
+        string providerName;
+        try
+        {
+            providerName = context.Database.ProviderName
+                ?? throw new ConfigurationException(CreateMissingProviderMessage());
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new ConfigurationException(CreateMissingProviderMessage(), exception);
+        }
+
+        return providerName switch
         {
             "Microsoft.EntityFrameworkCore.Sqlite" => new SqliteLockStatementProvider(),
             "Npgsql.EntityFrameworkCore.PostgreSQL" => new PostgreSqlLockStatementProvider(),
@@ -28,12 +40,13 @@ internal sealed class ReliableLockStatementProvider : ILockStatementProvider
                     "unknown",
                     $"EF provider '{provider}' has no lock-statement adapter.",
                     "Use SQLite, PostgreSQL or SQL Server, or supply a provider adapter")),
-            null => throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-                    "Reliable messaging",
-                    "unknown",
-                    "The EF provider name is unavailable.",
-                    "Configure a relational DbContext before starting the host")),
         };
     }
+
+    static string CreateMissingProviderMessage() =>
+        global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+            "Reliable messaging",
+            "unknown",
+            "The EF provider name is unavailable.",
+            "Configure a relational DbContext before starting the host");
 }

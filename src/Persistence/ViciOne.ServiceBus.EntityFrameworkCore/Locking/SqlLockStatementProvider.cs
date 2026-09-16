@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -21,9 +22,7 @@ public class SqlLockStatementProvider :
     /// <param name="formatter">The provider-specific SQL formatter.</param>
     public SqlLockStatementProvider(string defaultSchema, ILockStatementFormatter formatter)
     {
-        if (string.IsNullOrWhiteSpace(defaultSchema))
-            throw new ArgumentException("The default schema must not be empty.", nameof(defaultSchema));
-
+        defaultSchema = RelationalIdentifierValidator.Validate(defaultSchema, nameof(defaultSchema));
         ArgumentNullException.ThrowIfNull(formatter);
 
         DefaultSchema = defaultSchema;
@@ -125,7 +124,7 @@ public class SqlLockStatementProvider :
         IModel model = context.Model;
         var cache = _modelMappings.GetValue(model,
             static _ => new ConcurrentDictionary<LockStatementCacheKey, RelationalMapping>());
-        var key = new LockStatementCacheKey(type, string.Join('\u001f', requestedProperties));
+        var key = new LockStatementCacheKey(type, CreatePropertyKey(requestedProperties));
 
         return cache.GetOrAdd(key, _ => ResolveMapping(model, type, requestedProperties));
     }
@@ -139,6 +138,11 @@ public class SqlLockStatementProvider :
         var tableName = entityType.GetTableName();
         if (string.IsNullOrWhiteSpace(tableName))
             throw new ViciOneServiceBusException($"Unable to determine entity table name: {TypeCache.GetShortName(type)} (using model metadata).");
+
+        tableName = RelationalIdentifierValidator.Validate(tableName, nameof(tableName));
+        string resolvedSchema = schema ?? DefaultSchema;
+        if (resolvedSchema.Length > 0)
+            resolvedSchema = RelationalIdentifierValidator.Validate(resolvedSchema, nameof(schema));
 
         var storeObjectIdentifier = StoreObjectIdentifier.Table(tableName, schema);
         var columnNames = new string[propertyNames.Count];
@@ -154,12 +158,20 @@ public class SqlLockStatementProvider :
                 throw new InvalidOperationException(
                     $"Column mapping not found: {TypeCache.GetShortName(type)}.{propertyNames[i]}");
 
-            columnNames[i] = columnName;
+            columnNames[i] = RelationalIdentifierValidator.Validate(columnName, nameof(columnName));
         }
 
-        return new RelationalMapping(schema ?? DefaultSchema, tableName, columnNames);
+        return new RelationalMapping(resolvedSchema, tableName, columnNames);
     }
 
+    static string CreatePropertyKey(IEnumerable<string> propertyNames)
+    {
+        var key = new StringBuilder();
+        foreach (string propertyName in propertyNames)
+            key.Append(propertyName.Length.ToString(CultureInfo.InvariantCulture)).Append(':').Append(propertyName);
+
+        return key.ToString();
+    }
 
     readonly record struct LockStatementCacheKey(Type EntityType, string PropertyKey);
 
