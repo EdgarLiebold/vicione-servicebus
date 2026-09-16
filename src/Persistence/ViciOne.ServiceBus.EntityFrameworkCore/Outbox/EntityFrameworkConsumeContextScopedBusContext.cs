@@ -20,12 +20,19 @@ internal sealed class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbCon
     public EntityFrameworkConsumeContextScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification, IClientFactory clientFactory,
         IServiceProvider provider, ConsumeContext consumeContext, TimeProvider timeProvider,
         BusPersistenceIdentity<TBus> persistenceIdentity)
-        : base(bus, dbContext, notification, clientFactory, provider, timeProvider, persistenceIdentity)
+        : base(bus, dbContext, notification, clientFactory, ValidateConsumeContext(provider, consumeContext), timeProvider,
+            persistenceIdentity)
     {
-        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
-        _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        _consumeContext = consumeContext ?? throw new ArgumentNullException(nameof(consumeContext));
+        _bus = bus;
+        _clientFactory = clientFactory;
+        _provider = provider;
+        _consumeContext = consumeContext;
+    }
+
+    private static IServiceProvider ValidateConsumeContext(IServiceProvider provider, ConsumeContext consumeContext)
+    {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        return provider;
     }
 
     protected override IPublishEndpointProvider GetPublishEndpointProvider()

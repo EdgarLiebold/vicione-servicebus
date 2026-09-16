@@ -275,6 +275,10 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
     public async Task AmbientConsumeContext_ProvidesScopedEndpointsAndClientFactoryAsync()
     {
         await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        ArgumentNullException missingContext = Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkTransactionalConsumeContextScopedBusContext<IBus, ClassicOutboxDbContext>(
+                null!, null!, null!, null!, null!, null!, null!, null!));
+        Assert.Equal("consumeContext", missingContext.ParamName);
         ConsumeContext ambient = DispatchProxy.Create<ConsumeContext, PassiveConsumeContextProxy>();
         using var context = new EntityFrameworkTransactionalConsumeContextScopedBusContext<IBus, ClassicOutboxDbContext>(
             fixture.Bus,
@@ -286,6 +290,9 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
             fixture.TimeProvider,
             fixture.PersistenceIdentity);
 
+        Assert.NotNull(context.SendEndpointProvider);
+        Assert.NotNull(context.PublishEndpoint);
+        Assert.NotNull(context.ClientFactory);
         Assert.Same(context.SendEndpointProvider, context.SendEndpointProvider);
         Assert.Same(context.PublishEndpoint, context.PublishEndpoint);
         Assert.Same(context.ClientFactory, context.ClientFactory);

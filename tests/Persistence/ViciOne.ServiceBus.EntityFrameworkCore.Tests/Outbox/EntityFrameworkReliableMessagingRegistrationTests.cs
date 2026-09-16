@@ -179,6 +179,11 @@ public sealed class EntityFrameworkReliableMessagingRegistrationTests
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "reliable-factory-preserves-ambient-consume-context")]
     public async Task ReliableFactory_PreservesAnAmbientConsumeContextAsync()
     {
+        ArgumentNullException missingContext = Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkConsumeContextScopedBusContext<ISecondaryBus, ReliableDbContext>(
+                null!, null!, null!, null!, null!, null!, null!, null!));
+        Assert.Equal("consumeContext", missingContext.ParamName);
+
         string connectionString = $"Data Source={Path.Combine(Path.GetTempPath(), $"vicione-reliable-ambient-{Guid.NewGuid():N}.db")};Pooling=False";
         try
         {
@@ -199,6 +204,12 @@ public sealed class EntityFrameworkReliableMessagingRegistrationTests
                         .CreateTransactionalContext(scope.ServiceProvider);
                 Assert.IsType<EntityFrameworkConsumeContextScopedBusContext<ISecondaryBus, ReliableDbContext>>(
                     explicitContext);
+                Assert.NotNull(explicitContext.SendEndpointProvider);
+                Assert.NotNull(explicitContext.PublishEndpoint);
+                Assert.NotNull(explicitContext.ClientFactory);
+                Assert.Same(explicitContext.SendEndpointProvider, explicitContext.SendEndpointProvider);
+                Assert.Same(explicitContext.PublishEndpoint, explicitContext.PublishEndpoint);
+                Assert.Same(explicitContext.ClientFactory, explicitContext.ClientFactory);
             }
         }
         finally

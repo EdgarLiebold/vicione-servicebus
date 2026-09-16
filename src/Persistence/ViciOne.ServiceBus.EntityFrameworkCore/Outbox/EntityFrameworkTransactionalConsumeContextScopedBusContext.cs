@@ -25,12 +25,19 @@ internal sealed class EntityFrameworkTransactionalConsumeContextScopedBusContext
         ConsumeContext consumeContext,
         TimeProvider timeProvider,
         BusPersistenceIdentity<TBus> persistenceIdentity)
-        : base(bus, dbContext, notification, clientFactory, provider, timeProvider, persistenceIdentity)
+        : base(bus, dbContext, notification, clientFactory, ValidateConsumeContext(provider, consumeContext), timeProvider,
+            persistenceIdentity)
     {
         _bus = bus;
         _clientFactory = clientFactory;
         _provider = provider;
         _consumeContext = consumeContext;
+    }
+
+    private static IServiceProvider ValidateConsumeContext(IServiceProvider provider, ConsumeContext consumeContext)
+    {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        return provider;
     }
 
     protected override IPublishEndpointProvider GetPublishEndpointProvider() =>
