@@ -1,36 +1,24 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers.Factories;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>Provides cached message initialization for a message contract.</summary>
+/// <summary>Provides cached message initialization for a message contract without pinning collectible runtime input types.</summary>
 /// <typeparam name="TMessage">The message contract produced by initialization.</typeparam>
 public static class MessageInitializerCache<TMessage>
     where TMessage : class
 {
-    static readonly IDictionary<Type, Lazy<IMessageInitializer<TMessage>>> _initializers =
-        new Dictionary<Type, Lazy<IMessageInitializer<TMessage>>>();
+    static readonly ConditionalWeakTable<Type, CachedInitializer> _initializers = new();
 
     static IMessageInitializer<TMessage> GetOrAddInitializer(Type inputType)
     {
         ArgumentNullException.ThrowIfNull(inputType);
 
-        Lazy<IMessageInitializer<TMessage>> result;
-        lock (_initializers)
-        {
-            if (_initializers.TryGetValue(inputType, out Lazy<IMessageInitializer<TMessage>>? initializer))
-                return initializer.Value;
-
-            result = new Lazy<IMessageInitializer<TMessage>>(() => CreateMessageInitializer(inputType));
-
-            _initializers[inputType] = result;
-        }
-
-        return result.Value;
+        return _initializers.GetValue(inputType, static type => new CachedInitializer(type)).Value;
     }
 
     static IMessageInitializer<TMessage> CreateMessageInitializer(Type inputType)
@@ -169,5 +157,21 @@ public static class MessageInitializerCache<TMessage>
         ArgumentNullException.ThrowIfNull(input);
 
         return GetOrAddInitializer(input.GetType()).InitializeAsync(context, input, cancellationToken: cancellationToken);
+    }
+
+
+    /// <summary>Owns lazy initializer creation without turning its collectible type key into a strong cache root.</summary>
+    sealed class CachedInitializer
+    {
+        readonly Lazy<IMessageInitializer<TMessage>> _value;
+
+        public CachedInitializer(Type inputType)
+        {
+            _value = new Lazy<IMessageInitializer<TMessage>>(
+                () => CreateMessageInitializer(inputType),
+                LazyThreadSafetyMode.ExecutionAndPublication);
+        }
+
+        public IMessageInitializer<TMessage> Value => _value.Value;
     }
 }

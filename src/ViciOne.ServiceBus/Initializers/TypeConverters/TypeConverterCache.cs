@@ -1,145 +1,136 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>Provides cached access to the built-in type converters.</summary>
+/// <summary>Provides cached access to built-in converters and weakly owns converters composed for runtime types.</summary>
 public static class TypeConverterCache
 {
-    static readonly List<object> _converters;
+    static readonly List<object> _builtInConverters;
     static readonly object _lock = new();
-    static readonly ConcurrentDictionary<Type, object> _typeConverters;
+    static readonly ConditionalWeakTable<Type, CachedConverter> _typeConverters;
 
     static TypeConverterCache()
     {
-        _typeConverters = new ConcurrentDictionary<Type, object>();
-        _converters = new List<object>();
+        _typeConverters = new ConditionalWeakTable<Type, CachedConverter>();
+        _builtInConverters = new List<object>();
 
-        AddSupportedTypes(typeof(BooleanTypeConverter));
-        AddSupportedTypes(typeof(ByteTypeConverter));
-        AddSupportedTypes(typeof(DateTimeOffsetTypeConverter));
-        AddSupportedTypes(typeof(DateTimeTypeConverter));
-        AddSupportedTypes(typeof(DecimalTypeConverter));
-        AddSupportedTypes(typeof(DoubleTypeConverter));
-        AddSupportedTypes(typeof(ExceptionTypeConverter));
-        AddSupportedTypes(typeof(GuidTypeConverter));
-        AddSupportedTypes(typeof(IntTypeConverter));
-        AddSupportedTypes(typeof(LongTypeConverter));
-        AddSupportedTypes(typeof(ShortTypeConverter));
-        AddSupportedTypes(typeof(StringTypeConverter));
-        AddSupportedTypes(typeof(TimeSpanTypeConverter));
-        AddSupportedTypes(typeof(UriTypeConverter));
-        AddSupportedTypes(typeof(VersionTypeConverter));
+        AddBuiltInSupportedTypes(typeof(BooleanTypeConverter));
+        AddBuiltInSupportedTypes(typeof(ByteTypeConverter));
+        AddBuiltInSupportedTypes(typeof(DateTimeOffsetTypeConverter));
+        AddBuiltInSupportedTypes(typeof(DateTimeTypeConverter));
+        AddBuiltInSupportedTypes(typeof(DecimalTypeConverter));
+        AddBuiltInSupportedTypes(typeof(DoubleTypeConverter));
+        AddBuiltInSupportedTypes(typeof(ExceptionTypeConverter));
+        AddBuiltInSupportedTypes(typeof(GuidTypeConverter));
+        AddBuiltInSupportedTypes(typeof(IntTypeConverter));
+        AddBuiltInSupportedTypes(typeof(LongTypeConverter));
+        AddBuiltInSupportedTypes(typeof(ShortTypeConverter));
+        AddBuiltInSupportedTypes(typeof(StringTypeConverter));
+        AddBuiltInSupportedTypes(typeof(TimeSpanTypeConverter));
+        AddBuiltInSupportedTypes(typeof(UriTypeConverter));
+        AddBuiltInSupportedTypes(typeof(VersionTypeConverter));
     }
 
     static bool TryGetTypeConverterCore<TProperty, TInput>([NotNullWhen(true)] out ITypeConverter<TProperty, TInput>? typeConverter)
     {
-        var neededType = typeof(ITypeConverter<TProperty, TInput>);
+        typeConverter = GetOrCreateConverter(typeof(TProperty), typeof(TInput)) as ITypeConverter<TProperty, TInput>;
+        return typeConverter != null;
+    }
 
-        if (TryGetCachedConverter(neededType, out typeConverter))
-            return true;
+    static object? GetOrCreateConverter(Type propertyType, Type inputType)
+    {
+        Type neededType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, inputType);
+        if (_typeConverters.TryGetValue(neededType, out CachedConverter? cached))
+            return cached.Value;
 
         lock (_lock)
         {
-            if (TryGetCachedConverter(neededType, out typeConverter))
-                return true;
+            if (_typeConverters.TryGetValue(neededType, out cached))
+                return cached.Value;
 
-            AddConverterIfSupported(neededType, typeof(TProperty), typeof(TInput));
-
-            return TryGetCachedConverter(neededType, out typeConverter);
+            object? converter = CreateConverterIfSupported(neededType, propertyType, inputType);
+            if (converter != null)
+                CacheDeclaredContracts(converter);
+            CacheConverter(neededType, converter);
+            return converter;
         }
     }
 
-    static bool TryGetCachedConverter<TProperty, TInput>(Type neededType,
-        [NotNullWhen(true)] out ITypeConverter<TProperty, TInput>? typeConverter)
-    {
-        if (_typeConverters.TryGetValue(neededType, out object? converter))
-        {
-            typeConverter = converter as ITypeConverter<TProperty, TInput>;
-            return typeConverter != null;
-        }
-
-        typeConverter = null;
-        return false;
-    }
-
-    static void AddConverterIfSupported(Type neededType, Type propertyType, Type inputType)
+    static object? CreateConverterIfSupported(Type neededType, Type propertyType, Type inputType)
     {
         if (propertyType == typeof(string) && typeof(INamedInitializerValue).IsAssignableFrom(inputType))
         {
             var namedValueConverterType = typeof(NamedInitializerValueTypeConverter<>).MakeGenericType(inputType);
-            AddSupportedTypes(namedValueConverterType);
-
-            if (_typeConverters.ContainsKey(neededType))
-                return;
+            if (namedValueConverterType.ImplementsInterface(neededType))
+                return Activator.CreateInstance(namedValueConverterType)
+                    ?? throw new InvalidOperationException($"The converter type '{namedValueConverterType}' could not be activated.");
         }
 
-        object? matched = _converters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
+        object? matched = _builtInConverters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
         if (matched != null)
-        {
-            _typeConverters.GetOrAdd(neededType, matched);
-            return;
-        }
+            return matched;
 
         if (propertyType.IsEnum)
         {
             var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
             if (enumConverterType.ImplementsInterface(neededType))
-                AddSupportedTypes(enumConverterType);
+                return Activator.CreateInstance(enumConverterType)
+                    ?? throw new InvalidOperationException($"The converter type '{enumConverterType}' could not be activated.");
 
-            return;
+            return null;
         }
 
         if (propertyType.IsNullable(out Type? resultType))
-        {
-            AddNullableResultConverterIfSupported(resultType, inputType);
-            return;
-        }
+            return CreateNullableResultConverter(resultType, inputType);
 
         if (inputType.IsNullable(out Type? sourceType))
-            AddNullableSourceConverterIfSupported(propertyType, sourceType);
+            return CreateNullableSourceConverter(propertyType, sourceType);
+
+        return null;
     }
 
-    static void AddNullableResultConverterIfSupported(Type resultType, Type inputType)
+    static object? CreateNullableResultConverter(Type resultType, Type inputType)
     {
         if (resultType == inputType)
         {
-            var nullableType = typeof(ToNullableTypeConverter<>).MakeGenericType(resultType);
-            AddSupportedTypes(nullableType);
-            return;
+            var directNullableType = typeof(ToNullableTypeConverter<>).MakeGenericType(resultType);
+            return Activator.CreateInstance(directNullableType)
+                ?? throw new InvalidOperationException($"The converter type '{directNullableType}' could not be activated.");
         }
 
-        var converterType = typeof(ITypeConverter<,>).MakeGenericType(resultType, inputType);
-        AddEnumConverterIfSupported(resultType, converterType);
-        if (_typeConverters.TryGetValue(converterType, out object? converter))
-        {
-            var nullableType = typeof(ToNullableTypeConverter<,>).MakeGenericType(resultType, inputType);
-            AddSupportedTypes(nullableType, converter);
-        }
+        object? converter = GetOrCreateConverter(resultType, inputType);
+        if (converter == null)
+            return null;
+
+        var convertedNullableType = typeof(ToNullableTypeConverter<,>).MakeGenericType(resultType, inputType);
+        return Activator.CreateInstance(convertedNullableType, converter)
+            ?? throw new InvalidOperationException($"The converter type '{convertedNullableType}' could not be activated.");
     }
 
-    static void AddNullableSourceConverterIfSupported(Type propertyType, Type sourceType)
+    static object? CreateNullableSourceConverter(Type propertyType, Type sourceType)
     {
         if (sourceType == propertyType)
         {
-            var nullableType = typeof(FromNullableTypeConverter<>).MakeGenericType(sourceType);
-            AddSupportedTypes(nullableType);
-            return;
+            var directNullableType = typeof(FromNullableTypeConverter<>).MakeGenericType(sourceType);
+            return Activator.CreateInstance(directNullableType)
+                ?? throw new InvalidOperationException($"The converter type '{directNullableType}' could not be activated.");
         }
 
-        var converterType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, sourceType);
-        if (_typeConverters.TryGetValue(converterType, out object? converter))
-        {
-            var nullableType = typeof(FromNullableTypeConverter<,>).MakeGenericType(propertyType, sourceType);
-            AddSupportedTypes(nullableType, converter);
-        }
+        object? converter = GetOrCreateConverter(propertyType, sourceType);
+        if (converter == null)
+            return null;
+
+        var convertedNullableType = typeof(FromNullableTypeConverter<,>).MakeGenericType(propertyType, sourceType);
+        return Activator.CreateInstance(convertedNullableType, converter)
+            ?? throw new InvalidOperationException($"The converter type '{convertedNullableType}' could not be activated.");
     }
 
-    static void AddSupportedTypes(Type converterType, params object[] args)
+    static void AddBuiltInSupportedTypes(Type converterType, params object[] args)
     {
         Type[] interfaceTypes = converterType.GetInterfaces();
 
@@ -149,21 +140,34 @@ public static class TypeConverterCache
             var converter = Activator.CreateInstance(converterType, args)
                 ?? throw new InvalidOperationException($"The converter type '{converterType}' could not be activated.");
 
-            _converters.Add(converter);
+            _builtInConverters.Add(converter);
 
-            foreach (var type in types)
-                _typeConverters[type] = converter;
+            foreach (Type type in types)
+                CacheConverter(type, converter);
         }
     }
 
-    static void AddEnumConverterIfSupported(Type resultType, Type converterContract)
+    static void CacheDeclaredContracts(object converter)
     {
-        if (_typeConverters.ContainsKey(converterContract) || !resultType.IsEnum)
-            return;
+        Type[] types = converter.GetType().GetInterfaces()
+            .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ITypeConverter<,>))
+            .ToArray();
 
-        Type enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(resultType);
-        if (enumConverterType.ImplementsInterface(converterContract))
-            AddSupportedTypes(enumConverterType);
+        foreach (Type type in types)
+            CacheConverter(type, converter);
+    }
+
+    static void CacheConverter(Type contractType, object? converter)
+    {
+        if (!_typeConverters.TryGetValue(contractType, out _))
+            _typeConverters.Add(contractType, new CachedConverter(converter));
+    }
+
+
+    /// <summary>Stores a supported converter or a negative lookup behind its weak contract key.</summary>
+    sealed class CachedConverter(object? value)
+    {
+        public object? Value { get; } = value;
     }
 
     /// <summary>Attempts to resolve the shared converter for a source and result type pair.</summary>

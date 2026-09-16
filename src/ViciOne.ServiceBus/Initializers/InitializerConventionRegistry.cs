@@ -6,11 +6,12 @@ using ViciOne.ServiceBus.Initializers.Conventions;
 
 namespace ViciOne.ServiceBus.Initializers;
 
+/// <summary>Publishes an element-immutable convention snapshot and rejects registration after publication.</summary>
 internal sealed class InitializerConventionRegistry
 {
     readonly List<IInitializerConvention> _conventions;
     readonly object _lock = new();
-    IInitializerConvention[]? _snapshot;
+    IReadOnlyList<IInitializerConvention>? _snapshot;
     bool _frozen;
 
     internal InitializerConventionRegistry(IEnumerable<IInitializerConvention> conventions)
@@ -28,7 +29,7 @@ internal sealed class InitializerConventionRegistry
             lock (_lock)
             {
                 _frozen = true;
-                return _snapshot ??= _conventions.ToArray();
+                return _snapshot ??= _conventions.AsReadOnly();
             }
         }
     }
