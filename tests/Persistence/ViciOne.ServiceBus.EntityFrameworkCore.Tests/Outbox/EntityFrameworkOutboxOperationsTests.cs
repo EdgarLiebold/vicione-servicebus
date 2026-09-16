@@ -14,6 +14,71 @@ public sealed class EntityFrameworkOutboxOperationsTests
     private const string SecondBusKey = "second-bus-v1";
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "constructor-rejects-missing-dependencies")]
+    public async Task Constructor_RejectsEveryMissingDependencyAsync()
+    {
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
+        var notification = new RecordingNotification();
+        BusPersistenceIdentity<IFirstBus> identity = BusPersistenceIdentity<IFirstBus>.Create(FirstBusKey);
+
+        Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(null!, notification, identity));
+        Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(fixture.DbContext, null!, identity));
+        Assert.Throws<ArgumentNullException>(() =>
+            new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(fixture.DbContext, notification, null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "mutation-identifiers-must-be-nonempty")]
+    public async Task Mutations_RejectAnEmptyOutboxIdentifierBeforeDatabaseAccessAsync()
+    {
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
+        var operations = CreateOperations(fixture.DbContext, new RecordingNotification());
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.RequeueAsync(Guid.Empty, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.DiscardAsync(Guid.Empty, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "default-and-maximum-page-sizes-are-accepted")]
+    public async Task GetQuarantined_DeclaresTheDefaultAndAcceptsTheExactMaximumPageSizeAsync()
+    {
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
+        var operations = CreateOperations(fixture.DbContext, new RecordingNotification());
+
+        object? defaultLimit = typeof(IEntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>)
+            .GetMethod(nameof(IEntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>.GetQuarantinedAsync))!
+            .GetParameters()
+            .Single(parameter => parameter.Name == "limit")
+            .DefaultValue;
+
+        Assert.Equal(100, defaultLimit);
+        Assert.Empty(await operations.GetQuarantinedAsync(
+            EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>.MaximumQuarantinePageSize,
+            TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "every-database-operation-observes-caller-cancellation")]
+    public async Task Operations_ObservePreCanceledCallerTokensAsync()
+    {
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
+        var operations = CreateOperations(fixture.DbContext, new RecordingNotification());
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            operations.GetQuarantinedAsync(1, cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            operations.RequeueAsync(Guid.NewGuid(), cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            operations.DiscardAsync(Guid.NewGuid(), cancellation.Token));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "quarantine-list-is-bounded-owned-and-deterministic")]
     public async Task GetQuarantined_ReturnsOnlyTheOwnedBusInDeterministicBoundedOrderAsync()
     {
@@ -97,6 +162,34 @@ public sealed class EntityFrameworkOutboxOperationsTests
         OutboxMessage remainingMessage = await fixture.DbContext.Set<OutboxMessage>().SingleAsync(TestContext.Current.CancellationToken);
         Assert.Equal(foreign.OutboxId, remainingState.OutboxId);
         Assert.Equal(foreign.OutboxId, remainingMessage.OutboxId);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "discard-rolls-back-when-claimed-state-disappears")]
+    public async Task Discard_FailsClosedAndRollsBackWhenTheClaimedStateDisappearsAsync()
+    {
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
+        OutboxState state = CreateState(Guid.NewGuid(), FirstBusKey,
+            OutboxDeliveryStatus.Quarantined);
+        fixture.DbContext.Add(state);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await fixture.DbContext.Database.ExecuteSqlRawAsync("""
+            CREATE TRIGGER "delete_claimed_outbox_state"
+            AFTER UPDATE OF "Status" ON "OutboxState"
+            WHEN NEW."Status" = 5
+            BEGIN
+                DELETE FROM "OutboxState" WHERE "OutboxId" = NEW."OutboxId";
+            END;
+            """, TestContext.Current.CancellationToken);
+        var operations = CreateOperations(fixture.DbContext, new RecordingNotification());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            operations.DiscardAsync(state.OutboxId, TestContext.Current.CancellationToken));
+
+        Assert.Contains(state.OutboxId.ToString(), exception.Message, StringComparison.Ordinal);
+        fixture.DbContext.ChangeTracker.Clear();
+        OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
     }
 
     [Fact]
