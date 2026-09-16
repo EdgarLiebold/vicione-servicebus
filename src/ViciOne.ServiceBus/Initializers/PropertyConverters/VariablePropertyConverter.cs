@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 /// <summary>Resolves an initializer variable as a property value.</summary>
 /// <typeparam name="TResult">The variable value exposed as the property result.</typeparam>
 /// <typeparam name="TVariable">The variable type.</typeparam>
+/// <remarks>An accepted variable resolution is observed to its original terminal outcome.</remarks>
 internal sealed class VariablePropertyConverter<TResult, TVariable> :
     IPropertyConverter<TResult, TVariable>
     where TVariable : class, IInitializerVariable<TResult>
@@ -20,7 +21,7 @@ internal sealed class VariablePropertyConverter<TResult, TVariable> :
 
         Task<TResult> valueTask = input.GetValueAsync(context, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The initializer variable returned null.");
-        return await valueTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await valueTask.ConfigureAwait(false);
     }
 }
 
@@ -29,6 +30,7 @@ internal sealed class VariablePropertyConverter<TResult, TVariable> :
 /// <typeparam name="TResult">The converted property value type.</typeparam>
 /// <typeparam name="TVariable">The variable type.</typeparam>
 /// <typeparam name="TValue">The value resolved by the initializer variable.</typeparam>
+/// <remarks>Accepted variable resolution and value conversion are each observed to their original terminal outcome.</remarks>
 internal sealed class VariablePropertyConverter<TResult, TVariable, TValue> :
     IPropertyConverter<TResult, TVariable>
     where TVariable : class, IInitializerVariable<TValue>
@@ -53,9 +55,9 @@ internal sealed class VariablePropertyConverter<TResult, TVariable, TValue> :
 
         Task<TValue> inputTask = input.GetValueAsync(context, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The initializer variable returned null.");
-        var value = await inputTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        var value = await inputTask.ConfigureAwait(false);
         Task<TResult?> conversionTask = _propertyConverter.ConvertAsync(context, value, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The property converter returned null.");
-        return await conversionTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await conversionTask.ConfigureAwait(false);
     }
 }

@@ -24,6 +24,7 @@ internal sealed class ToNullablePropertyConverter<TResult> :
 /// <summary>Converts a property and wraps the result in its nullable form.</summary>
 /// <typeparam name="TResult">The underlying result value type.</typeparam>
 /// <typeparam name="TInput">The source value type.</typeparam>
+/// <remarks>An accepted underlying conversion is observed to its original terminal outcome.</remarks>
 internal sealed class ToNullablePropertyConverter<TResult, TInput> :
     IPropertyConverter<TResult?, TInput>
     where TResult : struct
@@ -46,6 +47,6 @@ internal sealed class ToNullablePropertyConverter<TResult, TInput> :
 
         Task<TResult> resultTask = _converter.ConvertAsync(context, input, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("The property converter returned null.");
-        return await resultTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await resultTask.ConfigureAwait(false);
     }
 }

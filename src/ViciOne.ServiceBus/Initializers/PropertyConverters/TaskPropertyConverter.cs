@@ -37,6 +37,7 @@ internal sealed class TaskPropertyConverter<TResult> :
 /// <summary>Combines task wrapping or awaiting with a conversion of the underlying value.</summary>
 /// <typeparam name="TResult">The converted task result type.</typeparam>
 /// <typeparam name="TInput">The source task result type.</typeparam>
+/// <remarks>Task-valued input remains caller-owned; once value conversion starts, its accepted task is observed to its original outcome.</remarks>
 internal sealed class TaskPropertyConverter<TResult, TInput> :
     IPropertyConverter<TResult, Task<TInput?>>,
     IPropertyConverter<Task<TResult?>, TInput>
@@ -86,7 +87,7 @@ internal sealed class TaskPropertyConverter<TResult, TInput> :
             if (convertTask.IsCompletedSuccessfully)
                 return convertTask.GetAwaiter().GetResult();
 
-            return await convertTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await convertTask.ConfigureAwait(false);
         }
 
         return ConvertAsync();
