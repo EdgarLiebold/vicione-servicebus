@@ -10,6 +10,6 @@ public interface ISendEndpointProvider :
     /// <summary>Gets the send endpoint for an address.</summary>
     /// <param name="address">The destination address.</param>
     /// <param name="cancellationToken">The token that cancels endpoint resolution.</param>
-    /// <returns>A task containing the resolved send endpoint.</returns>
+    /// <returns>A non-null task containing the non-null resolved send endpoint.</returns>
     Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default);
 }

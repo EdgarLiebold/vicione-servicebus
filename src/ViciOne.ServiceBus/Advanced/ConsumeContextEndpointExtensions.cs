@@ -9,12 +9,13 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Resolves response and fault endpoints from a consume context.</summary>
+/// <remarks>Required arguments are validated before cancellation. A pre-cancelled caller does not invoke endpoint providers. Once resolution starts, its actual completion is awaited and its original failure or cancellation is preserved.</remarks>
 public static class ConsumeContextEndpointExtensions
 {
     /// <summary>Returns the endpoint for a fault, either directly to the requester or published.</summary>
     /// <typeparam name="T">The failed message contract.</typeparam>
     /// <param name="context">The consumed message whose fault routing metadata is used.</param>
-    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <param name="cancellationToken">Prevents provider invocation when already cancelled and is forwarded unchanged to started resolution.</param>
     /// <returns>A task containing the resolved fault endpoint.</returns>
     public static Task<ISendEndpoint> GetFaultEndpointAsync<T>(this ConsumeContext context, CancellationToken cancellationToken = default)
         where T : class
@@ -38,7 +39,7 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="context">The consumed message whose metadata is propagated.</param>
     /// <param name="faultAddress">The explicit fault destination.</param>
     /// <param name="requestId">The request identifier assigned to the fault, or the consumed request identifier when omitted.</param>
-    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <param name="cancellationToken">Prevents provider invocation when already cancelled and is forwarded unchanged to started resolution.</param>
     /// <returns>A task containing the resolved fault endpoint.</returns>
     public static Task<ISendEndpoint> GetFaultEndpointAsync<T>(this ConsumeContext context, Uri faultAddress, Guid? requestId = null, CancellationToken cancellationToken = default)
         where T : class
@@ -60,7 +61,7 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="context">The transport receive context whose endpoint providers are used.</param>
     /// <param name="consumeContext">The consumed message whose routing metadata is propagated, or <see langword="null" />.</param>
     /// <param name="requestId">The request identifier assigned to the receive fault.</param>
-    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <param name="cancellationToken">Prevents provider invocation when already cancelled and is forwarded unchanged to started resolution.</param>
     /// <returns>A task containing the resolved receive-fault endpoint.</returns>
     public static Task<ISendEndpoint> GetReceiveFaultEndpointAsync(this ReceiveContext context, ConsumeContext? consumeContext, Guid? requestId, CancellationToken cancellationToken = default)
     {
@@ -76,7 +77,7 @@ public static class ConsumeContextEndpointExtensions
     /// <summary>Returns the endpoint for a response, either directly to the requester or published.</summary>
     /// <typeparam name="T">The response contract.</typeparam>
     /// <param name="context">The consumed request whose response routing metadata is used.</param>
-    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <param name="cancellationToken">Prevents provider invocation when already cancelled and is forwarded unchanged to started resolution.</param>
     /// <returns>A task containing the resolved response endpoint.</returns>
     public static Task<ISendEndpoint> GetResponseEndpointAsync<T>(this ConsumeContext context, CancellationToken cancellationToken = default)
         where T : class
@@ -98,7 +99,7 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="context">The consumed request whose metadata is propagated.</param>
     /// <param name="responseAddress">The explicit response destination.</param>
     /// <param name="requestId">The request identifier assigned to the response, or the consumed request identifier when omitted.</param>
-    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <param name="cancellationToken">Prevents provider invocation when already cancelled and is forwarded unchanged to started resolution.</param>
     /// <returns>A task containing the resolved response endpoint.</returns>
     public static Task<ISendEndpoint> GetResponseEndpointAsync<T>(this ConsumeContext context, Uri responseAddress, Guid? requestId = null, CancellationToken cancellationToken = default)
         where T : class
@@ -116,13 +117,13 @@ public static class ConsumeContextEndpointExtensions
             cancellationToken);
     }
 
-    /// <summary>Returns the endpoint for a response, either directly to the requester or published.</summary>
+    /// <summary>Resolves a response or fault endpoint, using publication when no addressed consume scope is available.</summary>
     /// <typeparam name="T">The outgoing response or fault contract.</typeparam>
     /// <param name="receiveContext">The transport receive context whose endpoint providers are used.</param>
     /// <param name="consumeContext">The consumed message whose metadata is propagated, or <see langword="null" />.</param>
     /// <param name="destinationAddress">The explicit destination, or <see langword="null" /> to publish.</param>
     /// <param name="requestId">The request identifier assigned to the outgoing message.</param>
-    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <param name="cancellationToken">Prevents provider invocation when already cancelled and is forwarded unchanged to started resolution.</param>
     /// <returns>A task containing the resolved endpoint.</returns>
     static Task<ISendEndpoint> GetEndpointAsync<T>(ReceiveContext receiveContext, ConsumeContext? consumeContext, Uri? destinationAddress,
         Guid? requestId, CancellationToken cancellationToken)
@@ -156,12 +157,15 @@ public static class ConsumeContextEndpointExtensions
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ISendEndpoint>(cancellationToken);
 
-        Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken);
+        Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken)
+            ?? throw new InvalidOperationException("The publish endpoint provider returned no endpoint resolution task.");
         if (publishSendEndpointTask.IsCompletedSuccessfully)
         {
+            ISendEndpoint publishSendEndpoint = publishSendEndpointTask.Result
+                ?? throw new InvalidOperationException("The publish endpoint provider resolved no send endpoint.");
             return consumeContext != null
                 ? Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(
-                    publishSendEndpointTask.Result,
+                    publishSendEndpoint,
                     consumeContext,
                     requestId,
                     inheritRequestTimeToLive))
@@ -170,7 +174,8 @@ public static class ConsumeContextEndpointExtensions
 
         async Task<ISendEndpoint> ResolvePublishEndpointAsync()
         {
-            var publishSendEndpoint = await publishSendEndpointTask.ConfigureAwait(false);
+            ISendEndpoint publishSendEndpoint = await publishSendEndpointTask.ConfigureAwait(false)
+                ?? throw new InvalidOperationException("The publish endpoint provider resolved no send endpoint.");
 
             return consumeContext != null
                 ? new ConsumeSendEndpoint(publishSendEndpoint, consumeContext, requestId, inheritRequestTimeToLive)
@@ -189,11 +194,14 @@ public static class ConsumeContextEndpointExtensions
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<ISendEndpoint>(cancellationToken);
 
-        Task<ISendEndpoint> sendEndpointTask = sendEndpointProvider.GetSendEndpointAsync(destinationAddress, cancellationToken);
+        Task<ISendEndpoint> sendEndpointTask = sendEndpointProvider.GetSendEndpointAsync(destinationAddress, cancellationToken)
+            ?? throw new InvalidOperationException($"The send endpoint provider returned no endpoint resolution task for '{destinationAddress}'.");
         if (sendEndpointTask.IsCompletedSuccessfully)
         {
+            ISendEndpoint sendEndpoint = sendEndpointTask.Result
+                ?? throw new InvalidOperationException($"The send endpoint provider resolved no send endpoint for '{destinationAddress}'.");
             return Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(
-                sendEndpointTask.Result,
+                sendEndpoint,
                 consumeContext,
                 requestId,
                 inheritRequestTimeToLive));
@@ -201,7 +209,8 @@ public static class ConsumeContextEndpointExtensions
 
         async Task<ISendEndpoint> ResolveSendEndpointAsync()
         {
-            var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
+            ISendEndpoint sendEndpoint = await sendEndpointTask.ConfigureAwait(false)
+                ?? throw new InvalidOperationException($"The send endpoint provider resolved no send endpoint for '{destinationAddress}'.");
 
             return new ConsumeSendEndpoint(sendEndpoint, consumeContext, requestId, inheritRequestTimeToLive);
         }

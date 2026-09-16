@@ -132,7 +132,7 @@ public abstract class BaseSerializerContext :
     /// <summary>Projects a message into a case-insensitive property dictionary.</summary>
     /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to project.</param>
-    /// <returns>The projected properties, or an empty dictionary for <see langword="null" />.</returns>
+    /// <returns>The projected message properties.</returns>
     public abstract Dictionary<string, object> ToDictionary<T>(T? message)
         where T : class;
 
