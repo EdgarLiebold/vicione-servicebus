@@ -28,6 +28,27 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "selector-rejects-null-registration-and-context-result")]
+    public void Provider_RejectsANullRegistrationAndANullFactoryResult()
+    {
+        var valid = new RecordingFactory(typeof(FirstDbContext), false, new RecordingScopedBusContext());
+        using ServiceProvider services = new ServiceCollection().BuildServiceProvider();
+
+        ArgumentException registrationFailure = Assert.Throws<ArgumentException>(() =>
+            new EntityFrameworkScopedBusContextProvider<IBus>([valid, null!], services));
+
+        Assert.Equal("factories", registrationFailure.ParamName);
+        Assert.Equal(0, valid.CreateCount);
+        var nullFactory = new RecordingFactory(typeof(FirstDbContext), false, null);
+
+        ConfigurationException contextFailure = Assert.Throws<ConfigurationException>(() =>
+            new EntityFrameworkScopedBusContextProvider<IBus>([nullFactory], services));
+
+        Assert.Contains("returned no scoped bus context", contextFailure.Message, StringComparison.Ordinal);
+        Assert.Equal(1, nullFactory.CreateCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "factory-metadata-and-provider-boundary")]
     public void Factories_ExposeExactContextIdentityAndRejectAMissingProvider()
     {
@@ -245,7 +266,7 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
     private sealed class RecordingFactory(
         Type dbContextType,
         bool isDefault,
-        ScopedBusContext context) : IEntityFrameworkScopedBusContextFactory<IBus>
+        ScopedBusContext? context) : IEntityFrameworkScopedBusContextFactory<IBus>
     {
         private int _createCount;
 
@@ -257,7 +278,7 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
         {
             ArgumentNullException.ThrowIfNull(provider);
             Interlocked.Increment(ref _createCount);
-            return context;
+            return context!;
         }
     }
 

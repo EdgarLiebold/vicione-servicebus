@@ -19,6 +19,9 @@ internal sealed class EntityFrameworkScopedBusContextProvider<TBus> : IScopedBus
         ArgumentNullException.ThrowIfNull(provider);
 
         var registrations = factories.ToArray();
+        if (registrations.Any(x => x == null))
+            throw new ArgumentException("Factory registrations cannot contain null.", nameof(factories));
+
         if (registrations.Length == 0)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Scoped Bus Context Provider", "unknown", $"No Entity Framework bus outbox is registered for {TypeCache<TBus>.ShortName}.", "Correct the named configuration before starting the host"));
 
@@ -39,7 +42,13 @@ internal sealed class EntityFrameworkScopedBusContextProvider<TBus> : IScopedBus
             };
         }
 
-        Context = selected.Create(provider);
+        Context = selected.Create(provider)
+            ?? throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Entity Framework Scoped Bus Context Provider",
+                    "unknown",
+                    $"The selected Entity Framework bus outbox for {TypeCache<TBus>.ShortName} returned no scoped bus context.",
+                    "Correct the named configuration before starting the host"));
     }
 
     public ScopedBusContext Context { get; }
