@@ -15,6 +15,9 @@ public class ScopedPublishEndpointProvider :
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedPublishEndpointProvider(IPublishEndpointProvider provider, IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         _provider = provider;
         _serviceProvider = serviceProvider;
     }

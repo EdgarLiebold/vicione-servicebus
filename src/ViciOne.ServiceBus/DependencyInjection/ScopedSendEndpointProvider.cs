@@ -16,6 +16,9 @@ public class ScopedSendEndpointProvider :
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedSendEndpointProvider(ISendEndpointProvider provider, IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         _provider = provider;
         _serviceProvider = serviceProvider;
     }
