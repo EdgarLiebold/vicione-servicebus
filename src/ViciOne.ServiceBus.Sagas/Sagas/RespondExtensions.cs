@@ -21,6 +21,8 @@ public static class RespondExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new RespondActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -38,6 +40,9 @@ public static class RespondExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new RespondActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -56,6 +61,9 @@ public static class RespondExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new RespondActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -74,6 +82,9 @@ public static class RespondExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new RespondActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -92,6 +103,9 @@ public static class RespondExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new RespondActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -110,6 +124,8 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new FaultedRespondActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -128,6 +144,9 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedRespondActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -147,6 +166,9 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedRespondActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -166,6 +188,9 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedRespondActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -186,6 +211,8 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new FaultedRespondActivity<TInstance, TData, TException, TMessage>(MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -206,6 +233,9 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedRespondActivity<TInstance, TData, TException, TMessage>(MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -227,6 +257,9 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedRespondActivity<TInstance, TData, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -248,6 +281,9 @@ public static class RespondExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedRespondActivity<TInstance, TData, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 }

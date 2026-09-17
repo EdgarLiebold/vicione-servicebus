@@ -20,6 +20,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -36,6 +40,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -52,6 +60,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -68,6 +80,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -84,6 +100,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -100,6 +120,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -116,6 +140,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -133,6 +161,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -150,6 +182,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -167,6 +203,10 @@ public static class SendExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -185,6 +225,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -203,6 +247,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -222,6 +270,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -241,6 +293,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -259,6 +315,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -277,6 +337,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -296,6 +360,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -315,6 +383,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -335,6 +407,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -355,6 +431,10 @@ public static class SendExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TSaga, TData, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -374,6 +454,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(
             new FaultedSendActivity<TSaga, TException, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -394,6 +478,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(
             new FaultedSendActivity<TSaga, TException, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -414,6 +502,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(
             new FaultedSendActivity<TSaga, TException, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -434,6 +526,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(
             new FaultedSendActivity<TSaga, TException, TMessage>(destinationAddressProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -454,6 +550,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TException, TMessage>(_ => destinationAddress,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -474,6 +574,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TException, TMessage>(_ => destinationAddress,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -494,6 +598,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TException, TMessage>(_ => destinationAddress,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -515,6 +623,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -536,6 +648,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -557,6 +673,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -579,6 +699,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(
             new FaultedSendActivity<TSaga, TData, TException, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -601,6 +725,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(
             new FaultedSendActivity<TSaga, TData, TException, TMessage>(_ => destinationAddress, MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -623,6 +751,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -645,6 +777,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -667,6 +803,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(_ => destinationAddress,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -691,6 +831,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(
             destinationAddressProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -713,6 +857,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(_ => destinationAddress,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -735,6 +883,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(_ => destinationAddress,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -757,6 +909,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -779,6 +935,10 @@ public static class SendExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TSaga, TData, TException, TMessage>(destinationAddressProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }

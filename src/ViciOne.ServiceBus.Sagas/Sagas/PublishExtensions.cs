@@ -19,6 +19,8 @@ public static class PublishExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -34,6 +36,9 @@ public static class PublishExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -49,6 +54,9 @@ public static class PublishExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -64,6 +72,9 @@ public static class PublishExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -79,6 +90,9 @@ public static class PublishExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new PublishActivity<TInstance, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -96,6 +110,8 @@ public static class PublishExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new PublishActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -113,6 +129,9 @@ public static class PublishExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new PublishActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -130,6 +149,9 @@ public static class PublishExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new PublishActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -147,6 +169,9 @@ public static class PublishExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new PublishActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -165,6 +190,9 @@ public static class PublishExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new PublishActivity<TInstance, TData, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -183,6 +211,8 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new FaultedPublishActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -201,6 +231,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedPublishActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -220,6 +253,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedPublishActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -239,6 +275,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedPublishActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -258,6 +297,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedPublishActivity<TInstance, TException, TMessage>(MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
 
@@ -278,6 +320,8 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new FaultedPublishActivity<TInstance, TData, TException, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -298,6 +342,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedPublishActivity<TInstance, TData, TException, TMessage>(MessageFactory<TMessage>.Create(message, Uplift(callback))));
     }
 
@@ -319,6 +366,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedPublishActivity<TInstance, TData, TException, TMessage>(
             MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
@@ -341,6 +391,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedPublishActivity<TInstance, TData, TException, TMessage>(
             MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
@@ -363,6 +416,9 @@ public static class PublishExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedPublishActivity<TInstance, TData, TException, TMessage>(
             MessageFactory<TMessage>.Create(messageFactory, Uplift(callback))));
     }
