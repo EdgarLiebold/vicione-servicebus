@@ -20,7 +20,7 @@ internal sealed class HostExecuteContext<TArguments> :
     /// <param name="compensationAddress">The endpoint that compensates this activity after successful execution, when available.</param>
     /// <param name="context">The received routing slip and transport context.</param>
     public HostExecuteContext(Uri? compensationAddress, ConsumeContext<IRoutingSlip> context)
-        : base(context)
+        : base(RequireContext(context))
     {
         _compensationAddress = compensationAddress;
 
@@ -416,5 +416,12 @@ internal sealed class HostExecuteContext<TArguments> :
         ArgumentNullException.ThrowIfNull(variables);
 
         return Faulted(exception, x => x.SetVariables(variables));
+    }
+
+    static ConsumeContext<IRoutingSlip> RequireContext(ConsumeContext<IRoutingSlip> context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        return context;
     }
 }

@@ -86,6 +86,7 @@ internal sealed class CompensateActivityHost<TActivity, TLog> :
         MetricOperation? instrument)
     {
         CompensateContext<TLog> compensateContext = new HostCompensateContext<TLog>(context);
+        CompensationResult result;
 
         LogContext.Debug?.Log("Compensate Activity: {TrackingNumber} ({Activity}, {Host})", compensateContext.TrackingNumber,
             TypeCache<TActivity>.ShortName, context.Advanced().ReceiveContext.InputAddress);
@@ -94,19 +95,23 @@ internal sealed class CompensateActivityHost<TActivity, TLog> :
         {
             await _compensatePipe.SendAsync(compensateContext).ConfigureAwait(false);
 
-            var result = compensateContext.Result
+            result = compensateContext.Result
                 ?? compensateContext.Failed(new ActivityCompensationException("The activity compensation did not return a result"));
-
-            await result.EvaluateAsync(context.CancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception) when (!IsCancellation(exception))
         {
+            CompensationResult? recordedResult = compensateContext.Result;
+            if (recordedResult == null || !recordedResult.IsFailed(out var failure) || failure != exception)
+                result = compensateContext.Result = compensateContext.Failed(exception);
+            else
+                result = recordedResult;
+
             activity?.AddExceptionEvent(exception);
 
             instrument?.RecordException(exception);
-
-            await compensateContext.Failed(exception).EvaluateAsync(context.CancellationToken).ConfigureAwait(false);
         }
+
+        await result.EvaluateAsync(context.CancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Adds the hosted compensation pipeline and activity contract to the probe graph.</summary>

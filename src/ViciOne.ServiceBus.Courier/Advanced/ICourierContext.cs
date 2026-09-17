@@ -1,4 +1,3 @@
-using System;
 using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Advanced;

@@ -19,18 +19,16 @@ internal abstract class BaseCourierContext :
     readonly IReadOnlyDictionary<string, object> _variables;
 
     /// <summary>Creates activity state from a received routing slip and its context-scoped clock.</summary>
-    /// <param name="consumeContext">The routing-slip consume context to isolate for activity execution.</param>
-    protected BaseCourierContext(ConsumeContext<IRoutingSlip> consumeContext)
-        : base(consumeContext)
+    /// <param name="context">The routing-slip consume context to isolate for activity execution.</param>
+    protected BaseCourierContext(ConsumeContext<IRoutingSlip> context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        ArgumentNullException.ThrowIfNull(consumeContext);
-
-        _timeProvider = consumeContext.GetTimeProvider();
+        _timeProvider = context.GetTimeProvider();
         _startedAt = _timeProvider.GetTimestamp();
         _executionId = NewId.NextGuid();
         _timestamp = _timeProvider.GetUtcNow();
 
-        RoutingSlip = new SanitizedRoutingSlip(consumeContext);
+        RoutingSlip = new SanitizedRoutingSlip(context);
         _variables = RoutingSlip.Variables;
 
         Publisher = new RoutingSlipEventPublisher(this, RoutingSlip);

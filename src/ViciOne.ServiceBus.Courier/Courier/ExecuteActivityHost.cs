@@ -89,6 +89,7 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
         MetricOperation? instrument)
     {
         ExecuteContext<TArguments> executeContext = new HostExecuteContext<TArguments>(_compensateAddress, context);
+        ExecutionResult result;
 
         LogContext.Debug?.Log("Execute Activity: {TrackingNumber} ({Activity}, {Host})", executeContext.TrackingNumber,
             TypeCache<TActivity>.ShortName, context.Advanced().ReceiveContext.InputAddress);
@@ -97,21 +98,22 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
         {
             await _executePipe.SendAsync(executeContext).ConfigureAwait(false);
 
-            var result = executeContext.Result
+            result = executeContext.Result
                 ?? executeContext.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
-
-            await result.EvaluateAsync(context.CancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception) when (!IsCancellation(exception))
         {
-            if (executeContext.Result == null || !executeContext.Result.IsFaulted(out var faultException) || faultException != exception)
-                executeContext.Result = executeContext.Faulted(exception);
+            ExecutionResult? recordedResult = executeContext.Result;
+            if (recordedResult == null || !recordedResult.IsFaulted(out var faultException) || faultException != exception)
+                result = executeContext.Result = executeContext.Faulted(exception);
+            else
+                result = recordedResult;
 
             activity?.AddExceptionEvent(exception);
             instrument?.RecordException(exception);
-
-            await executeContext.Result.EvaluateAsync(context.CancellationToken).ConfigureAwait(false);
         }
+
+        await result.EvaluateAsync(context.CancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Adds the hosted execution pipeline and activity contract to the probe graph.</summary>

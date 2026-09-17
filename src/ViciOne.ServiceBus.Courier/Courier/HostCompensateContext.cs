@@ -20,16 +20,21 @@ internal sealed class HostCompensateContext<TLog> :
     /// <summary>Creates a compensation context for the newest compensation entry in the received routing slip.</summary>
     /// <param name="context">The received routing slip and transport context.</param>
     public HostCompensateContext(ConsumeContext<IRoutingSlip> context)
-        : base(context)
+        : base(RequireContext(context))
     {
         if (RoutingSlip.CompensateLogs.Count == 0)
             throw new ArgumentException("The routing slip must contain at least one compensation log.", nameof(context));
 
         _compensateLog = RoutingSlip.CompensateLogs[^1];
 
-        _activityLog = RoutingSlip.ActivityLogs.SingleOrDefault(x => x.ExecutionId == _compensateLog.ExecutionId)
-            ?? throw new RoutingSlipException("The compensation log did not have a matching activity log entry: "
-                + _compensateLog.ExecutionId);
+        IActivityLog[] matchingActivityLogs = RoutingSlip.ActivityLogs
+            .Where(x => x.ExecutionId == _compensateLog.ExecutionId)
+            .Take(2)
+            .ToArray();
+        if (matchingActivityLogs.Length != 1)
+            throw new RoutingSlipException($"The compensation log must have exactly one matching activity log entry: {_compensateLog.ExecutionId}");
+
+        _activityLog = matchingActivityLogs[0];
 
         Log = RoutingSlip.GetCompensateLogData<TLog>();
     }
@@ -51,12 +56,18 @@ internal sealed class HostCompensateContext<TLog> :
 
     /// <summary>Gets or sets the result; the value is unset until the activity completes.</summary>
     public CompensationResult? Result { get; set; }
-    CompensationResult CompensateContext.Compensated()
+
+    /// <summary>Reports successful compensation.</summary>
+    /// <returns>A compensation result that removes the newest compensation entry.</returns>
+    public CompensationResult Compensated()
     {
         return new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
     }
 
-    CompensationResult CompensateContext.Compensated(object values)
+    /// <summary>Reports successful compensation and updates routing-slip variables.</summary>
+    /// <param name="values">The object's public values merged into routing-slip state.</param>
+    /// <returns>A compensation result containing the variable updates.</returns>
+    public CompensationResult Compensated(object values)
     {
         ArgumentNullException.ThrowIfNull(values);
 
@@ -67,7 +78,10 @@ internal sealed class HostCompensateContext<TLog> :
         return result;
     }
 
-    CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
+    /// <summary>Reports successful compensation and updates routing-slip variables.</summary>
+    /// <param name="variables">The variable entries merged into routing-slip state.</param>
+    /// <returns>A compensation result containing the variable updates.</returns>
+    public CompensationResult Compensated(IDictionary<string, object> variables)
     {
         ArgumentNullException.ThrowIfNull(variables);
 
@@ -78,7 +92,9 @@ internal sealed class HostCompensateContext<TLog> :
         return result;
     }
 
-    CompensationResult CompensateContext.Failed()
+    /// <summary>Reports compensation failure with the default routing-slip failure.</summary>
+    /// <returns>A compensation-failure result containing the default failure.</returns>
+    public CompensationResult Failed()
     {
         return Failed(new RoutingSlipException("The routing slip compensation failed"));
     }
@@ -91,5 +107,12 @@ internal sealed class HostCompensateContext<TLog> :
         ArgumentNullException.ThrowIfNull(exception);
 
         return new FailedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip, exception);
+    }
+
+    static ConsumeContext<IRoutingSlip> RequireContext(ConsumeContext<IRoutingSlip> context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        return context;
     }
 }

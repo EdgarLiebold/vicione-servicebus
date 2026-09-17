@@ -23,7 +23,8 @@ internal sealed class SanitizedRoutingSlip :
 
         _serializerContext = context.Advanced().SerializerContext;
 
-        var routingSlip = context.Message;
+        var routingSlip = context.Message
+            ?? throw new SerializationException("The received routing slip is missing.");
         if (routingSlip.TrackingNumber == Guid.Empty)
             throw new SerializationException("A routing slip requires a non-empty tracking number.");
         if (routingSlip.CreateTimestamp == default)
@@ -32,28 +33,28 @@ internal sealed class SanitizedRoutingSlip :
         TrackingNumber = routingSlip.TrackingNumber;
         CreateTimestamp = routingSlip.CreateTimestamp;
 
-        Itinerary = (routingSlip.Itinerary ?? [])
-            .Select(IActivity (x) => new RoutingSlipActivity(x))
-            .ToArray();
+        Itinerary = Array.AsReadOnly((routingSlip.Itinerary ?? [])
+            .Select(IActivity (x) => (IActivity)new RoutingSlipActivity(x))
+            .ToArray());
 
-        ActivityLogs = (routingSlip.ActivityLogs ?? [])
-            .Select(IActivityLog (x) => new RoutingSlipActivityLog(x))
-            .ToArray();
+        ActivityLogs = Array.AsReadOnly((routingSlip.ActivityLogs ?? [])
+            .Select(IActivityLog (x) => (IActivityLog)new RoutingSlipActivityLog(x))
+            .ToArray());
 
-        CompensateLogs = (routingSlip.CompensateLogs ?? [])
-            .Select(ICompensateLog (x) => new RoutingSlipCompensateLog(x))
-            .ToArray();
+        CompensateLogs = Array.AsReadOnly((routingSlip.CompensateLogs ?? [])
+            .Select(ICompensateLog (x) => (ICompensateLog)new RoutingSlipCompensateLog(x))
+            .ToArray());
 
         Variables = new ReadOnlyDictionary<string, object>(
             new Dictionary<string, object>(routingSlip.Variables ?? new Dictionary<string, object>(), StringComparer.OrdinalIgnoreCase));
 
-        ActivityExceptions = (routingSlip.ActivityExceptions ?? [])
-            .Select(IActivityException (x) => new RoutingSlipActivityException(x))
-            .ToArray();
+        ActivityExceptions = Array.AsReadOnly((routingSlip.ActivityExceptions ?? [])
+            .Select(IActivityException (x) => (IActivityException)new RoutingSlipActivityException(x))
+            .ToArray());
 
-        Subscriptions = (routingSlip.Subscriptions ?? [])
-            .Select(ISubscription (x) => new RoutingSlipSubscription(x))
-            .ToArray();
+        Subscriptions = Array.AsReadOnly((routingSlip.Subscriptions ?? [])
+            .Select(ISubscription (x) => (ISubscription)new RoutingSlipSubscription(x))
+            .ToArray());
     }
 
     /// <summary>Gets the tracking number.</summary>
