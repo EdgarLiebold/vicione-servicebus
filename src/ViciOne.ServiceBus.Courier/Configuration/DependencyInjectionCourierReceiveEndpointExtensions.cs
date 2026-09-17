@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -31,7 +30,6 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
         configurator.ExecuteActivityHost(compensateAddress, factory, configure);
     }
 
-
     /// <summary>Configures a dependency-injection execute-only activity host.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
@@ -52,7 +50,6 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
 
         configurator.ExecuteActivityHost(factory, configure);
     }
-
 
     /// <summary>Configures a dependency-injection compensation activity host.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>

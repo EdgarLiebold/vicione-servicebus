@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
-using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -42,21 +41,20 @@ internal static class DependencyInjectionExecuteActivityRegistrationExtensions
     {
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(registrar);
+        CourierRegistrationConfiguratorExtensions.EnsureConcreteActivityType(typeof(TActivity), nameof(TActivity));
+        CourierRegistrationConfiguratorExtensions.EnsureDefinitionType(
+            activityDefinitionType,
+            typeof(IExecuteActivityDefinition<,>),
+            [typeof(TActivity), typeof(TArguments)],
+            nameof(activityDefinitionType),
+            "execute activity");
 
         if (activityDefinitionType == null)
             return new ExecuteActivityRegistrar<TActivity, TArguments>().Register(collection, registrar);
 
-        if (!activityDefinitionType.TryGetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>), out Type[] types)
-            || types[0] != typeof(TActivity)
-            || types[1] != typeof(TArguments))
-        {
-            throw new ArgumentException(
-                $"{TypeCache.GetShortName(activityDefinitionType)} is not an activity definition of {TypeCache<TActivity>.ShortName}",
-                nameof(activityDefinitionType));
-        }
-
         var register = (IExecuteActivityRegistrar)(Activator.CreateInstance(typeof(ExecuteActivityDefinitionRegistrar<,,>)
-            .MakeGenericType(typeof(TActivity), typeof(TArguments), activityDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+            .MakeGenericType(typeof(TActivity), typeof(TArguments), activityDefinitionType))
+            ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }
@@ -65,7 +63,6 @@ internal static class DependencyInjectionExecuteActivityRegistrationExtensions
     {
         IExecuteActivityRegistration Register(IServiceCollection collection, IContainerRegistrar registrar);
     }
-
 
     class ExecuteActivityRegistrar<TActivity, TArguments> :
         IExecuteActivityRegistrar
@@ -84,7 +81,6 @@ internal static class DependencyInjectionExecuteActivityRegistrationExtensions
                 _ => new ExecuteActivityRegistration<TActivity, TArguments>(registrar));
         }
     }
-
 
     sealed class ExecuteActivityDefinitionRegistrar<TActivity, TArguments, TDefinition> :
         ExecuteActivityRegistrar<TActivity, TArguments>

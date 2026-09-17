@@ -116,39 +116,104 @@ public static class CourierRegistrationExtensions
         if (types.Any(type => type is null))
             throw new ArgumentException("The type collection cannot contain null entries.", nameof(types));
 
-        filter ??= _ => true;
+        Func<Type, bool> activityFilter = filter ?? (_ => true);
+        Type[] candidates = types.Distinct().ToArray();
+        Type[] activityTypes = candidates.Where(IsCompensatableActivity).ToArray();
+        Type[] executeActivityTypes = candidates.Where(IsExecuteActivity).Except(activityTypes).ToArray();
 
-        Type[] activityTypes = types.Where(IsCompensatableActivity).ToArray();
-        RegisterCompensatableActivities(configurator, filter, activityTypes, types.Where(IsCompensatableActivityDefinition));
+        (Type ActivityType, Type? DefinitionType)[] activities = PlanRegistrations(
+            activityTypes,
+            candidates.Where(IsCompensatableActivityDefinition),
+            GetCompensatableActivityType,
+            activityFilter,
+            "activity");
+        (Type ActivityType, Type? DefinitionType)[] executeActivities = PlanRegistrations(
+            executeActivityTypes,
+            candidates.Where(IsExecuteActivityDefinition),
+            GetExecuteActivityType,
+            activityFilter,
+            "execute activity");
 
-        IEnumerable<Type> executeActivityTypes = types.Where(IsExecuteActivity).Except(activityTypes);
-        RegisterExecuteOnlyActivities(configurator, filter, executeActivityTypes, types.Where(IsExecuteActivityDefinition));
+        RegisterCompensatableActivities(configurator, activities);
+        RegisterExecuteOnlyActivities(configurator, executeActivities);
     }
 
-
-    static void RegisterCompensatableActivities(IRegistrationConfigurator configurator, Func<Type, bool> filter,
-        IEnumerable<Type> activityTypes, IEnumerable<Type> definitionTypes)
+    static (Type ActivityType, Type? DefinitionType)[] PlanRegistrations(
+        IEnumerable<Type> activityTypes,
+        IEnumerable<Type> definitionTypes,
+        Func<Type, Type> getActivityType,
+        Func<Type, bool> filter,
+        string contractDescription)
     {
-        var activities = from activityType in activityTypes
-                         join definitionType in definitionTypes on activityType equals GetCompensatableActivityType(definitionType) into definitions
-                         from definitionType in definitions.DefaultIfEmpty()
-                         where filter(activityType)
-                         select (ActivityType: activityType, DefinitionType: definitionType);
+        var definitions = new List<(Type DefinitionType, Type ActivityType)>();
+        foreach (Type definitionType in definitionTypes)
+        {
+            try
+            {
+                definitions.Add((definitionType, getActivityType(definitionType)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                throw new ArgumentException(
+                    $"{TypeCache.GetShortName(definitionType)} must implement exactly one Courier {contractDescription} definition contract",
+                    "types",
+                    exception);
+            }
+        }
+
+        Type[] selectedActivities = activityTypes.Where(filter).ToArray();
+
+        foreach (Type activityType in selectedActivities)
+            CourierRegistrationConfiguratorExtensions.EnsureConcreteActivityType(activityType, "types");
+
+        (Type DefinitionType, Type ActivityType)[] selectedDefinitions = definitions
+            .Where(definition => selectedActivities.Contains(definition.ActivityType))
+            .ToArray();
+        foreach ((Type definitionType, _) in selectedDefinitions)
+        {
+            if (!definitionType.IsClass || definitionType.IsAbstract || definitionType.ContainsGenericParameters)
+            {
+                throw new ArgumentException(
+                    $"{TypeCache.GetShortName(definitionType)} is not a concrete Courier {contractDescription} definition",
+                    "types");
+            }
+        }
+
+        foreach (IGrouping<Type, (Type DefinitionType, Type ActivityType)> definitionGroup in selectedDefinitions.GroupBy(x => x.ActivityType))
+        {
+            if (definitionGroup.Skip(1).Any())
+            {
+                throw new ArgumentException(
+                    $"Multiple Courier {contractDescription} definitions target "
+                    + TypeCache.GetShortName(definitionGroup.Key),
+                    "types");
+            }
+        }
+
+        Dictionary<Type, Type> definitionsByActivity = selectedDefinitions.ToDictionary(
+            definition => definition.ActivityType,
+            definition => definition.DefinitionType);
+
+        return selectedActivities
+            .Select(activityType =>
+            {
+                definitionsByActivity.TryGetValue(activityType, out Type? definitionType);
+                return (ActivityType: activityType, DefinitionType: definitionType);
+            })
+            .ToArray();
+    }
+
+    static void RegisterCompensatableActivities(IRegistrationConfigurator configurator,
+        IEnumerable<(Type ActivityType, Type? DefinitionType)> activities)
+    {
 
         foreach ((Type activityType, Type? definitionType) in activities)
             configurator.AddActivity(activityType, definitionType);
     }
 
-
-    static void RegisterExecuteOnlyActivities(IRegistrationConfigurator configurator, Func<Type, bool> filter,
-        IEnumerable<Type> activityTypes, IEnumerable<Type> definitionTypes)
+    static void RegisterExecuteOnlyActivities(IRegistrationConfigurator configurator,
+        IEnumerable<(Type ActivityType, Type? DefinitionType)> activities)
     {
-        var activities = from activityType in activityTypes
-                         join definitionType in definitionTypes on activityType equals GetExecuteActivityType(definitionType) into definitions
-                         from definitionType in definitions.DefaultIfEmpty()
-                         where filter(activityType)
-                         select (ActivityType: activityType, DefinitionType: definitionType);
-
         foreach ((Type activityType, Type? definitionType) in activities)
             configurator.AddExecuteActivity(activityType, definitionType);
     }
@@ -167,7 +232,6 @@ public static class CourierRegistrationExtensions
 
     static Type GetExecuteActivityType(Type definitionType) =>
         definitionType.GetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>)).First();
-
 
     static Type[] FindTypesInNamespace(Type type, Func<Type, bool> typeFilter)
     {

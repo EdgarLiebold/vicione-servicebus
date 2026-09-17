@@ -45,12 +45,20 @@ public static class CourierRegistrationConfiguratorExtensions
         where TArguments : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        EnsureConcreteActivityType(typeof(TActivity), nameof(TActivity));
 
         if (typeof(TActivity).ImplementsInterface(typeof(IActivity<,>)))
         {
             throw new ArgumentException(
                 $"Compensatable Courier activities must be registered using AddActivity: {TypeCache<TActivity>.ShortName}");
         }
+
+        EnsureDefinitionType(
+            executeActivityDefinitionType,
+            typeof(IExecuteActivityDefinition<,>),
+            [typeof(TActivity), typeof(TArguments)],
+            nameof(executeActivityDefinitionType),
+            "execute activity");
 
         CourierServiceRegistration.Register(configurator.Services, configurator.BusType);
         IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
@@ -95,6 +103,14 @@ public static class CourierRegistrationConfiguratorExtensions
         where TLog : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        EnsureConcreteActivityType(typeof(TActivity), nameof(TActivity));
+        EnsureDefinitionType(
+            activityDefinitionType,
+            typeof(IActivityDefinition<,,>),
+            [typeof(TActivity), typeof(TArguments), typeof(TLog)],
+            nameof(activityDefinitionType),
+            "activity");
+
         CourierServiceRegistration.Register(configurator.Services, configurator.BusType);
         IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
         IActivityRegistration registration = configurator.Services.RegisterActivity<TActivity, TArguments, TLog>(advanced.Registrar,
@@ -102,5 +118,47 @@ public static class CourierRegistrationConfiguratorExtensions
         registration.AddConfigureAction(configureExecute);
         registration.AddConfigureAction(configureCompensate);
         return new ActivityRegistrationConfigurator<TActivity, TArguments, TLog>(configurator, registration);
+    }
+
+    internal static void EnsureConcreteActivityType(Type activityType, string parameterName)
+    {
+        ArgumentNullException.ThrowIfNull(activityType);
+
+        if (!activityType.IsClass || activityType.IsAbstract || activityType.ContainsGenericParameters)
+        {
+            throw new ArgumentException(
+                $"{TypeCache.GetShortName(activityType)} is not a concrete Courier activity implementation",
+                parameterName);
+        }
+    }
+
+    internal static void EnsureDefinitionType(Type? definitionType, Type contractType, Type[] expectedArguments,
+        string parameterName, string contractDescription)
+    {
+        if (definitionType == null)
+            return;
+
+        Type[] actualArguments;
+        try
+        {
+            if (!definitionType.TryGetSingleClosedGenericArguments(contractType, out actualArguments))
+                actualArguments = [];
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new ArgumentException(
+                $"{TypeCache.GetShortName(definitionType)} must implement exactly one {contractDescription} definition contract",
+                parameterName,
+                exception);
+        }
+
+        if (!definitionType.IsClass || definitionType.IsAbstract || definitionType.ContainsGenericParameters
+            || !actualArguments.SequenceEqual(expectedArguments))
+        {
+            throw new ArgumentException(
+                $"{TypeCache.GetShortName(definitionType)} is not a concrete {contractDescription} definition of "
+                + TypeCache.GetShortName(expectedArguments[0]),
+                parameterName);
+        }
     }
 }

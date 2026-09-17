@@ -17,11 +17,18 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityType);
+        CourierRegistrationConfiguratorExtensions.EnsureConcreteActivityType(activityType, nameof(activityType));
 
         Type[] types = GetSingleContractArguments(
             activityType,
             typeof(IActivity<,>),
             "Courier activity");
+        CourierRegistrationConfiguratorExtensions.EnsureDefinitionType(
+            activityDefinitionType,
+            typeof(IActivityDefinition<,,>),
+            [activityType, types[0], types[1]],
+            nameof(activityDefinitionType),
+            "activity");
 
         var register = (IRegisterActivity)(Activator.CreateInstance(typeof(RegisterActivity<,,>).MakeGenericType(activityType, types[0], types[1]))
             ?? throw new InvalidOperationException("The requested runtime activity registration could not be activated."));
@@ -39,6 +46,7 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityType);
+        CourierRegistrationConfiguratorExtensions.EnsureConcreteActivityType(activityType, nameof(activityType));
 
         if (activityType.ImplementsInterface(typeof(IActivity<,>)))
         {
@@ -51,6 +59,12 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
             activityType,
             typeof(IExecuteActivity<>),
             "Courier execute activity");
+        CourierRegistrationConfiguratorExtensions.EnsureDefinitionType(
+            activityDefinitionType,
+            typeof(IExecuteActivityDefinition<,>),
+            [activityType, types[0]],
+            nameof(activityDefinitionType),
+            "execute activity");
 
         var register = (IRegisterExecuteActivity)(Activator.CreateInstance(typeof(RegisterExecuteActivity<,>).MakeGenericType(activityType, types[0]))
             ?? throw new InvalidOperationException("The requested runtime execute-activity registration could not be activated."));
@@ -83,7 +97,6 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
         IActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? activityDefinitionType);
     }
 
-
     sealed class RegisterActivity<TActivity, TArguments, TLog> :
         IRegisterActivity
         where TActivity : class, IActivity<TArguments, TLog>
@@ -97,12 +110,10 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
         }
     }
 
-
     interface IRegisterExecuteActivity
     {
         IExecuteActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? activityDefinitionType);
     }
-
 
     sealed class RegisterExecuteActivity<TActivity, TArguments> :
         IRegisterExecuteActivity

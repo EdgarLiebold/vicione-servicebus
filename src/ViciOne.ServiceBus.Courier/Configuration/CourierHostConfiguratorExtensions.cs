@@ -45,6 +45,8 @@ public static class CourierHostConfiguratorExtensions
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(compensateAddress);
         ArgumentNullException.ThrowIfNull(activityFactory);
 
         ExecuteActivityHost(configurator, compensateAddress, _ => activityFactory(), configure);
@@ -61,6 +63,7 @@ public static class CourierHostConfiguratorExtensions
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityFactory);
 
         ExecuteActivityHost(configurator, _ => activityFactory(), configure);
@@ -79,6 +82,8 @@ public static class CourierHostConfiguratorExtensions
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(compensateAddress);
         ArgumentNullException.ThrowIfNull(activityFactory);
 
         var factory = new FactoryMethodExecuteActivityFactory<TActivity, TArguments>(activityFactory);
@@ -98,6 +103,7 @@ public static class CourierHostConfiguratorExtensions
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityFactory);
 
         var factory = new FactoryMethodExecuteActivityFactory<TActivity, TArguments>(activityFactory);
@@ -179,6 +185,7 @@ public static class CourierHostConfiguratorExtensions
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityFactory);
 
         CompensateActivityHost(configurator, _ => activityFactory(), configure);
@@ -195,6 +202,7 @@ public static class CourierHostConfiguratorExtensions
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(activityFactory);
 
         var factory = new FactoryMethodCompensateActivityFactory<TActivity, TLog>(activityFactory);

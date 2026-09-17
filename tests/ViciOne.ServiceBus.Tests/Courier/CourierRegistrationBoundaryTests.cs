@@ -88,13 +88,33 @@ public sealed class CourierRegistrationBoundaryTests
         Assert.NotNull(executeOnly);
         Assert.Contains(services, descriptor => descriptor.ImplementationType == typeof(RegisteredActivityDefinition));
         Assert.Contains(services, descriptor => descriptor.ImplementationType == typeof(RegisteredExecuteActivityDefinition));
+
+        var genericServices = new ServiceCollection();
+        var genericConfigurator = new ServiceCollectionBusConfigurator(genericServices);
+
+        IActivityRegistrationConfigurator<RegisteredActivity, RegisteredArguments, RegisteredLog> genericActivity =
+            genericConfigurator.AddActivity<RegisteredActivity, RegisteredArguments, RegisteredLog, RegisteredActivityDefinition>();
+
+        Assert.NotNull(genericActivity);
+        Assert.Contains(genericServices, descriptor => descriptor.ImplementationType == typeof(RegisteredActivityDefinition));
+
+        var defaultServices = new ServiceCollection();
+        var defaultConfigurator = new ServiceCollectionBusConfigurator(defaultServices);
+
+        IActivityRegistrationConfigurator<RegisteredActivity, RegisteredArguments, RegisteredLog> defaultActivity =
+            defaultConfigurator.AddActivity<RegisteredActivity, RegisteredArguments, RegisteredLog>();
+
+        Assert.NotNull(defaultActivity);
+        Assert.Contains(defaultServices, descriptor => descriptor.ServiceType == typeof(RegisteredActivity));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "runtime-registration-rejects-missing-inputs-and-mismatched-definitions")]
     public void RuntimeRegistration_RejectsMissingInputsAndMismatchedDefinitions()
     {
-        var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
+        int baseline = services.Count;
 
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             CourierRegistrationConfiguratorRuntimeExtensions.AddActivity(null!, typeof(RegisteredActivity))).ParamName);
@@ -109,9 +129,64 @@ public sealed class CourierRegistrationBoundaryTests
         ArgumentException executeDefinition = Assert.Throws<ArgumentException>(() => configurator.AddExecuteActivity(
             typeof(RegisteredExecuteActivity),
             typeof(RegisteredActivityDefinition)));
+        ArgumentException ambiguousDefinition = Assert.Throws<ArgumentException>(() => configurator.AddExecuteActivity(
+            typeof(RegisteredExecuteActivity),
+            typeof(AmbiguousExecuteActivityDefinition)));
 
         Assert.Equal("activityDefinitionType", activityDefinition.ParamName);
         Assert.Equal("activityDefinitionType", executeDefinition.ParamName);
+        Assert.Equal("activityDefinitionType", ambiguousDefinition.ParamName);
+        Assert.Equal(baseline, services.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "runtime-registration-rejects-non-concrete-types-before-service-effects")]
+    public void RuntimeRegistration_RejectsNonConcreteTypesBeforeChangingServices()
+    {
+        var activityServices = new ServiceCollection();
+        var activityConfigurator = new ServiceCollectionBusConfigurator(activityServices);
+        int activityBaseline = activityServices.Count;
+
+        ArgumentException activityFailure = Assert.Throws<ArgumentException>(() =>
+            activityConfigurator.AddExecuteActivity(typeof(AbstractExecuteActivity)));
+
+        Assert.Equal("activityType", activityFailure.ParamName);
+        Assert.Equal(activityBaseline, activityServices.Count);
+
+        var definitionServices = new ServiceCollection();
+        var definitionConfigurator = new ServiceCollectionBusConfigurator(definitionServices);
+        int definitionBaseline = definitionServices.Count;
+
+        ArgumentException definitionFailure = Assert.Throws<ArgumentException>(() =>
+            definitionConfigurator.AddExecuteActivity(
+                typeof(RegisteredExecuteActivity),
+                typeof(AbstractExecuteActivityDefinition)));
+
+        Assert.Equal("activityDefinitionType", definitionFailure.ParamName);
+        Assert.Equal(definitionBaseline, definitionServices.Count);
+
+        var genericActivityServices = new ServiceCollection();
+        var genericActivityConfigurator = new ServiceCollectionBusConfigurator(genericActivityServices);
+        int genericActivityBaseline = genericActivityServices.Count;
+
+        ArgumentException genericActivityFailure = Assert.Throws<ArgumentException>(() =>
+            genericActivityConfigurator.AddExecuteActivity<AbstractExecuteActivity, RegisteredArguments>());
+
+        Assert.Equal("TActivity", genericActivityFailure.ParamName);
+        Assert.Equal(genericActivityBaseline, genericActivityServices.Count);
+
+        var genericDefinitionServices = new ServiceCollection();
+        var genericDefinitionConfigurator = new ServiceCollectionBusConfigurator(genericDefinitionServices);
+        int genericDefinitionBaseline = genericDefinitionServices.Count;
+
+        ArgumentException genericDefinitionFailure = Assert.Throws<ArgumentException>(() =>
+            genericDefinitionConfigurator.AddExecuteActivity<
+                RegisteredExecuteActivity,
+                RegisteredArguments,
+                AbstractExecuteActivityDefinition>());
+
+        Assert.Equal("executeActivityDefinitionType", genericDefinitionFailure.ParamName);
+        Assert.Equal(genericDefinitionBaseline, genericDefinitionServices.Count);
     }
 
     [Fact]
@@ -165,13 +240,84 @@ public sealed class CourierRegistrationBoundaryTests
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(RegisteredExecuteActivity));
         Assert.Contains(services, descriptor => descriptor.ImplementationType == typeof(RegisteredActivityDefinition));
         Assert.DoesNotContain(services, descriptor => descriptor.ImplementationType == typeof(RegisteredExecuteActivityDefinition));
+
+        var executeServices = new ServiceCollection();
+        var executeConfigurator = new ServiceCollectionBusConfigurator(executeServices);
+
+        executeConfigurator.AddActivities(typeof(RegisteredExecuteActivity), typeof(RegisteredExecuteActivityDefinition));
+
+        Assert.Contains(executeServices, descriptor => descriptor.ServiceType == typeof(RegisteredExecuteActivity));
+        Assert.Contains(executeServices, descriptor => descriptor.ImplementationType == typeof(RegisteredExecuteActivityDefinition));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "explicit-scan-preflights-failures-before-service-effects")]
+    public void AddActivities_PreflightsFilterFailuresAndAmbiguousDefinitionsBeforeChangingServices()
+    {
+        var filterServices = new ServiceCollection();
+        var filterConfigurator = new ServiceCollectionBusConfigurator(filterServices);
+        int filterBaseline = filterServices.Count;
+        var filterCalls = 0;
+
+        Assert.Throws<InvalidOperationException>(() => filterConfigurator.AddActivities(
+            _ => ++filterCalls == 2 ? throw new InvalidOperationException("filter failure") : true,
+            typeof(RegisteredActivity),
+            typeof(RegisteredExecuteActivity)));
+
+        Assert.Equal(filterBaseline, filterServices.Count);
+
+        var definitionServices = new ServiceCollection();
+        var definitionConfigurator = new ServiceCollectionBusConfigurator(definitionServices);
+        int definitionBaseline = definitionServices.Count;
+
+        ArgumentException duplicateDefinition = Assert.Throws<ArgumentException>(() => definitionConfigurator.AddActivities(
+            typeof(RegisteredActivity),
+            typeof(RegisteredActivityDefinition),
+            typeof(AlternativeRegisteredActivityDefinition)));
+
+        Assert.Equal("types", duplicateDefinition.ParamName);
+        Assert.Equal(definitionBaseline, definitionServices.Count);
+
+        var ambiguousServices = new ServiceCollection();
+        var ambiguousConfigurator = new ServiceCollectionBusConfigurator(ambiguousServices);
+        int ambiguousBaseline = ambiguousServices.Count;
+
+        ArgumentException ambiguousDefinition = Assert.Throws<ArgumentException>(() => ambiguousConfigurator.AddActivities(
+            typeof(RegisteredExecuteActivity),
+            typeof(SecondRegisteredExecuteActivity),
+            typeof(AmbiguousExecuteActivityDefinition)));
+
+        Assert.Equal("types", ambiguousDefinition.ParamName);
+        Assert.Equal(ambiguousBaseline, ambiguousServices.Count);
+
+        var abstractServices = new ServiceCollection();
+        var abstractConfigurator = new ServiceCollectionBusConfigurator(abstractServices);
+        int abstractBaseline = abstractServices.Count;
+
+        ArgumentException abstractDefinition = Assert.Throws<ArgumentException>(() => abstractConfigurator.AddActivities(
+            typeof(RegisteredExecuteActivity),
+            typeof(AbstractExecuteActivityDefinition)));
+
+        Assert.Equal("types", abstractDefinition.ParamName);
+        Assert.Equal(abstractBaseline, abstractServices.Count);
+
+        var ignoredServices = new ServiceCollection();
+        var ignoredConfigurator = new ServiceCollectionBusConfigurator(ignoredServices);
+        int ignoredBaseline = ignoredServices.Count;
+
+        ignoredConfigurator.AddActivities(_ => false,
+            typeof(AbstractExecuteActivity),
+            typeof(AbstractExecuteActivityDefinition));
+
+        Assert.Equal(ignoredBaseline, ignoredServices.Count);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "public-scanning-boundaries-reject-null-elements")]
     public void AddActivities_RejectsMissingConfiguratorCollectionsAndElements()
     {
-        var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
 
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             CourierRegistrationExtensions.AddActivities(null!, Array.Empty<Type>())).ParamName);
@@ -181,13 +327,20 @@ public sealed class CourierRegistrationBoundaryTests
         Assert.Equal("assemblies", Assert.Throws<ArgumentNullException>(() => configurator.AddActivities((Assembly[])null!)).ParamName);
         Assert.Equal("assemblies", Assert.Throws<ArgumentException>(() =>
             configurator.AddActivities(new Assembly[] { typeof(RegisteredActivity).Assembly, null! })).ParamName);
+
+        configurator.AddActivities(typeof(RequirementCoverageAttribute).Assembly);
+
+        Exception? domainScanFailure = Record.Exception(() => configurator.AddActivities(Array.Empty<Assembly>()));
+
+        Assert.Null(domainScanFailure);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REGISTRATION", "namespace-scan-requires-a-named-namespace")]
     public void AddActivitiesFromNamespaceContaining_RejectsMissingOrNamespaceLessTypes()
     {
-        var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
         Type namespaceLessType = new DynamicNamespaceLessType().Create();
 
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
@@ -196,6 +349,12 @@ public sealed class CourierRegistrationBoundaryTests
             configurator.AddActivitiesFromNamespaceContaining(null!)).ParamName);
         Assert.Equal("type", Assert.Throws<ArgumentException>(() =>
             configurator.AddActivitiesFromNamespaceContaining(namespaceLessType)).ParamName);
+
+        int baseline = services.Count;
+        configurator.AddActivitiesFromNamespaceContaining<RequirementCoverageAttribute>(_ => false);
+        configurator.AddActivitiesFromNamespaceContaining<RequirementCoverageAttribute>();
+
+        Assert.Equal(baseline, services.Count);
     }
 
     private sealed record RegisteredArguments(string Value);
@@ -216,6 +375,16 @@ public sealed class CourierRegistrationBoundaryTests
         public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RegisteredArguments> context) => throw new NotSupportedException();
     }
 
+    private sealed class SecondRegisteredExecuteActivity : IExecuteActivity<AlternativeArguments>
+    {
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<AlternativeArguments> context) => throw new NotSupportedException();
+    }
+
+    private abstract class AbstractExecuteActivity : IExecuteActivity<RegisteredArguments>
+    {
+        public abstract Task<ExecutionResult> ExecuteAsync(ExecuteContext<RegisteredArguments> context);
+    }
+
     private sealed class ExecuteOnlyActivityWithTwoContracts :
         IExecuteActivity<RegisteredArguments>,
         IExecuteActivity<AlternativeArguments>
@@ -230,8 +399,32 @@ public sealed class CourierRegistrationBoundaryTests
     private sealed class RegisteredActivityDefinition :
         ActivityDefinition<RegisteredActivity, RegisteredArguments, RegisteredLog>;
 
+    private sealed class AlternativeRegisteredActivityDefinition :
+        ActivityDefinition<RegisteredActivity, RegisteredArguments, RegisteredLog>;
+
     private sealed class RegisteredExecuteActivityDefinition :
         ExecuteActivityDefinition<RegisteredExecuteActivity, RegisteredArguments>;
+
+    private abstract class AbstractExecuteActivityDefinition :
+        ExecuteActivityDefinition<RegisteredExecuteActivity, RegisteredArguments>;
+
+    private sealed class AmbiguousExecuteActivityDefinition :
+        ExecuteActivityDefinition<RegisteredExecuteActivity, RegisteredArguments>,
+        IExecuteActivityDefinition<SecondRegisteredExecuteActivity, AlternativeArguments>
+    {
+        IEndpointDefinition<IExecuteActivity<AlternativeArguments>>?
+            IExecuteActivityDefinition<SecondRegisteredExecuteActivity, AlternativeArguments>.ExecuteEndpointDefinition
+        {
+            set { }
+        }
+
+        void IExecuteActivityDefinition<SecondRegisteredExecuteActivity, AlternativeArguments>.Configure(
+            IReceiveEndpointConfigurator endpointConfigurator,
+            IExecuteActivityConfigurator<SecondRegisteredExecuteActivity, AlternativeArguments> executeActivityConfigurator,
+            IRegistrationContext context)
+        {
+        }
+    }
 
     private sealed class DynamicNamespaceLessType
     {
