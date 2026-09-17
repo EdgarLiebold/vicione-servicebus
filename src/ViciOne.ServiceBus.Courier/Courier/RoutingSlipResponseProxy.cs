@@ -32,7 +32,9 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
             .GetResponseEndpointAsync<TResponse>(requestInfo.ResponseAddress, requestInfo.RequestId, context.CancellationToken)
             .ConfigureAwait(false);
 
-        var response = await CreateResponseMessageAsync(context, requestInfo.Request).ConfigureAwait(false)
+        Task<TResponse> responseTask = CreateResponseMessageAsync(context, requestInfo.Request)
+            ?? throw new InvalidOperationException($"{nameof(ConsumeAsync)} cannot await a null task returned by {nameof(CreateResponseMessageAsync)}.");
+        var response = await responseTask.ConfigureAwait(false)
             ?? throw new InvalidOperationException("The routing slip response proxy returned a null response.");
 
         await endpoint.SendAsync(response, context.CancellationToken).ConfigureAwait(false);
@@ -71,7 +73,9 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
             .GetFaultEndpointAsync<TRequest>(requestInfo.FaultAddress ?? requestInfo.ResponseAddress, requestInfo.RequestId, context.CancellationToken)
             .ConfigureAwait(false);
 
-        var response = await CreateFaultedResponseMessageAsync(context, requestInfo.Request, requestInfo.RequestId).ConfigureAwait(false)
+        Task<TFault> responseTask = CreateFaultedResponseMessageAsync(context, requestInfo.Request, requestInfo.RequestId)
+            ?? throw new InvalidOperationException($"{nameof(ConsumeAsync)} cannot await a null task returned by {nameof(CreateFaultedResponseMessageAsync)}.");
+        var response = await responseTask.ConfigureAwait(false)
             ?? throw new InvalidOperationException("The routing slip response proxy returned a null fault response.");
 
         await endpoint.SendAsync(response, x =>
@@ -110,14 +114,14 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     /// <summary>Creates the response sent after successful routing-slip completion.</summary>
     /// <param name="context">The routing-slip completion context.</param>
     /// <param name="request">The original request.</param>
-    /// <returns>A task that produces the successful response.</returns>
+    /// <returns>A non-null task that produces a non-null successful response.</returns>
     protected abstract Task<TResponse> CreateResponseMessageAsync(ConsumeContext<IRoutingSlipCompleted> context, TRequest request);
 
     /// <summary>Creates the response sent after terminal routing-slip failure.</summary>
     /// <param name="context">The routing-slip fault context.</param>
     /// <param name="request">The original request.</param>
     /// <param name="requestId">The original request identifier.</param>
-    /// <returns>A task that produces the terminal fault response.</returns>
+    /// <returns>A non-null task that produces a non-null terminal fault response.</returns>
     protected abstract Task<TFault> CreateFaultedResponseMessageAsync(ConsumeContext<IRoutingSlipFaulted> context, TRequest request, Guid requestId);
 }
 

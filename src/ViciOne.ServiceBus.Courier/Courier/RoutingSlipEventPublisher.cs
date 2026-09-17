@@ -323,8 +323,12 @@ internal sealed class RoutingSlipEventPublisher :
         cancellationToken.ThrowIfCancellationRequested();
 
         foreach (var subscription in _routingSlip.Subscriptions)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             await PublishSubscriptionEventAsync(eventFlag, messageFactory, subscription, activityName, cancellationToken).ConfigureAwait(false);
+        }
 
+        cancellationToken.ThrowIfCancellationRequested();
         if (_routingSlip.Subscriptions.All(sub => sub.Events.HasFlag(RoutingSlipEvents.Supplemental)))
             await _publishEndpoint.PublishAsync(messageFactory(RoutingSlipEventContents.All), cancellationToken).ConfigureAwait(false);
     }
@@ -340,6 +344,7 @@ internal sealed class RoutingSlipEventPublisher :
                 || activityName?.Equals(subscription.ActivityName, StringComparison.OrdinalIgnoreCase) == true)
             {
                 var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(subscription.Address, cancellationToken).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
 
                 var message = messageFactory(subscription.Include);
 

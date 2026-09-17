@@ -61,5 +61,6 @@ internal sealed class ConsumeSendPipeAdapter<TMessage> :
     protected override void Send(SendContext<TMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
+        Send<TMessage>(context);
     }
 }

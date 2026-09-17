@@ -31,28 +31,21 @@ public sealed class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
         ArgumentNullException.ThrowIfNull(next);
         cancellationToken.ThrowIfCancellationRequested();
 
-        TActivity? activity = null;
+        TActivity activity = _compensateFactory(context.Log)
+            ?? throw new InvalidOperationException("The compensate activity factory returned null.");
+        Exception? operationFailure = null;
         try
         {
-            activity = _compensateFactory(context.Log)
-                ?? throw new InvalidOperationException("The compensate activity factory returned null.");
-
             CompensateActivityContext<TActivity, TLog> activityContext = context.CreateActivityContext(activity);
 
             await next.SendAsync(activityContext).ConfigureAwait(false);
         }
-        finally
+        catch (Exception exception)
         {
-            switch (activity)
-            {
-                case IAsyncDisposable asyncDisposable:
-                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                    break;
-                case IDisposable disposable:
-                    disposable.Dispose();
-                    break;
-            }
+            operationFailure = exception;
         }
+
+        await OwnedActivityLifetime.ReleaseAfterOperationAsync(activity, operationFailure).ConfigureAwait(false);
     }
 
     /// <summary>Adds this delegate-based factory to the pipeline probe graph.</summary>

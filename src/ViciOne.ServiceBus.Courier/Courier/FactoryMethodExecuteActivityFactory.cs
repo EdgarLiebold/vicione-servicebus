@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Courier;
@@ -31,17 +32,44 @@ public sealed class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
         ArgumentNullException.ThrowIfNull(next);
         cancellationToken.ThrowIfCancellationRequested();
 
-        TActivity? activity = null;
+        TActivity activity = _executeFactory(context.Arguments)
+            ?? throw new InvalidOperationException("The execute activity factory returned null.");
+        Exception? operationFailure = null;
         try
         {
-            activity = _executeFactory(context.Arguments)
-                ?? throw new InvalidOperationException("The execute activity factory returned null.");
-
             ExecuteActivityContext<TActivity, TArguments> activityContext = context.CreateActivityContext(activity);
 
             await next.SendAsync(activityContext).ConfigureAwait(false);
         }
-        finally
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await OwnedActivityLifetime.ReleaseAfterOperationAsync(activity, operationFailure).ConfigureAwait(false);
+    }
+
+    /// <summary>Adds this delegate-based factory to the pipeline probe graph.</summary>
+    /// <param name="context">The probe context that receives the factory scope.</param>
+    public void Probe(ProbeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        context.CreateScope("factoryMethod");
+    }
+}
+
+
+/// <summary>Completes an owned activity operation and releases the activity without losing either failure.</summary>
+static class OwnedActivityLifetime
+{
+    /// <summary>Releases the activity and propagates the operation and release outcomes.</summary>
+    /// <param name="activity">The owned activity.</param>
+    /// <param name="operationFailure">The failure selected by activity-context creation or pipeline execution.</param>
+    /// <returns>A task that completes after activity release and outcome propagation.</returns>
+    public static async Task ReleaseAfterOperationAsync(object activity, Exception? operationFailure)
+    {
+        Exception? releaseFailure = null;
+        try
         {
             switch (activity)
             {
@@ -53,13 +81,22 @@ public sealed class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
                     break;
             }
         }
-    }
+        catch (Exception exception)
+        {
+            releaseFailure = exception;
+        }
 
-    /// <summary>Adds this delegate-based factory to the pipeline probe graph.</summary>
-    /// <param name="context">The probe context that receives the factory scope.</param>
-    public void Probe(ProbeContext context)
-    {
-        ArgumentNullException.ThrowIfNull(context);
-        context.CreateScope("factoryMethod");
+        if (operationFailure is not null && releaseFailure is not null)
+        {
+            throw new AggregateException(
+                "Activity pipeline and release encountered multiple failures.",
+                operationFailure,
+                releaseFailure);
+        }
+
+        if (operationFailure is not null)
+            ExceptionDispatchInfo.Capture(operationFailure).Throw();
+        if (releaseFailure is not null)
+            ExceptionDispatchInfo.Capture(releaseFailure).Throw();
     }
 }

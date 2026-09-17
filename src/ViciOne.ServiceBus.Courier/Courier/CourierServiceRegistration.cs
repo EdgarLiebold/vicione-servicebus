@@ -12,6 +12,10 @@ static class CourierServiceRegistration
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(busType);
+
+        if (!typeof(IBus).IsAssignableFrom(busType) || busType.ContainsGenericParameters)
+            throw new ArgumentException($"The bus type must be closed and implement {TypeCache<IBus>.ShortName}.", nameof(busType));
+
         CourierCorrelationConventions.Register();
 
         services.TryAddScoped<IRoutingSlipExecutor>(provider =>
