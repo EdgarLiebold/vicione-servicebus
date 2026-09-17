@@ -37,7 +37,7 @@ public class IndexedSagaProperty<TSaga, TProperty> :
 
     internal IndexedSagaProperty(Func<TSaga, TProperty?> getProperty)
     {
-        _getProperty = getProperty;
+        _getProperty = getProperty ?? throw new ArgumentNullException(nameof(getProperty));
     }
 
     /// <summary>Gets the number of distinct registered keys, including a retained null key.</summary>
@@ -161,6 +161,8 @@ public class IndexedSagaProperty<TSaga, TProperty> :
 
     SagaIndexRegistration IStagedSagaIndex<TSaga>.Capture(SagaInstance<TSaga> instance)
     {
+        ArgumentNullException.ThrowIfNull(instance);
+
         TProperty? key = _getProperty(instance.Instance);
         return new SagaIndexRegistration(key, () => AddCaptured(instance, key), () => Remove(instance));
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
@@ -6,7 +7,9 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Forwards saga state-change notifications to the connected state observers.</summary>
+    /// <summary>
+    /// Fans state changes out to every connected state observer and propagates observer task failures.
+    /// </summary>
     public class StateObservable :
         Connectable<IStateObserver<TInstance>>,
         IStateObserver<TInstance>
@@ -18,6 +21,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The task for forwarding the notification.</returns>
         public Task StateChangedAsync(IBehaviorContext<TInstance> context, IState currentState, IState? previousState)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(currentState);
             return ForEachAsync(x => x.StateChangedAsync(context, currentState, previousState));
         }
     }

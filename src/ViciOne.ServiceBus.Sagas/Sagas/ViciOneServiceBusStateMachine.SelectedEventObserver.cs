@@ -6,7 +6,9 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Forwards notifications only when the context's event equals the selected event.</summary>
+    /// <summary>
+    /// Forwards notifications only when the context's event equals the selected event and requires a task from the observer.
+    /// </summary>
     public class SelectedEventObserver :
         IEventObserver<TInstance>
     {
@@ -18,6 +20,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="observer">The observer that receives matching notifications.</param>
         public SelectedEventObserver(IEvent @event, IEventObserver<TInstance> observer)
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
+            ArgumentNullException.ThrowIfNull(observer);
+
             _event = @event;
             _observer = observer;
         }
@@ -27,8 +32,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task PreExecuteAsync(IBehaviorContext<TInstance> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? _observer.PreExecuteAsync(context)
+                ? RequireObserverTask(_observer.PreExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -39,8 +45,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task PreExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? _observer.PreExecuteAsync(context)
+                ? RequireObserverTask(_observer.PreExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -49,8 +56,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task PostExecuteAsync(IBehaviorContext<TInstance> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? _observer.PostExecuteAsync(context)
+                ? RequireObserverTask(_observer.PostExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -61,8 +69,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task PostExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? _observer.PostExecuteAsync(context)
+                ? RequireObserverTask(_observer.PostExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -72,8 +81,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The observer's task for a match; otherwise, an already completed task.</returns>
         public Task ExecuteFaultAsync(IBehaviorContext<TInstance> context, Exception exception)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(exception);
             return _event.Equals(context.Event)
-                ? _observer.ExecuteFaultAsync(context, exception)
+                ? RequireObserverTask(_observer.ExecuteFaultAsync(context, exception))
                 : Task.CompletedTask;
         }
 
@@ -85,9 +96,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task ExecuteFaultAsync<T>(IBehaviorContext<TInstance, T> context, Exception exception)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(exception);
             return _event.Equals(context.Event)
-                ? _observer.ExecuteFaultAsync(context, exception)
+                ? RequireObserverTask(_observer.ExecuteFaultAsync(context, exception))
                 : Task.CompletedTask;
+        }
+
+        static Task RequireObserverTask(Task? task)
+        {
+            return task ?? throw new InvalidOperationException("The event observer returned no notification task.");
         }
     }
 }

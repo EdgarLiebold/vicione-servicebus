@@ -21,8 +21,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="context">The saga consume context providing instance state, completion and messaging operations.</param>
         /// <param name="event">The event represented by this behavior context.</param>
         public BehaviorContextProxy(IStateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, IEvent @event)
-            : base(context)
+            : base(context ?? throw new ArgumentNullException(nameof(context)))
         {
+            ArgumentNullException.ThrowIfNull(machine);
+            ArgumentNullException.ThrowIfNull(@event, "event");
+
             StateMachine = machine;
             _context = context;
             _event = @event;
@@ -54,6 +57,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The state machine's event execution task.</returns>
         public Task RaiseAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
             return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
 
@@ -66,6 +70,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task RaiseAsync<T>(IEvent<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
+            ArgumentNullException.ThrowIfNull(data);
             return StateMachine.RaiseEventAsync(CreateProxy(@event, data), cancellationToken: cancellationToken);
         }
 
@@ -84,6 +90,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>A behavior context sharing the selected saga and underlying consume context.</returns>
         public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
 
@@ -95,6 +102,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public IBehaviorContext<TInstance, T> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
+            ArgumentNullException.ThrowIfNull(data);
             return new BehaviorContextProxy<T>(StateMachine, _context, new MessageConsumeContext<T>(_context, data), @event);
         }
     }
@@ -117,8 +126,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The message event represented by this behavior context.</param>
         public BehaviorContextProxy(IStateMachine<TInstance> machine, SagaConsumeContext<TInstance> context, ConsumeContext<TMessage> consumeContext,
             IEvent<TMessage> @event)
-            : base(consumeContext)
+            : base(consumeContext ?? throw new ArgumentNullException(nameof(consumeContext)))
         {
+            ArgumentNullException.ThrowIfNull(machine);
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(@event, "event");
+
             StateMachine = machine;
             _context = context;
             _event = @event;
@@ -150,6 +163,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The state machine's event execution task.</returns>
         public Task RaiseAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
             return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
 
@@ -162,6 +176,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task RaiseAsync<T>(IEvent<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
+            ArgumentNullException.ThrowIfNull(data);
             return StateMachine.RaiseEventAsync(CreateProxy(@event, data), cancellationToken: cancellationToken);
         }
 
@@ -188,6 +204,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>A behavior context sharing the selected saga and underlying saga consume context.</returns>
         public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
 
@@ -199,6 +216,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public IBehaviorContext<TInstance, T> CreateProxy<T>(IEvent<T> @event, T data)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(@event, "event");
+            ArgumentNullException.ThrowIfNull(data);
             return new BehaviorContextProxy<T>(StateMachine, _context, new MessageConsumeContext<T>(_context, data), @event);
         }
     }

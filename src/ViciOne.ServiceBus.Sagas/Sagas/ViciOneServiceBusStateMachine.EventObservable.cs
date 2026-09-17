@@ -7,7 +7,9 @@ namespace ViciOne.ServiceBus.Sagas;
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>Forwards event execution notifications to the connected saga observers.</summary>
+    /// <summary>
+    /// Fans event execution notifications out to every connected saga observer and propagates observer task failures.
+    /// </summary>
     public class EventObservable :
         Connectable<IEventObserver<TInstance>>,
         IEventObserver<TInstance>
@@ -17,6 +19,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The task for forwarding the notification.</returns>
         public Task PreExecuteAsync(IBehaviorContext<TInstance> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             return ForEachAsync(x => x.PreExecuteAsync(context));
         }
 
@@ -27,6 +30,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task PreExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
             return ForEachAsync(x => x.PreExecuteAsync(context));
         }
 
@@ -35,6 +39,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The task for forwarding the notification.</returns>
         public Task PostExecuteAsync(IBehaviorContext<TInstance> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             return ForEachAsync(x => x.PostExecuteAsync(context));
         }
 
@@ -45,6 +50,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task PostExecuteAsync<T>(IBehaviorContext<TInstance, T> context)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
             return ForEachAsync(x => x.PostExecuteAsync(context));
         }
 
@@ -54,6 +60,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The task for forwarding the notification.</returns>
         public Task ExecuteFaultAsync(IBehaviorContext<TInstance> context, Exception exception)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(exception);
             return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
         }
 
@@ -65,6 +73,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task ExecuteFaultAsync<T>(IBehaviorContext<TInstance, T> context, Exception exception)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(exception);
             return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
         }
     }

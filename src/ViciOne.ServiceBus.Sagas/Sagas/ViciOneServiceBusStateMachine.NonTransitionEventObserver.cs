@@ -16,14 +16,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public NonTransitionEventObserver(IReadOnlyDictionary<string, StateMachineEvent> eventCache, IEventObserver<TSaga> observer)
         {
+            ArgumentNullException.ThrowIfNull(eventCache);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _eventCache = eventCache;
             _observer = observer;
         }
 
         public Task PreExecuteAsync(IBehaviorContext<TSaga> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
-                return _observer.PreExecuteAsync(context);
+                return RequireObserverTask(_observer.PreExecuteAsync(context));
 
             return Task.CompletedTask;
         }
@@ -31,16 +35,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task PreExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
-                return _observer.PreExecuteAsync(context);
+                return RequireObserverTask(_observer.PreExecuteAsync(context));
 
             return Task.CompletedTask;
         }
 
         public Task PostExecuteAsync(IBehaviorContext<TSaga> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
-                return _observer.PostExecuteAsync(context);
+                return RequireObserverTask(_observer.PostExecuteAsync(context));
 
             return Task.CompletedTask;
         }
@@ -48,16 +54,19 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task PostExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
-                return _observer.PostExecuteAsync(context);
+                return RequireObserverTask(_observer.PostExecuteAsync(context));
 
             return Task.CompletedTask;
         }
 
         public Task ExecuteFaultAsync(IBehaviorContext<TSaga> context, Exception exception)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(exception);
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
-                return _observer.ExecuteFaultAsync(context, exception);
+                return RequireObserverTask(_observer.ExecuteFaultAsync(context, exception));
 
             return Task.CompletedTask;
         }
@@ -65,10 +74,17 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public Task ExecuteFaultAsync<T>(IBehaviorContext<TSaga, T> context, Exception exception)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(exception);
             if (_eventCache.TryGetValue(context.Event.Name, out var stateMachineEvent) && !stateMachineEvent.IsTransitionEvent)
-                return _observer.ExecuteFaultAsync(context, exception);
+                return RequireObserverTask(_observer.ExecuteFaultAsync(context, exception));
 
             return Task.CompletedTask;
+        }
+
+        static Task RequireObserverTask(Task? task)
+        {
+            return task ?? throw new InvalidOperationException("The event observer returned no notification task.");
         }
     }
 }

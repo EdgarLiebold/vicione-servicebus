@@ -18,8 +18,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="context">The context supplying the state machine, selected saga and event.</param>
         /// <param name="exception">The exception exposed by this context and its typed message proxies.</param>
         public BehaviorExceptionContextProxy(IBehaviorContext<TInstance> context, TException exception)
+            : this(context ?? throw new ArgumentNullException(nameof(context)), exception, true)
+        {
+        }
+
+        BehaviorExceptionContextProxy(IBehaviorContext<TInstance> context, TException exception, bool _)
             : base(context.StateMachine, context, context.Event)
         {
+            ArgumentNullException.ThrowIfNull(exception);
+
             _context = context;
             Exception = exception;
         }
@@ -55,8 +62,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="context">The context supplying the state machine, selected saga, message and event.</param>
         /// <param name="exception">The exception exposed by this context and its message proxies.</param>
         public BehaviorExceptionContextProxy(IBehaviorContext<TInstance, TData> context, TException exception)
+            : this(context ?? throw new ArgumentNullException(nameof(context)), exception, true)
+        {
+        }
+
+        BehaviorExceptionContextProxy(IBehaviorContext<TInstance, TData> context, TException exception, bool _)
             : base(context.StateMachine, context, context, context.Event)
         {
+            ArgumentNullException.ThrowIfNull(exception);
+
             _context = context;
             Exception = exception;
         }

@@ -2,12 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Represents the method that handles send exception context callback.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TException">The exception handled by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
-/// <param name="context">The context associated with the operation.</param>
-/// <param name="sendContext">The send context.</param>
+/// <summary>Configures an outgoing send context from an exception behavior context.</summary>
+/// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
+/// <typeparam name="TException">The exception type available to the callback.</typeparam>
+/// <typeparam name="T">The outgoing message type.</typeparam>
+/// <param name="context">The exception behavior context supplied to the callback.</param>
+/// <param name="sendContext">The outgoing send context to configure.</param>
 public delegate void SendExceptionContextCallback<TSaga, in TException, in T>(IBehaviorExceptionContext<TSaga, TException> context,
     SendContext<T> sendContext)
     where TSaga : class, ISagaStateMachineInstance
@@ -15,13 +15,13 @@ public delegate void SendExceptionContextCallback<TSaga, in TException, in T>(IB
     where T : class;
 
 
-/// <summary>Represents the method that handles send exception context callback.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TException">The exception handled by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
-/// <param name="context">The context associated with the operation.</param>
-/// <param name="sendContext">The send context.</param>
+/// <summary>Configures an outgoing send context from a message-specific exception behavior context.</summary>
+/// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract available to the callback.</typeparam>
+/// <typeparam name="TException">The exception type available to the callback.</typeparam>
+/// <typeparam name="T">The outgoing message type.</typeparam>
+/// <param name="context">The exception behavior context supplied to the callback.</param>
+/// <param name="sendContext">The outgoing send context to configure.</param>
 public delegate void SendExceptionContextCallback<TSaga, in TMessage, in TException, in T>(IBehaviorExceptionContext<TSaga, TMessage, TException> context,
     SendContext<T> sendContext)
     where TSaga : class, ISagaStateMachineInstance

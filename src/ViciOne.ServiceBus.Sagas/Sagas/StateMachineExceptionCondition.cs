@@ -2,22 +2,22 @@ using System;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Filters activities based on the conditional statement.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TException">The exception handled by the member.</typeparam>
-/// <param name="context">The context associated with the operation.</param>
-/// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+/// <summary>Evaluates an exception behavior condition synchronously.</summary>
+/// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
+/// <typeparam name="TException">The exception type available to the condition.</typeparam>
+/// <param name="context">The exception behavior context evaluated by the condition.</param>
+/// <returns><see langword="true" /> when the exception behavior condition is satisfied; otherwise, <see langword="false" />.</returns>
 public delegate bool StateMachineExceptionCondition<TSaga, in TException>(IBehaviorExceptionContext<TSaga, TException> context)
     where TException : Exception
     where TSaga : class, ISagaStateMachineInstance;
 
 
-/// <summary>Filters activities based on the conditional statement.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TException">The exception handled by the member.</typeparam>
-/// <param name="context">The context associated with the operation.</param>
-/// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+/// <summary>Evaluates a message-specific exception behavior condition synchronously.</summary>
+/// <typeparam name="TSaga">The saga state-machine instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract available to the condition.</typeparam>
+/// <typeparam name="TException">The exception type available to the condition.</typeparam>
+/// <param name="context">The exception behavior context evaluated by the condition.</param>
+/// <returns><see langword="true" /> when the exception behavior condition is satisfied; otherwise, <see langword="false" />.</returns>
 public delegate bool StateMachineExceptionCondition<TSaga, in TMessage, in TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     where TException : Exception
     where TSaga : class, ISagaStateMachineInstance
