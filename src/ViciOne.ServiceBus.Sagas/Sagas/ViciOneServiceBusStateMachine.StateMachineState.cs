@@ -28,6 +28,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public StateMachineState(StateMachineUnhandledEventCallback<TInstance> unhandledEventCallback, string name, IEventObserver<TInstance> observer,
             IState<TInstance>? superState = null)
         {
+            ArgumentNullException.ThrowIfNull(unhandledEventCallback);
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _unhandledEventCallback = unhandledEventCallback;
             Name = name;
             _observer = observer;
@@ -51,12 +55,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             superState?.AddSubstate(this);
         }
 
-        /// <summary>Compares state names using ordinal equality, treating a missing other name as an empty string.</summary>
+        /// <summary>Compares non-null state names using ordinal equality.</summary>
         /// <param name="other">The state whose name is compared.</param>
-        /// <returns>Whether this state's name equals the other name or its empty-string fallback.</returns>
+        /// <returns><see langword="true" /> when the other state is non-null and has the same ordinal name; otherwise, <see langword="false" />.</returns>
         public bool Equals(IState? other)
         {
-            return string.CompareOrdinal(Name, other?.Name ?? "") == 0;
+            return other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
         }
 
         /// <summary>Gets the parent state, or <see langword="null" /> for a top-level state.</summary>
@@ -77,6 +81,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="visitor">The visitor receiving the state, bound events and behavior graph.</param>
         public void Accept(IStateMachineVisitor visitor)
         {
+            ArgumentNullException.ThrowIfNull(visitor);
+
             visitor.Visit(this, _ =>
             {
                 foreach (KeyValuePair<IEvent, ActivityBehaviorBuilder<TInstance>> behavior in _behaviors)
@@ -91,6 +97,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="context">The parent diagnostic scope in which the state scope is created.</param>
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             var scope = context.CreateScope("state");
             scope.Add("name", Name);
 
@@ -219,6 +227,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="activity">The activity appended to that event's behavior builder.</param>
         public void Bind(IEvent @event, IStateMachineActivity<TInstance> activity)
         {
+            ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+            ArgumentNullException.ThrowIfNull(activity);
+
             if (!_behaviors.TryGetValue(@event, out ActivityBehaviorBuilder<TInstance>? builder))
             {
                 builder = new ActivityBehaviorBuilder<TInstance>();
@@ -232,6 +243,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The event whose unbound occurrences are ignored.</param>
         public void Ignore(IEvent @event)
         {
+            ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
             _ignoredEvents[@event] = new AllStateEventFilter<TInstance>();
         }
 
@@ -242,6 +255,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public void Ignore<T>(IEvent<T> @event, StateMachineCondition<TInstance, T> filter)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+            ArgumentNullException.ThrowIfNull(filter);
+
             _ignoredEvents[@event] = new SelectedStateEventFilter<TInstance, T>(filter);
         }
 
@@ -263,6 +279,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>Whether this state or a descendant has the supplied name.</returns>
         public bool HasState(IState<TInstance> state)
         {
+            ArgumentNullException.ThrowIfNull(state);
+
             return Name.Equals(state.Name) || _subStates.Any(s => s.HasState(state));
         }
 
@@ -271,6 +289,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>Whether this state or an ancestor has the supplied name.</returns>
         public bool IsStateOf(IState<TInstance> state)
         {
+            ArgumentNullException.ThrowIfNull(state);
+
             return Name.Equals(state.Name) || (SuperState != null && SuperState.IsStateOf(state));
         }
 

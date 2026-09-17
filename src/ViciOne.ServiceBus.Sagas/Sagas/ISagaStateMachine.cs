@@ -12,9 +12,9 @@ public interface ISagaStateMachine<TSaga> :
     /// <summary>Gets the message-to-saga correlations configured for the state machine.</summary>
     IEnumerable<IEventCorrelation> Correlations { get; }
 
-    /// <summary>Determines whether the current saga instance has reached its terminal state.</summary>
+    /// <summary>Evaluates the configured completion predicate that determines whether the current saga instance can be removed.</summary>
     /// <param name="context">The behavior context containing the saga instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that returns <see langword="true" /> when the saga can be removed from its repository.</returns>
+    /// <returns>A task that returns <see langword="true" /> when the configured completion condition permits removing the saga from its repository.</returns>
     Task<bool> IsCompletedAsync(IBehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 }

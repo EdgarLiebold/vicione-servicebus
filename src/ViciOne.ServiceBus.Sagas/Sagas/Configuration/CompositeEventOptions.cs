@@ -15,6 +15,6 @@ public enum CompositeEventOptions
     /// <summary>Include the composite event in the final state.</summary>
     IncludeFinal = 2,
 
-    /// <summary>Specifies that the composite event should only be raised once and ignore any subsequent events.</summary>
+    /// <summary>Specifies that the composite event should be raised at most once.</summary>
     RaiseOnce = 4,
 }

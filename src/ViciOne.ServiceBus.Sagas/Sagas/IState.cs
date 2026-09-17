@@ -19,10 +19,10 @@ public interface IState :
     /// <summary>Gets the event raised before the current state is left.</summary>
     IEvent Leave { get; }
 
-    /// <summary>Gets the event raised before another state is entered.</summary>
+    /// <summary>Gets the event raised before this state becomes current.</summary>
     IEvent<IState> BeforeEnter { get; }
 
-    /// <summary>Gets the event raised after a previous state has been left.</summary>
+    /// <summary>Gets the event raised after this state has been left.</summary>
     IEvent<IState> AfterLeave { get; }
 }
 

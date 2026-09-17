@@ -29,6 +29,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public StateMachineRequest(string name, IRequestSettings<TInstance, TRequest, TResponse> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
         {
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(settings);
+
             Name = name;
             Settings = settings;
 
@@ -86,6 +89,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>A new ID when a request-ID property is configured; otherwise, the saga's correlation ID.</returns>
         public Guid GenerateRequestId(TInstance instance)
         {
+            ArgumentNullException.ThrowIfNull(instance);
+
             return _read != null
                 ? NewId.NextGuid()
                 : instance.CorrelationId;
@@ -95,6 +100,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="context">The request's outgoing send context.</param>
         public void SetSendContextHeaders(SendContext<TRequest> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             if (Settings.TimeToLive.HasValue && Settings.TimeToLive.Value > TimeSpan.Zero)
                 context.TimeToLive = Settings.TimeToLive.Value;
 
@@ -106,6 +113,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns><see langword="true" /> only when both request IDs are present and equal.</returns>
         public bool EventFilter(IBehaviorContext<TInstance, IRequestTimeoutExpired<TRequest>> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             if (!context.RequestId.HasValue)
                 return false;
 

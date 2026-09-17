@@ -16,6 +16,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="event">The message event reported by validation.</param>
         public UncorrelatedEventCorrelation(IEvent<TData> @event)
         {
+            ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
             Event = @event;
         }
 

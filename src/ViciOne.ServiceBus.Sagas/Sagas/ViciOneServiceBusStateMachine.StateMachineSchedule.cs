@@ -25,6 +25,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="settings">The settings supplying the schedule's delay provider.</param>
         public StateMachineSchedule(string name, Expression<Func<TInstance, Guid?>> tokenIdExpression, IScheduleSettings<TInstance, TMessage> settings)
         {
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(tokenIdExpression);
+            ArgumentNullException.ThrowIfNull(settings);
+
             _name = name;
             _settings = settings;
 
@@ -44,6 +48,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The configured provider's delay.</returns>
         public TimeSpan GetDelay(IBehaviorContext<TInstance> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             return _settings.DelayProvider(context);
         }
 
@@ -52,6 +58,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <returns>The property's token ID, or <see langword="null" /> when it is unset.</returns>
         public Guid? GetTokenId(TInstance instance)
         {
+            ArgumentNullException.ThrowIfNull(instance);
+
             return _read.Get(instance);
         }
 
@@ -60,6 +68,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         /// <param name="tokenId">The token ID to store, or <see langword="null" /> to clear it.</param>
         public void SetTokenId(TInstance instance, Guid? tokenId)
         {
+            ArgumentNullException.ThrowIfNull(instance);
+
             _write.Set(instance, tokenId);
         }
     }

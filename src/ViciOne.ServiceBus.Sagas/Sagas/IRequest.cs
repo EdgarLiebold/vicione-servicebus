@@ -15,7 +15,7 @@ public interface IRequest<TSaga, TRequest, TResponse>
     /// <summary>Gets the request declaration name.</summary>
     string Name { get; }
 
-    /// <summary>Gets the address, timeout, message lifetime, and correlation settings for the request.</summary>
+    /// <summary>Gets the address, timeout, message lifetime, fault-time request-identifier policy, and correlation settings for the request.</summary>
     IRequestSettings<TSaga, TRequest, TResponse> Settings { get; }
 
     /// <summary>Gets or sets the event raised when the response is received.</summary>
