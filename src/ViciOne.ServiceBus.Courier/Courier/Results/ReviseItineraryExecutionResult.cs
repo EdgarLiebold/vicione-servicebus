@@ -37,7 +37,7 @@ class ReviseItineraryExecutionResult<TArguments> :
     {
         await base.PublishActivityEventsAsync(routingSlip, builder, cancellationToken).ConfigureAwait(false);
 
-        await Publisher.PublishRoutingSlipRevisedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Context.Elapsed, routingSlip.Variables,
+        await Publisher.PublishRoutingSlipRevisedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Duration, routingSlip.Variables,
             routingSlip.Itinerary, builder.SourceItinerary, cancellationToken).ConfigureAwait(false);
     }
 }

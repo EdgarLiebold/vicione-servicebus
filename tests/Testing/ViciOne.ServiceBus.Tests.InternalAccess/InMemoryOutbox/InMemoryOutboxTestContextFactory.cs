@@ -271,11 +271,14 @@ public static class InMemoryOutboxTestContextFactory
     {
         public required IMessageScheduler Scheduler { get; set; }
 
-        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            "get_SchedulerFactory" => new MessageSchedulerFactory(_ => Scheduler),
-            _ => throw new NotSupportedException(targetMethod?.Name),
-        };
+            ArgumentNullException.ThrowIfNull(targetMethod);
+
+            return targetMethod.Name == "get_SchedulerFactory"
+                ? new MessageSchedulerFactory(_ => Scheduler)
+                : targetMethod.Invoke(Scheduler, args);
+        }
     }
 
     private class SerializerContextProxy : DispatchProxy

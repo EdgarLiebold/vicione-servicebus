@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
@@ -26,27 +27,46 @@ internal static class RoutingSlipMessageState
     }
 
     /// <summary>Creates a case-insensitive read-only copy of routing-slip key/value state.</summary>
-    public static IReadOnlyDictionary<string, object> Snapshot(IReadOnlyDictionary<string, object> values)
+    /// <param name="values">The key/value state to copy.</param>
+    /// <param name="parameterName">The originating call-site expression reported when <paramref name="values"/> is null.</param>
+    /// <returns>A detached, case-insensitive, read-only dictionary.</returns>
+    public static IReadOnlyDictionary<string, object> Snapshot(
+        IReadOnlyDictionary<string, object> values,
+        [CallerArgumentExpression(nameof(values))] string? parameterName = null)
     {
-        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(values, parameterName);
 
         return new ReadOnlyDictionary<string, object>(
             new Dictionary<string, object>(values, StringComparer.OrdinalIgnoreCase));
     }
 
     /// <summary>Creates a read-only deep copy of routing-slip itinerary entries.</summary>
-    public static IReadOnlyList<IActivity> SnapshotActivities(IEnumerable<IActivity> activities)
+    /// <param name="activities">The itinerary entries to copy.</param>
+    /// <param name="parameterName">The originating call-site expression reported for invalid collection input.</param>
+    /// <returns>A detached, read-only list containing detached activity entries.</returns>
+    public static IReadOnlyList<IActivity> SnapshotActivities(
+        IEnumerable<IActivity> activities,
+        [CallerArgumentExpression(nameof(activities))] string? parameterName = null)
     {
-        ArgumentNullException.ThrowIfNull(activities);
+        ArgumentNullException.ThrowIfNull(activities, parameterName);
 
-        return Array.AsReadOnly(activities.Select(activity => (IActivity)new RoutingSlipActivity(activity)).ToArray());
+        return Array.AsReadOnly(activities.Select(activity => activity is null
+            ? throw new ArgumentException("The activity collection cannot contain null entries.", parameterName)
+            : (IActivity)new RoutingSlipActivity(activity)).ToArray());
     }
 
     /// <summary>Creates a read-only deep copy of routing-slip activity failures.</summary>
-    public static IReadOnlyList<IActivityException> SnapshotExceptions(IEnumerable<IActivityException> exceptions)
+    /// <param name="exceptions">The activity failures to copy.</param>
+    /// <param name="parameterName">The originating call-site expression reported for invalid collection input.</param>
+    /// <returns>A detached, read-only list containing detached activity-failure envelopes.</returns>
+    public static IReadOnlyList<IActivityException> SnapshotExceptions(
+        IEnumerable<IActivityException> exceptions,
+        [CallerArgumentExpression(nameof(exceptions))] string? parameterName = null)
     {
-        ArgumentNullException.ThrowIfNull(exceptions);
+        ArgumentNullException.ThrowIfNull(exceptions, parameterName);
 
-        return Array.AsReadOnly(exceptions.Select(exception => (IActivityException)new RoutingSlipActivityException(exception)).ToArray());
+        return Array.AsReadOnly(exceptions.Select(exception => exception is null
+            ? throw new ArgumentException("The activity-exception collection cannot contain null entries.", parameterName)
+            : (IActivityException)new RoutingSlipActivityException(exception)).ToArray());
     }
 }

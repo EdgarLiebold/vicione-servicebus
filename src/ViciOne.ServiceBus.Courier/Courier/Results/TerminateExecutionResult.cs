@@ -25,7 +25,7 @@ class TerminateExecutionResult<TArguments> :
     {
         await base.PublishActivityEventsAsync(routingSlip, builder, cancellationToken).ConfigureAwait(false);
 
-        await Publisher.PublishRoutingSlipTerminatedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Context.Elapsed, routingSlip.Variables,
+        await Publisher.PublishRoutingSlipTerminatedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Duration, routingSlip.Variables,
             builder.SourceItinerary, cancellationToken).ConfigureAwait(false);
     }
 }

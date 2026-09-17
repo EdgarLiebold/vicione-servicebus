@@ -44,6 +44,7 @@ class CompensatedCompensationResult<TLog> :
                 ?? throw new RoutingSlipException("The next compensation address was not specified.");
             var endpoint = await _compensateContext.GetSendEndpointAsync(compensateAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
+            cancellationToken.ThrowIfCancellationRequested();
             await _compensateContext.ForwardAsync(endpoint, routingSlip).ConfigureAwait(false);
         }
         else
