@@ -85,7 +85,8 @@ public sealed class SagaRepository<TSaga> :
         var correlationId = context.CorrelationId
             ?? throw new SagaException("The CorrelationId was not specified", typeof(TSaga), typeof(T));
 
-        return _repositoryContextFactory.SendAsync(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
+        return _repositoryContextFactory.SendAsync(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId))
+            ?? Task.FromException(new InvalidOperationException("The saga repository context factory returned a null task."));
     }
 
     /// <summary>Dispatches a message to every saga selected by a repository query.</summary>
@@ -107,7 +108,8 @@ public sealed class SagaRepository<TSaga> :
         ArgumentNullException.ThrowIfNull(policy);
         ArgumentNullException.ThrowIfNull(next);
 
-        return _repositoryContextFactory.SendQueryAsync(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
+        return _repositoryContextFactory.SendQueryAsync(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next))
+            ?? Task.FromException(new InvalidOperationException("The saga repository context factory returned a null task."));
     }
 
     sealed class LoadableSagaRepository :

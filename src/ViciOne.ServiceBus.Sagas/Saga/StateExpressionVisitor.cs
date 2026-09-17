@@ -10,11 +10,13 @@ public class StateExpressionVisitor<TInstance> :
 {
     readonly Expression _expressionBody;
     readonly ParameterExpression _instanceParameter;
+    ParameterExpression? _stateParameter;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="expression">The expression.</param>
     public StateExpressionVisitor(Expression<Func<TInstance, bool>> expression)
     {
+        ArgumentNullException.ThrowIfNull(expression);
         _instanceParameter = expression.Parameters[0];
         _expressionBody = expression.Body;
     }
@@ -25,6 +27,8 @@ public class StateExpressionVisitor<TInstance> :
     /// <returns>The combined expression.</returns>
     Expression<Func<TInstance, bool>> Combine(Expression<Func<TInstance, bool>> stateExpression, bool not = false)
     {
+        ArgumentNullException.ThrowIfNull(stateExpression);
+        _stateParameter = stateExpression.Parameters[0];
         var result = Visit(stateExpression);
         if (result is LambdaExpression lambda)
         {
@@ -43,7 +47,7 @@ public class StateExpressionVisitor<TInstance> :
     /// <returns>The expression produced by the operation.</returns>
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        if (node.Type == typeof(TInstance))
+        if (ReferenceEquals(node, _stateParameter))
             return _instanceParameter;
 
         return base.VisitParameter(node);
@@ -55,6 +59,8 @@ public class StateExpressionVisitor<TInstance> :
     /// <returns>The expression produced by the operation.</returns>
     public static Expression<Func<TInstance, bool>> Combine(Expression<Func<TInstance, bool>> expression, Expression<Func<TInstance, bool>> stateExpression)
     {
+        ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(stateExpression);
         return new StateExpressionVisitor<TInstance>(expression).Combine(stateExpression);
     }
 }

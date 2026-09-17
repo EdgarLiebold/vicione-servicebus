@@ -17,11 +17,13 @@ public class ExpressionSagaQueryFactory<TSaga, TMessage> :
     /// <param name="filterExpression">The filter expression.</param>
     public ExpressionSagaQueryFactory(Expression<Func<TSaga, TMessage, bool>> filterExpression)
     {
-        _filterExpression = filterExpression;
+        _filterExpression = filterExpression ?? throw new ArgumentNullException(nameof(filterExpression));
     }
 
     bool ISagaQueryFactory<TSaga, TMessage>.TryCreateQuery(ConsumeContext<TMessage> context, out ISagaQuery<TSaga> query)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         Expression<Func<TSaga, bool>> expression = new SagaFilterExpressionConverter<TSaga, TMessage>(context.Message)
             .Convert(_filterExpression);
 
@@ -31,6 +33,7 @@ public class ExpressionSagaQueryFactory<TSaga, TMessage> :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("expression", _filterExpression.ToString());
     }
 }

@@ -28,10 +28,26 @@ public class QuerySagaRepository<TSaga> :
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        return _repositoryContextFactory.ExecuteAsync<IEnumerable<Guid>>(
-            async context => await context.QueryAsync(query, cancellationToken).ConfigureAwait(false),
-            cancellationToken);
+        Task<IEnumerable<Guid>>? execution = _repositoryContextFactory.ExecuteAsync<IEnumerable<Guid>>(
+                async context =>
+                {
+                    Task<ISagaRepositoryQueryContext<TSaga>> queryTask = context.QueryAsync(query, cancellationToken)
+                        ?? throw new InvalidOperationException("The saga query context returned a null task.");
+                    ISagaRepositoryQueryContext<TSaga> result = await queryTask.ConfigureAwait(false);
+
+                    return result
+                        ?? throw new InvalidOperationException("The saga query context returned a null result.");
+                },
+                cancellationToken);
+
+        return execution is null
+            ? Task.FromException<IEnumerable<Guid>>(new InvalidOperationException("The saga query context factory returned a null task."))
+            : ValidateResultAsync(execution);
     }
+
+    static async Task<IEnumerable<Guid>> ValidateResultAsync(Task<IEnumerable<Guid>> execution) =>
+        await execution.ConfigureAwait(false)
+        ?? throw new InvalidOperationException("The saga query context factory returned a null result.");
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>

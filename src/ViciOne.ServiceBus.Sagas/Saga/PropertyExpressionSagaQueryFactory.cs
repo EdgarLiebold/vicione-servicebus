@@ -24,8 +24,8 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     public PropertyExpressionSagaQueryFactory(Expression<Func<TInstance, TProperty>> propertyExpression,
         ISagaQueryPropertySelector<TData, TProperty> selector)
     {
-        _propertyExpression = propertyExpression;
-        _selector = selector;
+        _propertyExpression = propertyExpression ?? throw new ArgumentNullException(nameof(propertyExpression));
+        _selector = selector ?? throw new ArgumentNullException(nameof(selector));
 
         _propertyInfo = typeof(PropertyExpressionPropertyValue<TProperty>).GetProperty(nameof(PropertyExpressionPropertyValue<TProperty>.Value))
             ?? throw new InvalidOperationException("The saga query value property was not found.");
@@ -37,6 +37,8 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryCreateQuery(ConsumeContext<TData> context, [NotNullWhen(true)] out ISagaQuery<TInstance>? query)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (_selector.TryGetProperty(context, out var propertyValue))
         {
             Expression<Func<TInstance, bool>> filterExpression = CreateExpression(propertyValue);
@@ -53,6 +55,7 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("property", _propertyExpression.ToString());
     }
 

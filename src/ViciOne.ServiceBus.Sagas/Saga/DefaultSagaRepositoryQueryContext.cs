@@ -24,10 +24,10 @@ public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="results">The results.</param>
     public DefaultSagaRepositoryQueryContext(ISagaRepositoryContext<TSaga, TMessage> context, IList<Guid> results)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
-        _results = results;
+        _results = results ?? throw new ArgumentNullException(nameof(results));
     }
 
     /// <summary>Gets the count.</summary>
@@ -145,10 +145,10 @@ public class DefaultSagaRepositoryQueryContext<TSaga> :
     /// <param name="queryContext">The query context.</param>
     /// <param name="results">The results.</param>
     public DefaultSagaRepositoryQueryContext(IQuerySagaRepositoryContext<TSaga> queryContext, IList<Guid> results)
-        : base(queryContext)
+        : base(queryContext ?? throw new ArgumentNullException(nameof(queryContext)))
     {
         _queryContext = queryContext;
-        _results = results;
+        _results = results ?? throw new ArgumentNullException(nameof(results));
     }
 
     /// <summary>Gets the count.</summary>

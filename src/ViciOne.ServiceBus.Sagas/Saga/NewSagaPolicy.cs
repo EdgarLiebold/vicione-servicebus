@@ -22,7 +22,7 @@ public class NewSagaPolicy<TSaga, TMessage> :
     /// <param name="insertOnInitial">The insert on initial.</param>
     public NewSagaPolicy(ISagaFactory<TSaga, TMessage> sagaFactory, bool insertOnInitial)
     {
-        _sagaFactory = sagaFactory;
+        _sagaFactory = sagaFactory ?? throw new ArgumentNullException(nameof(sagaFactory));
         _insertOnInitial = insertOnInitial;
     }
 
@@ -35,9 +35,12 @@ public class NewSagaPolicy<TSaga, TMessage> :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (_insertOnInitial)
         {
-            instance = _sagaFactory.Create(context);
+            instance = _sagaFactory.Create(context)
+                ?? throw new InvalidOperationException("The saga factory returned no instance.");
             return true;
         }
 
@@ -47,12 +50,19 @@ public class NewSagaPolicy<TSaga, TMessage> :
 
     Task ISagaPolicy<TSaga, TMessage>.ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         throw new SagaException("The message cannot be accepted by an existing saga", typeof(TSaga), typeof(TMessage),
             context.CorrelationId ?? Guid.Empty);
     }
 
     Task ISagaPolicy<TSaga, TMessage>.MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return _sagaFactory.SendAsync(context, next);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        return _sagaFactory.SendAsync(context, next)
+            ?? throw new InvalidOperationException("The saga factory returned no send task.");
     }
 }

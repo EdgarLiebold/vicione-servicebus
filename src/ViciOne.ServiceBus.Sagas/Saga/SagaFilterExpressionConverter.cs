@@ -11,13 +11,15 @@ namespace ViciOne.ServiceBus.Saga;
 public class SagaFilterExpressionConverter<TSaga, TMessage> :
     ExpressionVisitor
 {
+    readonly object _conversionLock = new();
     readonly TMessage _message;
+    ParameterExpression? _messageParameter;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="message">The message to process.</param>
     public SagaFilterExpressionConverter(TMessage message)
     {
-        _message = message;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
     /// <summary>Converts the supplied value.</summary>
@@ -25,10 +27,24 @@ public class SagaFilterExpressionConverter<TSaga, TMessage> :
     /// <returns>The converted value.</returns>
     public Expression<Func<TSaga, bool>> Convert(Expression<Func<TSaga, TMessage, bool>> expression)
     {
-        var result = Visit(expression) as LambdaExpression
-            ?? throw new InvalidOperationException("The saga filter expression could not be converted to a lambda expression.");
+        ArgumentNullException.ThrowIfNull(expression);
 
-        return RemoveMessageParameter(result);
+        lock (_conversionLock)
+        {
+            _messageParameter = expression.Parameters[1];
+            try
+            {
+                Expression convertedBody = Visit(expression.Body)
+                    ?? throw new InvalidOperationException("The saga filter expression could not be converted to a lambda expression.");
+                LambdaExpression result = Expression.Lambda(convertedBody, expression.Parameters);
+
+                return RemoveMessageParameter(result);
+            }
+            finally
+            {
+                _messageParameter = null;
+            }
+        }
     }
 
     /// <summary>Visits member.</summary>
@@ -36,10 +52,20 @@ public class SagaFilterExpressionConverter<TSaga, TMessage> :
     /// <returns>The expression produced by the operation.</returns>
     protected override Expression VisitMember(MemberExpression m)
     {
-        if (m.Expression != null && m.Expression.NodeType == ExpressionType.Parameter && m.Expression.Type == typeof(TMessage))
+        if (ReferenceEquals(m.Expression, _messageParameter))
             return EvaluateMemberAccess(m);
 
         return base.VisitMember(m);
+    }
+
+    /// <summary>Replaces the message parameter with the message supplied to this converter.</summary>
+    /// <param name="node">The parameter being visited.</param>
+    /// <returns>The replacement constant for the message parameter, or the base visitor result.</returns>
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        return ReferenceEquals(node, _messageParameter)
+            ? Expression.Constant(_message, typeof(TMessage))
+            : base.VisitParameter(node);
     }
 
     static Expression<Func<TSaga, bool>> RemoveMessageParameter(LambdaExpression lambda)

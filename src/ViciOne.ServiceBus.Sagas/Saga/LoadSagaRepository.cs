@@ -26,8 +26,10 @@ public class LoadSagaRepository<TSaga> :
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         return _repositoryContextFactory.ExecuteAsync(
-            context => context.LoadAsync(correlationId, cancellationToken),
-            cancellationToken);
+                context => context.LoadAsync(correlationId, cancellationToken)
+                    ?? Task.FromException<TSaga?>(new InvalidOperationException("The saga load context returned a null task.")),
+                cancellationToken)
+            ?? Task.FromException<TSaga?>(new InvalidOperationException("The saga load context factory returned a null task."));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>

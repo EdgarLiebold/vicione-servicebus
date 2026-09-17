@@ -25,11 +25,11 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
     /// <param name="repositoryContext">The repository context.</param>
     /// <param name="instances">The instances.</param>
     public LoadedSagaRepositoryQueryContext(ISagaRepositoryContext<TSaga, TMessage> repositoryContext, IEnumerable<TSaga> instances)
-        : base(repositoryContext)
+        : base(repositoryContext ?? throw new ArgumentNullException(nameof(repositoryContext)))
     {
         _repositoryContext = repositoryContext;
 
-        _index = instances.ToDictionary(x => x.CorrelationId);
+        _index = (instances ?? throw new ArgumentNullException(nameof(instances))).ToDictionary(x => x.CorrelationId);
     }
 
     /// <summary>Gets the count.</summary>
@@ -59,6 +59,8 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
     /// <returns>A task that produces the load outcome.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (_index.TryGetValue(correlationId, out var instance))
             return await _repositoryContext.CreateSagaConsumeContextAsync(_repositoryContext, instance, SagaConsumeContextMode.Load)
                 .ConfigureAwait(false);
@@ -151,11 +153,11 @@ public class LoadedSagaRepositoryQueryContext<TSaga> :
     /// <param name="querySagaRepositoryContext">The query saga repository context.</param>
     /// <param name="instances">The instances.</param>
     public LoadedSagaRepositoryQueryContext(IQuerySagaRepositoryContext<TSaga> querySagaRepositoryContext, IEnumerable<TSaga> instances)
-        : base(querySagaRepositoryContext)
+        : base(querySagaRepositoryContext ?? throw new ArgumentNullException(nameof(querySagaRepositoryContext)))
     {
         _querySagaRepositoryContext = querySagaRepositoryContext;
 
-        _index = instances.ToDictionary(x => x.CorrelationId);
+        _index = (instances ?? throw new ArgumentNullException(nameof(instances))).ToDictionary(x => x.CorrelationId);
     }
 
     /// <summary>Gets the count.</summary>

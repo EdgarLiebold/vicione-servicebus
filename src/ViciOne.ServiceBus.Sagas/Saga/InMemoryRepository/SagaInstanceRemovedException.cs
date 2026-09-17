@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Saga;
 internal sealed class SagaInstanceRemovedException : InvalidOperationException
 {
     public SagaInstanceRemovedException(Type sagaType, Guid correlationId)
-        : base($"The saga instance was removed: {TypeCache.GetShortName(sagaType)}: {correlationId}")
+        : base($"The saga instance was removed: {TypeCache.GetShortName(sagaType ?? throw new ArgumentNullException(nameof(sagaType)))}: {correlationId}")
     {
     }
 }
