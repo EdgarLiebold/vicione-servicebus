@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Courier.Contracts;
 /// <summary>Records the data and endpoint required to compensate a completed activity.</summary>
 public interface ICompensateLog
 {
-    /// <summary>The tracking number for completion of the activity.</summary>
+    /// <summary>The identifier of the completed activity execution.</summary>
     Guid ExecutionId { get; }
 
     /// <summary>The compensation address where the routing slip should be sent for compensation.</summary>

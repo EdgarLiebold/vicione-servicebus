@@ -53,8 +53,12 @@ public sealed class RoutingSlipExecutor :
         {
             var address = snapshot.GetNextExecuteAddress() ?? throw new RoutingSlipException("Activity execute address was not specified.");
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
+            Task<ISendEndpoint> endpointTask = _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken)
+                ?? throw new InvalidOperationException($"The send endpoint provider returned no endpoint resolution task for '{address}'.");
+            var endpoint = await endpointTask.ConfigureAwait(false)
+                ?? throw new InvalidOperationException($"The send endpoint provider resolved no send endpoint for '{address}'.");
 
+            cancellationToken.ThrowIfCancellationRequested();
             await endpoint.SendAsync(snapshot, cancellationToken).ConfigureAwait(false);
         }
     }
