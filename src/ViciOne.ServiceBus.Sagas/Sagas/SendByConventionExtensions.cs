@@ -19,6 +19,8 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -35,6 +37,9 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -51,6 +56,9 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -67,6 +75,9 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -83,6 +94,9 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -101,6 +115,8 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -119,6 +135,9 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -137,6 +156,9 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -155,6 +177,9 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -173,6 +198,9 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -192,6 +220,8 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -211,6 +241,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -230,6 +263,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -249,6 +285,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -269,6 +308,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -290,6 +332,8 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -311,6 +355,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -332,6 +379,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -353,6 +403,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -375,6 +428,9 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -391,6 +447,10 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -407,6 +467,10 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -423,6 +487,10 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -439,6 +507,10 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -455,6 +527,10 @@ public static class SendByConventionExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -473,6 +549,10 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -491,6 +571,10 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -509,6 +593,10 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -527,6 +615,10 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -545,6 +637,10 @@ public static class SendByConventionExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -564,6 +660,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -583,6 +683,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -603,6 +707,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -623,6 +731,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -643,6 +755,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -664,6 +780,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -685,6 +805,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -707,6 +831,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -729,6 +857,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -751,6 +883,10 @@ public static class SendByConventionExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(callback);
+
         return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }

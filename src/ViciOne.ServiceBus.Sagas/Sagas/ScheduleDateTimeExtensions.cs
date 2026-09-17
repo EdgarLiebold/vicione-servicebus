@@ -22,6 +22,10 @@ public static class ScheduleDateTimeExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -40,6 +44,11 @@ public static class ScheduleDateTimeExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -58,6 +67,11 @@ public static class ScheduleDateTimeExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -76,6 +90,11 @@ public static class ScheduleDateTimeExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -94,6 +113,11 @@ public static class ScheduleDateTimeExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
@@ -114,6 +138,10 @@ public static class ScheduleDateTimeExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TData, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -134,6 +162,11 @@ public static class ScheduleDateTimeExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new ScheduleActivity<TInstance, TData, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
@@ -155,6 +188,11 @@ public static class ScheduleDateTimeExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(
             new ScheduleActivity<TInstance, TData, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -177,6 +215,11 @@ public static class ScheduleDateTimeExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(
             new ScheduleActivity<TInstance, TData, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -199,6 +242,11 @@ public static class ScheduleDateTimeExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(
             new ScheduleActivity<TInstance, TData, TMessage>(schedule, timeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -220,6 +268,10 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -241,6 +293,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -263,6 +320,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -285,6 +347,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -307,6 +374,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -330,6 +402,10 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TData, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -353,6 +429,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TData, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(message, callback)));
     }
@@ -377,6 +458,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TData, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -401,6 +487,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TData, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
@@ -425,6 +516,11 @@ public static class ScheduleDateTimeExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
         return source.Add(new FaultedScheduleActivity<TInstance, TData, TException, TMessage>(schedule, timeProvider,
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }

@@ -20,6 +20,9 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -41,6 +44,10 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -64,6 +71,10 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -87,6 +98,11 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -109,6 +125,10 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -131,6 +151,10 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -153,6 +177,10 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -176,6 +204,11 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -199,6 +232,11 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -222,6 +260,11 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -245,6 +288,9 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -268,6 +314,10 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -293,6 +343,10 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -318,6 +372,11 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -342,6 +401,10 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -367,6 +430,10 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -392,6 +459,10 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -418,6 +489,11 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -444,6 +520,11 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -470,6 +551,11 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorContext<TSaga, TData> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -494,6 +580,9 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -519,6 +608,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -545,6 +638,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -571,6 +668,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -596,6 +698,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -621,6 +727,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -646,6 +756,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -673,6 +787,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -700,6 +819,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -727,6 +851,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -754,6 +883,9 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -781,6 +913,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -809,6 +945,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -837,6 +977,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -864,6 +1009,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -891,6 +1040,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -918,6 +1071,10 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
@@ -947,6 +1104,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -976,6 +1138,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -1005,6 +1172,11 @@ public static class ScheduleTimeSpanExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+        ArgumentNullException.ThrowIfNull(delayProvider);
+
         DateTimeOffset TimeProvider(IBehaviorExceptionContext<TSaga, TData, TException> context)
         {
             return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
@@ -1025,6 +1197,9 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         return source.Add(new UnscheduleActivity<TSaga>(schedule));
     }
 
@@ -1041,6 +1216,9 @@ public static class ScheduleTimeSpanExtensions
         where TData : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         return source.Add(new FaultedUnscheduleActivity<TSaga>(schedule));
     }
 
@@ -1052,6 +1230,9 @@ public static class ScheduleTimeSpanExtensions
     public static IEventActivityBinder<TSaga> Unschedule<TSaga>(this IEventActivityBinder<TSaga> source, ISchedule<TSaga> schedule)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         return source.Add(new UnscheduleActivity<TSaga>(schedule));
     }
 
@@ -1066,6 +1247,9 @@ public static class ScheduleTimeSpanExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(schedule);
+
         return source.Add(new FaultedUnscheduleActivity<TSaga>(schedule));
     }
 }
