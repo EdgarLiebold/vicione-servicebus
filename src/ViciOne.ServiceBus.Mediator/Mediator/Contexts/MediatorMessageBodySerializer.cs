@@ -25,6 +25,7 @@ static class MediatorMessageBodySerializer
         ArgumentNullException.ThrowIfNull(serializerOptions);
         ArgumentNullException.ThrowIfNull(limits);
         ArgumentNullException.ThrowIfNull(endpointAddress);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var stream = new BoundedMessageBodyStream(limits.MaxBodyBytes, endpointAddress);
         try

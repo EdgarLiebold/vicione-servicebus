@@ -18,6 +18,8 @@ internal sealed class ScopedMediator :
     readonly IMediator _mediator;
     readonly IServiceProvider _provider;
     readonly Lazy<ClientFactory> _clientFactory;
+    readonly object _clientFactoryLock = new();
+    bool _disposed;
 
     /// <summary>Creates a scope-preserving view over the singleton mediator.</summary>
     /// <param name="mediator">The singleton mediator that owns the in-process dispatch pipelines.</param>
@@ -32,12 +34,26 @@ internal sealed class ScopedMediator :
             LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    ClientFactory ClientFactory => _clientFactory.Value;
+    ClientFactory ClientFactory
+    {
+        get
+        {
+            lock (_clientFactoryLock)
+            {
+                ObjectDisposedException.ThrowIf(_disposed, this);
+                return _clientFactory.Value;
+            }
+        }
+    }
 
     /// <inheritdoc />
     public ValueTask DisposeAsync()
     {
-        return _clientFactory.IsValueCreated ? _clientFactory.Value.DisposeAsync() : default;
+        lock (_clientFactoryLock)
+        {
+            _disposed = true;
+            return _clientFactory.IsValueCreated ? _clientFactory.Value.DisposeAsync() : default;
+        }
     }
 
     /// <inheritdoc />

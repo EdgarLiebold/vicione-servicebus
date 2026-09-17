@@ -13,11 +13,13 @@ public abstract class MediatorRequestHandler<TRequest> :
 {
     /// <summary>Passes the consumed request to <see cref="HandleAsync" />.</summary>
     /// <param name="context">The request delivery context.</param>
-    /// <returns>The task returned by <see cref="HandleAsync" /> for the current delivery.</returns>
+    /// <returns>A task that completes when the task returned by <see cref="HandleAsync" /> completes.</returns>
     public Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return HandleAsync(context.Message, context.CancellationToken);
+        return HandleAsync(context.Message, context.CancellationToken)
+            ?? Task.FromException(new InvalidOperationException(
+                $"The mediator request handler '{GetType().FullName}' returned a null task."));
     }
 
     /// <summary>Handles a mediator request that does not produce a response.</summary>
@@ -44,7 +46,10 @@ public abstract class MediatorRequestHandler<TRequest, TResponse> :
     public async Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        TResponse response = await HandleAsync(context.Message, context.CancellationToken).ConfigureAwait(false)
+        Task<TResponse> handling = HandleAsync(context.Message, context.CancellationToken)
+            ?? throw new InvalidOperationException(
+                $"The mediator request handler '{GetType().FullName}' returned a null task.");
+        TResponse response = await handling.ConfigureAwait(false)
             ?? throw new InvalidOperationException($"The mediator request handler '{GetType().FullName}' returned a null response.");
 
         await context.RespondAsync(response).ConfigureAwait(false);

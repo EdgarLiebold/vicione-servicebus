@@ -57,17 +57,28 @@ internal sealed class MediatorPublishSendEndpoint :
         public async Task SendAsync(SendContext<T> context)
         {
             ArgumentNullException.ThrowIfNull(context);
+            context.CancellationToken.ThrowIfCancellationRequested();
             var publishContext = context.GetPayload<MessageSendContext<T>>();
 
             publishContext.IsPublish = true;
 
             if (_pipe is ISendContextPipe sendContextPipe)
-                await sendContextPipe.SendAsync(context).ConfigureAwait(false);
+            {
+                Task generalConfiguration = sendContextPipe.SendAsync(context, context.CancellationToken)
+                    ?? throw new InvalidOperationException("The general publish send-context pipe returned no configuration task.");
+                await generalConfiguration.ConfigureAwait(false);
+            }
 
-            await _publishPipe.SendAsync(publishContext).ConfigureAwait(false);
+            Task publishConfiguration = _publishPipe.SendAsync(publishContext, context.CancellationToken)
+                ?? throw new InvalidOperationException("The mediator publish pipe returned no configuration task.");
+            await publishConfiguration.ConfigureAwait(false);
 
             if (_pipe != null && _pipe.IsNotEmpty())
-                await _pipe.SendAsync(context).ConfigureAwait(false);
+            {
+                Task additionalConfiguration = _pipe.SendAsync(context)
+                    ?? throw new InvalidOperationException("The additional publish send pipe returned no configuration task.");
+                await additionalConfiguration.ConfigureAwait(false);
+            }
         }
     }
 }

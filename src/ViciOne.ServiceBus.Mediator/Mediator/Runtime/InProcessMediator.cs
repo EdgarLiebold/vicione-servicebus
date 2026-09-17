@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Clients;
@@ -22,9 +24,11 @@ internal sealed class InProcessMediator :
 {
     readonly ClientFactory _clientFactory;
     readonly ConnectHandle _configuredConsumeObservers;
+    readonly object _disposeLock = new();
     readonly IReceivePipeDispatcher _dispatcher;
     readonly MediatorSendEndpoint _endpoint;
     readonly IReceivePipeDispatcher _responseDispatcher;
+    Task? _disposeTask;
 
     /// <summary>Initializes dispatch, response routing, request deadlines, and message limits.</summary>
     /// <param name="logContext">The log context inherited by mediator operations.</param>
@@ -82,7 +86,13 @@ internal sealed class InProcessMediator :
     }
 
     /// <inheritdoc />
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
+    {
+        lock (_disposeLock)
+            return new ValueTask(_disposeTask ??= DisposeCoreAsync());
+    }
+
+    async Task DisposeCoreAsync()
     {
         Task clientFactoryCleanup = _clientFactory.DisposeAsync().AsTask();
         Task observerCleanup = ((IAsyncDisposable)_configuredConsumeObservers).DisposeAsync().AsTask();
@@ -94,11 +104,26 @@ internal sealed class InProcessMediator :
         }
         catch
         {
-            if (cleanup.Exception is { InnerExceptions.Count: > 1 } failures)
-                throw new AggregateException("Mediator cleanup failed.", failures.InnerExceptions);
+            var failures = new List<Exception>();
+            AddFailures(clientFactoryCleanup, failures);
+            AddFailures(observerCleanup, failures);
+
+            if (failures.Count > 1)
+                throw new AggregateException("Mediator cleanup failed.", failures);
+            if (failures.Count == 1)
+                ExceptionDispatchInfo.Capture(failures[0]).Throw();
 
             throw;
         }
+    }
+
+    static void AddFailures(Task cleanup, ICollection<Exception> failures)
+    {
+        if (cleanup.Exception is not { } aggregate)
+            return;
+
+        foreach (Exception failure in aggregate.Flatten().InnerExceptions)
+            failures.Add(failure);
     }
 
     /// <inheritdoc />

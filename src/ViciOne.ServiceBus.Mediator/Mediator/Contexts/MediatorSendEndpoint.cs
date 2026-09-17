@@ -147,6 +147,7 @@ internal sealed class MediatorSendEndpoint :
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
+        cancellationToken.ThrowIfCancellationRequested();
 
         return SendMessageAsync(message, new MediatorPipe<T>(this), cancellationToken);
     }
@@ -159,6 +160,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(message));
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
+        cancellationToken.ThrowIfCancellationRequested();
 
         return SendMessageAsync(message, new MediatorPipe<T>(this, pipe), cancellationToken);
     }
@@ -168,6 +170,7 @@ internal sealed class MediatorSendEndpoint :
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
+        cancellationToken.ThrowIfCancellationRequested();
 
         var messageType = message.GetType();
 
@@ -181,6 +184,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(message));
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
+        cancellationToken.ThrowIfCancellationRequested();
 
         return SendEndpointDispatcher.SendAsync(this, message, messageType, cancellationToken);
     }
@@ -193,6 +197,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(message));
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
+        cancellationToken.ThrowIfCancellationRequested();
 
         return SendMessageAsync(message, new MediatorPipe<T>(this, pipe), cancellationToken);
     }
@@ -204,6 +209,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(message));
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
+        cancellationToken.ThrowIfCancellationRequested();
 
         var messageType = message.GetType();
 
@@ -219,6 +225,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(messageType));
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
+        cancellationToken.ThrowIfCancellationRequested();
 
         return SendEndpointDispatcher.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
@@ -229,6 +236,7 @@ internal sealed class MediatorSendEndpoint :
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
+        cancellationToken.ThrowIfCancellationRequested();
 
         (var message, IPipe<SendContext<T>> sendPipe) =
             await MessageInitializerCache<T>.InitializeMessageAsync(values, new MediatorPipe<T>(this), cancellationToken).ConfigureAwait(false);
@@ -244,6 +252,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(values));
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
+        cancellationToken.ThrowIfCancellationRequested();
 
         (var message, IPipe<SendContext<T>> sendPipe) =
             await MessageInitializerCache<T>.InitializeMessageAsync(values, new MediatorPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
@@ -259,6 +268,7 @@ internal sealed class MediatorSendEndpoint :
             throw new ArgumentNullException(nameof(values));
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
+        cancellationToken.ThrowIfCancellationRequested();
 
         (var message, IPipe<SendContext<T>> sendPipe) =
             await MessageInitializerCache<T>.InitializeMessageAsync(values, new MediatorPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
@@ -277,7 +287,9 @@ internal sealed class MediatorSendEndpoint :
 
         var context = new MessageSendContext<T>(message, cancellationToken);
 
-        await pipe.SendAsync(context).ConfigureAwait(false);
+        Task configuration = pipe.SendAsync(context)
+            ?? throw new InvalidOperationException("The send-context pipe returned no configuration task.");
+        await configuration.ConfigureAwait(false);
 
         return context;
     }
@@ -285,11 +297,14 @@ internal sealed class MediatorSendEndpoint :
     async Task SendMessageAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
+        cancellationToken.ThrowIfCancellationRequested();
         LogContext.SetCurrentIfNull(_logContext);
 
         var context = new MessageSendContext<T>(message, cancellationToken);
 
-        await pipe.SendAsync(context).ConfigureAwait(false);
+        Task configuration = pipe.SendAsync(context)
+            ?? throw new InvalidOperationException("The mediator send pipe returned no configuration task.");
+        await configuration.ConfigureAwait(false);
 
         if (ForwardingExpiration.TryDiscard(context))
             return;
@@ -321,7 +336,9 @@ internal sealed class MediatorSendEndpoint :
                 IsDelivered = context.IsPublish && !context.Mandatory
             };
 
-            await _dispatcher.DispatchAsync(receiveContext, NoLockReceiveContext.Instance, cancellationToken: cancellationToken).ConfigureAwait(false);
+            Task dispatch = _dispatcher.DispatchAsync(receiveContext, NoLockReceiveContext.Instance, cancellationToken: cancellationToken)
+                ?? throw new InvalidOperationException("The mediator receive dispatcher returned no dispatch task.");
+            await dispatch.ConfigureAwait(false);
 
             if ((isPublish ? _publishObservers.Count : _sendObservers.Count) > 0)
                 await observers.PostSendAsync(context).ConfigureAwait(false);
@@ -382,17 +399,28 @@ internal sealed class MediatorSendEndpoint :
         public async Task SendAsync(SendContext<TMessage> context)
         {
             ArgumentNullException.ThrowIfNull(context);
+            context.CancellationToken.ThrowIfCancellationRequested();
             context.DestinationAddress = _endpoint._destinationAddress;
 
             context.SourceAddress ??= _endpoint._sourceAddress;
 
             if (_pipe is ISendContextPipe sendContextPipe)
-                await sendContextPipe.SendAsync(context).ConfigureAwait(false);
+            {
+                Task generalConfiguration = sendContextPipe.SendAsync(context, context.CancellationToken)
+                    ?? throw new InvalidOperationException("The general send-context pipe returned no configuration task.");
+                await generalConfiguration.ConfigureAwait(false);
+            }
 
-            await _endpoint._sendPipe.SendAsync(context).ConfigureAwait(false);
+            Task endpointConfiguration = _endpoint._sendPipe.SendAsync(context, context.CancellationToken)
+                ?? throw new InvalidOperationException("The mediator endpoint send pipe returned no configuration task.");
+            await endpointConfiguration.ConfigureAwait(false);
 
             if (_pipe is { } pipe && pipe.IsNotEmpty())
-                await pipe.SendAsync(context).ConfigureAwait(false);
+            {
+                Task additionalConfiguration = pipe.SendAsync(context)
+                    ?? throw new InvalidOperationException("The additional mediator send pipe returned no configuration task.");
+                await additionalConfiguration.ConfigureAwait(false);
+            }
 
             context.ConversationId ??= NewId.NextGuid();
         }
