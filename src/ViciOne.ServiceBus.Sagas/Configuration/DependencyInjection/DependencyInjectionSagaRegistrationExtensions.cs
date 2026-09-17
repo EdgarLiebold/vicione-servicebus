@@ -18,6 +18,8 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection)
         where T : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         return RegisterSaga<T>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
@@ -29,8 +31,9 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, ISaga
     {
-        if (typeof(T).ImplementsInterface<ISagaStateMachineInstance>())
-            throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(registrar);
+        EnsureConcreteSagaType(typeof(T), nameof(T));
 
         return new SagaRegistrar<T>().Register(collection, registrar);
     }
@@ -44,6 +47,8 @@ public static class DependencyInjectionSagaRegistrationExtensions
         where T : class, ISaga
         where TDefinition : class, ISagaDefinition<T>
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         return RegisterSaga<T, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
@@ -57,8 +62,10 @@ public static class DependencyInjectionSagaRegistrationExtensions
         where T : class, ISaga
         where TDefinition : class, ISagaDefinition<T>
     {
-        if (typeof(T).ImplementsInterface<ISagaStateMachineInstance>())
-            throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(registrar);
+        EnsureConcreteSagaType(typeof(T), nameof(T));
+        EnsureSagaDefinitionType(typeof(TDefinition), typeof(T), nameof(TDefinition));
 
         return new SagaDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
     }
@@ -71,6 +78,9 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, Type sagaDefinitionType)
         where T : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(sagaDefinitionType);
+
         return RegisterSaga<T>(collection, new DependencyInjectionContainerRegistrar(collection), sagaDefinitionType);
     }
 
@@ -83,19 +93,17 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? sagaDefinitionType)
         where T : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(registrar);
+        EnsureConcreteSagaType(typeof(T), nameof(T));
+
         if (sagaDefinitionType == null)
-            return RegisterSaga<T>(collection, registrar);
+            return new SagaRegistrar<T>().Register(collection, registrar);
 
-        if (typeof(T).ImplementsInterface<ISagaStateMachineInstance>())
-            throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
+        EnsureSagaDefinitionType(sagaDefinitionType, typeof(T), nameof(sagaDefinitionType));
 
-        if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != typeof(T))
-        {
-            throw new ArgumentException($"{TypeCache.GetShortName(sagaDefinitionType)} is not a saga definition of {TypeCache<T>.ShortName}",
-                nameof(sagaDefinitionType));
-        }
-
-        var register = (ISagaRegistrar)(Activator.CreateInstance(typeof(SagaDefinitionRegistrar<,>).MakeGenericType(typeof(T), sagaDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+        var register = (ISagaRegistrar)Activator.CreateInstance(
+            typeof(SagaDefinitionRegistrar<,>).MakeGenericType(typeof(T), sagaDefinitionType))!;
 
         return register.Register(collection, registrar);
     }
@@ -109,25 +117,53 @@ public static class DependencyInjectionSagaRegistrationExtensions
     public static ISagaRegistration RegisterSaga(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
         Type? sagaDefinitionType = null)
     {
-        if (sagaType.ImplementsInterface<ISagaStateMachineInstance>())
-            throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(registrar);
+        ArgumentNullException.ThrowIfNull(sagaType);
+        EnsureConcreteSagaType(sagaType, nameof(sagaType));
 
         if (sagaDefinitionType != null)
         {
-            if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != sagaType)
-            {
-                throw new ArgumentException($"{TypeCache.GetShortName(sagaDefinitionType)} is not a saga definition of {TypeCache.GetShortName(sagaType)}",
-                    nameof(sagaDefinitionType));
-            }
+            EnsureSagaDefinitionType(sagaDefinitionType, sagaType, nameof(sagaDefinitionType));
 
-            var sagaRegistrar = (ISagaRegistrar)(Activator.CreateInstance(typeof(SagaDefinitionRegistrar<,>).MakeGenericType(sagaType, sagaDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+            var sagaRegistrar = (ISagaRegistrar)Activator.CreateInstance(
+                typeof(SagaDefinitionRegistrar<,>).MakeGenericType(sagaType, sagaDefinitionType))!;
 
             return sagaRegistrar.Register(collection, registrar);
         }
 
-        var register = (ISagaRegistrar)(Activator.CreateInstance(typeof(SagaRegistrar<>).MakeGenericType(sagaType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+        var register = (ISagaRegistrar)Activator.CreateInstance(typeof(SagaRegistrar<>).MakeGenericType(sagaType))!;
 
         return register.Register(collection, registrar);
+    }
+
+    static void EnsureConcreteSagaType(Type sagaType, string parameterName)
+    {
+        if (!sagaType.IsClass || sagaType.IsAbstract || sagaType.ContainsGenericParameters || !typeof(ISaga).IsAssignableFrom(sagaType))
+        {
+            throw new ArgumentException(
+                $"{TypeCache.GetShortName(sagaType)} is not a concrete, closed saga implementation",
+                parameterName);
+        }
+
+        if (sagaType.ImplementsInterface<ISagaStateMachineInstance>())
+        {
+            throw new ArgumentException(
+                $"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache.GetShortName(sagaType)}",
+                parameterName);
+        }
+    }
+
+    static void EnsureSagaDefinitionType(Type sagaDefinitionType, Type sagaType, string parameterName)
+    {
+        if (!sagaDefinitionType.IsClass || sagaDefinitionType.IsAbstract || sagaDefinitionType.ContainsGenericParameters
+            || !sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types)
+            || types[0] != sagaType)
+        {
+            throw new ArgumentException(
+                $"{TypeCache.GetShortName(sagaDefinitionType)} is not a concrete, closed saga definition of {TypeCache.GetShortName(sagaType)}",
+                parameterName);
+        }
     }
 
 
@@ -143,8 +179,16 @@ public static class DependencyInjectionSagaRegistrationExtensions
     {
         public virtual ISagaRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
+            ArgumentNullException.ThrowIfNull(collection);
+            ArgumentNullException.ThrowIfNull(registrar);
+
+            ISagaRegistration registration = registrar.GetOrAddRegistration<ISagaRegistration>(
+                typeof(TSaga),
+                _ => new SagaRegistration<TSaga>(registrar));
+
             collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, SagaConsumerKind>());
-            return registrar.GetOrAddRegistration<ISagaRegistration>(typeof(TSaga), _ => new SagaRegistration<TSaga>(registrar));
+
+            return registration;
         }
     }
 
@@ -156,11 +200,9 @@ public static class DependencyInjectionSagaRegistrationExtensions
     {
         public override ISagaRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
-            var registration = base.Register(collection, registrar);
-
             registrar.AddDefinition<ISagaDefinition<TSaga>, TDefinition>();
 
-            return registration;
+            return base.Register(collection, registrar);
         }
     }
 }

@@ -1,62 +1,90 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for registration service collection.</summary>
+/// <summary>Registers the dependency-injection services used by saga repository providers.</summary>
 public static class RegistrationServiceCollectionExtensions
 {
-    /// <summary>Registers saga repository.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-    /// <typeparam name="TConsumeContextFactory">The consume context factory type.</typeparam>
-    /// <typeparam name="TRepositoryContextFactory">The repository context factory type.</typeparam>
-    /// <param name="collection">The collection.</param>
+    static readonly Type[] SagaRepositoryServiceDefinitions =
+    [
+        typeof(ISagaConsumeContextFactory<,>),
+        typeof(ISagaRepositoryContextFactory<>),
+        typeof(IQuerySagaRepositoryContextFactory<>),
+        typeof(ILoadSagaRepositoryContextFactory<>),
+        typeof(IQuerySagaRepository<>),
+        typeof(ILoadSagaRepository<>),
+        typeof(ISagaRepository<>),
+    ];
+
+    /// <summary>Adds the scoped consume-context and repository-context factories for a saga repository provider.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the repository.</typeparam>
+    /// <typeparam name="TContext">The provider-specific persistence context.</typeparam>
+    /// <typeparam name="TConsumeContextFactory">The factory that creates saga consume contexts.</typeparam>
+    /// <typeparam name="TRepositoryContextFactory">The factory that executes saga repository operations.</typeparam>
+    /// <param name="collection">The dependency-injection service collection.</param>
+    /// <remarks>Each call appends one ordered descriptor pair and does not replace an earlier provider registration.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="collection" /> is <see langword="null" />.</exception>
     public static void RegisterSagaRepository<TSaga, TContext, TConsumeContextFactory, TRepositoryContextFactory>(this IServiceCollection collection)
         where TSaga : class, ISaga
         where TContext : class
         where TConsumeContextFactory : class, ISagaConsumeContextFactory<TContext, TSaga>
         where TRepositoryContextFactory : class, ISagaRepositoryContextFactory<TSaga>
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         collection.AddScoped<ISagaConsumeContextFactory<TContext, TSaga>, TConsumeContextFactory>();
         collection.AddScoped<ISagaRepositoryContextFactory<TSaga>, TRepositoryContextFactory>();
     }
 
-    /// <summary>Registers query saga repository.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-    /// <typeparam name="TQueryRepositoryContextFactory">The query repository context factory type.</typeparam>
-    /// <param name="collection">The collection.</param>
+    /// <summary>Adds the singleton query facade and scoped query-context factory for a saga repository provider.</summary>
+    /// <typeparam name="TSaga">The saga state queried by the repository.</typeparam>
+    /// <typeparam name="TQueryRepositoryContextFactory">The factory that executes saga queries.</typeparam>
+    /// <param name="collection">The dependency-injection service collection.</param>
+    /// <remarks>Each call appends one ordered descriptor pair and does not replace an earlier provider registration.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="collection" /> is <see langword="null" />.</exception>
     public static void RegisterQuerySagaRepository<TSaga, TQueryRepositoryContextFactory>(this IServiceCollection collection)
         where TSaga : class, ISaga
         where TQueryRepositoryContextFactory : class, IQuerySagaRepositoryContextFactory<TSaga>
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         collection.AddSingleton<IQuerySagaRepository<TSaga>, DependencyInjectionQuerySagaRepository<TSaga>>();
         collection.AddScoped<IQuerySagaRepositoryContextFactory<TSaga>, TQueryRepositoryContextFactory>();
     }
 
-    /// <summary>Registers load saga repository.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-    /// <typeparam name="TLoadRepositoryContextFactory">The load repository context factory type.</typeparam>
-    /// <param name="collection">The collection.</param>
+    /// <summary>Adds the singleton load facade and scoped load-context factory for a saga repository provider.</summary>
+    /// <typeparam name="TSaga">The saga state loaded by the repository.</typeparam>
+    /// <typeparam name="TLoadRepositoryContextFactory">The factory that executes saga loads.</typeparam>
+    /// <param name="collection">The dependency-injection service collection.</param>
+    /// <remarks>Each call appends one ordered descriptor pair and does not replace an earlier provider registration.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="collection" /> is <see langword="null" />.</exception>
     public static void RegisterLoadSagaRepository<TSaga, TLoadRepositoryContextFactory>(this IServiceCollection collection)
         where TSaga : class, ISaga
         where TLoadRepositoryContextFactory : class, ILoadSagaRepositoryContextFactory<TSaga>
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         collection.AddSingleton<ILoadSagaRepository<TSaga>, DependencyInjectionLoadSagaRepository<TSaga>>();
         collection.AddScoped<ILoadSagaRepositoryContextFactory<TSaga>, TLoadRepositoryContextFactory>();
     }
 
     internal static void RemoveSagaRepositories(this IServiceCollection collection)
     {
-        collection.RemoveAll(typeof(ISagaConsumeContextFactory<,>));
-        collection.RemoveAll(typeof(ISagaRepositoryContextFactory<>));
-        collection.RemoveAll(typeof(IQuerySagaRepositoryContextFactory<>));
-        collection.RemoveAll(typeof(ILoadSagaRepositoryContextFactory<>));
+        ArgumentNullException.ThrowIfNull(collection);
 
-        collection.RemoveAll(typeof(IQuerySagaRepository<>));
-        collection.RemoveAll(typeof(ILoadSagaRepository<>));
-        collection.RemoveAll(typeof(ISagaRepository<>));
+        ServiceDescriptor[] descriptors = collection
+            .Where(descriptor => IsSagaRepositoryService(descriptor.ServiceType))
+            .ToArray();
+
+        foreach (ServiceDescriptor descriptor in descriptors)
+            collection.Remove(descriptor);
+    }
+
+    static bool IsSagaRepositoryService(Type serviceType)
+    {
+        Type candidate = serviceType.IsGenericType ? serviceType.GetGenericTypeDefinition() : serviceType;
+        return SagaRepositoryServiceDefinitions.Contains(candidate);
     }
 }
