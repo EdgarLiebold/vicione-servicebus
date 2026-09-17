@@ -1,7 +1,9 @@
 using System.Reflection;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Courier;
@@ -111,6 +113,68 @@ public sealed class CourierActivityContextApiContractTests
         Assert.Equal("context", exception.ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-CONTEXT", "scope-payloads-preserve-courier-state")]
+    public void CourierContextScope_ExposesScopedPayloadsAndPreservesExactCourierState()
+    {
+        ICourierContext source = DispatchProxy.Create<ICourierContext, RecordingCourierContextProxy>();
+        var recording = (RecordingCourierContextProxy)(object)source;
+        recording.Configure();
+        var payload = new ScopedPayload("north-warehouse");
+        var scope = new TestCourierContextScope(source, payload);
+        ActivityContext activity = scope;
+        var payloadFactoryInvoked = false;
+
+        Assert.True(scope.HasPayloadType(typeof(ScopedPayload)));
+        Assert.True(scope.TryGetPayload(out ScopedPayload? selectedPayload));
+        Assert.Same(payload, selectedPayload);
+        Assert.Same(payload, scope.GetOrAddPayload(() =>
+        {
+            payloadFactoryInvoked = true;
+            return new ScopedPayload("unexpected");
+        }));
+        Assert.False(payloadFactoryInvoked);
+
+        Assert.Equal(recording.Timestamp, activity.Timestamp);
+        Assert.Equal(recording.Elapsed, activity.Elapsed);
+        Assert.Equal(recording.TrackingNumber, activity.TrackingNumber);
+        Assert.Equal(recording.ExecutionId, activity.ExecutionId);
+        Assert.Equal(recording.ActivityName, activity.ActivityName);
+        Assert.Same(recording.Variables, activity.Variables);
+        Assert.Same(recording.Message, scope.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-COURIER-CONTEXT",
+        "base-consumed-notification-forwards-context-duration-consumer-and-token")]
+    public void BaseCourierContext_NotifyActivityConsumedAsync_ForwardsEveryArgumentAndReturnedTask()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2044, 3, 4, 5, 6, 7, TimeSpan.Zero));
+        var builder = new RoutingSlipBuilder(Guid.Parse("e74375f2-6982-4297-8ec7-20520bf4410c"), clock);
+        ConsumeContext<IRoutingSlip> source = InMemoryOutboxTestContextFactory.Create(
+            builder.Build(),
+            TestContext.Current.CancellationToken);
+        source.SetTimeProvider(clock);
+        var recording = new RecordingNotificationConsumeContext(source);
+        var context = new GuardProbeCourierContext(recording);
+        ActivityContext activity = context;
+        TimeSpan duration = TimeSpan.FromMilliseconds(417);
+        using var cancellation = new CancellationTokenSource();
+
+        Task returnedTask = activity.NotifyActivityConsumedAsync(
+            duration,
+            "direct-base-activity",
+            cancellation.Token);
+
+        Assert.Same(recording.NotificationTask, returnedTask);
+        BaseNotificationCall call = Assert.Single(recording.NotificationCalls);
+        Assert.Same(context, call.MessageContext);
+        Assert.Equal(duration, call.Duration);
+        Assert.Equal("direct-base-activity", call.ConsumerType);
+        Assert.Equal(cancellation.Token, call.CancellationToken);
+    }
+
     private static void AssertCovariantReferenceParameters(Type genericType, int expectedCount)
     {
         Type[] parameters = genericType.GetGenericArguments();
@@ -156,17 +220,44 @@ public sealed class CourierActivityContextApiContractTests
 
     private sealed class TestCourierContextProxy(ICourierContext context) : CourierContextProxy(context);
 
-    private sealed class TestCourierContextScope(ICourierContext context) : CourierContextScope(context);
+    private sealed class TestCourierContextScope(ICourierContext context, params object[] payloads) :
+        CourierContextScope(context, payloads);
 
     private sealed record TestArguments;
 
     private sealed record TestLog;
+
+    private sealed record ScopedPayload(string Value);
 
     private sealed class TestActivity
     {
     }
 
     private sealed record NotificationCall(TimeSpan Duration, string ConsumerType, CancellationToken CancellationToken);
+
+    private sealed record BaseNotificationCall(
+        object MessageContext,
+        TimeSpan Duration,
+        string ConsumerType,
+        CancellationToken CancellationToken);
+
+    private sealed class RecordingNotificationConsumeContext(ConsumeContext<IRoutingSlip> context) :
+        ConsumeContextProxy<IRoutingSlip>(context)
+    {
+        public Task NotificationTask { get; } = Task.FromResult(new object());
+
+        public List<BaseNotificationCall> NotificationCalls { get; } = [];
+
+        public override Task NotifyConsumedAsync<T>(
+            ConsumeContext<T> context,
+            TimeSpan duration,
+            string consumerType,
+            CancellationToken cancellationToken = default)
+        {
+            NotificationCalls.Add(new BaseNotificationCall(context, duration, consumerType, cancellationToken));
+            return NotificationTask;
+        }
+    }
 
     private class UnexpectedInvocationProxy : DispatchProxy
     {

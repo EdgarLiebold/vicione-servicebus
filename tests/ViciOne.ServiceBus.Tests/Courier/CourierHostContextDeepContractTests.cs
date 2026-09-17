@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Courier;
@@ -287,6 +288,46 @@ public sealed class CourierHostContextDeepContractTests
         Assert.NotNull(compensationFailure.InnerException);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER-ISOLATION", "sanitized-context-and-message-null-admission")]
+    public void SanitizedRoutingSlip_RejectsMissingContextAndMessage()
+    {
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new SanitizedRoutingSlip(null!)).ParamName);
+
+        NullMessageConsumeContext context = DispatchProxy.Create<NullMessageConsumeContext, NullMessageConsumeContextProxy>();
+        ((NullMessageConsumeContextProxy)(object)context).SerializerContext = CreateSerializerContext(CreateRoutingSlip());
+
+        SerializationException failure = Assert.Throws<SerializationException>(() => new SanitizedRoutingSlip(context));
+
+        Assert.Contains("missing", failure.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER-ISOLATION", "sanitized-identity-preservation-and-null-collection-normalization")]
+    public void SanitizedRoutingSlip_PreservesIdentityAndNormalizesNullCollections()
+    {
+        MutableRoutingSlip source = CreateRoutingSlip();
+        Guid trackingNumber = source.TrackingNumber;
+        DateTimeOffset createTimestamp = source.CreateTimestamp;
+        source.Itinerary = null!;
+        source.ActivityLogs = null!;
+        source.CompensateLogs = null!;
+        source.Variables = null!;
+        source.ActivityExceptions = null!;
+        source.Subscriptions = null!;
+
+        var sanitized = new SanitizedRoutingSlip(CreateConsumeContext(source));
+
+        Assert.Equal(trackingNumber, sanitized.TrackingNumber);
+        Assert.Equal(createTimestamp, sanitized.CreateTimestamp);
+        Assert.Empty(sanitized.Itinerary);
+        Assert.Empty(sanitized.ActivityLogs);
+        Assert.Empty(sanitized.CompensateLogs);
+        Assert.Empty(sanitized.Variables);
+        Assert.Empty(sanitized.ActivityExceptions);
+        Assert.Empty(sanitized.Subscriptions);
+    }
+
     private static MutableRoutingSlip CreateRoutingSlip(
         IReadOnlyList<IActivity>? itinerary = null,
         IReadOnlyList<IActivityLog>? activityLogs = null,
@@ -373,6 +414,21 @@ public sealed class CourierHostContextDeepContractTests
     private sealed class NumericArguments
     {
         public int Count { get; set; }
+    }
+
+    private interface NullMessageConsumeContext : ConsumeContext<IRoutingSlip>, ConsumeContext;
+
+    private class NullMessageConsumeContextProxy : DispatchProxy
+    {
+        public SerializerContext SerializerContext { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.Name switch
+            {
+                "get_Message" => null,
+                "get_SerializerContext" => SerializerContext,
+                _ => throw new InvalidOperationException($"Unexpected null-message context member: {targetMethod?.Name}"),
+            };
     }
 
     private sealed class MutableRoutingSlip : IRoutingSlip

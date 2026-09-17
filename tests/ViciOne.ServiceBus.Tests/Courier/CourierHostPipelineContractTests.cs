@@ -120,6 +120,31 @@ public sealed class CourierHostPipelineContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-ACTIVITIES", "execute-host-preserves-the-recorded-failure-result")]
+    public async Task ExecuteHost_PreservesTheMatchingFailureResultBeforeContinuingAsync()
+    {
+        var trace = new List<string>();
+        HostContextObservation observation = CreateExecuteObservation(trace, TestContext.Current.CancellationToken);
+        var expected = new InvalidOperationException("activity execution failed");
+        var result = new RecordingExecutionResult(trace, activityFailure: expected);
+        var host = new ExecuteActivityHost<TestActivity, ActivityArguments>(
+            new DelegatePipe<ExecuteContext<ActivityArguments>>(context =>
+            {
+                trace.Add("pipe");
+                context.Result = result;
+                return Task.FromException(expected);
+            }),
+            null);
+
+        await host.SendAsync(observation.Context, Next(trace));
+
+        Assert.Equal(["pipe", "evaluate", "consumed", "next"], trace);
+        Assert.Equal(1, result.EvaluationCount);
+        Assert.Null(observation.Fault);
+        Assert.Empty(observation.Outgoing.Messages);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-ACTIVITIES", "compensate-host-preserves-the-recorded-failure-result")]
     public async Task CompensateHost_PreservesTheMatchingFailureResultBeforeContinuingAsync()
     {
@@ -141,6 +166,86 @@ public sealed class CourierHostPipelineContractTests
         Assert.Equal(1, result.EvaluationCount);
         Assert.Null(observation.Fault);
         Assert.Empty(observation.Outgoing.Messages);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-COURIER-ACTIVITIES", "execute-host-replaces-nonmatching-recorded-results")]
+    public async Task ExecuteHost_ReplacesNonFaultedAndDifferentlyFaultedRecordedResultsAsync(bool differentlyFaulted)
+    {
+        var trace = new List<string>();
+        HostContextObservation observation = CreateExecuteObservation(trace, TestContext.Current.CancellationToken);
+        var expected = new InvalidOperationException("activity execution failed");
+        Exception? recordedFailure = differentlyFaulted
+            ? new InvalidOperationException("different activity execution failure")
+            : null;
+        var recordedResult = new RecordingExecutionResult(trace, activityFailure: recordedFailure);
+        var host = new ExecuteActivityHost<TestActivity, ActivityArguments>(
+            new DelegatePipe<ExecuteContext<ActivityArguments>>(context =>
+            {
+                trace.Add("pipe");
+                context.Result = recordedResult;
+                return Task.FromException(expected);
+            }),
+            null);
+
+        await host.SendAsync(observation.Context, Next(trace));
+
+        Assert.Equal(["pipe", "consumed", "next"], trace);
+        Assert.Equal(0, recordedResult.EvaluationCount);
+        Assert.Null(observation.Fault);
+        Assert.Collection(
+            observation.Outgoing.Messages,
+            message =>
+            {
+                var faulted = Assert.IsAssignableFrom<IRoutingSlipActivityFaulted>(message);
+                Assert.Equal(TypeCache<InvalidOperationException>.ShortName, faulted.ExceptionInfo.ExceptionType);
+                Assert.Equal(expected.Message, faulted.ExceptionInfo.Message);
+            },
+            message => Assert.IsAssignableFrom<IRoutingSlipFaulted>(message));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-COURIER-ACTIVITIES", "compensate-host-replaces-nonmatching-recorded-results")]
+    public async Task CompensateHost_ReplacesNonFailedAndDifferentlyFailedRecordedResultsAsync(bool differentlyFailed)
+    {
+        var trace = new List<string>();
+        HostContextObservation observation = CreateCompensateObservation(trace, TestContext.Current.CancellationToken);
+        var expected = new InvalidOperationException("activity compensation failed");
+        Exception? recordedFailure = differentlyFailed
+            ? new InvalidOperationException("different activity compensation failure")
+            : null;
+        var recordedResult = new RecordingCompensationResult(trace, activityFailure: recordedFailure);
+        var host = new CompensateActivityHost<TestActivity, ActivityLog>(
+            new DelegatePipe<CompensateContext<ActivityLog>>(context =>
+            {
+                trace.Add("pipe");
+                context.Result = recordedResult;
+                return Task.FromException(expected);
+            }));
+
+        await host.SendAsync(observation.Context, Next(trace));
+
+        Assert.Equal(["pipe", "consumed", "next"], trace);
+        Assert.Equal(0, recordedResult.EvaluationCount);
+        Assert.Null(observation.Fault);
+        Assert.Collection(
+            observation.Outgoing.Messages,
+            message =>
+            {
+                var failed = Assert.IsAssignableFrom<IRoutingSlipActivityCompensationFailed>(message);
+                Assert.Equal(TypeCache<InvalidOperationException>.ShortName, failed.ExceptionInfo.ExceptionType);
+                Assert.Equal(expected.Message, failed.ExceptionInfo.Message);
+            },
+            message =>
+            {
+                var failed = Assert.IsAssignableFrom<IRoutingSlipCompensationFailed>(message);
+                Assert.Equal(TypeCache<InvalidOperationException>.ShortName, failed.ExceptionInfo.ExceptionType);
+                Assert.Equal(expected.Message, failed.ExceptionInfo.Message);
+            });
     }
 
     [Theory]
@@ -256,6 +361,47 @@ public sealed class CourierHostPipelineContractTests
         Assert.Same(deliveryCancellation, compensateObservation.Fault);
         Assert.Equal(["faulted"], compensateTrace);
         Assert.Empty(compensateObservation.Outgoing.Messages);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-CANCELLATION", "execute-host-preserves-delivery-cancellation")]
+    public async Task ExecuteHost_PreservesDeliveryTokenCancellationAndSkipsTheNextPipeAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        var trace = new List<string>();
+        HostContextObservation observation = CreateExecuteObservation(trace, cancellation.Token);
+        var expected = new OperationCanceledException("delivery canceled", cancellation.Token);
+        var host = new ExecuteActivityHost<TestActivity, ActivityArguments>(
+            new DelegatePipe<ExecuteContext<ActivityArguments>>(_ => Task.FromException(expected)),
+            null);
+
+        OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            host.SendAsync(observation.Context, Next(trace)));
+
+        Assert.Same(expected, actual);
+        Assert.Same(expected, observation.Fault);
+        Assert.Equal(["faulted"], trace);
+        Assert.Empty(observation.Outgoing.Messages);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-CANCELLATION", "compensate-host-converts-activity-owned-cancellation")]
+    public async Task CompensateHost_ConvertsActivityOwnedCancellationAndSkipsTheNextPipeAsync()
+    {
+        var trace = new List<string>();
+        HostContextObservation observation = CreateCompensateObservation(trace, TestContext.Current.CancellationToken);
+        var expected = new OperationCanceledException("activity compensation canceled");
+        var host = new CompensateActivityHost<TestActivity, ActivityLog>(
+            new DelegatePipe<CompensateContext<ActivityLog>>(_ => Task.FromException(expected)));
+
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(() =>
+            host.SendAsync(observation.Context, Next(trace)));
+
+        Assert.Same(expected, actual.InnerException);
+        Assert.Same(actual, observation.Fault);
+        Assert.Equal(["faulted"], trace);
+        Assert.Empty(observation.Outgoing.Messages);
     }
 
     [Fact]
