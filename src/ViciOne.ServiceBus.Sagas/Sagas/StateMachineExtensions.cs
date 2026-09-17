@@ -18,11 +18,15 @@ public static class StateMachineExtensions
     public static Task TransitionToStateAsync<TSaga>(this IBehaviorContext<TSaga> context, IState state, CancellationToken cancellationToken = default)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(state);
+
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
-        IStateAccessor<TSaga> accessor = context.StateMachine.Accessor;
-        IState<TSaga> toState = context.StateMachine.GetState(state.Name);
+        IStateMachine<TSaga> machine = context.StateMachine;
+        IStateAccessor<TSaga> accessor = machine.Accessor;
+        IState<TSaga> toState = machine.GetState(state.Name);
 
         IStateMachineActivity<TSaga> activity = new TransitionActivity<TSaga>(toState, accessor);
         IBehavior<TSaga> behavior = new LastBehavior<TSaga>(activity);

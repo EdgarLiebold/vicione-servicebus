@@ -14,6 +14,9 @@ public static class TransitionExtensions
     public static IEventActivityBinder<TSaga> TransitionTo<TSaga>(this IEventActivityBinder<TSaga> source, IState toState)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(toState);
+
         IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -32,6 +35,9 @@ public static class TransitionExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(toState);
+
         IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -51,6 +57,9 @@ public static class TransitionExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(toState);
+
         IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -71,6 +80,9 @@ public static class TransitionExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(toState);
+
         IState<TSaga> state = source.StateMachine.GetState(toState.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -89,6 +101,8 @@ public static class TransitionExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -103,6 +117,8 @@ public static class TransitionExtensions
     public static IEventActivityBinder<TSaga> Finalize<TSaga>(this IEventActivityBinder<TSaga> source)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -122,6 +138,8 @@ public static class TransitionExtensions
         where TException : Exception
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);
@@ -140,6 +158,8 @@ public static class TransitionExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         IState<TSaga> state = source.StateMachine.GetState(source.StateMachine.Final.Name);
 
         var activity = new TransitionActivity<TSaga>(state, source.StateMachine.Accessor);

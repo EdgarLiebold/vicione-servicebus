@@ -15,6 +15,9 @@ public static class ThenExtensions
     public static IEventActivityBinder<TSaga> Then<TSaga>(this IEventActivityBinder<TSaga> binder, Action<IBehaviorContext<TSaga>> action)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(action);
+
         return binder.Add(new ActionActivity<TSaga>(action));
     }
 
@@ -29,6 +32,9 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(action);
+
         return binder.Add(new FaultedActionActivity<TSaga, TException>(action));
     }
 
@@ -43,6 +49,9 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(asyncAction);
+
         return binder.Add(new AsyncFaultedActionActivity<TSaga, TException>(asyncAction));
     }
 
@@ -54,6 +63,9 @@ public static class ThenExtensions
     public static IEventActivityBinder<TSaga> ThenAwaited<TSaga>(this IEventActivityBinder<TSaga> binder, Func<IBehaviorContext<TSaga>, Task> action)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(action);
+
         return binder.Add(new AsyncActivity<TSaga>(action));
     }
 
@@ -68,6 +80,7 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
         ArgumentNullException.ThrowIfNull(action);
 
         return binder.Add(new ActionActivity<TSaga, TData>(action));
@@ -87,6 +100,9 @@ public static class ThenExtensions
         where TException : Exception
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(action);
+
         return binder.Add(new FaultedActionActivity<TSaga, TData, TException>(action));
     }
 
@@ -104,6 +120,9 @@ public static class ThenExtensions
         where TException : Exception
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(asyncAction);
+
         return binder.Add(new AsyncFaultedActionActivity<TSaga, TData, TException>(asyncAction));
     }
 
@@ -118,6 +137,7 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
         ArgumentNullException.ThrowIfNull(action);
 
         return binder.Add(new AsyncActivity<TSaga, TData>(action));
@@ -132,6 +152,9 @@ public static class ThenExtensions
         Func<IBehaviorContext<TSaga>, IStateMachineActivity<TSaga>> activityFactory)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+
         var activity = new FactoryActivity<TSaga>(activityFactory);
         return binder.Add(activity);
     }
@@ -144,6 +167,9 @@ public static class ThenExtensions
     public static IEventActivityBinder<TSaga> Execute<TSaga>(this IEventActivityBinder<TSaga> binder, IStateMachineActivity<TSaga> activity)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activity);
+
         return binder.Add(activity);
     }
 
@@ -156,6 +182,9 @@ public static class ThenExtensions
         Func<IBehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> activityFactory)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+
         var activity = new AsyncFactoryActivity<TSaga>(activityFactory);
         return binder.Add(activity);
     }
@@ -171,6 +200,9 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+
         var activity = new FactoryActivity<TSaga, TData>(activityFactory);
         return binder.Add(activity);
     }
@@ -186,6 +218,9 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+
         var activity = new AsyncFactoryActivity<TSaga, TData>(activityFactory);
         return binder.Add(activity);
     }
@@ -201,6 +236,9 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+
         var activity = new FactoryActivity<TSaga, TData>(context =>
         {
             IStateMachineActivity<TSaga> newActivity = activityFactory(context);
@@ -222,6 +260,9 @@ public static class ThenExtensions
         where TSaga : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+
         var activity = new AsyncFactoryActivity<TSaga, TData>(async context =>
         {
             IStateMachineActivity<TSaga> newActivity = await activityFactory(context).ConfigureAwait(false);

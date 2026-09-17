@@ -15,6 +15,9 @@ public static class StateAccessorExtensions
     public static Task<IState<TSaga>?> GetStateAsync<TSaga>(this IStateAccessor<TSaga> accessor, IBehaviorContext<TSaga> context, CancellationToken cancellationToken = default)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(accessor);
+        ArgumentNullException.ThrowIfNull(context);
+
         return accessor.GetAsync(context, cancellationToken: cancellationToken);
     }
 
@@ -28,6 +31,9 @@ public static class StateAccessorExtensions
     public static Task<IState<TSaga>?> GetStateAsync<TSaga>(this IStateMachine<TSaga> accessor, IBehaviorContext<TSaga> context, CancellationToken cancellationToken = default)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(accessor);
+        ArgumentNullException.ThrowIfNull(context);
+
         return accessor.Accessor.GetAsync(context, cancellationToken: cancellationToken);
     }
 }

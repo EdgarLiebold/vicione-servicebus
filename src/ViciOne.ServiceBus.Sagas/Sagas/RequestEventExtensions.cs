@@ -1,3 +1,4 @@
+using System;
 using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Sagas;
@@ -17,6 +18,8 @@ public static class RequestEventExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new RequestStartedActivity<TInstance, TData>());
     }
 
@@ -32,6 +35,8 @@ public static class RequestEventExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         return source.Add(new RequestCompletedActivity<TInstance, TData>());
     }
 
@@ -51,6 +56,9 @@ public static class RequestEventExtensions
         where TData : class
         where TResponse : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         return source.Add(new RequestCompletedActivity<TInstance, TData, TResponse>(messageFactory));
     }
 
@@ -67,6 +75,9 @@ public static class RequestEventExtensions
         where TData : class
         where TRequest : class
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(requestEvent);
+
         return source.Add(new RequestFaultedActivity<TInstance, TData, TRequest>());
     }
 }

@@ -19,6 +19,10 @@ public static class SagaStateMachineExtensions
         params IState[] states)
         where TInstance : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(expression);
+        ValidateStates(states);
+
         Expression<Func<TInstance, bool>> stateExpression = machine.Accessor.GetStateExpression(states);
 
         return new SagaQuery<TInstance>(StateExpressionVisitor<TInstance>.Combine(expression, stateExpression));
@@ -34,8 +38,19 @@ public static class SagaStateMachineExtensions
         params IState[] states)
         where TInstance : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(expression);
+        ValidateStates(states);
+
         Expression<Func<TInstance, bool>> stateExpression = machine.Accessor.GetStateExpression(states);
 
         return StateExpressionVisitor<TInstance>.Combine(expression, stateExpression).CompileFast();
+    }
+
+    static void ValidateStates(IState[] states)
+    {
+        ArgumentNullException.ThrowIfNull(states);
+        if (Array.Exists(states, static state => state is null))
+            throw new ArgumentException("States must not contain null values.", nameof(states));
     }
 }

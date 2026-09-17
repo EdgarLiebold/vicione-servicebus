@@ -17,6 +17,9 @@ public static class ContainerActivityExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var selector = new StateMachineActivitySelector<TInstance, TData>(binder);
 
         return configure(selector);
@@ -31,6 +34,9 @@ public static class ContainerActivityExtensions
         Func<IStateMachineActivitySelector<TInstance>, IEventActivityBinder<TInstance>> configure)
         where TInstance : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var selector = new StateMachineActivitySelector<TInstance>(binder);
 
         return configure(selector);
@@ -47,6 +53,9 @@ public static class ContainerActivityExtensions
         where TInstance : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var selector = new StateMachineFaultedActivitySelector<TInstance, TException>(binder);
 
         return configure(selector);
@@ -66,6 +75,9 @@ public static class ContainerActivityExtensions
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(binder);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var selector = new StateMachineFaultedActivitySelector<TInstance, TMessage, TException>(binder);
 
         return configure(selector);
