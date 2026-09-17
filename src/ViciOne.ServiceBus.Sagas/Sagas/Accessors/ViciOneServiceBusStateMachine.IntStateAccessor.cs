@@ -23,6 +23,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public IntStateAccessor(Expression<Func<TInstance, int>> currentStateExpression, StateAccessorIndex index, IStateObserver<TInstance> observer)
         {
+            ArgumentNullException.ThrowIfNull(currentStateExpression);
+            ArgumentNullException.ThrowIfNull(index);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _index = index;
             _observer = observer;
 
@@ -34,6 +38,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         Task<IState<TInstance>?> IStateAccessor<TInstance>.GetAsync(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             var stateIndex = _read.Get(context.Saga);
 
             return Task.FromResult(_index[stateIndex]);
@@ -41,8 +47,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         Task IStateAccessor<TInstance>.SetAsync(IBehaviorContext<TInstance> context, IState<TInstance> state, CancellationToken cancellationToken)
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state));
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(state);
 
             var stateIndex = _index[state.Name];
 
@@ -55,13 +61,17 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             IState<TInstance>? previousState = _index[previousIndex];
 
-            return _observer.StateChangedAsync(context, state, previousState);
+            return _observer.StateChangedAsync(context, state, previousState)
+                ?? throw new InvalidOperationException("The state observer returned no notification task.");
         }
 
         public Expression<Func<TInstance, bool>> GetStateExpression(params IState[] states)
         {
-            if (states == null || states.Length == 0)
+            ArgumentNullException.ThrowIfNull(states);
+            if (states.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(states), "One or more states must be specified");
+            if (states.Any(state => state is null))
+                throw new ArgumentException("States must not contain null values.", nameof(states));
 
             var parameterExpression = Expression.Parameter(typeof(TInstance), "instance");
 
@@ -77,6 +87,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             context.Add("currentStateProperty", _propertyInfo.Name);
         }
     }

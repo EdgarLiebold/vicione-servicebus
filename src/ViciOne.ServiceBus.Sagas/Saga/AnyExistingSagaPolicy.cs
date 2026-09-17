@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
@@ -28,19 +29,30 @@ public class AnyExistingSagaPolicy<TSaga, TMessage> :
     /// <param name="context">The message context for the repository's pre-insertion check.</param>
     /// <param name="instance">Receives null because this policy does not create an instance.</param>
     /// <returns>Always false.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is null.</exception>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         instance = null;
         return false;
     }
 
     Task ISagaPolicy<TSaga, TMessage>.ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return next.SendAsync(context);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        return next.SendAsync(context)
+            ?? Task.FromException(new InvalidOperationException("The existing saga pipeline returned a null task."));
     }
 
     Task ISagaPolicy<TSaga, TMessage>.MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return _missingPipe.SendAsync(context);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        return _missingPipe.SendAsync(context)
+            ?? Task.FromException(new InvalidOperationException("The missing saga pipeline returned a null task."));
     }
 }

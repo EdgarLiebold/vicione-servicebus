@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
@@ -16,9 +17,10 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
     /// <summary>Configures factory-based saga creation and optional repository pre-insertion.</summary>
     /// <param name="sagaFactory">The factory creating and dispatching missing saga instances.</param>
     /// <param name="insertOnInitial">Whether the repository's pre-insertion check creates an instance.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="sagaFactory" /> is null.</exception>
     public NewOrExistingSagaPolicy(ISagaFactory<TSaga, TMessage> sagaFactory, bool insertOnInitial)
     {
-        _sagaFactory = sagaFactory;
+        _sagaFactory = sagaFactory ?? throw new ArgumentNullException(nameof(sagaFactory));
         _insertOnInitial = insertOnInitial;
     }
 
@@ -29,11 +31,16 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
     /// <param name="context">The message context passed to the saga factory.</param>
     /// <param name="instance">Receives the factory-created instance, or null when pre-insertion is disabled.</param>
     /// <returns>True when pre-insertion is enabled; otherwise false.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is null.</exception>
+    /// <exception cref="InvalidOperationException">The factory returns null while pre-insertion is enabled.</exception>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (_insertOnInitial)
         {
-            instance = _sagaFactory.Create(context);
+            instance = _sagaFactory.Create(context)
+                ?? throw new InvalidOperationException("The saga factory returned a null instance.");
             return true;
         }
 
@@ -43,11 +50,19 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
 
     Task ISagaPolicy<TSaga, TMessage>.ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return next.SendAsync(context);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        return next.SendAsync(context)
+            ?? Task.FromException(new InvalidOperationException("The existing saga pipeline returned a null task."));
     }
 
     Task ISagaPolicy<TSaga, TMessage>.MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return _sagaFactory.SendAsync(context, next);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        return _sagaFactory.SendAsync(context, next)
+            ?? Task.FromException(new InvalidOperationException("The saga factory returned a null task."));
     }
 }

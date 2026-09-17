@@ -11,7 +11,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
     /// <summary>
-    /// Lazily selects the saga's single public instance property whose type is exactly
+    /// Lazily selects the saga's single public, non-indexed instance property whose type is exactly
     /// <see cref="IState"/> and which has both a getter and a setter, including non-public accessors.
     /// </summary>
     /// <remarks>
@@ -29,6 +29,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public DefaultInstanceStateAccessor(IStateMachine<TInstance> machine, IState<TInstance> initialState, IStateObserver<TInstance> observer)
         {
+            ArgumentNullException.ThrowIfNull(machine);
+            ArgumentNullException.ThrowIfNull(initialState);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _machine = machine;
             _initialState = initialState;
             _observer = observer;
@@ -37,21 +41,26 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         Task<IState<TInstance>?> IStateAccessor<TInstance>.GetAsync(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(context);
             return _accessor.Value.GetAsync(context, cancellationToken: cancellationToken);
         }
 
         Task IStateAccessor<TInstance>.SetAsync(IBehaviorContext<TInstance> context, IState<TInstance> state, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(state);
             return _accessor.Value.SetAsync(context, state, cancellationToken: cancellationToken);
         }
 
         public Expression<Func<TInstance, bool>> GetStateExpression(params IState[] states)
         {
+            ArgumentNullException.ThrowIfNull(states);
             return _accessor.Value.GetStateExpression(states);
         }
 
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             _accessor.Value.Probe(context);
         }
 
@@ -60,6 +69,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             List<PropertyInfo> states = typeof(TInstance)
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.PropertyType == typeof(IState))
+                .Where(x => x.GetIndexParameters().Length == 0)
                 .Where(x => x.GetGetMethod(true) != null)
                 .Where(x => x.GetSetMethod(true) != null)
                 .ToList();

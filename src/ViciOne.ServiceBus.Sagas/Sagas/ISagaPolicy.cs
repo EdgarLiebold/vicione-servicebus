@@ -22,12 +22,12 @@ public interface ISagaPolicy<TSaga, TMessage>
     /// <summary>The method invoked when an existing saga instance is present.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A non-null task that represents the asynchronous operation.</returns>
     Task ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
 
     /// <summary>Invoked when there is not an existing saga instance available.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A non-null task that represents the asynchronous operation.</returns>
     Task MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
 }

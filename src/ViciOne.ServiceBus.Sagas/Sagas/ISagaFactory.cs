@@ -9,14 +9,14 @@ public interface ISagaFactory<out TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    /// <summary>Create a new saga instance using the supplied consume context.</summary>
+    /// <summary>Creates a non-null saga instance using the supplied consume context.</summary>
     /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <returns>The newly created non-null instance.</returns>
     TSaga Create(ConsumeContext<TMessage> context);
 
-    /// <summary>Send the context through the factory, with the proper decorations.</summary>
+    /// <summary>Sends the context through the factory's decorated missing-instance pipeline.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A non-null task that represents the asynchronous operation.</returns>
     Task SendAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
 }
