@@ -17,7 +17,7 @@ internal sealed class RoutingSlipRoutingSlip :
 
     /// <summary>Creates an isolated, read-only snapshot of a routing slip.</summary>
     /// <param name="trackingNumber">The non-empty routing-slip identifier.</param>
-    /// <param name="createTimestamp">The routing-slip creation timestamp.</param>
+    /// <param name="createTimestamp">The non-default routing-slip creation timestamp.</param>
     /// <param name="activities">The remaining itinerary.</param>
     /// <param name="activityLogs">The completed activity records.</param>
     /// <param name="compensateLogs">The pending compensation records.</param>
@@ -30,6 +30,8 @@ internal sealed class RoutingSlipRoutingSlip :
     {
         if (trackingNumber == Guid.Empty)
             throw new ArgumentException("The routing-slip tracking number cannot be empty.", nameof(trackingNumber));
+        if (createTimestamp == default)
+            throw new ArgumentException("The routing-slip creation timestamp cannot be the default value.", nameof(createTimestamp));
         ArgumentNullException.ThrowIfNull(activities);
         ArgumentNullException.ThrowIfNull(activityLogs);
         ArgumentNullException.ThrowIfNull(compensateLogs);

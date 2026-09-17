@@ -45,23 +45,32 @@ internal sealed class RoutingSlipActivityException :
     {
         ArgumentNullException.ThrowIfNull(activityException);
 
-        if (string.IsNullOrWhiteSpace(activityException.Name))
+        string? name = activityException.Name;
+        if (string.IsNullOrWhiteSpace(name))
             throw new SerializationException("An activity failure requires an activity name.");
-        if (activityException.Host is null)
+
+        HostInfo? host = activityException.Host;
+        if (host is null)
             throw new SerializationException("An activity failure requires host information.");
-        if (activityException.ExecutionId == Guid.Empty)
+
+        Guid executionId = activityException.ExecutionId;
+        if (executionId == Guid.Empty)
             throw new SerializationException("An activity failure requires a non-empty execution identifier.");
-        if (activityException.Elapsed < TimeSpan.Zero)
+
+        TimeSpan elapsed = activityException.Elapsed;
+        if (elapsed < TimeSpan.Zero)
             throw new SerializationException("An activity failure cannot have a negative elapsed duration.");
-        if (activityException.ExceptionInfo == null)
+
+        ExceptionInfo? exceptionInfo = activityException.ExceptionInfo;
+        if (exceptionInfo == null)
             throw new SerializationException("An activity failure requires exception information.");
 
-        ExecutionId = activityException.ExecutionId;
+        ExecutionId = executionId;
         Timestamp = activityException.Timestamp;
-        Elapsed = activityException.Elapsed;
-        Name = activityException.Name;
-        Host = activityException.Host;
-        ExceptionInfo = activityException.ExceptionInfo;
+        Elapsed = elapsed;
+        Name = name;
+        Host = host;
+        ExceptionInfo = exceptionInfo;
     }
 
     /// <summary>Gets or sets the activity execution identifier.</summary>

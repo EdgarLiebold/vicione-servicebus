@@ -40,13 +40,15 @@ internal sealed class RoutingSlipSubscription :
     {
         ArgumentNullException.ThrowIfNull(subscription);
 
-        if (subscription.Address == null)
+        Uri? address = subscription.Address;
+        if (address == null)
             throw new SerializationException("A routing-slip subscription address is required.");
 
-        Address = subscription.Address;
+        Address = address;
         Events = ValidateReceived(subscription.Events);
         Include = ValidateReceived(subscription.Include);
-        Message = subscription.Message;
+        MessageEnvelope? message = subscription.Message;
+        Message = message is null ? null : new JsonMessageEnvelope(message);
         ActivityName = ValidateReceived(subscription.ActivityName);
     }
 

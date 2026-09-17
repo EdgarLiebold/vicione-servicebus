@@ -36,14 +36,19 @@ internal sealed class RoutingSlipActivity :
     {
         ArgumentNullException.ThrowIfNull(activity);
 
-        if (string.IsNullOrWhiteSpace(activity.Name))
+        string? name = activity.Name;
+        if (string.IsNullOrWhiteSpace(name))
             throw new SerializationException("A routing-slip activity name is required.");
-        if (activity.Address == null)
+
+        Uri? address = activity.Address;
+        if (address == null)
             throw new SerializationException("A routing-slip activity execution address is required.");
 
-        Name = activity.Name;
-        Address = activity.Address;
-        Arguments = Snapshot(activity.Arguments ?? new Dictionary<string, object>());
+        IReadOnlyDictionary<string, object>? arguments = activity.Arguments;
+
+        Name = name;
+        Address = address;
+        Arguments = Snapshot(arguments ?? new Dictionary<string, object>());
     }
 
     /// <summary>Gets or sets the activity name.</summary>

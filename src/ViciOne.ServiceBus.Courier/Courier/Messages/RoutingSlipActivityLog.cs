@@ -40,20 +40,27 @@ internal sealed class RoutingSlipActivityLog :
     {
         ArgumentNullException.ThrowIfNull(activityLog);
 
-        if (activityLog.Host is null)
+        HostInfo? host = activityLog.Host;
+        if (host is null)
             throw new SerializationException("An activity log requires host information.");
-        if (activityLog.ExecutionId == Guid.Empty)
+
+        Guid executionId = activityLog.ExecutionId;
+        if (executionId == Guid.Empty)
             throw new SerializationException("An activity log requires a non-empty execution identifier.");
-        if (string.IsNullOrWhiteSpace(activityLog.Name))
+
+        string? name = activityLog.Name;
+        if (string.IsNullOrWhiteSpace(name))
             throw new SerializationException("An activity log requires a name.");
-        if (activityLog.Duration < TimeSpan.Zero)
+
+        TimeSpan duration = activityLog.Duration;
+        if (duration < TimeSpan.Zero)
             throw new SerializationException("An activity log cannot have a negative duration.");
 
-        ExecutionId = activityLog.ExecutionId;
-        Name = activityLog.Name;
+        ExecutionId = executionId;
+        Name = name;
         Timestamp = activityLog.Timestamp;
-        Duration = activityLog.Duration;
-        Host = activityLog.Host;
+        Duration = duration;
+        Host = host;
     }
 
     /// <summary>Gets or sets the activity execution identifier.</summary>

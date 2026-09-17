@@ -6,6 +6,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Messages;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Internals.Dispatching;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
@@ -89,7 +90,18 @@ internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
         catch (Exception exception)
         {
             if (_observers.Count > 0)
-                await _observers.SendFaultAsync(context, exception).ConfigureAwait(false);
+            {
+                try
+                {
+                    await _observers.SendFaultAsync(context, exception).ConfigureAwait(false);
+                }
+                catch (Exception observerFailure)
+                {
+                    LogContext.Error?.Log(observerFailure,
+                        "A send-fault observer failed while capturing a routing-slip subscription: {DestinationAddress}",
+                        context.DestinationAddress);
+                }
+            }
 
             throw;
         }

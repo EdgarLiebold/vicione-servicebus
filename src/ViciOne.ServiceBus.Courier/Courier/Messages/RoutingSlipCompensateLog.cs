@@ -37,14 +37,19 @@ internal sealed class RoutingSlipCompensateLog :
     {
         ArgumentNullException.ThrowIfNull(compensateLog);
 
-        if (compensateLog.ExecutionId == Guid.Empty)
+        Guid executionId = compensateLog.ExecutionId;
+        if (executionId == Guid.Empty)
             throw new SerializationException("A compensation log requires a non-empty activity execution identifier.");
-        if (compensateLog.Address == null)
+
+        Uri? address = compensateLog.Address;
+        if (address == null)
             throw new SerializationException("A compensation log requires a compensation endpoint address.");
 
-        ExecutionId = compensateLog.ExecutionId;
-        Address = compensateLog.Address;
-        Data = Snapshot(compensateLog.Data ?? new Dictionary<string, object>());
+        IReadOnlyDictionary<string, object>? data = compensateLog.Data;
+
+        ExecutionId = executionId;
+        Address = address;
+        Data = Snapshot(data ?? new Dictionary<string, object>());
     }
 
     /// <summary>Gets or sets the activity execution identifier.</summary>
