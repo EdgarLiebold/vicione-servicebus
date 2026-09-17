@@ -16,8 +16,8 @@ public static class SagaPipeConfiguratorExtensions
         where T : class
         where TSaga : class, ISaga
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filter);
 
         var pipeBuilderConfigurator = new SagaFilterSpecification<TSaga, T>(filter);
 

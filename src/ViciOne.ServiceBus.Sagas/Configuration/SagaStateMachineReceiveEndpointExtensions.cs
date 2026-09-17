@@ -16,6 +16,8 @@ public static class SagaStateMachineReceiveEndpointExtensions
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, ISagaStateMachineInstance
     {
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
         if (stateMachine == null)
             throw new ArgumentNullException(nameof(stateMachine));
         if (repository == null)
@@ -38,6 +40,13 @@ public static class SagaStateMachineReceiveEndpointExtensions
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, ISagaStateMachineInstance
     {
+        if (bus == null)
+            throw new ArgumentNullException(nameof(bus));
+        if (stateMachine == null)
+            throw new ArgumentNullException(nameof(stateMachine));
+        if (repository == null)
+            throw new ArgumentNullException(nameof(repository));
+
         var connector = new ViciOneServiceBusStateMachine<TInstance>.StateMachineConnector(stateMachine);
 
         ISagaSpecification<TInstance> specification = connector.CreateSagaSpecification<TInstance>();

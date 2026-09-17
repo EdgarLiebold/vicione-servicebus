@@ -14,10 +14,24 @@ public static class SagaRegistrationConfiguratorRuntimeExtensions
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator AddSaga(this IRegistrationConfigurator configurator, Type sagaType, Type? sagaDefinitionType = null)
     {
-        if (sagaType.ImplementsInterface<ISagaStateMachineInstance>())
-            throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(sagaType);
 
-        var register = (IRegisterSaga)(Activator.CreateInstance(typeof(RegisterSaga<>).MakeGenericType(sagaType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+        if (!IsClosedReferenceType(sagaType) || !typeof(ISaga).IsAssignableFrom(sagaType))
+        {
+            throw new ArgumentException(
+                "The saga type must be a closed reference type that implements ISaga.",
+                nameof(sagaType));
+        }
+
+        if (sagaType.ImplementsInterface<ISagaStateMachineInstance>())
+        {
+            throw new ArgumentException(
+                $"State machine sagas must be registered using AddSagaStateMachine: {TypeCache.GetShortName(sagaType)}",
+                nameof(sagaType));
+        }
+
+        var register = (IRegisterSaga)Activator.CreateInstance(typeof(RegisterSaga<>).MakeGenericType(sagaType))!;
 
         return register.Register(configurator, sagaDefinitionType);
     }
@@ -30,12 +44,29 @@ public static class SagaRegistrationConfiguratorRuntimeExtensions
     public static ISagaRegistrationConfigurator AddSagaStateMachine(this IRegistrationConfigurator configurator, Type sagaType,
         Type? sagaDefinitionType = null)
     {
-        if (!sagaType.TryGetSingleClosedGenericArguments(typeof(ISagaStateMachine<>), out Type[] types))
-            throw new ArgumentException($"The type is not a saga state machine: {TypeCache.GetShortName(sagaType)}", nameof(sagaType));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(sagaType);
 
-        var register = (IRegisterSaga)(Activator.CreateInstance(typeof(RegisterSagaStateMachine<,>).MakeGenericType(sagaType, types[0])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+        IReadOnlyList<Type> stateMachineTypes = IsClosedReferenceType(sagaType)
+            ? sagaType.GetClosedGenericTypes(typeof(ISagaStateMachine<>))
+            : [];
+        if (stateMachineTypes.Count != 1)
+        {
+            throw new ArgumentException(
+                "The saga state machine type must be a closed reference type that implements exactly one "
+                + "ISagaStateMachine<TSaga> whose state implements ISagaStateMachineInstance.",
+                nameof(sagaType));
+        }
+
+        Type instanceType = stateMachineTypes[0].GetGenericArguments()[0];
+        var register = (IRegisterSaga)Activator.CreateInstance(typeof(RegisterSagaStateMachine<,>).MakeGenericType(sagaType, instanceType))!;
 
         return register.Register(configurator, sagaDefinitionType);
+    }
+
+    static bool IsClosedReferenceType(Type type)
+    {
+        return !type.IsValueType && !type.IsByRef && !type.IsPointer && !type.ContainsGenericParameters;
     }
 
 
