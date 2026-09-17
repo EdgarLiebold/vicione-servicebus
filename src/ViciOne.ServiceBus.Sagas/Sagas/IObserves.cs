@@ -11,6 +11,7 @@ namespace ViciOne.ServiceBus.Sagas;
 public interface IObserves<TMessage, TSaga> :
     IConsumer<TMessage>
     where TMessage : class
+    where TSaga : class, ISaga
 {
     /// <summary>Gets the expression that matches existing saga instances to an observed message.</summary>
     Expression<Func<TSaga, TMessage, bool>> CorrelationExpression { get; }

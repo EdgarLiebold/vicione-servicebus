@@ -16,6 +16,8 @@ public static class SagaQueryExpressionPropertyExtensions
     public static bool TryGetPropertyValue<T>(this ISagaQuery<T> query, out object? value)
         where T : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(query);
+
         Expression<Func<T, bool>> expression = query.FilterExpression;
         if (expression == null)
             throw new ArgumentException("The query is not a lambda expression", nameof(query));
@@ -46,6 +48,8 @@ public static class SagaQueryExpressionPropertyExtensions
     public static bool TryGetPropertyValue<T, TProperty>(this ISagaQuery<T> query, out TProperty? value)
         where T : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(query);
+
         Expression<Func<T, bool>> expression = query.FilterExpression;
         if (expression == null)
             throw new ArgumentException("The query is not a lambda expression", nameof(query));

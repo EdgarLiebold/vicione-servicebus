@@ -24,6 +24,13 @@ sealed class SagaConsumerKind :
 
     public IEnumerable<IConsumerKindRegistration> GetRegistrations(IConsumerKindContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
+        return GetRegistrationsCore(context);
+    }
+
+    static IEnumerable<IConsumerKindRegistration> GetRegistrationsCore(IConsumerKindContext context)
+    {
         foreach (var registration in context.GetRegistrations<ISagaRegistration>())
         {
             var definition = registration.GetDefinition(context.RegistrationContext);
@@ -54,17 +61,21 @@ sealed class SagaConsumerKind :
         ArgumentNullException.ThrowIfNull(endpointConfigurator);
         ArgumentNullException.ThrowIfNull(registrationContext);
 
+        Action<ISagaConfigurator<TRegistration>>? typedConfigure = null;
+        if (configure != null)
+        {
+            typedConfigure = configure as Action<ISagaConfigurator<TRegistration>>
+                ?? throw new ArgumentException(
+                    $"The saga configuration callback must target {TypeCache<ISagaConfigurator<TRegistration>>.ShortName}.",
+                    nameof(configure));
+        }
+
         IContainerSelector selector = registrationContext.GetRequiredService<IContainerSelector>();
         if (!selector.TryGetRegistration(registrationContext, typeof(TRegistration), out ISagaRegistration? registration))
             return false;
 
-        if (configure != null)
-        {
-            if (configure is not Action<ISagaConfigurator<TRegistration>> typedConfigure)
-                throw new ArgumentException($"The saga configuration callback must target {TypeCache<ISagaConfigurator<TRegistration>>.ShortName}.", nameof(configure));
-
+        if (typedConfigure != null)
             registration.AddConfigureAction<TRegistration>((_, configurator) => typedConfigure(configurator));
-        }
 
         registration.Configure(endpointConfigurator, registrationContext);
         return true;
@@ -145,6 +156,7 @@ sealed class SagaConsumerKind :
 
         public void Configure(IConsumerKindEndpointContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             _registration.Configure(context.EndpointConfigurator, context.RegistrationContext);
         }
     }
