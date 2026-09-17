@@ -9,7 +9,7 @@ public class SagaEndpointDefinition<TSaga> :
     /// <summary>Initializes a new instance.</summary>
     /// <param name="settings">The settings that control the operation.</param>
     public SagaEndpointDefinition(IEndpointSettings<IEndpointDefinition<TSaga>> settings)
-        : base(settings)
+        : base(settings ?? throw new ArgumentNullException(nameof(settings)))
     {
     }
 
@@ -18,6 +18,8 @@ public class SagaEndpointDefinition<TSaga> :
     /// <returns>The formatted endpoint name.</returns>
     protected override string FormatEndpointName(IEndpointNameFormatter formatter)
     {
+        ArgumentNullException.ThrowIfNull(formatter);
+
         return formatter.Saga<TSaga>();
     }
 }

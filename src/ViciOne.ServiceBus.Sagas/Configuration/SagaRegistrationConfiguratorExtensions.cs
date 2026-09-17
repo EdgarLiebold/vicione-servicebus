@@ -15,8 +15,12 @@ public static class SagaRegistrationConfiguratorExtensions
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator<TSaga> AddSaga<TSaga>(this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, ISagaConfigurator<TSaga>>? configure = null)
-        where TSaga : class, ISaga =>
-        configurator.AddSaga(null, configure);
+        where TSaga : class, ISaga
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        return configurator.AddSaga(null, configure);
+    }
 
     /// <summary>Adds a saga with an optional definition and allows it to be configured when attached to an endpoint.</summary>
     /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
@@ -29,6 +33,7 @@ public static class SagaRegistrationConfiguratorExtensions
         where TSaga : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        ValidateSagaDefinitionType<TSaga>(sagaDefinitionType);
 
         if (typeof(TSaga).ImplementsInterface<ISagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache<TSaga>.ShortName}");
@@ -50,8 +55,12 @@ public static class SagaRegistrationConfiguratorExtensions
     public static ISagaRegistrationConfigurator<TSaga> AddSagaStateMachine<TStateMachine, TSaga>(this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, ISagaConfigurator<TSaga>>? configure = null)
         where TStateMachine : class, ISagaStateMachine<TSaga>
-        where TSaga : class, ISagaStateMachineInstance =>
-        configurator.AddSagaStateMachine<TStateMachine, TSaga>(null, configure);
+        where TSaga : class, ISagaStateMachineInstance
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        return configurator.AddSagaStateMachine<TStateMachine, TSaga>(null, configure);
+    }
 
     /// <summary>Adds a saga state machine with an optional definition and allows it to be configured when attached to an endpoint.</summary>
     /// <typeparam name="TStateMachine">The state machine type.</typeparam>
@@ -66,6 +75,7 @@ public static class SagaRegistrationConfiguratorExtensions
         where TSaga : class, ISagaStateMachineInstance
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        ValidateSagaDefinitionType<TSaga>(sagaDefinitionType);
 
         IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
         ISagaRegistration registration = configurator.Services.RegisterSagaStateMachine<TStateMachine, TSaga>(advanced.Registrar,
@@ -96,5 +106,22 @@ public static class SagaRegistrationConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(provider);
         SagaRegistrationCompletionParticipant.Ensure(configurator).Provider = provider;
+    }
+
+    static void ValidateSagaDefinitionType<TSaga>(Type? sagaDefinitionType)
+        where TSaga : class, ISaga
+    {
+        if (sagaDefinitionType == null)
+            return;
+
+        if (!sagaDefinitionType.IsClass
+            || sagaDefinitionType.IsAbstract
+            || sagaDefinitionType.ContainsGenericParameters
+            || !typeof(ISagaDefinition<TSaga>).IsAssignableFrom(sagaDefinitionType))
+        {
+            throw new ArgumentException(
+                "The saga definition type must be a closed, non-abstract class compatible with the registered saga type.",
+                nameof(sagaDefinitionType));
+        }
     }
 }

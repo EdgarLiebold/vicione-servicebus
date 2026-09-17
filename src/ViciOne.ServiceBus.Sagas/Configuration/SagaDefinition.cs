@@ -41,12 +41,23 @@ public class SagaDefinition<TSaga> :
     public int? ConcurrentMessageLimit
     {
         get => _concurrentMessageLimit;
-        protected set => _concurrentMessageLimit = value;
+        protected set
+        {
+            if (value is <= 0)
+                throw new ArgumentOutOfRangeException(nameof(ConcurrentMessageLimit), value,
+                    "The concurrent message limit must be greater than zero.");
+
+            _concurrentMessageLimit = value;
+        }
     }
 
     void ISagaDefinition<TSaga>.Configure(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator,
         IRegistrationContext context)
     {
+        ArgumentNullException.ThrowIfNull(endpointConfigurator);
+        ArgumentNullException.ThrowIfNull(sagaConfigurator);
+        ArgumentNullException.ThrowIfNull(context);
+
         if (_concurrentMessageLimit.HasValue)
             sagaConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
         ConfigureSaga(endpointConfigurator, sagaConfigurator, context);
@@ -56,8 +67,10 @@ public class SagaDefinition<TSaga> :
 
     string ISagaDefinition.GetEndpointName(IEndpointNameFormatter formatter)
     {
+        ArgumentNullException.ThrowIfNull(formatter);
+
         return string.IsNullOrWhiteSpace(_endpointName)
-            ? _endpointName = EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Saga<TSaga>()
+            ? EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Saga<TSaga>()
             : _endpointName!;
     }
 
