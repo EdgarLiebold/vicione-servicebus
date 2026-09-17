@@ -18,6 +18,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public StateMachineConnector(ISagaStateMachine<TInstance> stateMachine)
         {
+            ArgumentNullException.ThrowIfNull(stateMachine);
+
             _stateMachine = stateMachine;
 
             try
@@ -46,6 +48,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public ConnectHandle ConnectSaga<T>(IConsumePipeConnector consumePipe, ISagaRepository<T> sagaRepository, ISagaSpecification<T> specification)
             where T : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(consumePipe);
+            ArgumentNullException.ThrowIfNull(sagaRepository);
+            ArgumentNullException.ThrowIfNull(specification);
+
             var handles = new List<ConnectHandle>(_connectors.Count);
             try
             {

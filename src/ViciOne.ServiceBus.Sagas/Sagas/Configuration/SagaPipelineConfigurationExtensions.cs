@@ -227,6 +227,7 @@ public static class SagaPipelineConfigurationExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(keyProvider);
+        ArgumentOutOfRangeException.ThrowIfLessThan(partitionCount, 1);
 
         ConfigurePartitioner(configurator, partitionCount, context => keyProvider(context).ToByteArray());
     }
@@ -243,6 +244,7 @@ public static class SagaPipelineConfigurationExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(keyProvider);
+        ArgumentOutOfRangeException.ThrowIfLessThan(partitionCount, 1);
 
         Encoding textEncoding = encoding ?? Encoding.UTF8;
         ConfigurePartitioner(configurator, partitionCount, context =>

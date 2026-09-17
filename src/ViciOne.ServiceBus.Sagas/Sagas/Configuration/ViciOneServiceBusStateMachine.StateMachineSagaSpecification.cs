@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Configuration;
@@ -15,8 +16,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public StateMachineSagaSpecification(ISagaStateMachine<TInstance> stateMachine,
             IEnumerable<ISagaMessageSpecification<TInstance>> messageSpecifications)
-            : base(messageSpecifications)
+            : base(EnsureMessageSpecifications(messageSpecifications))
         {
+            ArgumentNullException.ThrowIfNull(stateMachine);
+
             _stateMachine = stateMachine;
         }
 
@@ -26,6 +29,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 Observers.ForEach(observer => observer.StateMachineSagaConfigured(this, _stateMachine)));
 
             return base.Validate().ToArray();
+        }
+
+        static IEnumerable<ISagaMessageSpecification<TInstance>> EnsureMessageSpecifications(
+            IEnumerable<ISagaMessageSpecification<TInstance>> messageSpecifications)
+        {
+            ArgumentNullException.ThrowIfNull(messageSpecifications);
+            return messageSpecifications;
         }
     }
 }

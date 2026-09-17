@@ -18,6 +18,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public StateMachineSagaConfigurator(ISagaStateMachine<TInstance> stateMachine, ISagaRepository<TInstance> repository,
             ISagaConfigurationObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(stateMachine);
+            ArgumentNullException.ThrowIfNull(repository);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _repository = repository;
 
             _connector = new StateMachineConnector(stateMachine);
@@ -34,6 +38,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             _connector.ConnectSaga(builder, _repository, _specification);
         }
 
