@@ -1,11 +1,13 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-sealed class MissingSagaRepositoryRegistrationProvider :
+internal sealed class MissingSagaRepositoryRegistrationProvider :
     ISagaRepositoryRegistrationProvider
 {
     public void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         throw new ConfigurationException(
             global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
                 "Saga repository",

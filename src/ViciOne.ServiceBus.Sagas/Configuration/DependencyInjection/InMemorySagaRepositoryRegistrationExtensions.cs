@@ -1,5 +1,3 @@
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Provides extension methods for in memory saga repository registration.</summary>
@@ -12,7 +10,9 @@ public static class InMemorySagaRepositoryRegistrationExtensions
     public static ISagaRegistrationConfigurator<T> InMemoryRepository<T>(this ISagaRegistrationConfigurator<T> configurator)
         where T : class, ISaga
     {
-        configurator.Repository(x => x.RegisterInMemorySagaRepository<T>());
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        configurator.Repository(static repository => repository.RegisterInMemorySagaRepository<T>());
 
         return configurator;
     }
@@ -21,6 +21,8 @@ public static class InMemorySagaRepositoryRegistrationExtensions
     /// <param name="configurator">The configurator to update.</param>
     public static void SetInMemorySagaRepositoryProvider(this IRegistrationConfigurator configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.SetSagaRepositoryProvider(new InMemorySagaRepositoryRegistrationProvider());
     }
 }

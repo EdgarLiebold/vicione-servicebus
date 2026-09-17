@@ -10,47 +10,86 @@ sealed class SagaRegistrationCompletionParticipant :
     IRegistrationCompletionParticipant
 {
     readonly HashSet<Type> _repositoryOnlySagaTypes = new();
+    ISagaRepositoryRegistrationProvider _provider = new MissingSagaRepositoryRegistrationProvider();
 
     public int Order => 100;
 
-    public ISagaRepositoryRegistrationProvider Provider { get; set; } = new MissingSagaRepositoryRegistrationProvider();
+    public ISagaRepositoryRegistrationProvider Provider
+    {
+        get => _provider;
+        set => _provider = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
-    public static SagaRegistrationCompletionParticipant Ensure(IRegistrationConfigurator configurator) =>
-        configurator.GetOrAddRegistrationCompletionParticipant(static () => new SagaRegistrationCompletionParticipant());
+    public static SagaRegistrationCompletionParticipant Ensure(IRegistrationConfigurator configurator)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        return configurator.GetOrAddRegistrationCompletionParticipant(static () => new SagaRegistrationCompletionParticipant());
+    }
 
     public static void RequireRepository<TSaga>(IRegistrationConfigurator configurator)
-        where TSaga : class, ISaga =>
+        where TSaga : class, ISaga
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         Ensure(configurator)._repositoryOnlySagaTypes.Add(typeof(TSaga));
+    }
 
     public void Complete(IRegistrationConfigurator configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        ISagaRepositoryRegistrationProvider provider = Provider;
         IContainerRegistrar registrar = configurator.Advanced().Registrar;
-        List<ISagaRegistration> registrations = registrar.GetRegistrations<ISagaRegistration>().ToList();
+        var registrationsBySagaType = new Dictionary<Type, ISagaRegistration?>();
 
-        foreach (ISagaRegistration registration in registrations)
+        foreach (ISagaRegistration registration in registrar.GetRegistrations<ISagaRegistration>())
         {
-            if (HasRepository(configurator, registration.Type))
-                continue;
+            if (registration == null)
+                throw new InvalidOperationException("The saga registrar returned a null registration.");
 
-            ConfigureRepository(configurator, registration.Type, Provider, registration);
+            Type sagaType = registration.Type;
+            ValidateSagaType(sagaType);
+            registrationsBySagaType.TryAdd(sagaType, registration);
         }
 
-        foreach (Type sagaType in _repositoryOnlySagaTypes.OrderBy(x => x.FullName, StringComparer.Ordinal))
+        foreach (Type sagaType in _repositoryOnlySagaTypes)
+            registrationsBySagaType.TryAdd(sagaType, null);
+
+        List<(IConfigureSagaRepository Completion, ISagaRegistration? Registration)> configurations = registrationsBySagaType
+            .Where(x => !HasRepository(configurator, x.Key))
+            .OrderBy(x => x.Key.FullName, StringComparer.Ordinal)
+            .ThenBy(x => x.Key.AssemblyQualifiedName, StringComparer.Ordinal)
+            .Select(x => (CreateRepositoryConfiguration(x.Key), x.Value))
+            .ToList();
+
+        foreach ((IConfigureSagaRepository completion, ISagaRegistration? registration) in configurations)
         {
-            if (!HasRepository(configurator, sagaType))
-                ConfigureRepository(configurator, sagaType, Provider, null);
+            completion.Configure(configurator, provider, registration);
         }
     }
 
     static bool HasRepository(IRegistrationConfigurator configurator, Type sagaType) =>
         configurator.Services.Any(x => x.ServiceType == typeof(ISagaRepositoryContextFactory<>).MakeGenericType(sagaType));
 
-    static void ConfigureRepository(IRegistrationConfigurator configurator, Type sagaType,
-        ISagaRepositoryRegistrationProvider provider, ISagaRegistration? registration)
+    static IConfigureSagaRepository CreateRepositoryConfiguration(Type sagaType)
     {
-        var completion = (IConfigureSagaRepository)(Activator.CreateInstance(typeof(ConfigureSagaRepository<>).MakeGenericType(sagaType))
-            ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
-        completion.Configure(configurator, provider, registration);
+        ValidateSagaType(sagaType);
+
+        Type configurationType = typeof(ConfigureSagaRepository<>).MakeGenericType(sagaType);
+        return (IConfigureSagaRepository)Activator.CreateInstance(configurationType)!;
+    }
+
+    static void ValidateSagaType(Type sagaType)
+    {
+        if (sagaType == null)
+            throw new InvalidOperationException("The saga registration did not specify a saga type.");
+
+        if (sagaType.IsValueType || sagaType.ContainsGenericParameters || !typeof(ISaga).IsAssignableFrom(sagaType))
+        {
+            throw new InvalidOperationException(
+                $"The saga registration type '{sagaType}' must be a closed reference type implementing {nameof(ISaga)}.");
+        }
     }
 
     interface IConfigureSagaRepository

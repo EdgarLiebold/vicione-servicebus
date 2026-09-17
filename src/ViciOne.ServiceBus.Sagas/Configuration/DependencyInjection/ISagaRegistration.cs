@@ -6,12 +6,12 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface ISagaRegistration :
     IRegistration
 {
-    /// <summary>Gets the state machine type.</summary>
+    /// <summary>Gets the state machine type, or <see langword="null" /> for a class-based saga.</summary>
     Type? StateMachineType { get; }
 
     /// <summary>Adds configure action to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <typeparam name="T">The registered saga state type.</typeparam>
+    /// <param name="configure">The optional callback used to configure the saga.</param>
     void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
         where T : class;
 
