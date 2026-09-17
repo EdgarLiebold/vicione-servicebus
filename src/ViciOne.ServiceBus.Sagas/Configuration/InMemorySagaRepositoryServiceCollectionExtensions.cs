@@ -14,6 +14,8 @@ public static class InMemorySagaRepositoryServiceCollectionExtensions
     public static void RegisterInMemorySagaRepository<TSaga>(this IServiceCollection services)
         where TSaga : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(services);
+
         services.TryAddSingleton(new IndexedSagaDictionary<TSaga>());
         services.RegisterLoadSagaRepository<TSaga, InMemorySagaRepositoryContextFactory<TSaga>>();
         services.RegisterQuerySagaRepository<TSaga, InMemorySagaRepositoryContextFactory<TSaga>>();

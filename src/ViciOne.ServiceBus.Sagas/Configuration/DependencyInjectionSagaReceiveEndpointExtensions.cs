@@ -17,6 +17,9 @@ public static class DependencyInjectionSagaReceiveEndpointExtensions
         Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
+
         ISagaRepository<T> repository = new DependencyInjectionSagaRepository<T>(context);
 
         configurator.Saga(repository, configure);
@@ -33,6 +36,10 @@ public static class DependencyInjectionSagaReceiveEndpointExtensions
         IRegistrationContext context, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(stateMachine);
+        ArgumentNullException.ThrowIfNull(context);
+
         ISagaRepository<TInstance> repository = new DependencyInjectionSagaRepository<TInstance>(context);
 
         configurator.StateMachineSaga(stateMachine, repository, configure);
@@ -48,6 +55,9 @@ public static class DependencyInjectionSagaReceiveEndpointExtensions
         Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
+
         var stateMachine = context.GetRequiredService<ISagaStateMachine<TInstance>>();
         ISagaRepository<TInstance> repository = new DependencyInjectionSagaRepository<TInstance>(context);
 

@@ -43,6 +43,9 @@ public static class SagaExtensions
             throw new ArgumentNullException(nameof(connector));
         if (sagaRepository == null)
             throw new ArgumentNullException(nameof(sagaRepository));
+        ArgumentNullException.ThrowIfNull(pipeSpecifications);
+        foreach (IPipeSpecification<SagaConsumeContext<T>> pipeSpecification in pipeSpecifications)
+            ArgumentNullException.ThrowIfNull(pipeSpecification);
 
         LogContext.Debug?.Log("Connecting Saga: {SagaType}", TypeCache<T>.ShortName);
 
