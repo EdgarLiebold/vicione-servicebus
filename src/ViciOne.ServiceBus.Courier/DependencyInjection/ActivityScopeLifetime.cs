@@ -1,5 +1,5 @@
 using System.Runtime.ExceptionServices;
-using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
@@ -10,7 +10,9 @@ internal sealed class ActivityScopeLifetime :
 {
     readonly IDisposable _restoreContext;
     readonly IServiceScope? _scope;
-    int _disposed;
+    readonly object _stateLock = new();
+    Task? _activeDisposal;
+    bool _disposed;
 
     public ActivityScopeLifetime(IDisposable restoreContext, IServiceScope? scope = null)
     {
@@ -20,18 +22,53 @@ internal sealed class ActivityScopeLifetime :
 
     /// <summary>Restores the prior context and releases the owned scope while preserving every cleanup failure.</summary>
     /// <returns>A task that completes after all owned cleanup operations have been attempted.</returns>
+    /// <remarks>Concurrent calls made during cleanup share its completion; calls made after cleanup are no-ops.</remarks>
     public ValueTask DisposeAsync()
     {
-        if (Interlocked.Exchange(ref _disposed, 1) != 0)
-            return default;
-
-        if (_scope is null)
+        TaskCompletionSource completion;
+        Task disposal;
+        lock (_stateLock)
         {
-            _restoreContext.Dispose();
-            return default;
+            if (_disposed)
+                return default;
+
+            if (_activeDisposal is not null)
+                return new ValueTask(_activeDisposal);
+
+            completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            disposal = completion.Task;
+            _activeDisposal = disposal;
         }
 
-        return DisposeOwnedScopeAsync(_restoreContext, _scope);
+        _ = DisposeAndCompleteAsync(completion);
+        return new ValueTask(disposal);
+    }
+
+    async Task DisposeAndCompleteAsync(TaskCompletionSource completion)
+    {
+        Exception? failure = null;
+        try
+        {
+            if (_scope is null)
+                _restoreContext.Dispose();
+            else
+                await DisposeOwnedScopeAsync(_restoreContext, _scope).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            failure = exception;
+        }
+
+        lock (_stateLock)
+        {
+            _disposed = true;
+            _activeDisposal = null;
+        }
+
+        if (failure is null)
+            completion.TrySetResult();
+        else
+            completion.TrySetException(failure);
     }
 
     static async ValueTask DisposeOwnedScopeAsync(IDisposable restoreContext, IServiceScope scope)

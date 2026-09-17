@@ -33,9 +33,17 @@ internal sealed class ScopeCompensateActivityFactory<TActivity, TLog> :
         ICompensateActivityScopeContext<TActivity, TLog> acquiredScope =
             await _scopeProvider.GetActivityScopeAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException("The compensate activity scope provider returned null.");
-        await using ICompensateActivityScopeContext<TActivity, TLog> scope = acquiredScope;
+        Exception? operationFailure = null;
+        try
+        {
+            await next.SendAsync(acquiredScope.Context).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
 
-        await next.SendAsync(scope.Context).ConfigureAwait(false);
+        await OwnedActivityLifetime.ReleaseAfterOperationAsync(acquiredScope, operationFailure).ConfigureAwait(false);
     }
 
     /// <summary>Adds this scoped factory and its scope provider to the pipeline probe graph.</summary>
