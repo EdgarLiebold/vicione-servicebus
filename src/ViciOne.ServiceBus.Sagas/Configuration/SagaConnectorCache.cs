@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -12,7 +13,9 @@ public class SagaConnectorCache<TSaga> :
 
     SagaConnectorCache()
     {
-        _connector = new Lazy<SagaConnector<TSaga>>(() => new SagaConnector<TSaga>());
+        _connector = new Lazy<SagaConnector<TSaga>>(
+            () => new SagaConnector<TSaga>(),
+            LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     /// <summary>Gets the cached connector, initializing it on first access.</summary>
@@ -23,6 +26,8 @@ public class SagaConnectorCache<TSaga> :
 
     static class Cached
     {
-        internal static readonly Lazy<ISagaConnectorCache> Instance = new Lazy<ISagaConnectorCache>(() => new SagaConnectorCache<TSaga>());
+        internal static readonly Lazy<ISagaConnectorCache> Instance = new(
+            () => new SagaConnectorCache<TSaga>(),
+            LazyThreadSafetyMode.ExecutionAndPublication);
     }
 }

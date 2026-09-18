@@ -27,8 +27,8 @@ public partial class SagaConnector<TSaga, TMessage>
             Func<ConsumeContext<TMessage>, Guid> correlationIdSelector)
             : base(consumeFilter)
         {
-            _policy = policy;
-            _correlationIdSelector = correlationIdSelector;
+            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+            _correlationIdSelector = correlationIdSelector ?? throw new ArgumentNullException(nameof(correlationIdSelector));
         }
 
         /// <summary>Appends identifier selection followed by correlated saga repository dispatch.</summary>

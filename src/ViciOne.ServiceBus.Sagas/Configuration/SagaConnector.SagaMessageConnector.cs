@@ -17,7 +17,7 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="consumeFilter">The filter handling the saga/message consume context.</param>
         protected SagaMessageConnector(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter)
         {
-            _consumeFilter = consumeFilter;
+            _consumeFilter = consumeFilter ?? throw new ArgumentNullException(nameof(consumeFilter));
         }
 
         /// <summary>Gets whether connecting this message pipeline also configures consume topology.</summary>
@@ -40,20 +40,28 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <returns>A handle that disconnects the registration.</returns>
         public ConnectHandle ConnectSaga(IConsumePipeConnector consumePipe, ISagaRepository<TSaga> repository, ISagaSpecification<TSaga> specification)
         {
-            ISagaMessageSpecification<TSaga, TMessage> messageSpecification = specification.GetMessageSpecification<TMessage>();
+            ArgumentNullException.ThrowIfNull(consumePipe);
+            ArgumentNullException.ThrowIfNull(repository);
+            ArgumentNullException.ThrowIfNull(specification);
 
-            IPipe<SagaConsumeContext<TSaga, TMessage>> consumerPipe = messageSpecification.BuildConsumerPipe(_consumeFilter);
+            ISagaMessageSpecification<TSaga, TMessage> messageSpecification = specification.GetMessageSpecification<TMessage>()
+                ?? throw new InvalidOperationException("The saga specification returned a null message specification.");
+
+            IPipe<SagaConsumeContext<TSaga, TMessage>> consumerPipe = messageSpecification.BuildConsumerPipe(_consumeFilter)
+                ?? throw new InvalidOperationException("The saga message specification returned a null consumer pipe.");
 
             IPipe<ConsumeContext<TMessage>> messagePipe = messageSpecification.BuildMessagePipe(x =>
             {
                 specification.ConfigureMessagePipe(x);
 
                 ConfigureMessagePipe(x, repository, consumerPipe);
-            });
+            }) ?? throw new InvalidOperationException("The saga message specification returned a null message pipe.");
 
-            return ConfigureConsumeTopology
+            ConnectHandle handle = ConfigureConsumeTopology
                 ? consumePipe.ConnectConsumePipe(messagePipe)
                 : consumePipe.ConnectConsumePipe(messagePipe, NotConfigureConsumeTopology);
+
+            return handle ?? throw new InvalidOperationException("The consume pipe connector returned a null connect handle.");
         }
 
         /// <summary>Appends message-dispatch filters that enter the saga repository before the saga-specific pipeline.</summary>

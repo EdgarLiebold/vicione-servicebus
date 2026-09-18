@@ -54,6 +54,8 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="specification">The specification applied after the saga instance is selected.</param>
         public void AddPipeSpecification(IPipeSpecification<SagaConsumeContext<TSaga, TMessage>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _configurator.AddPipeSpecification(specification);
         }
 
@@ -61,6 +63,8 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="specification">The specification applied before saga repository dispatch.</param>
         public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _messagePipeConfigurator.AddPipeSpecification(specification);
         }
 
@@ -90,6 +94,8 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="specification">The specification whose filters receive the saga-only context view.</param>
         public void AddPipeSpecification(IPipeSpecification<SagaConsumeContext<TSaga>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _configurator.AddPipeSpecification(new SagaPipeSpecificationProxy(specification));
         }
 
@@ -98,6 +104,8 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <returns>A handle that disconnects the registration.</returns>
         public ConnectHandle ConnectSagaConfigurationObserver(ISagaConfigurationObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(observer);
+
             return _observers.Connect(observer);
         }
 
@@ -116,11 +124,13 @@ public partial class SagaConnector<TSaga, TMessage>
 
             public SagaMessageConfigurator(IPipeConfigurator<SagaConsumeContext<TSaga, TMessage>> configurator)
             {
-                _configurator = configurator;
+                _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
             }
 
             public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
             {
+                ArgumentNullException.ThrowIfNull(specification);
+
                 _configurator.AddPipeSpecification(new SagaPipeSpecificationProxy(specification));
             }
         }

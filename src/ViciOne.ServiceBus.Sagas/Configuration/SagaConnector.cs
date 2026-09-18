@@ -13,67 +13,92 @@ public sealed class SagaConnector<TSaga> :
     where TSaga : class, ISaga
 {
     readonly List<ISagaMessageConnector<TSaga>> _connectors;
+    readonly IEnumerable<ISagaMessageConnector> _connectorView;
 
     /// <summary>Discovers message connectors in category precedence order and rejects a saga with no supported contracts.</summary>
     public SagaConnector()
     {
-        try
-        {
-            _connectors = Initiates()
-                .Concat(Orchestrates())
-                .Concat(InitiatesOrOrchestrates())
-                .Concat(Observes())
-                // Category order is semantic: initiation owns a duplicated message contract
-                // before orchestration, combined initiation/orchestration, and observation.
-                // Ordering inside a category is stable and independent of reflection order.
-                .DistinctBy(x => x.MessageType)
-                .ToList();
+        _connectors = Initiates()
+            .Concat(Orchestrates())
+            .Concat(InitiatesOrOrchestrates())
+            .Concat(Observes())
+            // Category order is semantic: initiation owns a duplicated message contract
+            // before orchestration, combined initiation/orchestration, and observation.
+            // Ordering inside a category is stable and independent of reflection order.
+            .DistinctBy(x => x.MessageType)
+            .ToList();
 
-            if (_connectors.Count == 0)
-            {
-                throw new ConfigurationException(
-                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"The saga {TypeCache<TSaga>.ShortName} does not declare a supported saga message contract.", "Correct the named configuration before starting the host"));
-            }
-        }
-        catch (ConfigurationException)
+        if (_connectors.Count == 0)
         {
-            throw;
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"The saga {TypeCache<TSaga>.ShortName} does not declare a supported saga message contract.", "Correct the named configuration before starting the host"));
         }
-        catch (Exception ex)
-        {
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"Failed to create the saga connector for {TypeCache<TSaga>.ShortName}.", "Correct the named configuration before starting the host"), ex);
-        }
+
+        _connectorView = _connectors.AsReadOnly();
     }
 
-    /// <summary>Gets one connector per message contract, in initiation, orchestration, combined and observation category order.</summary>
-    public IEnumerable<ISagaMessageConnector> Connectors => _connectors;
+    /// <summary>Gets a read-only view containing one connector per message contract, in category precedence order.</summary>
+    public IEnumerable<ISagaMessageConnector> Connectors => _connectorView;
 
     ISagaSpecification<T> ISagaConnector.CreateSagaSpecification<T>()
     {
-        return new SagaSpecification<T>(_connectors.Select(x => x.CreateSagaMessageSpecification())
-            .Cast<ISagaMessageSpecification<T>>()
-            .ToList());
+        if (typeof(T) != typeof(TSaga))
+            throw new ArgumentException("The generic argument did not match the connector type", nameof(T));
+
+        var specification = new SagaSpecification<TSaga>(
+            _connectors.Select(x => x.CreateSagaMessageSpecification()).ToList());
+
+        return (ISagaSpecification<T>)(object)specification;
     }
 
     ConnectHandle ISagaConnector.ConnectSaga<T>(IConsumePipeConnector consumePipe, ISagaRepository<T> repository, ISagaSpecification<T> specification)
     {
+        ArgumentNullException.ThrowIfNull(consumePipe);
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(specification);
+
+        if (typeof(T) != typeof(TSaga))
+            throw new ArgumentException("The generic argument did not match the connector type", nameof(T));
+
         var handles = new List<ConnectHandle>(_connectors.Count);
         try
         {
-            foreach (ISagaMessageConnector<T> connector in _connectors.Cast<ISagaMessageConnector<T>>())
+            foreach (ISagaMessageConnector<TSaga> connector in _connectors)
             {
-                var handle = connector.ConnectSaga(consumePipe, repository, specification);
+                var handle = connector.ConnectSaga(
+                        consumePipe,
+                        (ISagaRepository<TSaga>)(object)repository,
+                        (ISagaSpecification<TSaga>)(object)specification)
+                    ?? throw new InvalidOperationException(
+                        $"The saga message connector for {TypeCache.GetShortName(connector.MessageType)} returned no connection handle.");
 
                 handles.Add(handle);
             }
 
             return new MultipleConnectHandle(handles);
         }
-        catch (Exception)
+        catch (Exception connectionFailure)
         {
+            List<Exception>? cleanupFailures = null;
             foreach (var handle in handles)
-                handle.Dispose();
-            throw;
+            {
+                try
+                {
+                    handle.Dispose();
+                }
+                catch (Exception cleanupFailure)
+                {
+                    cleanupFailures ??= [];
+                    cleanupFailures.Add(cleanupFailure);
+                }
+            }
+
+            if (cleanupFailures is null)
+                throw;
+
+            var failures = new List<Exception>(cleanupFailures.Count + 1) { connectionFailure };
+            failures.AddRange(cleanupFailures);
+            throw new AggregateException("Saga connection and cleanup both failed.", failures);
         }
     }
 

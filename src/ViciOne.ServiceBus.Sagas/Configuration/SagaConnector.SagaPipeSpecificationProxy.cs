@@ -17,8 +17,7 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="specification">The specification whose filters receive the saga-only context view.</param>
         public SagaPipeSpecificationProxy(IPipeSpecification<SagaConsumeContext<TSaga>> specification)
         {
-            if (specification == null)
-                throw new ArgumentNullException(nameof(specification));
+            ArgumentNullException.ThrowIfNull(specification);
 
             _specification = new SagaSplitFilterSpecification(specification);
         }
@@ -27,8 +26,7 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="specification">The specification whose filters receive the message-only context view.</param>
         public SagaPipeSpecificationProxy(IPipeSpecification<ConsumeContext<TMessage>> specification)
         {
-            if (specification == null)
-                throw new ArgumentNullException(nameof(specification));
+            ArgumentNullException.ThrowIfNull(specification);
 
             _specification = new SagaMessageSplitFilterSpecification(specification);
         }
@@ -37,6 +35,8 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="builder">The builder receiving adapted context filters.</param>
         public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             _specification.Apply(builder);
         }
 

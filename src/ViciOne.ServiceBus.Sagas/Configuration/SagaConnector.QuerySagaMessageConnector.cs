@@ -1,3 +1,4 @@
+using System;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -21,8 +22,8 @@ public partial class SagaConnector<TSaga, TMessage>
             ISagaQueryFactory<TSaga, TMessage> queryFactory)
             : base(consumeFilter)
         {
-            _policy = policy;
-            _queryFactory = queryFactory;
+            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+            _queryFactory = queryFactory ?? throw new ArgumentNullException(nameof(queryFactory));
         }
 
         /// <summary>Appends saga repository dispatch using the configured query factory.</summary>

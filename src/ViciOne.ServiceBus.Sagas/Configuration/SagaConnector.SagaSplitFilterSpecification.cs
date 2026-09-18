@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Middleware;
 
@@ -17,13 +18,15 @@ public partial class SagaConnector<TSaga, TMessage>
         /// <param name="specification">The specification supplying filters and validation results.</param>
         public SagaSplitFilterSpecification(IPipeSpecification<SagaConsumeContext<TSaga>> specification)
         {
-            _specification = specification;
+            _specification = specification ?? throw new ArgumentNullException(nameof(specification));
         }
 
         /// <summary>Applies the wrapped specification through a builder that adds saga split filters.</summary>
         /// <param name="builder">The saga/message-context builder receiving the adapted filters.</param>
         public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             _specification.Apply(new BuilderProxy(builder));
         }
 
@@ -42,11 +45,13 @@ public partial class SagaConnector<TSaga, TMessage>
 
             public BuilderProxy(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
             {
-                _builder = builder;
+                _builder = builder ?? throw new ArgumentNullException(nameof(builder));
             }
 
             public void AddFilter(IFilter<SagaConsumeContext<TSaga>> filter)
             {
+                ArgumentNullException.ThrowIfNull(filter);
+
                 _builder.AddFilter(new SagaSplitFilter<TSaga, TMessage>(filter));
             }
         }
