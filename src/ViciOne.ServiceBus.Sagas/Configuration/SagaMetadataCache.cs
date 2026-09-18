@@ -37,7 +37,7 @@ internal sealed class SagaMetadataCache<TSaga>
             return new ConstructorSagaInstanceFactory<TSaga>().FactoryMethod;
 
         if (typeof(TSaga).GetConstructor(Type.EmptyTypes) is not null
-            && typeof(TSaga).GetProperty(nameof(ISaga.CorrelationId), typeof(Guid))?.SetMethod is not null)
+            && typeof(TSaga).GetProperty(nameof(ISaga.CorrelationId), typeof(Guid))?.SetMethod is { IsPublic: true })
         {
             return new PropertySagaInstanceFactory<TSaga>().FactoryMethod;
         }
@@ -52,6 +52,7 @@ internal sealed class SagaMetadataCache<TSaga>
         return typeof(TSaga).GetInterfaces()
             .Where(x => x.IsGenericType)
             .Where(x => x.GetGenericTypeDefinition() == contractTypeDefinition)
+            .Where(x => contractTypeDefinition != typeof(IObserves<,>) || x.GetGenericArguments()[1] == typeof(TSaga))
             .Select(x => x.GetGenericArguments()[0])
             .Where(MessageTypeCache.IsValidMessageType)
             .Select(x => new SagaMessageConnectorDescriptor(x, typeof(TSaga)))

@@ -14,6 +14,9 @@ internal sealed class PropertySagaInstanceFactory<TSaga>
 {
     public PropertySagaInstanceFactory()
     {
+        if (!typeof(TSaga).IsClass || typeof(TSaga).IsAbstract)
+            throw new ArgumentException($"The saga must be a concrete class: {TypeCache<TSaga>.ShortName}");
+
         var constructorInfo = typeof(TSaga).GetConstructor(Type.EmptyTypes);
         if (constructorInfo == null)
             throw new ArgumentException($"The saga {TypeCache<TSaga>.ShortName} does not have a default public constructor");

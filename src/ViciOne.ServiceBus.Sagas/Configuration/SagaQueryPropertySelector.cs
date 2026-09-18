@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -10,12 +11,14 @@ public class SagaQueryPropertySelector<TData, TProperty> :
     where TData : class
     where TProperty : class
 {
-    readonly Func<ConsumeContext<TData>, TProperty> _selector;
+    readonly Func<ConsumeContext<TData>, TProperty?> _selector;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="selector">The selector.</param>
-    public SagaQueryPropertySelector(Func<ConsumeContext<TData>, TProperty> selector)
+    public SagaQueryPropertySelector(Func<ConsumeContext<TData>, TProperty?> selector)
     {
+        ArgumentNullException.ThrowIfNull(selector);
+
         _selector = selector;
     }
 
@@ -23,8 +26,10 @@ public class SagaQueryPropertySelector<TData, TProperty> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="property">Receives the property produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryGetProperty(ConsumeContext<TData> context, out TProperty property)
+    public bool TryGetProperty(ConsumeContext<TData> context, [NotNullWhen(true)] out TProperty? property)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         property = _selector(context);
 
         return property != null;

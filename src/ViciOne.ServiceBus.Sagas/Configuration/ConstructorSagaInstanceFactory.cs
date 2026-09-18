@@ -13,6 +13,9 @@ internal sealed class ConstructorSagaInstanceFactory<TSaga>
 {
     public ConstructorSagaInstanceFactory()
     {
+        if (!typeof(TSaga).IsClass || typeof(TSaga).IsAbstract)
+            throw new ArgumentException($"The saga must be a concrete class: {TypeCache<TSaga>.ShortName}");
+
         var constructorInfo = typeof(TSaga).GetConstructor([typeof(Guid)]);
         if (constructorInfo == null)
         {

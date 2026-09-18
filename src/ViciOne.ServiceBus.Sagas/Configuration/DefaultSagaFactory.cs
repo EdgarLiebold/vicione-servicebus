@@ -17,6 +17,8 @@ public class DefaultSagaFactory<TSaga, TMessage> :
     /// <returns>The newly created instance.</returns>
     public TSaga Create(ConsumeContext<TMessage> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (!context.CorrelationId.HasValue)
             throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
 
@@ -29,6 +31,9 @@ public class DefaultSagaFactory<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         if (!context.CorrelationId.HasValue)
             throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
 
@@ -38,6 +43,7 @@ public class DefaultSagaFactory<TSaga, TMessage> :
 
         proxy.LogCreated();
 
-        return next.SendAsync(proxy);
+        return next.SendAsync(proxy)
+            ?? throw new InvalidOperationException("The saga pipeline returned no task.");
     }
 }
