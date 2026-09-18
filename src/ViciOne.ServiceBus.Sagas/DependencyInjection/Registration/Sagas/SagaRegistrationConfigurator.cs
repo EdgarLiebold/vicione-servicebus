@@ -17,7 +17,7 @@ public class SagaRegistrationConfigurator<TSaga> :
     /// <param name="registration">The registration.</param>
     public SagaRegistrationConfigurator(IRegistrationConfigurator configurator, ISagaRegistration? registration = null)
     {
-        _configurator = configurator;
+        _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
         _registration = registration;
     }
 
@@ -37,15 +37,17 @@ public class SagaRegistrationConfigurator<TSaga> :
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public ISagaRegistrationConfigurator<TSaga> Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
+
         if (_registration is { IncludeInConfigureEndpoints: false })
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "Saga is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
-        var configurator = new EndpointRegistrationConfigurator<TSaga>();
-
-        configure?.Invoke(configurator);
-
         var registration = _registration
             ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "An endpoint cannot be configured for a repository-only saga registration.", "Correct the named configuration before starting the host"));
+        var configurator = new EndpointRegistrationConfigurator<TSaga>();
+
+        configure(configurator);
+
         _configurator.AddEndpoint<SagaEndpointDefinition<TSaga>, TSaga>(registration, configurator.Settings);
 
         return this;
@@ -56,9 +58,11 @@ public class SagaRegistrationConfigurator<TSaga> :
     /// <returns>The saga registration configurator produced by the operation.</returns>
     public ISagaRegistrationConfigurator<TSaga> Repository(Action<ISagaRepositoryRegistrationConfigurator<TSaga>> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
+
         var configurator = new SagaRepositoryRegistrationConfigurator<TSaga>(_configurator.Services);
 
-        configure?.Invoke(configurator);
+        configure(configurator);
 
         return this;
     }

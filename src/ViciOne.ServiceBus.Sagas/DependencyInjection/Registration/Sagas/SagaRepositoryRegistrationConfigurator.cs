@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,7 @@ public class SagaRepositoryRegistrationConfigurator<TSaga> :
     /// <param name="collection">The collection.</param>
     public SagaRepositoryRegistrationConfigurator(IServiceCollection collection)
     {
-        _collection = collection;
+        _collection = collection ?? throw new ArgumentNullException(nameof(collection));
     }
 
     /// <summary>Gets enumerator.</summary>

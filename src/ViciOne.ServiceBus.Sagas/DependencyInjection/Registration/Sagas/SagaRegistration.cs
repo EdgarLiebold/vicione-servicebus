@@ -17,13 +17,16 @@ public class SagaRegistration<TSaga> :
     where TSaga : class, ISaga
 {
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TSaga>>> _configureActions;
+    readonly object _definitionLock = new();
     readonly IContainerSelector _selector;
-    ISagaDefinition<TSaga> _definition = null!;
+    volatile ISagaDefinition<TSaga>? _definition;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="selector">The selector.</param>
     public SagaRegistration(IContainerSelector selector)
     {
+        ArgumentNullException.ThrowIfNull(selector);
+
         _selector = selector;
         _configureActions = new List<Action<IRegistrationContext, ISagaConfigurator<TSaga>>>();
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
@@ -46,6 +49,9 @@ public class SagaRegistration<TSaga> :
 
     void ISagaRegistration.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
+
         ISagaRepository<TSaga> repository = new DependencyInjectionSagaRepository<TSaga>(context);
 
         var decoratorRegistration = context.GetService<ISagaRepositoryDecoratorRegistration<TSaga>>();
@@ -68,20 +74,32 @@ public class SagaRegistration<TSaga> :
 
     ISagaDefinition ISagaRegistration.GetDefinition(IRegistrationContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return GetSagaDefinition(context);
     }
 
     ISagaDefinition<TSaga> GetSagaDefinition(IServiceProvider provider)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+
         if (_definition != null)
             return _definition;
 
-        _definition = _selector.GetDefinition<ISagaDefinition<TSaga>>(provider) ?? new DefaultSagaDefinition<TSaga>();
+        lock (_definitionLock)
+        {
+            if (_definition != null)
+                return _definition;
 
-        IEndpointDefinition<TSaga>? endpointDefinition = _selector.GetEndpointDefinition<TSaga>(provider);
-        if (endpointDefinition != null)
-            _definition.EndpointDefinition = endpointDefinition;
+            ISagaDefinition<TSaga> definition =
+                _selector.GetDefinition<ISagaDefinition<TSaga>>(provider) ?? new DefaultSagaDefinition<TSaga>();
 
-        return _definition;
+            IEndpointDefinition<TSaga>? endpointDefinition = _selector.GetEndpointDefinition<TSaga>(provider);
+            if (endpointDefinition != null)
+                definition.EndpointDefinition = endpointDefinition;
+
+            _definition = definition;
+            return definition;
+        }
     }
 }

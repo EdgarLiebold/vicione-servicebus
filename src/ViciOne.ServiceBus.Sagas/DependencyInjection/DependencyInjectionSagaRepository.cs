@@ -30,13 +30,16 @@ public class DependencyInjectionSagaRepository<TSaga> :
 
     DependencyInjectionSagaRepository(ISagaRepositoryContextFactory<TSaga> repositoryContextFactory)
     {
-        _repositoryContextFactory = repositoryContextFactory;
+        _repositoryContextFactory = repositoryContextFactory
+            ?? throw new ArgumentNullException(nameof(repositoryContextFactory));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("dependencyInjectionSagaRepository");
 
         _repositoryContextFactory.Probe(scope);
@@ -51,6 +54,10 @@ public class DependencyInjectionSagaRepository<TSaga> :
     public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(policy);
+        ArgumentNullException.ThrowIfNull(next);
+
         var correlationId = context.CorrelationId ??
             throw new SagaException("The CorrelationId was not specified", typeof(TSaga), typeof(T));
 
@@ -68,6 +75,11 @@ public class DependencyInjectionSagaRepository<TSaga> :
         IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(policy);
+        ArgumentNullException.ThrowIfNull(next);
+
         return _repositoryContextFactory.SendQueryAsync(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
     }
 }

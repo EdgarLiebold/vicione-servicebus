@@ -15,7 +15,8 @@ public class DependencyInjectionQuerySagaRepository<TSaga> :
     /// <summary>Initializes a new instance.</summary>
     /// <param name="provider">The service provider used to resolve dependencies.</param>
     public DependencyInjectionQuerySagaRepository(IServiceProvider provider)
-        : base(new DependencyInjectionQuerySagaRepositoryContextFactory(provider))
+        : base(new DependencyInjectionQuerySagaRepositoryContextFactory(
+            provider ?? throw new ArgumentNullException(nameof(provider))))
     {
     }
 
@@ -27,7 +28,7 @@ public class DependencyInjectionQuerySagaRepository<TSaga> :
 
         public DependencyInjectionQuerySagaRepositoryContextFactory(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public void Probe(ProbeContext context)
@@ -38,21 +39,33 @@ public class DependencyInjectionQuerySagaRepository<TSaga> :
         public async Task<T> ExecuteAsync<T>(Func<IQuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(asyncMethod);
+
             var serviceScope = _serviceProvider.CreateScope();
+            T? result = default;
+            Exception? operationFailure = null;
 
             try
             {
                 var factory = serviceScope.ServiceProvider.GetRequiredService<IQuerySagaRepositoryContextFactory<TSaga>>();
 
-                return await factory.ExecuteAsync(asyncMethod, cancellationToken).ConfigureAwait(false);
+                Task<T> execution = factory.ExecuteAsync(asyncMethod, cancellationToken)
+                    ?? throw new InvalidOperationException("The scoped saga query context factory returned a null task.");
+
+                result = await execution.ConfigureAwait(false);
             }
-            finally
+            catch (Exception exception)
             {
-                if (serviceScope is IAsyncDisposable asyncDisposable)
-                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                else
-                    serviceScope.Dispose();
+                operationFailure = exception;
             }
+
+            await DependencyInjectionSagaScope.DisposeAsync(
+                    serviceScope,
+                    operationFailure,
+                    "The saga query operation and its dependency injection scope both failed.")
+                .ConfigureAwait(false);
+
+            return result!;
         }
     }
 }
