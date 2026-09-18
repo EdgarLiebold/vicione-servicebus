@@ -12,6 +12,7 @@ public class RedeliverRequestStateMachineSpecification :
     /// <param name="configure">The callback used to configure the component.</param>
     public RedeliverRequestStateMachineSpecification(Action<IMissingInstanceRedeliveryConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
         _configure = configure;
     }
 
@@ -24,11 +25,13 @@ public class RedeliverRequestStateMachineSpecification :
         where TInstance : ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         return configurator.Redeliver(r =>
         {
             r.OnRedeliveryLimitReached(x => x.Fault());
 
-            _configure?.Invoke(r);
+            _configure(r);
         });
     }
 }

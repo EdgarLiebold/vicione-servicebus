@@ -18,7 +18,13 @@ public class InMemoryOutboxSagaConfigurationObserver<TSaga> :
     /// <param name="configure">The callback used to configure the component.</param>
     public InMemoryOutboxSagaConfigurationObserver(IRegistrationContext context, ISagaConfigurator<TSaga> configurator,
         Action<IOutboxConfigurator>? configure)
-        : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
+        : this(
+            context is null
+                ? throw new ArgumentNullException(nameof(context))
+                : context as ISetScopedConsumeContext
+                    ?? throw new ArgumentException("The registration context must support scoped consume contexts.", nameof(context)),
+            configurator,
+            configure)
     {
     }
 
@@ -30,7 +36,7 @@ public class InMemoryOutboxSagaConfigurationObserver<TSaga> :
         Action<IOutboxConfigurator>? configure)
     {
         _setter = setter;
-        _configurator = configurator;
+        _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
         _configure = configure;
     }
 

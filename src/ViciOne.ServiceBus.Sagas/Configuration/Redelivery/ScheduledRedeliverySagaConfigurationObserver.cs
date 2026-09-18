@@ -19,8 +19,8 @@ public class ScheduledRedeliverySagaConfigurationObserver<TSaga> :
     /// <param name="configure">The callback used to configure the component.</param>
     public ScheduledRedeliverySagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, Action<IRetryConfigurator> configure)
     {
-        _configurator = configurator;
-        _configure = configure;
+        _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
+        _configure = configure ?? throw new ArgumentNullException(nameof(configure));
     }
 
     void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
@@ -41,7 +41,7 @@ public class ScheduledRedeliverySagaConfigurationObserver<TSaga> :
         var redeliverySpecification = new ScheduledRedeliveryPipeSpecification<TMessage>();
         var retrySpecification = new RedeliveryRetryPipeSpecification<TMessage>(redeliverySpecification);
 
-        _configure?.Invoke(retrySpecification);
+        _configure(retrySpecification);
 
         _configurator.Message<TMessage>(x =>
         {
