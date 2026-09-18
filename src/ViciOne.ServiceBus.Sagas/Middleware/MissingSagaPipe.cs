@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Saga;
@@ -21,12 +22,13 @@ public class MissingSagaPipe<TSaga, TMessage> :
     /// <param name="next">The next pipeline stage to invoke.</param>
     public MissingSagaPipe(ISagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        _repositoryContext = repositoryContext;
-        _next = next;
+        _repositoryContext = repositoryContext ?? throw new ArgumentNullException(nameof(repositoryContext));
+        _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _next.Probe(context);
     }
 
@@ -35,36 +37,68 @@ public class MissingSagaPipe<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
     {
-        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _repositoryContext.AddAsync(context.Saga).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
 
-        sagaConsumeContext.LogAdded();
+        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await SagaRepositoryLifecycle.RequireTask(
+                _repositoryContext.AddAsync(context.Saga),
+                "The saga repository returned a null add task.")
+            .ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The saga repository returned a null added saga context.");
 
+        bool discardAttempted = false;
+        Exception? operationFailure = null;
         try
         {
-            await _next.SendAsync(sagaConsumeContext).ConfigureAwait(false);
+            sagaConsumeContext.LogAdded();
+
+            Task next = _next.SendAsync(sagaConsumeContext)
+                ?? throw new InvalidOperationException("The added saga pipeline returned a null task.");
+            await next.ConfigureAwait(false);
 
             if (sagaConsumeContext.IsCompleted)
-                await _repositoryContext.DiscardAsync(sagaConsumeContext).ConfigureAwait(false);
-            else
-                await _repositoryContext.SaveAsync(sagaConsumeContext).ConfigureAwait(false);
-        }
-        catch (Exception)
-        {
-            await _repositoryContext.DiscardAsync(sagaConsumeContext).ConfigureAwait(false);
-
-            throw;
-        }
-        finally
-        {
-            switch (sagaConsumeContext)
             {
-                case IAsyncDisposable asyncDisposable:
-                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                    break;
-                case IDisposable disposable:
-                    disposable.Dispose();
-                    break;
+                discardAttempted = true;
+                await SagaRepositoryLifecycle.RequireTask(
+                        _repositoryContext.DiscardAsync(sagaConsumeContext),
+                        "The saga repository returned a null discard task.")
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await SagaRepositoryLifecycle.RequireTask(
+                        _repositoryContext.SaveAsync(sagaConsumeContext),
+                        "The saga repository returned a null save task.")
+                    .ConfigureAwait(false);
             }
         }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        var cleanupFailures = new List<Exception>(2);
+        if (operationFailure is not null && !discardAttempted)
+        {
+            try
+            {
+                await SagaRepositoryLifecycle.RequireTask(
+                        _repositoryContext.DiscardAsync(sagaConsumeContext),
+                        "The saga repository returned a null discard task.")
+                    .ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                cleanupFailures.Add(exception);
+            }
+        }
+
+        Exception? disposalFailure = await SagaRepositoryLifecycle.TryDisposeAsync(sagaConsumeContext).ConfigureAwait(false);
+        if (disposalFailure is not null)
+            cleanupFailures.Add(disposalFailure);
+
+        SagaRepositoryLifecycle.ThrowIfAny(
+            "The added saga operation or consume-context cleanup failed.",
+            operationFailure,
+            cleanupFailures);
     }
 }

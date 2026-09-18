@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -21,14 +20,16 @@ public class SendQuerySagaPipe<TSaga, T> :
     /// <param name="next">The next pipeline stage to invoke.</param>
     public SendQuerySagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
-        _policy = policy;
-        _next = next;
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        _next.Probe(context);
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
@@ -36,56 +37,32 @@ public class SendQuerySagaPipe<TSaga, T> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ISagaRepositoryQueryContext<TSaga, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
+        bool found = false;
         if (context.Count > 0)
         {
-            async Task SendToInstanceAsync(Guid correlationId)
+            foreach (var correlationId in context)
             {
-                SagaConsumeContext<TSaga, T>? sagaConsumeContext = await context.LoadAsync(correlationId).ConfigureAwait(false);
+                SagaConsumeContext<TSaga, T>? sagaConsumeContext = await SagaRepositoryLifecycle.RequireTask(
+                        context.LoadAsync(correlationId),
+                        "The saga repository returned a null load task.")
+                    .ConfigureAwait(false);
                 if (sagaConsumeContext != null)
                 {
-                    sagaConsumeContext.LogUsed();
-
-                    try
-                    {
-                        await _policy.ExistingAsync(sagaConsumeContext, _next).ConfigureAwait(false);
-
-                        if (_policy.IsReadOnly)
-                            await context.UndoAsync(sagaConsumeContext).ConfigureAwait(false);
-                        else
-                        {
-                            if (sagaConsumeContext.IsCompleted)
-                            {
-                                await context.DeleteAsync(sagaConsumeContext).ConfigureAwait(false);
-
-                                sagaConsumeContext.LogRemoved();
-                            }
-                            else
-                                await context.UpdateAsync(sagaConsumeContext).ConfigureAwait(false);
-                        }
-                    }
-                    finally
-                    {
-                        switch (sagaConsumeContext)
-                        {
-                            case IAsyncDisposable asyncDisposable:
-                                await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                                break;
-                            case IDisposable disposable:
-                                disposable.Dispose();
-                                break;
-                        }
-                    }
+                    found = true;
+                    await SagaRepositoryLifecycle.SendToExistingAsync(context, _policy, _next, sagaConsumeContext).ConfigureAwait(false);
                 }
             }
-
-            foreach (var correlationId in context)
-                await SendToInstanceAsync(correlationId).ConfigureAwait(false);
         }
-        else
+
+        if (!found)
         {
             var missingPipe = new MissingSagaPipe<TSaga, T>(context, _next);
 
-            await _policy.MissingAsync(context, missingPipe).ConfigureAwait(false);
+            Task missing = _policy.MissingAsync(context, missingPipe)
+                ?? throw new InvalidOperationException("The saga policy returned a null missing-saga task.");
+            await missing.ConfigureAwait(false);
         }
     }
 }

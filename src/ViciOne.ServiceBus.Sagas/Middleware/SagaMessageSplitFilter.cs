@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -20,11 +20,13 @@ public class SagaMessageSplitFilter<TSaga, TMessage> :
     /// <param name="next">The next pipeline stage to invoke.</param>
     public SagaMessageSplitFilter(IFilter<ConsumeContext<TMessage>> next)
     {
-        _next = next;
+        _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateFilterScope("split");
         scope.Set(new { MessageType = TypeCache<TMessage>.ShortName });
 
@@ -35,9 +37,11 @@ public class SagaMessageSplitFilter<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    [DebuggerNonUserCode]
     public Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         var mergePipe = new SagaMessageMergePipe<TSaga, TMessage>(next, context);
 
         return _next.SendAsync(context, mergePipe);

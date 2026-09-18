@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Events.Faults;
@@ -13,16 +14,16 @@ public class RescueExceptionSagaConsumeContext<TSaga> :
     where TSaga : class, ISaga
 {
     readonly SagaConsumeContext<TSaga> _context;
-    ExceptionInfo _exceptionInfo = null!;
+    ExceptionInfo? _exceptionInfo;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     public RescueExceptionSagaConsumeContext(SagaConsumeContext<TSaga> context, Exception exception)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
-        Exception = exception;
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
     }
 
     /// <summary>Gets the saga.</summary>
@@ -45,6 +46,14 @@ public class RescueExceptionSagaConsumeContext<TSaga> :
     /// <summary>Gets the exception info.</summary>
     public ExceptionInfo ExceptionInfo
     {
-        get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
+        get
+        {
+            ExceptionInfo? published = Volatile.Read(ref _exceptionInfo);
+            if (published is not null)
+                return published;
+
+            var created = new FaultExceptionInfo(Exception);
+            return Interlocked.CompareExchange(ref _exceptionInfo, created, null) ?? created;
+        }
     }
 }

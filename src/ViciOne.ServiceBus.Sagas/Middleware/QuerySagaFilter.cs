@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -24,16 +25,18 @@ public class QuerySagaFilter<TSaga, TMessage> :
     public QuerySagaFilter(ISagaRepository<TSaga> sagaRepository, ISagaPolicy<TSaga, TMessage> policy,
         ISagaQueryFactory<TSaga, TMessage> queryFactory, IPipe<SagaConsumeContext<TSaga, TMessage>> messagePipe)
     {
-        _sagaRepository = sagaRepository;
-        _messagePipe = messagePipe;
-        _policy = policy;
-        _queryFactory = queryFactory;
+        _sagaRepository = sagaRepository ?? throw new ArgumentNullException(nameof(sagaRepository));
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        _queryFactory = queryFactory ?? throw new ArgumentNullException(nameof(queryFactory));
+        _messagePipe = messagePipe ?? throw new ArgumentNullException(nameof(messagePipe));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateFilterScope("saga");
         scope.Set(new { Correlation = "Query" });
 
@@ -49,31 +52,73 @@ public class QuerySagaFilter<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         TimeProvider timeProvider = context.GetTimeProvider();
         long startedAt = timeProvider.GetTimestamp();
+        ISagaQuery<TSaga>? query;
+        bool hasQuery;
         try
         {
-            if (_queryFactory.TryCreateQuery(context, out ISagaQuery<TSaga>? query))
-            {
-                await _sagaRepository.SendQueryAsync(context, query, _policy, _messagePipe).ConfigureAwait(false);
-
-                await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TSaga>.ShortName).ConfigureAwait(false);
-            }
-
-            await next.SendAsync(context).ConfigureAwait(false);
-        }
-        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                          && !context.CancellationToken.IsCancellationRequested)
-        {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TSaga>.ShortName, exception).ConfigureAwait(false);
-
-            throw new ConsumerCanceledException($"The operation was canceled by the saga: {TypeCache<TSaga>.ShortName}");
+            hasQuery = _queryFactory.TryCreateQuery(context, out query);
         }
         catch (Exception exception)
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TSaga>.ShortName, exception).ConfigureAwait(false);
-
-            throw;
+            await NotifyFaultedAndRethrowAsync(context, timeProvider, startedAt, exception).ConfigureAwait(false);
+            return;
         }
+
+        if (!hasQuery)
+        {
+            await next.SendAsync(context).ConfigureAwait(false);
+            return;
+        }
+
+        try
+        {
+            if (query is null)
+                throw new InvalidOperationException("The saga query factory reported success without returning a query.");
+
+            await _sagaRepository.SendQueryAsync(context, query, _policy, _messagePipe).ConfigureAwait(false);
+
+            await next.SendAsync(context).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            await NotifyFaultedAndRethrowAsync(context, timeProvider, startedAt, exception).ConfigureAwait(false);
+            return;
+        }
+
+        await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TSaga>.ShortName).ConfigureAwait(false);
+    }
+
+    static async Task NotifyFaultedAndRethrowAsync(ConsumeContext<TMessage> context, TimeProvider timeProvider, long startedAt,
+        Exception exception)
+    {
+        Exception operationException = exception is ConsumerCanceledException
+            ? exception
+            : TryGetDependencyCancellation(context, exception, out OperationCanceledException? cancellation)
+            ? new ConsumerCanceledException($"The operation was canceled by the saga: {TypeCache<TSaga>.ShortName}", cancellation!)
+            : exception;
+
+        try
+        {
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TSaga>.ShortName, exception)
+                .ConfigureAwait(false);
+        }
+        catch (Exception observerException)
+        {
+            throw new AggregateException(operationException, observerException);
+        }
+
+        ExceptionDispatchInfo.Throw(operationException);
+    }
+
+    static bool TryGetDependencyCancellation(ConsumeContext<TMessage> context, Exception exception,
+        out OperationCanceledException? cancellation)
+    {
+        cancellation = exception as OperationCanceledException ?? exception.GetBaseException() as OperationCanceledException;
+        return cancellation is not null && !context.CancellationToken.IsCancellationRequested;
     }
 }
