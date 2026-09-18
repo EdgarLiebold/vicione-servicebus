@@ -20,7 +20,7 @@ public class SagaConsumeContextProxy<TSaga, TMessage> :
     public SagaConsumeContextProxy(ConsumeContext<TMessage> context, SagaConsumeContext<TSaga, TMessage> sagaContext)
         : base(context)
     {
-        _sagaContext = sagaContext;
+        _sagaContext = sagaContext ?? throw new ArgumentNullException(nameof(sagaContext));
     }
 
     /// <summary>Gets the correlation id.</summary>
