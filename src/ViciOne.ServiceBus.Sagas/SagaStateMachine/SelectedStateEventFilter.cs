@@ -12,18 +12,24 @@ public class SelectedStateEventFilter<TSaga, TMessage> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="filter" /> is null.</exception>
     public SelectedStateEventFilter(StateMachineCondition<TSaga, TMessage> filter)
     {
+        ArgumentNullException.ThrowIfNull(filter);
+
         _filter = filter;
     }
 
     /// <summary>Applies the configured filter.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is null.</exception>
     public bool Filter<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (context is IBehaviorContext<TSaga, TMessage> filterContext)
             return _filter(filterContext);
 
@@ -33,8 +39,11 @@ public class SelectedStateEventFilter<TSaga, TMessage> :
     /// <summary>Applies the configured filter.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is null.</exception>
     public bool Filter(IBehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return false;
     }
 }
