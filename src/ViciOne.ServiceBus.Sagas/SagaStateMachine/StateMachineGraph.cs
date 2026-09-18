@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <summary>Provides an immutable snapshot of a state machine's nodes and directed edges.</summary>
 /// <remarks>
 /// The constructor copies and validates both input sequences, so the snapshot can be shared safely between readers.
+/// Both sequence references are validated before enumeration, and invalid nodes are rejected before edges are enumerated.
 /// Node membership uses reference identity, which preserves separate state-local occurrences with identical metadata.
 /// </remarks>
 public sealed class StateMachineGraph
@@ -31,16 +32,16 @@ public sealed class StateMachineGraph
         ArgumentNullException.ThrowIfNull(edges);
 
         StateMachineGraphNode[] nodeSnapshot = nodes.ToArray();
-        StateMachineGraphEdge[] edgeSnapshot = edges.ToArray();
-
         if (nodeSnapshot.Any(static node => node is null))
             throw new ArgumentException("Graph nodes cannot contain null elements.", nameof(nodes));
-        if (edgeSnapshot.Any(static edge => edge is null))
-            throw new ArgumentException("Graph edges cannot contain null elements.", nameof(edges));
 
         HashSet<StateMachineGraphNode> nodeSet = nodeSnapshot.ToHashSet();
         if (nodeSet.Count != nodeSnapshot.Length)
             throw new ArgumentException("Graph nodes must be unique.", nameof(nodes));
+
+        StateMachineGraphEdge[] edgeSnapshot = edges.ToArray();
+        if (edgeSnapshot.Any(static edge => edge is null))
+            throw new ArgumentException("Graph edges cannot contain null elements.", nameof(edges));
         if (edgeSnapshot.ToHashSet().Count != edgeSnapshot.Length)
             throw new ArgumentException("Graph edges must be unique.", nameof(edges));
         if (edgeSnapshot.Any(edge => !nodeSet.Contains(edge.Source) || !nodeSet.Contains(edge.Target)))

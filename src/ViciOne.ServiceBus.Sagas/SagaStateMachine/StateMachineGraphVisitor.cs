@@ -18,9 +18,13 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
     readonly HashSet<IEvent> _visitedEvents;
     StateMachineGraphNode? _currentEvent;
     StateMachineGraphNode? _currentState;
+    int _eventVisitDepth;
+    int _exceptionVisitDepth;
 
     internal StateMachineGraphVisitor(IStateMachine<TSaga> machine)
     {
+        ArgumentNullException.ThrowIfNull(machine);
+
         _machine = machine;
 
         _edges = new HashSet<StateMachineGraphEdge>();
@@ -51,43 +55,96 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
 
     public void Visit(IState state, Action<IState> next)
     {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(next);
+
+        StateMachineGraphNode? previousState = _currentState;
+        StateMachineGraphNode? previousEvent = _currentEvent;
         _currentState = GetStateNode(state);
-        IState<TSaga> typedState = _machine.GetState(state.Name);
-
-        foreach (IEvent @event in typedState.DeclaredEvents)
+        try
         {
-            StateMachineGraphNode eventNode = GetEventNode(@event);
-            AddEdge(new StateMachineGraphEdge(CurrentState, eventNode, StateMachineGraphEdgeKind.EventBinding));
-        }
+            IState<TSaga> typedState = _machine.GetState(state.Name);
 
-        if (typedState.SuperState is not null)
+            foreach (IEvent @event in typedState.DeclaredEvents)
+            {
+                StateMachineGraphNode eventNode = GetEventNode(@event);
+                AddEdge(new StateMachineGraphEdge(CurrentState, eventNode, StateMachineGraphEdgeKind.EventBinding));
+            }
+
+            if (typedState.SuperState is not null)
+            {
+                StateMachineGraphNode superState = GetStateNode(typedState.SuperState);
+                AddEdge(new StateMachineGraphEdge(CurrentState, superState, StateMachineGraphEdgeKind.StateInheritance));
+            }
+
+            next(state);
+        }
+        finally
         {
-            StateMachineGraphNode superState = GetStateNode(typedState.SuperState);
-            AddEdge(new StateMachineGraphEdge(CurrentState, superState, StateMachineGraphEdgeKind.StateInheritance));
+            _currentState = previousState;
+            _currentEvent = previousEvent;
         }
-
-        next(state);
     }
 
     public void Visit(IEvent @event, Action<IEvent> next)
     {
-        _currentEvent = GetEventNode(@event);
-        AddEdge(new StateMachineGraphEdge(CurrentState, CurrentEvent, StateMachineGraphEdgeKind.EventBinding));
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(next);
 
-        next(@event);
+        StateMachineGraphNode? previousEvent = _currentEvent;
+        bool restoreEvent = _eventVisitDepth > 0 || _exceptionVisitDepth > 0;
+        _currentEvent = GetEventNode(@event);
+        _eventVisitDepth++;
+        try
+        {
+            AddEdge(new StateMachineGraphEdge(CurrentState, CurrentEvent, StateMachineGraphEdgeKind.EventBinding));
+            next(@event);
+        }
+        catch
+        {
+            restoreEvent = true;
+            throw;
+        }
+        finally
+        {
+            _eventVisitDepth--;
+            if (restoreEvent)
+                _currentEvent = previousEvent;
+        }
     }
 
     public void Visit<TData>(IEvent<TData> @event, Action<IEvent<TData>> next)
         where TData : class
     {
-        _currentEvent = GetEventNode(@event);
-        AddEdge(new StateMachineGraphEdge(CurrentState, CurrentEvent, StateMachineGraphEdgeKind.EventBinding));
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(next);
 
-        next(@event);
+        StateMachineGraphNode? previousEvent = _currentEvent;
+        bool restoreEvent = _eventVisitDepth > 0 || _exceptionVisitDepth > 0;
+        _currentEvent = GetEventNode(@event);
+        _eventVisitDepth++;
+        try
+        {
+            AddEdge(new StateMachineGraphEdge(CurrentState, CurrentEvent, StateMachineGraphEdgeKind.EventBinding));
+            next(@event);
+        }
+        catch
+        {
+            restoreEvent = true;
+            throw;
+        }
+        finally
+        {
+            _eventVisitDepth--;
+            if (restoreEvent)
+                _currentEvent = previousEvent;
+        }
     }
 
     public void Visit(IStateMachineActivity activity)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+
         Visit(activity, x =>
         {
         });
@@ -95,19 +152,29 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
 
     public void Visit(IStateMachineExceptionActivity activity, Action<IStateMachineExceptionActivity> next)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(next);
+
         StateMachineGraphNode previousEvent = CurrentEvent;
         _currentEvent = CreateExceptionNode(activity.ExceptionType);
-
-        AddEdge(new StateMachineGraphEdge(previousEvent, CurrentEvent, StateMachineGraphEdgeKind.ExceptionHandler));
-
-        next(activity);
-
-        _currentEvent = previousEvent;
+        _exceptionVisitDepth++;
+        try
+        {
+            AddEdge(new StateMachineGraphEdge(previousEvent, CurrentEvent, StateMachineGraphEdgeKind.ExceptionHandler));
+            next(activity);
+        }
+        finally
+        {
+            _exceptionVisitDepth--;
+            _currentEvent = previousEvent;
+        }
     }
 
     public void Visit<T>(IBehavior<T> behavior)
         where T : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(behavior);
+
         Visit(behavior, x =>
         {
         });
@@ -116,6 +183,9 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
     public void Visit<T>(IBehavior<T> behavior, Action<IBehavior<T>> next)
         where T : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(behavior);
+        ArgumentNullException.ThrowIfNull(next);
+
         next(behavior);
     }
 
@@ -123,6 +193,8 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         where T : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(behavior);
+
         Visit(behavior, x =>
         {
         });
@@ -132,11 +204,17 @@ internal sealed class StateMachineGraphVisitor<TSaga> :
         where T : class, ISagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(behavior);
+        ArgumentNullException.ThrowIfNull(next);
+
         next(behavior);
     }
 
     public void Visit(IStateMachineActivity activity, Action<IStateMachineActivity> next)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(next);
+
         if (activity is TransitionActivity<TSaga> transitionActivity)
         {
             InspectTransitionActivity(transitionActivity);
