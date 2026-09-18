@@ -18,13 +18,14 @@ public class LastCatchBehavior<TSaga> :
     /// <param name="activity">The activity.</param>
     public LastCatchBehavior(IStateMachineActivity<TSaga> activity)
     {
-        _activity = activity;
+        _activity = activity ?? throw new ArgumentNullException(nameof(activity));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         _activity.Accept(visitor);
     }
 
@@ -32,6 +33,7 @@ public class LastCatchBehavior<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _activity.Probe(context);
     }
 
@@ -40,6 +42,7 @@ public class LastCatchBehavior<TSaga> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _activity.ExecuteAsync(context, Behavior.Empty<TSaga>());
     }
 
@@ -50,6 +53,7 @@ public class LastCatchBehavior<TSaga> :
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _activity.ExecuteAsync(context, Behavior.Empty<TSaga, T>());
     }
 
@@ -62,6 +66,7 @@ public class LastCatchBehavior<TSaga> :
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _activity.FaultedAsync(context, Behavior.Empty<TSaga, T>());
     }
 
@@ -72,6 +77,7 @@ public class LastCatchBehavior<TSaga> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _activity.FaultedAsync(context, Behavior.Empty<TSaga>());
     }
 }

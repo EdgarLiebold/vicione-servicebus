@@ -19,14 +19,15 @@ public class ExecuteOnFaultedBehavior<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     public ExecuteOnFaultedBehavior(IBehavior<TSaga> next, IBehaviorExceptionContext<TSaga, TException> context)
     {
-        _next = next;
-        _context = context;
+        _next = next ?? throw new ArgumentNullException(nameof(next));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         _next.Accept(visitor);
     }
 
@@ -34,26 +35,31 @@ public class ExecuteOnFaultedBehavior<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _next.Probe(context);
     }
 
     Task IBehavior<TSaga>.ExecuteAsync(IBehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _next.FaultedAsync(_context);
     }
 
     Task IBehavior<TSaga>.ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _next.FaultedAsync(_context);
     }
 
     Task IBehavior<TSaga>.FaultedAsync<TData, T>(IBehaviorExceptionContext<TSaga, TData, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new SagaStateMachineException("This should not ever be called.");
     }
 
     Task IBehavior<TSaga>.FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new SagaStateMachineException("This should not ever be called.");
     }
 }
@@ -77,14 +83,15 @@ public class ExecuteOnFaultedBehavior<TSaga, TMessage, TException> :
     /// <param name="context">The context associated with the operation.</param>
     public ExecuteOnFaultedBehavior(IBehavior<TSaga, TMessage> next, IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     {
-        _next = next;
-        _context = context;
+        _next = next ?? throw new ArgumentNullException(nameof(next));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         _next.Accept(visitor);
     }
 
@@ -92,26 +99,31 @@ public class ExecuteOnFaultedBehavior<TSaga, TMessage, TException> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _next.Probe(context);
     }
 
     Task IBehavior<TSaga>.ExecuteAsync(IBehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _next.FaultedAsync(_context);
     }
 
     Task IBehavior<TSaga>.ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _next.FaultedAsync(_context);
     }
 
     Task IBehavior<TSaga>.FaultedAsync<TD, T>(IBehaviorExceptionContext<TSaga, TD, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new SagaStateMachineException("This should not ever be called.");
     }
 
     Task IBehavior<TSaga>.FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new SagaStateMachineException("This should not ever be called.");
     }
 }

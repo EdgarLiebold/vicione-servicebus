@@ -13,6 +13,7 @@ public class FaultedBehavior<TSaga> :
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
     }
 
@@ -20,6 +21,7 @@ public class FaultedBehavior<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.CreateScope("exception");
     }
 
@@ -28,6 +30,7 @@ public class FaultedBehavior<TSaga> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -38,6 +41,7 @@ public class FaultedBehavior<TSaga> :
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -50,6 +54,7 @@ public class FaultedBehavior<TSaga> :
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new EventExecutionException($"The {context.Event} execution faulted", context.Exception);
     }
 
@@ -60,6 +65,7 @@ public class FaultedBehavior<TSaga> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new EventExecutionException($"The {context.Event} execution faulted", context.Exception);
     }
 }
@@ -77,6 +83,7 @@ public class FaultedBehavior<TSaga, TMessage> :
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
     }
 
@@ -84,6 +91,7 @@ public class FaultedBehavior<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.CreateScope("exception");
     }
 
@@ -92,6 +100,7 @@ public class FaultedBehavior<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -102,6 +111,7 @@ public class FaultedBehavior<TSaga, TMessage> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         throw new EventExecutionException($"The {context.Event} execution faulted", context.Exception);
     }
 }

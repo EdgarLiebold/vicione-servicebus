@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
@@ -9,9 +9,9 @@ internal static class ExceptionTypeCache
 {
     static ICachedConfigurator GetOrAdd(Type type)
     {
-        return Cached.Instance.GetOrAdd(type, _ =>
-            (ICachedConfigurator)(Activator.CreateInstance(typeof(CachedConfigurator<>).MakeGenericType(type))
-                ?? throw new InvalidOperationException($"Could not create an exception configurator for '{type}'.")));
+        return Cached.Instance.GetValue(type, static key => new Lazy<ICachedConfigurator>(() =>
+            (ICachedConfigurator)(Activator.CreateInstance(typeof(CachedConfigurator<>).MakeGenericType(key))
+                ?? throw new InvalidOperationException($"Could not create an exception configurator for '{key}'.")))).Value;
     }
 
     /// <summary>Dispatches an exception through an untyped-event fault behavior.</summary>
@@ -57,7 +57,7 @@ internal static class ExceptionTypeCache
 
     static class Cached
     {
-        internal static readonly ConcurrentDictionary<Type, ICachedConfigurator> Instance = new ConcurrentDictionary<Type, ICachedConfigurator>();
+        internal static readonly ConditionalWeakTable<Type, Lazy<ICachedConfigurator>> Instance = new();
     }
 
 

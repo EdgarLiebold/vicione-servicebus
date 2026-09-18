@@ -13,6 +13,7 @@ public class EmptyBehavior<TSaga> :
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
     }
 
@@ -20,6 +21,7 @@ public class EmptyBehavior<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
     }
 
     /// <summary>Runs the configured action.</summary>
@@ -27,6 +29,7 @@ public class EmptyBehavior<TSaga> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -37,6 +40,7 @@ public class EmptyBehavior<TSaga> :
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -49,6 +53,7 @@ public class EmptyBehavior<TSaga> :
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -59,6 +64,7 @@ public class EmptyBehavior<TSaga> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 }
@@ -76,6 +82,7 @@ public class EmptyBehavior<TSaga, TMessage> :
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
     }
 
@@ -83,6 +90,7 @@ public class EmptyBehavior<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
     }
 
     /// <summary>Runs the configured action.</summary>
@@ -90,6 +98,7 @@ public class EmptyBehavior<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 
@@ -100,6 +109,7 @@ public class EmptyBehavior<TSaga, TMessage> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
         return Task.CompletedTask;
     }
 }

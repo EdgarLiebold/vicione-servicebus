@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
@@ -16,13 +17,14 @@ public class DataBehavior<TSaga, TMessage> :
     /// <param name="behavior">The state-machine behavior to compose or inspect.</param>
     public DataBehavior(IBehavior<TSaga> behavior)
     {
-        _behavior = behavior;
+        _behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         _behavior.Accept(visitor);
     }
 
@@ -30,16 +32,19 @@ public class DataBehavior<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _behavior.Probe(context);
     }
 
     Task IBehavior<TSaga, TMessage>.ExecuteAsync(IBehaviorContext<TSaga, TMessage> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _behavior.ExecuteAsync(context);
     }
 
     Task IBehavior<TSaga, TMessage>.FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         return _behavior.FaultedAsync(context);
     }
 }
