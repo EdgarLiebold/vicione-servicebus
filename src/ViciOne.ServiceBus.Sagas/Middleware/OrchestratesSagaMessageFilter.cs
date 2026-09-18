@@ -15,6 +15,8 @@ public class OrchestratesSagaMessageFilter<TSaga, TMessage> :
 {
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateFilterScope("orchestrates");
         scope.Add("method", $"Consume({TypeCache<TMessage>.ShortName} message)");
     }
@@ -23,18 +25,34 @@ public class OrchestratesSagaMessageFilter<TSaga, TMessage> :
     /// <param name="context">The saga instance and correlated message.</param>
     /// <param name="next">The pipeline stage invoked after the saga consumes the message.</param>
     /// <returns>A task that completes after the saga and continuation finish.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is null.</exception>
+    /// <exception cref="OperationCanceledException">
+    /// The delivery is cancelled, or the saga or continuation reports cancellation.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">The saga or continuation returns a null task.</exception>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
+        context.CancellationToken.ThrowIfCancellationRequested();
 
         StartedActivity? activity = SagaActivity.TryStart(context);
         var instrument = LogContext.Current?.TryStartSagaMetrics(context);
         try
         {
-            await context.Saga.ConsumeAsync(context).ConfigureAwait(false);
+            Task consumeTask = context.Saga.ConsumeAsync(context)
+                ?? throw new InvalidOperationException("The saga returned a null task from ConsumeAsync.");
+            await consumeTask.ConfigureAwait(false);
 
-            await next.SendAsync(context).ConfigureAwait(false);
+            context.CancellationToken.ThrowIfCancellationRequested();
+
+            Task nextTask = next.SendAsync(context)
+                ?? throw new InvalidOperationException("The saga-message continuation returned a null task from SendAsync.");
+            await nextTask.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception ex)
         {
