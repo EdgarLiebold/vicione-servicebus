@@ -30,6 +30,9 @@ class StateMachineEventActivitiesBuilder<TInstance> :
 
     public IStateMachineModifier<TInstance> CommitActivities()
     {
+        if (IsCommitted)
+            return _modifier;
+
         _committer(_activities.ToArray());
         IsCommitted = true;
         return _modifier;
@@ -38,14 +41,23 @@ class StateMachineEventActivitiesBuilder<TInstance> :
     public IStateMachineEventActivitiesBuilder<TInstance> When(IEvent @event,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> configure)
     {
-        _activities.Add(configure(_machine.When(@event)));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(configure);
+
+        AddActivity(configure(_machine.When(@event)));
         return this;
     }
 
     public IStateMachineEventActivitiesBuilder<TInstance> When(IEvent @event, StateMachineCondition<TInstance> filter,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> configure)
     {
-        _activities.Add(configure(_machine.When(@event, filter)));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        AddActivity(configure(_machine.When(@event, filter)));
         return this;
     }
 
@@ -53,7 +65,11 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         Func<IEventActivityBinder<TInstance, TData>, IEventActivityBinder<TInstance, TData>> configure)
         where TData : class
     {
-        _activities.Add(configure(_machine.When(@event)));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(configure);
+
+        AddActivity(configure(_machine.When(@event)));
         return this;
     }
 
@@ -62,20 +78,31 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         Func<IEventActivityBinder<TInstance, TData>, IEventActivityBinder<TInstance, TData>> configure)
         where TData : class
     {
-        _activities.Add(configure(_machine.When(@event, filter)));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        AddActivity(configure(_machine.When(@event, filter)));
         return this;
     }
 
     public IStateMachineEventActivitiesBuilder<TInstance> Ignore(IEvent @event)
     {
-        _activities.Add(_machine.Ignore(@event));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
+        AddActivity(_machine.Ignore(@event));
         return this;
     }
 
     public IStateMachineEventActivitiesBuilder<TInstance> Ignore<TData>(IEvent<TData> @event)
         where TData : class
     {
-        _activities.Add(_machine.Ignore(@event));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
+        AddActivity(_machine.Ignore(@event));
         return this;
     }
 
@@ -83,7 +110,11 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         StateMachineCondition<TInstance, TData> filter)
         where TData : class
     {
-        _activities.Add(_machine.Ignore(@event, filter));
+        EnsureNotCommitted();
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+        ArgumentNullException.ThrowIfNull(filter);
+
+        AddActivity(_machine.Ignore(@event, filter));
         return this;
     }
 
@@ -262,4 +293,17 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return CommitActivities().WhenLeaveAny(activityCallback);
     }
 
+    void AddActivity(IEventActivities<TInstance>? activity)
+    {
+        if (activity == null)
+            throw new InvalidOperationException("The event activity configuration callback returned null.");
+
+        _activities.Add(activity);
+    }
+
+    void EnsureNotCommitted()
+    {
+        if (IsCommitted)
+            throw new InvalidOperationException("The state machine event activities have already been committed.");
+    }
 }

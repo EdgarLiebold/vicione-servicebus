@@ -11,8 +11,8 @@ internal sealed class TimeoutSagaConfigurationObserver<TSaga> :
 
     public TimeoutSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure)
     {
-        _configurator = configurator;
-        _configure = configure;
+        _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
+        _configure = configure ?? throw new ArgumentNullException(nameof(configure));
     }
 
     void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
