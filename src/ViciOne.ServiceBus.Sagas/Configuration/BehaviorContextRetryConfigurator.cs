@@ -21,6 +21,8 @@ public class BehaviorContextRetryConfigurator :
     /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         PolicyFactory = factory;
     }
 
@@ -29,6 +31,8 @@ public class BehaviorContextRetryConfigurator :
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
+
         return _observers.Connect(observer);
     }
 
@@ -36,6 +40,10 @@ public class BehaviorContextRetryConfigurator :
     /// <returns>The retry policy.</returns>
     public IRetryPolicy GetRetryPolicy()
     {
-        return PolicyFactory(Filter);
+        RetryPolicyFactory factory = PolicyFactory
+            ?? throw new InvalidOperationException("A retry policy must be configured before it is retrieved.");
+
+        return factory(Filter)
+            ?? throw new InvalidOperationException("The retry policy factory returned null.");
     }
 }

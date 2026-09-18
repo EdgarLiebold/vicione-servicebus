@@ -17,6 +17,9 @@ public class CorrelatedByEventCorrelationBuilder<TInstance, TData> :
     /// <param name="event">The event.</param>
     public CorrelatedByEventCorrelationBuilder(ISagaStateMachine<TInstance> machine, IEvent<TData> @event)
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
         var configurator = new StateMachineInterfaceType<TInstance, TData>.ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
         configurator.CorrelateById(x => x.Message.CorrelationId);
 

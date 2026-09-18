@@ -31,6 +31,8 @@ public class EventMissingInstanceConfigurator<TSaga, TMessage> :
     /// <returns>The pipe produced by the operation.</returns>
     public IPipe<ConsumeContext<TMessage>> ExecuteAwaited(Func<ConsumeContext<TMessage>, Task> callback)
     {
+        ArgumentNullException.ThrowIfNull(callback);
+
         return callback.ToPipe();
     }
 
@@ -39,6 +41,8 @@ public class EventMissingInstanceConfigurator<TSaga, TMessage> :
     /// <returns>The pipe produced by the operation.</returns>
     public IPipe<ConsumeContext<TMessage>> Execute(Action<ConsumeContext<TMessage>> callback)
     {
+        ArgumentNullException.ThrowIfNull(callback);
+
         return Pipe.Execute(callback);
     }
 }
