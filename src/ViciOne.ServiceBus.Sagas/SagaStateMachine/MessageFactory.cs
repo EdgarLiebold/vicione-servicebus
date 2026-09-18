@@ -20,7 +20,7 @@ public static class MessageFactory<T>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
-    public static TaskMessageFactory<T> Create(T message, IPipe<SendContext<T>> pipe)
+    public static TaskMessageFactory<T> Create(T message, IPipe<SendContext<T>>? pipe)
     {
         return pipe.IsNotEmpty()
             ? new TaskMessageFactory<T>(Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(message, pipe)))
@@ -46,6 +46,8 @@ public static class MessageFactory<T>
     /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(Task<T> factory)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (factory.Status == TaskStatus.RanToCompletion)
             return new TaskMessageFactory<T>(Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(factory.GetAwaiter().GetResult())));
 
@@ -61,8 +63,10 @@ public static class MessageFactory<T>
     /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
-    public static TaskMessageFactory<T> Create(Task<T> factory, IPipe<SendContext<T>> pipe)
+    public static TaskMessageFactory<T> Create(Task<T> factory, IPipe<SendContext<T>>? pipe)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
@@ -83,6 +87,8 @@ public static class MessageFactory<T>
     /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(Task<T> factory, Action<SendContext<T>>? callback)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -106,10 +112,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(T message,
-        SendContextCallback<TSaga, TMessage, T> callback)
+        SendContextCallback<TSaga, TMessage, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         return callback == null
             ? Create(message)
             : Create(context => message, callback);
@@ -122,10 +130,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(Task<T> factory,
-        SendContextCallback<TSaga, TMessage, T> callback)
+        SendContextCallback<TSaga, TMessage, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null
             ? Create(factory)
             : Create(context => factory, callback);
@@ -141,6 +151,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return new ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T>(factory);
     }
 
@@ -155,12 +167,14 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
-            (var message, IPipe<SendContext<T>> sendPipe) = await factory(context).ConfigureAwait(false);
+            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = sendPipe.AddCallback(callback);
@@ -180,16 +194,18 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(
-        Func<IBehaviorContext<TSaga, TMessage>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, SendContextCallback<TSaga, TMessage, T> callback)
+        Func<IBehaviorContext<TSaga, TMessage>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, SendContextCallback<TSaga, TMessage, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await factory(context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(ctx => callback(context, ctx));
@@ -211,9 +227,12 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult()));
 
@@ -235,16 +254,19 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
-        IPipe<SendContext<T>> pipe)
+        IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), pipe));
 
@@ -270,6 +292,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -280,10 +304,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
-        SendContextCallback<TSaga, TMessage, T> callback)
+        SendContextCallback<TSaga, TMessage, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -291,7 +317,8 @@ public static class MessageFactory<T>
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
@@ -315,6 +342,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
             var result = factory(context);
@@ -331,10 +360,12 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
-        IPipe<SendContext<T>> pipe)
+        IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
@@ -358,6 +389,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -368,10 +401,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
-        SendContextCallback<TSaga, TMessage, T> callback)
+        SendContextCallback<TSaga, TMessage, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -394,11 +429,13 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(T message,
-        SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
+        SendExceptionContextCallback<TSaga, TMessage, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         return callback == null
             ? Create(message)
             : Create(context => message, callback);
@@ -412,11 +449,13 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(Task<T> factory,
-        SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
+        SendExceptionContextCallback<TSaga, TMessage, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null
             ? Create(factory)
             : Create(context => factory, callback);
@@ -434,6 +473,8 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return new ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T>(factory);
     }
 
@@ -450,12 +491,14 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await factory(context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(callback);
@@ -477,17 +520,19 @@ public static class MessageFactory<T>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         Func<IBehaviorExceptionContext<TSaga, TMessage, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory,
-        SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
+        SendExceptionContextCallback<TSaga, TMessage, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await factory(context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(ctx => callback(context, ctx));
@@ -512,9 +557,12 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult()));
 
@@ -537,17 +585,20 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, IPipe<SendContext<T>> pipe)
+        AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), pipe));
 
@@ -575,6 +626,8 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -586,11 +639,13 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
+        AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, SendExceptionContextCallback<TSaga, TMessage, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -598,7 +653,8 @@ public static class MessageFactory<T>
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
@@ -625,6 +681,8 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             var result = factory(context);
@@ -642,11 +700,13 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, IPipe<SendContext<T>> pipe)
+        EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
@@ -672,6 +732,8 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -683,11 +745,13 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
+        EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, SendExceptionContextCallback<TSaga, TMessage, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TMessage : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -707,9 +771,11 @@ public static class MessageFactory<T>
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
-    public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(T message, SendContextCallback<TSaga, T> callback)
+    public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(T message, SendContextCallback<TSaga, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         return callback == null
             ? Create(message)
             : Create(context => message, callback);
@@ -720,9 +786,11 @@ public static class MessageFactory<T>
     /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
-    public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(Task<T> factory, SendContextCallback<TSaga, T> callback)
+    public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(Task<T> factory, SendContextCallback<TSaga, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null
             ? Create(factory)
             : Create(context => factory, callback);
@@ -735,10 +803,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(T message,
-        SendExceptionContextCallback<TSaga, TException, T> callback)
+        SendExceptionContextCallback<TSaga, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         return callback == null
             ? Create(message)
             : Create(context => message, callback);
@@ -751,10 +821,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(Task<T> factory,
-        SendExceptionContextCallback<TSaga, TException, T> callback)
+        SendExceptionContextCallback<TSaga, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null
             ? Create(factory)
             : Create(context => factory, callback);
@@ -767,6 +839,8 @@ public static class MessageFactory<T>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(Func<IBehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return new ContextMessageFactory<IBehaviorContext<TSaga>, T>(factory);
     }
 
@@ -779,12 +853,14 @@ public static class MessageFactory<T>
         Action<SendContext<T>>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await factory(context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(callback);
@@ -803,15 +879,17 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(Func<IBehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory,
-        SendContextCallback<TSaga, T> callback)
+        SendContextCallback<TSaga, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await factory(context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(ctx => callback(context, ctx));
@@ -831,9 +909,12 @@ public static class MessageFactory<T>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult()));
 
@@ -854,15 +935,18 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
-        IPipe<SendContext<T>> pipe)
+        IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), pipe));
 
@@ -886,6 +970,8 @@ public static class MessageFactory<T>
         Action<SendContext<T>>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -895,9 +981,11 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
-        SendContextCallback<TSaga, T> callback)
+        SendContextCallback<TSaga, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -905,7 +993,8 @@ public static class MessageFactory<T>
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
@@ -927,6 +1016,8 @@ public static class MessageFactory<T>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
             var result = factory(context);
@@ -942,9 +1033,11 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
-        IPipe<SendContext<T>> pipe)
+        IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
@@ -966,6 +1059,8 @@ public static class MessageFactory<T>
         Action<SendContext<T>>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -975,9 +1070,11 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
-        SendContextCallback<TSaga, T> callback)
+        SendContextCallback<TSaga, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -1002,6 +1099,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return new ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T>(factory);
     }
 
@@ -1016,12 +1115,14 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
-            (var message, IPipe<SendContext<T>> sendPipe) = await factory(context).ConfigureAwait(false);
+            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = sendPipe.AddCallback(callback);
@@ -1041,16 +1142,18 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        Func<IBehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, SendExceptionContextCallback<TSaga, TException, T> callback)
+        Func<IBehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, SendExceptionContextCallback<TSaga, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
-            (var message, IPipe<SendContext<T>> sendPipe) = await factory(context).ConfigureAwait(false);
+            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageTask(factory, context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = sendPipe.AddCallback(ctx => callback(context, ctx));
@@ -1073,9 +1176,12 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult()));
 
@@ -1097,16 +1203,19 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, IPipe<SendContext<T>> pipe)
+        AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), pipe));
 
@@ -1132,6 +1241,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -1142,10 +1253,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, SendExceptionContextCallback<TSaga, TException, T> callback)
+        AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, SendExceptionContextCallback<TSaga, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -1153,7 +1266,8 @@ public static class MessageFactory<T>
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
-            Task<T> result = factory(context);
+            Task<T> result = factory(context)
+                ?? throw new InvalidOperationException("The message factory returned no task.");
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
@@ -1178,6 +1292,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
             var result = factory(context);
@@ -1194,10 +1310,12 @@ public static class MessageFactory<T>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        EventExceptionMessageFactory<TSaga, TException, T> factory, IPipe<SendContext<T>> pipe)
+        EventExceptionMessageFactory<TSaga, TException, T> factory, IPipe<SendContext<T>>? pipe)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
@@ -1221,6 +1339,8 @@ public static class MessageFactory<T>
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
@@ -1231,10 +1351,12 @@ public static class MessageFactory<T>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        EventExceptionMessageFactory<TSaga, TException, T> factory, SendExceptionContextCallback<TSaga, TException, T> callback)
+        EventExceptionMessageFactory<TSaga, TException, T> factory, SendExceptionContextCallback<TSaga, TException, T>? callback)
         where TSaga : class, ISagaStateMachineInstance
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         if (callback == null)
             return Create(factory);
 
@@ -1247,5 +1369,11 @@ public static class MessageFactory<T>
         }
 
         return new ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
+    }
+
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageTask<TContext>(
+        Func<TContext, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, TContext context)
+    {
+        return factory(context) ?? throw new InvalidOperationException("The message factory returned no task.");
     }
 }

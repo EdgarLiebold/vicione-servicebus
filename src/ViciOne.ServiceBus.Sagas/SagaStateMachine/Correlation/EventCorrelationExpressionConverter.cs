@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using FastExpressionCompiler;
-using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
@@ -13,13 +12,15 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
     where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
 {
+    readonly object _conversionLock = new();
     readonly ConsumeContext<TMessage> _context;
+    ParameterExpression? _contextParameter;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public EventCorrelationExpressionConverter(ConsumeContext<TMessage> context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Converts the supplied value.</summary>
@@ -27,10 +28,24 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
     /// <returns>The converted value.</returns>
     public Expression<Func<TInstance, bool>> Convert(Expression<Func<TInstance, ConsumeContext<TMessage>, bool>> expression)
     {
-        var result = Visit(expression) as LambdaExpression
-            ?? throw new InvalidOperationException("The correlation expression could not be converted to a lambda expression.");
+        ArgumentNullException.ThrowIfNull(expression);
 
-        return RemoveMessageParameter(result);
+        lock (_conversionLock)
+        {
+            ParameterExpression? previousContextParameter = _contextParameter;
+            _contextParameter = expression.Parameters[1];
+            try
+            {
+                var result = Visit(expression) as LambdaExpression
+                    ?? throw new InvalidOperationException("The correlation expression could not be converted to a lambda expression.");
+
+                return RemoveMessageParameter(result);
+            }
+            finally
+            {
+                _contextParameter = previousContextParameter;
+            }
+        }
     }
 
     static Expression<Func<TInstance, bool>> RemoveMessageParameter(LambdaExpression lambda)
@@ -48,19 +63,36 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
         if (m.Expression == null)
             return base.VisitMember(m);
 
-        if (m.Expression.NodeType == ExpressionType.Parameter && m.Expression.Type == typeof(ConsumeContext<TMessage>))
-            return EvaluateConsumeContextAccess(m);
+        ParameterExpression? contextParameter = _contextParameter;
+        if (contextParameter != null && IsRootedInParameter(m, contextParameter))
+            return EvaluateConsumeContextAccess(m, contextParameter);
 
         return base.VisitMember(m);
     }
 
-    Expression EvaluateConsumeContextAccess(MemberExpression exp)
+    static bool IsRootedInParameter(MemberExpression expression, ParameterExpression parameter)
     {
-        var parameter = exp.Expression as ParameterExpression
-            ?? throw new InvalidOperationException("The consume context access must originate from a parameter expression.");
+        Expression? current = expression;
+        while (current is MemberExpression member)
+            current = member.Expression;
 
-        var fn = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(ConsumeContext<TMessage>), exp.Type), exp, parameter).CompileFast();
+        return ReferenceEquals(current, parameter);
+    }
 
-        return Expression.Constant(fn.DynamicInvoke(_context), exp.Type);
+    Expression EvaluateConsumeContextAccess(MemberExpression expression, ParameterExpression parameter)
+    {
+        var valueExpression = Expression.Convert(expression, typeof(object));
+        Func<ConsumeContext<TMessage>, object?> evaluator =
+            Expression.Lambda<Func<ConsumeContext<TMessage>, object?>>(valueExpression, parameter).CompileFast();
+        object? value = evaluator(_context);
+
+        if (value == null)
+            return Expression.Constant(value, expression.Type);
+
+        Type? nullableType = Nullable.GetUnderlyingType(expression.Type);
+        if (nullableType != null && nullableType.IsInstanceOfType(value))
+            return Expression.Convert(Expression.Constant(value, nullableType), expression.Type);
+
+        return Expression.Constant(value, expression.Type);
     }
 }

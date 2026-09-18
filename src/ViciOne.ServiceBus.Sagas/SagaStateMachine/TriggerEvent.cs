@@ -2,61 +2,70 @@ using System;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>Carries the trigger event data.</summary>
+/// <summary>Identifies a named state-machine event that does not carry message data.</summary>
 public class TriggerEvent :
     IEvent
 {
     readonly string _name;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="name">The name.</param>
+    /// <summary>Initializes an event with the name used for identity, ordering and diagnostics.</summary>
+    /// <param name="name">The non-null event name.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="name" /> is null.</exception>
     public TriggerEvent(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         _name = name;
     }
 
-    /// <summary>Gets the name.</summary>
+    /// <summary>Gets the event name used for identity, ordering and diagnostics.</summary>
     public string Name => _name;
 
-    /// <summary>Accepts the supplied value.</summary>
-    /// <param name="visitor">The visitor.</param>
+    /// <summary>Visits this event through the untyped event overload.</summary>
+    /// <param name="visitor">The visitor receiving this event.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="visitor" /> is null.</exception>
     public virtual void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
+
         visitor.Visit(this, x =>
         {
         });
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Writes the event name to the supplied diagnostic context.</summary>
+    /// <param name="context">The context receiving the event metadata.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is null.</exception>
     public virtual void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.Add("name", _name);
     }
 
-    /// <summary>Compares this instance with the supplied value.</summary>
-    /// <param name="other">The other.</param>
-    /// <returns>The int produced by the operation.</returns>
+    /// <summary>Orders events by ordinal name, after a null event.</summary>
+    /// <param name="other">The event whose name is compared, or <see langword="null" />.</param>
+    /// <returns>The ordinal name comparison, or one when <paramref name="other" /> is null.</returns>
     public int CompareTo(IEvent? other)
     {
         return other == null ? 1 : string.Compare(_name, other.Name, StringComparison.Ordinal);
     }
 
-    /// <summary>Determines whether this instance equals the supplied value.</summary>
-    /// <param name="other">The other.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Equals(TriggerEvent other)
+    /// <summary>Compares another trigger-event view by ordinal name.</summary>
+    /// <param name="other">The trigger event compared with this instance.</param>
+    /// <returns><see langword="true" /> when <paramref name="other" /> has the same ordinal name; otherwise, <see langword="false" />.</returns>
+    public bool Equals(TriggerEvent? other)
     {
         if (ReferenceEquals(null, other))
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return Equals(other._name, _name);
+        return string.Equals(other._name, _name, StringComparison.Ordinal);
     }
 
-    /// <summary>Determines whether this instance equals the supplied value.</summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Compares another object using exact <see cref="TriggerEvent" /> type and ordinal name equality.</summary>
+    /// <param name="obj">The object compared with this instance.</param>
+    /// <returns><see langword="true" /> when <paramref name="obj" /> is a trigger event with the same ordinal name; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
@@ -68,15 +77,15 @@ public class TriggerEvent :
         return Equals((TriggerEvent)obj);
     }
 
-    /// <summary>Gets hash code.</summary>
-    /// <returns>The hash code for this instance.</returns>
+    /// <summary>Gets the event name's hash code.</summary>
+    /// <returns>The ordinal name hash code for this instance.</returns>
     public override int GetHashCode()
     {
-        return _name?.GetHashCode() ?? 0;
+        return StringComparer.Ordinal.GetHashCode(_name);
     }
 
-    /// <summary>Returns the string representation of this instance.</summary>
-    /// <returns>The converted string.</returns>
+    /// <summary>Returns the event name followed by its event marker.</summary>
+    /// <returns>The display text in the form <c>Name (Event)</c>.</returns>
     public override string ToString()
     {
         return $"{_name} (Event)";

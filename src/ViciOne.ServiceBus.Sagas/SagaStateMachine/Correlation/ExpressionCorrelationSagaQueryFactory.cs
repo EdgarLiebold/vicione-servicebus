@@ -18,7 +18,7 @@ public class ExpressionCorrelationSagaQueryFactory<TInstance, TData> :
     /// <param name="correlationExpression">The correlation expression.</param>
     public ExpressionCorrelationSagaQueryFactory(Expression<Func<TInstance, ConsumeContext<TData>, bool>> correlationExpression)
     {
-        _correlationExpression = correlationExpression;
+        _correlationExpression = correlationExpression ?? throw new ArgumentNullException(nameof(correlationExpression));
     }
 
     /// <summary>Attempts to create query.</summary>
@@ -27,6 +27,8 @@ public class ExpressionCorrelationSagaQueryFactory<TInstance, TData> :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryCreateQuery(ConsumeContext<TData> context, out ISagaQuery<TInstance> query)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         Expression<Func<TInstance, bool>> filter = new EventCorrelationExpressionConverter<TInstance, TData>(context)
             .Convert(_correlationExpression);
 
@@ -38,6 +40,7 @@ public class ExpressionCorrelationSagaQueryFactory<TInstance, TData> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.Add("expression", _correlationExpression.ToString());
     }
 }

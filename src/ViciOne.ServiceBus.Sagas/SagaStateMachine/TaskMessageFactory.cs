@@ -14,6 +14,8 @@ public class TaskMessageFactory<T>
     /// <param name="messageFactory">The message factory.</param>
     public TaskMessageFactory(Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> messageFactory)
     {
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         _messageFactory = messageFactory;
     }
 
@@ -34,18 +36,24 @@ public class TaskMessageFactory<T>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UseAsync(Func<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>, Task> callback, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(callback);
+
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> msgTask = _messageFactory;
         if (msgTask.Status == TaskStatus.RanToCompletion)
-            return callback(msgTask.GetAwaiter().GetResult());
+            return callback(msgTask.GetAwaiter().GetResult())
+                ?? throw new InvalidOperationException("The callback returned no task.");
 
         async Task GetResultAsync()
         {
             global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> send = await msgTask.ConfigureAwait(false);
 
-            await callback(send).ConfigureAwait(false);
+            Task callbackTask = callback(send)
+                ?? throw new InvalidOperationException("The callback returned no task.");
+
+            await callbackTask.ConfigureAwait(false);
         }
 
         return GetResultAsync();
