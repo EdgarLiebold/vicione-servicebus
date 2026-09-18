@@ -1,3 +1,5 @@
+using System;
+
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Creates message connectors for a correlated state-machine event.</summary>
@@ -15,11 +17,17 @@ public partial class StateMachineInterfaceType<TInstance, TData> :
     /// <param name="correlation">The correlation supplying repository policy and message-dispatch filters.</param>
     public StateMachineInterfaceType(ISagaStateMachine<TInstance> machine, IEventCorrelation<TInstance, TData> correlation)
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(correlation);
+
         _connectorFactory = new StateMachineEventConnectorFactory(machine, correlation);
     }
 
     ISagaMessageConnector<T> IStateMachineInterfaceType.GetConnector<T>()
     {
+        if (typeof(T) != typeof(TInstance))
+            throw new ArgumentException("The generic argument did not match the state machine instance type", nameof(T));
+
         return _connectorFactory.CreateMessageConnector<T>();
     }
 }

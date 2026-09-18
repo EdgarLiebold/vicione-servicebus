@@ -16,6 +16,8 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         /// <param name="sagaFilterFactory">The correlation factory required when the message pipeline is connected.</param>
         /// <param name="messageFilter">The optional filter applied before saga repository dispatch.</param>
         /// <param name="configureConsumeTopology">Whether connecting the message pipeline configures consume topology.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="consumeFilter" /> is null.</exception>
+        /// <exception cref="ConfigurationException"><paramref name="policy" /> is null.</exception>
         public StateMachineSagaMessageConnector(IFilter<SagaConsumeContext<TInstance, TData>> consumeFilter, ISagaPolicy<TInstance, TData>? policy,
             SagaFilterFactory<TInstance, TData>? sagaFilterFactory, IFilter<ConsumeContext<TData>>? messageFilter, bool configureConsumeTopology)
             : base(consumeFilter)
@@ -33,16 +35,27 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         /// <param name="configurator">The message pipeline receiving the dispatch filters.</param>
         /// <param name="repository">The repository locating or creating saga instances under the configured policy.</param>
         /// <param name="sagaPipe">The pipeline invoking the state machine with the selected saga context.</param>
+        /// <exception cref="ArgumentNullException">A required method argument is null.</exception>
+        /// <exception cref="ConfigurationException">The event correlation did not supply a saga filter factory.</exception>
+        /// <exception cref="InvalidOperationException">The saga filter factory returned a null filter.</exception>
         protected override void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TData>> configurator, ISagaRepository<TInstance> repository,
             IPipe<SagaConsumeContext<TInstance, TData>> sagaPipe)
         {
-            if (_messageFilter != null)
-                configurator.UseFilter(_messageFilter);
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(repository);
+            ArgumentNullException.ThrowIfNull(sagaPipe);
 
             if (_sagaFilterFactory == null)
                 throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"The event was not properly correlated: {TypeCache<TInstance>.ShortName} - {TypeCache<TData>.ShortName}", "Correct the named configuration before starting the host"));
 
-            configurator.UseFilter(_sagaFilterFactory(repository, _policy, sagaPipe));
+            IFilter<ConsumeContext<TData>> sagaFilter = _sagaFilterFactory(repository, _policy, sagaPipe)
+                ?? throw new InvalidOperationException(
+                    $"The saga filter factory returned a null filter: {TypeCache<TInstance>.ShortName} - {TypeCache<TData>.ShortName}.");
+
+            if (_messageFilter != null)
+                configurator.UseFilter(_messageFilter);
+
+            configurator.UseFilter(sagaFilter);
         }
     }
 }

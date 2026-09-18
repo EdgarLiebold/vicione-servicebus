@@ -17,6 +17,10 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         public MessageCorrelationIdEventCorrelationBuilder(ISagaStateMachine<TInstance> machine, IEvent<TData> @event,
             IMessageCorrelationId<TData> messageCorrelationId)
         {
+            ArgumentNullException.ThrowIfNull(machine);
+            ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+            ArgumentNullException.ThrowIfNull(messageCorrelationId);
+
             var configurator = new ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
 
             configurator.CorrelateById(x => messageCorrelationId.TryGetCorrelationId(x.Message, out var correlationId)

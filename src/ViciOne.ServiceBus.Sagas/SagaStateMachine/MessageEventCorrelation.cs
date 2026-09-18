@@ -16,7 +16,7 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     readonly Lazy<bool> _includesInitial;
     readonly bool _insertOnInitial;
     readonly ISagaStateMachine<TSaga> _machine;
-    readonly IPipe<ConsumeContext<TMessage>> _missingPipe;
+    readonly IPipe<ConsumeContext<TMessage>>? _missingPipe;
     readonly Lazy<ISagaPolicy<TSaga, TMessage>> _policy;
     readonly bool _readOnly;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
@@ -26,15 +26,21 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     /// <param name="event">The event receiving the correlated message.</param>
     /// <param name="sagaFilterFactory">The optional factory composing correlated repository dispatch.</param>
     /// <param name="messageFilter">The optional message filter applied before repository dispatch.</param>
-    /// <param name="missingPipe">The message pipeline used when existing-instance dispatch finds no saga.</param>
+    /// <param name="missingPipe">The optional message pipeline used when existing-instance dispatch finds no saga.</param>
     /// <param name="sagaFactory">The factory creating saga instances for initial-state dispatch.</param>
     /// <param name="insertOnInitial">Whether initial-state dispatch requests saga creation before repository dispatch.</param>
     /// <param name="readOnly">Whether existing-instance dispatch uses a read-only repository policy.</param>
     /// <param name="configureConsumeTopology">Whether connecting the event's message pipeline configures consume topology.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="machine" />, <paramref name="event" />, or
+    /// <paramref name="sagaFactory" /> is null.</exception>
     public MessageEventCorrelation(ISagaStateMachine<TSaga> machine, IEvent<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
-        IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
+        IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>>? missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
         bool insertOnInitial, bool readOnly, bool configureConsumeTopology)
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(@event, "event");
+        ArgumentNullException.ThrowIfNull(sagaFactory);
+
         Event = @event;
         FilterFactory = sagaFilterFactory;
         MessageFilter = messageFilter;
@@ -74,7 +80,7 @@ public class MessageEventCorrelation<TSaga, TMessage> :
         if (_insertOnInitial && _readOnly)
             yield return this.Failure("ReadOnly", "ReadOnly cannot be set when InsertOnInitial is true");
 
-        if (_includesInitial.Value && _readOnly)
+        if (_readOnly && _includesInitial.Value)
             yield return this.Failure("ReadOnly", "ReadOnly cannot be used for events in the initial state");
     }
 

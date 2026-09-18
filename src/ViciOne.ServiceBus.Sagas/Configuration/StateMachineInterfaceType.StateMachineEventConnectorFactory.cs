@@ -16,19 +16,40 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         /// <param name="correlation">The correlation supplying event, policy, filters and topology selection.</param>
         public StateMachineEventConnectorFactory(ISagaStateMachine<TInstance> stateMachine, IEventCorrelation<TInstance, TData> correlation)
         {
-            var consumeFilter = new StateMachineSagaMessageFilter<TInstance, TData>(stateMachine, correlation.Event);
+            ArgumentNullException.ThrowIfNull(stateMachine);
+            ArgumentNullException.ThrowIfNull(correlation);
 
-            _connector = new StateMachineSagaMessageConnector(consumeFilter, correlation.Policy,
-                correlation.FilterFactory,
-                correlation.MessageFilter, correlation.ConfigureConsumeTopology);
+            IEvent<TData> @event = correlation.Event
+                ?? throw new InvalidOperationException("The event correlation returned a null event.");
+            ISagaPolicy<TInstance, TData>? policy = correlation.Policy;
+            SagaFilterFactory<TInstance, TData>? filterFactory = correlation.FilterFactory;
+            IFilter<ConsumeContext<TData>>? messageFilter = correlation.MessageFilter;
+            bool configureConsumeTopology = correlation.ConfigureConsumeTopology;
+
+            if (filterFactory != null)
+            {
+                SagaFilterFactory<TInstance, TData> configuredFilterFactory = filterFactory;
+                filterFactory = (repository, sagaPolicy, sagaPipe) =>
+                    configuredFilterFactory(repository, sagaPolicy, sagaPipe)
+                    ?? throw new InvalidOperationException("The event correlation filter factory returned a null saga filter.");
+            }
+
+            var consumeFilter = new StateMachineSagaMessageFilter<TInstance, TData>(stateMachine, @event);
+
+            _connector = new StateMachineSagaMessageConnector(
+                consumeFilter,
+                policy,
+                filterFactory,
+                messageFilter,
+                configureConsumeTopology);
         }
 
         ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
         {
-            if (_connector is ISagaMessageConnector<T> connector)
-                return connector;
+            if (typeof(T) != typeof(TInstance))
+                throw new ArgumentException("The generic argument did not match the state machine instance type", nameof(T));
 
-            throw new ArgumentException("The saga type did not match the connector type");
+            return (ISagaMessageConnector<T>)(object)_connector;
         }
     }
 }
