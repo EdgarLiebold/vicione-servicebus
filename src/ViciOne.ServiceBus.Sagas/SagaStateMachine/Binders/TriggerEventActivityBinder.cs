@@ -19,11 +19,16 @@ public class TriggerEventActivityBinder<TInstance> :
     /// <param name="machine">The machine.</param>
     /// <param name="event">The event.</param>
     /// <param name="activities">The activities.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="machine"/>, <paramref name="event"/>, or <paramref name="activities"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="activities"/> contains a <see langword="null"/> element.</exception>
     public TriggerEventActivityBinder(IStateMachine<TInstance> machine, IEvent @event, params IActivityBinder<TInstance>[] activities)
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
         Event = @event;
         _machine = machine;
-        _activities = activities ?? [];
+        _activities = SnapshotActivities(activities);
     }
 
     /// <summary>Initializes a new instance.</summary>
@@ -31,13 +36,18 @@ public class TriggerEventActivityBinder<TInstance> :
     /// <param name="event">The event.</param>
     /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="activities">The activities.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="machine"/>, <paramref name="event"/>, or <paramref name="activities"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="activities"/> contains a <see langword="null"/> element.</exception>
     public TriggerEventActivityBinder(IStateMachine<TInstance> machine, IEvent @event, StateMachineCondition<TInstance>? filter,
         params IActivityBinder<TInstance>[] activities)
     {
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
         Event = @event;
         _filter = filter;
         _machine = machine;
-        _activities = activities ?? [];
+        _activities = SnapshotActivities(activities);
     }
 
     TriggerEventActivityBinder(IStateMachine<TInstance> machine, IEvent @event, StateMachineCondition<TInstance>? filter,
@@ -58,19 +68,29 @@ public class TriggerEventActivityBinder<TInstance> :
 
     IEvent IEventActivityBinder<TInstance>.Event => Event;
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="activity"/> is <see langword="null"/>.</exception>
     IEventActivityBinder<TInstance> IEventActivityBinder<TInstance>.Add(IStateMachineActivity<TInstance> activity)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+
         IActivityBinder<TInstance> activityBinder = new ExecuteActivityBinder<TInstance>(Event, activity);
 
         return new TriggerEventActivityBinder<TInstance>(_machine, Event, _filter, _activities, activityBinder);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="activityCallback"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="activityCallback"/> returns <see langword="null"/>.</exception>
     IEventActivityBinder<TInstance> IEventActivityBinder<TInstance>.Catch<T>(
         Func<IExceptionActivityBinder<TInstance, T>, IExceptionActivityBinder<TInstance, T>> activityCallback)
     {
+        ArgumentNullException.ThrowIfNull(activityCallback);
+
         IExceptionActivityBinder<TInstance, T> binder = new CatchExceptionActivityBinder<TInstance, T>(_machine, Event);
 
-        binder = activityCallback(binder);
+        binder = activityCallback(binder)
+            ?? throw new InvalidOperationException("The exception activity configuration callback returned null.");
 
         IActivityBinder<TInstance> activityBinder = new CatchActivityBinder<TInstance, T>(Event, binder);
 
@@ -81,9 +101,15 @@ public class TriggerEventActivityBinder<TInstance> :
     /// <param name="configure">The callback used to configure the component.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="configure"/> or <paramref name="activityCallback"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ConfigurationException"><paramref name="configure"/> does not specify a retry policy.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="activityCallback"/> returns <see langword="null"/>.</exception>
     public IEventActivityBinder<TInstance> Retry(Action<IRetryConfigurator> configure,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
+        ArgumentNullException.ThrowIfNull(configure);
+        ArgumentNullException.ThrowIfNull(activityCallback);
+
         var configurator = new BehaviorContextRetryConfigurator();
         configure(configurator);
 
@@ -99,15 +125,27 @@ public class TriggerEventActivityBinder<TInstance> :
         return new TriggerEventActivityBinder<TInstance>(_machine, Event, _filter, _activities, binder);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="condition"/> or <paramref name="activityCallback"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="activityCallback"/> returns <see langword="null"/>.</exception>
     IEventActivityBinder<TInstance> IEventActivityBinder<TInstance>.If(StateMachineCondition<TInstance> condition,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
+        ArgumentNullException.ThrowIfNull(condition);
+        ArgumentNullException.ThrowIfNull(activityCallback);
+
         return IfElse(condition, activityCallback, b => b);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="condition"/> or <paramref name="activityCallback"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="activityCallback"/> returns <see langword="null"/>.</exception>
     IEventActivityBinder<TInstance> IEventActivityBinder<TInstance>.IfAwaited(StateMachineAsyncCondition<TInstance> condition,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
+        ArgumentNullException.ThrowIfNull(condition);
+        ArgumentNullException.ThrowIfNull(activityCallback);
+
         return IfElseAwaited(condition, activityCallback, b => b);
     }
 
@@ -116,10 +154,16 @@ public class TriggerEventActivityBinder<TInstance> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="condition"/>, <paramref name="thenActivityCallback"/>, or <paramref name="elseActivityCallback"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="thenActivityCallback"/> or <paramref name="elseActivityCallback"/> returns <see langword="null"/>.</exception>
     public IEventActivityBinder<TInstance> IfElse(StateMachineCondition<TInstance> condition,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> thenActivityCallback,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> elseActivityCallback)
     {
+        ArgumentNullException.ThrowIfNull(condition);
+        ArgumentNullException.ThrowIfNull(thenActivityCallback);
+        ArgumentNullException.ThrowIfNull(elseActivityCallback);
+
         IEventActivityBinder<TInstance> thenBinder = GetBinder(thenActivityCallback);
         IEventActivityBinder<TInstance> elseBinder = GetBinder(elseActivityCallback);
 
@@ -133,10 +177,16 @@ public class TriggerEventActivityBinder<TInstance> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="condition"/>, <paramref name="thenActivityCallback"/>, or <paramref name="elseActivityCallback"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="thenActivityCallback"/> or <paramref name="elseActivityCallback"/> returns <see langword="null"/>.</exception>
     public IEventActivityBinder<TInstance> IfElseAwaited(StateMachineAsyncCondition<TInstance> condition,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> thenActivityCallback,
         Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> elseActivityCallback)
     {
+        ArgumentNullException.ThrowIfNull(condition);
+        ArgumentNullException.ThrowIfNull(thenActivityCallback);
+        ArgumentNullException.ThrowIfNull(elseActivityCallback);
+
         IEventActivityBinder<TInstance> thenBinder = GetBinder(thenActivityCallback);
         IEventActivityBinder<TInstance> elseBinder = GetBinder(elseActivityCallback);
 
@@ -154,13 +204,14 @@ public class TriggerEventActivityBinder<TInstance> :
         if (_filter != null)
             return Enumerable.Repeat(CreateConditionalActivityBinder(), 1);
 
-        return _activities;
+        return (IActivityBinder<TInstance>[])_activities.Clone();
     }
 
     IEventActivityBinder<TInstance> GetBinder(Func<IEventActivityBinder<TInstance>, IEventActivityBinder<TInstance>> activityCallback)
     {
         IEventActivityBinder<TInstance> binder = new TriggerEventActivityBinder<TInstance>(_machine, Event);
-        return activityCallback(binder);
+        return activityCallback(binder)
+            ?? throw new InvalidOperationException("The event activity configuration callback returned null.");
     }
 
     IActivityBinder<TInstance> CreateConditionalActivityBinder()
@@ -172,5 +223,15 @@ public class TriggerEventActivityBinder<TInstance> :
         var conditionBinder = new ConditionalActivityBinder<TInstance>(Event, context => filter(context), thenBinder, elseBinder);
 
         return conditionBinder;
+    }
+
+    static IActivityBinder<TInstance>[] SnapshotActivities(IActivityBinder<TInstance>[] activities)
+    {
+        ArgumentNullException.ThrowIfNull(activities);
+
+        if (Array.IndexOf(activities, null!) >= 0)
+            throw new ArgumentException("The activity collection cannot contain null.", nameof(activities));
+
+        return (IActivityBinder<TInstance>[])activities.Clone();
     }
 }
