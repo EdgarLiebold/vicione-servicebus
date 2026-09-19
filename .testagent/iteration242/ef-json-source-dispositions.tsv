@@ -1,0 +1,2 @@
+path	disposition	reason
+src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Serialization/JsonValueComparer.cs	retain-with-json-structural-fix	Re-read current 52-line comparer after commit 36594e8e6; equality hash and snapshot use the same serialized JSON representation as the converter instead of typed equality or shallow ICloneable shortcuts. Both red frozen regressions are green in the fresh complete EF project 274/274 at stable EF-scope hash 9c32fe68; full current UnitArchitecture and real-provider acceptance remain open.

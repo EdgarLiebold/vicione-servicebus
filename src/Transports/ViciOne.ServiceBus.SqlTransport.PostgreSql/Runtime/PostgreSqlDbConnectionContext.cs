@@ -153,11 +153,10 @@ internal sealed class PostgreSqlDbConnectionContext :
 
     async Task<IPostgreSqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        var connection = new PostgreSqlTransportConnection(_dataSource.CreateConnection());
-
-        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-
-        return connection;
+        return await SqlTransportConnectionOpen.OpenOwnedAsync(
+            new PostgreSqlTransportConnection(_dataSource.CreateConnection()),
+            static (connection, token) => connection.OpenAsync(token),
+            cancellationToken).ConfigureAwait(false);
     }
 
 

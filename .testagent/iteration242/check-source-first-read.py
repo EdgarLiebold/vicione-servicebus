@@ -41,7 +41,9 @@ def main() -> None:
     snapshot = set(
         (ROOT / ".testagent/source-read-remainder.txt").read_text(encoding="utf-8").splitlines()
     )
-    ledgers = sorted((ROOT / ".testagent").glob("iteration*/source-admission.tsv"))
+    # Area-specific admission packets are also full-read records. The previous
+    # exact-name glob missed a newly read, untracked source file until commit.
+    ledgers = sorted((ROOT / ".testagent").glob("iteration*/*source-admission.tsv"))
     ledgers.extend(ROOT / ledger for ledger in EXTRA_LEDGERS)
     attested: set[str] = set()
     hashes = {

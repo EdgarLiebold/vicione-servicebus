@@ -130,11 +130,10 @@ internal sealed class SqlServerConnectionContext :
     /// <returns>The open SQL Server transport connection.</returns>
     public async Task<ISqlServerTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        var connection = new SqlServerTransportConnection(_hostSettings.GetConnectionString());
-
-        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-
-        return connection;
+        return await SqlTransportConnectionOpen.OpenOwnedAsync(
+            new SqlServerTransportConnection(_hostSettings.GetConnectionString()),
+            static (connection, token) => connection.OpenAsync(token),
+            cancellationToken).ConfigureAwait(false);
     }
 
     static bool IsTransient(SqlException exception)
