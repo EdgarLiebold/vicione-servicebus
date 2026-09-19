@@ -124,3 +124,11 @@ The request deadline candidate conflicts with an existing assertion requiring
 post-deadline pipe execution; this will need explicit causal test disposition
 after the full-read gate. Ledger/status may be committed independently of
 these unverified source edits.
+
+Next personal-read checkpoint: 290/702 Core files. The latest set covers
+message-data converters, cron schedules, raw JSON type admission, message
+journal input snapshots, initializer request/response flow, activity outcome
+and scoped request-filter faulting. The three source-only patches are now
+present and under lead review; a combined Core build is in progress. No new
+test code has been designed or edited. A build result alone will not qualify
+these fixes as causal/mutation-tested A+ closures.
