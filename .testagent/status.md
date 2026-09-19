@@ -1,5 +1,15 @@
 # A+ remediation test status
 
+> Current first-read accounting (PO rule, 2026-09-19):
+> [source-read-remainder.txt](source-read-remainder.txt) is the single active list.
+> A current `src` path touched in commit
+> `e01a5e5eb3411412229221bd58b170b583ce6caa` or afterward, including the
+> working tree, counts as completely read for this accounting purpose. At source
+> checkpoint `bac2c88f91f08fbef7cbc4ca6d391ced51c31793`, 100 of 4,207
+> current paths remain (87 C# and 13 other files). Older read counts below are
+> historical checkpoints, not the current first-read balance. This rule does
+> not by itself establish current-byte A+ review or test coverage.
+
 ## Iteration 132 connected ownership/liveness package complete; original goal active
 
 Input3e4eae03435f3b7343bb63a1eac66eeca2269139 is secured before edits. Main
