@@ -316,3 +316,19 @@ custom payload evaluator's public buffer customization remains supported;
 the agent is adding independent immutable-policy postchecks and retains
 before/during-read limits for opaque Copy. Remaining custom-buffer allocation
 behavior is a documented contract boundary, not an excuse to remove SPI.
+
+The personal Core read advanced to 456/702; ledger path/blob reconciliation
+remains clean. The current 14-file source-admission manifest matches its
+line/SHA-256 evidence, and the Core Release build is warning-free. A fresh
+filtered direct-host Core replay had 6,214 successes and one 31-second
+`NestedRequestCompletion_ResumesTheOriginalRequestWithTheExactResponseAsync`
+failure; the two pre-existing cache/deadline stale oracles remained excluded.
+Its exact failure is under isolated review; this is not an unfiltered green.
+Independent counterreview found four concrete Copy/durable-replay admission
+defects in the uncommitted source patch: envelope bytes were misclassified as
+application-body bytes, offload evidence vanished on replay, validation read
+different bytes from those eventually sent, and extra full-size buffers could
+exceed embedded memory budgets. Separate Sol 5.6 xhigh agents are correcting
+the serialization path and reviewing durable persistence/replay, without test
+edits before §4.3. Source closure and commit wait on those fixes and fresh
+verification; the goal remains active.
