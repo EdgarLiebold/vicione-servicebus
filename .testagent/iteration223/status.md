@@ -196,3 +196,12 @@ consumers, the state-machine scheduler fixture and receive lifecycle events.
 No source or test files changed after the source-only correction. The
 unfiltered gate remains red because the two test oracles still need causal
 revision after full owning-project reading.
+
+Source-read reconciliation packet: the lead personally reread all 11 current
+files changed by the cache, request-deadline and saga patches and recorded
+their exact line counts and SHA-256 in
+`../iteration228/source-admission.tsv`. Every row was rechecked against the
+working tree (11/11 matched). This is an incremental current-content
+admission only; the historical 831-file aggregate includes chain metadata
+whose early per-path manifests are not retained, so no exact whole-source
+set-equality claim follows from it. The 4,118-file goal remains active.
