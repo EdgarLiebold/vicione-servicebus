@@ -36,6 +36,9 @@ entry below records what the current work changed for anyone reading the source.
 - Amazon S3 message data now keeps caller streams open, uploads from their current position,
   applies its lifecycle rule only to explicit-TTL objects, rejects legacy untagged rules and
   versioned buckets, and revalidates startup state (`becc51c51`).
+- Azure Blob message data now keeps SAS credentials out of new claim-check addresses and logs,
+  reads older signed addresses using current credentials, isolates compressed upload block IDs,
+  and treats `TimeSpan.MaxValue` as unbounded (`04d9708a2`). Azure TTL enforcement remains open.
 
 ### Removed
 
