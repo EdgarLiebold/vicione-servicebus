@@ -33,7 +33,7 @@ public sealed class PostgreSqlBusOutboxTests
             {
                 outbox.UsePostgreSql();
                 outbox.DisableInboxCleanupService();
-                outbox.QueryDelay = TimeSpan.FromHours(1);
+                outbox.QueryDelay = TimeSpan.FromSeconds(1);
                 outbox.EnableTransactionalOutbox(busOutbox => busOutbox.MessageDeliveryLimit = 10);
             });
             configuration.AddConsumer<OutboxMessageConsumer>()
@@ -85,10 +85,12 @@ public sealed class PostgreSqlBusOutboxTests
                 Assert.Equal(0, await TransportMessageCountAsync(database, messageId, cancellationToken));
 
                 await dbContext.SaveChangesAsync(cancellationToken);
-                Assert.Equal(0, await TransportMessageCountAsync(database, messageId, cancellationToken));
+                await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
                 await using var independent = new OutboxDbContext(
                     new DbContextOptionsBuilder<OutboxDbContext>().UseNpgsql(database.ConnectionString).Options);
                 Assert.Empty(await independent.Set<OutboxMessage>().AsNoTracking().ToListAsync(cancellationToken));
+                Assert.Equal(0, await TransportMessageCountAsync(database, messageId, cancellationToken));
+                Assert.False(delivery.Consumed.IsCompleted);
 
                 await transaction.CommitAsync(cancellationToken);
             }
