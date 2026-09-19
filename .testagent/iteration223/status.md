@@ -89,3 +89,8 @@ Continuation checkpoint: 170/702 personally read, with assembly-wide topology
 and correlation bootstrap, timer/key/job fixtures, nested pipe composition,
 JSON defaults, topology naming and state-machine ownership/status contracts.
 The aggregate test read gate remains incomplete and the goal remains active.
+
+Continuation checkpoint: 180/702 personally read, adding deterministic
+partition-hash vectors, retry-policy context budgets, MessageId/JSON wire
+boundaries, saga query caching, provider discovery and TCS/readiness contracts.
+These focused tests do not replace the remaining runtime/provider acceptance.
