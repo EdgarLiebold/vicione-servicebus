@@ -19,7 +19,8 @@ public class RabbitMqReceiveEndpointConfiguration :
     readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
     readonly IRabbitMqEndpointConfiguration _endpointConfiguration;
     readonly IRabbitMqHostConfiguration _hostConfiguration;
-    readonly Lazy<Uri> _inputAddress;
+    Uri? _builtInputAddress;
+    volatile bool _inputAddressRead;
     readonly IBuildPipeConfigurator<ChannelContext> _channelConfigurator;
     readonly List<RabbitMqQueueRedeliveryPlan> _queueRedeliveryPlans = new();
     readonly RabbitMqReceiveSettings _settings;
@@ -40,8 +41,6 @@ public class RabbitMqReceiveEndpointConfiguration :
         _connectionConfigurator = new PipeConfigurator<ConnectionContext>();
         _channelConfigurator = new PipeConfigurator<ChannelContext>();
 
-        _inputAddress = new Lazy<Uri>(FormatInputAddress);
-
         if (settings.QueueName == RabbitMqExchangeNames.ReplyTo)
         {
             settings.ExchangeName = "";
@@ -60,7 +59,18 @@ public class RabbitMqReceiveEndpointConfiguration :
     /// <summary>Gets the RabbitMQ host and virtual-host address.</summary>
     public override Uri HostAddress => _hostConfiguration.HostAddress;
     /// <summary>Gets the normalized receive endpoint address.</summary>
-    public override Uri InputAddress => _inputAddress.Value;
+    public override Uri InputAddress
+    {
+        get
+        {
+            if (_builtInputAddress is { } builtInputAddress)
+                return builtInputAddress;
+
+            Uri address = FormatInputAddress();
+            _inputAddressRead = true;
+            return address;
+        }
+    }
 
     /// <summary>Creates the runtime context and broker topology for this endpoint.</summary>
     /// <returns>The RabbitMQ receive-endpoint context.</returns>
@@ -114,6 +124,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         host.AddReceiveEndpoint(queueName, receiveEndpoint);
 
         ReceiveEndpoint = receiveEndpoint;
+        _builtInputAddress = context.InputAddress;
     }
 
     internal RabbitMqQueueRedeliveryPlan CreateQueueRedeliveryPlan(IEnumerable<TimeSpan> intervals)
@@ -393,6 +404,6 @@ public class RabbitMqReceiveEndpointConfiguration :
     /// <returns><see langword="true" /> when the endpoint can no longer be changed.</returns>
     protected override bool IsAlreadyConfigured()
     {
-        return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
+        return _inputAddressRead || base.IsAlreadyConfigured();
     }
 }

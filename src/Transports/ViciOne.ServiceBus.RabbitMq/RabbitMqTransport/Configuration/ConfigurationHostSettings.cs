@@ -14,7 +14,11 @@ class ConfigurationHostSettings :
     internal const SslProtocols DefaultSslProtocols = SslProtocols.None;
 
     readonly ConfigurationBatchSettings _batchSettings;
-    readonly Lazy<Uri> _hostAddress;
+    bool _addressFrozen;
+    string? _host;
+    int _port;
+    bool _ssl;
+    string? _virtualHost;
 
     public ConfigurationHostSettings()
     {
@@ -30,18 +34,51 @@ class ConfigurationHostSettings :
 
         ClientProvidedName = HostMetadataCache.Host.ProcessName;
 
-        _hostAddress = new Lazy<Uri>(FormatHostAddress);
     }
 
     public RefreshConnectionFactoryCallback? OnRefreshConnectionFactory { get; set; }
 
-    public string? Host { get; set; }
-    public int Port { get; set; }
-    public string? VirtualHost { get; set; }
+    public string? Host
+    {
+        get => _host;
+        set
+        {
+            EnsureAddressMutable();
+            _host = value;
+        }
+    }
+
+    public int Port
+    {
+        get => _port;
+        set
+        {
+            EnsureAddressMutable();
+            _port = value;
+        }
+    }
+
+    public string? VirtualHost
+    {
+        get => _virtualHost;
+        set
+        {
+            EnsureAddressMutable();
+            _virtualHost = value;
+        }
+    }
     public string? Username { get; set; }
     public string? Password { get; set; }
     public TimeSpan Heartbeat { get; set; }
-    public bool Ssl { get; set; }
+    public bool Ssl
+    {
+        get => _ssl;
+        set
+        {
+            EnsureAddressMutable();
+            _ssl = value;
+        }
+    }
     public SslProtocols SslProtocol { get; set; }
     public string? SslServerName { get; set; }
     public SslPolicyErrors AcceptablePolicyErrors { get; set; }
@@ -54,7 +91,7 @@ class ConfigurationHostSettings :
     public IRabbitMqEndpointResolver? EndpointResolver { get; set; }
     public string? ClientProvidedName { get; set; }
     public bool PublisherConfirmation { get; set; }
-    public Uri HostAddress => _hostAddress.Value;
+    public Uri HostAddress => FormatHostAddress();
     public ushort RequestedChannelMax { get; set; }
     public TimeSpan RequestedConnectionTimeout { get; set; }
 
@@ -78,6 +115,17 @@ class ConfigurationHostSettings :
     Uri FormatHostAddress()
     {
         return new RabbitMqHostAddress(Host, Port, VirtualHost, Ssl);
+    }
+
+    internal void FreezeAddress()
+    {
+        _addressFrozen = true;
+    }
+
+    internal void EnsureAddressMutable()
+    {
+        if (_addressFrozen)
+            throw new InvalidOperationException("RabbitMQ host address settings cannot change after the host is built.");
     }
 
 

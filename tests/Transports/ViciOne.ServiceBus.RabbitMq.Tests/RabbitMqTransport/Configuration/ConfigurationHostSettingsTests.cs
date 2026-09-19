@@ -28,6 +28,58 @@ public sealed class ConfigurationHostSettingsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "host-address-tracks-later-tls-configuration")]
+    public void HostAddress_ReflectsTlsEnabledAfterAnEarlierAddressRead()
+    {
+        var configurator = new RabbitMqHostConfigurator("broker", "production");
+
+        Assert.Equal(new Uri("rabbitmq://broker/production"), configurator.Settings.HostAddress);
+
+        configurator.UseSsl();
+
+        Assert.Equal(new Uri("rabbitmqs://broker:5672/production"), configurator.Settings.HostAddress);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "receive-address-tracks-later-tls-configuration")]
+    public void ReceiveInputAddress_ReflectsTlsEnabledAfterAnEarlierAddressRead()
+    {
+        var configurator = new RabbitMqHostConfigurator("broker", "production");
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        busConfiguration.HostConfiguration.Settings = configurator.Settings;
+        IRabbitMqReceiveEndpointConfiguration endpoint =
+            busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("orders");
+
+        Assert.Equal("rabbitmq", endpoint.InputAddress.Scheme);
+
+        configurator.UseSsl();
+
+        Assert.Equal("rabbitmqs", busConfiguration.HostConfiguration.HostAddress.Scheme);
+        Assert.Equal("rabbitmqs", endpoint.InputAddress.Scheme);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "built-address-rejects-later-tls-configuration")]
+    public void BuiltHost_RejectsTlsChangesThatWouldInvalidateRuntimeAddresses()
+    {
+        var configurator = new RabbitMqHostConfigurator("broker", "production");
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        busConfiguration.HostConfiguration.Settings = configurator.Settings;
+        IRabbitMqReceiveEndpointConfiguration endpoint =
+            busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("orders");
+        _ = busConfiguration.HostConfiguration.Build();
+
+        Uri hostAddress = busConfiguration.HostConfiguration.HostAddress;
+        Uri inputAddress = endpoint.InputAddress;
+
+        Assert.Throws<InvalidOperationException>(() => configurator.UseSsl());
+        Assert.Equal(hostAddress, busConfiguration.HostConfiguration.HostAddress);
+        Assert.Equal(inputAddress, endpoint.InputAddress);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "os-selected-tls-protocol")]
     public void DefaultTlsProtocol_IsSelectedByTheOperatingSystem()
     {

@@ -17,6 +17,7 @@ public class RabbitMqHostConfiguration :
     readonly IRabbitMqBusConfiguration _busConfiguration;
     readonly Recycle<IConnectionContextSupervisor> _connectionContext;
     readonly IRabbitMqBusTopology _topology;
+    HostAddressSnapshot? _builtAddress;
     RabbitMqHostSettings _hostSettings;
 
     /// <summary>Creates a RabbitMQ host configuration with secure defaults, transport retry, and recyclable connection supervision.</summary>
@@ -52,6 +53,8 @@ public class RabbitMqHostConfiguration :
             x.Handle<NotSupportedException>(exception => exception.Message.Contains("Pipelining of requests forbidden"));
 
             x.Ignore<AuthenticationFailureException>();
+            // A configuration failure can retain a broker reply as its inner exception.
+            x.Ignore<ConfigurationException>();
 
             x.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
         });
@@ -63,7 +66,14 @@ public class RabbitMqHostConfiguration :
     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
 
     /// <summary>Gets the address of the configured RabbitMQ host.</summary>
-    public override Uri HostAddress => _hostSettings.HostAddress;
+    public override Uri HostAddress
+    {
+        get
+        {
+            RabbitMqHostSettings settings = Settings;
+            return _builtAddress?.Address ?? settings.HostAddress;
+        }
+    }
 
     /// <summary>Gets whether published messages require broker confirmation.</summary>
     public bool PublisherConfirmation => _hostSettings.PublisherConfirmation;
@@ -82,8 +92,20 @@ public class RabbitMqHostConfiguration :
     /// <summary>Gets or sets the RabbitMQ host settings.</summary>
     public RabbitMqHostSettings Settings
     {
-        get => _hostSettings;
-        set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
+        get
+        {
+            if (_builtAddress is { } builtAddress && !builtAddress.Matches(_hostSettings))
+                throw new InvalidOperationException("RabbitMQ host address settings cannot change after the host is built.");
+
+            return _hostSettings;
+        }
+        set
+        {
+            if (_builtAddress is not null)
+                throw new InvalidOperationException("RabbitMQ host settings cannot be replaced after the host is built.");
+
+            _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
+        }
     }
 
     /// <summary>Applies common endpoint settings and maps temporary endpoints to expiring, non-durable RabbitMQ queues.</summary>
@@ -201,11 +223,29 @@ public class RabbitMqHostConfiguration :
     /// <returns>The configured RabbitMQ host.</returns>
     public override IHost Build()
     {
+        RabbitMqHostSettings settings = Settings;
         var host = new RabbitMqHost(this, _topology);
 
         foreach (var endpointConfiguration in GetConfiguredEndpoints())
             endpointConfiguration.Build(host);
 
+        _builtAddress = new HostAddressSnapshot(
+            settings.HostAddress, settings.Host, settings.Port, settings.VirtualHost, settings.Ssl);
+        if (settings is ConfigurationHostSettings configurationSettings)
+            configurationSettings.FreezeAddress();
+
         return host;
+    }
+
+    readonly record struct HostAddressSnapshot(Uri Address, string? Host, int Port, string? VirtualHost, bool Ssl)
+    {
+        public bool Matches(RabbitMqHostSettings settings)
+        {
+            return Address.Equals(settings.HostAddress)
+                && string.Equals(Host, settings.Host, StringComparison.Ordinal)
+                && Port == settings.Port
+                && string.Equals(VirtualHost, settings.VirtualHost, StringComparison.Ordinal)
+                && Ssl == settings.Ssl;
+        }
     }
 }

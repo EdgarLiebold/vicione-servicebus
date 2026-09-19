@@ -59,6 +59,7 @@ public class RabbitMqHostConfigurator :
     /// <param name="configure">An optional RabbitMQ TLS configuration callback.</param>
     public void UseSsl(Action<IRabbitMqSslConfigurator>? configure = null)
     {
+        _settings.EnsureAddressMutable();
         var configurator = new RabbitMqSslConfigurator(_settings);
 
         configure?.Invoke(configurator);
