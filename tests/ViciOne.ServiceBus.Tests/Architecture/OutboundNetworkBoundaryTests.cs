@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -65,17 +66,35 @@ public sealed class OutboundNetworkBoundaryTests
             .Distinct(StringComparer.Ordinal)
             .ToArray();
         string[] addressLike = strings.Where(text => text.Contains("://", StringComparison.Ordinal)).ToArray();
-        string[] offenders = addressLike
-            .Where(text => !text.StartsWith("loopback://", StringComparison.OrdinalIgnoreCase)
-                && !text.StartsWith("urn:", StringComparison.OrdinalIgnoreCase)
-                && (text.Contains("usage", StringComparison.OrdinalIgnoreCase)
-                    || text.Contains("telemetry", StringComparison.OrdinalIgnoreCase)
-                    || text.Contains("license", StringComparison.OrdinalIgnoreCase)))
-            .ToArray();
 
-        Assert.NotEmpty(addressLike);
+        string[] probe =
+        [
+            "loopback://localhost/",
+            "https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html",
+            "https://vendor.invalid/usage",
+            "https://vendor.invalid/telemetry",
+            "https://vendor.invalid/license",
+        ];
+        Assert.Equal(
+            ["https://vendor.invalid/usage", "https://vendor.invalid/telemetry", "https://vendor.invalid/license"],
+            FindForbiddenVendorAddresses(probe));
+
+        string[] offenders = FindForbiddenVendorAddresses(addressLike);
+
+        Assert.Contains("loopback://localhost/", addressLike);
         Assert.Empty(offenders);
     }
+
+    private static string[] FindForbiddenVendorAddresses(IEnumerable<string> strings) => strings
+        .SelectMany(text => Regex.Matches(text, @"https?://[^\s<>]+")
+            .Select(match => match.Value))
+        .Where(address => !string.Equals(address,
+                "https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html",
+                StringComparison.OrdinalIgnoreCase)
+            && (address.Contains("usage", StringComparison.OrdinalIgnoreCase)
+                || address.Contains("telemetry", StringComparison.OrdinalIgnoreCase)
+                || address.Contains("license", StringComparison.OrdinalIgnoreCase)))
+        .ToArray();
 
     [Fact]
     [RequirementCoverage("REQ-VSB-NO-OUTBOUND-VENDOR-CALL", "two-distinct-product-assemblies")]

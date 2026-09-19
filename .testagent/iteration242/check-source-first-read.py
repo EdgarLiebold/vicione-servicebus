@@ -72,6 +72,8 @@ def main() -> None:
         "new_raw_remainder_paths": sorted(raw_remainder - snapshot),
     }
     print(json.dumps(report, indent=2, ensure_ascii=False))
+    if report["first_read_unproven_paths"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

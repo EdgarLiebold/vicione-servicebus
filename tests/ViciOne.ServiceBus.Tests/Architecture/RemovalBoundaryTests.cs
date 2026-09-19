@@ -311,5 +311,27 @@ public sealed class RemovalBoundaryTests
 
         if (builder.Length > 0)
             yield return builder.ToString();
+
+        // CLR user-string literals are UTF-16LE; scanning only ASCII misses
+        // addresses such as the in-memory transport's loopback URI.
+        for (int parity = 0; parity < 2; parity++)
+        {
+            builder.Clear();
+            for (int index = parity; index + 1 < bytes.Length; index += 2)
+            {
+                if (bytes[index] is >= 0x20 and < 0x7f && bytes[index + 1] == 0)
+                {
+                    builder.Append((char)bytes[index]);
+                    continue;
+                }
+
+                if (builder.Length > 0)
+                    yield return builder.ToString();
+                builder.Clear();
+            }
+
+            if (builder.Length > 0)
+                yield return builder.ToString();
+        }
     }
 }
