@@ -1,0 +1,5 @@
+# Non-C# source read — iteration 242
+
+I read the complete current contents of the 13 non-C# paths in `../source-read-remainder.txt`: nine `.csproj.DotSettings` files and four `packages.lock.json` files. Every path was absent from the existing `source-admission.tsv`; the adjacent TSV records the current byte SHA-256, a disposition, and a short assessment for each. All nine XML and four JSON files parsed successfully. A repeat hash check found no changes to these paths during review.
+
+The `.DotSettings` entries relax JetBrains namespace-folder inspections, not compiler or runtime behavior. Their breadth merits a final physical-layout/namespace review under `PO-2026-09-08-01`; this read does not prove those exceptions necessary. The lock files show resolved, hashed dependency graphs consistent with the relevant project references and central Roslyn 5.9.0 versions. I did not perform a restore or package-security audit. No product file, tracked control document, C# remainder path, test, or coverage artifact was changed by this work.
