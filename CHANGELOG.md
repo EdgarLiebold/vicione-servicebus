@@ -23,6 +23,12 @@ entry below records what the current work changed for anyone reading the source.
 - MessagePack formatter caches no longer retain the wrong lifetime (`e0d5fc1b0`), and typed inline
   object message data is preserved on round-trip (`bac2c88f9`).
 - Payload-admission checks now cover transport and durable replay boundaries (`194271bbd`).
+- Container saga test harnesses now resolve when a persistence provider supplies load but no query
+  capability; unsupported operations still report their capability error (`468ba2369`).
+- EventHubs raw-message tests now assert the actual receive address and default content type, and
+  isolate observer events by message identity (`a2e9995a3`).
+- The PostgreSQL transactional-outbox test now observes an uncommitted transaction across a polling
+  interval and checks delivery after commit (`0578d6830`).
 
 ### Removed
 
