@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Saga;
@@ -310,6 +311,31 @@ public sealed class DependencyInjectionTestHarnessTests
         Assert.Equal(
             "replacement",
             Assert.IsType<ViciOne.ServiceBus.Saga.SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "classic-saga-load-without-query")]
+    public async Task ContainerSagaHarness_LoadOnlyRepositoryResolvesAndRejectsQueryAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTestHarness(configuration =>
+            configuration.AddSaga<ManagedSaga>().InMemoryRepository());
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IQuerySagaRepository<ManagedSaga>));
+        services.RemoveAll<IQuerySagaRepository<ManagedSaga>>();
+        await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = provider.GetTestHarness();
+        Guid correlationId = NewId.NextGuid();
+
+        await harness.AddSagaInstanceAsync<ManagedSaga>(correlationId,
+            saga => saga.Value = "load-only", TestContext.Current.CancellationToken);
+
+        ISagaTestHarness<ManagedSaga> sagaHarness = harness.GetSagaHarness<ManagedSaga>();
+        Assert.Equal(correlationId, await sagaHarness.WaitForSagaAsync(
+            correlationId, cancellationToken: TestContext.Current.CancellationToken));
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sagaHarness.WaitForSagasAsync(saga => saga.Value == "load-only",
+                cancellationToken: TestContext.Current.CancellationToken));
+        Assert.Equal("The ManagedSaga repository does not support querying sagas.", exception.Message);
     }
 
     [Fact]

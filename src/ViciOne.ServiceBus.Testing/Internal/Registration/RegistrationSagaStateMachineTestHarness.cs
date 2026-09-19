@@ -24,13 +24,14 @@ internal sealed class RegistrationSagaStateMachineTestHarness<TStateMachine, TIn
 
     /// <summary>Creates a harness over a registered state machine and its repository capabilities.</summary>
     /// <param name="registration">The recorded saga activity.</param>
-    /// <param name="querySagaRepository">The optional repository query capability.</param>
-    /// <param name="loadSagaRepository">The optional repository load capability.</param>
     /// <param name="stateMachine">The registered state machine.</param>
     /// <param name="testHarness">The owning container test harness.</param>
+    /// <param name="querySagaRepository">The optional repository query capability.</param>
+    /// <param name="loadSagaRepository">The optional repository load capability.</param>
     public RegistrationSagaStateMachineTestHarness(SagaContainerTestHarnessRegistration<TInstance> registration,
-        IQuerySagaRepository<TInstance>? querySagaRepository, ILoadSagaRepository<TInstance>? loadSagaRepository,
-        TStateMachine stateMachine, ITestHarness testHarness)
+        TStateMachine stateMachine, ITestHarness testHarness,
+        IQuerySagaRepository<TInstance>? querySagaRepository = null,
+        ILoadSagaRepository<TInstance>? loadSagaRepository = null)
         : base(
             querySagaRepository,
             loadSagaRepository,
