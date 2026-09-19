@@ -446,5 +446,75 @@
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
     "testMethod": "ClientResultInvocation_DuplicateBackplaneDelivery_WritesOnlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "default-remote-group-timeout",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Options_DefaultToTheDocumentedRemoteGroupTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "custom-remote-group-timeout",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_AppliesACustomRemoteGroupTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "registered-options-are-snapshotted",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_SnapshotsOptionsBeforeCallerMutatesThem"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "nonpositive-timeout-rejected-atomically",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsANonPositiveRemoteGroupOperationTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "fluent-hub-registration",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_ReturnsTheConfiguratorAndAddsTheHubLifetimeManager"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "shared-hub-lifetime-manager-instance",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_ResolvesOneSharedLifetimeManagerInstanceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "duplicate-hub-registration-rejected-atomically",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsTheSameHubWithoutPartiallyAddingServices"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "independent-hub-types",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_AllowsIndependentHubTypes"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "null-configurator-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsAMissingConfigurator"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "public-api-is-backplane-composition-only",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "PublicApi_ContainsOnlyBackplaneOptionsAndComposition"
   }
 ]

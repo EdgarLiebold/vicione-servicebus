@@ -8,6 +8,7 @@ using ViciOne.ServiceBus.SignalR.Consumers;
 using ViciOne.ServiceBus.SignalR.Contracts;
 using ViciOne.ServiceBus.SignalR.Runtime;
 using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.SignalR.Tests;
@@ -15,6 +16,7 @@ namespace ViciOne.ServiceBus.SignalR.Tests;
 public sealed class SignalRBackplaneConfigurationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "default-remote-group-timeout")]
     public void Options_DefaultToTheDocumentedRemoteGroupTimeout()
     {
         var options = new SignalRBackplaneOptions();
@@ -23,6 +25,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "custom-remote-group-timeout")]
     public void Registration_AppliesACustomRemoteGroupTimeout()
     {
         var services = new ServiceCollection();
@@ -39,10 +42,35 @@ public sealed class SignalRBackplaneConfigurationTests
         Assert.Equal(expected, settings.RemoteGroupOperationTimeout.Value);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "registered-options-are-snapshotted")]
+    public void Registration_SnapshotsOptionsBeforeCallerMutatesThem()
+    {
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
+        SignalRBackplaneOptions? capturedOptions = null;
+        TimeSpan registeredTimeout = TimeSpan.FromSeconds(7);
+
+        configurator.AddSignalRBackplane<ConfigurationHub>(options =>
+        {
+            options.RemoteGroupOperationTimeout = registeredTimeout;
+            capturedOptions = options;
+        });
+        Assert.IsType<SignalRBackplaneOptions>(capturedOptions).RemoteGroupOperationTimeout =
+            TimeSpan.FromSeconds(13);
+
+        ServiceDescriptor descriptor = Assert.Single(services, candidate =>
+            candidate.ServiceType == typeof(SignalRBackplaneSettings<ConfigurationHub>));
+        var settings = Assert.IsType<SignalRBackplaneSettings<ConfigurationHub>>(
+            descriptor.ImplementationInstance);
+        Assert.Equal(registeredTimeout, settings.RemoteGroupOperationTimeout.Value);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(-2)]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "nonpositive-timeout-rejected-atomically")]
     public void Registration_RejectsANonPositiveRemoteGroupOperationTimeout(int milliseconds)
     {
         var services = new ServiceCollection();
@@ -63,6 +91,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "fluent-hub-registration")]
     public void Registration_ReturnsTheConfiguratorAndAddsTheHubLifetimeManager()
     {
         var services = new ServiceCollection();
@@ -76,6 +105,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "shared-hub-lifetime-manager-instance")]
     public async Task Registration_ResolvesOneSharedLifetimeManagerInstanceAsync()
     {
         var services = new ServiceCollection();
@@ -94,6 +124,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "duplicate-hub-registration-rejected-atomically")]
     public void Registration_RejectsTheSameHubWithoutPartiallyAddingServices()
     {
         var services = new ServiceCollection();
@@ -112,6 +143,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "independent-hub-types")]
     public void Registration_AllowsIndependentHubTypes()
     {
         var services = new ServiceCollection();
@@ -127,6 +159,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "null-configurator-rejected")]
     public void Registration_RejectsAMissingConfigurator()
     {
         ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() =>
@@ -136,6 +169,7 @@ public sealed class SignalRBackplaneConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "public-api-is-backplane-composition-only")]
     public void PublicApi_ContainsOnlyBackplaneOptionsAndComposition()
     {
         Assembly assembly = typeof(SignalRBackplaneOptions).Assembly;
