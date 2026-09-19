@@ -232,3 +232,18 @@ property loading and virtual-host relay. The Scheduling and Retry source
 agents have submitted uncommitted source-only corrections; Serialization
 admission work is still in progress. These are not yet admitted, mutation-
 proven or covered by newly authored tests.
+
+Personal Core read reached 380/702, including the complete 801-line payload
+admission transport integration file. Its exact JSON boundary oracles exposed
+seven new false rejections from the source agent's lazy buffer: Utf8JsonWriter
+can demand a larger contiguous span near the cap than its eventual written
+bytes. The agent is revising growth while retaining small-message laziness.
+A first filtered Release Core run exposed 302 failures from treating missing
+payload runtime as an error for direct non-DI InMemory harnesses; the lead
+restored that path's previous no-runtime behavior. A fresh Release Core build
+then had zero warnings/errors, the representative formerly failing harness
+test passed, and the filtered full Core run reached 6,208 pass / 7 exact
+JSON-boundary failures (zero skips). The two previously documented stale or
+hanging cache/deadline tests remain excluded. This is not an unfiltered green
+or admission closure; direct no-runtime transports still have no payload
+admission, and the architecture test's literal source check is stale.
