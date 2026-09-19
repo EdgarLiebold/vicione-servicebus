@@ -43,6 +43,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     readonly RequestTimeout _timeout;
     readonly bool _useDeadlineAsTimeToLive;
     int _faultedOrCanceled;
+    Exception? _responseFailure;
     bool _responseCompleted;
     ConnectHandle? _faultHandler;
     ITimer? _timeoutTimer;

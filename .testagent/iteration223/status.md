@@ -1,0 +1,52 @@
+# Iteration 223 — active research and source-only checkpoint
+
+The ServiceBus A+ goal remains active. This checkpoint is not an A+ admission:
+the lead's personal full-owning-Core-test-project read gate (§4.3) is only
+86/702 tracked files at the hash-bound baseline (see
+`../core-test-project-full-read/partial-ledger.md`). The historical ordering
+deviation remains open; the source inventory's previously admitted total
+remains 831/4,118. No new tests were designed, edited, or admitted here.
+
+Three disjoint Sol 5.6 xhigh read-only audits examined saga connector,
+ResourceCache and request-client source. Their findings are candidate defects,
+not independently mutation-qualified fixes:
+
+- ResourceCache capacity counts indexed entries and pending factories, not
+  evicted resources awaiting asynchronous disposal. Repeated `AddAsync` with
+  blocked disposal may leave arbitrarily many live cache-owned resources with
+  `Capacity=1`. A correct bound needs accounting for retiring ownership and
+  capacity-change signaling outside the index and no lock held across await.
+- A direct `AddAsync` for a key reserved by a pending `GetOrAddAsync` factory
+  can commit the same key, block `RemoveAsync` while the factory remains
+  pending, then fault the factory's single-flight callers on duplicate commit.
+- Request deadlines/timers are initialized after endpoint acquisition and send
+  pipeline execution. An endpoint that never becomes ready can exceed its
+  absolute deadline indefinitely; a response received before a hung send task
+  completes also suppresses the timeout while response completion awaits send.
+  Terminal timeout may not cancel the send if `_sendContext` already completed.
+- Reusing a saga specification for a second direct `ConnectSaga` accumulates
+  terminal filters in persistent configurators and can duplicate saga
+  consumption. Existing tests intentionally assert repeated-build accumulation,
+  so a connection-specific snapshot or explicit single-use contract needs
+  careful design rather than changing general Build semantics.
+
+One smaller request-client error-precedence defect has a source-only correction:
+the constructor starts the send before the caller can register typed response
+handlers. If endpoint acquisition faults immediately, `Fail` used to set the
+terminal bit and later `ResponseAsync` synthesized cancellation. `Fail` now
+stores the exact response exception under the handler lock; a subsequent
+registration returns that exception instead of false cancellation. Genuine
+cancel/dispose paths still return canceled tasks. This was inspected against
+the existing request-client lifecycle tests but has **no new causal regression
+or mutation evidence** until the §4.3 gate is dispositioned.
+
+Verification: strict Core Release build, 0 warnings and 0 errors; first full
+MTP run 6,216/6,217, one 30-second timeout in
+`StateMachineNestedRequestIntegrationTests.NestedRequestCompletion_ResumesTheOriginalRequestWithTheExactResponseAsync`.
+The exact test passed alone 1/1 on retry; the following unfiltered full Core
+run passed 6,217/6,217, 0 skipped. The one-off failure is retained as an
+observed instability, not declared fixed. `git diff --check` passed.
+
+No remote push is made at this checkpoint. The remote-specific private-source
+exfiltration confirmation is still absent; this does **not** pause or block
+the active local goal and personal read/verification work continues.

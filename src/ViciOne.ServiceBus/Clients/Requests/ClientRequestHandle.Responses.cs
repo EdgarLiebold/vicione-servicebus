@@ -52,6 +52,9 @@ internal sealed partial class ClientRequestHandle<TRequest>
     {
         lock (_handlerLock)
         {
+            if (_responseFailure is { } failure)
+                return Task.FromException<Response<TResponse>>(failure);
+
             if (_faultedOrCanceled != 0 || _cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled<Response<TResponse>>(CancellationTokenForCanceledRequest());
 

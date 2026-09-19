@@ -21,6 +21,7 @@ internal sealed partial class ClientRequestHandle<TRequest>
             if (_faultedOrCanceled != 0 || _responseCompleted)
                 return;
 
+            _responseFailure = responseException;
             _faultedOrCanceled = 1;
         }
 
