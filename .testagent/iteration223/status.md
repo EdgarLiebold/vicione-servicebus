@@ -293,3 +293,17 @@ DI endpoint exclusion, job start and transport formatting. The lead requested
 instance-bound admission evidence for the first-party JSON bodies as well as
 MessagePack, to prevent same-length replacement bytes inheriting stale
 tracking flags. The agent's parity correction is still in progress.
+
+Personal Core read reached 435/702; all ledger path/blob pairs match the
+current owning-project tree. Two disjoint read-only Sol 5.6 xhigh reviews
+resolved the two excluded Core-test oracles without touching files. The
+cache test asserts Count=1 while the evicted entry has already left the map
+and still owns retiring capacity; that failed assertion prevents releasing
+the disposal probe and traps async teardown. The deadline test waits for a
+pipe callback that correctly need not run once the absolute deadline has
+canceled the gated send. Their post-§4.3 revisions must retain causal hard-
+capacity and deadline assertions, always release probes and use bounded
+waits. No current unfiltered green claim follows. The payload agent is
+preserving public custom-buffer SPI; independent host threshold decisions
+will be enforced post-serialization without pretending an arbitrary custom
+buffer's internal allocations can be bounded by an outer wrapper.
