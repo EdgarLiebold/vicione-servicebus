@@ -115,3 +115,12 @@ Continuation checkpoint: 250/702 personally read Core files, adding
 container-discovered job execution, forward-expiration outbox behavior,
 fork/join failure retention, serializer/body oracles, saga context factories
 and application topology freeze. This does not close the 702-file gate.
+
+Parallel-source checkpoint: 280/702 personally read Core files. Three
+disjoint Sol 5.6 xhigh agents are examining Caching, Clients/Requests and
+Sagas/Configuration; their source-only patches are not yet accepted or
+verified. The Saga connector replay patch has a preliminary lead diff review.
+The request deadline candidate conflicts with an existing assertion requiring
+post-deadline pipe execution; this will need explicit causal test disposition
+after the full-read gate. Ledger/status may be committed independently of
+these unverified source edits.
