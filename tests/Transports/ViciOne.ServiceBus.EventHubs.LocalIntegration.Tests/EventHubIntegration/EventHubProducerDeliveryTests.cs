@@ -183,10 +183,13 @@ public sealed class EventHubProducerDeliveryTests
         const string eventHubName = "envelope-eh";
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("observer");
         string containerName = fixture.ContainerName("checkpoint");
+        Guid marker = NewId.NextGuid();
+        Guid foreignMarker = NewId.NextGuid();
         var consumed = NewObservation<Guid>();
+        var foreignConsumed = NewObservation<Guid>();
         var observer = new RecordingSendObserver();
         await using ServiceProvider provider = new ServiceCollection()
-            .AddSingleton(consumed)
+            .AddSingleton(new ExpectedObservedMessage(marker, foreignMarker, consumed, foreignConsumed))
             .AddViciOneServiceBus(configuration =>
             {
                 configuration.Limits(MessageLimits.Conservative);
@@ -209,7 +212,6 @@ public sealed class EventHubProducerDeliveryTests
             .BuildServiceProvider(true);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        Guid marker = NewId.NextGuid();
         Guid messageId = NewId.NextGuid();
         bool started = false;
 
@@ -223,13 +225,19 @@ public sealed class EventHubProducerDeliveryTests
                 .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             await producer.ProduceAsync<IEnvelopeMessage>(
+                    new EnvelopeMessage(foreignMarker, 0, "foreign"), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            Assert.Equal(foreignMarker, await foreignConsumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            Assert.False(consumed.Task.IsCompleted);
+
+            await producer.ProduceAsync<IEnvelopeMessage>(
                     new EnvelopeMessage(marker, 1, "observer"),
                     Pipe.Execute<SendContext>(context => context.MessageId = messageId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(marker, await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            SendObservation[] actual = observer.Snapshot();
+            SendObservation[] actual = observer.Snapshot().Where(item => item.Marker == marker).ToArray();
             Assert.Equal(["pre", "post"], actual.Select(item => item.Stage));
             Assert.All(actual, item =>
             {
@@ -272,6 +280,11 @@ public sealed class EventHubProducerDeliveryTests
     }
     private sealed record HeaderValue(string Key, string Value) : IHeaderValue;
     private sealed record ExpectedEnvelope(Guid Marker, TaskCompletionSource<ConsumeContext<IEnvelopeMessage>> Received);
+    private sealed record ExpectedObservedMessage(
+        Guid Marker,
+        Guid ForeignMarker,
+        TaskCompletionSource<Guid> Consumed,
+        TaskCompletionSource<Guid> ForeignConsumed);
     private sealed record EnvelopeObservation(
         int Index,
         string Text,
@@ -279,7 +292,7 @@ public sealed class EventHubProducerDeliveryTests
         Guid? CorrelationId,
         Guid? InitiatorId,
         Guid? ConversationId);
-    private sealed record SendObservation(string Stage, Guid? MessageId, Uri? DestinationAddress);
+    private sealed record SendObservation(string Stage, Guid? Marker, Guid? MessageId, Uri? DestinationAddress);
 
     private sealed class BatchEnvelopeConsumer(
         ConcurrentQueue<EnvelopeObservation> observations,
@@ -311,11 +324,14 @@ public sealed class EventHubProducerDeliveryTests
         }
     }
 
-    private sealed class ObserverMessageConsumer(TaskCompletionSource<Guid> consumed) : IConsumer<IEnvelopeMessage>
+    private sealed class ObserverMessageConsumer(ExpectedObservedMessage expected) : IConsumer<IEnvelopeMessage>
     {
         public Task ConsumeAsync(ConsumeContext<IEnvelopeMessage> context)
         {
-            consumed.TrySetResult(context.Message.Marker);
+            if (context.Message.Marker == expected.Marker)
+                expected.Consumed.TrySetResult(context.Message.Marker);
+            else if (context.Message.Marker == expected.ForeignMarker)
+                expected.ForeignConsumed.TrySetResult(context.Message.Marker);
             return Task.CompletedTask;
         }
     }
@@ -349,7 +365,11 @@ public sealed class EventHubProducerDeliveryTests
         private void Record<T>(string stage, SendContext<T> context) where T : class
         {
             lock (_lock)
-                _observations.Add(new SendObservation(stage, context.MessageId, context.DestinationAddress));
+                _observations.Add(new SendObservation(
+                    stage,
+                    (context.Message as IEnvelopeMessage)?.Marker,
+                    context.MessageId,
+                    context.DestinationAddress));
         }
     }
 }

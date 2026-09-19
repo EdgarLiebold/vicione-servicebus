@@ -75,9 +75,10 @@ public sealed class EventHubInteropAndContextTests
             Assert.Equal(source.Text, received.Message.Text);
             Assert.Equal(correlationId, received.CorrelationId);
             Assert.Equal(received.CorrelationId, ping.InitiatorId);
-            Assert.Equal(
-                new Uri($"loopback://localhost/{EventHubEndpointAddress.PathPrefix}/{eventHubName}/{EventHubLocalFixture.ConsumerGroup}"),
-                ping.SourceAddress);
+            string receiveQueueName = $"{EventHubEndpointAddress.PathPrefix}/{eventHubName}/{EventHubLocalFixture.ConsumerGroup}";
+            var expectedSourceAddress = new Uri($"loopback://localhost/{Uri.EscapeDataString(receiveQueueName)}");
+            Assert.Equal(expectedSourceAddress, received.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(expectedSourceAddress, ping.SourceAddress);
             Assert.Equal(state.RunId, ping.Message.RunId);
         }
         finally
@@ -88,8 +89,8 @@ public sealed class EventHubInteropAndContextTests
     }
 
     [Fact]
-    [RequirementCoverage("OBL-R0-CLOUD-0157", "raw-sdk-envelope-with-default-send-context-serializer-deserializes-to-contract")]
-    public async Task RawSdkEnvelope_UsesTheDefaultMessageSerializerAndDeserializesToTheContractAsync()
+    [RequirementCoverage("OBL-R0-CLOUD-0157", "raw-sdk-envelope-without-content-type-uses-default-receive-serializer")]
+    public async Task RawSdkEnvelope_WithoutContentType_UsesDefaultReceiveSerializerAsync()
     {
         const string eventHubName = "raw-eh";
         var state = new DefaultSerializerState(NewId.NextGuid());
@@ -126,17 +127,18 @@ public sealed class EventHubInteropAndContextTests
             started = true;
             var source = new DefaultSerializerMessage(state.RunId, "default-contract");
             var sendContext = new MessageSendContext<IDefaultSerializerMessage>(source);
-            Assert.Null(sendContext.Serializer);
             var eventData = new EventData(ServiceBusMetadataJson.MessageSerializer.GetMessageBody(sendContext).ToArray());
+            Assert.Null(eventData.ContentType);
             await using EventHubProducerClient producer = fixture.CreateRawProducer(eventHubName);
 
             await producer.SendAsync([eventData], cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            IDefaultSerializerMessage actual = await state.Received.Task
+            ConsumeContext<IDefaultSerializerMessage> actual = await state.Received.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            Assert.Equal(source.RunId, actual.RunId);
-            Assert.Equal(source.Text, actual.Text);
+            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, actual.Advanced().ReceiveContext.ContentType);
+            Assert.Equal(source.RunId, actual.Message.RunId);
+            Assert.Equal(source.Text, actual.Message.Text);
         }
         finally
         {
@@ -301,7 +303,8 @@ public sealed class EventHubInteropAndContextTests
     private sealed class DefaultSerializerState(Guid runId)
     {
         public Guid RunId { get; } = runId;
-        public TaskCompletionSource<IDefaultSerializerMessage> Received { get; } = NewSignal<IDefaultSerializerMessage>();
+        public TaskCompletionSource<ConsumeContext<IDefaultSerializerMessage>> Received { get; } =
+            NewSignal<ConsumeContext<IDefaultSerializerMessage>>();
     }
 
     private sealed class DefaultSerializerConsumer(DefaultSerializerState state) : IConsumer<IDefaultSerializerMessage>
@@ -309,7 +312,7 @@ public sealed class EventHubInteropAndContextTests
         public Task ConsumeAsync(ConsumeContext<IDefaultSerializerMessage> context)
         {
             if (context.Message.RunId == state.RunId)
-                state.Received.TrySetResult(context.Message);
+                state.Received.TrySetResult(context);
             return Task.CompletedTask;
         }
     }
