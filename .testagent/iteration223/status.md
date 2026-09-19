@@ -172,3 +172,13 @@ engineering progress, **not** A+ acceptance or causal mutation proof. The
 personal Core project read advanced to 320/702, adding mediator request/body,
 cron, JSON body, topology, endpoint cache, scoped DI, transaction and
 outgoing-options contracts. The historical §4.3 ordering deviation remains.
+
+Further continuation: personal Core read is 330/702. The added files cover
+application Protobuf/XML JSON shapes, retry factories, reflection property
+cache, cron identity, bus probes, InMemory saga repository and scoped
+scheduling, JSON polymorphism, in-memory outbox scheduler argument boundaries
+and application schedule options. The committed source patch passed a fresh
+Release Core build with zero warnings/errors. A filtered direct Release-host
+test run, excluding the same two documented stale/hanging oracles, is in
+progress; neither an unfiltered green result nor provider acceptance is
+claimed.
