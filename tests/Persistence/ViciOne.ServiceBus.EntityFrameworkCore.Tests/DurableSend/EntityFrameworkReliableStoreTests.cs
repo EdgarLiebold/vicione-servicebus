@@ -68,6 +68,25 @@ public sealed class EntityFrameworkReliableStoreTests
             store.AdmitAsync(message with { Metadata = new byte[] { 9, 9 } }, limits, Epoch, cancellationToken));
         await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
             store.AdmitAsync(message with { DueAt = Epoch.AddMinutes(1) }, limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with
+            {
+                ContractIdentity = new MessageContractIdentity("vicione.tests.ef-durable-alternate", 1),
+            }, limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with { DestinationAddress = new Uri("loopback://ef-durable/other") },
+                limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with { ContentType = "application/json" }, limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with { ContentType = "APPLICATION/octet-stream" },
+                limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with { MessageId = GuidFrom(81) }, limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with { CorrelationId = GuidFrom(82) }, limits, Epoch, cancellationToken));
+        await Assert.ThrowsAsync<DurableSendIdentityConflictException>(() =>
+            store.AdmitAsync(message with { Body = new byte[] { 9, 2, 3 } }, limits, Epoch, cancellationToken));
         await Assert.ThrowsAsync<DurableSendCapacityExceededException>(() =>
             store.AdmitAsync(Message(2, body: [], metadata: []), limits, Epoch, cancellationToken));
 
@@ -76,6 +95,14 @@ public sealed class EntityFrameworkReliableStoreTests
             1,
             TimeSpan.FromMinutes(1),
             cancellationToken));
+        Assert.Equal(message.ContractIdentity, first.Message.ContractIdentity);
+        Assert.Equal(message.DestinationAddress, first.Message.DestinationAddress);
+        Assert.Equal(message.ContentType, first.Message.ContentType);
+        Assert.Equal(message.MessageId, first.Message.MessageId);
+        Assert.Equal(message.CorrelationId, first.Message.CorrelationId);
+        Assert.Equal(message.DueAt, first.Message.DueAt);
+        Assert.Equal(message.Body.ToArray(), first.Message.Body.ToArray());
+        Assert.Equal(message.Metadata.ToArray(), first.Message.Metadata.ToArray());
         Assert.True(await store.ScheduleRetryAsync(
             message.Id,
             first.Lease,
@@ -215,7 +242,7 @@ public sealed class EntityFrameworkReliableStoreTests
             cancellationToken));
 
         DurableSendAdmissionResult duplicate = await restarted.AdmitAsync(
-            scheduled,
+            scheduled with { DueAt = dueAt.ToOffset(TimeSpan.FromHours(5)) },
             limits,
             Epoch,
             cancellationToken);

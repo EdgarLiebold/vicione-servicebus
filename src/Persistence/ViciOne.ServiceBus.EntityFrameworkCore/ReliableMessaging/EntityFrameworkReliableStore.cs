@@ -987,12 +987,22 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
 
     static void EnsureSameIntent(DurableSendRecord existing, SerializedDurableSend message)
     {
-        if (string.Equals(existing.ContractIdentity, message.ContractIdentity.ToString(), StringComparison.Ordinal)
-            && string.Equals(existing.DestinationAddress, message.DestinationAddress.AbsoluteUri, StringComparison.Ordinal)
-            && string.Equals(existing.ContentType, message.ContentType, StringComparison.Ordinal)
-            && existing.MessageId == message.MessageId
-            && existing.CorrelationId == message.CorrelationId
-            && existing.DueAt == message.DueAt?.UtcDateTime
+        var storedIdentity = (
+            existing.ContractIdentity,
+            existing.DestinationAddress,
+            existing.ContentType,
+            existing.MessageId,
+            existing.CorrelationId,
+            existing.DueAt);
+        var requestedIdentity = (
+            message.ContractIdentity.ToString(),
+            message.DestinationAddress.AbsoluteUri,
+            message.ContentType,
+            message.MessageId,
+            message.CorrelationId,
+            message.DueAt?.UtcDateTime);
+
+        if (storedIdentity.Equals(requestedIdentity)
             && existing.Body.AsSpan().SequenceEqual(message.Body.Span)
             && (existing.Metadata ?? Array.Empty<byte>()).AsSpan().SequenceEqual(message.Metadata.Span))
             return;
