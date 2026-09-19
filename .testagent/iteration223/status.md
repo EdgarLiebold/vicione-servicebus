@@ -247,3 +247,30 @@ JSON-boundary failures (zero skips). The two previously documented stale or
 hanging cache/deadline tests remain excluded. This is not an unfiltered green
 or admission closure; direct no-runtime transports still have no payload
 admission, and the architecture test's literal source check is stale.
+
+The Scheduling/Retry/Serialization source-only patch now has a ten-file
+personal current-content admission in `../iteration233/source-admission.tsv`;
+all 10 line/SHA-256 pairs were rechecked. The latest full Release Core build
+has zero warnings/errors. Its direct-host filtered run passed 6,215/6,215,
+zero skips, again excluding only the known cache/deadline stale-oracle tests.
+A Release Architecture build also has zero warnings/errors, but the focused
+`PayloadAdmissionArchitectureTests.CommonPhysicalSendBoundary_AdmitsBeforeObserversAndProviderIo`
+fails solely because it searches for the obsolete literal
+`_ = transportContext.Body.Length`; the current source materializes and
+measures the same Body through a local variable. No test file is changed
+before the Core §4.3 read gate. The source patch is engineering progress,
+not A+ closure: causal new tests, mutations, MessagePack/custom evaluator
+parity, complete test admission and unfiltered acceptance remain open.
+
+The lead's personal Core test-project read advanced to 395/702 tracked files;
+each ledger path/blob pair is present in the current tree. The fifteen newly
+inspected files span initializer factories/converters, retries, MessageData,
+outbox, JSON runtime isolation, kill-switch, topology and scoped request
+clients. A separate source review found two concrete compatibility regressions
+in the uncommitted payload-admission patch: a custom public evaluator throws
+for even a tiny pre-materialized body, and MessagePack's already validated
+envelope is rechecked as though entirely body bytes. A dedicated disjoint
+Sol 5.6 xhigh source agent is correcting those in Serialization/Admission
+and, if required, MessagePack; no tests or other source scope are delegated.
+The source manifest must be regenerated after that correction. The goal is
+still active; no unfiltered-green or A+ completion claim is made.
