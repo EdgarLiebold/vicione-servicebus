@@ -50,3 +50,9 @@ observed instability, not declared fixed. `git diff --check` passed.
 No remote push is made at this checkpoint. The remote-specific private-source
 exfiltration confirmation is still absent; this does **not** pause or block
 the active local goal and personal read/verification work continues.
+
+Later read-only continuation: the personally complete Core test-project ledger
+advanced from 86/702 to 100/702, adding Courier activity/host contracts,
+subscription capture, argument integration and InMemory conversation inheritance.
+The additional reading does not retroactively qualify the source-only fix or
+resolve the historical §4.3 ordering deviation.
