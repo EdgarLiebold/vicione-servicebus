@@ -1,4 +1,5 @@
 using System.Buffers;
+using MessagePack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -44,6 +45,181 @@ public sealed class PayloadAdmissionMessagePackTests
         await AssertEnvelopeBoundaryAsync(requiredCapacity + 1, rejected: false);
         await AssertEnvelopeBoundaryAsync(requiredCapacity, rejected: false);
         await AssertEnvelopeBoundaryAsync(requiredCapacity - 1, rejected: true);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "copied-envelope-exact-body-and-wire-snapshot")]
+    public async Task CopiedEnvelope_AdmitsItsEmbeddedBodyAndPreservesTheWireBytesAsync()
+    {
+        var source = new BoundaryPayload(Enumerable.Repeat((byte)0x5A, 128).ToArray());
+        byte[] serializedBody = MessagePackSerializationRuntime.Serialize(source);
+        byte[] envelope = new MessagePackMessageSerializer()
+            .GetMessageBody(new MessageSendContext<BoundaryPayload>(source))
+            .ToArray();
+        Assert.True(envelope.Length > serializedBody.Length);
+
+        BoundaryPayload.ResetSerializationReads();
+        var observer = new BodyReadingObserver();
+        var received = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using ServiceProvider provider = BuildProvider(
+            observer,
+            options =>
+            {
+                options.MaximumSerializedBodyBytes = serializedBody.Length;
+                options.MaximumTransportEnvelopeBytes = envelope.Length;
+            },
+            context => received.TrySetResult(context.Message.Data.ToArray()));
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+
+        await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
+        try
+        {
+            await SendCopiedAsync(bus, envelope);
+
+            Assert.Equal(source.Data, await received.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(envelope, observer.EnvelopeBytes);
+            Assert.Equal(envelope.Length, observer.BodyLength);
+            Assert.Equal(1, observer.PreSendCalls);
+            Assert.Equal(0, observer.ApplicationSerializationReads);
+        }
+        finally
+        {
+            BoundaryPayload.StopCountingSerializationReads();
+            await bus.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "copied-envelope-embedded-body-one-byte-over-limit")]
+    public async Task CopiedEnvelope_RejectsTheFullEmbeddedBodyOneByteOverLimitAsync()
+    {
+        var source = new BoundaryPayload(Enumerable.Repeat((byte)0x5A, 128).ToArray());
+        byte[] serializedBody = MessagePackSerializationRuntime.Serialize(source);
+        byte[] envelope = new MessagePackMessageSerializer()
+            .GetMessageBody(new MessageSendContext<BoundaryPayload>(source))
+            .ToArray();
+        int bodyLimit = serializedBody.Length - 1;
+
+        BoundaryPayload.ResetSerializationReads();
+        var observer = new BodyReadingObserver();
+        var consumed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using ServiceProvider provider = BuildProvider(
+            observer,
+            options =>
+            {
+                options.MaximumSerializedBodyBytes = bodyLimit;
+                options.MaximumTransportEnvelopeBytes = envelope.Length;
+            },
+            _ => consumed.TrySetResult());
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+
+        await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
+        try
+        {
+            PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(
+                () => SendCopiedAsync(bus, envelope));
+            Assert.Equal(PayloadAdmissionStage.SerializedBody, exception.Stage);
+            Assert.Equal(serializedBody.LongLength, exception.ActualBytes);
+            Assert.Equal(bodyLimit, exception.ConfiguredLimitBytes);
+            Assert.Equal(0, observer.PreSendCalls);
+            Assert.False(consumed.Task.IsCompleted);
+            Assert.Equal(0, BoundaryPayload.SerializationReads);
+        }
+        finally
+        {
+            BoundaryPayload.StopCountingSerializationReads();
+            await bus.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "copied-envelope-ambiguous-or-trailing-content-rejected")]
+    public async Task CopiedEnvelope_RejectsAmbiguousOrTrailingContentBeforeTransportAsync()
+    {
+        byte[] serializedBody = MessagePackSerializationRuntime.Serialize(new BoundaryPayload([0x5A]));
+        byte[] validEnvelope = EnvelopeWithMessage(serializedBody);
+        (byte[] Envelope, string ExpectedReason)[] malformed =
+        [
+            ([0xC0], "not a map"),
+            (EnvelopeWithMessage(serializedBody, numericKey: true), "non-string key"),
+            (EnvelopeWithMessage(serializedBody, duplicate: true), "more than one message value"),
+            (EnvelopeWithMessage(serializedBody, key: "Other"), "no unique message value"),
+            (EnvelopeWithMessage(serializedBody, nilValue: true), "message is not binary"),
+            (EnvelopeWithMessage([]), "no serialized message"),
+            (EnvelopeWithMessage([.. serializedBody, 0xC0]), "message has trailing data"),
+            ([.. validEnvelope, 0xC0], "has trailing data"),
+            (validEnvelope[..^1], "malformed"),
+        ];
+        var observer = new BodyReadingObserver();
+        var consumed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using ServiceProvider provider = BuildProvider(
+            observer,
+            options =>
+            {
+                options.MaximumSerializedBodyBytes = 1_000;
+                options.MaximumTransportEnvelopeBytes = 1_000;
+            },
+            _ => consumed.TrySetResult());
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+
+        await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
+        try
+        {
+            foreach ((byte[] envelope, string expectedReason) in malformed)
+            {
+                InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                    () => SendCopiedAsync(bus, envelope));
+                Assert.Contains(expectedReason, exception.Message, StringComparison.Ordinal);
+            }
+
+            Assert.Equal(0, observer.PreSendCalls);
+            Assert.False(consumed.Task.IsCompleted);
+        }
+        finally
+        {
+            await bus.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+        }
+    }
+
+    private static byte[] EnvelopeWithMessage(
+        byte[] serializedBody,
+        string key = "Message",
+        bool duplicate = false,
+        bool nilValue = false,
+        bool numericKey = false)
+    {
+        var buffer = new ArrayBufferWriter<byte>();
+        var writer = new MessagePackWriter(buffer);
+        writer.WriteMapHeader(duplicate ? 2 : 1);
+        if (numericKey)
+            writer.Write(1);
+        else
+            writer.Write(key);
+
+        if (nilValue)
+            writer.WriteNil();
+        else
+            writer.Write(serializedBody.AsSpan());
+        if (duplicate)
+        {
+            writer.Write("Message");
+            writer.Write(serializedBody.AsSpan());
+        }
+
+        writer.Flush();
+        return buffer.WrittenSpan.ToArray();
+    }
+
+    private static async Task SendCopiedAsync(IBus bus, byte[] envelope)
+    {
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(
+            new Uri("loopback://payload-messagepack/payload-messagepack-input"));
+        await endpoint.SendAsync(
+            new BoundaryPayload([0x7F]),
+            context => context.Serializer = new CopyBodySerializer(
+                MessagePackMessageSerializer.MessagePackContentType,
+                new BinaryMessageBody(envelope)),
+            TestContext.Current.CancellationToken);
     }
 
     private static async Task AssertBodyBoundaryAsync(int maximumBodyBytes, bool rejected)
@@ -289,6 +465,8 @@ public sealed class PayloadAdmissionMessagePackTests
 
         public long? BodyLength { get; private set; }
 
+        public byte[]? EnvelopeBytes { get; private set; }
+
         public int ApplicationSerializationReads { get; private set; }
 
         public Task PreSendAsync<T>(SendContext<T> context)
@@ -296,7 +474,8 @@ public sealed class PayloadAdmissionMessagePackTests
         {
             Interlocked.Increment(ref _preSendCalls);
             TransportSendContext transport = Assert.IsType<TransportSendContext>(context, exactMatch: false);
-            BodyLength = transport.Body.ToArray().LongLength;
+            EnvelopeBytes = transport.Body.ToArray();
+            BodyLength = EnvelopeBytes.LongLength;
             ApplicationSerializationReads = BoundaryPayload.SerializationReads;
             BoundaryPayload.StopCountingSerializationReads();
             return Task.CompletedTask;
