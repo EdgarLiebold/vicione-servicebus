@@ -13,6 +13,7 @@ public class FaultRequestActivity :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.CreateScope("faultRequest");
     }
 
@@ -20,6 +21,7 @@ public class FaultRequestActivity :
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
     }
 
@@ -29,15 +31,15 @@ public class FaultRequestActivity :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<RequestState, IRequestFaulted> context, IBehavior<RequestState, IRequestFaulted> next)
     {
-        if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
-        {
-            var outcome = new ForwardedRequestOutcome(context.Message.Payload, context.Message.PayloadType);
-            IPipe<SendContext> pipe = new RequestStateMessagePipe(context, outcome);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
 
-            var endpoint = await context.GetSendEndpointAsync(context.Saga.ResponseAddress).ConfigureAwait(false);
+        var outcome = new ForwardedRequestOutcome(context.Message.Payload, context.Message.PayloadType);
+        IPipe<SendContext> pipe = new RequestStateMessagePipe(context, outcome);
 
-            await endpoint.SendAsync(outcome, pipe, context.CancellationToken).ConfigureAwait(false);
-        }
+        var endpoint = await context.GetSendEndpointAsync(context.Saga.ResponseAddress, context.CancellationToken).ConfigureAwait(false);
+
+        await endpoint.SendAsync(outcome, pipe, context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
@@ -51,6 +53,9 @@ public class FaultRequestActivity :
         IBehavior<RequestState, IRequestFaulted> next)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 }

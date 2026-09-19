@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>Executes the faulted request activity.</summary>
+/// <summary>Sends a request when an untyped state-machine event faults with the selected exception.</summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 /// <typeparam name="TRequest">The request type.</typeparam>
@@ -24,9 +24,9 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="messageFactory">The message factory.</param>
     public FaultedRequestActivity(IRequest<TSaga, TRequest, TResponse> request,
         ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TRequest> messageFactory)
-        : base(request)
+        : base(request ?? throw new ArgumentNullException(nameof(request)))
     {
-        _messageFactory = messageFactory;
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => request.Settings.ServiceAddress ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
@@ -37,9 +37,10 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     public FaultedRequestActivity(IRequest<TSaga, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TSaga, TException> serviceAddressProvider,
         ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TRequest> messageFactory)
-        : base(request)
+        : base(request ?? throw new ArgumentNullException(nameof(request)))
     {
-        _messageFactory = messageFactory;
+        ArgumentNullException.ThrowIfNull(serviceAddressProvider);
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => serviceAddressProvider(context) ?? request.Settings.ServiceAddress
             ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
@@ -48,7 +49,16 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
+    }
+
+    /// <summary>Writes the request configuration to the diagnostic graph.</summary>
+    /// <param name="context">The diagnostic context to populate.</param>
+    public override void Probe(ProbeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        base.Probe(context);
     }
 
     /// <summary>Runs the configured action.</summary>
@@ -57,6 +67,8 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -68,6 +80,8 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -79,11 +93,15 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
     public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
+            context.CancellationToken.ThrowIfCancellationRequested();
             var serviceAddress = _serviceAddressProvider(exceptionContext);
 
-            await _messageFactory.UseAsync(exceptionContext, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress),
+                context.CancellationToken).ConfigureAwait(false);
         }
 
         await next.FaultedAsync(context).ConfigureAwait(false);
@@ -99,11 +117,15 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
         where T : class
         where TOtherException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         if (context is IBehaviorExceptionContext<TSaga, T, TException> exceptionContext)
         {
+            context.CancellationToken.ThrowIfCancellationRequested();
             var serviceAddress = _serviceAddressProvider(exceptionContext);
 
-            await _messageFactory.UseAsync(exceptionContext, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress),
+                context.CancellationToken).ConfigureAwait(false);
         }
 
         await next.FaultedAsync(context).ConfigureAwait(false);
@@ -111,7 +133,7 @@ public class FaultedRequestActivity<TSaga, TException, TRequest, TResponse> :
 }
 
 
-/// <summary>Executes the faulted request activity.</summary>
+/// <summary>Sends a request when a data event faults with the selected exception.</summary>
 /// <typeparam name="TInstance">The instance type.</typeparam>
 /// <typeparam name="TData">The data type.</typeparam>
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
@@ -134,9 +156,9 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     /// <param name="messageFactory">The message factory.</param>
     public FaultedRequestActivity(IRequest<TInstance, TRequest, TResponse> request,
         ContextMessageFactory<IBehaviorExceptionContext<TInstance, TData, TException>, TRequest> messageFactory)
-        : base(request)
+        : base(request ?? throw new ArgumentNullException(nameof(request)))
     {
-        _messageFactory = messageFactory;
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => request.Settings.ServiceAddress ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
@@ -147,9 +169,10 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     public FaultedRequestActivity(IRequest<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
         ContextMessageFactory<IBehaviorExceptionContext<TInstance, TData, TException>, TRequest> messageFactory)
-        : base(request)
+        : base(request ?? throw new ArgumentNullException(nameof(request)))
     {
-        _messageFactory = messageFactory;
+        ArgumentNullException.ThrowIfNull(serviceAddressProvider);
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => serviceAddressProvider(context) ?? request.Settings.ServiceAddress
             ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
@@ -158,7 +181,16 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
+    }
+
+    /// <summary>Writes the request configuration to the diagnostic graph.</summary>
+    /// <param name="context">The diagnostic context to populate.</param>
+    public override void Probe(ProbeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        base.Probe(context);
     }
 
     /// <summary>Runs the configured action.</summary>
@@ -167,6 +199,8 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -178,11 +212,15 @@ public class FaultedRequestActivity<TInstance, TData, TException, TRequest, TRes
     public async Task FaultedAsync<T>(IBehaviorExceptionContext<TInstance, TData, T> context, IBehavior<TInstance, TData> next)
         where T : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         if (context is IBehaviorExceptionContext<TInstance, TData, TException> exceptionContext)
         {
+            context.CancellationToken.ThrowIfCancellationRequested();
             var serviceAddress = _serviceAddressProvider(exceptionContext);
 
-            await _messageFactory.UseAsync(exceptionContext, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress),
+                context.CancellationToken).ConfigureAwait(false);
         }
 
         await next.FaultedAsync(context).ConfigureAwait(false);

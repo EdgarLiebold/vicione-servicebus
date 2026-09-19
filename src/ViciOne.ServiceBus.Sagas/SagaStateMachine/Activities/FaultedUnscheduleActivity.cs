@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>Executes the faulted unschedule activity.</summary>
+/// <summary>Cancels a saga schedule on a fault unless the faulting message owns the active token.</summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class FaultedUnscheduleActivity<TSaga> :
     IStateMachineActivity<TSaga>
@@ -15,13 +15,14 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <param name="schedule">The schedule.</param>
     public FaultedUnscheduleActivity(ISchedule<TSaga> schedule)
     {
-        _schedule = schedule;
+        _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="inspector">The inspector.</param>
     public void Accept(IStateMachineVisitor inspector)
     {
+        ArgumentNullException.ThrowIfNull(inspector);
         inspector.Visit(this);
     }
 
@@ -29,6 +30,7 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.CreateScope("unschedule-faulted");
     }
 
@@ -38,6 +40,8 @@ public class FaultedUnscheduleActivity<TSaga> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -49,6 +53,8 @@ public class FaultedUnscheduleActivity<TSaga> :
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -60,6 +66,8 @@ public class FaultedUnscheduleActivity<TSaga> :
     public async Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         await FaultedAsync(context).ConfigureAwait(false);
 
         await next.FaultedAsync(context).ConfigureAwait(false);
@@ -75,6 +83,8 @@ public class FaultedUnscheduleActivity<TSaga> :
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         await FaultedAsync(context).ConfigureAwait(false);
 
         await next.FaultedAsync(context).ConfigureAwait(false);
@@ -82,11 +92,12 @@ public class FaultedUnscheduleActivity<TSaga> :
 
     async Task FaultedAsync(SagaConsumeContext<TSaga> context)
     {
-        var schedulerContext = context.GetPayload<MessageSchedulerContext>();
-
+        context.CancellationToken.ThrowIfCancellationRequested();
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
-        if (previousTokenId.HasValue)
+        if (previousTokenId.HasValue && previousTokenId != context.GetSchedulingTokenId())
         {
+            var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+
             await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                 .ConfigureAwait(false);
 

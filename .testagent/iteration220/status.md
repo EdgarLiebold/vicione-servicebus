@@ -1,6 +1,14 @@
 # Iteration 220 status
 
 - Status: complete and admitted locally.
+
+Post-hoc governance qualification (discovered during iteration 221): the technical
+build/test/mutation/coverage evidence below remains recorded, but the §4.3 prerequisite
+of a complete personal semantic reading of the owning tracked Core test project was not
+documented or fulfilled before test editing/lead admission. That order deviation cannot
+be repaired retroactively. Accordingly the historic "admitted locally" label is not a
+claim of compliant §4.3 lead acceptance; this open finding must be resolved explicitly
+before any global A+ acceptance. The active source-admission goal continues.
 - Scope: ten state-machine condition, catch, composite, conversion, retry, selector, transition and
   forwarded-outcome sources personally read by the lead (initially 1,266 lines).
 - Progress: 821/4,118 personally read C# sources (19.937%).

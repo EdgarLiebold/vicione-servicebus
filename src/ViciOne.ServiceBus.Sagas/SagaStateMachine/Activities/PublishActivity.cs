@@ -17,6 +17,8 @@ public class PublishActivity<TSaga, TMessage> :
     /// <param name="messageFactory">The message factory.</param>
     public PublishActivity(ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> messageFactory)
     {
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         _messageFactory = messageFactory;
     }
 
@@ -24,6 +26,8 @@ public class PublishActivity<TSaga, TMessage> :
     /// <param name="inspector">The inspector.</param>
     public void Accept(IStateMachineVisitor inspector)
     {
+        ArgumentNullException.ThrowIfNull(inspector);
+
         inspector.Visit(this);
     }
 
@@ -31,6 +35,8 @@ public class PublishActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("publish");
     }
 
@@ -40,7 +46,11 @@ public class PublishActivity<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        await _messageFactory.UseAsync(context, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        await _messageFactory.UseAsync(context, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken),
+            context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
@@ -53,7 +63,11 @@ public class PublishActivity<TSaga, TMessage> :
     public async Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        await _messageFactory.UseAsync(context, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        await _messageFactory.UseAsync(context, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken),
+            context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
@@ -66,6 +80,9 @@ public class PublishActivity<TSaga, TMessage> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 
@@ -79,6 +96,9 @@ public class PublishActivity<TSaga, TMessage> :
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 }
@@ -100,6 +120,8 @@ public class PublishActivity<TSaga, TMessage, T> :
     /// <param name="messageFactory">The message factory.</param>
     public PublishActivity(ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> messageFactory)
     {
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         _messageFactory = messageFactory;
     }
 
@@ -107,6 +129,8 @@ public class PublishActivity<TSaga, TMessage, T> :
     /// <param name="inspector">The inspector.</param>
     public void Accept(IStateMachineVisitor inspector)
     {
+        ArgumentNullException.ThrowIfNull(inspector);
+
         inspector.Visit(this);
     }
 
@@ -114,6 +138,8 @@ public class PublishActivity<TSaga, TMessage, T> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("publish");
     }
 
@@ -123,7 +149,11 @@ public class PublishActivity<TSaga, TMessage, T> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await _messageFactory.UseAsync(context, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        await _messageFactory.UseAsync(context, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken),
+            context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
@@ -136,6 +166,9 @@ public class PublishActivity<TSaga, TMessage, T> :
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 }

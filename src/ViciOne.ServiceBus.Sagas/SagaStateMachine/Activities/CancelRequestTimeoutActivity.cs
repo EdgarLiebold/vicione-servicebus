@@ -23,7 +23,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     /// <param name="completed">The completed.</param>
     public CancelRequestTimeoutActivity(IRequest<TSaga, TRequest, TResponse> request, bool completed)
     {
-        _request = request;
+        _request = request ?? throw new ArgumentNullException(nameof(request));
         _completed = completed;
     }
 
@@ -31,6 +31,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     /// <param name="visitor">The visitor.</param>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this);
     }
 
@@ -38,6 +39,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         context.CreateScope("cancelRequest");
     }
 
@@ -47,6 +49,10 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         Guid? requestId = _request.GetRequestId(context.Saga);
         if (requestId.HasValue && _request.Settings.Timeout > TimeSpan.Zero)
         {
@@ -73,6 +79,9 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 }

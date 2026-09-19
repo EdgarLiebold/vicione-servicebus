@@ -131,8 +131,8 @@ public sealed class RequestStateMachineDeepContractTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    [RequirementCoverage("REQ-VSB-REQUEST-STATE-MACHINE", "terminal-outcomes-finalize-and-expired-outcomes-do-not-send")]
-    public async Task TerminalOutcome_FinalizesExactlyOnceWithoutSendingAnExpiredOutcomeAsync(bool faulted)
+    [RequirementCoverage("REQ-VSB-REQUEST-STATE-MACHINE", "terminal-outcomes-forward-expired-with-one-second-minimum-ttl-and-finalize")]
+    public async Task TerminalOutcome_ForwardsExpiredOutcomeWithOneSecondTtlAndFinalizesAsync(bool faulted)
     {
         var machine = new RequestStateMachine();
         Guid requestId = NewId.NextGuid();
@@ -179,7 +179,12 @@ public sealed class RequestStateMachineDeepContractTests
                 cancellationToken: TestContext.Current.CancellationToken);
         }
 
-        Assert.Empty(recorder.Messages);
+        object forwarded = Assert.Single(recorder.Messages);
+        OutgoingMessageRecorder.SendObservation send = Assert.Single(recorder.SendObservations);
+        Assert.Same(forwarded, send.Message);
+        Assert.Equal(requestId, send.RequestId);
+        Assert.Equal(started.FaultAddress, send.FaultAddress);
+        Assert.Equal(TimeSpan.FromSeconds(1), send.TimeToLive);
         Assert.Same(machine.Final, await StateMachineTestExecution.GetStateAsync(machine, state));
         Assert.True(await StateMachineTestExecution.IsCompletedAsync(
             machine,

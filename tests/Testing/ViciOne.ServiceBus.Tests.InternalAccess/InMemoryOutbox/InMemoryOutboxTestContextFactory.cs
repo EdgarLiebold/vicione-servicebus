@@ -289,6 +289,8 @@ public static class InMemoryOutboxTestContextFactory
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
         {
             "GetMessageSerializer" when targetMethod.GetParameters().Length == 0 => _serializer,
+            "GetMessageSerializer" when !targetMethod.IsGenericMethod &&
+                targetMethod.GetParameters().Length == 2 => _serializer,
             _ => throw new NotSupportedException(targetMethod?.Name),
         };
     }
@@ -472,6 +474,7 @@ public sealed class OutgoingMessageRecorder
             context.FaultAddress,
             context.MessageId,
             context.Delay,
+            context.TimeToLive,
             context.Headers.Get(MessageHeaders.RedeliveryCount, default(int?))));
     }
 
@@ -483,5 +486,6 @@ public sealed class OutgoingMessageRecorder
         Uri? FaultAddress,
         Guid? MessageId,
         TimeSpan? Delay,
+        TimeSpan? TimeToLive,
         int? RedeliveryCount);
 }

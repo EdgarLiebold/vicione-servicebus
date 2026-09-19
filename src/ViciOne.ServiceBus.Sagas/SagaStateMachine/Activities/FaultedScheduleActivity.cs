@@ -106,12 +106,14 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
     async Task ScheduleAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehaviorExceptionContext<TSaga, TException> exceptionContext)
         where T : Exception
     {
+        context.CancellationToken.ThrowIfCancellationRequested();
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
         ScheduledMessage<TMessage> message = await _messageFactory
-            .UseAsync(exceptionContext, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken))
+            .UseAsync(exceptionContext, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),
+                context.CancellationToken)
             .ConfigureAwait(false);
 
         _schedule.SetTokenId(context.Saga, message.TokenId);
@@ -197,12 +199,14 @@ internal sealed class FaultedScheduleActivity<TSaga, TData, TException, TMessage
         ArgumentNullException.ThrowIfNull(next);
         if (context is IBehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
         {
+            context.CancellationToken.ThrowIfCancellationRequested();
             Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
             var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
             ScheduledMessage<TMessage> message = await _messageFactory
-                .UseAsync(exceptionContext, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken))
+                .UseAsync(exceptionContext, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),
+                    context.CancellationToken)
                 .ConfigureAwait(false);
 
             _schedule.SetTokenId(context.Saga, message.TokenId);

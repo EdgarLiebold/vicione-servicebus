@@ -22,6 +22,9 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     public FaultedSendActivity(DestinationAddressProvider<TSaga> destinationAddressProvider,
         ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, TMessage> messageFactory)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         _destinationAddressProvider = destinationAddressProvider;
         _messageFactory = messageFactory;
     }
@@ -30,6 +33,8 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     /// <param name="inspector">The inspector.</param>
     public void Accept(IStateMachineVisitor inspector)
     {
+        ArgumentNullException.ThrowIfNull(inspector);
+
         inspector.Visit(this);
     }
 
@@ -37,6 +42,8 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("send-faulted");
     }
 
@@ -46,6 +53,9 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.ExecuteAsync(context);
     }
 
@@ -57,6 +67,9 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.ExecuteAsync(context);
     }
 
@@ -68,6 +81,9 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
             await SendAsync(exceptionContext).ConfigureAwait(false);
 
@@ -84,6 +100,9 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
         where T : class
         where TOtherException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
             await SendAsync(exceptionContext).ConfigureAwait(false);
 
@@ -92,11 +111,15 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
 
     async Task SendAsync(IBehaviorExceptionContext<TSaga, TException> exceptionContext)
     {
+        exceptionContext.CancellationToken.ThrowIfCancellationRequested();
+
         var destinationAddress = _destinationAddressProvider(exceptionContext);
 
-        var endpoint = await exceptionContext.GetSendEndpointAsync(destinationAddress).ConfigureAwait(false);
+        var endpoint = await exceptionContext.GetSendEndpointAsync(destinationAddress, exceptionContext.CancellationToken)
+            .ConfigureAwait(false);
 
-        await _messageFactory.UseAsync(exceptionContext, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        await _messageFactory.UseAsync(exceptionContext, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken),
+            exceptionContext.CancellationToken).ConfigureAwait(false);
     }
 }
 
@@ -122,6 +145,9 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     public FaultedSendActivity(DestinationAddressProvider<TSaga, TData> destinationAddressProvider,
         ContextMessageFactory<IBehaviorExceptionContext<TSaga, TData, TException>, TMessage> messageFactory)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddressProvider);
+        ArgumentNullException.ThrowIfNull(messageFactory);
+
         _destinationAddressProvider = destinationAddressProvider;
         _messageFactory = messageFactory;
     }
@@ -130,6 +156,8 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     /// <param name="inspector">The inspector.</param>
     public void Accept(IStateMachineVisitor inspector)
     {
+        ArgumentNullException.ThrowIfNull(inspector);
+
         inspector.Visit(this);
     }
 
@@ -137,6 +165,8 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("send-faulted");
     }
 
@@ -146,6 +176,9 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.ExecuteAsync(context);
     }
 
@@ -157,13 +190,20 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
         where T : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         if (context is IBehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
         {
+            exceptionContext.CancellationToken.ThrowIfCancellationRequested();
+
             var destinationAddress = _destinationAddressProvider(exceptionContext);
 
-            var endpoint = await exceptionContext.GetSendEndpointAsync(destinationAddress).ConfigureAwait(false);
+            var endpoint = await exceptionContext.GetSendEndpointAsync(destinationAddress, exceptionContext.CancellationToken)
+                .ConfigureAwait(false);
 
-            await _messageFactory.UseAsync(exceptionContext, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken),
+                exceptionContext.CancellationToken).ConfigureAwait(false);
         }
 
         await next.FaultedAsync(context).ConfigureAwait(false);
