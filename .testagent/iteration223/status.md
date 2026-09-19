@@ -161,3 +161,14 @@ projections, InMemory publish overloads, saga partition keys, request-outcome
 TTL and converter contracts. The Saga revision now retains the direct Build
 contract and isolates only built-in `ConnectSaga` composition; the combined
 rebuild and filtered regression rerun are pending. No new test source work.
+
+Combined revised source built in Debug with zero warnings/errors. The first
+filtered full-host run was 6,214 pass and one unrelated Batching integration
+failure; that exact Batching test passed alone (1/1). The next filtered
+full-host run passed 6,215/6,215 with zero skips, excluding only the two
+documented cache/deadline tests whose old oracles now hang. The 11-file
+source-only correction was committed as `4fdb4063b`; this is staged
+engineering progress, **not** A+ acceptance or causal mutation proof. The
+personal Core project read advanced to 320/702, adding mediator request/body,
+cron, JSON body, topology, endpoint cache, scoped DI, transaction and
+outgoing-options contracts. The historical §4.3 ordering deviation remains.
