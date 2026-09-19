@@ -332,3 +332,15 @@ exceed embedded memory budgets. Separate Sol 5.6 xhigh agents are correcting
 the serialization path and reviewing durable persistence/replay, without test
 edits before §4.3. Source closure and commit wait on those fixes and fresh
 verification; the goal remains active.
+
+Personal Core test reading reached 475/702 tracked files with a clean
+path/blob reconciliation. The nested-request full-run timeout was diagnosed
+as a real cross-queue Started/Completed race; a source-only default bounded
+missing-instance redelivery is now under review. Durable admission metadata
+now captures the originally evaluated body size, offload evidence and a
+SHA-256 binding to the persisted envelope; replay dispatchers consume it.
+The active Copy path uses an owned on-wire snapshot and JSON/raw extraction,
+and MessagePack body extraction is being integrated by a separate agent.
+The Core Release build after initial integration had zero warnings/errors;
+the final combined build and tests have not yet run. The proof hash assumes
+a trusted durable store, not authentication against an adversarial DB writer.
