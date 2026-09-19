@@ -99,3 +99,9 @@ Continuation checkpoint: 190/702 personally read. The last ten cover
 initializer array/provider fixtures, generated message implementation and
 assembly scan cache, InMemory receive context, job identity, metadata codec,
 UTC timestamps and sent-message metadata. No product/test code changed.
+
+Continuation checkpoint: 220/702 personally read Core test-project files,
+adding health/report metadata, serializer and raw JSON round-trips, scheduler
+guards, retry/saga boundaries, future behavior fixture, job clock settings and
+message-data API snapshots. Only ledger/status changed; the historical §4.3
+ordering deviation and the effective full-read gate remain unresolved.
