@@ -13,6 +13,9 @@ internal sealed partial class ClientRequestHandle<TRequest>
     {
         try
         {
+            if (_deadline is { } deadline && deadline <= _context.TimeProvider.GetUtcNow())
+                throw new RequestTimeoutException(RequestId);
+
             var message = await _sendRequestCallback(RequestId, this, _requestSendCancellationToken).ConfigureAwait(false)
                 ?? throw new InvalidOperationException("The request send callback returned no request message.");
 
@@ -83,7 +86,7 @@ internal sealed partial class ClientRequestHandle<TRequest>
 
             ConnectHandle connectHandle = _context.ConnectRequestHandler(RequestId, MessageHandlerAsync, pipeConfigurator)
                 ?? throw new InvalidOperationException("The client-factory context returned no response-handler connection.");
-            var handle = new ResponseHandlerConnectHandle<TResponse>(connectHandle, completed, _send);
+            var handle = new ResponseHandlerConnectHandle<TResponse>(connectHandle, completed, _send, _terminalRequestFailure.Task);
 
             _responseHandlers.Add(typeof(TResponse), handle);
             _accept.Add(MessageUrn.ForTypeString<TResponse>());

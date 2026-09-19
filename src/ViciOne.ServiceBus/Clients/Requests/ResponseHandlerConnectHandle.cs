@@ -11,19 +11,25 @@ internal sealed class ResponseHandlerConnectHandle<TResponse> :
     HandlerConnectHandle<TResponse>
     where TResponse : class
 {
+    static readonly Task NoTerminalRequestFailure = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously).Task;
+
     readonly TaskCompletionSource<ConsumeContext<TResponse>> _completed;
     readonly ConnectHandle _handle;
     readonly Task _requestTask;
+    readonly Task _terminalRequestFailure;
 
     /// <summary>Creates a response handle for one connected response pipeline.</summary>
     /// <param name="handle">The response-pipeline connection.</param>
     /// <param name="completed">The matching response context completion source.</param>
     /// <param name="requestTask">The task that sends the associated request.</param>
-    public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
+    /// <param name="terminalRequestFailure">The request's terminal failure or cancellation signal, when available.</param>
+    public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask,
+        Task? terminalRequestFailure = null)
     {
         _handle = handle ?? throw new ArgumentNullException(nameof(handle));
         _completed = completed ?? throw new ArgumentNullException(nameof(completed));
         _requestTask = requestTask ?? throw new ArgumentNullException(nameof(requestTask));
+        _terminalRequestFailure = terminalRequestFailure ?? NoTerminalRequestFailure;
 
         Task = GetTaskAsync();
     }
@@ -62,11 +68,23 @@ internal sealed class ResponseHandlerConnectHandle<TResponse> :
 
     async Task<Response<TResponse>> GetTaskAsync()
     {
-        if (!_completed.Task.IsCompleted && !_requestTask.IsCompleted)
-            await System.Threading.Tasks.Task.WhenAny(_completed.Task, _requestTask).ConfigureAwait(false);
+        if (!_completed.Task.IsCompleted && !_requestTask.IsCompleted && !_terminalRequestFailure.IsCompleted)
+            await System.Threading.Tasks.Task.WhenAny(_completed.Task, _requestTask, _terminalRequestFailure).ConfigureAwait(false);
 
         if (_completed.Task is { IsCompleted: true, IsCompletedSuccessfully: false })
             await _completed.Task.ConfigureAwait(false);
+
+        if (_terminalRequestFailure.IsCompleted)
+            await _terminalRequestFailure.ConfigureAwait(false);
+
+        if (!_requestTask.IsCompleted)
+        {
+            Task first = await System.Threading.Tasks.Task.WhenAny(_requestTask, _terminalRequestFailure).ConfigureAwait(false);
+            await first.ConfigureAwait(false);
+        }
+
+        if (_terminalRequestFailure.IsCompleted)
+            await _terminalRequestFailure.ConfigureAwait(false);
 
         await _requestTask.ConfigureAwait(false);
 

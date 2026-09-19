@@ -110,6 +110,17 @@ public sealed partial class ResourceCache<TValue>
         }
     }
 
+    bool HasPendingKey_NoLock(PreparedResourceKeys<TValue> prepared)
+    {
+        foreach (var pair in prepared.Keys)
+        {
+            if (pair.Key.TryGetPending(pair.Value, out _))
+                return true;
+        }
+
+        return false;
+    }
+
     List<ResourceCacheEntry<TValue>> CollectExpired_NoLock(long now)
     {
         var removed = new List<ResourceCacheEntry<TValue>>();
@@ -163,13 +174,16 @@ public sealed partial class ResourceCache<TValue>
             : entry.LastUsedTimestamp;
     }
 
-    Task GetPendingCompletion_NoLockAsync()
+    Task WaitForCapacityChange_NoLockAsync()
     {
-        Task[] pending = _pendingCreations.Select(x => x.OwnershipReleased.Task).ToArray();
-        if (pending.Length == 0)
-            throw new InvalidOperationException("Cache capacity was exhausted without a committed resource or pending creation.");
+        return _capacityChanged.Task;
+    }
 
-        return Task.WhenAny(pending);
+    void SignalCapacityChanged_NoLock()
+    {
+        var previous = _capacityChanged;
+        _capacityChanged = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        previous.TrySetResult();
     }
 
     void RemoveEntry_NoLock(ResourceCacheEntry<TValue> entry, bool eviction)
@@ -178,6 +192,7 @@ public sealed partial class ResourceCache<TValue>
             return;
 
         entry.Active = false;
+        _retiringEntries++;
         foreach (var pair in entry.Keys)
             pair.Key.RemoveKey(pair.Value, entry);
 
@@ -256,18 +271,35 @@ public sealed partial class ResourceCache<TValue>
     {
         foreach (var entry in entries)
         {
-            DetachUsage(entry);
-
-            if (notifyRemoved)
-                await NotifyRemovedAsync(entry.Value, cancellationToken).ConfigureAwait(false);
-
             try
             {
-                await DisposeResourceAsync(entry.Value).ConfigureAwait(false);
+                DetachUsage(entry);
+
+                if (notifyRemoved)
+                    await NotifyRemovedAsync(entry.Value, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                LogWarningSafely(exception, "Cached resource disposal faulted");
+                LogWarningSafely(exception, "Cached resource removal notification faulted");
+            }
+            finally
+            {
+                try
+                {
+                    await DisposeResourceAsync(entry.Value).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    LogWarningSafely(exception, "Cached resource disposal faulted");
+                }
+                finally
+                {
+                    lock (_sync)
+                    {
+                        _retiringEntries--;
+                        SignalCapacityChanged_NoLock();
+                    }
+                }
             }
         }
     }

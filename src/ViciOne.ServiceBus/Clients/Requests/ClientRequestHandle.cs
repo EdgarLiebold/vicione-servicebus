@@ -40,6 +40,7 @@ internal sealed partial class ClientRequestHandle<TRequest> :
     readonly TaskCompletionSource<SendContext<TRequest>> _sendContext;
     readonly SendRequestCallback _sendRequestCallback;
     readonly TaskCompletionSource _terminalCleanupCompleted;
+    readonly TaskCompletionSource _terminalRequestFailure;
     readonly RequestTimeout _timeout;
     readonly bool _useDeadlineAsTimeToLive;
     int _faultedOrCanceled;
@@ -84,6 +85,8 @@ internal sealed partial class ClientRequestHandle<TRequest> :
         _responseHandlers = new Dictionary<Type, HandlerConnectHandle>();
         _handlerLock = new object();
         _terminalCleanupCompleted = TaskCompletionSources.Create();
+        _terminalRequestFailure = TaskCompletionSources.Create();
+        _terminalRequestFailure.Task.IgnoreUnobservedExceptions();
         _accept = [];
 
         if (cancellationToken.IsCancellationRequested)
@@ -103,10 +106,14 @@ internal sealed partial class ClientRequestHandle<TRequest> :
 
         try
         {
+            if (_deadline is { } absoluteDeadline)
+                StartTimeoutTimer(absoluteDeadline - _context.TimeProvider.GetUtcNow());
+
             ConnectFaultHandler();
         }
         catch
         {
+            DisposeTimer();
             _registration.Dispose();
             _cancellationTokenSource.Dispose();
             throw;
@@ -141,32 +148,17 @@ internal sealed partial class ClientRequestHandle<TRequest> :
         if (pipe.IsNotEmpty())
             await pipe.SendAsync(context).ConfigureAwait(false);
 
-        TimeSpan responseTimeout = _timeout.Value;
         if (_deadline is { } deadline)
         {
-            responseTimeout = deadline - _context.TimeProvider.GetUtcNow();
+            TimeSpan responseTimeout = deadline - _context.TimeProvider.GetUtcNow();
             if (responseTimeout <= TimeSpan.Zero)
                 throw new RequestTimeoutException(RequestId);
 
             if (_useDeadlineAsTimeToLive)
                 context.TimeToLive = responseTimeout;
         }
-
-        ITimer timeoutTimer = _context.TimeProvider.CreateTimer(
-            TimeoutExpired,
-            this,
-            responseTimeout,
-            Timeout.InfiniteTimeSpan)
-            ?? throw new InvalidOperationException("The request time provider returned no timeout timer.");
-
-        if (Interlocked.CompareExchange(ref _timeoutTimer, timeoutTimer, null) is not null)
-        {
-            DisposeTimerSafely(timeoutTimer);
-            throw new InvalidOperationException("The request timeout timer was initialized more than once.");
-        }
-
-        if (Volatile.Read(ref _faultedOrCanceled) != 0)
-            DisposeTimer();
+        else
+            StartTimeoutTimer(_timeout.Value);
 
         _sendContext.TrySetResult(context);
     }
@@ -250,4 +242,23 @@ internal sealed partial class ClientRequestHandle<TRequest> :
 
     /// <summary>Gets the request message produced by the send callback.</summary>
     public Task<TRequest> Message => _message.Task;
+
+    void StartTimeoutTimer(TimeSpan timeout)
+    {
+        ITimer timeoutTimer = _context.TimeProvider.CreateTimer(
+            TimeoutExpired,
+            this,
+            timeout <= TimeSpan.Zero ? TimeSpan.Zero : timeout,
+            Timeout.InfiniteTimeSpan)
+            ?? throw new InvalidOperationException("The request time provider returned no timeout timer.");
+
+        if (Interlocked.CompareExchange(ref _timeoutTimer, timeoutTimer, null) is not null)
+        {
+            DisposeTimerSafely(timeoutTimer);
+            throw new InvalidOperationException("The request timeout timer was initialized more than once.");
+        }
+
+        if (Volatile.Read(ref _faultedOrCanceled) != 0)
+            DisposeTimer();
+    }
 }

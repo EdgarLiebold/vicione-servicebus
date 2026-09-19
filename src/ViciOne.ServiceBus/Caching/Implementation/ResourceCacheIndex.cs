@@ -75,6 +75,11 @@ internal sealed class ResourceCacheIndex<TKey, TValue> :
         return _pending.TryGetValue(key, out pending);
     }
 
+    public override bool TryGetPending(object key, [NotNullWhen(true)] out PendingResourceCreation<TValue>? pending)
+    {
+        return _pending.TryGetValue((TKey)key, out pending);
+    }
+
     public void AddPending(TKey key, PendingResourceCreation<TValue> pending)
     {
         _pending.Add(key, pending);

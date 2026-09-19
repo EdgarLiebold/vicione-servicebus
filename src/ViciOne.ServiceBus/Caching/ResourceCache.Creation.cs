@@ -91,7 +91,7 @@ public sealed partial class ResourceCache<TValue>
                     _misses++;
                     missingWithoutFactory = true;
                 }
-                else if (_entries.Count + _pendingCreations.Count < _options.Capacity || TryEvictCapacityCandidate_NoLock(removed))
+                else if (_entries.Count + _pendingCreations.Count + _retiringEntries < _options.Capacity)
                 {
                     _misses++;
                     pending = new PendingResourceCreation<TValue>(index, key!, _lifetimeCancellationSource.Token);
@@ -101,11 +101,10 @@ public sealed partial class ResourceCache<TValue>
                     creationOperation = new OperationLease(this);
                     startCreation = true;
                 }
-                else
+                else if (!TryEvictCapacityCandidate_NoLock(removed))
                 {
-                    // Every capacity slot is an in-flight creation. Wait for an owner before retrying the
-                    // lookup and reservation atomically so the configured resource bound cannot be exceeded.
-                    waitForPendingCapacity = GetPendingCompletion_NoLockAsync();
+                    // Pending creations and removed resources retain their slots until ownership is released.
+                    waitForPendingCapacity = WaitForCapacityChange_NoLockAsync();
                 }
             }
 
@@ -241,6 +240,7 @@ public sealed partial class ResourceCache<TValue>
     {
         pending.Index.RemovePending(pending.RequestedKey, pending);
         _pendingCreations.Remove(pending);
+        SignalCapacityChanged_NoLock();
         pending.OwnershipReleased.TrySetResult();
         pending.CreationCancellationSource.Dispose();
     }
@@ -251,6 +251,7 @@ public sealed partial class ResourceCache<TValue>
         {
             pending.Index.RemovePending(pending.RequestedKey, pending);
             _pendingCreations.Remove(pending);
+            SignalCapacityChanged_NoLock();
             pending.Completion.TrySetException(new OperationCanceledException("Resource creation was invalidated by the cache owner."));
             pending.OwnershipReleased.TrySetResult();
             pending.CreationCancellationSource.Dispose();
@@ -263,6 +264,7 @@ public sealed partial class ResourceCache<TValue>
         {
             pending.Index.RemovePending(pending.RequestedKey, pending);
             _pendingCreations.Remove(pending);
+            SignalCapacityChanged_NoLock();
             pending.Completion.TrySetCanceled(_lifetimeCancellationToken);
             pending.OwnershipReleased.TrySetResult();
             pending.CreationCancellationSource.Dispose();
@@ -275,6 +277,7 @@ public sealed partial class ResourceCache<TValue>
         {
             pending.Index.RemovePending(pending.RequestedKey, pending);
             _pendingCreations.Remove(pending);
+            SignalCapacityChanged_NoLock();
             _creationFaults++;
             pending.Completion.TrySetException(exception);
             pending.OwnershipReleased.TrySetResult();

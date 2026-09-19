@@ -14,15 +14,16 @@ internal sealed partial class ClientRequestHandle<TRequest>
         Fail(new RequestFaultException(typeof(TRequest), message));
     }
 
-    void Fail(Exception responseException, Exception? messageException = null)
+    void Fail(Exception responseException, Exception? messageException = null, bool failPendingSendAfterResponse = false)
     {
         lock (_handlerLock)
         {
-            if (_faultedOrCanceled != 0 || _responseCompleted)
+            if (_faultedOrCanceled != 0 || (_responseCompleted && (!failPendingSendAfterResponse || _message.Task.IsCompletedSuccessfully)))
                 return;
 
             _responseFailure = responseException;
             _faultedOrCanceled = 1;
+            _terminalRequestFailure.TrySetException(responseException);
         }
 
         void HandleFail()
@@ -35,15 +36,14 @@ internal sealed partial class ClientRequestHandle<TRequest>
 
                 _readyToSend.TrySetException(responseException);
 
-                var wasSet = _sendContext.TrySetException(responseException);
+                _sendContext.TrySetException(responseException);
 
                 _message.TrySetException(messageException ?? responseException);
                 _message.Task.IgnoreUnobservedExceptions();
 
                 DisconnectHandlers(handle => handle.TrySetException(responseException));
 
-                if (wasSet)
-                    CancelRequestSend();
+                CancelRequestSend();
             }
             finally
             {
@@ -81,6 +81,7 @@ internal sealed partial class ClientRequestHandle<TRequest>
         _readyToSend.TrySetCanceled(cancellationToken);
         _sendContext.TrySetCanceled(cancellationToken);
         _message.TrySetCanceled(cancellationToken);
+        _terminalRequestFailure.TrySetCanceled(cancellationToken);
 
         HandlerConnectHandle[] responseHandlers;
         lock (_handlerLock)
@@ -94,7 +95,7 @@ internal sealed partial class ClientRequestHandle<TRequest>
     {
         var timeoutException = new RequestTimeoutException(RequestId);
 
-        Fail(timeoutException);
+        Fail(timeoutException, failPendingSendAfterResponse: true);
     }
 
     void DisposeTimer()

@@ -14,16 +14,16 @@ public partial class SagaConnector<TSaga, TMessage>
     public class SagaMessageSpecification :
         ISagaMessageSpecification<TSaga, TMessage>
     {
-        readonly IBuildPipeConfigurator<SagaConsumeContext<TSaga, TMessage>> _configurator;
-        readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _messagePipeConfigurator;
+        readonly ReplayablePipeConfigurator<SagaConsumeContext<TSaga, TMessage>> _configurator;
+        readonly ReplayablePipeConfigurator<ConsumeContext<TMessage>> _messagePipeConfigurator;
         readonly SagaConfigurationObservable _observers;
         readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
         /// <summary>Creates empty message and saga pipelines with a configuration-observer collection.</summary>
         public SagaMessageSpecification()
         {
-            _configurator = new PipeConfigurator<SagaConsumeContext<TSaga, TMessage>>();
-            _messagePipeConfigurator = new PipeConfigurator<ConsumeContext<TMessage>>();
+            _configurator = new ReplayablePipeConfigurator<SagaConsumeContext<TSaga, TMessage>>();
+            _messagePipeConfigurator = new ReplayablePipeConfigurator<ConsumeContext<TMessage>>();
             _observers = new SagaConfigurationObservable();
         }
 
@@ -76,7 +76,6 @@ public partial class SagaConnector<TSaga, TMessage>
             ArgumentNullException.ThrowIfNull(consumeFilter);
 
             _configurator.AddPipeSpecification(new FilterPipeSpecification<SagaConsumeContext<TSaga, TMessage>>(consumeFilter));
-
             return _configurator.Build();
         }
 
@@ -86,8 +85,22 @@ public partial class SagaConnector<TSaga, TMessage>
         public IPipe<ConsumeContext<TMessage>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<TMessage>>> configure)
         {
             configure?.Invoke(_messagePipeConfigurator);
-
             return _messagePipeConfigurator.Build();
+        }
+
+        internal IPipe<SagaConsumeContext<TSaga, TMessage>> BuildConsumerPipeForConnection(
+            IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter)
+        {
+            ArgumentNullException.ThrowIfNull(consumeFilter);
+
+            return _configurator.BuildWith(x =>
+                x.AddPipeSpecification(new FilterPipeSpecification<SagaConsumeContext<TSaga, TMessage>>(consumeFilter)));
+        }
+
+        internal IPipe<ConsumeContext<TMessage>> BuildMessagePipeForConnection(
+            Action<IPipeConfigurator<ConsumeContext<TMessage>>> configure)
+        {
+            return _messagePipeConfigurator.BuildWith(configure);
         }
 
         /// <summary>Adapts a saga-context specification into the saga/message-context pipeline.</summary>
@@ -132,6 +145,43 @@ public partial class SagaConnector<TSaga, TMessage>
                 ArgumentNullException.ThrowIfNull(specification);
 
                 _configurator.AddPipeSpecification(new SagaPipeSpecificationProxy(specification));
+            }
+        }
+
+        sealed class ReplayablePipeConfigurator<TContext> :
+            IPipeConfigurator<TContext>
+            where TContext : class, PipeContext
+        {
+            readonly List<IPipeSpecification<TContext>> _specifications = new();
+
+            public void AddPipeSpecification(IPipeSpecification<TContext> specification)
+            {
+                ArgumentNullException.ThrowIfNull(specification);
+                _specifications.Add(specification);
+            }
+
+            public IEnumerable<ValidationResult> Validate()
+            {
+                for (var index = 0; index < _specifications.Count; index++)
+                {
+                    foreach (ValidationResult result in _specifications[index].Validate())
+                        yield return result;
+                }
+            }
+
+            public IPipe<TContext> Build()
+            {
+                return BuildWith(null);
+            }
+
+            public IPipe<TContext> BuildWith(Action<IPipeConfigurator<TContext>>? configure)
+            {
+                var configurator = new PipeConfigurator<TContext>();
+                foreach (IPipeSpecification<TContext> specification in _specifications)
+                    configurator.AddPipeSpecification(specification);
+
+                configure?.Invoke(configurator);
+                return configurator.Build();
             }
         }
     }

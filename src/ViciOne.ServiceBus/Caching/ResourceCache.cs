@@ -28,6 +28,7 @@ public sealed partial class ResourceCache<TValue> :
     readonly AsyncLocal<ObserverDispatchScope?> _observerDispatchScope;
     readonly HashSet<PendingResourceCreation<TValue>> _pendingCreations;
     readonly object _sync;
+    TaskCompletionSource _capacityChanged = new(TaskCreationOptions.RunContinuationsAsynchronously);
     bool _disposed;
     bool _stopping;
     int _activeOperations;
@@ -40,6 +41,7 @@ public sealed partial class ResourceCache<TValue> :
     long _nextEntryId;
     long _creationFaults;
     long _totalCreated;
+    int _retiringEntries;
     Task _cleanupTask = Task.CompletedTask;
     bool _cleanupRunning;
 
@@ -180,8 +182,8 @@ public sealed partial class ResourceCache<TValue> :
     }
 
     /// <summary>
-    /// Adds a fully created resource. If capacity is full, the least recently relevant committed resource is evicted.
-    /// When all capacity is currently occupied by in-flight creations, this call backpressures until one completes.
+    /// Adds a fully created resource. If capacity is full, the least recently relevant committed resource is evicted
+    /// and released before the new resource is admitted. Pending keys and resources being released backpressure admission.
     /// </summary>
     /// <param name="value">The resource whose ownership is transferred to the cache after a successful commit.</param>
     /// <param name="cancellationToken">The token checked before admission and used while waiting for pending capacity.</param>
@@ -197,7 +199,7 @@ public sealed partial class ResourceCache<TValue> :
         while (true)
         {
             List<ResourceCacheEntry<TValue>> removed;
-            Task? waitForPending = null;
+            Task? waitForCapacity = null;
             ResourceCacheEntry<TValue>? committed = null;
             long now = _options.TimeProvider.GetTimestamp();
 
@@ -214,12 +216,12 @@ public sealed partial class ResourceCache<TValue> :
                 {
                     EnsureKeysAvailable_NoLock(prepared);
 
-                    if (_entries.Count + _pendingCreations.Count < _options.Capacity)
+                    if (HasPendingKey_NoLock(prepared))
+                        waitForCapacity = WaitForCapacityChange_NoLockAsync();
+                    else if (_entries.Count + _pendingCreations.Count + _retiringEntries < _options.Capacity)
                         committed = CommitValue_NoLock(value, prepared, now);
-                    else if (TryEvictCapacityCandidate_NoLock(removed))
-                        committed = CommitValue_NoLock(value, prepared, now);
-                    else
-                        waitForPending = GetPendingCompletion_NoLockAsync();
+                    else if (!TryEvictCapacityCandidate_NoLock(removed))
+                        waitForCapacity = WaitForCapacityChange_NoLockAsync();
                 }
             }
 
@@ -238,10 +240,10 @@ public sealed partial class ResourceCache<TValue> :
                 continue;
             }
 
-            if (waitForPending is null)
+            if (waitForCapacity is null)
                 continue;
 
-            await waitForPending.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await waitForCapacity.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
