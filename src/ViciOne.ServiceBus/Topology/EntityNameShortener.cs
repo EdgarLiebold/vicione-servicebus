@@ -21,6 +21,9 @@ internal static class EntityNameShortener
         string hash = ZBase32Formatter.LowerCase.Format(digest.AsSpan(0, 16))[..HashLength];
         int prefixLength = maximumLength - HashLength - 1;
 
+        if (char.IsHighSurrogate(value[prefixLength - 1]) && char.IsLowSurrogate(value[prefixLength]))
+            prefixLength--;
+
         return $"{value[..prefixLength]}-{hash}";
     }
 }

@@ -186,6 +186,9 @@ public class DefaultEndpointNameFormatter :
             tagLength = spread;
         }
 
+        if (tagLength > 0 && tagLength < tag.Length && char.IsHighSurrogate(tag[tagLength - 1]) && char.IsLowSurrogate(tag[tagLength]))
+            tagLength--;
+
         var sb = new StringBuilder(machineNameLength + processNameLength + tagLength + OverheadLength);
 
         sb.Append(machineName, 0, machineNameLength);
