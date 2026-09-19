@@ -145,3 +145,19 @@ failed at its old `PipeOutcome` wait after 30 seconds. The run was cancelled
 with two Ctrl-C signals rather than claiming a pass; a filtered rerun is
 needed to expose the other failure and unaffected-test result. Lead personal
 Core-file reading meanwhile reached 300/702. No test edits before §4.3 gate.
+
+Filtered direct-host rerun, excluding only the hanging cache test and the
+30-second deadline test, finished: 6,214 passed, 0 skipped, 1 failed. The
+sole failure is
+`SagaConnectorSpecificationAdapterDeepContractTests.BuildMethods_AppendInOrderAcrossCallsWithoutMutatingPreviouslyBuiltPipes`:
+public direct Build methods must retain accumulated filters and the same
+message configurator instance. The Saga source agent was asked to preserve
+that contract while making repeat `ConnectSaga` use fresh connection-local
+composition. This is a source revision in progress, not a test-oracle change.
+
+Personal Core test-project read advanced to 310/702, adding receiver/fabric
+exchange routing, dispatcher, observer, future configuration, rescue
+projections, InMemory publish overloads, saga partition keys, request-outcome
+TTL and converter contracts. The Saga revision now retains the direct Build
+contract and isolates only built-in `ConnectSaga` composition; the combined
+rebuild and filtered regression rerun are pending. No new test source work.
