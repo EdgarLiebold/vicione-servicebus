@@ -205,3 +205,11 @@ working tree (11/11 matched). This is an incremental current-content
 admission only; the historical 831-file aggregate includes chain metadata
 whose early per-path manifests are not retained, so no exact whole-source
 set-equality claim follows from it. The 4,118-file goal remains active.
+
+Personal Core read advanced to 350/702 while three disjoint Sol 5.6 xhigh
+agents perform read-only source audits of Scheduling, RetryPolicies and
+Serialization/Admission. The ten new files cover state-machine cancellation,
+scoped consume endpoint providers, job bus lifecycle/property metadata,
+pipe-supervisor failure/shutdown, multi-consumer harness, endpoint convention
+overloads, request initializer forwarding and virtual-time redelivery. Agent
+audits are discovery only and do not count toward lead personal source reads.
