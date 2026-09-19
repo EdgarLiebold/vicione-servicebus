@@ -72,3 +72,9 @@ consume-context proxy, outgoing wrapper, response lifetime and endpoint/fault
 resolution tests. The effective Core test-project gate remains incomplete;
 provider parity and causal mutation evidence remain outstanding. No product or
 test file changed since the last full-suite verification.
+
+Continuation checkpoint: 133/702 personally read Core test-project files,
+adding the 11-route endpoint matrix, message consume forwarding, consumer
+metadata/configuration, batch context/factory/collector lifecycle, instance
+registration and disposal contracts. This is a read-ledger checkpoint only;
+the effective gate, provider parity and causal mutation evidence remain open.
