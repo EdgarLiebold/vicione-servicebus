@@ -223,3 +223,12 @@ Scheduling, RetryPolicies and Serialization/Admission. Those agents are now
 working on source-only corrections in non-overlapping directories; their
 reading does not count as lead personal source admission. No new test source
 work is authorized before the full §4.3 owning-project read.
+
+Personal Core read reached 370/702. The ten new files cover polymorphic
+fault dispatch, job partition-key topology, mediator receive context,
+dynamic InMemory endpoints, concurrency limits, temporal conversion,
+multi-bus scope isolation, schedule initializer forwarding, MessageData
+property loading and virtual-host relay. The Scheduling and Retry source
+agents have submitted uncommitted source-only corrections; Serialization
+admission work is still in progress. These are not yet admitted, mutation-
+proven or covered by newly authored tests.
