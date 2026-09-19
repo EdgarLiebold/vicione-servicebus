@@ -68,6 +68,8 @@ def main() -> None:
         "current_byte_attested_raw_paths": len(attested),
         "first_read_unproven_paths": sorted(raw_remainder - attested),
         "committed_snapshot_matches_current_raw_remainder": raw_remainder == snapshot,
+        "historical_snapshot_only_paths": sorted(snapshot - raw_remainder),
+        "new_raw_remainder_paths": sorted(raw_remainder - snapshot),
     }
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
