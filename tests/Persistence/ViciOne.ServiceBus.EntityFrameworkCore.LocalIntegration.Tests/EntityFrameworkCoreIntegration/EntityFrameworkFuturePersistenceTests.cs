@@ -584,7 +584,8 @@ public sealed class EntityFrameworkFuturePersistenceTests
                 var services = new ServiceCollection();
                 services.AddSingleton(attempts);
                 services.AddSingleton(partAttempts);
-                services.AddDbContext<FutureSagaDbContext>(options => options.UseNpgsql(database.ConnectionString));
+                services.AddDbContext<FutureSagaDbContext>(options =>
+                    options.UseNpgsql(database.ConnectionString, postgres => postgres.EnableRetryOnFailure()));
                 services.AddViciOneServiceBusTestHarness(configuration =>
                 {
                     configuration.SetKebabCaseEndpointNameFormatter();
