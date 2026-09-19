@@ -1,6 +1,10 @@
 # API-Fortschrittsabgleich · Iteration 242
 
-**Urteil:** Ein *aktueller* Gesamt-API-Nenner und damit eine belastbare Gesamtquote liegen für den heutigen Working Tree nicht vor. Die jüngste wirklich gepackte und reflektierte API ist ein **historischer Snapshot**; zehn disjunkte manuelle Paketprüfungen ergeben nur eine begrenzte Arbeits-Zwischensumme, keinen A+-PASS. Kandidateninventare und Scannerzahlen dürfen diesen Zähler nicht vergrößern.
+**Aktualisierung 19.09.2026:** Der damals fehlende aktuelle Nenner ist inzwischen durch [frisches Packen und komplette Reflexion](current-b70-api-confirmation.md) des live-identischen Produkt-`src`-Hashes `b70d54d6…` geschlossen: **3.233 Typen, 15.255 Member, 18.126 Slots**, exakt derselbe reflektierte Byte-Stream wie beim früheren `e99…`-Snapshot. Das offizielle Journey-Skript endet nach erfolgreichen Paketen/Journeys/Consumern weiterhin **rot** am Vergleich mit der veralteten eingecheckten API-Textbaseline. Die zehn disjunkten manuellen Paketprüfungen bleiben nur eine begrenzte Arbeits-Zwischensumme, kein A+-PASS; eine belastbare **Gesamtquote der manuellen API-Abnahme** liegt weiter nicht vor. Die folgende Tabelle und die damalige Driftanalyse dokumentieren den früheren Abgleichstand und dürfen nicht als heutige Ist-Behauptung gelesen werden.
+
+## Ursprünglicher Abgleich vor der b70-Neumessung
+
+**Damals gültiges Urteil:** Ein *aktueller* Gesamt-API-Nenner und damit eine belastbare Gesamtquote lagen für den damaligen Working Tree nicht vor. Die jüngste wirklich gepackte und reflektierte API war zu diesem Zeitpunkt ein **historischer Snapshot**; zehn disjunkte manuelle Paketprüfungen ergaben nur eine begrenzte Arbeits-Zwischensumme, keinen A+-PASS. Kandidateninventare und Scannerzahlen durften diesen Zähler nicht vergrößern.
 
 | Belegklasse | Zählung | Gültige Aussage |
 |---|---:|---|

@@ -1,0 +1,21 @@
+path	disposition	reason
+src/ViciOne.ServiceBus.Testing/Observations/FilterDelegate.cs	retain-with-api-parity-reservation	Filter delegate contract is coherent; legacy callsite and packed-API parity remain unproven.
+src/ViciOne.ServiceBus.Testing/Observations/IAsyncListElement.cs	retain-with-identity-reservation	ElementId identity across repeated deliveries and retry attempts remains an owner-path question.
+src/ViciOne.ServiceBus.Testing/Observations/IPublishMessageObservation.cs	retain-with-lifecycle-reservation	Publish observation message and disposal ownership need wider owner-path proof.
+src/ViciOne.ServiceBus.Testing/Observations/TestContextSaveMode.cs	retain-with-retention-reservation	All, Bounded and None mode declarations are coherent; full behavioral parity remains open.
+src/ViciOne.ServiceBus.Testing/Observations/ConsumedMessageFilter.cs	retain-with-callsite-reservation	Documented include/exclude semantics remain subject to consumer parity.
+src/ViciOne.ServiceBus.Testing/Observations/PublishedMessageFilter.cs	retain-with-callsite-reservation	Documented publish filter semantics remain subject to consumer parity.
+src/ViciOne.ServiceBus.Testing/Observations/SentMessageFilter.cs	retain-with-callsite-reservation	Documented send filter semantics remain subject to consumer parity.
+src/ViciOne.ServiceBus.Testing/Observations/IAsyncElementList.cs	retain-with-cancellation-fix	Caller-token contract motivated T-01 private iterator correction; full acceptance remains open.
+src/ViciOne.ServiceBus.Testing/Observations/IConsumedMessage.cs	retain-with-api-parity-reservation	Typed consume context and base contract are coherent; packed-API compatibility remains open.
+src/ViciOne.ServiceBus.Testing/Observations/IPublishedMessage.cs	retain-with-api-parity-reservation	Typed publish context and untyped send context are retained; consumer parity remains open.
+src/ViciOne.ServiceBus.Testing/Observations/ISentMessage.cs	retain-with-api-parity-reservation	Typed send context and base contract are coherent; packed-API compatibility remains open.
+src/ViciOne.ServiceBus.Testing/Observations/ConsumedMessageFilterSet.cs	retain-with-callsite-reservation	Null-protected typed consume filter still needs owner-callsite parity.
+src/ViciOne.ServiceBus.Testing/Observations/PublishedMessageFilterSet.cs	retain-with-callsite-reservation	Null-protected typed publish filter still needs owner-callsite parity.
+src/ViciOne.ServiceBus.Testing/Observations/SentMessageFilterSet.cs	retain-with-callsite-reservation	Null-protected typed send filter still needs owner-callsite parity.
+src/ViciOne.ServiceBus.Testing/Observations/FilterSet.cs	retain-with-api-semantics-reservation	Documented empty-set Any, NotAny and None outcomes must not be changed without API and consumer proof.
+src/ViciOne.ServiceBus.Testing/Observations/AsyncElementListExtensions.cs	retain-with-parity-reservation	Terminal and projection helpers forward caller cancellation; broader callsite parity remains open.
+src/ViciOne.ServiceBus.Testing/Observations/ConsumedMessageList.cs	retain-with-base-fix	Typed consume overloads and retention modes are preserved; base T-01 validation is pending.
+src/ViciOne.ServiceBus.Testing/Observations/PublishedMessageList.cs	retain-with-base-fix	Typed publish overloads and retention modes are preserved; base T-01 validation is pending.
+src/ViciOne.ServiceBus.Testing/Observations/SentMessageList.cs	retain-with-base-fix	Typed send overloads and retention modes are preserved; base T-01 validation is pending.
+src/ViciOne.ServiceBus.Testing/Observations/AsyncElementList.cs	retain-with-cancellation-fix	T-01 caller cancellation checks now guard historical snapshot yields; focused and whole-profile validation remain open.

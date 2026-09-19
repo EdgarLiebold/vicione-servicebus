@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Testing.Internal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;
@@ -172,6 +173,100 @@ public sealed class AsyncElementListTests
         cancellation.Cancel();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => observation);
+    }
+
+    [Theory]
+    [InlineData(TestContextSaveMode.All)]
+    [InlineData(TestContextSaveMode.Bounded)]
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "pre-cancelled-historical-selection")]
+    public async Task PreCancelledCaller_DoesNotYieldRetainedHistoryAsync(TestContextSaveMode saveMode)
+    {
+        var messages = CreateList();
+        ((ITestContextRetention)messages).ConfigureRetention(saveMode, 2);
+        Add(messages, new MessageA("first"));
+        Add(messages, new MessageA("second"));
+        Add(messages, new MessageA("third"));
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cancellation.Cancel();
+
+        await using var enumerator = messages.SelectAsync<MessageA>(cancellation.Token).GetAsyncEnumerator(cancellation.Token);
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => enumerator.MoveNextAsync().AsTask());
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        string[] expected = saveMode == TestContextSaveMode.All
+            ? ["first", "second", "third"]
+            : ["second", "third"];
+        Assert.Equal(expected, messages.Snapshot<MessageA>().Select(message => message.Context.Message.Value));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "pre-cancelled-enumerator-only-historical-selection")]
+    public async Task PreCancelledEnumeratorToken_DoesNotYieldRetainedHistoryAsync()
+    {
+        var messages = CreateList();
+        ((ITestContextRetention)messages).ConfigureRetention(TestContextSaveMode.Bounded, 2);
+        Add(messages, new MessageA("first"));
+        Add(messages, new MessageA("second"));
+        Add(messages, new MessageA("third"));
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cancellation.Cancel();
+
+        // This test deliberately supplies cancellation only to the enumerator, not to SelectAsync.
+#pragma warning disable xUnit1051
+        await using var enumerator = messages.SelectAsync<MessageA>().GetAsyncEnumerator(cancellation.Token);
+#pragma warning restore xUnit1051
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => enumerator.MoveNextAsync().AsTask());
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        string[] expected = ["second", "third"];
+        Assert.Equal(expected, messages.Snapshot<MessageA>().Select(message => message.Context.Message.Value));
+    }
+
+    [Theory]
+    [InlineData(TestContextSaveMode.All)]
+    [InlineData(TestContextSaveMode.Bounded)]
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "cancellation-between-historical-yields")]
+    public async Task CallerCancellation_BetweenHistoricalYieldsStopsSelectionAsync(TestContextSaveMode saveMode)
+    {
+        var messages = CreateList();
+        ((ITestContextRetention)messages).ConfigureRetention(saveMode, 2);
+        Add(messages, new MessageA("first"));
+        Add(messages, new MessageA("second"));
+        Add(messages, new MessageA("third"));
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+
+        await using var enumerator = messages.SelectAsync<MessageA>(cancellation.Token).GetAsyncEnumerator(cancellation.Token);
+        Assert.True(await enumerator.MoveNextAsync());
+        Assert.Equal(saveMode == TestContextSaveMode.All ? "first" : "second", enumerator.Current.Context.Message.Value);
+
+        cancellation.Cancel();
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => enumerator.MoveNextAsync().AsTask());
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.Equal(saveMode == TestContextSaveMode.All ? 3 : 2, messages.Count);
+    }
+
+    [Theory]
+    [InlineData(TestContextSaveMode.All)]
+    [InlineData(TestContextSaveMode.Bounded)]
+    [InlineData(TestContextSaveMode.None)]
+    [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "live-observation-with-each-retention-mode")]
+    public async Task RetentionMode_DoesNotStopLiveObservationAsync(TestContextSaveMode saveMode)
+    {
+        var messages = CreateList();
+        ((ITestContextRetention)messages).ConfigureRetention(saveMode, 2);
+        Task<bool> observation = messages.AnyAsync<MessageA>(TestContext.Current.CancellationToken);
+        Assert.False(observation.IsCompleted);
+
+        Add(messages, new MessageA("live"));
+
+        Assert.True(await observation);
+        Assert.Equal(saveMode == TestContextSaveMode.None ? 0 : 1, messages.Count);
+        string[] expected = saveMode == TestContextSaveMode.None ? [] : ["live"];
+        Assert.Equal(expected, messages.Snapshot<MessageA>().Select(message => message.Context.Message.Value));
     }
 
     [Fact]

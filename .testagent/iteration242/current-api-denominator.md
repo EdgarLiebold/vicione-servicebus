@@ -1,5 +1,7 @@
 # Aktueller öffentlicher/geschützter API-Nenner · Iteration 242
 
+**Erneute aktuelle Bestätigung:** Die frische paketweise Reflexion vom 19.09.2026 auf `src`-Hash `b70d54d627e30a97e0d31298c0bed51b6884bde48981a83c09e423ffb8deb6aa` ist bytegleich mit der unten beschriebenen früheren Reflexion (identischer SHA-256 `2536d15d…`). Damit gelten die **3.233 Typen / 15.255 Member / 18.126 Parameterslots** auch für diesen aktuellen Produktquellbestand. Der vollständige Beleg und die weiterhin rote alte Contract-Baseline stehen in [current-b70-api-confirmation.md](current-b70-api-confirmation.md). Die nachstehenden `e99…`-Angaben beschreiben den ursprünglichen Messlauf, nicht den neuesten Hash.
+
 **Ergebnis:** Für den gemessenen Working-Tree-Stand vom 19.09.2026 wurden **31 aktuelle Pakete** gebaut und daraus **30 `net10.0`-Laufzeit-Assemblies** paketweise restauriert und mit dem vorhandenen API-Reflektor ausgewertet. Sie enthalten **3.233 extern sichtbare Typen, 15.255 deklarierte öffentliche/geschützte Member und 18.126 Parameterslots**. Das ist ein maschinell erhobener **aktueller Nenner**, keine manuelle Memberdisposition, kein Test-Mapping und keine A+-Abnahme.
 
 ## Reproduzierbarer Bezug

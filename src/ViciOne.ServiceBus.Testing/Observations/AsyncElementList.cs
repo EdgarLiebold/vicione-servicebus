@@ -144,7 +144,7 @@ public abstract class AsyncElementList<TElement> :
 
         try
         {
-            foreach (var entry in GetMatchingSnapshot(filter, returnedIds, returnedUnidentified))
+            foreach (var entry in GetMatchingSnapshot(filter, returnedIds, returnedUnidentified, cancellationToken))
                 yield return entry;
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -179,7 +179,7 @@ public abstract class AsyncElementList<TElement> :
                     continue;
                 }
 
-                foreach (var entry in GetMatchingSnapshot(filter, returnedIds, returnedUnidentified))
+                foreach (var entry in GetMatchingSnapshot(filter, returnedIds, returnedUnidentified, cancellationToken))
                     yield return entry;
             }
         }
@@ -200,14 +200,16 @@ public abstract class AsyncElementList<TElement> :
     }
 
     IEnumerable<TElement> GetMatchingSnapshot(FilterDelegate<TElement> filter, HashSet<Guid> returnedIds,
-        HashSet<TElement> returnedUnidentified)
+        HashSet<TElement> returnedUnidentified, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         TElement[] snapshot;
         lock (_messages)
             snapshot = _messages.ToArray();
 
         foreach (var entry in snapshot)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (!MarkReturned(entry, returnedIds, returnedUnidentified))
                 continue;
 
