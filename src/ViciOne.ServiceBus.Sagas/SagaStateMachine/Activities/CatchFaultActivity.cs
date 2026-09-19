@@ -28,15 +28,19 @@ public class CatchFaultActivity<TSaga, TException> :
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="visitor" /> is <see langword="null" />.</exception>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
         visitor.Visit(this, x => _behavior.Accept(visitor));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is <see langword="null" />.</exception>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateScope("catch");
 
         scope.Add("exceptionType", TypeCache<TException>.ShortName);
@@ -48,8 +52,11 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -58,9 +65,12 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         return next.ExecuteAsync(context);
     }
 
@@ -69,9 +79,12 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public async Task FaultedAsync<T>(IBehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         if (context is IBehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
             await _behavior.FaultedAsync(exceptionContext).ConfigureAwait(false);
@@ -89,10 +102,13 @@ public class CatchFaultActivity<TSaga, TException> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public async Task FaultedAsync<TMessage, T>(IBehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
         where TMessage : class
         where T : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
         if (context is IBehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
         {
             await _behavior.FaultedAsync(exceptionContext).ConfigureAwait(false);

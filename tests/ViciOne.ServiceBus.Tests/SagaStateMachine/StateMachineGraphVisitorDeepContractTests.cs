@@ -291,7 +291,8 @@ public sealed class StateMachineGraphVisitorDeepContractTests
         var inner = new ExceptionActivity(typeof(ArgumentException));
         IStateMachineActivity transition = CreateTransitionActivity(machine, machine.Running);
         var composite = new CompositeEventActivity<GraphState>(
-            null!,
+            new IntCompositeEventStatusAccessor<GraphState>(
+                typeof(GraphState).GetProperty(nameof(GraphState.CompositeStatus))!),
             1,
             default,
             machine.Ready,

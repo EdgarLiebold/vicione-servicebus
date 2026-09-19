@@ -15,6 +15,7 @@ internal sealed class TransitionActivity<TSaga> :
     /// <summary>Creates an activity that transitions a saga to a target state.</summary>
     /// <param name="toState">The target state.</param>
     /// <param name="currentStateAccessor">The accessor used to read and persist the current state.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="toState" /> or <paramref name="currentStateAccessor" /> is <see langword="null" />.</exception>
     public TransitionActivity(IState<TSaga> toState, IStateAccessor<TSaga> currentStateAccessor)
     {
         _toState = toState ?? throw new ArgumentNullException(nameof(toState));
@@ -26,6 +27,7 @@ internal sealed class TransitionActivity<TSaga> :
 
     /// <summary>Exposes this transition to a state-machine visitor.</summary>
     /// <param name="visitor">The visitor receiving the transition.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="visitor" /> is <see langword="null" />.</exception>
     public void Accept(IStateMachineVisitor visitor)
     {
         ArgumentNullException.ThrowIfNull(visitor);
@@ -34,6 +36,7 @@ internal sealed class TransitionActivity<TSaga> :
 
     /// <summary>Writes the target-state name to a transition probe scope.</summary>
     /// <param name="context">The diagnostic context to populate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is <see langword="null" />.</exception>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -45,6 +48,7 @@ internal sealed class TransitionActivity<TSaga> :
     /// <param name="context">The current saga behavior context.</param>
     /// <param name="next">The remaining behavior.</param>
     /// <returns>A task that completes after the transition and remaining behavior.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -55,12 +59,13 @@ internal sealed class TransitionActivity<TSaga> :
     }
 
     /// <summary>Transitions a data-event saga and then invokes the remaining behavior.</summary>
-    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="T">The event data type.</typeparam>
     /// <param name="context">The current saga and event data.</param>
     /// <param name="next">The remaining data-event behavior.</param>
     /// <returns>A task that completes after the transition and remaining behavior.</returns>
-    public async Task ExecuteAsync<TData>(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
-        where TData : class
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    public async Task ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+        where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -74,6 +79,7 @@ internal sealed class TransitionActivity<TSaga> :
     /// <param name="context">The faulted saga behavior context.</param>
     /// <param name="next">The remaining fault behavior.</param>
     /// <returns>A task that completes after fault propagation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
@@ -88,6 +94,7 @@ internal sealed class TransitionActivity<TSaga> :
     /// <param name="context">The faulted saga and event data.</param>
     /// <param name="next">The remaining data-event fault behavior.</param>
     /// <returns>A task that completes after fault propagation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
     public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
@@ -118,19 +125,7 @@ internal sealed class TransitionActivity<TSaga> :
             await RaiseAfterLeaveEventsAsync(context, currentState, _toState).ConfigureAwait(false);
 
         if (currentState == null || !_toState.HasState(currentState))
-        {
-            IState<TSaga>? superState = _toState.SuperState;
-            while (superState != null && (currentState == null || !superState.HasState(currentState)))
-            {
-                IBehaviorContext<TSaga> superStateEnterContext = context.CreateProxy(superState.Enter);
-                await superState.RaiseAsync(superStateEnterContext, context.CancellationToken).ConfigureAwait(false);
-
-                superState = superState.SuperState;
-            }
-
-            IBehaviorContext<TSaga> enterContext = context.CreateProxy(_toState.Enter);
-            await _toState.RaiseAsync(enterContext, context.CancellationToken).ConfigureAwait(false);
-        }
+            await RaiseEnterEventsAsync(context, currentState, _toState).ConfigureAwait(false);
     }
 
     static async Task RaiseBeforeEnterEventsAsync(IBehaviorContext<TSaga> context, IState<TSaga>? currentState, IState<TSaga> toState)
@@ -157,6 +152,16 @@ internal sealed class TransitionActivity<TSaga> :
         IState<TSaga>? superState = fromState.SuperState;
         if (superState != null)
             await RaiseAfterLeaveEventsAsync(context, superState, toState).ConfigureAwait(false);
+    }
+
+    static async Task RaiseEnterEventsAsync(IBehaviorContext<TSaga> context, IState<TSaga>? currentState, IState<TSaga> toState)
+    {
+        IState<TSaga>? superState = toState.SuperState;
+        if (superState != null && (currentState == null || !superState.HasState(currentState)))
+            await RaiseEnterEventsAsync(context, currentState, superState).ConfigureAwait(false);
+
+        IBehaviorContext<TSaga> enterContext = context.CreateProxy(toState.Enter);
+        await toState.RaiseAsync(enterContext, context.CancellationToken).ConfigureAwait(false);
     }
 
     static async Task RaiseCurrentStateLeaveEventsAsync(IBehaviorContext<TSaga> context, IState<TSaga> fromState, IState<TSaga> toState)

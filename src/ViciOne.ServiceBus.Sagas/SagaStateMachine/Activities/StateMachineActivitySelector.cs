@@ -1,3 +1,5 @@
+using System;
+
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
 /// <summary>Selects state machine activity values.</summary>
@@ -10,9 +12,10 @@ public class StateMachineActivitySelector<TSaga> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="binder">The binder.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="binder" /> is <see langword="null" />.</exception>
     public StateMachineActivitySelector(IEventActivityBinder<TSaga> binder)
     {
-        _binder = binder;
+        _binder = binder ?? throw new ArgumentNullException(nameof(binder));
     }
 
     /// <summary>Restricts the operation to the specified type.</summary>
@@ -40,9 +43,10 @@ public class StateMachineActivitySelector<TSaga, TMessage> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="binder">The binder.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="binder" /> is <see langword="null" />.</exception>
     public StateMachineActivitySelector(IEventActivityBinder<TSaga, TMessage> binder)
     {
-        _binder = binder;
+        _binder = binder ?? throw new ArgumentNullException(nameof(binder));
     }
 
     /// <summary>Restricts the operation to the specified type.</summary>

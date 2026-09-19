@@ -14,9 +14,10 @@ public class StateMachineFaultedActivitySelector<TSaga, TException> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="binder">The binder.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="binder" /> is <see langword="null" />.</exception>
     public StateMachineFaultedActivitySelector(IExceptionActivityBinder<TSaga, TException> binder)
     {
-        _binder = binder;
+        _binder = binder ?? throw new ArgumentNullException(nameof(binder));
     }
 
     /// <summary>Restricts the operation to the specified type.</summary>
@@ -46,9 +47,10 @@ public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="binder">The binder.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="binder" /> is <see langword="null" />.</exception>
     public StateMachineFaultedActivitySelector(IExceptionActivityBinder<TSaga, TMessage, TException> binder)
     {
-        _binder = binder;
+        _binder = binder ?? throw new ArgumentNullException(nameof(binder));
     }
 
     /// <summary>Restricts the operation to the specified type.</summary>

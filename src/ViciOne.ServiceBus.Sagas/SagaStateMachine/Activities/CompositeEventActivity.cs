@@ -20,9 +20,13 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="complete">The exact status identifying completion of all required events.</param>
     /// <param name="event">The composite event raised when the resulting status equals the complete status.</param>
     /// <param name="options">The options whose RaiseOnce flag suppresses processing of an already-set required-event flag.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="accessor"/> or <paramref name="event"/> is null.</exception>
     public CompositeEventActivity(ICompositeEventStatusAccessor<TSaga> accessor, int flag, CompositeEventStatus complete, IEvent @event,
         CompositeEventOptions options)
     {
+        ArgumentNullException.ThrowIfNull(accessor);
+        ArgumentNullException.ThrowIfNull(@event, nameof(@event));
+
         _accessor = accessor;
         _flag = flag;
         _complete = complete;
@@ -35,15 +39,21 @@ public class CompositeEventActivity<TSaga> :
 
     /// <summary>Exposes this activity to a state-machine visitor.</summary>
     /// <param name="visitor">The visitor receiving the composite-event activity.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null.</exception>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
+
         visitor.Visit(this);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The parent probe context for the status accessor, composite-event name and required-event flag.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="context"/> is null.</exception>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("compositeEvent");
         _accessor.Probe(scope);
         scope.Add("event", Event.Name);
@@ -54,21 +64,29 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="context">The behavior context containing the saga instance.</param>
     /// <param name="next">The remaining behavior invoked after composite processing succeeds.</param>
     /// <returns>A task completing after composite processing and the remaining behavior.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context"/> or <paramref name="next"/> is null.</exception>
     public async Task ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         await ExecuteAsync(context).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
     /// <summary>Updates composite status for a message event, awaits any resulting composite event and invokes the remaining behavior.</summary>
-    /// <typeparam name="TData">The event's message type.</typeparam>
+    /// <typeparam name="TData">The message contract carried by the event.</typeparam>
     /// <param name="context">The behavior context containing the saga instance and event message.</param>
     /// <param name="next">The remaining typed behavior invoked after composite processing succeeds.</param>
     /// <returns>A task completing after composite processing and the remaining typed behavior.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context"/> or <paramref name="next"/> is null.</exception>
     public async Task ExecuteAsync<TData>(IBehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         await ExecuteAsync(context).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
@@ -79,22 +97,30 @@ public class CompositeEventActivity<TSaga> :
     /// <param name="context">The faulted saga behavior context.</param>
     /// <param name="next">The remaining fault behavior.</param>
     /// <returns>The remaining behavior's fault-propagation task.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context"/> or <paramref name="next"/> is null.</exception>
     public Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 
     /// <summary>Forwards the message-event fault to the remaining behavior without changing composite status.</summary>
-    /// <typeparam name="T">The event's message type.</typeparam>
+    /// <typeparam name="T">The message contract carried by the event.</typeparam>
     /// <typeparam name="TException">The fault's exception type.</typeparam>
     /// <param name="context">The faulted saga and event-message behavior context.</param>
     /// <param name="next">The remaining typed fault behavior.</param>
     /// <returns>The remaining typed behavior's fault-propagation task.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context"/> or <paramref name="next"/> is null.</exception>
     public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         return next.FaultedAsync(context);
     }
 
