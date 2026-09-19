@@ -78,3 +78,9 @@ adding the 11-route endpoint matrix, message consume forwarding, consumer
 metadata/configuration, batch context/factory/collector lifecycle, instance
 registration and disposal contracts. This is a read-ledger checkpoint only;
 the effective gate, provider parity and causal mutation evidence remain open.
+
+Continuation checkpoint: 160/702 personally read Core test-project files.
+The newest set covers consumer concurrency and dynamic connections, batch
+timing/cleanup, initializer converters/providers, job API fixtures and the
+embedded requirement-projection assertion. Driver/fixture closure and all
+remaining project files are still required before test-design clearance.
