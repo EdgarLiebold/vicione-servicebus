@@ -441,10 +441,15 @@ the historical pre-edit order deviation also requires explicit disposition.
 | `tests/ViciOne.ServiceBus.Tests/RetryPolicies/PendingFaultCollectionTests.cs` | `ecae976933e9c59e8ced0a4365291ae441fee0fc` | Pending fault collection validation, single-owner sealing, pre-cancel preservation, metadata/token forwarding and continuation after sync/null-task observer faults. |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/MissingInstanceRedeliveryTests.cs` | `bf9273cdc281717e388e8ba749cb223efd25321e` | Missing saga-instance retry observer order/lifetime, scheduled redelivery metadata, terminal pipe, null configuration and invalid policy context. |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataEndpointIntegrationTests.cs` | `8085115f5d587413dc95b4d9f398c27b90b55e3e` | InMemory MessageData JSON large-payload sizes, stored publish string and request/response repository value round-trips; no real durable provider. |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | `be71db6c2235caa9637a2019107b1e0b60eb0fb7` | Declarative/dynamic state-machine definition surfaces enumerate exact states/events/reachable events; two machines keep independent state slots on one saga. |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedConsumeContextProviderTests.cs` | `567c8aaa90170a96711633e0bff53fae84d7cb5f` | Nullable scoped consume snapshot contract, push/null guards, nested restoration, typed local-before-global disposal and exact scope resolution. Proxy fixtures. |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs` | `e41a145b9e1a2e14c8a64b03909ce336fb94ac73` | Exact/unsupported dictionary mappings, expando scalar/nested graph initialization and prefixed standard-header conversion. |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/MediatorObserverContractTests.cs` | `f523bcd55178ab3af1b06f0a21a1b24ae8229776` | Mediator configuration/runtime consume/send/publish observers cover direct messages, request/response, disconnect, exact publish fault and fault-observer isolation. |
+| `tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs` | `81babf63ddea05732216fc52ae0bd54558db142b` | Fake-clock wrapper records timer creation/change/due time and active count; waiters are signaled outside lock, disposable timer can inject change/dispose failures. Shared fixture, not a test. |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | `d78fb5af245de421d4d2e9bda7a51ed9fc6161a9` | MTP xUnit executable, package and product/support references, Protobuf fixture generation and embedded Core requirements; CS1591 suppressed for this test project. |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | `5cc36f6191c45dfd05c2be832143c717a0bf86ec` | net10.0 locked direct graph (Google.Protobuf, Grpc.Tools, DI, fake clock, MTP coverage and xUnit) plus transitive MTP/telemetry dependencies and referenced product/support projects; content hashes bind the resolution. |
 
-Current personal-read count in this ledger: 435/702 tracked owning-project files.
+Current personal-read count in this ledger: 440/702 tracked owning-project files.
 No parser/set-equality claim yet.
 
 Effective external build/test configuration personally read at this baseline:

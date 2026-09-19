@@ -307,3 +307,12 @@ waits. No current unfiltered green claim follows. The payload agent is
 preserving public custom-buffer SPI; independent host threshold decisions
 will be enforced post-serialization without pretending an arbitrary custom
 buffer's internal allocations can be bounded by an outer wrapper.
+
+The personal Core read is now 440/702; the five added files cover machine
+definition equivalence, scoped consume-context lifetime, dictionary
+initializer graph mapping, mediator observers and the shared observable
+time-provider fixture. Path/blob set reconciliation is still clean. The
+custom payload evaluator's public buffer customization remains supported;
+the agent is adding independent immutable-policy postchecks and retains
+before/during-read limits for opaque Copy. Remaining custom-buffer allocation
+behavior is a documented contract boundary, not an excuse to remove SPI.
