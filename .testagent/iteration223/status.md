@@ -188,3 +188,11 @@ skipped, with only the same two explicitly excluded legacy-oracle tests.
 This confirms the unaffected Core surface under Release; it does not resolve
 the two test gaps, source-read gate, mutation/coverage/CRAP or real-provider
 acceptance. The active A+ goal continues.
+
+Personal Core-file reading advanced to 340/702. The additional ten cover
+message observers, dictionary headers, transport-text normalization, scoped
+bus contexts, probe contracts, job progress/distribution, Future request
+consumers, the state-machine scheduler fixture and receive lifecycle events.
+No source or test files changed after the source-only correction. The
+unfiltered gate remains red because the two test oracles still need causal
+revision after full owning-project reading.
