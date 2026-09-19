@@ -35,7 +35,8 @@ def main() -> None:
         "log", "--format=", "--name-only", "-z", f"{BASELINE}^..HEAD", "--", "src"
     )
     changed |= git_paths("diff", "--name-only", "-z", "HEAD", "--", "src")
-    raw_remainder = tracked - changed
+    # An untracked source file has no Git edit history and needs direct reading.
+    raw_remainder = (tracked - changed) | untracked
 
     snapshot = set(
         (ROOT / ".testagent/source-read-remainder.txt").read_text(encoding="utf-8").splitlines()
@@ -58,9 +59,10 @@ def main() -> None:
 
     report = {
         "baseline_inclusive": BASELINE,
+        "current_src_paths": len(tracked | untracked),
         "tracked_src_paths": len(tracked),
         "untracked_src_paths": sorted(untracked),
-        "git_convention_read_paths": len(tracked - raw_remainder),
+        "git_convention_read_paths": len(tracked & changed),
         "raw_remainder_paths": len(raw_remainder),
         "raw_remainder_csharp": sum(path.endswith(".cs") for path in raw_remainder),
         "current_byte_attested_raw_paths": len(attested),
