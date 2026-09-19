@@ -70,3 +70,29 @@ The §4.3 full-owning-test-project personal-read/ordering gate is open. Do not
 turn these source hypotheses into new test design/edit or A+ acceptance until that
 gate and the historical order deviation are explicitly addressed. The active
 goal continues with read-only inventory and semantic reading meanwhile.
+
+Further disjoint **agent-only, read-only** source audit (17 additional activity
+files; this does not increase the lead-personal source-read/admission count):
+
+- Action/async/factory/faulted-action flows reject required/null delegate results
+  and propagate the original context. They do not force pre-cancellation before
+  user code; without a corresponding source contract this is only a conditional
+  API question. Untyped async-factory execution is interface-explicit while its
+  typed counterpart is publicly callable on the concrete type.
+- `TransitionActivity` raises before-enter asynchronously, then writes the target
+  without rereading state. A nested transition in a lifecycle handler can be
+  overwritten or result in an Enter notification inconsistent with the current
+  state; a failing after-leave/enter leaves the in-memory target assigned. The
+  lead has also personally read this 181-line source, but it is not admitted.
+  Data-converter covariance requires an independently compatible continuation;
+  it fails closed for an otherwise valid derived-message/base-activity pairing.
+- `CompositeEventActivity` marks completion before awaiting its nested raise;
+  failure/cancellation can cause same-instance retry to be suppressed by
+  RaiseOnce. Concurrent status read-modify-write is conditional on same-saga
+  serialization. Condition activities may invoke delegates on a canceled
+  context and the retry delay selects system time. These are audit findings,
+  not yet regression-proven fixes or broad transport acceptance.
+
+The lead's hash-bound partial personal read of the owning Core test project is
+tracked separately in `../core-test-project-full-read/partial-ledger.md` (43/702
+at this checkpoint). Historical ordering is still not retrospectively cured.
