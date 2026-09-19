@@ -91,3 +91,24 @@ deduplicated method-line ratio: `CC² × (1 − covered/valid)³ + CC`.
 Report results only after all fresh runs and the post-run digest. If a run
 fails or source/test content drifts, record the partial result and its limits
 without presenting it as current coverage.
+
+## Lead attempt on 2026-09-19
+
+The Lead captured pre-run `src/tests` digest
+`469a2cbea2379b33317ba793db0090dbcce42afa48dc1731c2c00c8d29710769`.
+The specified isolated Release build gave no compilation/test output for over
+five minutes and was terminated after an attempted console cancellation. A
+second Lead build with `--no-restore` likewise produced no completion/output
+for over four minutes and was terminated by its verified exact PID. Neither
+attempt produced a fresh Cobertura file or a completed test result; a terminal
+exit status from process cancellation is not a successful build. No coverage
+or CRAP aggregation was run from this attempt.
+
+The post-attempt `src/tests` digest was
+`1320cc6c859b72f1f92d7af268aeecb2f12e7dabb50c4951dff2213d245976a4`,
+different from the pre-run digest because the shared worktree changed during
+the attempt. No fresh measurement can be attached to the pre-run tree. The
+previous unit-derived and Unit+Rabbit reports remain explicitly older,
+partial snapshots. Resume only with a new stable content digest and a
+separately diagnosed build/restore path; do not infer fresh coverage from
+this failed collection.
