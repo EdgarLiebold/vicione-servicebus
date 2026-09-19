@@ -1,0 +1,2 @@
+path	current_sha256	historical_evidence	commit	disposition	confidence
+src/Transports/ViciOne.ServiceBus.EventHubs.Testing/EventHubTestHarnessExtensions.cs	d1831ff3a1667bf06e498dd16dac969f64d63f8ffee2984400abf60f82dd5c9c	.testagent/iteration148/source-admission.tsv; .testagent/iteration148/research.md; .testagent/iteration148/status.md	8cbdc3ab5531f00554529bf9041ec89a5f43b664	admitted-no-reproduced-defect; product-and-test-source-unchanged	high: sole file in packet; exact current and committed bytes

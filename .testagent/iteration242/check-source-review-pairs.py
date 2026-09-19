@@ -91,9 +91,34 @@ def main() -> None:
                 dispositioned_current.add(path)
 
     stale_paths -= dispositioned_current
+    historical_current: set[str] = set()
+    historical_stale: set[str] = set()
+    historical_untracked_files: list[str] = []
+    for name in ("historical-review-early.tsv", "historical-review-late.tsv"):
+        historical = ROOT / ".testagent" / "iteration242" / name
+        if not historical.is_file():
+            continue
+        historical_name = str(historical.relative_to(ROOT))
+        if historical_name not in tracked_evidence:
+            historical_untracked_files.append(historical_name)
+        for path, row in rows(historical).items():
+            if not (row.get("disposition") or row.get("explicit_disposition")) or not row.get("confidence"):
+                raise ValueError(f"incomplete historical review record: {name}: {path}")
+            evidence = row.get("historical_evidence_path", row.get("historical_evidence", ""))
+            if not evidence or any(not (ROOT / item.strip()).is_file() for item in evidence.split(";")):
+                raise ValueError(f"missing historical review evidence: {name}: {path}")
+            if path in current:
+                if row.get("current_sha256") == current_hashes[path]:
+                    if path in historical_current:
+                        raise ValueError(f"duplicate historical review path: {path}")
+                    historical_current.add(path)
+                else:
+                    historical_stale.add(path)
+
     unpaired = sorted(current - dispositioned_current)
+    reviewed_union = dispositioned_current | historical_current
     report = {
-        "meaning": "lower-bound current-byte admission+disposition pairs; not A+ approvals",
+        "meaning": "lower-bound current-byte disposition records; not A+ approvals",
         "current_src_paths": len(current),
         "current_csharp_paths": sum(path.endswith(".cs") for path in current),
         "paired_tsv_packets": pair_files,
@@ -101,6 +126,12 @@ def main() -> None:
         "current_byte_admitted_in_paired_packets": len(admitted_current),
         "current_byte_admitted_and_dispositioned": len(dispositioned_current),
         "current_byte_unpaired_paths": len(unpaired),
+        "current_byte_historical_file_specific_records": len(historical_current),
+        "historical_record_overlap_with_pairs": len(historical_current & dispositioned_current),
+        "current_byte_review_record_union": len(reviewed_union),
+        "current_byte_without_these_review_formats": len(current - reviewed_union),
+        "historical_stale_path_list": sorted(historical_stale),
+        "untracked_historical_evidence_files": historical_untracked_files,
         "stale_admission_paths": len(stale_paths),
         "stale_admission_path_list": sorted(stale_paths),
         "pair_path_mismatches": unpaired_rows,
