@@ -94,3 +94,8 @@ Continuation checkpoint: 180/702 personally read, adding deterministic
 partition-hash vectors, retry-policy context budgets, MessageId/JSON wire
 boundaries, saga query caching, provider discovery and TCS/readiness contracts.
 These focused tests do not replace the remaining runtime/provider acceptance.
+
+Continuation checkpoint: 190/702 personally read. The last ten cover
+initializer array/provider fixtures, generated message implementation and
+assembly scan cache, InMemory receive context, job identity, metadata codec,
+UTC timestamps and sent-message metadata. No product/test code changed.
