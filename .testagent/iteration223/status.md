@@ -110,3 +110,8 @@ Continuation checkpoint: 240/702 personally read, including volatile outbox
 fault/result ordering, scoped send-pipe ownership, future state/location,
 provider object graphs, typed job-state projection, constructor-only JSON and
 historical cron DST boundaries. Product and test sources remain unchanged.
+
+Continuation checkpoint: 250/702 personally read Core files, adding
+container-discovered job execution, forward-expiration outbox behavior,
+fork/join failure retention, serializer/body oracles, saga context factories
+and application topology freeze. This does not close the 702-file gate.
