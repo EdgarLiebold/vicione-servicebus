@@ -13,52 +13,92 @@ public class AsyncFactoryActivity<TSaga> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="activityFactory">The activity factory.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="activityFactory" /> is <see langword="null" />.</exception>
     public AsyncFactoryActivity(Func<IBehaviorContext<TSaga>, Task<IStateMachineActivity<TSaga>>> activityFactory)
     {
-        _activityFactory = activityFactory;
+        _activityFactory = activityFactory ?? throw new ArgumentNullException(nameof(activityFactory));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="visitor" /> is <see langword="null" />.</exception>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
+
         visitor.Visit(this);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is <see langword="null" />.</exception>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("activityFactory");
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    /// <exception cref="InvalidOperationException">The activity factory returns <see langword="null" />.</exception>
     async Task IStateMachineActivity<TSaga>.ExecuteAsync(IBehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        IStateMachineActivity<TSaga> activity = await GetActivity(context).ConfigureAwait(false);
 
         await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    /// <exception cref="InvalidOperationException">The activity factory returns <see langword="null" />.</exception>
     async Task IStateMachineActivity<TSaga>.ExecuteAsync<T>(IBehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
     {
-        IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        IStateMachineActivity<TSaga> activity = await GetActivity(context).ConfigureAwait(false);
 
         await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    /// <exception cref="InvalidOperationException">The activity factory returns <see langword="null" />.</exception>
     async Task IStateMachineActivity<TSaga>.FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
     {
-        IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        IStateMachineActivity<TSaga> activity = await GetActivity(context).ConfigureAwait(false);
 
         await activity.FaultedAsync(context, next).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    /// <exception cref="InvalidOperationException">The activity factory returns <see langword="null" />.</exception>
     async Task IStateMachineActivity<TSaga>.FaultedAsync<T, TException>(IBehaviorExceptionContext<TSaga, T, TException> context,
         IBehavior<TSaga, T> next)
     {
-        IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        IStateMachineActivity<TSaga> activity = await GetActivity(context).ConfigureAwait(false);
 
         await activity.FaultedAsync(context, next).ConfigureAwait(false);
+    }
+
+    async Task<IStateMachineActivity<TSaga>> GetActivity(IBehaviorContext<TSaga> context)
+    {
+        Task<IStateMachineActivity<TSaga>> activityTask = _activityFactory(context)
+            ?? throw new InvalidOperationException("The activity factory returned null.");
+
+        return await activityTask.ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The activity factory returned null.");
     }
 }
 
@@ -75,22 +115,29 @@ public class AsyncFactoryActivity<TSaga, TMessage> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="activityFactory">The activity factory.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="activityFactory" /> is <see langword="null" />.</exception>
     public AsyncFactoryActivity(Func<IBehaviorContext<TSaga, TMessage>, Task<IStateMachineActivity<TSaga, TMessage>>> activityFactory)
     {
-        _activityFactory = activityFactory;
+        _activityFactory = activityFactory ?? throw new ArgumentNullException(nameof(activityFactory));
     }
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="visitor" /> is <see langword="null" />.</exception>
     public void Accept(IStateMachineVisitor visitor)
     {
+        ArgumentNullException.ThrowIfNull(visitor);
+
         visitor.Visit(this);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> is <see langword="null" />.</exception>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("activityFactory");
     }
 
@@ -98,9 +145,14 @@ public class AsyncFactoryActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    /// <exception cref="InvalidOperationException">The activity factory returns <see langword="null" />.</exception>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        IStateMachineActivity<TSaga, TMessage> activity = await _activityFactory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        IStateMachineActivity<TSaga, TMessage> activity = await GetActivity(context).ConfigureAwait(false);
 
         await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
@@ -110,11 +162,25 @@ public class AsyncFactoryActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="context" /> or <paramref name="next" /> is <see langword="null" />.</exception>
+    /// <exception cref="InvalidOperationException">The activity factory returns <see langword="null" />.</exception>
     public async Task FaultedAsync<TException>(IBehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        IStateMachineActivity<TSaga, TMessage> activity = await _activityFactory(context).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        IStateMachineActivity<TSaga, TMessage> activity = await GetActivity(context).ConfigureAwait(false);
 
         await activity.FaultedAsync(context, next).ConfigureAwait(false);
+    }
+
+    async Task<IStateMachineActivity<TSaga, TMessage>> GetActivity(IBehaviorContext<TSaga, TMessage> context)
+    {
+        Task<IStateMachineActivity<TSaga, TMessage>> activityTask = _activityFactory(context)
+            ?? throw new InvalidOperationException("The activity factory returned null.");
+
+        return await activityTask.ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The activity factory returned null.");
     }
 }
