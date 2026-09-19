@@ -85,8 +85,11 @@ these do **not** represent all provider test assemblies or final fork acceptance
 Final independent read-only packet audits found residual work, so this is a bounded
 working checkpoint rather than an A+ admission. `CompleteRequestActivity` and
 `FaultRequestActivity` propagate cancellation but do not reject a pre-canceled
-context before reading the outcome/resolving an endpoint; an endpoint that ignores
-its token could still send and continue. The 16-task forwarding isolation test
+context before reading the outcome/resolving an endpoint; an injected endpoint
+that ignores its token could still send and continue. Built-in endpoint resolution
+and send do reject a pre-canceled token, so this is a conditional hardening and
+error-precedence question rather than a demonstrated built-in send defect. The
+16-task forwarding isolation test
 does not guarantee an overlapping interleaving, and the faulted-schedule test's
 `cancelStarted.Task` wait is unbounded under a cancel-skipping regression. Packet B's
 continuation concurrency oracle checks aggregate calls but not per-context identity.
@@ -94,8 +97,8 @@ Several tests named `exact-api-*` check only subsets of signatures/nullability a
 cannot be cited as proof of the entire public surface or XML documentation. The
 same-saga schedule/unschedule token race needs either an upstream serialization
 proof or a dedicated interleaving oracle; existing cases use independent sagas.
-These observations are not automatically proven product defects. Address the concrete
-pre-cancellation gap and strengthen bounded/overlap assertions in a follow-up once
+These observations are not automatically proven product defects. Disposition the
+pre-cancellation policy and strengthen bounded/overlap assertions in a follow-up once
 the §4.3 gate is satisfied; retain them as open findings until then.
 
 Open governance finding: §4.3 of `AI_WORKING_AGREEMENT.md` requires each responsible role
