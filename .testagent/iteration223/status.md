@@ -84,3 +84,8 @@ The newest set covers consumer concurrency and dynamic connections, batch
 timing/cleanup, initializer converters/providers, job API fixtures and the
 embedded requirement-projection assertion. Driver/fixture closure and all
 remaining project files are still required before test-design clearance.
+
+Continuation checkpoint: 170/702 personally read, with assembly-wide topology
+and correlation bootstrap, timer/key/job fixtures, nested pipe composition,
+JSON defaults, topology naming and state-machine ownership/status contracts.
+The aggregate test read gate remains incomplete and the goal remains active.
