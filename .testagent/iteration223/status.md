@@ -213,3 +213,13 @@ scoped consume endpoint providers, job bus lifecycle/property metadata,
 pipe-supervisor failure/shutdown, multi-consumer harness, endpoint convention
 overloads, request initializer forwarding and virtual-time redelivery. Agent
 audits are discovery only and do not count toward lead personal source reads.
+
+Personal Core read advanced to 360/702. The next ten cover host handle,
+state-machine callback, InMemory scheduled publish, inactivity observation,
+bus health, Courier activity harness, consumer-agent lifecycle, dynamic
+contracts, Future dispatch and InMemory outbox attempt isolation. Three
+disjoint Sol 5.6 xhigh audits identified candidate source defects in
+Scheduling, RetryPolicies and Serialization/Admission. Those agents are now
+working on source-only corrections in non-overlapping directories; their
+reading does not count as lead personal source admission. No new test source
+work is authorized before the full §4.3 owning-project read.
