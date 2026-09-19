@@ -61,3 +61,8 @@ Next read-only checkpoint: 110/702 complete, including the shared Courier
 fixture, convention/JSON registry, executor and routing-slip request bridge,
 success/fault integration and unavailable consume-context overload boundaries.
 No source/test files changed since the successful full-suite checkpoint.
+
+Further personal read: 115/702, adding consumed-context outgoing metadata,
+deserializer completion/payload ownership, context scope/proxy forwarding and
+request/response envelope flow. Only the read ledger/status changed since the
+last full-suite verification. The goal stays active after this checkpoint.
