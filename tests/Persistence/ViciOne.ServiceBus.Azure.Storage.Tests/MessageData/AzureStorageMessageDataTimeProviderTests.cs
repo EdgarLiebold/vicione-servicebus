@@ -80,6 +80,22 @@ public sealed class AzureStorageMessageDataTimeProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "maximum-ttl-means-unbounded-storage")]
+    public async Task MaximumTimeToLive_DoesNotWriteExpirationMetadataAsync()
+    {
+        var handler = new RecordingBlobHandler();
+        var repository = CreateRepository(handler, new FixedTimeProvider(Now));
+
+        await repository.PutAsync(
+            new MemoryStream([4, 5, 6]),
+            TimeSpan.MaxValue,
+            TestContext.Current.CancellationToken);
+
+        RecordedRequest upload = Assert.Single(handler.Requests);
+        Assert.Null(upload.ValidUntilUtc);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "atomic-ttl-upload-honors-cancellation")]
     public async Task TimeToLiveUpload_HonorsCallerCancellationAsync()
     {

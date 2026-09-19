@@ -148,7 +148,10 @@ public sealed class AzureBlobMessageDataRepository :
 
         try
         {
-            LogContext.Debug?.Log("GET Message Data: {Address} ({Blob})", address, blobClient.Name);
+            LogContext.Debug?.Log(
+                "GET Message Data: {Address} ({Blob})",
+                PublicBlobAddress(address),
+                blobClient.Name);
 
             global::Azure.Response<BlobDownloadStreamingResult> response = await blobClient
                 .DownloadStreamingAsync(cancellationToken: cancellationToken)
@@ -222,9 +225,10 @@ public sealed class AzureBlobMessageDataRepository :
                 .ConfigureAwait(false);
         }
 
-        LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", blobClient.Uri, blobClient.Name);
+        Uri address = PublicBlobAddress(blobClient.Uri);
+        LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", address, blobClient.Name);
 
-        return blobClient.Uri;
+        return address;
     }
 
     private BlobClient ResolveBlobClient(Uri address)
@@ -253,12 +257,20 @@ public sealed class AzureBlobMessageDataRepository :
         }
 
         BlobClient blobClient = _containerClient.GetBlobClient(addressBuilder.BlobName);
+        bool legacySasAddress =
+            !string.IsNullOrEmpty(address.Query) &&
+            !string.IsNullOrWhiteSpace(addressBuilder.Sas?.Version) &&
+            !string.IsNullOrWhiteSpace(addressBuilder.Sas.Signature) &&
+            string.IsNullOrEmpty(addressBuilder.Query) &&
+            string.IsNullOrEmpty(addressBuilder.Snapshot) &&
+            string.IsNullOrEmpty(addressBuilder.VersionId);
         bool containsAmbiguousComponents =
             !string.IsNullOrEmpty(address.UserInfo) ||
-            !string.IsNullOrEmpty(address.Fragment);
+            !string.IsNullOrEmpty(address.Fragment) ||
+            (!string.IsNullOrEmpty(address.Query) && !legacySasAddress);
         bool differsFromRepositoryAddress = Uri.Compare(
-                blobClient.Uri,
-                address,
+                PublicBlobAddress(blobClient.Uri),
+                PublicBlobAddress(address),
                 UriComponents.SchemeAndServer | UriComponents.PathAndQuery,
                 UriFormat.UriEscaped,
                 StringComparison.Ordinal) != 0;
@@ -272,11 +284,14 @@ public sealed class AzureBlobMessageDataRepository :
         return blobClient;
     }
 
+    private static Uri PublicBlobAddress(Uri blobUri) =>
+        new(blobUri.GetLeftPart(UriPartial.Path), UriKind.Absolute);
+
     private static IDictionary<string, string>? CreateExpirationMetadata(
         TimeSpan? timeToLive,
         TimeProvider timeProvider)
     {
-        if (timeToLive is null)
+        if (timeToLive is null || timeToLive == TimeSpan.MaxValue)
             return null;
 
         if (timeToLive <= TimeSpan.Zero)

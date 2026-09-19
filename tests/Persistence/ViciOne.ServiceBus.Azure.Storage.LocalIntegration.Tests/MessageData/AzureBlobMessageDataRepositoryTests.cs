@@ -53,6 +53,32 @@ public sealed class AzureBlobMessageDataRepositoryTests
         Assert.Equal(expected, actual.ToArray());
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-LOCAL-PERSISTENCE", "remaining-bytes-upload-preserves-caller-stream")]
+    public async Task PutAsync_UploadsRemainingBytesAndLeavesCallerStreamOpenAsync(bool compress)
+    {
+        await using AzureBlobTestContainer fixture = AzureBlobTestContainer.Create(
+            compress ? "compressedstream" : "plainstream");
+        var repository = new AzureBlobMessageDataRepository(fixture.Container, compress);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await repository.PreStartAsync(CreateBus()).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        using var source = new MemoryStream([99, 88, 1, 2, 3], writable: false)
+        {
+            Position = 2,
+        };
+
+        Uri address = await repository.PutAsync(source, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.True(source.CanRead);
+        await using Stream stored = await repository.GetAsync(address, cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        using var actual = new MemoryStream();
+        await stored.CopyToAsync(actual, cancellationToken);
+        Assert.Equal(new byte[] { 1, 2, 3 }, actual.ToArray());
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-STORAGE-LOCAL-PROPERTIES", "ttl-and-content-encoding-committed-atomically")]
     public async Task PutAsync_CommitsExpirationAndContentEncodingWithTheBlobAsync()

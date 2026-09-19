@@ -18,6 +18,7 @@ internal sealed class BlockBlobUploadStream :
 {
     private readonly BlockBlobClient _client;
     private readonly List<string> _blockIds = [];
+    private readonly string _blockIdPrefix = Guid.NewGuid().ToString("N");
     private readonly byte[] _buffer;
     private int _bufferedLength;
     private bool _committed;
@@ -151,7 +152,8 @@ internal sealed class BlockBlobUploadStream :
             return;
 
         string blockId = Convert.ToBase64String(
-            Encoding.ASCII.GetBytes(_blockIds.Count.ToString("D8", CultureInfo.InvariantCulture)));
+            Encoding.ASCII.GetBytes(
+                _blockIdPrefix + _blockIds.Count.ToString("D8", CultureInfo.InvariantCulture)));
         using var content = new MemoryStream(_buffer, 0, _bufferedLength, writable: false, publiclyVisible: true);
         await _client.StageBlockAsync(blockId, content, cancellationToken: cancellationToken)
             .ConfigureAwait(false);

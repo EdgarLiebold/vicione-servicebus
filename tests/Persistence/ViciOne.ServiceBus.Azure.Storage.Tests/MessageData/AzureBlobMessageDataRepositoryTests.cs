@@ -74,6 +74,85 @@ public sealed class AzureBlobMessageDataRepositoryTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-UPLOAD", "compressed-colliding-uploads-use-disjoint-block-ids")]
+    public async Task PutAsync_UsesDisjointBlockIdsForSeparateAttemptsAtTheSameNameAsync()
+    {
+        var handler = new RecordingBlobHandler();
+        AzureBlobMessageDataRepository repository = CreateRepository(
+            handler,
+            "colliding-name",
+            compress: true);
+        byte[] firstPayload = RandomNumberGenerator.GetBytes(300_000);
+        byte[] secondPayload = RandomNumberGenerator.GetBytes(300_000);
+
+        await repository.PutAsync(
+            new MemoryStream(firstPayload),
+            cancellationToken: TestContext.Current.CancellationToken);
+        string[] firstIds =
+        [
+            .. handler.Requests.Where(request => request.IsBlock).Select(BlockId),
+        ];
+        Assert.NotEmpty(firstIds);
+
+        handler.Requests.Clear();
+        await repository.PutAsync(
+            new MemoryStream(secondPayload),
+            cancellationToken: TestContext.Current.CancellationToken);
+        string[] secondIds =
+        [
+            .. handler.Requests.Where(request => request.IsBlock).Select(BlockId),
+        ];
+        Assert.NotEmpty(secondIds);
+        Assert.DoesNotContain(firstIds, id => secondIds.Contains(id));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-UPLOAD", "sas-credentials-stay-out-of-claim-check-address")]
+    public async Task PutAsync_DoesNotPublishSasCredentialsAndAddressSurvivesRotationAsync()
+    {
+        byte[] payload = [11, 22, 33];
+        var handler = new RecordingBlobHandler(payload);
+        AzureBlobMessageDataRepository first = CreateSasRepository(handler, "SignatureOne");
+
+        Uri address = await first.PutAsync(
+            new MemoryStream(payload),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Empty(address.Query);
+        Assert.DoesNotContain("SignatureOne", address.AbsoluteUri, StringComparison.Ordinal);
+        AzureBlobMessageDataRepository rotated = CreateSasRepository(handler, "SignatureTwo");
+        await using Stream downloaded = await rotated.GetAsync(
+            address,
+            TestContext.Current.CancellationToken);
+        Assert.Equal(payload, await ReadAllBytesAsync(downloaded));
+        RecordedRequest request = Assert.Single(
+            handler.Requests,
+            candidate => candidate.Method == HttpMethod.Get);
+        Assert.Contains("sig=SignatureTwo", request.Uri.Query, StringComparison.Ordinal);
+        Assert.DoesNotContain("SignatureOne", request.Uri.Query, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-STORAGE-DOWNLOAD", "legacy-sas-address-uses-current-client-credentials")]
+    public async Task GetAsync_ReadsLegacySasAddressWithCurrentCredentialsAsync()
+    {
+        byte[] payload = [44, 55, 66];
+        var handler = new RecordingBlobHandler(payload);
+        AzureBlobMessageDataRepository rotated = CreateSasRepository(handler, "SignatureTwo");
+        var legacyAddress = new Uri(
+            "https://account.blob.core.windows.net/message-data/sas-address" +
+            "?sv=2024-11-04&sr=c&sp=rw&sig=SignatureOne");
+
+        await using Stream downloaded = await rotated.GetAsync(
+            legacyAddress,
+            TestContext.Current.CancellationToken);
+        Assert.Equal(payload, await ReadAllBytesAsync(downloaded));
+        RecordedRequest request = Assert.Single(handler.Requests);
+        Assert.Contains("sig=SignatureTwo", request.Uri.Query, StringComparison.Ordinal);
+        Assert.DoesNotContain("SignatureOne", request.Uri.Query, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-STORAGE-UPLOAD", "compression-failure-does-not-commit-partial-blob")]
     public async Task PutAsync_WhenCompressionSourceFails_DoesNotCommitPartialBlobAsync()
     {
@@ -172,6 +251,9 @@ public sealed class AzureBlobMessageDataRepositoryTests
             new("https://account.blob.core.windows.net/foreign/blob", UriKind.Absolute),
             new("https://account.blob.core.windows.net/message-data", UriKind.Absolute),
             new("https://account.blob.core.windows.net/message-data/blob?sig=foreign", UriKind.Absolute),
+            new("https://account.blob.core.windows.net/message-data/blob?sv=2024-11-04&sig=foreign&comp=metadata", UriKind.Absolute),
+            new("https://account.blob.core.windows.net/message-data/blob?sv=2024-11-04&sig=foreign&snapshot=2045-01-01T00%3A00%3A00Z", UriKind.Absolute),
+            new("https://account.blob.core.windows.net/message-data/blob?sv=2024-11-04&sig=foreign&versionid=older", UriKind.Absolute),
             new("https://account.blob.core.windows.net/message-data/blob#fragment", UriKind.Absolute),
             new("https://user@account.blob.core.windows.net/message-data/blob", UriKind.Absolute),
         ];
@@ -306,6 +388,24 @@ public sealed class AzureBlobMessageDataRepositoryTests
             compress);
     }
 
+    private static AzureBlobMessageDataRepository CreateSasRepository(
+        HttpMessageHandler handler,
+        string signature)
+    {
+        var options = new BlobClientOptions
+        {
+            Transport = new HttpClientTransport(handler),
+        };
+        options.Retry.MaxRetries = 0;
+        var container = new BlobContainerClient(
+            new Uri(
+                $"https://account.blob.core.windows.net/message-data?sv=2024-11-04&sr=c&sp=rw&sig={signature}"),
+            options);
+        return new AzureBlobMessageDataRepository(
+            container,
+            new FixedBlobNameGenerator("sas-address"));
+    }
+
     private static byte[] Compress(byte[] payload)
     {
         using var output = new MemoryStream();
@@ -314,6 +414,10 @@ public sealed class AzureBlobMessageDataRepositoryTests
 
         return output.ToArray();
     }
+
+    private static string BlockId(RecordedRequest request) =>
+        Assert.Single(request.Uri.Query.TrimStart('?').Split('&'), part =>
+            part.StartsWith("blockid=", StringComparison.OrdinalIgnoreCase));
 
     private static byte[] Decompress(byte[] payload)
     {
