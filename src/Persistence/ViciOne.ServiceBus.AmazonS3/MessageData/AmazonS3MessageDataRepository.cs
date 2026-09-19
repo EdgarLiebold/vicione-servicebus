@@ -21,9 +21,12 @@ public sealed class AmazonS3MessageDataRepository :
     IBusObserver
 {
     internal const string LifecycleRuleId = "vicione-servicebus-message-data-expiration";
+    internal const string LifecycleTagValue = "enabled";
 
     private readonly IAmazonS3 _client;
     private readonly AmazonS3MessageDataRepositoryOptions _options;
+    private readonly SemaphoreSlim _readinessGate = new(1, 1);
+    private volatile bool _ready;
 
     /// <summary>Creates a message-data repository that uses the supplied Amazon S3 client and bucket settings.</summary>
     /// <param name="client">The client used for all Amazon S3 operations.</param>
@@ -53,7 +56,7 @@ public sealed class AmazonS3MessageDataRepository :
     public Task PreStartAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
-        return EnsureReadyAsync(CancellationToken.None);
+        return RevalidateReadyAsync(CancellationToken.None);
     }
 
     /// <summary>Observes successful bus startup; all repository initialization occurs before startup.</summary>
@@ -137,16 +140,72 @@ public sealed class AmazonS3MessageDataRepository :
 
         _options.ValidateTimeToLive(timeToLive);
 
+        if (!_ready)
+            await EnsureReadyAsync(cancellationToken).ConfigureAwait(false);
+        else if (timeToLive is not null)
+            await RequireUnversionedBucketAsync(cancellationToken).ConfigureAwait(false);
+
         string objectKey = FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());
         using var transfer = new TransferUtility(_client);
+        var request = new TransferUtilityUploadRequest
+        {
+            InputStream = stream,
+            BucketName = _options.BucketName,
+            Key = objectKey,
+            AutoCloseStream = false,
+            AutoResetStreamPosition = false,
+        };
+        if (timeToLive is not null)
+        {
+            request.TagSet =
+            [
+                new Tag { Key = LifecycleRuleId, Value = LifecycleTagValue },
+            ];
+        }
+
         await transfer
-            .UploadAsync(stream, _options.BucketName, objectKey, cancellationToken)
+            .UploadAsync(request, cancellationToken)
             .ConfigureAwait(false);
 
         return new Uri($"s3://{_options.BucketName}/{objectKey}", UriKind.Absolute);
     }
 
     internal async Task EnsureReadyAsync(CancellationToken cancellationToken)
+    {
+        if (_ready)
+            return;
+
+        await _readinessGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            if (_ready)
+                return;
+
+            await EnsureReadyCoreAsync(cancellationToken).ConfigureAwait(false);
+            _ready = true;
+        }
+        finally
+        {
+            _readinessGate.Release();
+        }
+    }
+
+    private async Task RevalidateReadyAsync(CancellationToken cancellationToken)
+    {
+        await _readinessGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            _ready = false;
+            await EnsureReadyCoreAsync(cancellationToken).ConfigureAwait(false);
+            _ready = true;
+        }
+        finally
+        {
+            _readinessGate.Release();
+        }
+    }
+
+    private async Task EnsureReadyCoreAsync(CancellationToken cancellationToken)
     {
         bool bucketExists = await BucketExistsAsync(cancellationToken).ConfigureAwait(false);
 
@@ -171,12 +230,30 @@ public sealed class AmazonS3MessageDataRepository :
             }
         }
 
-        if (_options.LifecycleExpirationDays is { } expirationDays)
-            await ReconcileOwnedLifecycleRuleAsync(expirationDays, cancellationToken).ConfigureAwait(false);
+        if (_options.LifecycleExpirationDays is not null)
+            await RequireUnversionedBucketAsync(cancellationToken).ConfigureAwait(false);
+
+        await ReconcileOwnedLifecycleRuleAsync(_options.LifecycleExpirationDays, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private async Task RequireUnversionedBucketAsync(CancellationToken cancellationToken)
+    {
+        GetBucketVersioningResponse response = await _client.GetBucketVersioningAsync(
+                new GetBucketVersioningRequest { BucketName = _options.BucketName },
+                cancellationToken)
+            .ConfigureAwait(false);
+        string? status = response.VersioningConfig?.Status?.Value;
+        if (status is not null and not "Off")
+        {
+            throw new InvalidOperationException(
+                "Amazon S3 bucket versioning must be off for repository-managed message-data expiration. " +
+                $"The configured bucket reports versioning status '{status}'.");
+        }
     }
 
     private async Task ReconcileOwnedLifecycleRuleAsync(
-        int expirationDays,
+        int? expirationDays,
         CancellationToken cancellationToken)
     {
         List<LifecycleRule> rules;
@@ -202,7 +279,17 @@ public sealed class AmazonS3MessageDataRepository :
             .. rules.Where(rule => string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal)),
         ];
 
-        if (ownedRules.Length == 1 && IsCurrentOwnedRule(ownedRules[0], expirationDays))
+        if (ownedRules.Any(rule => !IsExpiringObjectsFilter(rule.Filter)))
+        {
+            throw new InvalidOperationException(
+                "The existing Amazon S3 message-data lifecycle rule does not use the retention tag. " +
+                "Migrate existing objects and the rule before starting this repository.");
+        }
+
+        if (expirationDays is null)
+            return;
+
+        if (ownedRules.Length == 1 && IsCurrentOwnedRule(ownedRules[0], expirationDays.Value))
             return;
 
         int ownedRuleIndex = rules.FindIndex(rule =>
@@ -215,38 +302,45 @@ public sealed class AmazonS3MessageDataRepository :
             {
                 Id = LifecycleRuleId,
                 Status = LifecycleRuleStatus.Enabled,
-                Filter = AllObjectsFilter(),
-                Expiration = new LifecycleRuleExpiration { Days = expirationDays },
+                Filter = ExpiringObjectsFilter(),
+                Expiration = new LifecycleRuleExpiration { Days = expirationDays.Value },
             });
 
-        await _client.PutLifecycleConfigurationAsync(
-                new PutLifecycleConfigurationRequest
-                {
-                    BucketName = _options.BucketName,
-                    Configuration = new LifecycleConfiguration { Rules = rules },
-                },
-                cancellationToken)
-            .ConfigureAwait(false);
+        await PutLifecycleConfigurationAsync(rules, cancellationToken).ConfigureAwait(false);
     }
+
+    private Task PutLifecycleConfigurationAsync(List<LifecycleRule> rules, CancellationToken cancellationToken) =>
+        _client.PutLifecycleConfigurationAsync(
+            new PutLifecycleConfigurationRequest
+            {
+                BucketName = _options.BucketName,
+                Configuration = new LifecycleConfiguration { Rules = rules },
+            },
+            cancellationToken);
 
     private static bool IsCurrentOwnedRule(LifecycleRule rule, int expirationDays) =>
         rule.Status == LifecycleRuleStatus.Enabled &&
-        IsAllObjectsFilter(rule.Filter) &&
+        IsExpiringObjectsFilter(rule.Filter) &&
         rule.Expiration?.Days == expirationDays &&
         rule.AbortIncompleteMultipartUpload is null &&
         rule.NoncurrentVersionExpiration is null &&
         rule.NoncurrentVersionTransitions is not { Count: > 0 } &&
         rule.Transitions is not { Count: > 0 };
 
-    private static LifecycleFilter AllObjectsFilter() =>
+    private static LifecycleFilter ExpiringObjectsFilter() =>
         new()
         {
-            LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = string.Empty },
+            LifecycleFilterPredicate = new LifecycleTagPredicate
+            {
+                Tag = new Tag { Key = LifecycleRuleId, Value = LifecycleTagValue },
+            },
         };
 
-    private static bool IsAllObjectsFilter(LifecycleFilter? filter) =>
-        filter is not null &&
-        (filter.LifecycleFilterPredicate is null or LifecyclePrefixPredicate { Prefix: "" });
+    private static bool IsExpiringObjectsFilter(LifecycleFilter? filter) =>
+        filter?.LifecycleFilterPredicate is LifecycleTagPredicate
+        {
+            Tag: { Key: LifecycleRuleId, Value: LifecycleTagValue },
+        };
 
     private async Task<bool> BucketExistsAsync(CancellationToken cancellationToken)
     {

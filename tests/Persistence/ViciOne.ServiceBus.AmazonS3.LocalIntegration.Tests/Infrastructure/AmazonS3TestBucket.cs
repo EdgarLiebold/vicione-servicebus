@@ -74,6 +74,36 @@ internal sealed class AmazonS3TestBucket : IAsyncDisposable
             }
             while (continuationToken is not null);
 
+            string? keyMarker = null;
+            string? versionIdMarker = null;
+            do
+            {
+                ListVersionsResponse versions = await _client.ListVersionsAsync(
+                    new ListVersionsRequest
+                    {
+                        BucketName = BucketName,
+                        KeyMarker = keyMarker,
+                        VersionIdMarker = versionIdMarker,
+                    },
+                    cleanup.Token);
+
+                foreach (S3ObjectVersion version in versions.Versions ?? [])
+                {
+                    await _client.DeleteObjectAsync(
+                        new DeleteObjectRequest
+                        {
+                            BucketName = BucketName,
+                            Key = version.Key,
+                            VersionId = version.VersionId,
+                        },
+                        cleanup.Token);
+                }
+
+                keyMarker = versions.IsTruncated == true ? versions.NextKeyMarker : null;
+                versionIdMarker = versions.IsTruncated == true ? versions.NextVersionIdMarker : null;
+            }
+            while (keyMarker is not null || versionIdMarker is not null);
+
             await _client.DeleteBucketAsync(BucketName, cleanup.Token);
         }
         catch (AmazonS3Exception exception) when (exception.StatusCode == System.Net.HttpStatusCode.NotFound)

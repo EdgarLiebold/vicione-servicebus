@@ -78,6 +78,7 @@ transport combinations fail during startup.
 
 - [Reliability model](docs/reliability.md)
 - [Provider capabilities](docs/provider-capabilities.json)
+- [Amazon S3 message-data deployment](docs/amazon-s3-message-data.md)
 - [Observability](docs/observability.md)
 - [API layers and packages](docs/api-surface.md)
 - [Database deployment](docs/migrations/README.md)

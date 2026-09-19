@@ -265,6 +265,11 @@ public sealed class AmazonS3MessageDataConfigurationTests
                 case nameof(IAmazonS3.HeadBucketAsync):
                     HeadBucketRequest = Assert.IsType<HeadBucketRequest>(args![0]);
                     return Task.FromResult(new HeadBucketResponse());
+                case nameof(IAmazonS3.GetBucketVersioningAsync):
+                    return Task.FromResult(new GetBucketVersioningResponse
+                    {
+                        VersioningConfig = new S3BucketVersioningConfig(),
+                    });
                 case nameof(IAmazonS3.GetLifecycleConfigurationAsync):
                     return Task.FromResult(
                         new GetLifecycleConfigurationResponse

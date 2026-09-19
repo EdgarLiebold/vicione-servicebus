@@ -37,6 +37,30 @@ public sealed class AmazonS3MessageDataRepositoryTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-PERSISTENCE", "upload-remaining-bytes-preserves-caller-stream-ownership")]
+    public async Task Put_UploadsOnlyRemainingBytesAndLeavesCallerStreamOpenAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("stream-boundary");
+        var repository = new AmazonS3MessageDataRepository(
+            fixture.Client,
+            new AmazonS3MessageDataRepositoryOptions(fixture.BucketName));
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await repository.EnsureReadyAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        using var source = new MemoryStream([91, 92, 1, 2, 3], writable: false);
+        source.Position = 2;
+
+        Uri address = await repository.PutAsync(source, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.True(source.CanRead);
+        await using Stream stored = await repository.GetAsync(address, cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        using var actual = new MemoryStream();
+        await stored.CopyToAsync(actual, cancellationToken);
+
+        Assert.Equal([1, 2, 3], actual.ToArray());
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "missing-bucket-created-before-ready")]
     public async Task PreStart_CreatesMissingBucketAndReportsReadyOnlyAfterSuccessAsync()
     {
@@ -80,7 +104,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
                         Rules =
                         [
                             Rule("foreign-archive-rule", 30, "foreign/"),
-                            Rule(AmazonS3MessageDataRepository.LifecycleRuleId, 3, "stale/"),
+                            TaggedRule(AmazonS3MessageDataRepository.LifecycleRuleId, 3),
                         ],
                     },
                 },
@@ -108,9 +132,161 @@ public sealed class AmazonS3MessageDataRepositoryTests
             Assert.IsType<LifecyclePrefixPredicate>(foreign.Filter.LifecycleFilterPredicate).Prefix);
         Assert.Equal(14, owned.Expiration.Days);
         Assert.Equal(LifecycleRuleStatus.Enabled, owned.Status);
-        Assert.Equal(
-            string.Empty,
+        Tag lifecycleTag = Assert.IsType<LifecycleTagPredicate>(owned.Filter.LifecycleFilterPredicate).Tag;
+        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, lifecycleTag.Key);
+        Assert.Equal("enabled", lifecycleTag.Value);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "legacy-untagged-rule-remains-unchanged-pending-migration")]
+    public async Task PreStart_RejectsLegacyAllObjectRuleWithoutChangingItAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("legacy-retention");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await fixture.Client.PutBucketAsync(
+                new PutBucketRequest
+                {
+                    BucketName = fixture.BucketName,
+                    BucketRegionName = fixture.Client.Config.AuthenticationRegion,
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await fixture.Client.PutLifecycleConfigurationAsync(
+                new PutLifecycleConfigurationRequest
+                {
+                    BucketName = fixture.BucketName,
+                    Configuration = new LifecycleConfiguration
+                    {
+                        Rules = [Rule(AmazonS3MessageDataRepository.LifecycleRuleId, 14, string.Empty)],
+                    },
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        var repository = new AmazonS3MessageDataRepository(
+            fixture.Client,
+            new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14));
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => repository.EnsureReadyAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken));
+        GetLifecycleConfigurationResponse response = await fixture.Client
+            .GetLifecycleConfigurationAsync(fixture.BucketName, cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        LifecycleRule owned = Assert.Single(response.Configuration.Rules);
+
+        Assert.Contains("Migrate existing objects", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(14, owned.Expiration.Days);
+        Assert.Equal(string.Empty,
             Assert.IsType<LifecyclePrefixPredicate>(owned.Filter.LifecycleFilterPredicate).Prefix);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "versioned-bucket-rejected-before-retention-rule-and-upload")]
+    public async Task VersionedBucket_RejectsStartupAndDirectTtlUploadAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("versioned-retention");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await fixture.Client.PutBucketAsync(
+                new PutBucketRequest
+                {
+                    BucketName = fixture.BucketName,
+                    BucketRegionName = fixture.Client.Config.AuthenticationRegion,
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await fixture.Client.PutBucketVersioningAsync(
+                new PutBucketVersioningRequest
+                {
+                    BucketName = fixture.BucketName,
+                    VersioningConfig = new S3BucketVersioningConfig
+                    {
+                        Status = VersionStatus.Enabled,
+                    },
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        var repository = new AmazonS3MessageDataRepository(
+            fixture.Client,
+            new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14));
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => repository.EnsureReadyAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+        Assert.Contains("versioning", failure.Message, StringComparison.OrdinalIgnoreCase);
+        GetLifecycleConfigurationResponse lifecycle = await fixture.Client
+            .GetLifecycleConfigurationAsync(fixture.BucketName, cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Empty(lifecycle.Configuration?.Rules ?? []);
+
+        InvalidOperationException directUploadFailure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => repository.PutAsync(
+                    new MemoryStream([1], writable: false), TimeSpan.FromDays(14), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+        Assert.Contains("versioning", directUploadFailure.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "versioning-enabled-after-ready-rejects-next-ttl-upload")]
+    public async Task Put_RejectsTtlUploadAfterBucketVersioningIsEnabledAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("versioning-change");
+        var repository = new AmazonS3MessageDataRepository(
+            fixture.Client,
+            new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14));
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Uri first = await repository.PutAsync(
+                new MemoryStream([1], writable: false), TimeSpan.FromDays(14), cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await fixture.Client.PutBucketVersioningAsync(
+                new PutBucketVersioningRequest
+                {
+                    BucketName = fixture.BucketName,
+                    VersioningConfig = new S3BucketVersioningConfig { Status = VersionStatus.Enabled },
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => repository.PutAsync(
+                    new MemoryStream([2], writable: false), TimeSpan.FromDays(14), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+        ListObjectsV2Response objects = await fixture.Client.ListObjectsV2Async(
+                new ListObjectsV2Request { BucketName = fixture.BucketName },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+        Assert.Contains("versioning", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(first.AbsolutePath.TrimStart('/'), Assert.Single(objects.S3Objects).Key);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "only-explicit-retention-uploads-receive-lifecycle-tag")]
+    public async Task Put_TagsOnlyUploadsWithExplicitRetentionAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("retention-tag");
+        var repository = new AmazonS3MessageDataRepository(
+            fixture.Client,
+            new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14));
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        Uri indefinite = await repository.PutAsync(
+                new MemoryStream([1], writable: false), cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        Uri expiring = await repository.PutAsync(
+                new MemoryStream([2], writable: false), TimeSpan.FromDays(14), cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        GetObjectTaggingResponse indefiniteTags = await fixture.Client.GetObjectTaggingAsync(
+                new GetObjectTaggingRequest { BucketName = fixture.BucketName, Key = indefinite.AbsolutePath.TrimStart('/') },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        GetObjectTaggingResponse expiringTags = await fixture.Client.GetObjectTaggingAsync(
+                new GetObjectTaggingRequest { BucketName = fixture.BucketName, Key = expiring.AbsolutePath.TrimStart('/') },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+        Assert.Empty(indefiniteTags.Tagging ?? []);
+        Tag tag = Assert.Single(expiringTags.Tagging ?? []);
+        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, tag.Key);
+        Assert.Equal("enabled", tag.Value);
     }
 
     [Fact]
@@ -145,6 +321,21 @@ public sealed class AmazonS3MessageDataRepositoryTests
             Filter = new LifecycleFilter
             {
                 LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = prefix },
+            },
+            Expiration = new LifecycleRuleExpiration { Days = expirationDays },
+        };
+
+    private static LifecycleRule TaggedRule(string id, int expirationDays) =>
+        new()
+        {
+            Id = id,
+            Status = LifecycleRuleStatus.Enabled,
+            Filter = new LifecycleFilter
+            {
+                LifecycleFilterPredicate = new LifecycleTagPredicate
+                {
+                    Tag = new Tag { Key = id, Value = AmazonS3MessageDataRepository.LifecycleTagValue },
+                },
             },
             Expiration = new LifecycleRuleExpiration { Days = expirationDays },
         };
