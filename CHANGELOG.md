@@ -33,6 +33,9 @@ entry below records what the current work changed for anyone reading the source.
   branches encounter a transient serialization conflict (`7a933284d`).
 - RabbitMQ host and receive addresses now reflect TLS changes made before build, then retain the
   built runtime addresses and reject later host-address changes (`17f5dc4bd`).
+- Amazon S3 message data now keeps caller streams open, uploads from their current position,
+  applies its lifecycle rule only to explicit-TTL objects, rejects legacy untagged rules and
+  versioned buckets, and revalidates startup state (`becc51c51`).
 
 ### Removed
 
