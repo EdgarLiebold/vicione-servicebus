@@ -105,3 +105,8 @@ adding health/report metadata, serializer and raw JSON round-trips, scheduler
 guards, retry/saga boundaries, future behavior fixture, job clock settings and
 message-data API snapshots. Only ledger/status changed; the historical §4.3
 ordering deviation and the effective full-read gate remain unresolved.
+
+Continuation checkpoint: 240/702 personally read, including volatile outbox
+fault/result ordering, scoped send-pipe ownership, future state/location,
+provider object graphs, typed job-state projection, constructor-only JSON and
+historical cron DST boundaries. Product and test sources remain unchanged.
