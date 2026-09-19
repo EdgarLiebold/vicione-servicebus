@@ -66,3 +66,9 @@ Further personal read: 115/702, adding consumed-context outgoing metadata,
 deserializer completion/payload ownership, context scope/proxy forwarding and
 request/response envelope flow. Only the read ledger/status changed since the
 last full-suite verification. The goal stays active after this checkpoint.
+
+Continuation checkpoint: 120/702, adding activity-context adapters, saga
+consume-context proxy, outgoing wrapper, response lifetime and endpoint/fault
+resolution tests. The effective Core test-project gate remains incomplete;
+provider parity and causal mutation evidence remain outstanding. No product or
+test file changed since the last full-suite verification.
