@@ -2,8 +2,11 @@ using MessagePack;
 using MessagePack.Formatters;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Converters;
+using ViciOne.ServiceBus.MessageData.Internals;
 using ViciOne.ServiceBus.MessageData.Serialization;
 using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Serialization.Json.Converters;
 
 namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
@@ -34,7 +37,7 @@ internal sealed class MessageDataFormatter<T> :
         innerFormatter.Serialize(ref writer, reference, options);
     }
 
-    /// <summary>Reads an inline value, an external reference, or an empty message-data handle.</summary>
+    /// <summary>Reads inline text, bytes or object data, an external reference, or an empty handle.</summary>
     /// <param name="reader">The MessagePack reader positioned at the reference envelope.</param>
     /// <param name="options">The serializer options whose resolver supplies the envelope formatter.</param>
     /// <returns>A handle for the inline value or external address, or the shared empty handle when neither is present.</returns>
@@ -45,9 +48,24 @@ internal sealed class MessageDataFormatter<T> :
         var reference = innerFormatter.Deserialize(ref reader, options);
 
         if (reference?.Text != null)
+        {
+            if (typeof(T) != typeof(string))
+                throw new MessageDataException("Inline text requires a string message-data contract.");
+
             return (MessageData<T>)(object)new StringInlineMessageData(reference.Text, reference.Reference);
+        }
+
         if (reference?.Data != null)
-            return (MessageData<T>)(object)new BytesInlineMessageData(reference.Data, reference.Reference);
+        {
+            if (typeof(T) == typeof(byte[]))
+                return (MessageData<T>)(object)new BytesInlineMessageData(reference.Data, reference.Reference);
+
+            if (!MessageDataTypeClassifier.IsSupported(typeof(T)))
+                throw new MessageDataException("Inline binary data requires a byte-array or supported object message-data contract.");
+
+            var converter = new SystemTextJsonObjectMessageDataConverter<T>(ServiceBusMetadataJson.Options);
+            return new BytesInlineMessageData<T>(converter, reference.Data, reference.Reference);
+        }
 
         if (reference?.Reference == null)
             return EmptyMessageData<T>.Instance;
