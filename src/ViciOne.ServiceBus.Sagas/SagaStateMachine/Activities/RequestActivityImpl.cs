@@ -29,6 +29,9 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task SendRequestAsync(IBehaviorContext<TInstance> context, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest> sendTuple, Uri serviceAddress)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         var requestId = _request.GenerateRequestId(context.Saga);
 
         var pipe = new SendRequestPipe(_request, context.ReceiveContext.InputAddress, requestId, sendTuple.Pipe);

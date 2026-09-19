@@ -53,6 +53,10 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         await ExecuteAsync(context).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
@@ -66,6 +70,10 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
     public async Task ExecuteAsync<T>(IBehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         await ExecuteAsync(context).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
@@ -157,6 +165,10 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
         var serviceAddress = _serviceAddressProvider(context);
 
         await _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress)).ConfigureAwait(false);

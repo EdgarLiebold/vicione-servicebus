@@ -94,5 +94,34 @@ files; this does not increase the lead-personal source-read/admission count):
   not yet regression-proven fixes or broad transport acceptance.
 
 The lead's hash-bound partial personal read of the owning Core test project is
-tracked separately in `../core-test-project-full-read/partial-ledger.md` (55/702
+tracked separately in `../core-test-project-full-read/partial-ledger.md` (64/702
 at this checkpoint). Historical ordering is still not retrospectively cured.
+
+Later source-only checkpoint: `RequestActivity` now rejects null execution
+contexts/continuations and observes an already-canceled context before address
+provider/message-factory work on all three execution overloads. Its shared
+`RequestActivityImpl.SendRequestAsync` rechecks cancellation before generating a
+request ID, covering cancellation during an awaited message factory. A separate
+agent edited only these two source files; the lead personally reread their full
+post-edit versions. No tests were edited. The agent's initial change also
+forwarded cancellation into endpoint resolution. A fresh Core run then failed
+the existing `StateMachineFaultedRequestScheduleActivitiesDeepContractTests`
+faulted-request test reproducibly (full 6,216/6,217; focused 0/1): its strict
+endpoint proxy explicitly expects `CancellationToken.None` at resolution. This
+shared `RequestActivityImpl` path serves faulted requests too. The lead removed
+**only** that token-forwarding change, preserving the new early cancellation
+checks without changing the pinned endpoint-resolution contract. Propagation at
+endpoint resolution remains an explicit pending API/test decision after §4.3,
+not an accepted fix. A separate strict Core Release build on the corrected
+source passed with zero warnings/errors; the unfiltered MTP Core rerun passed
+6,217/6,217 with no skips. The first `dotnet test` invocation included an
+unsupported build-server flag and ran zero tests; it is not counted as evidence.
+Focused causal mutation evidence for this source change remains outstanding.
+
+Agents declined changes to `TransitionActivity` and `CompositeEventActivity`:
+an immediate state re-read or moving the completion write after nested RaiseAsync
+would pick an undefined nested-transition precedence or break same-saga
+reentrancy. Current documents/tests pin ordinary lifecycle order but not a
+winner for nested lifecycle transitions. These risks need broader contract
+derivation and, if behavior changes, PO-level semantic disposition; no quick
+line-reorder is represented as a correction. The active goal continues.
