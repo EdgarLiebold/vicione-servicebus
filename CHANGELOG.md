@@ -9,6 +9,21 @@ baseline.
 ViciOne.ServiceBus has not been released. The repository is in a private development state, and the
 entry below records what the current work changed for anyone reading the source.
 
+### Fixed during the source review since 2026-09-06
+
+- RabbitMQ durable-send acceptance now requires a broker-confirmed, persistent, mandatory publish
+  (`6154ec2b4`).
+- Saga removal and nested request outcome forwarding were corrected (`6a43c31ed`); in-memory saga
+  indexes and queries now preserve registered identities and consistent snapshots (`fd11887df`).
+- Semantic asynchronous API names and processor-lease handling were corrected (`7e5095b5a`).
+- Reliable inbox operations and their evidence became deterministic (`f38685b51`), and SQL transport
+  delivery invariants were enforced (`cbeb76206`).
+- Mediator receive contexts no longer share mutable MIME state (`d071332b7`); resource caches release
+  constructor-owned state when initialization fails (`020c146f8`).
+- MessagePack formatter caches no longer retain the wrong lifetime (`e0d5fc1b0`), and typed inline
+  object message data is preserved on round-trip (`bac2c88f9`).
+- Payload-admission checks now cover transport and durable replay boundaries (`194271bbd`).
+
 ### Removed
 
 - The inherited message-audit contracts, observers, configuration and provider implementations.
