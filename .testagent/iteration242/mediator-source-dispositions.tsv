@@ -1,0 +1,30 @@
+path	disposition	reason
+src/ViciOne.ServiceBus.Mediator/Advanced/MediatorRequestExtensions.cs	retain	Typed request helper owns handle lifetime and preserves original handler exception dispatch.
+src/ViciOne.ServiceBus.Mediator/Configuration/IMediatorConfigurator.cs	retain	Single mediator configuration contract exposes receive pipeline and observer attachment.
+src/ViciOne.ServiceBus.Mediator/Configuration/IMediatorRegistrationConfigurator.cs	retain	DI registration callback binds resolved handlers to the mediator pipeline.
+src/ViciOne.ServiceBus.Mediator/Configuration/IMediatorRegistrationContext.cs	retain	Registration context specializes the shared registration SPI without a second resolver.
+src/ViciOne.ServiceBus.Mediator/Configuration/MediatorConfiguration.cs	retain	Single configuration owner guards one declared message-limit policy and observer ownership.
+src/ViciOne.ServiceBus.Mediator/Configuration/MediatorContainerRegistrar.cs	retain	Mediator-keyed registrations and scope-specific client factory stay in the registration adapter.
+src/ViciOne.ServiceBus.Mediator/Configuration/MediatorMessageLimitsConfigurationExtensions.cs	retain-with-scope-review	Both direct and DI creation require explicit validated limits; mediator envelope-byte semantics still need a dedicated decision/test.
+src/ViciOne.ServiceBus.Mediator/Configuration/MediatorRegistrationContext.cs	retain	Delegates handler configuration to the one resolved registration context and preserves scope push.
+src/ViciOne.ServiceBus.Mediator/Configuration/ServiceCollectionMediatorConfigurator.cs	retain	DI mediator resolves limits at materialization and composes one in-process runtime.
+src/ViciOne.ServiceBus.Mediator/DependencyInjection/MediatorServiceCollectionExtensions.cs	retain	Public DI entry points validate loopback address and reject duplicate mediator registration.
+src/ViciOne.ServiceBus.Mediator/DependencyInjection/ScopedMediator.cs	retain-with-lifecycle-review	Scope view composes publish/send/request paths and owns only its lazy scoped client factory; disposal race merits targeted follow-up.
+src/ViciOne.ServiceBus.Mediator/GlobalUsings.cs	retain	Imports named core API and SPI layers without an independent product mechanism.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/AddressedMediatorSendEndpoint.cs	retain	Logical destination projection stays in-process and does not add a carrier.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorClientFactoryContext.cs	retain	Request clients bind the mediator response connector and configured TimeProvider.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorConsumeContext.cs	retain	Typed context projects send metadata and propagates failures rather than publishing transport faults.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorMessageBodySerializer.cs	retain	Canonical JSON body snapshot is bounded before handler dispatch and owns its exact buffer.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorPublishSendEndpoint.cs	retain	Publish adapter applies general and typed caller stages separately once and marks publish metadata.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorReceiveContext.cs	retain	Receive context exposes immutable body snapshot, observer events and TimeProvider elapsed duration.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorRequestSendEndpoint.cs	retain	Request endpoint forwards to local send path with pre-cancellation.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorSendEndpoint.cs	retain-with-scope-review	Dispatch admits bounded serialized body before receive; general/typed pipe stages are intentional, but envelope/header admission remains unproven.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorSendMessageContext.cs	retain	Projects materialized send metadata without transport envelope or separate clock.
+src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorSerializationContext.cs	retain	Already materialized message supports typed projections and explicitly rejects transport serializer access.
+src/ViciOne.ServiceBus.Mediator/Mediator/IMediator.cs	retain	Optional package facade combines local send, publish, request and observer capabilities.
+src/ViciOne.ServiceBus.Mediator/Mediator/IRequest.cs	retain	Covariant response marker is excluded from transport topology.
+src/ViciOne.ServiceBus.Mediator/Mediator/IScopedMediator.cs	retain	Scoped facade distinguishes scope-preserving dispatch from singleton mediator.
+src/ViciOne.ServiceBus.Mediator/Mediator/MediatorFactory.cs	retain	Direct factory validates logical loopback base and creates two in-process receive pipelines.
+src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs	retain	Typed handler adapters propagate null-task/null-response errors and await response dispatch.
+src/ViciOne.ServiceBus.Mediator/Mediator/Runtime/InProcessMediator.cs	retain	Runtime delegates to one endpoint and disposes both request factory and observer connectors with preserved failures.
+src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj	retain	Separate optional net10.0 capability package depends only on core and retains targeted test friend.
