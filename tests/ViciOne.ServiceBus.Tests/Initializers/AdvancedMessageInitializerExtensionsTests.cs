@@ -75,7 +75,15 @@ public sealed class AdvancedMessageInitializerExtensionsTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         AssertNull("endpoint", () => AdvancedMessageInitializerExtensions.SendAsync<MessageContract>(null!, values, cancellationToken));
+        AssertNull("endpoint", () => AdvancedMessageInitializerExtensions.SendAsync<MessageContract>(
+            null!, values, Pipe.Empty<SendContext<MessageContract>>(), cancellationToken));
+        AssertNull("endpoint", () => AdvancedMessageInitializerExtensions.SendAsync<MessageContract>(
+            null!, values, Pipe.Empty<SendContext>(), cancellationToken));
         AssertNull("endpoint", () => AdvancedMessageInitializerExtensions.PublishAsync<MessageContract>(null!, values, cancellationToken));
+        AssertNull("endpoint", () => AdvancedMessageInitializerExtensions.PublishAsync<MessageContract>(
+            null!, values, Pipe.Empty<PublishContext<MessageContract>>(), cancellationToken));
+        AssertNull("endpoint", () => AdvancedMessageInitializerExtensions.PublishAsync<MessageContract>(
+            null!, values, Pipe.Empty<PublishContext>(), cancellationToken));
         Assert.Throws<NotSupportedException>(() =>
         {
             _ = AdvancedMessageInitializerExtensions.SendAsync<MessageContract>(basicSendEndpoint, values, cancellationToken);
@@ -83,6 +91,26 @@ public sealed class AdvancedMessageInitializerExtensionsTests
         Assert.Throws<NotSupportedException>(() =>
         {
             _ = AdvancedMessageInitializerExtensions.PublishAsync<MessageContract>(basicPublishEndpoint, values, cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedMessageInitializerExtensions.SendAsync<MessageContract>(
+                basicSendEndpoint, values, Pipe.Empty<SendContext<MessageContract>>(), cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedMessageInitializerExtensions.SendAsync<MessageContract>(
+                basicSendEndpoint, values, Pipe.Empty<SendContext>(), cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedMessageInitializerExtensions.PublishAsync<MessageContract>(
+                basicPublishEndpoint, values, Pipe.Empty<PublishContext<MessageContract>>(), cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedMessageInitializerExtensions.PublishAsync<MessageContract>(
+                basicPublishEndpoint, values, Pipe.Empty<PublishContext>(), cancellationToken);
         });
     }
 
@@ -130,6 +158,7 @@ public sealed class AdvancedMessageInitializerExtensionsTests
         IPipe<PublishContext> publishPipe = Pipe.Empty<PublishContext>();
 
         AssertNull("endpoint", () => SendEndpointExtensions.SendAsync(null!, typeof(MessageContract), values));
+        AssertNull("endpoint", () => SendEndpointExtensions.SendAsync(null!, typeof(MessageContract), values, sendPipe));
         AssertNull("messageType", () => SendEndpointExtensions.SendAsync(sendEndpoint, null!, values));
         AssertNull("values", () => SendEndpointExtensions.SendAsync(sendEndpoint, typeof(MessageContract), null!));
         AssertNull("messageType", () => SendEndpointExtensions.SendAsync(sendEndpoint, null!, values, sendPipe));
@@ -137,6 +166,7 @@ public sealed class AdvancedMessageInitializerExtensionsTests
         AssertNull("pipe", () => SendEndpointExtensions.SendAsync(sendEndpoint, typeof(MessageContract), values, null!));
 
         AssertNull("endpoint", () => PublishEndpointExtensions.PublishAsync(null!, typeof(MessageContract), values));
+        AssertNull("endpoint", () => PublishEndpointExtensions.PublishAsync(null!, typeof(MessageContract), values, publishPipe));
         AssertNull("messageType", () => PublishEndpointExtensions.PublishAsync(publishEndpoint, null!, values));
         AssertNull("values", () => PublishEndpointExtensions.PublishAsync(publishEndpoint, typeof(MessageContract), null!));
         AssertNull("messageType", () => PublishEndpointExtensions.PublishAsync(publishEndpoint, null!, values, publishPipe));

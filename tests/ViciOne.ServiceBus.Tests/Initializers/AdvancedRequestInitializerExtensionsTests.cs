@@ -52,12 +52,23 @@ public sealed class AdvancedRequestInitializerExtensionsTests
     {
         var values = new { Value = "request" };
         IRequestClient<TestRequest> basicClient = DispatchProxy.Create<IRequestClient<TestRequest>, RecordingProxy>();
+        RequestPipeConfiguratorCallback<TestRequest> callback = _ => { };
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         AssertNull("client", () => AdvancedRequestInitializerExtensions.Create<TestRequest>(
             null!, values, cancellationToken: cancellationToken));
         AssertNull("client", () => AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse>(
             null!, values, cancellationToken: cancellationToken));
+        AssertNull("client", () => AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse>(
+            null!, values, callback, cancellationToken: cancellationToken));
+        AssertNull("client", () => AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse>(
+            null!, values, cancellationToken: cancellationToken));
+        AssertNull("client", () => AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse>(
+            null!, values, callback, cancellationToken: cancellationToken));
+        AssertNull("client", () => AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse, ThirdResponse>(
+            null!, values, cancellationToken: cancellationToken));
+        AssertNull("client", () => AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse, ThirdResponse>(
+            null!, values, callback, cancellationToken: cancellationToken));
         Assert.Throws<NotSupportedException>(() =>
         {
             _ = AdvancedRequestInitializerExtensions.Create(basicClient, values, cancellationToken: cancellationToken);
@@ -66,6 +77,31 @@ public sealed class AdvancedRequestInitializerExtensionsTests
         {
             _ = AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse>(
                 basicClient, values, cancellationToken: cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse>(
+                basicClient, values, callback, cancellationToken: cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse>(
+                basicClient, values, cancellationToken: cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse>(
+                basicClient, values, callback, cancellationToken: cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse, ThirdResponse>(
+                basicClient, values, cancellationToken: cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedRequestInitializerExtensions.GetResponseAsync<TestRequest, FirstResponse, SecondResponse, ThirdResponse>(
+                basicClient, values, callback, cancellationToken: cancellationToken);
         });
     }
 

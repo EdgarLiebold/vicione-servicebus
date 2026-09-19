@@ -51,12 +51,22 @@ public sealed class AdvancedScheduleInitializerExtensionsTests
     {
         var values = new { Value = "message" };
         IMessageScheduler basicScheduler = CreateProxy<IMessageScheduler>(out _);
+        IPipe<SendContext<MessageContract>> typedPipe = Pipe.Empty<SendContext<MessageContract>>();
+        IPipe<SendContext> pipe = Pipe.Empty<SendContext>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         AssertNull("scheduler", () => AdvancedScheduleInitializerExtensions.ScheduleSendAsync<MessageContract>(
             null!, Destination, DueAt, values, cancellationToken));
+        AssertNull("scheduler", () => AdvancedScheduleInitializerExtensions.ScheduleSendAsync<MessageContract>(
+            null!, Destination, DueAt, values, typedPipe, cancellationToken));
+        AssertNull("scheduler", () => AdvancedScheduleInitializerExtensions.ScheduleSendAsync<MessageContract>(
+            null!, Destination, DueAt, values, pipe, cancellationToken));
         AssertNull("scheduler", () => AdvancedScheduleInitializerExtensions.SchedulePublishAsync<MessageContract>(
             null!, DueAt, values, cancellationToken));
+        AssertNull("scheduler", () => AdvancedScheduleInitializerExtensions.SchedulePublishAsync<MessageContract>(
+            null!, DueAt, values, typedPipe, cancellationToken));
+        AssertNull("scheduler", () => AdvancedScheduleInitializerExtensions.SchedulePublishAsync<MessageContract>(
+            null!, DueAt, values, pipe, cancellationToken));
         Assert.Throws<NotSupportedException>(() =>
         {
             _ = AdvancedScheduleInitializerExtensions.ScheduleSendAsync<MessageContract>(
@@ -66,6 +76,26 @@ public sealed class AdvancedScheduleInitializerExtensionsTests
         {
             _ = AdvancedScheduleInitializerExtensions.SchedulePublishAsync<MessageContract>(
                 basicScheduler, DueAt, values, cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedScheduleInitializerExtensions.ScheduleSendAsync<MessageContract>(
+                basicScheduler, Destination, DueAt, values, typedPipe, cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedScheduleInitializerExtensions.ScheduleSendAsync<MessageContract>(
+                basicScheduler, Destination, DueAt, values, pipe, cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedScheduleInitializerExtensions.SchedulePublishAsync<MessageContract>(
+                basicScheduler, DueAt, values, typedPipe, cancellationToken);
+        });
+        Assert.Throws<NotSupportedException>(() =>
+        {
+            _ = AdvancedScheduleInitializerExtensions.SchedulePublishAsync<MessageContract>(
+                basicScheduler, DueAt, values, pipe, cancellationToken);
         });
     }
 
