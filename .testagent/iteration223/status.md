@@ -132,3 +132,16 @@ and scoped request-filter faulting. The three source-only patches are now
 present and under lead review; a combined Core build is in progress. No new
 test code has been designed or edited. A build result alone will not qualify
 these fixes as causal/mutation-tested A+ closures.
+
+Combined patch build completed successfully in Debug with zero warnings and
+errors. The repository's known MTP `dotnet test --project` discovery problem
+returned zero tests; direct execution of the built host is required. Its
+first unfiltered run reached 5,987 completed and two failures, then stuck in
+`ResourceCacheObserverAndDisposalTests.Eviction_AwaitsAsynchronousDisposalAndReleasesTheResourceExactlyOnceAsync`;
+that test asserts a committed replacement before the blocked old disposal is
+released, which conflicts with the new hard capacity bound. The predicted
+`RequestClientMetadataTests.RequestDeadline_DoesNotRestartAfterDelayedEndpointAcquisitionAsync`
+failed at its old `PipeOutcome` wait after 30 seconds. The run was cancelled
+with two Ctrl-C signals rather than claiming a pass; a filtered rerun is
+needed to expose the other failure and unaffected-test result. Lead personal
+Core-file reading meanwhile reached 300/702. No test edits before §4.3 gate.
