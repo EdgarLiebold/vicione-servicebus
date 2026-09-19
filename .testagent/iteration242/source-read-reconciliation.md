@@ -14,3 +14,5 @@ The previous “0 open” statement preceded this reconciliation and incorrectly
 ## Recheck rule
 
 Before reporting the balance again, recompute the current tracked `src` set and Git complement from `e01a5e5e`, then intersect that complement with per-file reading records only when their SHA-256 equals the current file bytes. Changed or newly added paths must return to the queue unless their current version is newly read and recorded. Preserve the 100-path raw list as a historical checkpoint rather than silently deleting it.
+
+The read-only checker `python3 .testagent/iteration242/check-source-first-read.py` implements this calculation and reports any untracked `src` paths separately. At this checkpoint it reports 4,207 tracked paths, 4,107 covered by the PO Git convention, 100 raw exceptions, 100 current-byte attestations, and zero unproven paths. Its output is only a first-read accounting result, never an A+ quality verdict.
