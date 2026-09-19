@@ -94,7 +94,7 @@ files; this does not increase the lead-personal source-read/admission count):
   not yet regression-proven fixes or broad transport acceptance.
 
 The lead's hash-bound partial personal read of the owning Core test project is
-tracked separately in `../core-test-project-full-read/partial-ledger.md` (70/702
+tracked separately in `../core-test-project-full-read/partial-ledger.md` (80/702
 at this checkpoint). Historical ordering is still not retrospectively cured.
 
 Later source-only checkpoint: `RequestActivity` now rejects null execution
