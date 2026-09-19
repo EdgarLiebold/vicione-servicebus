@@ -31,6 +31,8 @@ entry below records what the current work changed for anyone reading the source.
   interval and checks delivery after commit (`0578d6830`).
 - The EF Future PostgreSQL fixture now retries complete serializable transactions when concurrent
   branches encounter a transient serialization conflict (`7a933284d`).
+- RabbitMQ host and receive addresses now reflect TLS changes made before build, then retain the
+  built runtime addresses and reject later host-address changes (`17f5dc4bd`).
 
 ### Removed
 
