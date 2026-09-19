@@ -87,8 +87,8 @@ public class BrokerTopologyBuilder :
 
         var queueEntity = Queues.Get(queue);
 
-        if (topicEntity.CreateTopicOptions.EnablePartitioning)
-            queueEntity.CreateQueueOptions.EnablePartitioning = true;
+        if (topicEntity.IsPartitioned)
+            queueEntity.PromotePartitioning();
 
         var binding = new QueueSubscriptionEntity(GetNextId(), GetNextId(), topicEntity, queueEntity, createSubscriptionOptions, rule, filter);
 
@@ -106,8 +106,8 @@ public class BrokerTopologyBuilder :
 
         var destinationEntity = Topics.Get(destination);
 
-        if (sourceEntity.CreateTopicOptions.EnablePartitioning)
-            destinationEntity.CreateTopicOptions.EnablePartitioning = true;
+        if (sourceEntity.IsPartitioned)
+            destinationEntity.PromotePartitioning();
 
         var subscriptionEntity = new TopicSubscriptionEntity(GetNextId(), GetNextId(), sourceEntity, destinationEntity, createSubscriptionOptions);
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Azure.Messaging.ServiceBus.Administration;
@@ -9,13 +10,15 @@ public class QueueEntity :
     Queue,
     QueueHandle
 {
+    readonly CreateQueueOptions _createQueueOptions;
+
     /// <summary>Creates a topology queue from Azure declaration options.</summary>
     /// <param name="id">The topology-local identifier.</param>
     /// <param name="createQueueOptions">The Azure queue declaration options.</param>
     public QueueEntity(long id, CreateQueueOptions createQueueOptions)
     {
         Id = id;
-        CreateQueueOptions = createQueueOptions;
+        _createQueueOptions = Snapshot(createQueueOptions);
     }
 
     /// <summary>Gets a comparer that considers only the Azure queue name.</summary>
@@ -23,8 +26,8 @@ public class QueueEntity :
     /// <summary>Gets a comparer that considers the queue name and declaration properties.</summary>
     public static IEqualityComparer<QueueEntity> EntityComparer { get; } = new QueueEntityEqualityComparer();
 
-    /// <summary>Gets the Azure queue declaration options.</summary>
-    public CreateQueueOptions CreateQueueOptions { get; }
+    /// <summary>Gets a snapshot of the Azure queue declaration options.</summary>
+    public CreateQueueOptions CreateQueueOptions => Snapshot(_createQueueOptions);
     /// <summary>Gets the topology-local identifier.</summary>
     public long Id { get; }
     /// <summary>Gets this entity through the read-only queue contract.</summary>
@@ -34,7 +37,40 @@ public class QueueEntity :
     /// <returns>A diagnostic string containing the queue path.</returns>
     public override string ToString()
     {
-        return string.Join(", ", new[] { $"path: {CreateQueueOptions.Name}" }.Where(x => !string.IsNullOrWhiteSpace(x)));
+        return string.Join(", ", new[] { $"path: {_createQueueOptions.Name}" }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    }
+
+    internal void PromotePartitioning() => _createQueueOptions.EnablePartitioning = true;
+
+    static CreateQueueOptions Snapshot(CreateQueueOptions source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        var copy = new CreateQueueOptions(source.Name)
+        {
+            AutoDeleteOnIdle = source.AutoDeleteOnIdle,
+            DefaultMessageTimeToLive = source.DefaultMessageTimeToLive,
+            DuplicateDetectionHistoryTimeWindow = source.DuplicateDetectionHistoryTimeWindow,
+            EnableBatchedOperations = source.EnableBatchedOperations,
+            DeadLetteringOnMessageExpiration = source.DeadLetteringOnMessageExpiration,
+            EnablePartitioning = source.EnablePartitioning,
+            ForwardDeadLetteredMessagesTo = source.ForwardDeadLetteredMessagesTo,
+            ForwardTo = source.ForwardTo,
+            LockDuration = source.LockDuration,
+            MaxDeliveryCount = source.MaxDeliveryCount,
+            MaxSizeInMegabytes = source.MaxSizeInMegabytes,
+            MaxMessageSizeInKilobytes = source.MaxMessageSizeInKilobytes,
+            RequiresDuplicateDetection = source.RequiresDuplicateDetection,
+            RequiresSession = source.RequiresSession,
+            Status = source.Status,
+        };
+
+        if (source.UserMetadata is not null)
+            copy.UserMetadata = source.UserMetadata;
+
+        AuthorizationRuleSnapshot.CopyTo(source.AuthorizationRules, copy.AuthorizationRules);
+
+        return copy;
     }
 
 
@@ -51,47 +87,47 @@ public class QueueEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x.CreateQueueOptions.Name, y.CreateQueueOptions.Name)
-                && x.CreateQueueOptions.AutoDeleteOnIdle == y.CreateQueueOptions.AutoDeleteOnIdle
-                && x.CreateQueueOptions.DefaultMessageTimeToLive == y.CreateQueueOptions.DefaultMessageTimeToLive
-                && x.CreateQueueOptions.DuplicateDetectionHistoryTimeWindow == y.CreateQueueOptions.DuplicateDetectionHistoryTimeWindow
-                && x.CreateQueueOptions.EnableBatchedOperations == y.CreateQueueOptions.EnableBatchedOperations
-                && x.CreateQueueOptions.DeadLetteringOnMessageExpiration == y.CreateQueueOptions.DeadLetteringOnMessageExpiration
-                && x.CreateQueueOptions.EnablePartitioning == y.CreateQueueOptions.EnablePartitioning
-                && string.Equals(x.CreateQueueOptions.ForwardDeadLetteredMessagesTo, y.CreateQueueOptions.ForwardDeadLetteredMessagesTo)
-                && string.Equals(x.CreateQueueOptions.ForwardTo, y.CreateQueueOptions.ForwardTo)
-                && x.CreateQueueOptions.LockDuration == y.CreateQueueOptions.LockDuration
-                && x.CreateQueueOptions.MaxDeliveryCount == y.CreateQueueOptions.MaxDeliveryCount
-                && x.CreateQueueOptions.MaxSizeInMegabytes == y.CreateQueueOptions.MaxSizeInMegabytes
-                && x.CreateQueueOptions.RequiresDuplicateDetection == y.CreateQueueOptions.RequiresDuplicateDetection
-                && x.CreateQueueOptions.RequiresSession == y.CreateQueueOptions.RequiresSession
-                && string.Equals(x.CreateQueueOptions.UserMetadata, y.CreateQueueOptions.UserMetadata);
+            CreateQueueOptions left = x._createQueueOptions;
+            CreateQueueOptions right = y._createQueueOptions;
+            return SameIdentityAndLifetime(left, right)
+                && SameDelivery(left, right)
+                && SameForwarding(left, right)
+                && SameLimits(left, right)
+                && SameAccess(left, right);
         }
+
+        static bool SameIdentityAndLifetime(CreateQueueOptions x, CreateQueueOptions y) =>
+            string.Equals(x.Name, y.Name)
+            && x.AutoDeleteOnIdle == y.AutoDeleteOnIdle
+            && x.DefaultMessageTimeToLive == y.DefaultMessageTimeToLive
+            && x.DuplicateDetectionHistoryTimeWindow == y.DuplicateDetectionHistoryTimeWindow
+            && string.Equals(x.UserMetadata, y.UserMetadata);
+
+        static bool SameDelivery(CreateQueueOptions x, CreateQueueOptions y) =>
+            x.EnableBatchedOperations == y.EnableBatchedOperations
+            && x.DeadLetteringOnMessageExpiration == y.DeadLetteringOnMessageExpiration
+            && x.EnablePartitioning == y.EnablePartitioning
+            && x.LockDuration == y.LockDuration
+            && x.MaxDeliveryCount == y.MaxDeliveryCount
+            && x.RequiresDuplicateDetection == y.RequiresDuplicateDetection
+            && x.RequiresSession == y.RequiresSession;
+
+        static bool SameForwarding(CreateQueueOptions x, CreateQueueOptions y) =>
+            string.Equals(x.ForwardDeadLetteredMessagesTo, y.ForwardDeadLetteredMessagesTo)
+            && string.Equals(x.ForwardTo, y.ForwardTo);
+
+        static bool SameLimits(CreateQueueOptions x, CreateQueueOptions y) =>
+            x.MaxSizeInMegabytes == y.MaxSizeInMegabytes
+            && x.MaxMessageSizeInKilobytes == y.MaxMessageSizeInKilobytes;
+
+        static bool SameAccess(CreateQueueOptions x, CreateQueueOptions y) =>
+            x.Status == y.Status
+            && Equals(x.AuthorizationRules, y.AuthorizationRules);
 
         public int GetHashCode(QueueEntity obj)
         {
-            unchecked
-            {
-                var hashCode = obj.CreateQueueOptions.Name.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.AutoDeleteOnIdle.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.DefaultMessageTimeToLive.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.DuplicateDetectionHistoryTimeWindow.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.EnableBatchedOperations.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.DeadLetteringOnMessageExpiration.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.EnablePartitioning.GetHashCode();
-                if (!string.IsNullOrWhiteSpace(obj.CreateQueueOptions.ForwardDeadLetteredMessagesTo))
-                    hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.ForwardDeadLetteredMessagesTo.GetHashCode();
-                if (!string.IsNullOrWhiteSpace(obj.CreateQueueOptions.ForwardTo))
-                    hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.ForwardTo.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.LockDuration.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.MaxDeliveryCount.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.RequiresDuplicateDetection.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.RequiresSession.GetHashCode();
-                if (!string.IsNullOrWhiteSpace(obj.CreateQueueOptions.UserMetadata))
-                    hashCode = (hashCode * 397) ^ obj.CreateQueueOptions.UserMetadata.GetHashCode();
-
-                return hashCode;
-            }
+            // Declaration settings can change during topology building; the queue name remains stable.
+            return obj._createQueueOptions.Name.GetHashCode();
         }
     }
 
@@ -109,12 +145,12 @@ public class QueueEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x.CreateQueueOptions.Name, y.CreateQueueOptions.Name);
+            return string.Equals(x._createQueueOptions.Name, y._createQueueOptions.Name);
         }
 
         public int GetHashCode(QueueEntity obj)
         {
-            return obj.CreateQueueOptions.Name.GetHashCode();
+            return obj._createQueueOptions.Name.GetHashCode();
         }
     }
 }
