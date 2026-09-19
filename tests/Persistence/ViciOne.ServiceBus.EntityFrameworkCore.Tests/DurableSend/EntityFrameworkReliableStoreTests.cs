@@ -56,7 +56,11 @@ public sealed class EntityFrameworkReliableStoreTests
         await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
         var validator = new RecordingValidator();
         IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("lifecycle", validator);
-        SerializedDurableSend message = Message(1, body: [1, 2, 3], metadata: [4, 5]);
+        SerializedDurableSend message = Message(1, body: [1, 2, 3], metadata: [4, 5]) with
+        {
+            MessageId = GuidFrom(71),
+            CorrelationId = GuidFrom(72),
+        };
         var limits = new DurableSendStoreLimits(1, 5);
 
         DurableSendAdmissionResult accepted = await store.AdmitAsync(message, limits, Epoch, cancellationToken);
