@@ -182,3 +182,9 @@ Release Core build with zero warnings/errors. A filtered direct Release-host
 test run, excluding the same two documented stale/hanging oracles, is in
 progress; neither an unfiltered green result nor provider acceptance is
 claimed.
+
+The filtered direct Release-host run completed 6,215/6,215 passed, zero
+skipped, with only the same two explicitly excluded legacy-oracle tests.
+This confirms the unaffected Core surface under Release; it does not resolve
+the two test gaps, source-read gate, mutation/coverage/CRAP or real-provider
+acceptance. The active A+ goal continues.
