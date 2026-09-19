@@ -294,6 +294,11 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddViciOneMessageContracts(catalog =>
                 catalog.Register<OutboxProbe>("vicione.tests.transactional-outbox"));
+            serviceCollection.AddViciOnePayloadAdmission<IBus>(options =>
+            {
+                options.MaximumSerializedBodyBytes = 1024 * 1024;
+                options.MaximumTransportEnvelopeBytes = 2 * 1024 * 1024;
+            });
             serviceCollection.AddViciOneReliableMessaging<IBus>(options =>
             {
                 options.MaximumStoredCount = 100;

@@ -1,10 +1,15 @@
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -83,6 +88,49 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
         Assert.Equal(messageId, message.MessageId);
         Assert.Equal(1, fixture.Notification.DeliveredCount);
         Assert.False(context.HasActiveSession);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "admitted-proof-persists-replays-and-binds-body")]
+    public async Task AdmittedOutbox_PersistsProofReplaysAndRejectsBodyTamperingAsync()
+    {
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        Guid messageId = Guid.Parse("39e984da-2ce2-454a-b3d9-f673a7a4e30b");
+        MessageSendContext<OutboxProbe> original = CreateSendContext(messageId, 7);
+        original.Headers.Set("tenant", "north");
+
+        await context.AddSendAsync(original, TestContext.Current.CancellationToken);
+        await context.CommitAsync(TestContext.Current.CancellationToken);
+        fixture.DbContext.ChangeTracker.Clear();
+        OutboxMessage stored = await fixture.DbContext.Set<OutboxMessage>()
+            .AsNoTracking().SingleAsync(TestContext.Current.CancellationToken);
+        Assert.NotNull(stored.Headers);
+        Assert.StartsWith("VOSB-EF-OUTBOX-ADMISSION/1:", stored.Headers, StringComparison.Ordinal);
+
+        stored.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
+        ISerialization serialization = new SerializationConfiguration().CreateSerializerCollection();
+        var replay = new MessageSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
+        {
+            Serialization = serialization,
+        };
+
+        await new OutboxMessageSendPipe(stored, stored.DestinationAddress).SendAsync(replay);
+
+        Assert.Equal(messageId, replay.MessageId);
+        Assert.Equal("north", replay.Headers.Get<string>("tenant"));
+        Assert.Equal(Encoding.UTF8.GetBytes(stored.Body), replay.Serializer.GetMessageBody(replay).ToArray());
+
+        stored.Body += " ";
+        var tamperedReplay = new MessageSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
+        {
+            Serialization = serialization,
+        };
+
+        SerializationException failure = await Assert.ThrowsAsync<SerializationException>(
+            () => new OutboxMessageSendPipe(stored, stored.DestinationAddress).SendAsync(tamperedReplay));
+        Assert.Contains("does not match its payload admission proof", failure.Message, StringComparison.Ordinal);
+        Assert.Empty(tamperedReplay.Headers.GetAll());
     }
 
     [Fact]
@@ -362,7 +410,14 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
                 new DbContextOptionsBuilder<ClassicOutboxDbContext>().UseSqlite(connection).Options);
             await dbContext.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
             var marker = new ServiceMarker();
-            ServiceProvider services = new ServiceCollection().AddSingleton(marker).BuildServiceProvider();
+            ServiceProvider services = new ServiceCollection()
+                .AddSingleton(marker)
+                .AddViciOnePayloadAdmission<IBus>(options =>
+                {
+                    options.MaximumSerializedBodyBytes = 1024 * 1024;
+                    options.MaximumTransportEnvelopeBytes = 2 * 1024 * 1024;
+                })
+                .BuildServiceProvider();
 
             return new ClassicOutboxFixture(
                 connection,

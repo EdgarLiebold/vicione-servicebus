@@ -250,10 +250,10 @@ public sealed class InboxCleanupServiceTests
 
         public static async Task<CleanupEnvironment> CreateAsync(string? lockStatement = null)
         {
-            var connection = new SqliteConnection("Data Source=:memory:");
+            var connection = new SqliteConnection($"Data Source=vsb-cleanup-{Guid.NewGuid():N};Mode=Memory;Cache=Shared");
             await connection.OpenAsync(TestContext.Current.CancellationToken);
             DbContextOptions<CleanupDbContext> dbContextOptions =
-                new DbContextOptionsBuilder<CleanupDbContext>().UseSqlite(connection).Options;
+                new DbContextOptionsBuilder<CleanupDbContext>().UseSqlite(connection.ConnectionString).Options;
             await using (var setupContext = new CleanupDbContext(dbContextOptions))
                 await setupContext.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
 
