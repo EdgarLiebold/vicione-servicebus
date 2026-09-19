@@ -274,3 +274,13 @@ Sol 5.6 xhigh source agent is correcting those in Serialization/Admission
 and, if required, MessagePack; no tests or other source scope are delegated.
 The source manifest must be regenerated after that correction. The goal is
 still active; no unfiltered-green or A+ completion claim is made.
+
+Personal Core-project reading reached 410/702 tracked files; all 410 ledger
+path/blob pairs match the current tree. The fifteen later files cover
+InMemory error/dead-letter movement, initializer and MessageData contracts,
+request/outbox and mediator behavior, temporal JSON, host retry, consume
+payload propagation, JSON type mappings, Futures, topology and test harness.
+The Serialization agent's parity design now uses the public evaluator path
+for bounded opaque Copy bytes and a first-party MessagePack admission marker;
+its code/build/testing are still under review, so no source patch is yet
+admitted or committed. Historical and current A+ gates remain open.
