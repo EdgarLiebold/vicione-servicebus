@@ -22,6 +22,8 @@ public sealed class SystemTextJsonMessageSerializer :
     readonly string _contentType;
     readonly JsonSerializerOptions _options;
 
+    internal JsonSerializerOptions AdmissionOptions => _options;
+
     /// <summary>Creates an envelope-encoded JSON serializer.</summary>
     /// <param name="options">The immutable JSON option snapshot.</param>
     /// <param name="contentType">An alternate envelope media type.</param>

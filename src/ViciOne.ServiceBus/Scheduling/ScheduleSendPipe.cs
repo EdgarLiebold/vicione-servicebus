@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Scheduling;
@@ -11,7 +13,9 @@ public sealed class ScheduleSendPipe<TMessage> :
 {
     readonly DateTimeOffset _dueAt;
     readonly TimeProvider? _timeProvider;
-    SendContext _context = null!;
+    readonly object _resultLock = new();
+    SendContext? _configuredContext;
+    ScheduleSendResult? _acceptedResult;
 
     Guid? _scheduledMessageId;
 
@@ -19,7 +23,7 @@ public sealed class ScheduleSendPipe<TMessage> :
     /// <param name="pipe">The message-specific send pipeline.</param>
     /// <param name="dueAt">The requested delivery time.</param>
     public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt)
-        : base(pipe ?? throw new ArgumentNullException(nameof(pipe)))
+        : base(new SchedulingTokenPipe(pipe ?? throw new ArgumentNullException(nameof(pipe))))
     {
         _dueAt = dueAt;
     }
@@ -29,7 +33,7 @@ public sealed class ScheduleSendPipe<TMessage> :
     /// <param name="dueAt">The requested delivery time.</param>
     /// <param name="timeProvider">The clock used to calculate the transport delay.</param>
     public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt, TimeProvider timeProvider)
-        : base(pipe ?? throw new ArgumentNullException(nameof(pipe)))
+        : base(new SchedulingTokenPipe(pipe ?? throw new ArgumentNullException(nameof(pipe))))
     {
         _dueAt = dueAt;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -38,12 +42,54 @@ public sealed class ScheduleSendPipe<TMessage> :
     /// <summary>Gets or sets the scheduling token applied to the send context.</summary>
     public Guid? ScheduledMessageId
     {
-        get => _context?.ScheduledMessageId ?? _scheduledMessageId;
-        set => _scheduledMessageId = value;
+        get
+        {
+            lock (_resultLock)
+            {
+                if (_acceptedResult is { } acceptedResult)
+                    return acceptedResult.ScheduledMessageId;
+
+                return _configuredContext?.ScheduledMessageId ?? _scheduledMessageId;
+            }
+        }
+        set
+        {
+            lock (_resultLock)
+                _scheduledMessageId = value;
+        }
     }
 
     /// <summary>Gets the message identifier assigned by the send pipeline.</summary>
-    public Guid? MessageId => _context?.MessageId;
+    public Guid? MessageId
+    {
+        get
+        {
+            lock (_resultLock)
+            {
+                if (_acceptedResult is { } acceptedResult)
+                    return acceptedResult.MessageId;
+
+                return _configuredContext?.MessageId;
+            }
+        }
+    }
+
+    internal ScheduleSendResult AcceptResult()
+    {
+        lock (_resultLock)
+        {
+            if (_acceptedResult is { } acceptedResult)
+                return acceptedResult;
+
+            if (_configuredContext is not { } context)
+                throw new InvalidOperationException("The send completed without applying its scheduling pipe.");
+
+            var result = new ScheduleSendResult(context.ScheduledMessageId, context.MessageId);
+            _acceptedResult = result;
+            _configuredContext = null;
+            return result;
+        }
+    }
 
     /// <summary>Applies scheduling metadata to the message context.</summary>
     /// <param name="context">The message send context.</param>
@@ -62,8 +108,14 @@ public sealed class ScheduleSendPipe<TMessage> :
 
     void Apply(SendContext context)
     {
-        _context = context;
-        context.ScheduledMessageId = _scheduledMessageId;
+        lock (_resultLock)
+        {
+            if (_acceptedResult.HasValue)
+                throw new InvalidOperationException("An accepted scheduling pipe cannot be applied to another send context.");
+
+            _configuredContext = context;
+            context.ScheduledMessageId = _scheduledMessageId;
+        }
 
         TimeProvider timeProvider = _timeProvider ?? context.GetTimeProvider();
         TimeSpan delay = _dueAt - timeProvider.GetUtcNow();
@@ -73,5 +125,52 @@ public sealed class ScheduleSendPipe<TMessage> :
 
         if (context.ScheduledMessageId.HasValue)
             context.Headers.Set(MessageHeaders.SchedulingTokenId, context.ScheduledMessageId.Value.ToString("D"));
+    }
+
+    internal readonly record struct ScheduleSendResult(Guid? ScheduledMessageId, Guid? MessageId);
+
+    sealed class SchedulingTokenPipe : IPipe<SendContext<TMessage>>, ISendContextPipe
+    {
+        readonly IPipe<SendContext<TMessage>> _pipe;
+
+        public SchedulingTokenPipe(IPipe<SendContext<TMessage>> pipe)
+        {
+            _pipe = pipe;
+        }
+
+        public async Task SendAsync(SendContext<TMessage> context)
+        {
+            Guid? originalTokenId = context.ScheduledMessageId;
+
+            if (_pipe.IsNotEmpty())
+                await (_pipe.SendAsync(context) ?? throw new InvalidOperationException("The wrapped typed send pipe returned no task."))
+                    .ConfigureAwait(false);
+
+            ReconcileToken(context, originalTokenId);
+        }
+
+        async Task ISendContextPipe.SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
+        {
+            Guid? originalTokenId = context.ScheduledMessageId;
+
+            if (_pipe is ISendContextPipe sendContextPipe)
+                await (sendContextPipe.SendAsync(context, cancellationToken)
+                    ?? throw new InvalidOperationException("The wrapped send-context pipe returned no task.")).ConfigureAwait(false);
+
+            ReconcileToken(context, originalTokenId);
+        }
+
+        public void Probe(ProbeContext context)
+        {
+            _pipe.Probe(context);
+        }
+
+        static void ReconcileToken(SendContext context, Guid? originalTokenId)
+        {
+            context.ScheduledMessageId ??= originalTokenId;
+
+            if (context.ScheduledMessageId is Guid tokenId)
+                context.Headers.Set(MessageHeaders.SchedulingTokenId, tokenId.ToString("D"));
+        }
     }
 }

@@ -87,9 +87,21 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             Uri destination = context.DestinationAddress
                 ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
             DateTimeOffset now = _timeProvider.GetUtcNow();
-            byte[] body = context.Serializer.GetMessageBody(context).ToArray();
-            byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now).ToArray();
+            PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
+            if (admissionRuntime is null)
+            {
+                throw new ConfigurationException(
+                    $"The Entity Framework transactional outbox for bus '{typeof(TBus)}' has no payload-admission runtime.");
+            }
+
+            byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();
             string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
+            if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
+                || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
+                || !proof.MatchesEnvelope(body, contentType))
+                throw new InvalidOperationException("The transactional outbox has no complete payload admission proof for its serialized envelope.");
+
+            byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof).ToArray();
             Guid id = context.MessageId.Value;
             var record = new DurableSendRecord
             {

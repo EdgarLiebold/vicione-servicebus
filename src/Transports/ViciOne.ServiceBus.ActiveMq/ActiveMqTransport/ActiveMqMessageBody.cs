@@ -31,6 +31,13 @@ internal sealed class ActiveMqMessageBody :
                 _content = content is null ? [] : (byte[])content.Clone();
                 break;
 
+            case Apache.NMS.ActiveMQ.Commands.ActiveMQMessage classic
+                when classic.GetType() == typeof(Apache.NMS.ActiveMQ.Commands.ActiveMQMessage):
+            case Apache.NMS.AMQP.Message.NmsMessage amqp
+                when amqp.GetType() == typeof(Apache.NMS.AMQP.Message.NmsMessage):
+                _content = [];
+                break;
+
             default:
                 throw new ActiveMqTransportException(
                     $"The message type is not supported: {TypeCache.GetShortName(message.GetType())}");

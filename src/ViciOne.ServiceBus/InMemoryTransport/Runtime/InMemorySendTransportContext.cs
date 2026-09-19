@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
@@ -86,15 +87,29 @@ internal sealed class InMemorySendTransportContext :
             ?? throw new ArgumentException("The send context was not created by the in-memory transport.", nameof(sendContext));
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
+        ApplyPayloadAdmission(context);
 
         var messageId = context.MessageId ?? NewId.NextGuid();
 
         var body = context.Body ?? throw new InvalidOperationException("The send context body has not been serialized.");
         var contentType = context.ContentType ?? throw new InvalidOperationException("The send context content type has not been set.");
-        var transportMessage = new InMemoryTransportMessage(messageId, body.ToArray(), contentType.ToString())
+        string contentTypeName = contentType.ToString();
+        byte[] serializedEnvelope = body.ToArray();
+        InMemoryPayloadAdmissionProof? admissionProof = null;
+        if (context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+        {
+            if (!admission.TryCreateDurableProof(contentTypeName, out DurablePayloadAdmissionProof proof)
+                || !proof.MatchesEnvelope(serializedEnvelope, contentTypeName))
+                throw new InvalidOperationException("The in-memory transport body differs from its payload-admission decision.");
+
+            admissionProof = new InMemoryPayloadAdmissionProof(admission.OwnerRuntime, proof);
+        }
+
+        var transportMessage = new InMemoryTransportMessage(messageId, serializedEnvelope, contentTypeName)
         {
             Delay = context.Delay,
-            RoutingKey = context.RoutingKey
+            RoutingKey = context.RoutingKey,
+            PayloadAdmissionProof = admissionProof
         };
 
         if (context.TryGetPayload(out InMemoryDurableSendContext? durableSendContext))

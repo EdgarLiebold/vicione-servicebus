@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Mime;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -36,6 +39,14 @@ public class OutboxMessageSendPipe :
         var deserializer = context.Serialization.GetMessageDeserializer(contentType);
 
         var body = deserializer.GetMessageBody(_message.Body);
+        DurablePayloadAdmissionProof? proof = (_message as IDurableOutboxMessageContext)?.AdmissionProof;
+        byte[]? provedEnvelope = null;
+        if (proof is { } durableProof)
+        {
+            provedEnvelope = body.ToArray();
+            if (!durableProof.MatchesEnvelope(provedEnvelope, _message.ContentType))
+                throw new SerializationException("The persisted outbox body or content type does not match its payload admission proof.");
+        }
 
         var headers = new JsonTransportHeaders(new OutboxMessageHeaderProvider(_message));
 
@@ -68,7 +79,9 @@ public class OutboxMessageSendPipe :
         if (_message.Properties.Count > 0 && context is TransportSendContext transportSendContext)
             transportSendContext.ReadPropertiesFrom(_message.Properties);
 
-        context.Serializer = serializerContext.GetMessageSerializer();
+        context.Serializer = provedEnvelope is not null
+            ? new CopyBodySerializer(_message.ContentType, provedEnvelope, proof)
+            : serializerContext.GetMessageSerializer();
 
         return Task.CompletedTask;
     }

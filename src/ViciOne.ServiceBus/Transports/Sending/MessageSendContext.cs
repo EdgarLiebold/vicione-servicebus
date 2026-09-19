@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Initializers.TypeConverters;
 using ViciOne.ServiceBus.Middleware;
@@ -175,7 +176,29 @@ public class MessageSendContext<TMessage> :
 
     MessageBody GetMessageBody()
     {
-        return _serializer?.GetMessageBody(this) ?? throw new SerializationException("Unable to serialize the message because no serializer is configured.");
+        IMessageSerializer serializer = _serializer
+            ?? throw new SerializationException("Unable to serialize the message because no serializer is configured.");
+
+        if (!this.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+            return serializer.GetMessageBody(this);
+
+        if (serializer is IBoundedMessageSerializer boundedSerializer)
+            return BoundedSerializerMessageBody.Create(this, boundedSerializer, admission);
+
+        // Built-in serializers still own their established admitted bodies. A legacy external
+        // serializer cannot obtain the internal operation marker and fails at the physical boundary.
+        MessageBody body = serializer.GetMessageBody(this);
+        if (body is not IPayloadAdmittedMessageBody)
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Serialization",
+                    "unknown",
+                    $"Serializer '{serializer.GetType().FullName}' does not support bounded payload admission.",
+                    $"Implement {nameof(IBoundedMessageSerializer)} for this serializer"));
+        }
+
+        return body;
     }
 
     /// <summary>Reads a UTF-8 or native string value from a transport property bag.</summary>

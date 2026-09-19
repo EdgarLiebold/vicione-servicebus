@@ -69,10 +69,11 @@ public class SqlScheduleMessageProvider :
 
         await endpoint.SendAsync(message, schedulePipe, cancellationToken).ConfigureAwait(false);
 
+        var accepted = schedulePipe.AcceptResult();
         LogContext.Debug?.Log("SCHED {DestinationAddress} {MessageId} {MessageType} {DeliveryTime:G} {Token}",
-            destinationAddress, schedulePipe.MessageId, TypeCache<T>.ShortName, dueAt, schedulePipe.ScheduledMessageId);
+            destinationAddress, accepted.MessageId, TypeCache<T>.ShortName, dueAt, accepted.ScheduledMessageId);
 
-        return new ScheduledMessageHandle<T>(tokenId, dueAt, destinationAddress, message);
+        return new ScheduledMessageHandle<T>(accepted.ScheduledMessageId ?? tokenId, dueAt, destinationAddress, message);
     }
 
     /// <summary>Cancels the scheduled message identified by its transport token.</summary>

@@ -48,7 +48,8 @@ public class ServiceBusScheduleMessageProvider :
 
         await endpoint.SendAsync(message, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
-        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
+        var accepted = scheduleMessagePipe.AcceptResult();
+        return new ScheduledMessageHandle<T>(accepted.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
     }
 
     /// <summary>Completes without contacting Azure Service Bus because cancellation requires a destination address.</summary>

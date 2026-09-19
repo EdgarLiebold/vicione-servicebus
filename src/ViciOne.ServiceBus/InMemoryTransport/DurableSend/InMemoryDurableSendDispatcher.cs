@@ -84,9 +84,12 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
         {
             ArgumentNullException.ThrowIfNull(context);
             var contentType = new ContentType(_message.ContentType);
-            context.Serializer = new CopyBodySerializer(contentType, new BinaryMessageBody(_message.Body));
             context.ContentType = contentType;
-            ReliableEnvelopeMetadataCodec.Apply(context, _message.Metadata, context.GetTimeProvider().GetUtcNow());
+            DurablePayloadAdmissionProof? proof = ReliableEnvelopeMetadataCodec.ApplyForDurableReplay(
+                context,
+                _message.Metadata,
+                context.GetTimeProvider().GetUtcNow());
+            context.Serializer = new CopyBodySerializer(_message.ContentType, _message.Body, proof);
             context.MessageId = _message.MessageId;
             context.CorrelationId = _message.CorrelationId;
             context.Durable = true;

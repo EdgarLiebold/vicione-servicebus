@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Serialization;
@@ -12,6 +14,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
     readonly List<SerializedDurableSend> _messages = [];
     readonly Lock _messagesLock = new();
     readonly IMessageContractCatalog _contracts;
+    readonly IServiceProvider _provider;
     readonly DurableSendStoreLimits _limits;
     readonly ReliableInboxKey _key;
     readonly ReliableInboxLease _lease;
@@ -36,6 +39,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
             provider ?? throw new ArgumentNullException(nameof(provider)))
     {
         _store = store ?? throw new ArgumentNullException(nameof(store));
+        _provider = provider;
         _contracts = contracts ?? throw new ArgumentNullException(nameof(contracts));
         _limits = limits;
         _key = key;
@@ -104,14 +108,28 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
         Uri destination = context.DestinationAddress
             ?? throw new MessageException(typeof(TOutgoingMessage), "The SendContext DestinationAddress must be present");
         DateTimeOffset now = _timeProvider.GetUtcNow();
+        PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
+        if (admissionRuntime is null)
+        {
+            throw new ConfigurationException(
+                $"The in-memory reliable inbox for bus '{typeof(TBus)}' has no payload-admission runtime.");
+        }
+
+        byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();
+        string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
+        if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
+            || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
+            || !proof.MatchesEnvelope(body, contentType))
+            throw new InvalidOperationException("The in-memory reliable inbox has no complete payload admission proof for its serialized envelope.");
+
         var message = new SerializedDurableSend
         {
             Id = new DurableSendId(context.MessageId.Value),
             ContractIdentity = _contracts.GetIdentity(typeof(TOutgoingMessage)),
             DestinationAddress = destination,
-            ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
-            Body = context.Serializer.GetMessageBody(context).ToArray(),
-            Metadata = ReliableEnvelopeMetadataCodec.Capture(context, now),
+            ContentType = contentType,
+            Body = body,
+            Metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof),
             MessageId = context.MessageId,
             CorrelationId = context.CorrelationId,
             DueAt = context.Delay.HasValue ? now + context.Delay.Value : null,

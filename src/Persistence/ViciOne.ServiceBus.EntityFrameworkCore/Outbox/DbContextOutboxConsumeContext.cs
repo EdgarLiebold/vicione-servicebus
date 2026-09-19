@@ -4,23 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Coordinates one receive-side EF Core inbox transaction and its ordered outgoing messages.</summary>
+/// <typeparam name="TBus">The bus whose payload-admission policy owns outgoing messages.</typeparam>
 /// <typeparam name="TDbContext">The EF Core context containing the inbox and outbox entity sets.</typeparam>
 /// <typeparam name="TMessage">The consumed message contract.</typeparam>
-internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
+internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> :
     OutboxConsumeContextProxy<TMessage>,
     IDbTransactionContext,
     IDisposable
+    where TBus : class, IBus
     where TDbContext : DbContext
     where TMessage : class
 {
     readonly TDbContext _dbContext;
     readonly InboxState _inboxState;
+    readonly IServiceProvider _provider;
     readonly TimeProvider _timeProvider;
     readonly IDbContextTransaction _transaction;
     readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator;
@@ -41,6 +46,7 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
             provider ?? throw new ArgumentNullException(nameof(provider)))
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _provider = provider;
         _transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
         _inboxState = inboxState ?? throw new ArgumentNullException(nameof(inboxState));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -173,12 +179,21 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         if (operationCancellationToken.IsCancellationRequested)
             return Task.FromCanceled(operationCancellationToken);
 
+        PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
+        if (admissionRuntime is null)
+        {
+            throw new ConfigurationException(
+                $"The Entity Framework inbox outbox for bus '{typeof(TBus)}' has no payload-admission runtime.");
+        }
+
+        MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
         OutboxMessage message = OutboxMessageFactory.Create(
             context,
             SerializerContext,
             _timeProvider,
             MessageId,
-            ConsumerId);
+            ConsumerId,
+            admittedBody: admittedBody);
         return _writeCoordinator.ExecuteAsync(() =>
         {
             _dbContext.Add(message);

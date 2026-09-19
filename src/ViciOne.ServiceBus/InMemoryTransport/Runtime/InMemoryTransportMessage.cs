@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Runtime;
@@ -48,4 +49,9 @@ internal sealed class InMemoryTransportMessage
     public string? RoutingKey { get; set; }
 
     internal InMemoryDurableSendContext? DurableSendContext { get; set; }
+
+    internal InMemoryPayloadAdmissionProof? PayloadAdmissionProof { get; set; }
 }
+
+/// <summary>Binds an admitted in-memory envelope to the runtime of its originating bus.</summary>
+internal sealed record InMemoryPayloadAdmissionProof(IPayloadAdmissionRuntime OwnerRuntime, DurablePayloadAdmissionProof Proof);

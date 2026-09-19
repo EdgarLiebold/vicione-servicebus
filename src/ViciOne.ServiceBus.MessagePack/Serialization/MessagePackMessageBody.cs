@@ -11,10 +11,11 @@ namespace ViciOne.ServiceBus.MessagePack.Serialization;
 /// <summary>Owns one serialized MessagePack message or transport envelope.</summary>
 /// <typeparam name="TMessage">The message contract contained by the body.</typeparam>
 internal sealed class MessagePackMessageBody<TMessage> :
-    MessageBody
+    MessageBody, IPayloadAdmittedMessageBody
     where TMessage : class
 {
     readonly byte[] _content;
+    readonly PayloadAdmissionSerializationContext? _admissionContext;
 
     /// <summary>Creates an owned MessagePack transport-envelope snapshot.</summary>
     /// <param name="context">The send context that supplies message content and transport metadata.</param>
@@ -22,6 +23,8 @@ internal sealed class MessagePackMessageBody<TMessage> :
     public MessagePackMessageBody(SendContext<TMessage> context, MessagePackEnvelope? envelope = null)
     {
         ArgumentNullException.ThrowIfNull(context);
+        context.TryGetPayload(out PayloadAdmissionSerializationContext? admission);
+        _admissionContext = admission;
         _content = Serialize(context, envelope);
     }
 
@@ -35,6 +38,8 @@ internal sealed class MessagePackMessageBody<TMessage> :
 
     /// <summary>Gets the serialized byte length.</summary>
     public long Length => _content.LongLength;
+
+    PayloadAdmissionSerializationContext? IPayloadAdmittedMessageBody.AdmissionContext => _admissionContext;
 
     /// <summary>Copies the serialized MessagePack content into a new array.</summary>
     /// <returns>An independently mutable copy of the serialized content.</returns>

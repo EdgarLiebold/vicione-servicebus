@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Transports;
 
@@ -10,8 +11,9 @@ internal sealed class InMemoryReceiveContext :
     RoutingKeyConsumeContext,
     TransportReceiveContext
 {
-    readonly MessageBody _body;
+    readonly Lazy<MessageBody> _body;
     readonly InMemoryTransportMessage _message;
+    readonly IInMemoryReceiveEndpointContext _receiveEndpointContext;
 
     /// <summary>Creates a receive context for a transport message and its owning endpoint.</summary>
     /// <param name="message">The received transport message.</param>
@@ -23,15 +25,16 @@ internal sealed class InMemoryReceiveContext :
             GetPayloads(message))
     {
         _message = message;
+        _receiveEndpointContext = receiveEndpointContext;
 
-        _body = new BinaryMessageBody(message.Body);
+        _body = new Lazy<MessageBody>(CreateBody);
     }
 
     /// <summary>Gets the provider for the message's transport headers.</summary>
     protected override IHeaderProvider HeaderProvider => new DictionarySendHeaderProvider(_message.Headers);
 
     /// <summary>Gets the message body after applying the configured size limits.</summary>
-    public override MessageBody Body => EnforceMessageLimits(_body);
+    public override MessageBody Body => EnforceMessageLimits(_body.Value);
 
     /// <summary>Gets the routing key carried by the transport message.</summary>
     public string? RoutingKey => _message.RoutingKey;
@@ -49,6 +52,32 @@ internal sealed class InMemoryReceiveContext :
             {
                 [InMemoryTransportPropertyNames.RoutingKey] = RoutingKey,
             };
+    }
+
+    MessageBody CreateBody()
+    {
+        InMemoryPayloadAdmissionProof? proof = _message.PayloadAdmissionProof;
+        IPayloadAdmissionRuntime? runtime = _receiveEndpointContext.PayloadAdmissionRuntime;
+        if (runtime is null)
+        {
+            if (proof is not null)
+                throw new InvalidOperationException("The in-memory receive endpoint has no runtime for the admitted transport envelope.");
+
+            return new BinaryMessageBody(_message.Body);
+        }
+
+        if (proof is not null && !ReferenceEquals(proof.OwnerRuntime, runtime))
+            throw new InvalidOperationException("The in-memory transport envelope was admitted by a different bus.");
+
+        var admission = new PayloadAdmissionSerializationContext(
+            runtime,
+            proof?.Proof.MessageDataOffloadObserved ?? false);
+        return AdmittedCopyMessageBody.Create(
+            _message.Body.AsMemory(),
+            ContentType,
+            _receiveEndpointContext.Serialization,
+            admission,
+            proof?.Proof);
     }
 
     static object[] GetPayloads(InMemoryTransportMessage message)

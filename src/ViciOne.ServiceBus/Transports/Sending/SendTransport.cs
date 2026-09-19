@@ -166,6 +166,9 @@ public sealed class SendTransport<TContext> :
             if (_sendTransportContext.SendObservers.Count > 0)
                 await _sendTransportContext.SendObservers.PreSendAsync(sendContext).ConfigureAwait(false);
 
+            if (_sendTransportContext is BaseSendTransportContext admittedTransportContext)
+                admittedTransportContext.ApplyPayloadAdmission(sendContext);
+
             Task sendTask = _sendTransportContext.SendAsync(context, sendContext)
                 ?? throw new InvalidOperationException("The send transport context returned no send task.");
             await sendTask.ConfigureAwait(false);

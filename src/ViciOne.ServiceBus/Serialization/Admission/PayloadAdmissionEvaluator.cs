@@ -9,6 +9,8 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
 {
     private readonly PayloadAdmissionPolicy _policy;
 
+    internal PayloadAdmissionPolicy Policy => _policy;
+
     internal PayloadAdmissionEvaluator(PayloadAdmissionPolicyProvider<TBus> policy)
     {
         ArgumentNullException.ThrowIfNull(policy);

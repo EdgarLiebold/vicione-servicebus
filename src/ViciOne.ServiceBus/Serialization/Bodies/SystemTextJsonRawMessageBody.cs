@@ -3,16 +3,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>Serializes an outgoing message directly as UTF-8 JSON without a ServiceBus envelope.</summary>
 /// <typeparam name="TMessage">The message contract serialized by the body.</typeparam>
 internal sealed class SystemTextJsonRawMessageBody<TMessage> :
-    MessageBody
+    MessageBody, IPayloadAdmittedMessageBody
     where TMessage : class
 {
     readonly byte[] _content;
+    readonly PayloadAdmissionSerializationContext? _admissionContext;
 
     /// <summary>Creates an owned snapshot of the raw JSON body.</summary>
     /// <param name="context">The outgoing message and admission policy.</param>
@@ -22,11 +24,15 @@ internal sealed class SystemTextJsonRawMessageBody<TMessage> :
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(options);
+        context.TryGetPayload(out PayloadAdmissionSerializationContext? admission);
+        _admissionContext = admission;
         _content = Serialize(context, options, message ?? context.Message);
     }
 
     /// <summary>Gets the exact encoded UTF-8 byte length.</summary>
     public long Length => _content.LongLength;
+
+    PayloadAdmissionSerializationContext? IPayloadAdmittedMessageBody.AdmissionContext => _admissionContext;
 
     /// <summary>Copies the raw JSON content into a new array.</summary>
     /// <returns>An independently mutable copy of the raw JSON content.</returns>

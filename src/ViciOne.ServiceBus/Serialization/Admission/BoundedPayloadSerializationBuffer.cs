@@ -3,13 +3,13 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Managed writer that never owns more memory than its configured hard maximum.</summary>
+/// <summary>Managed writer that grows on demand without exceeding its configured buffer maximum.</summary>
 internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationBuffer
 {
     private readonly int _maximumBytes;
     private readonly Action<PayloadAdmissionException>? _rejectionObserver;
     private readonly PayloadAdmissionStage _stage;
-    private readonly byte[] _buffer;
+    private byte[] _buffer = Array.Empty<byte>();
     private int _rejectionObserved;
     private int _writtenCount;
 
@@ -26,9 +26,7 @@ internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationB
         _maximumBytes = maximumBytes;
         _stage = stage;
         _rejectionObserver = rejectionObserver;
-        // Every returned memory region stays within the hard ownership limit, including
-        // reservations for worst-case serializer expansion.
-        _buffer = new byte[maximumBytes];
+        // A limit is not a reservation: small messages must not allocate their full maxima.
     }
 
     public int WrittenCount => _writtenCount;
@@ -76,7 +74,17 @@ internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationB
                 $"Serialization requested at least {required} bytes, exceeding the configured maximum of {_maximumBytes} bytes.");
         }
 
-        // The complete bounded region is allocated by the constructor, so no growth is required.
+        if (required <= _buffer.Length)
+            return;
+
+        int doubled = _buffer.Length <= _maximumBytes / 2 ? _buffer.Length * 2 : _maximumBytes;
+        int newLength = (int)Math.Min(_maximumBytes, Math.Max(required, Math.Max(256, doubled)));
+        // Utf8JsonWriter may request a contiguous worst-case expansion larger than the
+        // eventual JSON. Once the payload is substantial relative to its limit, expose
+        // the complete remaining bounded region before such a speculative request occurs.
+        if (newLength >= Math.Max(1, _maximumBytes / 4))
+            newLength = _maximumBytes;
+        Array.Resize(ref _buffer, newLength);
     }
 
     private PayloadAdmissionException CreateRejection(long actualBytes, string message)

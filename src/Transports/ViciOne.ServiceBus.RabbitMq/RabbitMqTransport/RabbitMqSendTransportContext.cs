@@ -152,7 +152,7 @@ public class RabbitMqSendTransportContext :
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        if (context.TryGetPayload<RabbitMqTransportAcceptanceRequirement>(out _)
+        if (context.TryGetPayload<RabbitMqTransportAcceptanceRequirement>(out var acceptanceRequirement)
             && !transportContext.ConnectionContext.PublisherConfirmation)
         {
             throw new ConfigurationException(
@@ -163,10 +163,55 @@ public class RabbitMqSendTransportContext :
                     "Enable publisher confirmations on the RabbitMQ host"));
         }
 
+        if (acceptanceRequirement is not null
+            && (!string.Equals(context.Exchange, acceptanceRequirement.Exchange, StringComparison.Ordinal)
+                || !string.Equals(_exchange, acceptanceRequirement.Exchange, StringComparison.Ordinal)
+                || context.Delay.GetValueOrDefault() > TimeSpan.Zero
+                || context.TimeToLive.HasValue
+                || !context.Durable
+                || !context.Mandatory
+                || !context.AwaitAck))
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "RabbitMQ durable transport acceptance",
+                    context.DestinationAddress?.ToString() ?? _exchange,
+                    "The publish route or delivery properties differ from the validated durable queue destination",
+                    "Use the validated durable queue without delayed routing or transport-property overrides"));
+        }
+
         OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext =
             await _configureTopologyFilter.ConfigureAsync(transportContext, sendContext.CancellationToken).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+        if (acceptanceRequirement?.RequiresExistingQueueProof == true)
+        {
+            try
+            {
+                // Receive InputAddress retains its exchange-form public URI. Verify its same-name queue
+                // without creating a missing one. An active quorum redeclaration checks stable queue
+                // properties; incompatible additional arguments fail closed rather than falling back
+                // to a classic queue. This does not prove effective broker policies.
+                await transportContext.QueueDeclarePassiveAsync(acceptanceRequirement.Exchange, sendContext.CancellationToken)
+                    .ConfigureAwait(false);
+                await transportContext.QueueDeclareAsync(acceptanceRequirement.Exchange, durable: true, exclusive: false,
+                        autoDelete: false, new Dictionary<string, object?>
+                        {
+                            [RabbitMQ.Client.Headers.XQueueType] = "quorum"
+                        }, sendContext.CancellationToken)
+                    .ConfigureAwait(false);
+                await transportContext.QueueBindAsync(acceptanceRequirement.Exchange, acceptanceRequirement.Exchange, "",
+                        new Dictionary<string, object?>(), sendContext.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch
+            {
+                oneTimeContext.Evict();
+                transportContext.ConnectionContext.TopologyEntityCache.Invalidate();
+                throw;
+            }
+        }
 
         var exchange = context.Exchange;
         if (exchange.Equals(RabbitMqExchangeNames.ReplyTo))
@@ -225,6 +270,7 @@ public class RabbitMqSendTransportContext :
         try
         {
             await publishTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
+            acceptanceRequirement?.MarkAccepted();
         }
         catch (OperationCanceledException)
         {

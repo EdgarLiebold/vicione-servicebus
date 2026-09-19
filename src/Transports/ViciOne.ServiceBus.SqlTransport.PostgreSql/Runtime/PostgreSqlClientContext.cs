@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
+using NpgsqlTypes;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.SqlTransport.Serialization;
 using ViciOne.ServiceBus.SqlTransport.Topology;
@@ -33,6 +34,7 @@ internal sealed class PostgreSqlClientContext :
     readonly string _receiveSql;
     readonly string _renewLockSql;
     readonly string _sendSql;
+    readonly string _setExactBodySql;
     readonly string _touchQueueSql;
     readonly string _unlockSql;
 
@@ -49,6 +51,7 @@ internal sealed class PostgreSqlClientContext :
         _receiveSql = string.Format(PostgreSqlStatements.DbReceiveSql, _context.Schema);
         _receivePartitionedSql = string.Format(PostgreSqlStatements.DbReceivePartitionedSql, _context.Schema);
         _sendSql = string.Format(PostgreSqlStatements.DbEnqueueSql, _context.Schema);
+        _setExactBodySql = string.Format(PostgreSqlStatements.DbSetExactBodySql, _context.Schema);
         _createTopicSubscriptionSql = string.Format(PostgreSqlStatements.DbCreateTopicSubscriptionSql, _context.Schema);
         _publishSql = string.Format(PostgreSqlStatements.DbPublishSql, _context.Schema);
         _purgeQueueSql = string.Format(PostgreSqlStatements.DbPurgeQueueSql, _context.Schema);
@@ -279,15 +282,17 @@ internal sealed class PostgreSqlClientContext :
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
         SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
+        string? exactBody = bodyStorage.Text;
 
-        return ExecuteDatabaseOperationAsync((connection, transaction, token) =>
+        return ExecuteDatabaseOperationAsync(async (connection, transaction, token) =>
         {
             var command = new CommandDefinition(_sendSql, new
             {
                 entity_name = queueName,
                 priority = (int)(context.Priority ?? 100),
                 transport_message_id = context.TransportMessageId,
-                body = new JsonParameter(bodyStorage.Text),
+                body = new JsonParameter(null),
+                body_exact = new JsonParameter(exactBody, NpgsqlDbType.Json),
                 binary_body = bodyStorage.Binary,
                 content_type = context.ContentType?.MediaType,
                 message_type = string.Join(";", context.SupportedMessageTypes),
@@ -310,7 +315,16 @@ internal sealed class PostgreSqlClientContext :
                 scheduling_token_id = schedulingTokenId
             }, transaction, cancellationToken: token);
 
-            return connection.ExecuteScalarAsync<long?>(command);
+            long? sent = await connection.ExecuteScalarAsync<long?>(command).ConfigureAwait(false);
+            if (exactBody is not null)
+            {
+                if (sent != 1)
+                    throw new InvalidOperationException("A PostgreSQL send did not persist its transport message.");
+
+                await SetExactBodyAsync(connection, transaction, context.TransportMessageId, exactBody, token).ConfigureAwait(false);
+            }
+
+            return sent;
         }, cancellationToken);
     }
 
@@ -333,15 +347,17 @@ internal sealed class PostgreSqlClientContext :
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
         SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
+        string? exactBody = bodyStorage.Text;
 
-        return ExecuteDatabaseOperationAsync((connection, transaction, token) =>
+        return ExecuteDatabaseOperationAsync(async (connection, transaction, token) =>
         {
             var command = new CommandDefinition(_publishSql, new
             {
                 entity_name = topicName,
                 priority = (int)(context.Priority ?? 100),
                 transport_message_id = context.TransportMessageId,
-                body = new JsonParameter(bodyStorage.Text),
+                body = new JsonParameter(null),
+                body_exact = new JsonParameter(exactBody, NpgsqlDbType.Json),
                 binary_body = bodyStorage.Binary,
                 content_type = context.ContentType?.MediaType,
                 message_type = string.Join(";", context.SupportedMessageTypes),
@@ -364,8 +380,30 @@ internal sealed class PostgreSqlClientContext :
                 scheduling_token_id = schedulingTokenId
             }, transaction, cancellationToken: token);
 
-            return connection.ExecuteScalarAsync<long?>(command);
+            long? published = await connection.ExecuteScalarAsync<long?>(command).ConfigureAwait(false);
+            if (exactBody is not null)
+            {
+                if (published is null)
+                    throw new InvalidOperationException("A PostgreSQL publish did not return a recipient count.");
+
+                if (published > 0)
+                    await SetExactBodyAsync(connection, transaction, context.TransportMessageId, exactBody, token).ConfigureAwait(false);
+            }
+
+            return published;
         }, cancellationToken);
+    }
+
+    async Task SetExactBodyAsync(IDbConnection connection, IDbTransaction transaction, Guid transportMessageId, string body, CancellationToken cancellationToken)
+    {
+        var command = new CommandDefinition(_setExactBodySql, new
+        {
+            transport_message_id = transportMessageId,
+            body_exact = new JsonParameter(body, NpgsqlDbType.Json)
+        }, transaction, cancellationToken: cancellationToken);
+
+        if (await connection.ExecuteAsync(command).ConfigureAwait(false) != 1)
+            throw new InvalidOperationException("A PostgreSQL message body was not persisted exactly.");
     }
 
     /// <summary>Deletes a delivered message when the supplied lock still owns it.</summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
@@ -9,10 +10,12 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Persists a serialized outgoing message associated with an inbox row or transactional outbox row.</summary>
 public class OutboxMessage :
-    OutboxMessageContext
+    OutboxMessageContext,
+    IDurableOutboxMessageContext
 {
     Headers _headers = EmptyHeaders.Instance;
     IReadOnlyDictionary<string, object> _properties = FrozenDictionary<string, object>.Empty;
+    DurablePayloadAdmissionProof? _admissionProof;
 
     /// <summary>Gets or sets the UTC time before which the message must not be sent.</summary>
     public DateTimeOffset? EnqueueTime { get; set; }
@@ -77,6 +80,7 @@ public class OutboxMessage :
     HostInfo MessageContext.Host => HostMetadataCache.Host;
 
     IReadOnlyDictionary<string, object> OutboxMessageContext.Properties => _properties;
+    DurablePayloadAdmissionProof? IDurableOutboxMessageContext.AdmissionProof => _admissionProof;
 
     /// <summary>Materializes the persisted headers and transport properties for delivery.</summary>
     /// <param name="deserializer">The metadata deserializer used for both dictionaries.</param>
@@ -84,13 +88,14 @@ public class OutboxMessage :
     {
         ArgumentNullException.ThrowIfNull(deserializer);
 
-        _headers = DeserializerHeaders(deserializer);
+        (string? serializedHeaders, _admissionProof) = OutboxAdmissionMetadata.Decode(Headers);
+        _headers = DeserializerHeaders(deserializer, serializedHeaders);
         _properties = DeserializerProperties(deserializer);
     }
 
-    Headers DeserializerHeaders(IObjectDeserializer deserializer)
+    Headers DeserializerHeaders(IObjectDeserializer deserializer, string? serializedHeaders)
     {
-        Dictionary<string, object?>? headers = deserializer.DeserializeDictionary<object?>(Headers);
+        Dictionary<string, object?>? headers = deserializer.DeserializeDictionary<object?>(serializedHeaders);
         if (headers != null)
         {
             return new DictionarySendHeaders(headers

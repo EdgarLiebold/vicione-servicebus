@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService.Model;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.AmazonSqs.Configuration;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Transports;
@@ -14,6 +15,8 @@ public class TopicSendTransportContext :
     BaseSendTransportContext,
     SendTransportContext<ClientContext>
 {
+    const int DefaultMaximumSnsPublishBytes = 256 * 1024;
+
     readonly IPipe<ClientContext> _configureTopologyPipe;
     readonly ITransportSetHeaderAdapter<MessageAttributeValue> _headerAdapter;
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
@@ -118,6 +121,10 @@ public class TopicSendTransportContext :
         operationToken.ThrowIfCancellationRequested();
 
         AmazonSqsDelay.EnsureNotSetForTopic(context.Delay);
+        string body = context.Body.GetRequiredTransportText();
+        AmazonSqsTransportTextAdmission.Validate(context, body);
+
+        operationToken.ThrowIfCancellationRequested();
 
         await _configureTopologyPipe.SendAsync(operationContext).ConfigureAwait(false);
 
@@ -125,7 +132,7 @@ public class TopicSendTransportContext :
 
         var request = new PublishBatchRequestEntry
         {
-            Message = context.Body.GetRequiredTransportText(),
+            Message = body,
             MessageAttributes = new Dictionary<string, MessageAttributeValue>()
         };
 
@@ -138,6 +145,18 @@ public class TopicSendTransportContext :
 
         if (!string.IsNullOrEmpty(context.GroupId))
             request.MessageGroupId = context.GroupId;
+
+        // SNS constructs the subscription notification JSON later; only the publish request is known here.
+        long publishBytes = MessageDefaults.Encoding.GetByteCount(request.Message)
+            + (long)AmazonMessageAttributeSizeCalculator.Calculate(request.MessageAttributes);
+        if (publishBytes > DefaultMaximumSnsPublishBytes)
+        {
+            throw new PayloadAdmissionException(
+                PayloadAdmissionStage.TransportEnvelope,
+                publishBytes,
+                DefaultMaximumSnsPublishBytes,
+                $"Amazon SNS publish message and attributes are {publishBytes} UTF-8 bytes, exceeding the default 256 KiB API limit of {DefaultMaximumSnsPublishBytes} bytes.");
+        }
 
         await operationContext.PublishAsync(EntityName, request, operationToken).ConfigureAwait(false);
     }

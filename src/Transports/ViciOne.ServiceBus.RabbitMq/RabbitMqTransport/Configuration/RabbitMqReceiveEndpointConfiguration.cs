@@ -47,6 +47,10 @@ public class RabbitMqReceiveEndpointConfiguration :
             settings.ExchangeName = "";
             settings.BindQueue = true;
             settings.NoAck = true;
+
+            // Direct reply-to is an at-most-once pseudo-queue without broker-side error or skipped queues.
+            this.DiscardFaultedMessages();
+            this.DiscardSkippedMessages();
         }
     }
 

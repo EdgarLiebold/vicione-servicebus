@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Runtime;
@@ -36,9 +37,24 @@ internal abstract class InMemoryMessageMoveTransport
 
         var messageId = context.GetMessageId(NewId.NextGuid());
 
-        byte[] body = context.GetBodyContent();
+        MessageBody receivedBody = context.Body;
+        byte[] body = receivedBody.ToArray();
+        string contentType = context.ContentType.ToString();
 
-        var transportMessage = new InMemoryTransportMessage(messageId, body, context.ContentType?.ToString());
+        InMemoryPayloadAdmissionProof? admissionProof = null;
+        if (receivedBody is IPayloadAdmittedMessageBody { AdmissionContext: { } admission })
+        {
+            if (!admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
+                || !proof.MatchesEnvelope(body, contentType))
+                throw new InvalidOperationException("The copied in-memory transport body differs from its payload-admission decision.");
+
+            admissionProof = new InMemoryPayloadAdmissionProof(admission.OwnerRuntime, proof);
+        }
+
+        var transportMessage = new InMemoryTransportMessage(messageId, body, contentType)
+        {
+            PayloadAdmissionProof = admissionProof
+        };
 
         transportMessage.Headers.SetHostHeaders();
 

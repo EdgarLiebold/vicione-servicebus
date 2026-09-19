@@ -116,12 +116,16 @@ public class QueueSendTransportContext :
         CancellationToken operationToken = operationContext.CancellationToken;
 
         operationToken.ThrowIfCancellationRequested();
+        string body = context.Body.GetRequiredTransportText();
+        AmazonSqsTransportTextAdmission.Validate(context, body);
+
+        operationToken.ThrowIfCancellationRequested();
 
         await _configureTopologyPipe.SendAsync(operationContext).ConfigureAwait(false);
 
         operationToken.ThrowIfCancellationRequested();
 
-        var message = new SendMessageBatchRequestEntry("", context.Body.GetRequiredTransportText())
+        var message = new SendMessageBatchRequestEntry("", body)
         {
             Id = sendContext.MessageId.ToString(),
             MessageAttributes = new Dictionary<string, MessageAttributeValue>()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Transports;
 
@@ -13,7 +14,8 @@ internal static class OutboxMessageFactory
         TimeProvider timeProvider,
         Guid? inboxMessageId = null,
         Guid? inboxConsumerId = null,
-        Guid? outboxId = null)
+        Guid? outboxId = null,
+        MessageBody? admittedBody = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -25,7 +27,22 @@ internal static class OutboxMessageFactory
 
         ValidateOwner(inboxMessageId, inboxConsumerId, outboxId);
 
-        var body = context.Serializer.GetMessageBody(context);
+        MessageBody body = admittedBody ?? context.Serializer.GetMessageBody(context);
+        string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
+        DurablePayloadAdmissionProof? proof = null;
+        if (admittedBody is not null)
+        {
+            if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
+                || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof admittedProof)
+                || !admittedProof.MatchesEnvelope(body.ToArray(), contentType))
+            {
+                throw new InvalidOperationException(
+                    "The EF outbox has no complete payload admission proof for its serialized envelope.");
+            }
+
+            proof = admittedProof;
+        }
+
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         var outboxMessage = new OutboxMessage
         {
@@ -39,7 +56,7 @@ internal static class OutboxMessageFactory
             ResponseAddress = context.ResponseAddress,
             FaultAddress = context.FaultAddress,
             SentTime = context.SentTime ?? now,
-            ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
+            ContentType = contentType,
             MessageType = string.Join(";", context.SupportedMessageTypes),
             Body = body.GetRequiredTransportText(),
             InboxMessageId = inboxMessageId,
@@ -53,7 +70,10 @@ internal static class OutboxMessageFactory
         if (context.Delay.HasValue)
             outboxMessage.EnqueueTime = now + context.Delay;
 
-        outboxMessage.Headers = deserializer.SerializeDictionary(context.Headers.GetAll());
+        string? headers = deserializer.SerializeDictionary(context.Headers.GetAll());
+        outboxMessage.Headers = proof is { } durableProof
+            ? OutboxAdmissionMetadata.Encode(headers, durableProof)
+            : headers;
 
         if (context is TransportSendContext<T> transportSendContext)
         {

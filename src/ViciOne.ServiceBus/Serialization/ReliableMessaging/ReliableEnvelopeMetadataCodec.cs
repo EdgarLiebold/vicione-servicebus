@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
@@ -20,6 +21,13 @@ public static class ReliableEnvelopeMetadataCodec
     /// <param name="capturedAt">The clock instant used to convert relative lifetime into absolute expiration.</param>
     /// <returns>The versioned UTF-8 JSON metadata document.</returns>
     public static ReadOnlyMemory<byte> Capture<T>(SendContext<T> context, DateTimeOffset capturedAt)
+        where T : class
+        => Capture(context, capturedAt, durableProof: null);
+
+    internal static ReadOnlyMemory<byte> Capture<T>(
+        SendContext<T> context,
+        DateTimeOffset capturedAt,
+        DurablePayloadAdmissionProof? durableProof)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -47,6 +55,9 @@ public static class ReliableEnvelopeMetadataCodec
             ExpirationTime = context.TimeToLive.HasValue ? capturedAt + context.TimeToLive.Value : null,
             Headers = headers,
             Properties = serializedProperties,
+            AdmittedBodyBytes = durableProof?.SerializedBodyBytes,
+            MessageDataOffloadObserved = durableProof?.MessageDataOffloadObserved,
+            AdmissionSha256 = durableProof?.AdmissionSha256,
         };
         return JsonSerializer.SerializeToUtf8Bytes(document, ServiceBusMetadataJson.Options);
     }
@@ -61,6 +72,36 @@ public static class ReliableEnvelopeMetadataCodec
         if (metadata.IsEmpty)
             return;
 
+        Apply(context, Decode(metadata), replayedAt);
+    }
+
+    internal static DurablePayloadAdmissionProof? ApplyForDurableReplay(
+        SendContext context,
+        ReadOnlyMemory<byte> metadata,
+        DateTimeOffset replayedAt)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        if (metadata.IsEmpty)
+            return null;
+
+        MetadataDocument document = Decode(metadata);
+        Apply(context, document, replayedAt);
+
+        if (document.AdmittedBodyBytes is null
+            && document.MessageDataOffloadObserved is null
+            && document.AdmissionSha256 is null)
+            return null;
+
+        if (document.AdmittedBodyBytes is not { } bodyBytes || bodyBytes < 0
+            || document.MessageDataOffloadObserved is not { } offloadObserved
+            || document.AdmissionSha256 is not { Length: 32 } digest)
+            throw new SerializationException("Reliable envelope metadata contains an incomplete durable payload admission proof.");
+
+        return new DurablePayloadAdmissionProof(bodyBytes, offloadObserved, digest);
+    }
+
+    static MetadataDocument Decode(ReadOnlyMemory<byte> metadata)
+    {
         MetadataDocument document = JsonSerializer.Deserialize<MetadataDocument>(
             metadata.Span,
             ServiceBusMetadataJson.Options)
@@ -71,6 +112,11 @@ public static class ReliableEnvelopeMetadataCodec
                 $"Reliable envelope metadata version '{document.Version}' is unsupported; expected '{CurrentVersion}'.");
         }
 
+        return document;
+    }
+
+    static void Apply(SendContext context, MetadataDocument document, DateTimeOffset replayedAt)
+    {
         context.RequestId = document.RequestId;
         context.ConversationId = document.ConversationId;
         context.InitiatorId = document.InitiatorId;
@@ -130,5 +176,14 @@ public static class ReliableEnvelopeMetadataCodec
         public string? Headers { get; set; }
 
         public string? Properties { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? AdmittedBodyBytes { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? MessageDataOffloadObserved { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public byte[]? AdmissionSha256 { get; set; }
     }
 }

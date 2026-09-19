@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
@@ -18,6 +19,16 @@ internal sealed class PostgreSqlDatabaseMigrator :
     const string RoleExistsSql = "SELECT COUNT(*) FROM pg_catalog.pg_roles WHERE rolname = @Name";
     const string CreateRoleSql = """CREATE ROLE "{0}" """;
     const string GrantRoleToPrincipalSql = """GRANT "{0}" TO "{1}";""";
+    const string BodyExactColumnTypeSql = """
+        SELECT a.atttypid = 'pg_catalog.json'::regtype
+        FROM pg_catalog.pg_attribute a
+        JOIN pg_catalog.pg_class c ON c.oid = a.attrelid
+        JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+        WHERE n.nspname = @Schema AND c.relname = 'message'
+            AND a.attname = 'body_exact' AND NOT a.attisdropped
+        """;
+    const string AddBodyExactColumnSql = """ALTER TABLE "{0}".message ADD COLUMN IF NOT EXISTS body_exact json""";
+    const string PrepareBodyExactMigrationSql = """SET LOCAL ROLE "{0}"; SET LOCAL lock_timeout = '5s';""";
 
     const string GrantRoleSql = """
         GRANT USAGE ON SCHEMA "{1}" TO "{0}";
@@ -166,6 +177,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
             content_type         text,
             message_type         text,
             body                 jsonb,
+            body_exact           json,
             binary_body          bytea,
 
             message_id           uuid,
@@ -1418,6 +1430,37 @@ internal sealed class PostgreSqlDatabaseMigrator :
             string.Format(CreateInfrastructureSql, schema, role, notifyChannelPrefix), cancellationToken: cancellationToken);
 
         await connection.Connection.ExecuteScalarAsync<int>(command).ConfigureAwait(false);
+
+        var columnTypeCommand = new CommandDefinition(BodyExactColumnTypeSql, new { Schema = schema }, cancellationToken: cancellationToken);
+        bool? columnIsJson = await connection.Connection.ExecuteScalarAsync<bool?>(columnTypeCommand).ConfigureAwait(false);
+        if (columnIsJson == false)
+            throw new InvalidOperationException($"The PostgreSQL transport schema '{schema}' has a body_exact column that is not json.");
+
+        if (columnIsJson is null)
+        {
+            await using var transaction = await connection.Connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            var prepareCommand = new CommandDefinition(string.Format(PrepareBodyExactMigrationSql, role),
+                transaction: transaction, cancellationToken: cancellationToken);
+            await connection.Connection.ExecuteAsync(prepareCommand).ConfigureAwait(false);
+
+            try
+            {
+                var addColumnCommand = new CommandDefinition(string.Format(AddBodyExactColumnSql, schema),
+                    transaction: transaction, cancellationToken: cancellationToken);
+                await connection.Connection.ExecuteAsync(addColumnCommand).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (PostgresException exception) when (exception.SqlState == PostgresErrorCodes.LockNotAvailable)
+            {
+                throw new InvalidOperationException(
+                    $"The PostgreSQL transport schema '{schema}' could not add body_exact within the bounded lock wait. Retry the migration when the message table is available.",
+                    exception);
+            }
+
+            columnIsJson = await connection.Connection.ExecuteScalarAsync<bool?>(columnTypeCommand).ConfigureAwait(false);
+            if (columnIsJson != true)
+                throw new InvalidOperationException($"The PostgreSQL transport schema '{schema}' did not acquire a json body_exact column.");
+        }
 
         _logger.LogDebug("Transport infrastructure in schema {Schema} created or updated", schema);
     }

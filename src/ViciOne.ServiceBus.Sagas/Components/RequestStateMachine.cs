@@ -16,9 +16,9 @@ public class RequestStateMachine :
     /// <param name="configureMissingInstanceRedelivery">The configure missing instance redelivery.</param>
     public RequestStateMachine(Action<IMissingInstanceRedeliveryConfigurator>? configureMissingInstanceRedelivery = null)
     {
-        IRequestStateMachineMissingInstanceConfigurator? missingInstanceConfigurator = configureMissingInstanceRedelivery == null
-            ? null
-            : new RedeliverRequestStateMachineSpecification(configureMissingInstanceRedelivery);
+        IRequestStateMachineMissingInstanceConfigurator missingInstanceConfigurator =
+            new RedeliverRequestStateMachineSpecification(
+                configureMissingInstanceRedelivery ?? ConfigureDefaultMissingInstanceRedelivery);
 
         InstanceState(x => x.CurrentState, Pending);
 
@@ -31,16 +31,14 @@ public class RequestStateMachine :
         {
             x.CorrelateById(m => m.SagaCorrelationId, i => i.Message.CorrelationId);
 
-            if (missingInstanceConfigurator != null)
-                x.OnMissingInstance(m => missingInstanceConfigurator.Apply(m));
+            x.OnMissingInstance(m => missingInstanceConfigurator.Apply(m));
         });
 
         Event(() => Faulted, x =>
         {
             x.CorrelateById(m => m.SagaCorrelationId, i => i.Message.CorrelationId);
 
-            if (missingInstanceConfigurator != null)
-                x.OnMissingInstance(m => missingInstanceConfigurator.Apply(m));
+            x.OnMissingInstance(m => missingInstanceConfigurator.Apply(m));
         });
 
         Initially(
@@ -68,6 +66,15 @@ public class RequestStateMachine :
     public IEvent<IRequestCompleted> Completed { get; } = null!;
     /// <summary>Gets the faulted.</summary>
     public IEvent<IRequestFaulted> Faulted { get; } = null!;
+
+    static void ConfigureDefaultMissingInstanceRedelivery(IMissingInstanceRedeliveryConfigurator configurator)
+    {
+        // Outcome and start events can arrive out of order across queues. The built-in request
+        // timeout is 30 seconds; a caller-specific timeout is not available before Started.
+        configurator.Interval(30, TimeSpan.FromSeconds(1));
+        configurator.ConfigureMessageScheduler = false;
+    }
+
     static void InitializeInstance(IBehaviorContext<RequestState, IRequestStarted> context)
     {
         context.Saga.ConversationId = context.ConversationId;

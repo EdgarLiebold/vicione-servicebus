@@ -42,7 +42,8 @@ public sealed class DelayedScheduleMessageProvider :
 
         await schedulerEndpoint.SendAsync(message, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
-        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
+        var accepted = scheduleMessagePipe.AcceptResult();
+        return new ScheduledMessageHandle<T>(accepted.ScheduledMessageId ?? tokenId, dueAt, destinationAddress, message);
     }
 
     /// <summary>Reports that transport-delayed messages cannot be recalled after acceptance.</summary>

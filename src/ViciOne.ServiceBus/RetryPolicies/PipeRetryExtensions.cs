@@ -136,11 +136,19 @@ public static class PipeRetryExtensions
         RetryContext<InlinePipeContext>? retryContext = null;
         while (true)
         {
-            try
+            if (retryContext != null)
             {
-                if (retryContext != null)
+                CancellationToken retryToken = retryContext.CancellationToken;
+                using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled && retryToken.CanBeCanceled
+                    && cancellationToken != retryToken
+                    ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, retryToken)
+                    : null;
+                CancellationToken preparationToken = linkedCancellation?.Token
+                    ?? (retryToken.CanBeCanceled ? retryToken : cancellationToken);
+
+                try
                 {
-                    retryContext.CancellationToken.ThrowIfCancellationRequested();
+                    preparationToken.ThrowIfCancellationRequested();
 
                     if (log)
                         LogContext.Warning?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay,
@@ -148,16 +156,29 @@ public static class PipeRetryExtensions
 
                     if (retryContext.Delay.HasValue)
                     {
-                        await Task.Delay(retryContext.Delay.Value, timeProvider, retryContext.CancellationToken)
+                        await Task.Delay(retryContext.Delay.Value, timeProvider, preparationToken)
                             .ConfigureAwait(false);
                     }
 
-                    Task preRetryTask = retryContext.PreRetryAsync(cancellationToken: cancellationToken)
+                    Task preRetryTask = retryContext.PreRetryAsync(cancellationToken: preparationToken)
                         ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
                     await preRetryTask.ConfigureAwait(false);
+                    preparationToken.ThrowIfCancellationRequested();
                 }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException(cancellationToken);
+                }
+                catch (OperationCanceledException) when (retryToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException(retryToken);
+                }
+            }
 
-                cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            retryContext?.CancellationToken.ThrowIfCancellationRequested();
+            try
+            {
                 Task<TResult> operation = retryMethod()
                     ?? throw new InvalidOperationException("The retry operation returned a null task.");
                 return await operation.ConfigureAwait(false);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Middleware;
 
@@ -24,4 +25,10 @@ public interface OutboxMessageContext :
 
     /// <summary>Gets the properties.</summary>
     IReadOnlyDictionary<string, object> Properties { get; }
+}
+
+// Kept separate from the public outbox contract: in-memory and legacy outboxes do not carry a durable proof.
+internal interface IDurableOutboxMessageContext
+{
+    DurablePayloadAdmissionProof? AdmissionProof { get; }
 }

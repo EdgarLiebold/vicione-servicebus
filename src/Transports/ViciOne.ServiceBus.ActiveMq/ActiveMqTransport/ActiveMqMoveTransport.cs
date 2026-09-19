@@ -35,14 +35,27 @@ public class ActiveMqMoveTransport<TSettings>
         if (!context.TryGetPayload(out ActiveMqMessageContext? messageContext))
             throw new ArgumentException("The ActiveMqMessageContext was not present", nameof(context));
 
+        byte[]? byteBody = null;
+        string? textBody = null;
+        switch (messageContext.TransportMessage)
+        {
+            case IBytesMessage:
+                byteBody = context.Body.ToArray();
+                break;
+
+            case ITextMessage:
+                textBody = context.Body.GetRequiredTransportText();
+                break;
+        }
+
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await _topologyFilter.ConfigureAsync(sessionContext).ConfigureAwait(false);
 
         var queue = await sessionContext.GetQueueAsync(_destination).ConfigureAwait(false);
 
         var message = messageContext.TransportMessage switch
         {
-            IBytesMessage _ => sessionContext.CreateBytesMessage(context.Body.ToArray()),
-            ITextMessage _ => sessionContext.CreateTextMessage(context.Body.GetRequiredTransportText()),
+            IBytesMessage _ => sessionContext.CreateBytesMessage(byteBody!),
+            ITextMessage _ => sessionContext.CreateTextMessage(textBody!),
             _ => sessionContext.CreateMessage(),
         };
 

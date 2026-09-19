@@ -47,12 +47,17 @@ public class SqsMoveTransport<TSettings>
         if (!context.TryGetPayload(out ClientContext? clientContext))
             throw new ArgumentException("The ReceiveContext must contain a ClientContext (from Amazon SQS)", nameof(context));
 
+        operationToken.ThrowIfCancellationRequested();
+        string body = context.Body.GetRequiredTransportText();
+
+        operationToken.ThrowIfCancellationRequested();
+
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext =
             await _topologyFilter.ConfigureAsync(clientContext, operationToken).ConfigureAwait(false);
 
         operationToken.ThrowIfCancellationRequested();
 
-        var message = new SendMessageBatchRequestEntry("", context.Body.GetRequiredTransportText()) { MessageAttributes = new Dictionary<string, MessageAttributeValue>() };
+        var message = new SendMessageBatchRequestEntry("", body) { MessageAttributes = new Dictionary<string, MessageAttributeValue>() };
 
         if (context.TryGetPayload(out AmazonSqsMessageContext? receiveContext))
         {

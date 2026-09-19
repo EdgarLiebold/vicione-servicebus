@@ -94,7 +94,18 @@ internal sealed class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
         TimeSpan queryDelay = QueryDelay;
         TimeSpan queryTimeout = QueryTimeout;
 
-        _services.TryAddScoped<IOutboxContextFactory<TDbContext>, EntityFrameworkOutboxContextFactory<TDbContext>>();
+        Type factoryService = typeof(IOutboxContextFactory<TDbContext>);
+        Type ownedFactory = typeof(EntityFrameworkOutboxContextFactory<TBus, TDbContext>);
+        if (_services.Any(descriptor => descriptor.ServiceType == factoryService
+                && descriptor.ImplementationType is { IsGenericType: true } implementation
+                && implementation.GetGenericTypeDefinition() == typeof(EntityFrameworkOutboxContextFactory<,>)
+                && implementation != ownedFactory))
+        {
+            throw new ConfigurationException(
+                $"The Entity Framework inbox outbox for DbContext '{typeof(TDbContext)}' is already owned by another bus.");
+        }
+
+        _services.TryAddScoped<IOutboxContextFactory<TDbContext>, EntityFrameworkOutboxContextFactory<TBus, TDbContext>>();
         _services.AddOptions<EntityFrameworkOutboxOptions<TDbContext>>().Configure(options =>
         {
             options.IsolationLevel = isolationLevel;

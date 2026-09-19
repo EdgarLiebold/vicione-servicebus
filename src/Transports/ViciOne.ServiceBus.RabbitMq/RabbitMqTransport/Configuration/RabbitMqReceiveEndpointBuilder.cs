@@ -47,14 +47,14 @@ public class RabbitMqReceiveEndpointBuilder :
     public RabbitMqReceiveEndpointContext CreateReceiveEndpointContext()
     {
         var brokerTopology = BuildTopology(_configuration.Settings);
-
-        var deadLetterTransport = CreateDeadLetterTransport();
-        var errorTransport = CreateErrorTransport();
-
         var context = new RabbitMqQueueReceiveEndpointContext(_hostConfiguration, _configuration, brokerTopology);
 
-        context.GetOrAddPayload(() => deadLetterTransport);
-        context.GetOrAddPayload(() => errorTransport);
+        if (_configuration.Settings.QueueName != RabbitMqExchangeNames.ReplyTo)
+        {
+            context.GetOrAddPayload(CreateDeadLetterTransport);
+            context.GetOrAddPayload(CreateErrorTransport);
+        }
+
         context.GetOrAddPayload(() => _hostConfiguration.Topology);
 
         return context;

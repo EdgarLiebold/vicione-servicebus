@@ -1,4 +1,5 @@
 using System;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports;
@@ -32,6 +33,9 @@ internal sealed class InMemoryReceiveEndpointContext :
     public IMessageFabric<InMemoryTransportMessage> MessageFabric => _hostConfiguration.TransportProvider.MessageFabric;
     /// <summary>Gets the host-specific context that isolates fabric entities.</summary>
     public IInMemoryTransportContext TransportContext => _hostConfiguration.TransportProvider;
+    /// <summary>Gets the payload-admission policy attached to the owning in-memory host.</summary>
+    public IPayloadAdmissionRuntime? PayloadAdmissionRuntime =>
+        (_hostConfiguration as IPayloadAdmissionHostConfiguration)?.PayloadAdmissionRuntime;
 
     /// <summary>Rejects send agents because the in-memory fabric owns send lifecycle directly.</summary>
     /// <param name="agent">The unsupported send agent.</param>

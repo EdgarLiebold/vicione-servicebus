@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
@@ -15,6 +16,9 @@ internal interface IInMemoryReceiveEndpointContext :
 
     /// <summary>Gets the host-specific context that isolates fabric entities.</summary>
     IInMemoryTransportContext TransportContext { get; }
+
+    /// <summary>Gets the payload-admission runtime owned by this endpoint's bus.</summary>
+    IPayloadAdmissionRuntime? PayloadAdmissionRuntime { get; }
 
     /// <summary>Declares the endpoint queue, exchange, and configured consume bindings.</summary>
     void ConfigureTopology();

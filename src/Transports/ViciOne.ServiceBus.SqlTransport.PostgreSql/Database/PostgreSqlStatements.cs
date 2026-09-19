@@ -16,16 +16,20 @@ internal static class PostgreSqlStatements
     public const string DbDeadLetterMessagesSql = """SELECT * FROM "{0}".dead_letter_messages(@queue_name,@message_count)""";
 
     public const string DbEnqueueSql = """
-        SELECT * FROM "{0}".send_message(@entity_name,@priority,@transport_message_id,@body,@binary_body,@content_type,
+        SELECT * FROM "{0}".send_message(@entity_name,@priority,@transport_message_id,@body,
+        COALESCE(@binary_body, convert_to(@body_exact::text, 'UTF8')),@content_type,
         @message_type,@message_id,@correlation_id,@conversation_id,@request_id,@initiator_id,@source_address,@destination_address,@response_address,@fault_address,
         @sent_time,@expiration_time,@headers,@host,@partition_key,@routing_key,@delay,@scheduling_token_id)
         """;
 
     public const string DbPublishSql = """
-        SELECT * FROM "{0}".publish_message(@entity_name,@priority,@transport_message_id,@body,@binary_body,@content_type,
+        SELECT * FROM "{0}".publish_message(@entity_name,@priority,@transport_message_id,@body,
+        COALESCE(@binary_body, convert_to(@body_exact::text, 'UTF8')),@content_type,
         @message_type,@message_id,@correlation_id,@conversation_id,@request_id,@initiator_id,@source_address,@destination_address,@response_address,@fault_address,
         @sent_time,@expiration_time,@headers,@host,@partition_key,@routing_key,@delay,@scheduling_token_id)
         """;
+
+    public const string DbSetExactBodySql = """UPDATE "{0}".message SET body_exact = @body_exact WHERE transport_message_id = @transport_message_id""";
 
     public const string DbProcessMetricsSql = """SELECT * FROM "{0}".process_metrics(@row_limit)""";
     public const string DbPurgeTopologySql = """SELECT * FROM "{0}".purge_topology()""";

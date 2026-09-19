@@ -11,9 +11,11 @@ using ViciOne.ServiceBus.Middleware;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Creates receive-side EF Core inbox/outbox transactions with provider-specific row locking.</summary>
+/// <typeparam name="TBus">The bus whose payload-admission policy owns outgoing messages.</typeparam>
 /// <typeparam name="TDbContext">The DbContext type containing inbox and outbox entities.</typeparam>
-internal sealed class EntityFrameworkOutboxContextFactory<TDbContext> :
+internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
     IOutboxContextFactory<TDbContext>
+    where TBus : class, IBus
     where TDbContext : DbContext
 {
     readonly TDbContext _dbContext;
@@ -116,7 +118,7 @@ internal sealed class EntityFrameworkOutboxContextFactory<TDbContext> :
                     _dbContext.Update(inboxState);
                     await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
 
-                    using var outboxContext = new DbContextOutboxConsumeContext<TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState,
+                    using var outboxContext = new DbContextOutboxConsumeContext<TBus, TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState,
                         _timeProvider);
 
                     await next.SendAsync(outboxContext).ConfigureAwait(false);

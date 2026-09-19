@@ -3,16 +3,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>Serializes an outgoing message and its ServiceBus envelope as UTF-8 JSON.</summary>
 /// <typeparam name="TMessage">The message contract contained by the envelope.</typeparam>
 internal sealed class SystemTextJsonMessageBody<TMessage> :
-    MessageBody
+    MessageBody, IPayloadAdmittedMessageBody
     where TMessage : class
 {
     readonly byte[] _content;
+    readonly PayloadAdmissionSerializationContext? _admissionContext;
 
     /// <summary>Creates an owned snapshot of the encoded envelope.</summary>
     /// <param name="context">The outgoing message and metadata.</param>
@@ -22,11 +24,15 @@ internal sealed class SystemTextJsonMessageBody<TMessage> :
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(options);
+        context.TryGetPayload(out PayloadAdmissionSerializationContext? admission);
+        _admissionContext = admission;
         _content = Serialize(context, options, envelope);
     }
 
     /// <summary>Gets the exact encoded UTF-8 byte length.</summary>
     public long Length => _content.LongLength;
+
+    PayloadAdmissionSerializationContext? IPayloadAdmittedMessageBody.AdmissionContext => _admissionContext;
 
     /// <summary>Copies the encoded envelope into a new array.</summary>
     /// <returns>An independently mutable copy of the encoded envelope.</returns>
@@ -54,25 +60,42 @@ internal sealed class SystemTextJsonMessageBody<TMessage> :
             if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
                 return JsonSerializer.SerializeToUtf8Bytes(envelope, options);
 
+            var writerOptions = new JsonWriterOptions
+            {
+                Indented = options.WriteIndented,
+                IndentCharacter = options.IndentCharacter,
+                IndentSize = options.IndentSize,
+                NewLine = options.NewLine,
+                Encoder = options.Encoder,
+            };
+
             IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
-            using (var bodyWriter = new Utf8JsonWriter(bodyBuffer))
+            using (var bodyWriter = new Utf8JsonWriter(bodyBuffer, writerOptions))
             {
                 object? message = envelope.Message;
                 JsonSerializer.Serialize(bodyWriter, message, message?.GetType() ?? typeof(object), options);
             }
 
-            _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
-
-            using JsonDocument bodyDocument = JsonDocument.Parse(bodyBuffer.WrittenMemory);
+            using JsonDocument bodyDocument = JsonDocument.Parse(bodyBuffer.WrittenMemory,
+                new JsonDocumentOptions
+                {
+                    AllowTrailingCommas = options.AllowTrailingCommas,
+                    CommentHandling = options.ReadCommentHandling == JsonCommentHandling.Allow
+                        ? JsonCommentHandling.Skip
+                        : options.ReadCommentHandling,
+                    MaxDepth = options.MaxDepth,
+                });
             var boundedEnvelope = new JsonMessageEnvelope(envelope)
             {
                 Message = bodyDocument.RootElement,
             };
 
             IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
-            using (var envelopeWriter = new Utf8JsonWriter(envelopeBuffer))
+            using (var envelopeWriter = new Utf8JsonWriter(envelopeBuffer, writerOptions))
                 JsonSerializer.Serialize(envelopeWriter, boundedEnvelope, options);
 
+            ReadOnlyMemory<byte> finalBody = JsonEnvelopeMessageValue.Extract(envelopeBuffer.WrittenMemory, options);
+            _ = admission.Runtime.EvaluateSerializedBody(finalBody, admission.MessageDataOffloadObserved);
             admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
             return envelopeBuffer.WrittenMemory.ToArray();
         }

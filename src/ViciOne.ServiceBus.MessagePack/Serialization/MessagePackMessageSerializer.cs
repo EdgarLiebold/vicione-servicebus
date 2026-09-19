@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Mime;
 using System.Text.Json;
 using MessagePack;
@@ -17,7 +18,8 @@ namespace ViciOne.ServiceBus.MessagePack.Serialization;
 internal sealed class MessagePackMessageSerializer :
     IMessageSerializer,
     IMessageDeserializer,
-    IObjectDeserializer
+    IObjectDeserializer,
+    ICopiedEnvelopeBodyExtractor
 {
     const string ProviderKey = "MessagePack";
 
@@ -74,6 +76,66 @@ internal sealed class MessagePackMessageSerializer :
     {
         ArgumentNullException.ThrowIfNull(context);
         return new MessagePackMessageBody<T>(context);
+    }
+
+    ReadOnlyMemory<byte> ICopiedEnvelopeBodyExtractor.ExtractSerializedBody(ReadOnlyMemory<byte> envelope)
+    {
+        try
+        {
+            var reader = new MessagePackReader(envelope);
+            if (reader.NextMessagePackType != MessagePackType.Map)
+                throw new InvalidOperationException("The copied MessagePack envelope is not a map.");
+
+            int count = reader.ReadMapHeader();
+            ReadOnlyMemory<byte> body = default;
+            bool found = false;
+
+            for (int index = 0; index < count; index++)
+            {
+                // This serializer writes named envelope properties as string map keys.
+                // The input is one contiguous snapshot, so the key span never needs a copy.
+                if (reader.NextMessagePackType != MessagePackType.String
+                    || !reader.TryReadStringSpan(out ReadOnlySpan<byte> key))
+                    throw new InvalidOperationException("The copied MessagePack envelope has a non-string key.");
+
+                if (!key.SequenceEqual("Message"u8))
+                {
+                    reader.Skip();
+                    continue;
+                }
+
+                if (found)
+                    throw new InvalidOperationException("The copied MessagePack envelope has more than one message value.");
+                found = true;
+
+                if (reader.NextMessagePackType != MessagePackType.Binary)
+                    throw new InvalidOperationException("The copied MessagePack envelope message is not binary.");
+
+                var serialized = reader.ReadBytes();
+                if (serialized is null || serialized.Value.IsEmpty)
+                    throw new InvalidOperationException("The copied MessagePack envelope has no serialized message.");
+
+                int length = checked((int)serialized.Value.Length);
+                int start = checked((int)(reader.Consumed - serialized.Value.Length));
+                body = envelope.Slice(start, length);
+            }
+
+            if (!found || !reader.End)
+                throw new InvalidOperationException("The copied MessagePack envelope has no unique message value or has trailing data.");
+
+            // A byte[] field is only a carrier. Its contents must be one complete
+            // MessagePack value before they are used for application-body admission.
+            var bodyReader = new MessagePackReader(body);
+            bodyReader.Skip();
+            if (!bodyReader.End)
+                throw new InvalidOperationException("The copied MessagePack message has trailing data.");
+
+            return body;
+        }
+        catch (Exception exception) when (exception is EndOfStreamException or MessagePackSerializationException)
+        {
+            throw new InvalidOperationException("The copied MessagePack envelope or message is malformed.", exception);
+        }
     }
 
     /// <summary>Adds this serializer's media type and provider identity to a probe.</summary>

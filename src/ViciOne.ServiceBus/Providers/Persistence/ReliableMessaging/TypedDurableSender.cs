@@ -100,9 +100,23 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));
-        ReadOnlyMemory<byte> metadata = scheduledOptions is null
+        DurablePayloadAdmissionProof? durableProof = null;
+        if (_payloadAdmission is not null)
+        {
+            if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
+                || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
+                || !proof.MatchesEnvelope(body, contentType))
+                throw new InvalidOperationException("The durable send has no complete payload admission proof for its serialized envelope.");
+
+            durableProof = proof;
+        }
+
+        ReadOnlyMemory<byte> metadata = durableProof is null && scheduledOptions is null
             ? ReadOnlyMemory<byte>.Empty
-            : ReliableEnvelopeMetadataCodec.Capture(context, options.DueAt ?? context.GetTimeProvider().GetUtcNow());
+            : ReliableEnvelopeMetadataCodec.Capture(
+                context,
+                options.DueAt ?? context.GetTimeProvider().GetUtcNow(),
+                durableProof);
         var serialized = new SerializedDurableSend
         {
             Id = options.IdempotencyKey,

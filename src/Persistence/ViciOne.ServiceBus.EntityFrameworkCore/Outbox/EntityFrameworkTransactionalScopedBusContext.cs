@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
@@ -78,13 +80,22 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         return _writeCoordinator.ExecuteAsync(() =>
         {
             ThrowIfDisposed();
+            PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
+            if (admissionRuntime is null)
+            {
+                throw new ConfigurationException(
+                    $"The Entity Framework transactional outbox for bus '{typeof(TBus)}' has no payload-admission runtime.");
+            }
+
+            MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
             EnsureOutboxState();
 
             var message = OutboxMessageFactory.Create(
                 context,
                 ServiceBusMetadataJson.ObjectDeserializer,
                 _timeProvider,
-                outboxId: _outboxId);
+                outboxId: _outboxId,
+                admittedBody: admittedBody);
             _dbContext.Add(message);
             return Task.CompletedTask;
         }, cancellationToken);
