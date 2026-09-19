@@ -11,7 +11,7 @@ internal sealed class JsonValueComparer<T> :
     ValueComparer<T>
     where T : class?
 {
-    /// <summary>Initializes a comparer that prefers cloning and typed equality before JSON fallbacks.</summary>
+    /// <summary>Initializes a comparer based on the JSON value written to the database.</summary>
     public JsonValueComparer()
         : base((t1, t2) => DoEquals(t1, t2), t => DoGetHashCode(t), t => DoGetSnapshot(t)!)
     {
@@ -29,9 +29,6 @@ internal sealed class JsonValueComparer<T> :
         if (instance == null)
             return default;
 
-        if (instance is ICloneable cloneable)
-            return (T)cloneable.Clone();
-
         return JsonSerializer.Deserialize<T>(Json(instance)!, ServiceBusMetadataJson.Options);
     }
 
@@ -39,9 +36,6 @@ internal sealed class JsonValueComparer<T> :
     {
         if (instance == null)
             return 0;
-
-        if (instance is IEquatable<T>)
-            return instance.GetHashCode();
 
         return Json(instance)?.GetHashCode() ?? 0;
     }
@@ -52,9 +46,6 @@ internal sealed class JsonValueComparer<T> :
             return true;
         if (left == null || right == null)
             return false;
-
-        if (left is IEquatable<T> equatable)
-            return equatable.Equals(right);
 
         return string.Equals(Json(left), Json(right), StringComparison.Ordinal);
     }

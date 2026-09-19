@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.Advanced.Serialization;
@@ -15,6 +16,47 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
 
 public sealed class MessagePackOutboxReplayTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "corrupt-admission-digest-blocks-replay")]
+    public async Task Outbox_RejectsReplayWhenPersistedAdmissionDigestIsCorruptAsync()
+    {
+        var factory = new MessagePackSerializerFactory();
+        var configuration = new SerializationConfiguration();
+        configuration.Clear();
+        configuration.AddSerializer(factory);
+        configuration.AddDeserializer(factory, isDefault: true);
+        ISerialization serialization = configuration.CreateSerializerCollection();
+        var destination = new Uri("loopback://localhost/admission-proof-replay");
+        var sendContext = new MessageSendContext<MessagePackOutboxPayload>(
+            new MessagePackOutboxPayload(
+                Guid.Parse("3b6251cf-e727-4ba0-b1bb-273d0dc2f801"),
+                "durable-payload",
+                [0x00, 0xff]))
+        {
+            MessageId = Guid.Parse("312da260-5aa9-4c96-88f5-13d14dd1decc"),
+            DestinationAddress = destination,
+            Serializer = factory.CreateSerializer(),
+            Serialization = serialization,
+        };
+        OutboxMessage stored = OutboxMessageFactory.Create(
+            sendContext,
+            ServiceBusMetadataJson.ObjectDeserializer,
+            TimeProvider.System,
+            outboxId: Guid.Parse("5b461445-5d9a-4d85-b5e3-e8efcc352eca"));
+        stored.Headers = "VOSB-EF-OUTBOX-ADMISSION/1:17:0:" + new string('A', 64) + "\n" + stored.Headers;
+        stored.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
+        var replayContext = new MessageSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
+        {
+            Serialization = serialization,
+        };
+
+        SerializationException failure = await Assert.ThrowsAsync<SerializationException>(
+            () => new OutboxMessageSendPipe(stored, destination).SendAsync(replayContext));
+
+        Assert.Contains("does not match its payload admission proof", failure.Message, StringComparison.Ordinal);
+        Assert.Empty(replayContext.Headers.GetAll());
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-BODY-CROSS-OWNER", "ef-outbox-messagepack-store-replay")]
     public async Task Outbox_StoresCanonicalMessagePackCarrierAndReplaysTheTypedEnvelopeAsync()
