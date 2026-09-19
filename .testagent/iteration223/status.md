@@ -284,3 +284,12 @@ The Serialization agent's parity design now uses the public evaluator path
 for bounded opaque Copy bytes and a first-party MessagePack admission marker;
 its code/build/testing are still under review, so no source patch is yet
 admitted or committed. Historical and current A+ gates remain open.
+
+Personal Core read reached 420/702, with all ledger path/blob rows confirmed
+against the current owning-project tree. The ten newly read files cover topic
+exchange routing, send transport, scalar/property-provider conversion,
+recurring scheduler contracts, consume observers, a 500-message fault storm,
+DI endpoint exclusion, job start and transport formatting. The lead requested
+instance-bound admission evidence for the first-party JSON bodies as well as
+MessagePack, to prevent same-length replacement bytes inheriting stale
+tracking flags. The agent's parity correction is still in progress.
