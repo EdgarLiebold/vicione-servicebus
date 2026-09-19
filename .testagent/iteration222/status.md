@@ -94,5 +94,5 @@ files; this does not increase the lead-personal source-read/admission count):
   not yet regression-proven fixes or broad transport acceptance.
 
 The lead's hash-bound partial personal read of the owning Core test project is
-tracked separately in `../core-test-project-full-read/partial-ledger.md` (43/702
+tracked separately in `../core-test-project-full-read/partial-ledger.md` (55/702
 at this checkpoint). Historical ordering is still not retrospectively cured.
