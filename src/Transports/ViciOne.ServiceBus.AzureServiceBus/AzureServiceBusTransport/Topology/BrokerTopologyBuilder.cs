@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.Topology;
@@ -9,6 +11,15 @@ public class BrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
     long _nextId;
+    readonly Dictionary<(string TopicName, string SubscriptionName), SubscriptionKind> _subscriptionKinds =
+        new(new SubscriptionIdentityComparer());
+
+    enum SubscriptionKind
+    {
+        Consumer,
+        QueueForwarding,
+        TopicForwarding,
+    }
 
     /// <summary>Creates empty entity collections keyed by broker identity and name.</summary>
     public BrokerTopologyBuilder()
@@ -57,10 +68,16 @@ public class BrokerTopologyBuilder :
         RuleFilter? filter)
     {
         var topicEntity = Topics.Get(topic);
+        ValidateTopicName(topicEntity, createSubscriptionOptions);
+        ValidateSessionForwarding(createSubscriptionOptions.RequiresSession, createSubscriptionOptions.ForwardTo,
+            nameof(createSubscriptionOptions));
+        EnsureSubscriptionKind(createSubscriptionOptions, SubscriptionKind.Consumer);
 
         var subscriptionEntity = new SubscriptionEntity(GetNextId(), topicEntity, createSubscriptionOptions, rule, filter);
 
-        return Subscriptions.GetOrAdd(subscriptionEntity);
+        SubscriptionHandle handle = Subscriptions.GetOrAdd(subscriptionEntity);
+        RegisterSubscriptionKind(createSubscriptionOptions, SubscriptionKind.Consumer);
+        return handle;
     }
 
     /// <summary>Adds or reuses a queue declaration.</summary>
@@ -68,6 +85,8 @@ public class BrokerTopologyBuilder :
     /// <returns>A handle to the topology queue.</returns>
     public QueueHandle CreateQueue(CreateQueueOptions createQueueOptions)
     {
+        ArgumentNullException.ThrowIfNull(createQueueOptions);
+        ValidateSessionForwarding(createQueueOptions.RequiresSession, createQueueOptions.ForwardTo, nameof(createQueueOptions));
         var queue = new QueueEntity(GetNextId(), createQueueOptions);
 
         return Queues.GetOrAdd(queue);
@@ -84,15 +103,18 @@ public class BrokerTopologyBuilder :
         CreateRuleOptions? rule, RuleFilter? filter)
     {
         var topicEntity = Topics.Get(exchange);
+        ValidateTopicName(topicEntity, createSubscriptionOptions);
+        EnsureSubscriptionKind(createSubscriptionOptions, SubscriptionKind.QueueForwarding);
 
         var queueEntity = Queues.Get(queue);
+        CreateSubscriptionOptions forwardingOptions = ForwardingOptions(createSubscriptionOptions, queueEntity.CreateQueueOptions.Name);
 
-        if (topicEntity.IsPartitioned)
-            queueEntity.PromotePartitioning();
+        var binding = new QueueSubscriptionEntity(GetNextId(), GetNextId(), topicEntity, queueEntity, forwardingOptions, rule, filter);
 
-        var binding = new QueueSubscriptionEntity(GetNextId(), GetNextId(), topicEntity, queueEntity, createSubscriptionOptions, rule, filter);
-
-        return QueueSubscriptions.GetOrAdd(binding);
+        QueueSubscriptionHandle handle = QueueSubscriptions.GetOrAdd(binding);
+        PromoteForwardingDestinations(topicEntity);
+        RegisterSubscriptionKind(createSubscriptionOptions, SubscriptionKind.QueueForwarding);
+        return handle;
     }
 
     /// <summary>Creates topic subscription.</summary>
@@ -103,15 +125,18 @@ public class BrokerTopologyBuilder :
     public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, CreateSubscriptionOptions createSubscriptionOptions)
     {
         var sourceEntity = Topics.Get(source);
+        ValidateTopicName(sourceEntity, createSubscriptionOptions);
+        EnsureSubscriptionKind(createSubscriptionOptions, SubscriptionKind.TopicForwarding);
 
         var destinationEntity = Topics.Get(destination);
+        CreateSubscriptionOptions forwardingOptions = ForwardingOptions(createSubscriptionOptions, destinationEntity.CreateTopicOptions.Name);
 
-        if (sourceEntity.IsPartitioned)
-            destinationEntity.PromotePartitioning();
+        var subscriptionEntity = new TopicSubscriptionEntity(GetNextId(), GetNextId(), sourceEntity, destinationEntity, forwardingOptions);
 
-        var subscriptionEntity = new TopicSubscriptionEntity(GetNextId(), GetNextId(), sourceEntity, destinationEntity, createSubscriptionOptions);
-
-        return TopicSubscriptions.GetOrAdd(subscriptionEntity);
+        TopicSubscriptionHandle handle = TopicSubscriptions.GetOrAdd(subscriptionEntity);
+        PromoteForwardingDestinations(sourceEntity);
+        RegisterSubscriptionKind(createSubscriptionOptions, SubscriptionKind.TopicForwarding);
+        return handle;
     }
 
     /// <summary>Builds an immutable view over the collected entity relationships.</summary>
@@ -124,5 +149,89 @@ public class BrokerTopologyBuilder :
     long GetNextId()
     {
         return Interlocked.Increment(ref _nextId);
+    }
+
+    static void ValidateTopicName(TopicEntity topic, CreateSubscriptionOptions createSubscriptionOptions)
+    {
+        ArgumentNullException.ThrowIfNull(createSubscriptionOptions);
+
+        if (!BrokerName.Equals(topic.CreateTopicOptions.Name, createSubscriptionOptions.TopicName))
+            throw new ArgumentException("The subscription topic name does not match its topic handle.", nameof(createSubscriptionOptions));
+    }
+
+    static CreateSubscriptionOptions ForwardingOptions(CreateSubscriptionOptions createSubscriptionOptions, string destinationName)
+    {
+        ValidateSessionForwarding(createSubscriptionOptions.RequiresSession, destinationName, nameof(createSubscriptionOptions));
+
+        if (!string.IsNullOrWhiteSpace(createSubscriptionOptions.ForwardTo)
+            && !BrokerName.Equals(createSubscriptionOptions.ForwardTo, destinationName))
+            throw new ArgumentException("The subscription forwarding target does not match its destination handle.",
+                nameof(createSubscriptionOptions));
+
+        CreateSubscriptionOptions copy = SubscriptionEntity.Snapshot(createSubscriptionOptions);
+        copy.ForwardTo = destinationName;
+        return copy;
+    }
+
+    static void ValidateSessionForwarding(bool requiresSession, string? forwardTo, string parameterName)
+    {
+        if (requiresSession && !string.IsNullOrWhiteSpace(forwardTo))
+            throw new ArgumentException("A session-enabled entity cannot forward messages.", parameterName);
+    }
+
+    void PromoteForwardingDestinations(TopicEntity source)
+    {
+        if (!source.IsPartitioned)
+            return;
+
+        var pending = new Queue<TopicEntity>();
+        var visited = new HashSet<TopicEntity>(ReferenceEqualityComparer.Instance) { source };
+        pending.Enqueue(source);
+
+        while (pending.Count > 0)
+        {
+            TopicEntity current = pending.Dequeue();
+            foreach (QueueSubscriptionEntity relationship in QueueSubscriptions)
+                if (ReferenceEquals(relationship.Source, current))
+                    ((QueueEntity)relationship.Destination).PromotePartitioning();
+
+            foreach (TopicSubscriptionEntity relationship in TopicSubscriptions)
+            {
+                if (!ReferenceEquals(relationship.Source, current))
+                    continue;
+
+                var destination = (TopicEntity)relationship.Destination;
+                destination.PromotePartitioning();
+                if (visited.Add(destination))
+                    pending.Enqueue(destination);
+            }
+        }
+    }
+
+    void EnsureSubscriptionKind(CreateSubscriptionOptions createSubscriptionOptions, SubscriptionKind kind)
+    {
+        if (_subscriptionKinds.TryGetValue((createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName),
+            out SubscriptionKind existing) && existing != kind)
+            throw new ArgumentException("The subscription broker name is already declared for another relationship kind.",
+                nameof(createSubscriptionOptions));
+    }
+
+    void RegisterSubscriptionKind(CreateSubscriptionOptions options, SubscriptionKind kind) =>
+        _subscriptionKinds.TryAdd((options.TopicName, options.SubscriptionName), kind);
+
+    sealed class SubscriptionIdentityComparer : IEqualityComparer<(string TopicName, string SubscriptionName)>
+    {
+        public bool Equals((string TopicName, string SubscriptionName) x, (string TopicName, string SubscriptionName) y) =>
+            BrokerName.Equals(x.TopicName, y.TopicName)
+            && BrokerName.Equals(x.SubscriptionName, y.SubscriptionName);
+
+        public int GetHashCode((string TopicName, string SubscriptionName) identity)
+        {
+            unchecked
+            {
+                return (BrokerName.GetHashCode(identity.TopicName) * 397)
+                    ^ BrokerName.GetHashCode(identity.SubscriptionName);
+            }
+        }
     }
 }

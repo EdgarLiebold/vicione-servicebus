@@ -93,7 +93,7 @@ public class TopicEntity :
         }
 
         static bool SameIdentityAndLifetime(CreateTopicOptions x, CreateTopicOptions y) =>
-            string.Equals(x.Name, y.Name)
+            BrokerName.Equals(x.Name, y.Name)
             && x.AutoDeleteOnIdle == y.AutoDeleteOnIdle
             && x.DefaultMessageTimeToLive == y.DefaultMessageTimeToLive
             && x.DuplicateDetectionHistoryTimeWindow == y.DuplicateDetectionHistoryTimeWindow
@@ -116,7 +116,7 @@ public class TopicEntity :
         public int GetHashCode(TopicEntity obj)
         {
             // Declaration settings can change during topology building; the topic name remains stable.
-            return obj._createTopicOptions.Name.GetHashCode();
+            return BrokerName.GetHashCode(obj._createTopicOptions.Name);
         }
     }
 
@@ -134,12 +134,12 @@ public class TopicEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x._createTopicOptions.Name, y._createTopicOptions.Name);
+            return BrokerName.Equals(x._createTopicOptions.Name, y._createTopicOptions.Name);
         }
 
         public int GetHashCode(TopicEntity obj)
         {
-            return obj._createTopicOptions.Name.GetHashCode();
+            return BrokerName.GetHashCode(obj._createTopicOptions.Name);
         }
     }
 }

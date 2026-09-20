@@ -39,6 +39,10 @@ entry below records what the current work changed for anyone reading the source.
 - Azure Blob message data now keeps SAS credentials out of new claim-check addresses and logs,
   reads older signed addresses using current credentials, isolates compressed upload block IDs,
   and treats `TimeSpan.MaxValue` as unbounded (`04d9708a2`). Azure TTL enforcement remains open.
+- Azure Service Bus topology declarations now snapshot subscription options and rules, reject
+  conflicting broker identities across relationship kinds and case variants, bind forwarding to
+  the declared destination, propagate partitioning through earlier relationships, and reject
+  session-enabled autoforwarding before deployment.
 - EF JSON change tracking now compares and snapshots the value actually persisted. Selective
   `IEquatable<T>` implementations and shallow `ICloneable` snapshots can no longer silently drop
   changes to serialized fields; SQLite regression tests cover both cases.

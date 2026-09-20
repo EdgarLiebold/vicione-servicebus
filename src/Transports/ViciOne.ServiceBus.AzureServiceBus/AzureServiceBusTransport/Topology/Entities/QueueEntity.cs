@@ -97,7 +97,7 @@ public class QueueEntity :
         }
 
         static bool SameIdentityAndLifetime(CreateQueueOptions x, CreateQueueOptions y) =>
-            string.Equals(x.Name, y.Name)
+            BrokerName.Equals(x.Name, y.Name)
             && x.AutoDeleteOnIdle == y.AutoDeleteOnIdle
             && x.DefaultMessageTimeToLive == y.DefaultMessageTimeToLive
             && x.DuplicateDetectionHistoryTimeWindow == y.DuplicateDetectionHistoryTimeWindow
@@ -113,8 +113,8 @@ public class QueueEntity :
             && x.RequiresSession == y.RequiresSession;
 
         static bool SameForwarding(CreateQueueOptions x, CreateQueueOptions y) =>
-            string.Equals(x.ForwardDeadLetteredMessagesTo, y.ForwardDeadLetteredMessagesTo)
-            && string.Equals(x.ForwardTo, y.ForwardTo);
+            BrokerName.Equals(x.ForwardDeadLetteredMessagesTo, y.ForwardDeadLetteredMessagesTo)
+            && BrokerName.Equals(x.ForwardTo, y.ForwardTo);
 
         static bool SameLimits(CreateQueueOptions x, CreateQueueOptions y) =>
             x.MaxSizeInMegabytes == y.MaxSizeInMegabytes
@@ -127,7 +127,7 @@ public class QueueEntity :
         public int GetHashCode(QueueEntity obj)
         {
             // Declaration settings can change during topology building; the queue name remains stable.
-            return obj._createQueueOptions.Name.GetHashCode();
+            return BrokerName.GetHashCode(obj._createQueueOptions.Name);
         }
     }
 
@@ -145,12 +145,12 @@ public class QueueEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x._createQueueOptions.Name, y._createQueueOptions.Name);
+            return BrokerName.Equals(x._createQueueOptions.Name, y._createQueueOptions.Name);
         }
 
         public int GetHashCode(QueueEntity obj)
         {
-            return obj._createQueueOptions.Name.GetHashCode();
+            return BrokerName.GetHashCode(obj._createQueueOptions.Name);
         }
     }
 }

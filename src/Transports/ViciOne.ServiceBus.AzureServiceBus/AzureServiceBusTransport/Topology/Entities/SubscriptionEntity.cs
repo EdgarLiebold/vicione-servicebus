@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Azure.Messaging.ServiceBus.Administration;
@@ -10,6 +11,9 @@ public class SubscriptionEntity :
     SubscriptionHandle
 {
     readonly TopicEntity _topic;
+    readonly CreateSubscriptionOptions _createSubscriptionOptions;
+    readonly CreateRuleOptions? _rule;
+    readonly RuleFilter? _filter;
 
     /// <summary>Creates a topology subscription for a topic.</summary>
     /// <param name="id">The topology-local identifier.</param>
@@ -24,10 +28,9 @@ public class SubscriptionEntity :
 
         _topic = topic;
 
-        CreateSubscriptionOptions = createSubscriptionOptions;
-
-        Rule = rule;
-        Filter = filter;
+        _createSubscriptionOptions = Snapshot(createSubscriptionOptions);
+        _rule = RuleSnapshot.Copy(rule);
+        _filter = RuleSnapshot.Copy(filter);
     }
 
     /// <summary>Gets a comparer that considers only topic and subscription names.</summary>
@@ -35,16 +38,16 @@ public class SubscriptionEntity :
     /// <summary>Gets a comparer that considers names and subscription declaration properties.</summary>
     public static IEqualityComparer<SubscriptionEntity> EntityComparer { get; } = new SubscriptionEntityEqualityComparer();
 
-    /// <summary>Gets the Azure subscription declaration options.</summary>
-    public CreateSubscriptionOptions CreateSubscriptionOptions { get; }
+    /// <summary>Gets a snapshot of the Azure subscription declaration options.</summary>
+    public CreateSubscriptionOptions CreateSubscriptionOptions => Snapshot(_createSubscriptionOptions);
 
     /// <summary>Gets the subscribed topic.</summary>
     public TopicHandle Topic => _topic;
 
-    /// <summary>Gets the optional initial subscription rule.</summary>
-    public CreateRuleOptions? Rule { get; }
-    /// <summary>Gets the optional broker rule filter.</summary>
-    public RuleFilter? Filter { get; }
+    /// <summary>Gets a snapshot of the optional initial subscription rule.</summary>
+    public CreateRuleOptions? Rule => RuleSnapshot.Copy(_rule);
+    /// <summary>Gets a snapshot of the optional broker rule filter.</summary>
+    public RuleFilter? Filter => RuleSnapshot.Copy(_filter);
     /// <summary>Gets the topology-local identifier.</summary>
     public long Id { get; }
     /// <summary>Gets this entity through the read-only subscription contract.</summary>
@@ -55,8 +58,33 @@ public class SubscriptionEntity :
     public override string ToString()
     {
         return string.Join(", ",
-            new[] { $"topic: {_topic.CreateTopicOptions.Name}", $"subscription: {CreateSubscriptionOptions.SubscriptionName}" }.Where(x =>
+            new[] { $"topic: {_topic.CreateTopicOptions.Name}", $"subscription: {_createSubscriptionOptions.SubscriptionName}" }.Where(x =>
                 !string.IsNullOrWhiteSpace(x)));
+    }
+
+    internal static CreateSubscriptionOptions Snapshot(CreateSubscriptionOptions source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        var copy = new CreateSubscriptionOptions(source.TopicName, source.SubscriptionName)
+        {
+            AutoDeleteOnIdle = source.AutoDeleteOnIdle,
+            DefaultMessageTimeToLive = source.DefaultMessageTimeToLive,
+            EnableBatchedOperations = source.EnableBatchedOperations,
+            DeadLetteringOnMessageExpiration = source.DeadLetteringOnMessageExpiration,
+            EnableDeadLetteringOnFilterEvaluationExceptions = source.EnableDeadLetteringOnFilterEvaluationExceptions,
+            ForwardDeadLetteredMessagesTo = source.ForwardDeadLetteredMessagesTo,
+            ForwardTo = source.ForwardTo,
+            LockDuration = source.LockDuration,
+            MaxDeliveryCount = source.MaxDeliveryCount,
+            RequiresSession = source.RequiresSession,
+            Status = source.Status,
+        };
+
+        if (source.UserMetadata is not null)
+            copy.UserMetadata = source.UserMetadata;
+
+        return copy;
     }
 
 
@@ -77,47 +105,38 @@ public class SubscriptionEntity :
             if (x.GetType() != y.GetType())
                 return false;
 
-            return string.Equals(x.CreateSubscriptionOptions.SubscriptionName, y.CreateSubscriptionOptions.SubscriptionName)
-                && string.Equals(x.CreateSubscriptionOptions.TopicName, y.CreateSubscriptionOptions.TopicName)
-                && x.CreateSubscriptionOptions.AutoDeleteOnIdle == y.CreateSubscriptionOptions.AutoDeleteOnIdle
-                && x.CreateSubscriptionOptions.DefaultMessageTimeToLive == y.CreateSubscriptionOptions.DefaultMessageTimeToLive
-                && x.CreateSubscriptionOptions.EnableBatchedOperations == y.CreateSubscriptionOptions.EnableBatchedOperations
-                && x.CreateSubscriptionOptions.DeadLetteringOnMessageExpiration == y.CreateSubscriptionOptions.DeadLetteringOnMessageExpiration
-                && x.CreateSubscriptionOptions.EnableDeadLetteringOnFilterEvaluationExceptions
-                == y.CreateSubscriptionOptions.EnableDeadLetteringOnFilterEvaluationExceptions
-                && string.Equals(x.CreateSubscriptionOptions.ForwardDeadLetteredMessagesTo, y.CreateSubscriptionOptions.ForwardDeadLetteredMessagesTo)
-                && string.Equals(x.CreateSubscriptionOptions.ForwardTo, y.CreateSubscriptionOptions.ForwardTo)
-                && x.CreateSubscriptionOptions.LockDuration == y.CreateSubscriptionOptions.LockDuration
-                && x.CreateSubscriptionOptions.MaxDeliveryCount == y.CreateSubscriptionOptions.MaxDeliveryCount
-                && x.CreateSubscriptionOptions.RequiresSession == y.CreateSubscriptionOptions.RequiresSession
-                && string.Equals(x.CreateSubscriptionOptions.UserMetadata, y.CreateSubscriptionOptions.UserMetadata);
+            CreateSubscriptionOptions left = x._createSubscriptionOptions;
+            CreateSubscriptionOptions right = y._createSubscriptionOptions;
+            return SameIdentityAndLifetime(left, right)
+                && SameDelivery(left, right)
+                && SameForwarding(left, right)
+                && left.Status == right.Status
+                && object.Equals(x._rule, y._rule)
+                && object.Equals(x._filter, y._filter);
         }
+
+        static bool SameIdentityAndLifetime(CreateSubscriptionOptions x, CreateSubscriptionOptions y) =>
+            BrokerName.Equals(x.SubscriptionName, y.SubscriptionName)
+            && BrokerName.Equals(x.TopicName, y.TopicName)
+            && x.AutoDeleteOnIdle == y.AutoDeleteOnIdle
+            && x.DefaultMessageTimeToLive == y.DefaultMessageTimeToLive
+            && string.Equals(x.UserMetadata, y.UserMetadata);
+
+        static bool SameDelivery(CreateSubscriptionOptions x, CreateSubscriptionOptions y) =>
+            x.EnableBatchedOperations == y.EnableBatchedOperations
+            && x.DeadLetteringOnMessageExpiration == y.DeadLetteringOnMessageExpiration
+            && x.EnableDeadLetteringOnFilterEvaluationExceptions == y.EnableDeadLetteringOnFilterEvaluationExceptions
+            && x.LockDuration == y.LockDuration
+            && x.MaxDeliveryCount == y.MaxDeliveryCount
+            && x.RequiresSession == y.RequiresSession;
+
+        static bool SameForwarding(CreateSubscriptionOptions x, CreateSubscriptionOptions y) =>
+            BrokerName.Equals(x.ForwardDeadLetteredMessagesTo, y.ForwardDeadLetteredMessagesTo)
+            && BrokerName.Equals(x.ForwardTo, y.ForwardTo);
 
         public int GetHashCode(SubscriptionEntity obj)
         {
-            unchecked
-            {
-                var hashCode = obj.CreateSubscriptionOptions.SubscriptionName.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.TopicName.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.AutoDeleteOnIdle.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.DefaultMessageTimeToLive.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.EnableBatchedOperations.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.DeadLetteringOnMessageExpiration.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.EnableDeadLetteringOnFilterEvaluationExceptions.GetHashCode();
-                if (!string.IsNullOrWhiteSpace(obj.CreateSubscriptionOptions.ForwardDeadLetteredMessagesTo))
-                    hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.ForwardDeadLetteredMessagesTo.GetHashCode();
-
-                if (!string.IsNullOrWhiteSpace(obj.CreateSubscriptionOptions.ForwardTo))
-                    hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.ForwardTo.GetHashCode();
-
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.LockDuration.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.MaxDeliveryCount.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.RequiresSession.GetHashCode();
-                if (!string.IsNullOrWhiteSpace(obj.CreateSubscriptionOptions.UserMetadata))
-                    hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.UserMetadata.GetHashCode();
-
-                return hashCode;
-            }
+            return NameEqualityComparer.HashName(obj._createSubscriptionOptions);
         }
     }
 
@@ -139,16 +158,19 @@ public class SubscriptionEntity :
             if (x.GetType() != y.GetType())
                 return false;
 
-            return string.Equals(x.CreateSubscriptionOptions.SubscriptionName, y.CreateSubscriptionOptions.SubscriptionName)
-                && string.Equals(x.CreateSubscriptionOptions.TopicName, y.CreateSubscriptionOptions.TopicName);
+            return BrokerName.Equals(x._createSubscriptionOptions.SubscriptionName, y._createSubscriptionOptions.SubscriptionName)
+                && BrokerName.Equals(x._createSubscriptionOptions.TopicName, y._createSubscriptionOptions.TopicName);
         }
 
         public int GetHashCode(SubscriptionEntity obj)
         {
-            var hashCode = obj.CreateSubscriptionOptions.SubscriptionName.GetHashCode();
-            hashCode = (hashCode * 397) ^ obj.CreateSubscriptionOptions.TopicName.GetHashCode();
+            return HashName(obj._createSubscriptionOptions);
+        }
 
-            return hashCode;
+        internal static int HashName(CreateSubscriptionOptions options)
+        {
+            var hashCode = BrokerName.GetHashCode(options.SubscriptionName);
+            return (hashCode * 397) ^ BrokerName.GetHashCode(options.TopicName);
         }
     }
 }

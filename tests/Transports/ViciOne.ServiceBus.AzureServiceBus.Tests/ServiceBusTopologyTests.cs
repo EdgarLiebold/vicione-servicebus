@@ -533,6 +533,491 @@ public sealed class ServiceBusTopologyTests
         Assert.Equal([AccessRights.Listen], stored.Rights);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-status-and-initial-rule-conflicts-rejected")]
+    public void SubscriptionDeclaration_RejectsDifferentStatusOrInitialRule(bool initialRule)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+        SubscriptionHandle first = builder.CreateSubscription(
+            topic, new CreateSubscriptionOptions("orders", "consumer"), null, null);
+        var changed = new CreateSubscriptionOptions("orders", "consumer");
+        CreateRuleOptions? rule = null;
+        if (initialRule)
+            rule = new CreateRuleOptions("orders-only", new SqlRuleFilter("sys.Label = 'orders'"));
+        else
+            changed.Status = EntityStatus.Disabled;
+
+        ArgumentException conflict = Assert.Throws<ArgumentException>(
+            () => builder.CreateSubscription(topic, changed, rule, null));
+
+        Assert.Contains("settings differ", conflict.Message, StringComparison.Ordinal);
+        Assert.Same(first, builder.CreateSubscription(
+            topic, new CreateSubscriptionOptions("orders", "consumer"), null, null));
+        Assert.Single(builder.BuildBrokerTopology().Subscriptions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-declaration-is-stable-after-caller-and-getter-mutation")]
+    public void SubscriptionDeclaration_RetainsIdentityAndRuleAfterOptionsAreMutated()
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+        var options = new CreateSubscriptionOptions("orders", "consumer") { MaxDeliveryCount = 5 };
+        var rule = new CreateRuleOptions("orders-only", new SqlRuleFilter("sys.Label = 'orders'"));
+        SubscriptionHandle first = builder.CreateSubscription(topic, options, rule, null);
+
+        options.SubscriptionName = "renamed-consumer";
+        options.MaxDeliveryCount = 7;
+        rule.Name = "renamed-rule";
+        Subscription exposed = Assert.IsType<SubscriptionEntity>(first);
+        exposed.CreateSubscriptionOptions.SubscriptionName = "getter-renamed-consumer";
+        exposed.Rule!.Name = "getter-renamed-rule";
+
+        Assert.Same(first, builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer") { MaxDeliveryCount = 5 },
+            new CreateRuleOptions("orders-only", new SqlRuleFilter("sys.Label = 'orders'")), null));
+        Subscription stored = Assert.Single(builder.BuildBrokerTopology().Subscriptions);
+        Assert.Equal("consumer", stored.CreateSubscriptionOptions.SubscriptionName);
+        Assert.Equal(5, stored.CreateSubscriptionOptions.MaxDeliveryCount);
+        Assert.Equal("orders-only", stored.Rule!.Name);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-settings-conflicts-are-not-silently-reused")]
+    public void SubscriptionDeclaration_RejectsEveryOtherConfiguredSettingConflict()
+    {
+        (string Setting, Action<CreateSubscriptionOptions> Change)[] changes =
+        [
+            ("auto-delete", options => options.AutoDeleteOnIdle = TimeSpan.FromMinutes(10)),
+            ("message-ttl", options => options.DefaultMessageTimeToLive = TimeSpan.FromHours(1)),
+            ("batched-operations", options => options.EnableBatchedOperations = false),
+            ("dead-letter-expired", options => options.DeadLetteringOnMessageExpiration = true),
+            ("dead-letter-filter-error", options => options.EnableDeadLetteringOnFilterEvaluationExceptions = false),
+            ("forward-dead-letter", options => options.ForwardDeadLetteredMessagesTo = "dead-letter-target"),
+            ("forward-active", options => options.ForwardTo = "active-target"),
+            ("lock-duration", options => options.LockDuration = TimeSpan.FromMinutes(2)),
+            ("delivery-count", options => options.MaxDeliveryCount = 7),
+            ("session", options => options.RequiresSession = true),
+            ("metadata", options => options.UserMetadata = "tenant"),
+        ];
+
+        foreach ((string setting, Action<CreateSubscriptionOptions> change) in changes)
+        {
+            var builder = new BrokerTopologyBuilder();
+            TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+            SubscriptionHandle first = builder.CreateSubscription(topic,
+                new CreateSubscriptionOptions("orders", "consumer"), null, null);
+            var changed = new CreateSubscriptionOptions("orders", "consumer");
+            change(changed);
+
+            Exception? failure = Record.Exception(() => builder.CreateSubscription(topic, changed, null, null));
+            Assert.True(failure is ArgumentException, $"Subscription setting {setting} was silently reused.");
+            Assert.Contains("settings differ", failure.Message, StringComparison.Ordinal);
+            Assert.Same(first, builder.CreateSubscription(topic,
+                new CreateSubscriptionOptions("orders", "consumer"), null, null));
+            Assert.Single(builder.BuildBrokerTopology().Subscriptions);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-filter-selection-conflicts-rejected")]
+    public void SubscriptionDeclaration_RejectsDifferentFilterSelection()
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+        SubscriptionHandle first = builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), null, new TrueRuleFilter());
+
+        Assert.Same(first, builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), null, new TrueRuleFilter()));
+        ArgumentException conflict = Assert.Throws<ArgumentException>(() => builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), null, new FalseRuleFilter()));
+        Assert.Contains("settings differ", conflict.Message, StringComparison.Ordinal);
+        Assert.IsType<TrueRuleFilter>(Assert.Single(builder.BuildBrokerTopology().Subscriptions).Filter);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-sql-rule-and-action-parameters-are-snapshotted")]
+    public void SubscriptionRule_RetainsSqlParametersAfterCallerAndGetterMutation()
+    {
+        var filter = new SqlRuleFilter("sys.Label = @label");
+        filter.Parameters.Add("@label", "orders");
+        var action = new SqlRuleAction("SET priority = @priority");
+        action.Parameters.Add("@priority", 5);
+        var rule = new CreateRuleOptions("orders-only", filter) { Action = action };
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+        builder.CreateSubscription(topic, new CreateSubscriptionOptions("orders", "consumer"), rule, null);
+
+        filter.Parameters["@label"] = "returns";
+        action.Parameters["@priority"] = 9;
+        CreateRuleOptions exposed = Assert.Single(builder.BuildBrokerTopology().Subscriptions).Rule!;
+        Assert.IsType<SqlRuleFilter>(exposed.Filter).Parameters["@label"] = "getter";
+        Assert.IsType<SqlRuleAction>(exposed.Action).Parameters["@priority"] = 12;
+
+        CreateRuleOptions stored = Assert.Single(builder.BuildBrokerTopology().Subscriptions).Rule!;
+        Assert.Equal("orders", Assert.IsType<SqlRuleFilter>(stored.Filter).Parameters["@label"]);
+        Assert.Equal(5, Assert.IsType<SqlRuleAction>(stored.Action).Parameters["@priority"]);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-rule-parameter-conflicts-rejected")]
+    public void SubscriptionDeclaration_RejectsDifferentSqlFilterOrActionParameter(bool actionParameter)
+    {
+        static CreateRuleOptions Rule(string label, int priority)
+        {
+            var filter = new SqlRuleFilter("sys.Label = @label");
+            filter.Parameters.Add("@label", label);
+            var action = new SqlRuleAction("SET priority = @priority");
+            action.Parameters.Add("@priority", priority);
+            return new CreateRuleOptions("orders-only", filter) { Action = action };
+        }
+
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+        SubscriptionHandle first = builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), Rule("orders", 5), null);
+
+        Assert.Same(first, builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), Rule("orders", 5), null));
+        CreateRuleOptions conflicting = actionParameter ? Rule("orders", 7) : Rule("returns", 5);
+        ArgumentException conflict = Assert.Throws<ArgumentException>(() => builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), conflicting, null));
+        Assert.Contains("settings differ", conflict.Message, StringComparison.Ordinal);
+        Assert.Single(builder.BuildBrokerTopology().Subscriptions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-correlation-filter-properties-are-snapshotted")]
+    public void SubscriptionFilter_RetainsCorrelationPropertiesAfterCallerAndGetterMutation()
+    {
+        var filter = new CorrelationRuleFilter { CorrelationId = "original" };
+        filter.ApplicationProperties.Add("tenant", "north");
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+        builder.CreateSubscription(topic, new CreateSubscriptionOptions("orders", "consumer"), null, filter);
+
+        filter.CorrelationId = "caller-changed";
+        filter.ApplicationProperties["tenant"] = "south";
+        var exposed = Assert.IsType<CorrelationRuleFilter>(Assert.Single(builder.BuildBrokerTopology().Subscriptions).Filter);
+        exposed.CorrelationId = "getter-changed";
+        exposed.ApplicationProperties["tenant"] = "east";
+
+        var stored = Assert.IsType<CorrelationRuleFilter>(Assert.Single(builder.BuildBrokerTopology().Subscriptions).Filter);
+        Assert.Equal("original", stored.CorrelationId);
+        Assert.Equal("north", stored.ApplicationProperties["tenant"]);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-topic-handle-must-match-sdk-options")]
+    public void SubscriptionDeclaration_RejectsOptionsForAnotherTopic(int relationship)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("orders"));
+        QueueHandle queue = builder.CreateQueue(new CreateQueueOptions("queue"));
+        TopicHandle destination = builder.CreateTopic(new CreateTopicOptions("destination"));
+        var mismatched = new CreateSubscriptionOptions("returns", "consumer");
+
+        ArgumentException failure = Assert.Throws<ArgumentException>(() =>
+        {
+            if (relationship == 0)
+                builder.CreateSubscription(source, mismatched, null, null);
+            else if (relationship == 1)
+                builder.CreateQueueSubscription(source, queue, mismatched, null, null);
+            else
+                builder.CreateTopicSubscription(source, destination, mismatched);
+        });
+
+        Assert.Equal("createSubscriptionOptions", failure.ParamName);
+        BrokerTopology topology = builder.BuildBrokerTopology();
+        Assert.Empty(topology.Subscriptions);
+        Assert.Empty(topology.QueueSubscriptions);
+        Assert.Empty(topology.TopicSubscriptions);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "forwarding-subscription-name-cannot-target-two-destinations")]
+    public void ForwardingSubscription_RejectsSameBrokerNameForDifferentDestinations(bool topicDestination)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("orders"));
+        var first = new CreateSubscriptionOptions("orders", "forward") { ForwardTo = "first" };
+        var second = new CreateSubscriptionOptions("orders", "forward") { ForwardTo = "second" };
+
+        if (topicDestination)
+        {
+            TopicHandle firstDestination = builder.CreateTopic(new CreateTopicOptions("first"));
+            TopicHandle secondDestination = builder.CreateTopic(new CreateTopicOptions("second"));
+            TopicSubscriptionHandle firstHandle = builder.CreateTopicSubscription(source, firstDestination, first);
+
+            ArgumentException conflict = Assert.Throws<ArgumentException>(
+                () => builder.CreateTopicSubscription(source, secondDestination, second));
+            Assert.Contains("settings differ", conflict.Message, StringComparison.Ordinal);
+            Assert.Same(firstHandle, builder.CreateTopicSubscription(source, firstDestination,
+                new CreateSubscriptionOptions("orders", "forward") { ForwardTo = "first" }));
+            Assert.Single(builder.BuildBrokerTopology().TopicSubscriptions);
+        }
+        else
+        {
+            QueueHandle firstDestination = builder.CreateQueue(new CreateQueueOptions("first"));
+            QueueHandle secondDestination = builder.CreateQueue(new CreateQueueOptions("second"));
+            QueueSubscriptionHandle firstHandle = builder.CreateQueueSubscription(source, firstDestination, first, null, null);
+
+            ArgumentException conflict = Assert.Throws<ArgumentException>(
+                () => builder.CreateQueueSubscription(source, secondDestination, second, null, null));
+            Assert.Contains("settings differ", conflict.Message, StringComparison.Ordinal);
+            Assert.Same(firstHandle, builder.CreateQueueSubscription(source, firstDestination,
+                new CreateSubscriptionOptions("orders", "forward") { ForwardTo = "first" }, null, null));
+            Assert.Single(builder.BuildBrokerTopology().QueueSubscriptions);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-broker-name-is-unique-across-relationship-kinds")]
+    public void SubscriptionDeclaration_RejectsBrokerNameAlreadyUsedByAnotherRelationshipKind()
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("orders"));
+        QueueHandle destination = builder.CreateQueue(new CreateQueueOptions("forward-queue"));
+        SubscriptionHandle first = builder.CreateSubscription(source,
+            new CreateSubscriptionOptions("orders", "consumer"), null, null);
+
+        ArgumentException conflict = Assert.Throws<ArgumentException>(() => builder.CreateQueueSubscription(
+            source, destination,
+            new CreateSubscriptionOptions("orders", "consumer") { ForwardTo = "forward-queue" }, null, null));
+
+        Assert.Contains("already declared", conflict.Message, StringComparison.Ordinal);
+        Assert.Same(first, Assert.Single(builder.BuildBrokerTopology().Subscriptions));
+        Assert.Empty(builder.BuildBrokerTopology().QueueSubscriptions);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "forwarding-target-must-match-destination-handle")]
+    public void ForwardingSubscription_RejectsAnotherForwardingTargetWithoutPromotingDestination(bool topicDestination)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("orders") { EnablePartitioning = true });
+        var options = new CreateSubscriptionOptions("orders", "forward") { ForwardTo = "wrong-target" };
+
+        if (topicDestination)
+        {
+            TopicHandle destination = builder.CreateTopic(new CreateTopicOptions("target"));
+            ArgumentException failure = Assert.Throws<ArgumentException>(
+                () => builder.CreateTopicSubscription(source, destination, options));
+            Assert.Equal("createSubscriptionOptions", failure.ParamName);
+            Assert.False(Assert.Single(builder.BuildBrokerTopology().Topics,
+                topic => topic.CreateTopicOptions.Name == "target").CreateTopicOptions.EnablePartitioning);
+            Assert.Empty(builder.BuildBrokerTopology().TopicSubscriptions);
+        }
+        else
+        {
+            QueueHandle destination = builder.CreateQueue(new CreateQueueOptions("target"));
+            ArgumentException failure = Assert.Throws<ArgumentException>(
+                () => builder.CreateQueueSubscription(source, destination, options, null, null));
+            Assert.Equal("createSubscriptionOptions", failure.ParamName);
+            Assert.False(Assert.Single(builder.BuildBrokerTopology().Queues).CreateQueueOptions.EnablePartitioning);
+            Assert.Empty(builder.BuildBrokerTopology().QueueSubscriptions);
+        }
+    }
+
+    [Theory]
+    [InlineData(false, null)]
+    [InlineData(false, "")]
+    [InlineData(false, " ")]
+    [InlineData(true, null)]
+    [InlineData(true, "")]
+    [InlineData(true, " ")]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "forwarding-target-defaults-to-destination-without-caller-mutation")]
+    public void ForwardingSubscription_FillsOmittedTargetFromDestinationWithoutMutatingCaller(bool topicDestination, string? omittedTarget)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("orders"));
+        var options = new CreateSubscriptionOptions("orders", "forward") { ForwardTo = omittedTarget };
+
+        if (topicDestination)
+        {
+            TopicHandle destination = builder.CreateTopic(new CreateTopicOptions("target"));
+            TopicSubscriptionHandle first = builder.CreateTopicSubscription(source, destination, options);
+            Assert.Same(first, builder.CreateTopicSubscription(source, destination,
+                new CreateSubscriptionOptions("orders", "forward")));
+            Assert.Equal("target", Assert.Single(builder.BuildBrokerTopology().TopicSubscriptions)
+                .Subscription.CreateSubscriptionOptions.ForwardTo);
+        }
+        else
+        {
+            QueueHandle destination = builder.CreateQueue(new CreateQueueOptions("target"));
+            QueueSubscriptionHandle first = builder.CreateQueueSubscription(source, destination, options, null, null);
+            Assert.Same(first, builder.CreateQueueSubscription(source, destination,
+                new CreateSubscriptionOptions("orders", "forward"), null, null));
+            Assert.Equal("target", Assert.Single(builder.BuildBrokerTopology().QueueSubscriptions)
+                .Subscription.CreateSubscriptionOptions.ForwardTo);
+        }
+
+        Assert.Equal(omittedTarget, options.ForwardTo);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "partitioning-propagates-through-existing-forwarding-relationships")]
+    public void ForwardingSubscription_PropagatesLatePartitioningThroughExistingRelationships(bool topicDestination)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle root = builder.CreateTopic(new CreateTopicOptions("root") { EnablePartitioning = true });
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("source"));
+
+        if (topicDestination)
+        {
+            TopicHandle destination = builder.CreateTopic(new CreateTopicOptions("target"));
+            builder.CreateTopicSubscription(source, destination, new CreateSubscriptionOptions("source", "forward"));
+            builder.CreateTopicSubscription(root, source, new CreateSubscriptionOptions("root", "promote-source"));
+
+            Assert.True(Assert.Single(builder.BuildBrokerTopology().Topics,
+                topic => topic.CreateTopicOptions.Name == "source").CreateTopicOptions.EnablePartitioning);
+            Assert.True(Assert.Single(builder.BuildBrokerTopology().Topics,
+                topic => topic.CreateTopicOptions.Name == "target").CreateTopicOptions.EnablePartitioning);
+        }
+        else
+        {
+            QueueHandle destination = builder.CreateQueue(new CreateQueueOptions("target"));
+            builder.CreateQueueSubscription(source, destination, new CreateSubscriptionOptions("source", "forward"), null, null);
+            builder.CreateTopicSubscription(root, source, new CreateSubscriptionOptions("root", "promote-source"));
+
+            Assert.True(Assert.Single(builder.BuildBrokerTopology().Topics,
+                topic => topic.CreateTopicOptions.Name == "source").CreateTopicOptions.EnablePartitioning);
+            Assert.True(Assert.Single(builder.BuildBrokerTopology().Queues).CreateQueueOptions.EnablePartitioning);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "session-enabled-subscriptions-cannot-be-forwarding-sources")]
+    public void ForwardingSubscription_RejectsSessionEnabledSourceBeforeChangingTopology(bool topicDestination)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("orders") { EnablePartitioning = true });
+        var options = new CreateSubscriptionOptions("orders", "forward") { RequiresSession = true };
+
+        if (topicDestination)
+        {
+            TopicHandle destination = builder.CreateTopic(new CreateTopicOptions("target"));
+            ArgumentException failure = Assert.Throws<ArgumentException>(
+                () => builder.CreateTopicSubscription(source, destination, options));
+            Assert.Equal("createSubscriptionOptions", failure.ParamName);
+            Assert.Empty(builder.BuildBrokerTopology().TopicSubscriptions);
+            Assert.False(Assert.Single(builder.BuildBrokerTopology().Topics,
+                topic => topic.CreateTopicOptions.Name == "target").CreateTopicOptions.EnablePartitioning);
+        }
+        else
+        {
+            QueueHandle destination = builder.CreateQueue(new CreateQueueOptions("target"));
+            ArgumentException failure = Assert.Throws<ArgumentException>(
+                () => builder.CreateQueueSubscription(source, destination, options, null, null));
+            Assert.Equal("createSubscriptionOptions", failure.ParamName);
+            Assert.Empty(builder.BuildBrokerTopology().QueueSubscriptions);
+            Assert.False(Assert.Single(builder.BuildBrokerTopology().Queues).CreateQueueOptions.EnablePartitioning);
+        }
+
+        Assert.Null(options.ForwardTo);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "broker-entity-names-ignore-case-for-deduplication-and-conflicts")]
+    public void BrokerEntities_ReuseCaseVariantNamesAndRejectCaseVariantSettingConflicts()
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("Orders"));
+        QueueHandle queue = builder.CreateQueue(new CreateQueueOptions("Target"));
+
+        Assert.Same(topic, builder.CreateTopic(new CreateTopicOptions("orders")));
+        Assert.Same(queue, builder.CreateQueue(new CreateQueueOptions("target")));
+        Assert.Throws<ArgumentException>(() => builder.CreateTopic(
+            new CreateTopicOptions("ORDERS") { SupportOrdering = true }));
+        Assert.Throws<ArgumentException>(() => builder.CreateQueue(
+            new CreateQueueOptions("TARGET") { MaxDeliveryCount = 7 }));
+        Assert.Single(builder.BuildBrokerTopology().Topics);
+        Assert.Single(builder.BuildBrokerTopology().Queues);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "subscription-identity-ignores-case-across-relationship-kinds")]
+    public void SubscriptionDeclaration_RejectsCaseVariantBrokerNameAcrossRelationshipKinds()
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("Orders"));
+        QueueHandle queue = builder.CreateQueue(new CreateQueueOptions("Target"));
+        SubscriptionHandle first = builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("Orders", "Consumer"), null, null);
+
+        Assert.Same(first, builder.CreateSubscription(topic,
+            new CreateSubscriptionOptions("orders", "consumer"), null, null));
+        ArgumentException failure = Assert.Throws<ArgumentException>(() => builder.CreateQueueSubscription(topic, queue,
+            new CreateSubscriptionOptions("ORDERS", "CONSUMER") { ForwardTo = "target" }, null, null));
+
+        Assert.Equal("createSubscriptionOptions", failure.ParamName);
+        Assert.Empty(builder.BuildBrokerTopology().QueueSubscriptions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "forwarding-target-identity-ignores-case")]
+    public void ForwardingSubscription_AcceptsCaseVariantOfDestinationName()
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle source = builder.CreateTopic(new CreateTopicOptions("Orders"));
+        QueueHandle destination = builder.CreateQueue(new CreateQueueOptions("Target"));
+        var options = new CreateSubscriptionOptions("orders", "forward") { ForwardTo = "target" };
+
+        QueueSubscriptionHandle first = builder.CreateQueueSubscription(source, destination, options, null, null);
+        Assert.Same(first, builder.CreateQueueSubscription(source, destination,
+            new CreateSubscriptionOptions("ORDERS", "FORWARD") { ForwardTo = "TARGET" }, null, null));
+        Assert.Equal("Target", Assert.Single(builder.BuildBrokerTopology().QueueSubscriptions)
+            .Subscription.CreateSubscriptionOptions.ForwardTo);
+        Assert.Equal("target", options.ForwardTo);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "direct-session-enabled-entities-cannot-auto-forward")]
+    public void DirectEntityDeclaration_RejectsSessionEnabledAutoForwarding(bool queueEntity)
+    {
+        var builder = new BrokerTopologyBuilder();
+        TopicHandle topic = builder.CreateTopic(new CreateTopicOptions("orders"));
+
+        if (queueEntity)
+        {
+            var options = new CreateQueueOptions("source") { RequiresSession = true, ForwardTo = "destination" };
+            ArgumentException failure = Assert.Throws<ArgumentException>(() => builder.CreateQueue(options));
+            Assert.Equal("createQueueOptions", failure.ParamName);
+            Assert.Empty(builder.BuildBrokerTopology().Queues);
+        }
+        else
+        {
+            var options = new CreateSubscriptionOptions("orders", "source")
+            {
+                RequiresSession = true,
+                ForwardTo = "destination"
+            };
+            ArgumentException failure = Assert.Throws<ArgumentException>(
+                () => builder.CreateSubscription(topic, options, null, null));
+            Assert.Equal("createSubscriptionOptions", failure.ParamName);
+            Assert.Empty(builder.BuildBrokerTopology().Subscriptions);
+        }
+    }
+
     public interface ISingle;
 
     public interface IFirst

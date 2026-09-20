@@ -114,16 +114,14 @@ public class TopicSubscriptionEntity :
             if (x.GetType() != y.GetType())
                 return false;
 
-            return string.Equals(x.Subscription.CreateSubscriptionOptions.SubscriptionName, y.Subscription.CreateSubscriptionOptions.SubscriptionName)
-                && string.Equals(x.Subscription.CreateSubscriptionOptions.TopicName, y.Subscription.CreateSubscriptionOptions.TopicName)
-                && string.Equals(x.Destination.CreateTopicOptions.Name, y.Destination.CreateTopicOptions.Name);
+            return BrokerName.Equals(x.Subscription.CreateSubscriptionOptions.SubscriptionName, y.Subscription.CreateSubscriptionOptions.SubscriptionName)
+                && BrokerName.Equals(x.Subscription.CreateSubscriptionOptions.TopicName, y.Subscription.CreateSubscriptionOptions.TopicName);
         }
 
         public int GetHashCode(TopicSubscriptionEntity obj)
         {
-            var hashCode = obj.Subscription.CreateSubscriptionOptions.SubscriptionName.GetHashCode();
-            hashCode = (hashCode * 397) ^ obj.Subscription.CreateSubscriptionOptions.TopicName.GetHashCode();
-            hashCode = (hashCode * 397) ^ obj.Destination.CreateTopicOptions.Name.GetHashCode();
+            var hashCode = BrokerName.GetHashCode(obj.Subscription.CreateSubscriptionOptions.SubscriptionName);
+            hashCode = (hashCode * 397) ^ BrokerName.GetHashCode(obj.Subscription.CreateSubscriptionOptions.TopicName);
 
             return hashCode;
         }
