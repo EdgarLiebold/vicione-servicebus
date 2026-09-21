@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- SQL topology subscriptions now compare their nested queue and topic declarations by logical
+  broker identity instead of object reference, with matching hash codes. SQL topology diagnostics
+  now expose the queue delivery limit, and the public publish-topology registration extensions
+  reject missing configurators, missing message-type collections, and null collection entries at
+  their API boundary before registering any preceding type.
 - ActiveMQ header projection now preserves both Boolean values, limits native values to the shared
   OpenWire/AMQP message-property set, omits OpenWire-incompatible byte arrays, formats other
   `IFormattable` values with invariant culture, and keeps every `DateTime` kind on the same instant.

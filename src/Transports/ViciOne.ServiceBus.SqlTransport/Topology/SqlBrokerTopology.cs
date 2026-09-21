@@ -46,7 +46,8 @@ public class SqlBrokerTopology :
             scope.Set(new
             {
                 Name = queue.QueueName,
-                queue.AutoDeleteOnIdle
+                queue.AutoDeleteOnIdle,
+                queue.MaxDeliveryCount
             });
         }
 

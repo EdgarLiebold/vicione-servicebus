@@ -19,8 +19,10 @@
    NMS marshalling and real OpenWire/AMQP/Artemis brokers, persisted transport properties, runtime
    destination metadata, diagnostics, and every declaration comparer with field-level negative
    controls.
-3. **PostgreSQL and generic SQL topology.** Cover host parsing boundaries,
-   address symbols/areas, declaration comparers, and validation errors.
+3. **PostgreSQL and generic SQL topology — in progress.** The declaration identity, complete
+   topology diagnostic, publish scan, public input, invalid-contract, and namespace-boundary slice
+   is complete. Continue with host parsing boundaries, address symbols/areas, validation errors,
+   receiver behavior, and provider-specific PostgreSQL/SQL Server hotspots.
 4. **Amazon SQS/SNS.** Cover subscription reconciliation, topology diagnostics,
    failure classification, receive validation, and persisted transport metadata.
 5. **Azure Service Bus and Event Hubs.** Cover exception classification,

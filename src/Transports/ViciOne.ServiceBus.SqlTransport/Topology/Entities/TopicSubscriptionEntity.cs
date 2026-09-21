@@ -70,8 +70,8 @@ public class TopicSubscriptionEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return x._source.Equals(y._source)
-                && x._destination.Equals(y._destination)
+            return TopicEntity.EntityComparer.Equals(x._source, y._source)
+                && TopicEntity.EntityComparer.Equals(x._destination, y._destination)
                 && x.SubscriptionType == y.SubscriptionType
                 && string.Equals(x.RoutingKey, y.RoutingKey, StringComparison.Ordinal);
         }
@@ -80,8 +80,8 @@ public class TopicSubscriptionEntity :
         {
             unchecked
             {
-                var hashCode = obj._source.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj._destination.GetHashCode();
+                var hashCode = TopicEntity.EntityComparer.GetHashCode(obj._source);
+                hashCode = (hashCode * 397) ^ TopicEntity.EntityComparer.GetHashCode(obj._destination);
                 hashCode = (hashCode * 397) ^ (int)obj.SubscriptionType;
                 hashCode = (hashCode * 397) ^ (obj.RoutingKey != null ? obj.RoutingKey.GetHashCode() : 0);
                 return hashCode;

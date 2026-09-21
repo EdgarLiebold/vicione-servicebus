@@ -26,6 +26,8 @@ public static class SqlPublishTopologyConfigurationExtensions
     public static void AddPublishMessageTypesFromNamespaceContaining(this ISqlBusFactoryConfigurator configurator, Type type,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         if (type == null)
             throw new ArgumentNullException(nameof(type));
 
@@ -60,7 +62,19 @@ public static class SqlPublishTopologyConfigurationExtensions
     public static void AddPublishMessageTypes(this ISqlBusFactoryConfigurator configurator, IEnumerable<Type> messageTypes,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(messageTypes);
+
+        var validatedMessageTypes = new List<Type>();
         foreach (var messageType in messageTypes)
+        {
+            if (messageType == null)
+                throw new ArgumentException("The message type collection cannot contain null entries.", nameof(messageTypes));
+
+            validatedMessageTypes.Add(messageType);
+        }
+
+        foreach (var messageType in validatedMessageTypes)
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }
 }

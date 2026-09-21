@@ -36,6 +36,17 @@ Snapshot baseline: branch `feature/servicebus-a-plus-api`, commit
   in OpenWire message properties.
 - Final adversarial review: PASS, no findings.
 
+## Generic SQL topology slice result
+
+- 9 new behavior tests received Microsoft `grade-tests` A ratings.
+- 147/147 SQL Unit/Contract tests and 9,797/9,797 complete Unit/Architecture tests pass.
+- The six selected generic SQL topology hotspots fell from CRAP 72–272 to CRAP 8–16, except the
+  namespace scanner at CRAP 12.11; all are below 30.
+- Logical subscription equality, queue delivery-limit diagnostics, public null validation, atomic
+  explicit-type validation, both scan branches, invalid contract rejection, and namespace
+  boundaries have exact positive and negative controls.
+- Final adversarial review: PASS, no findings after its product and oracle corrections.
+
 ## Baseline risk inventory
 
 The largest CRAP groups are RabbitMQ (33), Core (32), Amazon SQS (25), Azure

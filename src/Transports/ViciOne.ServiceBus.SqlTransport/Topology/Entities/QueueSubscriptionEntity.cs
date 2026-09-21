@@ -70,15 +70,18 @@ public class QueueSubscriptionEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return x._queue.Equals(y._queue) && x._topic.Equals(y._topic) && x.SubscriptionType == y.SubscriptionType && x.RoutingKey == y.RoutingKey;
+            return QueueEntity.QueueComparer.Equals(x._queue, y._queue)
+                && TopicEntity.EntityComparer.Equals(x._topic, y._topic)
+                && x.SubscriptionType == y.SubscriptionType
+                && x.RoutingKey == y.RoutingKey;
         }
 
         public int GetHashCode(QueueSubscriptionEntity obj)
         {
             unchecked
             {
-                var hashCode = obj._queue.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj._topic.GetHashCode();
+                var hashCode = QueueEntity.QueueComparer.GetHashCode(obj._queue);
+                hashCode = (hashCode * 397) ^ TopicEntity.EntityComparer.GetHashCode(obj._topic);
                 hashCode = (hashCode * 397) ^ (int)obj.SubscriptionType;
                 hashCode = (hashCode * 397) ^ (obj.RoutingKey != null ? obj.RoutingKey.GetHashCode() : 0);
                 return hashCode;

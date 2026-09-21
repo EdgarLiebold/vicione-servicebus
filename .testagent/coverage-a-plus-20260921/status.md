@@ -43,6 +43,11 @@ current change set: 9,788/9,788 Unit/Architecture tests, three targeted real-bro
 coverage/CRAP, Microsoft test-quality assessment, and final adversarial review are green. Details are
 in `active-mq-phase.md`.
 
-The next phase selects the highest remaining product-risk cluster from the exact 142-method global
-baseline. A fresh product-wide aggregate will follow after coherent phases; the focused ActiveMQ
-report does not claim that the requested global A+ target is reached.
+The first generic SQL topology slice is also complete: 147/147 SQL tests and 9,797/9,797 complete
+Unit/Architecture tests pass, its six selected baseline hotspots are below CRAP 30, and the final
+adversarial re-review returned PASS. Details are in `sql-topology-phase.md`.
+
+The next SQL slice covers the remaining configuration, receiver, PostgreSQL, and SQL Server
+hotspots from the exact 142-method global baseline. A fresh product-wide aggregate will follow
+after coherent phases; the focused reports do not claim that the requested global A+ target is
+reached.
