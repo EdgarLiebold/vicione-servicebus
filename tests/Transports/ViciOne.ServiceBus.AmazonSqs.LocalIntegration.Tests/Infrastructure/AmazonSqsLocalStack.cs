@@ -89,19 +89,29 @@ internal sealed class AmazonSqsLocalStack : IAsyncDisposable
         ConfigureHost(configurator, (Action<IAmazonSqsHostConfigurator>?)null);
 
     public void ConfigureHost(IAmazonSqsBusFactoryConfigurator configurator, bool scopeTopics) =>
-        ConfigureHost(configurator, scopeTopics, null);
+        ConfigureHost(configurator, scopeTopics, null, MessageLimits.Conservative);
 
     public void ConfigureHost(
         IAmazonSqsBusFactoryConfigurator configurator,
         Action<IAmazonSqsHostConfigurator>? configure) =>
-        ConfigureHost(configurator, scopeTopics: true, configure);
+        ConfigureHost(configurator, scopeTopics: true, configure, MessageLimits.Conservative);
+
+    public void ConfigureHost(IAmazonSqsBusFactoryConfigurator configurator, MessageLimits limits) =>
+        ConfigureHost(configurator, scopeTopics: true, configure: null, limits);
+
+    public void ConfigureRegisteredHost(IAmazonSqsBusFactoryConfigurator configurator) =>
+        ConfigureHost(configurator, scopeTopics: true, configure: null, limits: null);
 
     private void ConfigureHost(
         IAmazonSqsBusFactoryConfigurator configurator,
         bool scopeTopics,
-        Action<IAmazonSqsHostConfigurator>? configure)
+        Action<IAmazonSqsHostConfigurator>? configure,
+        MessageLimits? limits)
     {
         ArgumentNullException.ThrowIfNull(configurator);
+
+        if (limits is not null)
+            configurator.Limits(limits);
 
         configurator.Host(new Uri($"amazonsqs://{Region}"), host =>
         {
@@ -115,6 +125,8 @@ internal sealed class AmazonSqsLocalStack : IAsyncDisposable
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(credentials);
+
+        configurator.Limits(MessageLimits.Conservative);
 
         configurator.Host(new Uri($"amazonsqs://{Region}"), host =>
         {

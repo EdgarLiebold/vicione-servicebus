@@ -717,12 +717,12 @@ public sealed class StateMachineRequestForwardingTimeoutActivitiesDeepContractTe
             "get_Message" => message,
             "get_SerializerContext" => serializer,
             "get_CancellationToken" => token,
-            "GetSendEndpointAsync" => ResolveEndpoint(args, saga.ResponseAddress, token, endpoint),
+            "GetSendEndpointAsync" => ResolveEndpointAsync(args, saga.ResponseAddress, token, endpoint),
             "TryGetPayload" => TryPayload(method, args, null, new FixedTimeProvider(Now)),
             _ => throw Unexpected()
         });
 
-    static Task<ISendEndpoint> ResolveEndpoint(object?[] args, Uri expected, CancellationToken token,
+    static Task<ISendEndpoint> ResolveEndpointAsync(object?[] args, Uri expected, CancellationToken token,
         IAdvancedSendEndpoint endpoint)
     {
         Assert.Equal(expected, args[0]);

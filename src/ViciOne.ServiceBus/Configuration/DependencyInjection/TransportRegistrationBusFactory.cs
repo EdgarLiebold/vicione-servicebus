@@ -72,11 +72,17 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
 
         configure?.Invoke(context, configurator);
 
-        _hostConfiguration.BusConfiguration.Serialization.ConfigureSystemTextJsonSerializerOptions(options =>
+        if (_hostConfiguration.BusConfiguration.Serialization is not SerializationConfiguration serialization)
         {
-            options.MaxDepth = limits.MaxJsonDepth;
-            return options;
-        });
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Message limits",
+                    "unknown",
+                    "MaxJsonDepth cannot be enforced because the built-in serialization configuration is unavailable",
+                    "Use the built-in serialization configuration before starting the host"));
+        }
+
+        serialization.SetMaximumJsonDepth(limits.MaxJsonDepth);
 
         IEnumerable<ValidationResult> validationResult = configurator.Validate()
             .Concat(busInstanceSpecifications.SelectMany(x => x.Validate()));

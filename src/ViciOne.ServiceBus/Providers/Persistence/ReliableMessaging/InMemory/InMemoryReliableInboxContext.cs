@@ -112,7 +112,11 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
         if (admissionRuntime is null)
         {
             throw new ConfigurationException(
-                $"The in-memory reliable inbox for bus '{typeof(TBus)}' has no payload-admission runtime.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "In-memory reliable inbox",
+                    typeof(TBus).ToString(),
+                    "The payload-admission runtime is missing.",
+                    "Register payload admission for this bus before using the reliable inbox"));
         }
 
         byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();

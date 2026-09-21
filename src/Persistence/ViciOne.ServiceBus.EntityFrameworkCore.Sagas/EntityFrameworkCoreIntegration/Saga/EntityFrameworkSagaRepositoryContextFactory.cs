@@ -75,7 +75,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         finally
         {
-            dbContext.Dispose();
+            _dbContextFactory.ReleaseAsync(dbContext).GetAwaiter().GetResult();
         }
     }
 

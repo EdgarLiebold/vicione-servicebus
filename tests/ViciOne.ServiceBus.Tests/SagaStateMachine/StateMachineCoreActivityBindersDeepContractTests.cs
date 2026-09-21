@@ -926,14 +926,14 @@ public sealed class StateMachineCoreActivityBindersDeepContractTests
 
         public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
         public void Probe(ProbeContext context) => context.CreateScope("attempt");
-        public Task ExecuteAsync(IBehaviorContext<TestSaga> context, IBehavior<TestSaga> next) => ExecuteCore();
-        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context, IBehavior<TestSaga, T> next) where T : class => ExecuteCore();
+        public Task ExecuteAsync(IBehaviorContext<TestSaga> context, IBehavior<TestSaga> next) => ExecuteCoreAsync();
+        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context, IBehavior<TestSaga, T> next) where T : class => ExecuteCoreAsync();
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<TestSaga, TException> context, IBehavior<TestSaga> next)
             where TException : Exception => next.FaultedAsync(context);
         public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TestSaga, T, TException> context, IBehavior<TestSaga, T> next)
             where T : class where TException : Exception => next.FaultedAsync(context);
 
-        Task ExecuteCore()
+        Task ExecuteCoreAsync()
         {
             Attempts++;
             return Attempts <= failuresBeforeSuccess ? Task.FromException(failure) : Task.CompletedTask;

@@ -860,7 +860,7 @@ public sealed class StateMachineConditionFaultActivitiesDeepContractTests
             Task branchTask = pendingStage == 1 ? branchGate.Task : Task.CompletedTask;
             Task nextTask = pendingStage == 2 ? nextGate.Task : Task.CompletedTask;
             int initialPosts = synchronizationContext.PostCalls;
-            Task execution = StartUnderSynchronizationContext(synchronizationContext,
+            Task execution = StartUnderSynchronizationContextAsync(synchronizationContext,
                 () => start(conditionTask, branchTask, nextTask));
             if (pendingStage == 0)
                 conditionGate.SetResult(true);
@@ -883,7 +883,7 @@ public sealed class StateMachineConditionFaultActivitiesDeepContractTests
             Task behaviorTask = pendingStage == 0 ? behaviorGate.Task : Task.CompletedTask;
             Task nextTask = pendingStage == 1 ? nextGate.Task : Task.CompletedTask;
             int initialPosts = synchronizationContext.PostCalls;
-            Task execution = StartUnderSynchronizationContext(synchronizationContext,
+            Task execution = StartUnderSynchronizationContextAsync(synchronizationContext,
                 () => start(behaviorTask, nextTask));
             if (pendingStage == 0)
                 behaviorGate.SetResult(true);
@@ -894,7 +894,7 @@ public sealed class StateMachineConditionFaultActivitiesDeepContractTests
         }
     }
 
-    static Task StartUnderSynchronizationContext(RecordingSynchronizationContext synchronizationContext, Func<Task> start)
+    static Task StartUnderSynchronizationContextAsync(RecordingSynchronizationContext synchronizationContext, Func<Task> start)
     {
         SynchronizationContext? previous = SynchronizationContext.Current;
         try
@@ -1047,23 +1047,23 @@ public sealed class StateMachineConditionFaultActivitiesDeepContractTests
         public ConcurrentQueue<object> FaultContexts { get; } = new();
         public int ExecuteCount => ExecuteContexts.Count;
 
-        public Task ExecuteAsync(IBehaviorContext<TestSaga> context) => RecordExecute(context);
-        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context) where T : class => RecordExecute(context);
+        public Task ExecuteAsync(IBehaviorContext<TestSaga> context) => RecordExecuteAsync(context);
+        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context) where T : class => RecordExecuteAsync(context);
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<TestSaga, TException> context)
-            where TException : Exception => RecordFault(context);
+            where TException : Exception => RecordFaultAsync(context);
         public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TestSaga, T, TException> context)
-            where T : class where TException : Exception => RecordFault(context);
+            where T : class where TException : Exception => RecordFaultAsync(context);
         public void Accept(IStateMachineVisitor visitor) => accept?.Invoke();
         public void Probe(ProbeContext context) => probe?.Invoke(Assert.IsType<RecordingProbeContext>(context));
 
-        Task RecordExecute(object context)
+        Task RecordExecuteAsync(object context)
         {
             effect?.Invoke();
             ExecuteContexts.Enqueue(context);
             return _execute(context);
         }
 
-        Task RecordFault(object context)
+        Task RecordFaultAsync(object context)
         {
             effect?.Invoke();
             FaultContexts.Enqueue(context);

@@ -4,7 +4,15 @@ namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infra
 
 internal static class SqlServerTransportInspection
 {
-    internal sealed record ScheduledDelivery(DateTime EnqueueTimeUtc, DateTime DatabaseNowUtc);
+    internal sealed record ScheduledDelivery(DateTime EnqueueTimeUtc);
+
+    public static async Task<DateTime> DatabaseNowUtcAsync(
+        this SqlConnection connection,
+        CancellationToken cancellationToken)
+    {
+        await using SqlCommand command = connection.Command("SELECT SYSUTCDATETIME()");
+        return DateTime.SpecifyKind((DateTime)(await command.ExecuteScalarAsync(cancellationToken))!, DateTimeKind.Utc);
+    }
 
     public static async Task OpenWithinAsync(
         this SqlConnection connection,
@@ -158,7 +166,7 @@ internal static class SqlServerTransportInspection
         Guid messageId,
         CancellationToken cancellationToken)
     {
-        string text = $"SELECT d.EnqueueTime, SYSUTCDATETIME() "
+        string text = $"SELECT d.EnqueueTime "
             + $"FROM [{schema}].[MessageDelivery] d "
             + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
             + "WHERE m.MessageId = @messageId";
@@ -166,9 +174,7 @@ internal static class SqlServerTransportInspection
         await using SqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
         if (!await reader.ReadAsync(cancellationToken))
             throw new InvalidOperationException("The delayed delivery was not persisted by SQL Server.");
-        var result = new ScheduledDelivery(
-            DateTime.SpecifyKind(reader.GetDateTime(0), DateTimeKind.Utc),
-            DateTime.SpecifyKind(reader.GetDateTime(1), DateTimeKind.Utc));
+        var result = new ScheduledDelivery(DateTime.SpecifyKind(reader.GetDateTime(0), DateTimeKind.Utc));
         if (await reader.ReadAsync(cancellationToken))
             throw new InvalidOperationException("The message has more than one scheduled delivery.");
         return result;

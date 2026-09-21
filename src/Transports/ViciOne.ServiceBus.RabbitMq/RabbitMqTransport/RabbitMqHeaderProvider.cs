@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using ViciOne.ServiceBus.Initializers.TypeConverters;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
@@ -11,15 +10,13 @@ namespace ViciOne.ServiceBus.RabbitMq;
 public class RabbitMqHeaderProvider :
     IHeaderProvider
 {
-    static readonly DateTimeOffsetTypeConverter _dateTimeConverter = new DateTimeOffsetTypeConverter();
-
     readonly RabbitMqBasicConsumeContext _context;
 
     /// <summary>Creates a header provider over one RabbitMQ delivery.</summary>
     /// <param name="context">The delivery metadata and AMQP properties.</param>
     public RabbitMqHeaderProvider(RabbitMqBasicConsumeContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Enumerates transport metadata and every non-null, nonblank AMQP header.</summary>
@@ -42,6 +39,9 @@ public class RabbitMqHeaderProvider :
         {
             foreach (KeyValuePair<string, object?> header in _context.Properties.Headers)
             {
+                if (IsReservedHeader(header.Key))
+                    continue;
+
                 var value = header.Value;
 
                 if (value is byte[] bytes)
@@ -51,8 +51,11 @@ public class RabbitMqHeaderProvider :
                     if (!string.IsNullOrWhiteSpace(text))
                         yield return new KeyValuePair<string, object>(header.Key, text);
                 }
-                else if (value is string s && !string.IsNullOrWhiteSpace(s))
-                    yield return new KeyValuePair<string, object>(header.Key, s);
+                else if (value is string s)
+                {
+                    if (!string.IsNullOrWhiteSpace(s))
+                        yield return new KeyValuePair<string, object>(header.Key, s);
+                }
                 else if (value != null)
                     yield return new KeyValuePair<string, object>(header.Key, value);
             }
@@ -65,43 +68,36 @@ public class RabbitMqHeaderProvider :
     /// <returns><see langword="true" /> when a usable value is available.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
-        if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null
-            && _context.Properties.Headers.TryGetValue(key, out var headerValue) && headerValue != null)
+        if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
-            value = headerValue;
-            if (value is byte[] bytes)
+            if (!_context.Properties.IsTimestampPresent())
             {
-                var text = Encoding.UTF8.GetString(bytes);
-
-                value = text;
-                return !string.IsNullOrWhiteSpace(text);
+                value = null;
+                return false;
             }
 
-            if (value is string s)
-                return !string.IsNullOrWhiteSpace(s);
-
-            return value != default;
-        }
-
-        if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase) && _context.Properties.IsTimestampPresent())
-        {
-            if (_dateTimeConverter.TryConvert(_context.Properties.Timestamp.UnixTime, out var result))
+            try
             {
-                value = result;
+                value = DateTimeOffset.FromUnixTimeSeconds(_context.Properties.Timestamp.UnixTime);
                 return true;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                value = null;
+                return false;
             }
         }
 
         if (RabbitMqHeaders.Exchange.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _context.Exchange;
-            return value != default;
+            return !string.IsNullOrWhiteSpace(value as string);
         }
 
         if (RabbitMqHeaders.RoutingKey.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _context.RoutingKey;
-            return value != default;
+            return !string.IsNullOrWhiteSpace(value as string);
         }
 
         if (RabbitMqHeaders.DeliveryTag.Equals(key, StringComparison.OrdinalIgnoreCase))
@@ -113,22 +109,56 @@ public class RabbitMqHeaderProvider :
         if (RabbitMqHeaders.ConsumerTag.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _context.ConsumerTag;
-            return value != default;
+            return !string.IsNullOrWhiteSpace(value as string);
         }
 
         if (nameof(_context.Properties.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _context.Properties.MessageId;
-            return value != default;
+            return !string.IsNullOrWhiteSpace(value as string);
         }
 
         if (nameof(_context.Properties.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _context.Properties.CorrelationId;
-            return value != default;
+            return !string.IsNullOrWhiteSpace(value as string);
+        }
+
+        if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null)
+        {
+            foreach (KeyValuePair<string, object?> header in _context.Properties.Headers)
+            {
+                if (header.Key.Equals(key, StringComparison.OrdinalIgnoreCase) && TryNormalize(header.Value, out value))
+                    return true;
+            }
         }
 
         value = null;
         return false;
+    }
+
+    static bool IsReservedHeader(string key)
+    {
+        return RabbitMqHeaders.Exchange.Equals(key, StringComparison.OrdinalIgnoreCase)
+            || RabbitMqHeaders.RoutingKey.Equals(key, StringComparison.OrdinalIgnoreCase)
+            || RabbitMqHeaders.DeliveryTag.Equals(key, StringComparison.OrdinalIgnoreCase)
+            || RabbitMqHeaders.ConsumerTag.Equals(key, StringComparison.OrdinalIgnoreCase)
+            || MessageHeaders.MessageId.Equals(key, StringComparison.OrdinalIgnoreCase)
+            || MessageHeaders.CorrelationId.Equals(key, StringComparison.OrdinalIgnoreCase)
+            || MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase);
+    }
+
+    static bool TryNormalize(object? source, [NotNullWhen(true)] out object? value)
+    {
+        if (source is byte[] bytes)
+        {
+            value = Encoding.UTF8.GetString(bytes);
+            return !string.IsNullOrWhiteSpace(value as string);
+        }
+
+        value = source;
+        return source is string text
+            ? !string.IsNullOrWhiteSpace(text)
+            : source != null;
     }
 }

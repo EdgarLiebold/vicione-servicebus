@@ -174,7 +174,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
-            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageTask(factory, context).ConfigureAwait(false);
+            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = sendPipe.AddCallback(callback);
@@ -205,7 +205,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga, TMessage> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(ctx => callback(context, ctx));
@@ -498,7 +498,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(callback);
@@ -532,7 +532,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(ctx => callback(context, ctx));
@@ -860,7 +860,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(callback);
@@ -889,7 +889,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorContext<TSaga> context)
         {
-            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageTask(factory, context).ConfigureAwait(false);
+            global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> result = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = result.Pipe.AddCallback(ctx => callback(context, ctx));
@@ -1122,7 +1122,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
-            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageTask(factory, context).ConfigureAwait(false);
+            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = sendPipe.AddCallback(callback);
@@ -1153,7 +1153,7 @@ public static class MessageFactory<T>
 
         async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> FactoryAsync(IBehaviorExceptionContext<TSaga, TException> context)
         {
-            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageTask(factory, context).ConfigureAwait(false);
+            (var message, IPipe<SendContext<T>> sendPipe) = await GetMessageAsync(factory, context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
             {
                 IPipe<SendContext<T>> pipe = sendPipe.AddCallback(ctx => callback(context, ctx));
@@ -1371,7 +1371,7 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<IBehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageTask<TContext>(
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageAsync<TContext>(
         Func<TContext, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, TContext context)
     {
         return factory(context) ?? throw new InvalidOperationException("The message factory returned no task.");

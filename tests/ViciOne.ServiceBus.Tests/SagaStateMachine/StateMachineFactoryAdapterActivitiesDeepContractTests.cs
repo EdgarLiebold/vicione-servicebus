@@ -997,33 +997,33 @@ public sealed class StateMachineFactoryAdapterActivitiesDeepContractTests
         }
 
         public Task ExecuteAsync(IBehaviorContext<TestSaga> context, IBehavior<TestSaga> next) =>
-            Record("execute", context, next, () => next.ExecuteAsync(context));
+            RecordAsync("execute", context, next, () => next.ExecuteAsync(context));
 
         public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context, IBehavior<TestSaga, T> next)
-            where T : class => Record("execute-message", context, next, () => next.ExecuteAsync(context));
+            where T : class => RecordAsync("execute-message", context, next, () => next.ExecuteAsync(context));
 
         public Task FaultedAsync<TException>(
             IBehaviorExceptionContext<TestSaga, TException> context,
             IBehavior<TestSaga> next)
-            where TException : Exception => Record("fault", context, next, () => next.FaultedAsync(context));
+            where TException : Exception => RecordAsync("fault", context, next, () => next.FaultedAsync(context));
 
         public Task FaultedAsync<T, TException>(
             IBehaviorExceptionContext<TestSaga, T, TException> context,
             IBehavior<TestSaga, T> next)
             where T : class
-            where TException : Exception => Record("fault-message", context, next, () => next.FaultedAsync(context));
+            where TException : Exception => RecordAsync("fault-message", context, next, () => next.FaultedAsync(context));
 
         Task IStateMachineActivity<TestSaga, Message>.ExecuteAsync(
             IBehaviorContext<TestSaga, Message> context,
             IBehavior<TestSaga, Message> next) =>
-            Record("execute-message", context, next, () => next.ExecuteAsync(context));
+            RecordAsync("execute-message", context, next, () => next.ExecuteAsync(context));
 
         Task IStateMachineActivity<TestSaga, Message>.FaultedAsync<TException>(
             IBehaviorExceptionContext<TestSaga, Message, TException> context,
             IBehavior<TestSaga, Message> next) =>
-            Record("fault-message", context, next, () => next.FaultedAsync(context));
+            RecordAsync("fault-message", context, next, () => next.FaultedAsync(context));
 
-        Task Record(string operation, object context, object next, Func<Task> continuation)
+        Task RecordAsync(string operation, object context, object next, Func<Task> continuation)
         {
             Interlocked.Increment(ref _calls);
             Operation = operation;
@@ -1044,20 +1044,20 @@ public sealed class StateMachineFactoryAdapterActivitiesDeepContractTests
         public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
         public void Probe(ProbeContext context) => context.CreateScope("pair");
 
-        public Task ExecuteAsync(IBehaviorContext<TestSaga> context, IBehavior<TestSaga> next) => Record(context, next, () => next.ExecuteAsync(context));
+        public Task ExecuteAsync(IBehaviorContext<TestSaga> context, IBehavior<TestSaga> next) => RecordAsync(context, next, () => next.ExecuteAsync(context));
         public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context, IBehavior<TestSaga, T> next) where T : class =>
-            Record(context, next, () => next.ExecuteAsync(context));
+            RecordAsync(context, next, () => next.ExecuteAsync(context));
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<TestSaga, TException> context, IBehavior<TestSaga> next)
-            where TException : Exception => Record(context, next, () => next.FaultedAsync(context));
+            where TException : Exception => RecordAsync(context, next, () => next.FaultedAsync(context));
         public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TestSaga, T, TException> context, IBehavior<TestSaga, T> next)
-            where T : class where TException : Exception => Record(context, next, () => next.FaultedAsync(context));
+            where T : class where TException : Exception => RecordAsync(context, next, () => next.FaultedAsync(context));
         Task IStateMachineActivity<TestSaga, Message>.ExecuteAsync(IBehaviorContext<TestSaga, Message> context, IBehavior<TestSaga, Message> next) =>
-            Record(context, next, () => next.ExecuteAsync(context));
+            RecordAsync(context, next, () => next.ExecuteAsync(context));
         Task IStateMachineActivity<TestSaga, Message>.FaultedAsync<TException>(
             IBehaviorExceptionContext<TestSaga, Message, TException> context,
-            IBehavior<TestSaga, Message> next) => Record(context, next, () => next.FaultedAsync(context));
+            IBehavior<TestSaga, Message> next) => RecordAsync(context, next, () => next.FaultedAsync(context));
 
-        Task Record(object context, object next, Func<Task> continuation)
+        Task RecordAsync(object context, object next, Func<Task> continuation)
         {
             if (factoryContext is not null)
                 Assert.Same(factoryContext, context);

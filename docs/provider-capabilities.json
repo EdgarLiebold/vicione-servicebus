@@ -130,8 +130,9 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "publisher-confirmed-persistent-mandatory",
-      "durableSendAcceptanceBoundary": "publisher-confirm-after-route-admission",
+      "durableSendAcceptanceBoundary": "pre-and-post-quorum-equivalence-with-publisher-confirm-after-route-admission",
       "durableSendAcceptanceEnvironment": "real-rabbitmq-container",
+      "durableSendOperationalPrecondition": "no-concurrent-privileged-queue-deletion-or-redeclaration-during-or-after-acceptance",
       "durableSendEvidence": "tests/Transports/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/RabbitMqDurableSendAcceptanceTests.cs"
     },
     {

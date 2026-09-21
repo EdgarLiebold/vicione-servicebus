@@ -61,7 +61,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "iteration-220-composite-converter-retry-required-input-boundaries")]
-    public async Task RequiredInputs_RejectNullBeforeAnyCollaboratorIsObserved()
+    public async Task RequiredInputs_RejectNullBeforeAnyCollaboratorIsObservedAsync()
     {
         var accessor = new RecordingAccessor();
         var @event = new TriggerEvent("Composite");
@@ -110,8 +110,8 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
         AssertArgument("next", () => composite.FaultedAsync(dataFault, null!));
 
         AssertAllLifecycleNulls(converter, context, dataContext, fault, dataFault, next, dataNext);
-        await AssertAllAsyncLifecycleNulls(retry, context, dataContext, fault, dataFault, next, dataNext);
-        await AssertAllAsyncLifecycleNulls(typedRetry, context, dataContext, fault, dataFault, next, dataNext);
+        await AssertAllAsyncLifecycleNullsAsync(retry, context, dataContext, fault, dataFault, next, dataNext);
+        await AssertAllAsyncLifecycleNullsAsync(typedRetry, context, dataContext, fault, dataFault, next, dataNext);
 
         Assert.Empty(accessor.Calls);
         Assert.Equal(0, typedActivity.TotalCalls);
@@ -122,7 +122,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "iteration-220-composite-status-raise-once-and-ordering")]
-    public async Task CompositeExecution_UsesExactCompletionRaiseOnceAndStatusBeforeRaiseAndContinuation()
+    public async Task CompositeExecution_UsesExactCompletionRaiseOnceAndStatusBeforeRaiseAndContinuationAsync()
     {
         var trace = new List<string>();
         var accessor = new RecordingAccessor(trace);
@@ -205,7 +205,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "iteration-220-composite-failure-cancellation-and-concurrency")]
-    public async Task CompositeExecution_PreservesRaiseOutcomeAndConcurrentContextPairingWithoutContinuation()
+    public async Task CompositeExecution_PreservesRaiseOutcomeAndConcurrentContextPairingWithoutContinuationAsync()
     {
         var @event = new TriggerEvent("Composite");
         var failure = new MarkerException("raise");
@@ -236,7 +236,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
         var fault = new MarkerException("fault");
         IBehaviorExceptionContext<TestSaga, MarkerException> faultContext =
             ContextProxy.Create<IBehaviorExceptionContext<TestSaga, MarkerException>>(new TestSaga(), failure: fault);
-        var faultNext = new RecordingBehavior { FaultUntypedResult = NewIncompleteTask() };
+        var faultNext = new RecordingBehavior { FaultUntypedResult = NewIncompleteTaskAsync() };
         Task faultTask = activity.FaultedAsync(faultContext, faultNext);
         Assert.Same(faultNext.FaultUntypedResult, faultTask);
         Assert.Same(faultContext, faultNext.LastFaultContext);
@@ -245,7 +245,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
         IBehaviorExceptionContext<TestSaga, Message, MarkerException> typedFaultContext =
             ContextProxy.Create<IBehaviorExceptionContext<TestSaga, Message, MarkerException>>(
                 new TestSaga(), new Message(1), failure: fault);
-        var typedFaultNext = new RecordingTypedBehavior<Message> { FaultResult = NewIncompleteTask() };
+        var typedFaultNext = new RecordingTypedBehavior<Message> { FaultResult = NewIncompleteTaskAsync() };
         Task typedFaultTask = activity.FaultedAsync(typedFaultContext, typedFaultNext);
         Assert.Same(typedFaultNext.FaultResult, typedFaultTask);
         Assert.Same(typedFaultContext, typedFaultNext.LastFaultContext);
@@ -317,7 +317,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "iteration-220-data-converter-body-type-next-and-route-identity")]
-    public async Task DataConverter_DiagnosesIncompatibleRoutesAndPreservesExactTypedExecutionAndFaultTasks()
+    public async Task DataConverter_DiagnosesIncompatibleRoutesAndPreservesExactTypedExecutionAndFaultTasksAsync()
     {
         var nested = new RecordingTypedActivity();
         var converter = new DataConverterActivity<TestSaga, Message>(nested);
@@ -410,7 +410,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RETRY", "iteration-220-retry-attempt-cancellation-gating-and-continuation")]
     [SuppressMessage("Usage", "xUnit1051", Justification = "This contract test verifies exact cancellation-token ownership and identity.")]
-    public async Task RetryExecution_ControlsAttemptsCancellationTypedGatingAndSingleContinuation()
+    public async Task RetryExecution_ControlsAttemptsCancellationTypedGatingAndSingleContinuationAsync()
     {
         var trace = new List<string>();
         var retryBehavior = new RecordingBehavior
@@ -593,19 +593,19 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
         IBehaviorExceptionContext<TestSaga, MarkerException> untypedFault =
             ContextProxy.Create<IBehaviorExceptionContext<TestSaga, MarkerException>>(
                 new TestSaga(), failure: new MarkerException("untyped-fault"));
-        var retryUntypedFaultNext = new RecordingBehavior { FaultUntypedResult = NewIncompleteTask() };
+        var retryUntypedFaultNext = new RecordingBehavior { FaultUntypedResult = NewIncompleteTaskAsync() };
         Assert.Same(retryUntypedFaultNext.FaultUntypedResult, retry.FaultedAsync(untypedFault, retryUntypedFaultNext));
         Assert.Same(untypedFault, retryUntypedFaultNext.LastFaultContext);
 
-        var retryTypedFaultNext = new RecordingTypedBehavior<Message> { FaultResult = NewIncompleteTask() };
+        var retryTypedFaultNext = new RecordingTypedBehavior<Message> { FaultResult = NewIncompleteTaskAsync() };
         Assert.Same(retryTypedFaultNext.FaultResult, retry.FaultedAsync(fault, retryTypedFaultNext));
         Assert.Same(fault, retryTypedFaultNext.LastFaultContext);
 
-        var gatedUntypedFaultNext = new RecordingBehavior { FaultUntypedResult = NewIncompleteTask() };
+        var gatedUntypedFaultNext = new RecordingBehavior { FaultUntypedResult = NewIncompleteTaskAsync() };
         Assert.Same(gatedUntypedFaultNext.FaultUntypedResult, typedRetry.FaultedAsync(untypedFault, gatedUntypedFaultNext));
         Assert.Same(untypedFault, gatedUntypedFaultNext.LastFaultContext);
 
-        var gatedTypedFaultNext = new RecordingTypedBehavior<Message> { FaultResult = NewIncompleteTask() };
+        var gatedTypedFaultNext = new RecordingTypedBehavior<Message> { FaultResult = NewIncompleteTaskAsync() };
         Assert.Same(gatedTypedFaultNext.FaultResult, typedRetry.FaultedAsync(fault, gatedTypedFaultNext));
         Assert.Same(fault, gatedTypedFaultNext.LastFaultContext);
 
@@ -649,7 +649,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RETRY", "iteration-220-retry-event-execution-unwrapping-stack-and-identity")]
-    public async Task RetryExecution_UnwrapsEventFailureWithOriginalIdentityAndStackWithoutContinuation()
+    public async Task RetryExecution_UnwrapsEventFailureWithOriginalIdentityAndStackWithoutContinuationAsync()
     {
         MarkerException inner = CaptureMarkerFailure();
         var wrapper = new EventExecutionException("wrapped", inner);
@@ -936,7 +936,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
         AssertArgument("next", () => activity.FaultedAsync(dataFault, null!));
     }
 
-    static async Task AssertAllAsyncLifecycleNulls(
+    static async Task AssertAllAsyncLifecycleNullsAsync(
         IStateMachineActivity<TestSaga> activity,
         IBehaviorContext<TestSaga> context,
         IBehaviorContext<TestSaga, Message> dataContext,
@@ -967,7 +967,7 @@ public sealed class StateMachineCompositeConversionRetryActivitiesDeepContractTe
         Assert.Equal(parameterName, exception.ParamName);
     }
 
-    static Task NewIncompleteTask() =>
+    static Task NewIncompleteTaskAsync() =>
         new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously).Task;
 
     static async Task<int> CountSynchronizationContextPostsAsync(Func<Task, Task> execute)

@@ -95,10 +95,17 @@ the scoped bus or `context.Outgoing`. The delivery service can observe the inten
 does not have an application transaction. `DurableSendReceipt` reports the durable commit; later
 carrier acceptance is a separate observable outcome.
 
-RabbitMQ acceptance requires a persistent, mandatory publish and a publisher confirmation. The
-in-memory adapter removes its retained record only after consumer completion. Other transports fail
-during startup when combined with reliable messaging until their provider supplies an equally strong
-acceptance contract. The current matrix is [provider-capabilities.json](provider-capabilities.json).
+RabbitMQ acceptance requires an existing same-name durable quorum queue to pass declaration
+equivalence checks immediately before and after a persistent, mandatory, publisher-confirmed
+publish. The application must prevent privileged concurrent queue deletion or redeclaration during
+or after broker acceptance; AMQP 0-9-1 does not expose a stable queue identity that can make a
+property check and publish atomic. A failed post-confirm check can occur after delivery, so retained
+intent retry preserves at-least-once delivery and may duplicate the message. Administrative deletion
+can discard messages the broker already accepted and is outside the carrier guarantee. The in-memory
+adapter removes its retained record only after consumer completion. Other
+transports fail during startup when combined with reliable messaging until their provider supplies
+an equally strong acceptance contract. The current matrix is
+[provider-capabilities.json](provider-capabilities.json).
 
 ## Inbox
 

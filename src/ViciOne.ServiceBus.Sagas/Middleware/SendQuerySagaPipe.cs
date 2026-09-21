@@ -4,9 +4,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Executes the pipeline for send query saga.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Dispatches a repository query across matching sagas or invokes the missing-saga policy.</summary>
+/// <typeparam name="TSaga">The saga instances selected by the query.</typeparam>
+/// <typeparam name="T">The consumed message contract used by the query.</typeparam>
 public class SendQuerySagaPipe<TSaga, T> :
     IPipe<ISagaRepositoryQueryContext<TSaga, T>>
     where TSaga : class, ISaga
@@ -15,26 +15,26 @@ public class SendQuerySagaPipe<TSaga, T> :
     readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
     readonly ISagaPolicy<TSaga, T> _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <summary>Creates a stage that applies one policy to every loaded query result.</summary>
+    /// <param name="policy">The policy for existing and missing sagas.</param>
+    /// <param name="next">The consumer pipeline invoked for each loaded saga.</param>
     public SendQuerySagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Forwards diagnostic probing to the consumer pipeline.</summary>
+    /// <param name="context">The diagnostic scope to forward.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         _next.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Loads each matching saga and dispatches it, falling back to the missing-saga policy if none load.</summary>
+    /// <param name="context">The repository query and message context.</param>
+    /// <returns>A task that completes after every selected repository action.</returns>
     public async Task SendAsync(ISagaRepositoryQueryContext<TSaga, T> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -44,7 +44,7 @@ public class SendQuerySagaPipe<TSaga, T> :
         {
             foreach (var correlationId in context)
             {
-                SagaConsumeContext<TSaga, T>? sagaConsumeContext = await SagaRepositoryLifecycle.RequireTask(
+                SagaConsumeContext<TSaga, T>? sagaConsumeContext = await SagaRepositoryLifecycle.RequireTaskAsync(
                         context.LoadAsync(correlationId),
                         "The saga repository returned a null load task.")
                     .ConfigureAwait(false);

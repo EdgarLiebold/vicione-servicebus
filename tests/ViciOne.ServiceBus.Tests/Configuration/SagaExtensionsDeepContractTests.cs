@@ -337,7 +337,7 @@ public sealed class SagaExtensionsDeepContractTests
     {
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<ExtensionMessage> context) => Task.CompletedTask;
+        public Task ConsumeProbeAsync(ConsumeContext<ExtensionMessage> context) => Task.CompletedTask;
 
         public Task ConsumeAsync(ConsumeContext<ExtensionMessage> context)
         {

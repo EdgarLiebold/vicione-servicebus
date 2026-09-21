@@ -284,12 +284,12 @@ public sealed class StateMachineSelectorTransitionOutcomeDeepContractTests
         AssertArgument("toState", () => SagaStateMachineExecutionTestDriver.CreateTransition<TestSaga>(null!, accessor));
         AssertArgument("currentStateAccessor", () => SagaStateMachineExecutionTestDriver.CreateTransition(hierarchy.ASibling, null!));
 
-        Task faultTask = NewIncompleteTask();
+        Task faultTask = NewIncompleteTaskAsync();
         next.FaultTask = faultTask;
         Assert.Same(faultTask, transition.FaultedAsync(faultContext, next));
         Assert.Same(faultContext, next.LastFaultContext);
 
-        Task typedFaultTask = NewIncompleteTask();
+        Task typedFaultTask = NewIncompleteTaskAsync();
         typedNext.FaultTask = typedFaultTask;
         Assert.Same(typedFaultTask, transition.FaultedAsync(typedFaultContext, typedNext));
         Assert.Same(typedFaultContext, typedNext.LastFaultContext);
@@ -701,7 +701,7 @@ public sealed class StateMachineSelectorTransitionOutcomeDeepContractTests
         return context;
     }
 
-    static Task NewIncompleteTask() => new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously).Task;
+    static Task NewIncompleteTaskAsync() => new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously).Task;
 
     static InvalidOperationException Unexpected() => new("Unexpected test-double call.");
 

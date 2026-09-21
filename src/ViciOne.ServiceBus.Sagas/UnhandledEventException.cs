@@ -4,7 +4,8 @@ namespace ViciOne.ServiceBus;
 
 /// <summary>Reports an event for which the current saga state has no configured behavior.</summary>
 public sealed class UnhandledEventException :
-    SagaStateMachineException
+    SagaStateMachineException,
+    IRetryFailureClassification
 {
     /// <summary>Creates an unhandled-event exception without state-machine context.</summary>
     public UnhandledEventException()
@@ -31,6 +32,8 @@ public sealed class UnhandledEventException :
 
     /// <summary>Gets the state in which the event was received, when one was supplied.</summary>
     public string? StateName { get; }
+
+    RetryFailureKind IRetryFailureClassification.RetryFailureKind => RetryFailureKind.NonRetryable;
 
     static string FormatMessage(string machineName, string eventName, string stateName)
     {

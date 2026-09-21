@@ -191,7 +191,7 @@ public sealed class StateMachineBehaviorFaultDispatchDeepContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-FAULT", "iteration-216-activity-behavior-direct-fault-forwarding")]
-    public async Task ActivityBehavior_DirectFaultPathsRejectNullAndPreserveContextContinuationAndTaskIdentity()
+    public async Task ActivityBehavior_DirectFaultPathsRejectNullAndPreserveContextContinuationAndTaskIdentityAsync()
     {
         var untypedCompletion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         var typedCompletion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -837,14 +837,14 @@ public sealed class StateMachineBehaviorFaultDispatchDeepContractTests
         public Task ExecuteAsync(IBehaviorContext<TestSaga> context, IBehavior<TestSaga> next)
         {
             UntypedExecuteCalls++;
-            return ExecuteCore();
+            return ExecuteCoreAsync();
         }
 
         public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context, IBehavior<TestSaga, T> next)
             where T : class
         {
             TypedExecuteCalls++;
-            return ExecuteCore();
+            return ExecuteCoreAsync();
         }
 
         public Task FaultedAsync<TException>(
@@ -870,7 +870,7 @@ public sealed class StateMachineBehaviorFaultDispatchDeepContractTests
             return TypedFaultTask;
         }
 
-        private Task ExecuteCore()
+        private Task ExecuteCoreAsync()
         {
             BeforeExecute?.Invoke();
             if (ExecuteFailure is not null)

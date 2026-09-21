@@ -154,5 +154,8 @@ public class AmazonSqsBusFactoryConfigurator :
 
         if (string.IsNullOrWhiteSpace(_settings.EntityName))
             yield return this.Failure("Bus", "The bus queue name must not be null or empty");
+
+        if (!HasMessageLimits)
+            yield return this.Failure("Bus", "Message limits for this Amazon SQS bus are missing. Call configurator.Limits(...) with explicit body and envelope limits before building the bus");
     }
 }

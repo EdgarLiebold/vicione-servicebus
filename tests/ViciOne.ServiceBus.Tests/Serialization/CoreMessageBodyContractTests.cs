@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -13,6 +14,8 @@ public sealed class CoreMessageBodyContractTests
     {
         string[] expected =
         [
+            IdentityOf(typeof(AdmittedCopyMessageBody)),
+            IdentityOf(typeof(BoundedSerializerMessageBody)),
             IdentityOf(typeof(SystemTextJsonMessageBody<>)),
             IdentityOf(typeof(SystemTextJsonObjectMessageBody)),
             IdentityOf(typeof(SystemTextJsonRawMessageBody<>)),

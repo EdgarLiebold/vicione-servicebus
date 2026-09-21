@@ -432,7 +432,7 @@ public sealed class MediatorEndpointContextDeepContractTests
         using var source = new CancellationTokenSource();
         source.Cancel();
 
-        Task Invoke() => form switch
+        Task InvokeAsync() => form switch
         {
             0 => mediator.SendAsync(message, source.Token),
             1 => mediator.SendAsync(message, typedPipe, source.Token),
@@ -448,7 +448,7 @@ public sealed class MediatorEndpointContextDeepContractTests
         };
 
         OperationCanceledException failure = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            Invoke());
+            InvokeAsync());
 
         Assert.Equal(source.Token, failure.CancellationToken);
         Assert.Equal(0, typedPipe.Count);
@@ -468,13 +468,13 @@ public sealed class MediatorEndpointContextDeepContractTests
             configuration.Limits(MessageLimits.Conservative));
         var expected = new ApplicationException("caller pipe failed");
         var message = new EndpointMessage(NewId.NextGuid(), returnsNullTask ? "null" : "exception");
-        Task Action() => publish
+        Task ActionAsync() => publish
             ? mediator.PublishAsync(message, new BoundaryPublishPipe<EndpointMessage>(returnsNullTask, expected),
                 TestContext.Current.CancellationToken)
             : mediator.SendAsync(message, new BoundarySendPipe<EndpointMessage>(returnsNullTask, expected),
                 TestContext.Current.CancellationToken);
 
-        Exception failure = await Assert.ThrowsAnyAsync<Exception>(Action);
+        Exception failure = await Assert.ThrowsAnyAsync<Exception>(ActionAsync);
 
         if (returnsNullTask)
         {
@@ -514,11 +514,11 @@ public sealed class MediatorEndpointContextDeepContractTests
             ? mediator.ConnectPublishObserver(publishObserver)
             : mediator.ConnectSendObserver(sendObserver);
         var message = new EndpointMessage(NewId.NextGuid(), returnsNullTask ? "null" : "exception");
-        Task Action() => publish
+        Task ActionAsync() => publish
             ? mediator.PublishAsync(message, TestContext.Current.CancellationToken)
             : mediator.SendAsync(message, TestContext.Current.CancellationToken);
 
-        Exception failure = await Assert.ThrowsAnyAsync<Exception>(Action);
+        Exception failure = await Assert.ThrowsAnyAsync<Exception>(ActionAsync);
 
         if (returnsNullTask)
         {

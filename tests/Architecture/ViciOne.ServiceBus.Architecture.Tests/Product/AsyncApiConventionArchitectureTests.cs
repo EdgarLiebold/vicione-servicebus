@@ -45,7 +45,19 @@ public sealed class AsyncApiConventionArchitectureTests
                     global::System.Threading.CancellationToken cancellationToken);
             }
 
+            public interface ISchedulerListener
+            {
+                global::System.Threading.Tasks.ValueTask TriggerFinalized(
+                    IScheduler scheduler,
+                    ITrigger trigger,
+                    global::System.Threading.CancellationToken cancellationToken);
+            }
+
             public interface IJobExecutionContext { }
+
+            public interface IScheduler { }
+
+            public interface ITrigger { }
 
             public sealed class JobExecutionException { }
         }
@@ -167,6 +179,8 @@ public sealed class AsyncApiConventionArchitectureTests
     [InlineData("sealed class Listener : global::Quartz.IJobListener { ValueTask global::Quartz.IJobListener.JobExecutionVetoed(IJobExecutionContext context, CancellationToken cancellationToken) => default; }", true)]
     [InlineData("sealed class Listener : global::Quartz.IJobListener { ValueTask global::Quartz.IJobListener.JobWasExecuted(IJobExecutionContext context, JobExecutionException? exception, CancellationToken cancellationToken) => default; }", true)]
     [InlineData("sealed class Listener : global::Quartz.IJobListener { ValueTask global::Quartz.IJobListener.JobWasExecuted(IJobExecutionContext context, CancellationToken cancellationToken) => default; }", false)]
+    [InlineData("sealed class Listener : global::Quartz.ISchedulerListener { public ValueTask TriggerFinalized(IScheduler scheduler, ITrigger trigger, CancellationToken cancellationToken) => default; }", true)]
+    [InlineData("sealed class Listener : global::Quartz.ISchedulerListener { public ValueTask TriggerFinalized(IScheduler scheduler, CancellationToken cancellationToken) => default; }", false)]
     [InlineData("using ValueTask = Bogus.ValueTask; using IJobExecutionContext = Bogus.IJobExecutionContext; using CancellationToken = Bogus.CancellationToken; sealed class Job : global::Quartz.IJob { System.Threading.Tasks.ValueTask global::Quartz.IJob.Execute(Quartz.IJobExecutionContext context, System.Threading.CancellationToken cancellationToken) => default; public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken) => default; }", false)]
     [InlineData("using ValueTask = Bogus.ValueTask; using IJobExecutionContext = Bogus.IJobExecutionContext; using CancellationToken = Bogus.CancellationToken; namespace Bogus { public sealed class ValueTask { } public sealed class IJobExecutionContext { } public sealed class CancellationToken { } } public interface ShadowJob : global::Quartz.IJob { public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken); }", false)]
     public void QuartzAsyncContractAllowlist_RequiresTheExactExternalSignature(string source, bool expectedAllowed)
@@ -327,6 +341,7 @@ public sealed class AsyncApiConventionArchitectureTests
             {
                 "Quartz.IJob" => "Quartz.IJob",
                 "Quartz.IJobListener" => "Quartz.IJobListener",
+                "Quartz.ISchedulerListener" => "Quartz.ISchedulerListener",
                 _ => string.Empty,
             };
             if (metadataName.Length == 0

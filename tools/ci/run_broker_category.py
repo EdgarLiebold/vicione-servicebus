@@ -119,8 +119,12 @@ def validate(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
     if not args.category or not args.project:
         parser.error("either --category with --project, or --command with the command after --")
     if args.rest:
-        parser.error("a category run forwards extra arguments after --, and these arrived without it: "
-                     + " ".join(args.rest))
+        parser.error("a category run does not accept a command or extra arguments: " + " ".join(args.rest))
+    if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", args.category):
+        parser.error("--category must be a single Category trait value")
+    project = (REPO_ROOT / args.project).resolve()
+    if project.suffix != ".csproj" or not project.is_file() or not project.is_relative_to(REPO_ROOT):
+        parser.error("--project must name an existing test project inside this repository")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -135,7 +139,7 @@ def build_parser() -> argparse.ArgumentParser:
     # 'artemis' flavor that addresses a second, separate broker. Repeating --broker starts each of them,
     # so no spec has to fall back to a fixed port because its fixture was not started.
     parser.add_argument("--broker", required=True, action="append", choices=sorted(compose_fixture.BROKER_PORTS))
-    parser.add_argument("--category")
+    parser.add_argument("--category", help="Select tests with the xUnit Category trait of this value")
     parser.add_argument("--project")
     parser.add_argument("--evidence-dir", type=Path, default=Path("artifacts/run-output"))
     # --ports-out is gone. The projection is written under the run root, where it cannot be the file
@@ -233,13 +237,19 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
         # reach a broker this runner did not start.
         completed = subprocess.run(args.rest, env=environment, text=True, check=False)
     else:
-        runner = REPO_ROOT / "tools/ci/run_test_category.py"
+        # The former Python category runner was removed with the old test platform. Native xUnit 4
+        # on MTP v2 selects traits with --filter-trait, not VSTest's --filter. At present the native
+        # projects declare no Category traits, so this optional mode must fail with zero matched tests
+        # until a project explicitly declares them. CI uses --command for complete project suites.
+        # Give each invocation its own result directory even when callers share --evidence-dir.
+        results_dir = (REPO_ROOT / args.evidence_dir / run_root.name).resolve()
+        environment.setdefault("TZ", "UTC")
         completed = subprocess.run(
-            [sys.executable, str(runner),
-             "--category", args.category,
-             "--project", args.project,
-             "--evidence-dir", str(args.evidence_dir)],
-            env=environment, text=True, check=False,
+            ["dotnet", "test", "--project", str((REPO_ROOT / args.project).resolve()),
+             "-c", "Release", "--results-directory", str(results_dir),
+             "--filter-trait", f"Category={args.category}",
+             "--minimum-expected-tests", "1"],
+            cwd=REPO_ROOT, env=environment, text=True, check=False,
         )
 
     if args.one_refusal_per_vhost:

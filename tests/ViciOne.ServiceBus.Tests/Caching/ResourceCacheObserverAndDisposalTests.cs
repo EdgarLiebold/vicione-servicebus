@@ -276,13 +276,21 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await cache.AddAsync(disposal, TestContext.Current.CancellationToken);
 
         Task addReplacement = cache.AddAsync(new Resource("two"), TestContext.Current.CancellationToken).AsTask();
-        await disposal.Started.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        try
+        {
+            await disposal.Started.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            Assert.False(addReplacement.IsCompleted);
+            Assert.Equal(0, cache.Statistics.Count);
+        }
+        finally
+        {
+            // Release teardown even if a changed eviction contract fails the assertion.
+            disposal.Release();
+        }
 
-        Assert.False(addReplacement.IsCompleted);
-        Assert.Equal(1, cache.Statistics.Count);
-        disposal.Release();
         await addReplacement.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Assert.Equal(1, disposal.DisposeCount);
+        Assert.Equal(1, cache.Statistics.Count);
     }
 
     [Fact]

@@ -14,6 +14,7 @@ public class SerializationConfiguration :
 {
     readonly Lazy<ISerialization> _collection;
     readonly IDictionary<string, ISerializerFactory> _deserializers;
+    readonly JsonSerializerConstraints _jsonConstraints;
     readonly List<Func<JsonSerializerOptions, JsonSerializerOptions>> _jsonOptionsConfigurators;
     readonly IDictionary<string, ISerializerFactory> _serializers;
     ContentType? _defaultContentType;
@@ -25,6 +26,7 @@ public class SerializationConfiguration :
     {
         _serializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
         _deserializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
+        _jsonConstraints = new JsonSerializerConstraints();
         _jsonOptionsConfigurators = [];
         _collection = new Lazy<ISerialization>(CreateCollection);
 
@@ -35,6 +37,7 @@ public class SerializationConfiguration :
     {
         _serializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
         _deserializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
+        _jsonConstraints = source._jsonConstraints;
         _jsonOptionsConfigurators = [];
         _collection = new Lazy<ISerialization>(CreateCollection);
 
@@ -111,6 +114,12 @@ public class SerializationConfiguration :
         ArgumentNullException.ThrowIfNull(configure);
         EnsureMutable();
         _jsonOptionsConfigurators.Add(configure);
+    }
+
+    internal void SetMaximumJsonDepth(int maximumDepth)
+    {
+        EnsureMutable();
+        _jsonConstraints.MaximumDepth = maximumDepth;
     }
 
     /// <summary>Creates serialization configuration.</summary>
@@ -205,6 +214,14 @@ public class SerializationConfiguration :
             options = SystemTextJsonSerializerOptions.Freeze(candidate);
         }
 
+        if (_jsonConstraints.MaximumDepth is { } maximumDepth)
+        {
+            options = SystemTextJsonSerializerOptions.Freeze(new JsonSerializerOptions(options)
+            {
+                MaxDepth = maximumDepth,
+            });
+        }
+
         return options;
     }
 
@@ -242,5 +259,10 @@ public class SerializationConfiguration :
 
         AddSerializer(factory);
         AddDeserializer(factory, true);
+    }
+
+    sealed class JsonSerializerConstraints
+    {
+        public int? MaximumDepth { get; set; }
     }
 }

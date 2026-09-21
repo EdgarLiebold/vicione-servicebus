@@ -55,7 +55,7 @@ public class AsyncActivity<TSaga> :
     }
 
     /// <summary>Runs the configured action.</summary>
-    /// <typeparam name="TData">The message contract processed by the operation.</typeparam>
+    /// <typeparam name="TData">The message type carried through the asynchronous saga action and subsequent behavior.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

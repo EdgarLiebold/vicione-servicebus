@@ -36,7 +36,7 @@ public sealed class AmazonSqsMultiBusTests
                 registration.UsingAmazonSqs((_, configurator) =>
                 {
                     configurator.MessageTopology.SetEntityNameFormatter(new BusEntityNameFormatter("server1"));
-                    fixture.ConfigureHost(configurator);
+                    fixture.ConfigureRegisteredHost(configurator);
                     configurator.ReceiveEndpoint(firstQueueName, endpoint =>
                     {
                         endpoint.Handler<EndpointProbe>(firstDeliveries.ObserveProbeAsync);
@@ -50,7 +50,7 @@ public sealed class AmazonSqsMultiBusTests
                 registration.UsingAmazonSqs((_, configurator) =>
                 {
                     configurator.MessageTopology.SetEntityNameFormatter(new BusEntityNameFormatter("server2"));
-                    fixture.ConfigureHost(configurator);
+                    fixture.ConfigureRegisteredHost(configurator);
                     configurator.ReceiveEndpoint(secondQueueName, endpoint =>
                     {
                         endpoint.Handler<EndpointProbe>(secondDeliveries.ObserveProbeAsync);

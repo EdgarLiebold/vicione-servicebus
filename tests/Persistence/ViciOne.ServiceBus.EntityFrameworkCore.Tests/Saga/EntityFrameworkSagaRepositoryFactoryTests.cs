@@ -8,6 +8,7 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Operations;
 using Xunit;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga;
@@ -40,6 +41,76 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
         Assert.Same(dbContext, created);
         Assert.False(dbContext.DisposeAsyncCalled);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "probe-preserves-container-owned-context")]
+    public void Probe_PreservesTheContainerOwnedContext()
+    {
+        using var dbContext = new ProbeDbContext(new DbContextOptionsBuilder<ProbeDbContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options);
+        var factory = new ContainerSagaDbContextFactory<ProbeDbContext, FactorySaga>(dbContext);
+        var probe = new ProbeResultBuilderTestDriver(Guid.NewGuid(), CancellationToken.None, TimeProvider.System);
+
+        CreateProbeFactory(factory).Probe(probe.Context);
+
+        Assert.False(dbContext.DisposeCalled);
+        Assert.False(dbContext.DisposeAsyncCalled);
+        Assert.NotNull(dbContext.Model.FindEntityType(typeof(FactorySaga)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "probe-releases-delegate-owned-context")]
+    public void Probe_ReleasesTheDelegateOwnedContextThroughItsFactory()
+    {
+        var dbContext = new ProbeDbContext(new DbContextOptionsBuilder<ProbeDbContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options);
+        var factory = new DelegateSagaDbContextFactory<FactorySaga>(() => dbContext);
+        var probe = new ProbeResultBuilderTestDriver(Guid.NewGuid(), CancellationToken.None, TimeProvider.System);
+
+        CreateProbeFactory(factory).Probe(probe.Context);
+
+        Assert.True(dbContext.DisposeAsyncCalled);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "probe-releases-context-after-model-failure")]
+    public void Probe_ReleasesTheContextWhenModelConstructionFails()
+    {
+        var modelFailure = new InvalidOperationException("Model construction failed.");
+        var dbContext = new FaultingProbeDbContext(new DbContextOptionsBuilder<FaultingProbeDbContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options, modelFailure);
+        var factory = new DelegateSagaDbContextFactory<FactorySaga>(() => dbContext);
+        var probe = new ProbeResultBuilderTestDriver(Guid.NewGuid(), CancellationToken.None, TimeProvider.System);
+
+        InvalidOperationException actual = Assert.Throws<InvalidOperationException>(() =>
+            CreateProbeFactory(factory).Probe(probe.Context));
+
+        Assert.Same(modelFailure, actual);
+        Assert.True(dbContext.DisposeAsyncCalled);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "probe-propagates-release-failure")]
+    public void Probe_PropagatesTheFactoryReleaseFailure()
+    {
+        var releaseFailure = new InvalidOperationException("Factory release failed.");
+        using var dbContext = new ReleaseFaultingProbeDbContext(
+            new DbContextOptionsBuilder<ReleaseFaultingProbeDbContext>()
+                .UseSqlite("Data Source=:memory:")
+                .Options,
+            releaseFailure);
+        var factory = new DelegateSagaDbContextFactory<FactorySaga>(() => dbContext);
+        var probe = new ProbeResultBuilderTestDriver(Guid.NewGuid(), CancellationToken.None, TimeProvider.System);
+
+        InvalidOperationException actual = Assert.Throws<InvalidOperationException>(() =>
+            CreateProbeFactory(factory).Probe(probe.Context));
+
+        Assert.Same(releaseFailure, actual);
+        Assert.Equal(1, dbContext.DisposeAsyncCalls);
     }
 
     [Fact]
@@ -185,6 +256,16 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         return context;
     }
 
+    private static EntityFrameworkSagaRepositoryContextFactory<FactorySaga> CreateProbeFactory(
+        ISagaDbContextFactory<FactorySaga> dbContextFactory) => new(
+        dbContextFactory,
+        new SagaConsumeContextFactory<DbContext, FactorySaga>(),
+        new OptimisticSagaRepositoryLockStrategy<FactorySaga>(
+            new OptimisticLoadQueryExecutor<FactorySaga>(),
+            queryCustomization: null,
+            System.Data.IsolationLevel.ReadCommitted,
+            isTransactionEnabled: true));
+
     private interface FactoryConsumeContext : ConsumeContext<FactoryMessage>, ConsumeContext;
 
     public sealed class FactorySaga : ISaga
@@ -219,6 +300,66 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         {
             DisposeAsyncCalled = true;
             await base.DisposeAsync();
+        }
+    }
+
+    private sealed class ProbeDbContext(DbContextOptions<ProbeDbContext> options) : DbContext(options)
+    {
+        public bool DisposeCalled { get; private set; }
+
+        public bool DisposeAsyncCalled { get; private set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FactorySaga>().HasKey(saga => saga.CorrelationId);
+        }
+
+        public override void Dispose()
+        {
+            DisposeCalled = true;
+            base.Dispose();
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            DisposeAsyncCalled = true;
+            return base.DisposeAsync();
+        }
+    }
+
+    private sealed class FaultingProbeDbContext(
+        DbContextOptions<FaultingProbeDbContext> options,
+        Exception modelFailure) : DbContext(options)
+    {
+        public bool DisposeAsyncCalled { get; private set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            throw modelFailure;
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            DisposeAsyncCalled = true;
+            return base.DisposeAsync();
+        }
+    }
+
+    private sealed class ReleaseFaultingProbeDbContext(
+        DbContextOptions<ReleaseFaultingProbeDbContext> options,
+        Exception releaseFailure) : DbContext(options)
+    {
+        public int DisposeAsyncCalls { get; private set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FactorySaga>().HasKey(saga => saga.CorrelationId);
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            DisposeAsyncCalls++;
+            return ValueTask.FromException(releaseFailure);
         }
     }
 

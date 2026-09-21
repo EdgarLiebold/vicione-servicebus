@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -19,6 +20,7 @@ public abstract class BusFactoryConfigurator :
     IPublishObserverConnector
 {
     readonly IBusConfiguration _busConfiguration;
+    bool _directMessageLimitsDeclared;
 
     /// <summary>Initializes a configurator backed by the supplied bus configuration.</summary>
     /// <param name="busConfiguration">The mutable configuration assembled for the bus.</param>
@@ -40,6 +42,52 @@ public abstract class BusFactoryConfigurator :
     public ISendTopologyConfigurator SendTopology => _busConfiguration.Topology.Send;
     /// <summary>Gets the topology applied when messages are published.</summary>
     public IPublishTopologyConfigurator PublishTopology => _busConfiguration.Topology.Publish;
+
+    /// <summary>Gets whether this factory's host has both limits and payload admission.</summary>
+    protected bool HasMessageLimits =>
+        _busConfiguration.HostConfiguration is IMessageLimitsHostConfiguration { MessageLimits: not null }
+        && _busConfiguration.HostConfiguration is IPayloadAdmissionHostConfiguration { PayloadAdmissionRuntime: not null };
+
+    internal void ConfigureDirectMessageLimits(MessageLimits limits)
+    {
+        ArgumentNullException.ThrowIfNull(limits);
+
+        if (_directMessageLimitsDeclared
+            || _busConfiguration.HostConfiguration is IMessageLimitsHostConfiguration { MessageLimits: not null }
+            || _busConfiguration.HostConfiguration is IPayloadAdmissionHostConfiguration { PayloadAdmissionRuntime: not null })
+        {
+            throw new ConfigurationException(
+                "Message limits for bus 'default': Limits is already declared. Configure exactly one Limits policy for this bus.");
+        }
+
+        if (_busConfiguration.HostConfiguration is not IMessageLimitsHostConfiguration limitsHost
+            || _busConfiguration.HostConfiguration is not IPayloadAdmissionHostConfiguration admissionHost)
+        {
+            throw new ConfigurationException(
+                "Message limits for bus 'default': The selected transport cannot enforce receive and send limits. Choose a transport with message-limit support.");
+        }
+
+        limits.Validate("default");
+        var policy = new PayloadAdmissionPolicy
+        {
+            WarningBodyBytes = limits.WarnAboveBytes,
+            MessageDataOffloadThresholdBytes = limits.OffloadToMessageDataAboveBytes,
+            MaximumSerializedBodyBytes = limits.MaxBodyBytes,
+            MaximumTransportEnvelopeBytes = limits.MaxEnvelopeBytes,
+        };
+        var runtime = new PayloadAdmissionRuntime<IBus>(new PayloadAdmissionEvaluator<IBus>(policy));
+
+        if (_busConfiguration.Serialization is not SerializationConfiguration serialization)
+        {
+            throw new ConfigurationException(
+                "Message limits for bus 'default': The selected serialization configuration cannot enforce MaxJsonDepth. Choose the built-in serialization configuration.");
+        }
+
+        serialization.SetMaximumJsonDepth(limits.MaxJsonDepth);
+        limitsHost.SetMessageLimits(limits);
+        admissionHost.SetPayloadAdmissionRuntime(runtime);
+        _directMessageLimitsDeclared = true;
+    }
 
     /// <summary>Sets whether startup deploys topology without starting message delivery.</summary>
     public bool DeployTopologyOnly

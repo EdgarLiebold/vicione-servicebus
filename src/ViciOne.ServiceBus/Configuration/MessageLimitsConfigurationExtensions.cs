@@ -3,9 +3,32 @@ using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures mandatory message-size and JSON-depth boundaries inside a bus registration block.</summary>
+/// <summary>Configures mandatory message-size and JSON-depth boundaries for registered and factory-created buses.</summary>
 public static class MessageLimitsConfigurationExtensions
 {
+    /// <summary>Assigns explicit message limits to a bus created through a transport factory.</summary>
+    /// <typeparam name="TConfigurator">The transport-specific factory configurator type.</typeparam>
+    /// <param name="configurator">The bus factory configurator to update.</param>
+    /// <param name="limits">The body, envelope, and JSON-depth limits owned by this bus.</param>
+    /// <returns>The factory configurator for continued configuration.</returns>
+    public static TConfigurator Limits<TConfigurator>(
+        this TConfigurator configurator,
+        MessageLimits limits)
+        where TConfigurator : IBusFactoryConfigurator
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(limits);
+
+        if (configurator is not BusFactoryConfigurator factory)
+        {
+            throw new ConfigurationException(
+                "Message limits for bus 'unknown': The selected factory cannot enforce message limits. Choose a factory with message-limit support.");
+        }
+
+        factory.ConfigureDirectMessageLimits(limits);
+        return configurator;
+    }
+
     internal static bool HasLimits<TBus>(IServiceCollection services)
         where TBus : class, IBus
     {

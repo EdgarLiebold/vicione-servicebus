@@ -138,7 +138,7 @@ public sealed class PropertyConverterOwnershipTests
         var values = new TrackingEnumerable<int>([2]);
         var entries = new TrackingEnumerable<KeyValuePair<int, int>>([new(1, 2)]);
         InitializeContext<OwnerMessage> context = CreateContext();
-        Task<object?> root = StartSingleCollectionConversion(form, elementConverter, values, entries, context, caller.Token);
+        Task<object?> root = StartSingleCollectionConversionAsync(form, elementConverter, values, entries, context, caller.Token);
         var expected = new InvalidOperationException("element conversion failed");
         TrackingState tracking = form < 6 ? values.State : entries.State;
         try
@@ -180,7 +180,7 @@ public sealed class PropertyConverterOwnershipTests
         var valueConverter = new ControlledConverter<string, int>(_ => valueSource.Task);
         var entries = new TrackingEnumerable<KeyValuePair<int, int>>([new(1, 2)]);
         InitializeContext<OwnerMessage> context = CreateContext();
-        Task<object?> root = StartCombinedDictionaryConversion(shape, keyConverter, valueConverter, entries, context, caller.Token);
+        Task<object?> root = StartCombinedDictionaryConversionAsync(shape, keyConverter, valueConverter, entries, context, caller.Token);
         var expected = new InvalidOperationException("value conversion failed");
         try
         {
@@ -224,7 +224,7 @@ public sealed class PropertyConverterOwnershipTests
         var valueConverter = new ControlledConverter<string, int>(_ => valueSource.Task);
         var entries = new TrackingEnumerable<KeyValuePair<int, int>>([new(1, 2)]);
         InitializeContext<OwnerMessage> context = CreateContext();
-        Task<object?> root = StartCombinedDictionaryConversion(0, keyConverter, valueConverter, entries, context, caller.Token);
+        Task<object?> root = StartCombinedDictionaryConversionAsync(0, keyConverter, valueConverter, entries, context, caller.Token);
         var keyFailure = new InvalidOperationException("key conversion failed");
         var valueFailure = new InvalidOperationException("value conversion failed");
         try
@@ -275,7 +275,7 @@ public sealed class PropertyConverterOwnershipTests
             Exception? synchronous = null;
             try
             {
-                root = StartCombinedDictionaryConversion(
+                root = StartCombinedDictionaryConversionAsync(
                     0, keyConverter, valueConverter, entries, context, TestContext.Current.CancellationToken);
             }
             catch (Exception exception)
@@ -328,7 +328,7 @@ public sealed class PropertyConverterOwnershipTests
         var values = new TrackingEnumerable<int>([1, 2]);
         var entries = new TrackingEnumerable<KeyValuePair<int, int>>([new(1, 1), new(2, 2)]);
         InitializeContext<OwnerMessage> context = CreateContext();
-        Task<object?> root = StartTwoEntryConversion(form, elementConverter, valueConverter, values, entries, context, caller.Token);
+        Task<object?> root = StartTwoEntryConversionAsync(form, elementConverter, valueConverter, values, entries, context, caller.Token);
         TrackingState tracking = form < 2 ? values.State : entries.State;
         try
         {
@@ -358,7 +358,7 @@ public sealed class PropertyConverterOwnershipTests
         }
     }
 
-    static Task<object?> StartSingleCollectionConversion(
+    static Task<object?> StartSingleCollectionConversionAsync(
         int form,
         IPropertyConverter<long, int> elementConverter,
         IEnumerable<int> values,
@@ -386,14 +386,14 @@ public sealed class PropertyConverterOwnershipTests
         if (form < 10)
         {
             var converter = new DictionaryPropertyConverter<int, long, int>(elementConverter);
-            return StartDictionaryShape<int, long>(form - 6, converter, context, entries, cancellationToken);
+            return StartDictionaryShapeAsync<int, long>(form - 6, converter, context, entries, cancellationToken);
         }
 
-        return StartDictionaryShape<long, int>(form - 10,
+        return StartDictionaryShapeAsync<long, int>(form - 10,
             new DictionaryKeyPropertyConverter<long, int, int>(elementConverter), context, entries, cancellationToken);
     }
 
-    static Task<object?> StartCombinedDictionaryConversion(
+    static Task<object?> StartCombinedDictionaryConversionAsync(
         int shape,
         IPropertyConverter<long, int> keyConverter,
         IPropertyConverter<string, int> valueConverter,
@@ -402,10 +402,10 @@ public sealed class PropertyConverterOwnershipTests
         CancellationToken cancellationToken)
     {
         var converter = new DictionaryPropertyConverter<long, string, int, int>(keyConverter, valueConverter);
-        return StartDictionaryShape<long, string>(shape, converter, context, entries, cancellationToken);
+        return StartDictionaryShapeAsync<long, string>(shape, converter, context, entries, cancellationToken);
     }
 
-    static Task<object?> StartDictionaryShape<TKey, TElement>(
+    static Task<object?> StartDictionaryShapeAsync<TKey, TElement>(
         int shape,
         object converter,
         InitializeContext<OwnerMessage> context,
@@ -427,7 +427,7 @@ public sealed class PropertyConverterOwnershipTests
         };
     }
 
-    static Task<object?> StartTwoEntryConversion(
+    static Task<object?> StartTwoEntryConversionAsync(
         int form,
         IPropertyConverter<long, int> elementConverter,
         IPropertyConverter<string, int> valueConverter,

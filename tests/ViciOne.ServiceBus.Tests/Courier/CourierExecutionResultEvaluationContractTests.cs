@@ -660,7 +660,7 @@ public sealed class CourierExecutionResultEvaluationContractTests
     private class RecordingSchedulerProxy : DispatchProxy
     {
         private static readonly MethodInfo CreateScheduledTaskMethod = typeof(RecordingSchedulerProxy)
-            .GetMethod(nameof(CreateScheduledTask), BindingFlags.NonPublic | BindingFlags.Static)
+            .GetMethod(nameof(CreateScheduledTaskAsync), BindingFlags.NonPublic | BindingFlags.Static)
             ?? throw new InvalidOperationException("The scheduled-task factory is missing.");
 
         public int CallCount { get; private set; }
@@ -697,7 +697,7 @@ public sealed class CourierExecutionResultEvaluationContractTests
                 .Invoke(null, [Destination, DueAt, Message, CancellationToken]);
         }
 
-        private static Task<ScheduledMessage<T>> CreateScheduledTask<T>(
+        private static Task<ScheduledMessage<T>> CreateScheduledTaskAsync<T>(
             Uri destination,
             DateTimeOffset dueAt,
             object message,

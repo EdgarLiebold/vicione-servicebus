@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
@@ -21,7 +22,8 @@ public class QueueBindingEntity :
     {
         Id = id;
         RoutingKey = routingKey;
-        Arguments = arguments ?? new Dictionary<string, object?>();
+        Arguments = new ReadOnlyDictionary<string, object?>(
+            new Dictionary<string, object?>(arguments ?? new Dictionary<string, object?>()));
         _exchange = exchange;
         _queue = queue;
     }

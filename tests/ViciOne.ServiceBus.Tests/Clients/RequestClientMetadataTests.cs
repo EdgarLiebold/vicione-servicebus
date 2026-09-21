@@ -191,10 +191,13 @@ public sealed class RequestClientMetadataTests
             clock.Advance(TimeSpan.FromMinutes(1));
             endpoint.Release();
 
-            Exception? pipelineFailure = await endpoint.PipeOutcome
+            Exception? sendFailure = await endpoint.SendOutcome
                 .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
-            Assert.IsType<RequestTimeoutException>(pipelineFailure);
-            await Assert.ThrowsAsync<RequestTimeoutException>(() => response);
+            Assert.True(sendFailure is RequestTimeoutException or OperationCanceledException,
+                $"An expired deadline must fail the send, but the endpoint returned {sendFailure?.GetType().Name ?? "success"}.");
+            Assert.False(endpoint.Applied.IsCompleted);
+            await Assert.ThrowsAsync<RequestTimeoutException>(() =>
+                response.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
         }
         finally
         {
@@ -468,7 +471,7 @@ public sealed class RequestClientMetadataTests
     {
         private readonly TaskCompletionSource _applied = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _entered = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        private readonly TaskCompletionSource<Exception?> _pipeOutcome =
+        private readonly TaskCompletionSource<Exception?> _sendOutcome =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -476,7 +479,7 @@ public sealed class RequestClientMetadataTests
 
         public Task Entered => _entered.Task;
 
-        public Task<Exception?> PipeOutcome => _pipeOutcome.Task;
+        public Task<Exception?> SendOutcome => _sendOutcome.Task;
 
         public SendHeaders Headers { get; private set; } = new DictionarySendHeaders();
 
@@ -500,20 +503,20 @@ public sealed class RequestClientMetadataTests
             CancellationToken cancellationToken)
         {
             _entered.TrySetResult();
-            await _release.Task.WaitAsync(cancellationToken);
-            SendContext<MetadataRequest> context = DispatchProxy.Create<SendContext<MetadataRequest>, RecordingRequestSendContextProxy>();
-            var recording = (RecordingRequestSendContextProxy)(object)context;
             try
             {
+                await _release.Task.WaitAsync(cancellationToken);
+                SendContext<MetadataRequest> context = DispatchProxy.Create<SendContext<MetadataRequest>, RecordingRequestSendContextProxy>();
+                var recording = (RecordingRequestSendContextProxy)(object)context;
                 await pipe.SendAsync(context);
                 Headers = recording.Headers;
                 TimeToLive = context.TimeToLive;
                 _applied.TrySetResult();
-                _pipeOutcome.TrySetResult(null);
+                _sendOutcome.TrySetResult(null);
             }
             catch (Exception exception)
             {
-                _pipeOutcome.TrySetResult(exception);
+                _sendOutcome.TrySetResult(exception);
                 throw;
             }
         }

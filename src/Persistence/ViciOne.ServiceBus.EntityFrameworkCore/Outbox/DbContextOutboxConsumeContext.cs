@@ -183,7 +183,11 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
         if (admissionRuntime is null)
         {
             throw new ConfigurationException(
-                $"The Entity Framework inbox outbox for bus '{typeof(TBus)}' has no payload-admission runtime.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Entity Framework inbox outbox",
+                    typeof(TBus).ToString(),
+                    "The payload-admission runtime is missing.",
+                    "Register payload admission for this bus before using the inbox outbox"));
         }
 
         MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);

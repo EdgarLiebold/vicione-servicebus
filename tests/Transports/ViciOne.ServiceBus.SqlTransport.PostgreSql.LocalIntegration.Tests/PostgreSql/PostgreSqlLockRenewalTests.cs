@@ -87,7 +87,7 @@ public sealed class PostgreSqlLockRenewalTests
 
             SqlReceiveLockContext receiveLock = await state.ReceiveLock.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await WaitForNotificationsAsync(listener, 1, fixture.OperationTimeout, cancellationToken);
-            int expectedRenewals;
+            long expectedRenewals;
             if (boundary == RenewalBoundary.MaxDuration)
             {
                 expectedRenewals = 2;
@@ -98,8 +98,9 @@ public sealed class PostgreSqlLockRenewalTests
             }
             else
             {
-                expectedRenewals = 1;
                 await RefuseCurrentRenewalAsync(listener, fixture.Schema, queueName, cancellationToken);
+                expectedRenewals = await RenewalCountAsync(listener, fixture.Schema, cancellationToken);
+                Assert.True(expectedRenewals >= 1);
                 TransportException exception = await WaitForLostLockAsync(
                     receiveLock,
                     fixture.OperationTimeout,

@@ -60,7 +60,7 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
     }
 
     /// <summary>Passes message processing to the next behavior.</summary>
-    /// <typeparam name="T">The message contract processed by the operation.</typeparam>
+    /// <typeparam name="T">The message type forwarded without evaluating the fault condition.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -189,7 +189,7 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
     }
 
     /// <summary>Passes message processing to the next behavior.</summary>
-    /// <typeparam name="T">The message contract processed by the operation.</typeparam>
+    /// <typeparam name="T">The message type forwarded without evaluating the message-fault condition.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

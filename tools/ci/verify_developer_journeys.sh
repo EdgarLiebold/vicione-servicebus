@@ -35,6 +35,7 @@ isolated_consumer_projects=(
   "$repository_root/samples/PackageConsumers/AzureServiceBusTesting/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.csproj"
   "$repository_root/samples/PackageConsumers/EventHubsTesting/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.csproj"
   "$repository_root/samples/PackageConsumers/RabbitMqTesting/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.csproj"
+  "$repository_root/samples/PackageConsumers/SignalR/ViciOne.ServiceBus.Samples.SignalRPackageConsumer.csproj"
 )
 public_api_contract="${PUBLIC_API_CONTRACT_OUTPUT:-$repository_root/artifacts/verification/public-api-contract.txt}"
 committed_public_api_contract="$repository_root/docs/api/packed-public-api.txt"
@@ -69,8 +70,6 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1
 export MSBUILDDISABLENODEREUSE=1
-export NUGET_PACKAGES="$global_packages"
-
 restore_package_consumer() {
   local project="$1"
   local project_file="${project##*/}"
@@ -104,6 +103,16 @@ testing_package_projects=(
   "$repository_root/src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj"
 )
 
+"$dotnet_cli" restore "$repository_root/ViciOne.ServiceBus.slnx" \
+  --locked-mode \
+  "${build_server_arguments[@]}"
+
+for project in "${testing_package_projects[@]}"; do
+  "$dotnet_cli" restore "$project" \
+    --locked-mode \
+    "${build_server_arguments[@]}"
+done
+
 "$dotnet_cli" pack "$repository_root/ViciOne.ServiceBus.slnx" \
   --configuration Release \
   --no-restore \
@@ -119,6 +128,10 @@ for project in "${testing_package_projects[@]}"; do
     --output "$package_feed" \
     -p:ContinuousIntegrationBuild=true
 done
+
+# Keep the normal project restore out of the package-only consumer cache. The
+# public-API inventory resolves assemblies exclusively from this clean folder.
+export NUGET_PACKAGES="$global_packages"
 
 expected_packages=(
   "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg"
@@ -160,6 +173,17 @@ done
 actual_package_count="$(find "$package_feed" -maxdepth 1 -type f -name 'ViciOne.ServiceBus*.nupkg' | wc -l | tr -d '[:space:]')"
 if [[ "$actual_package_count" != "${#expected_packages[@]}" ]]; then
   printf 'Expected exactly %s ViciOne packages, found %s.\n' "${#expected_packages[@]}" "$actual_package_count" >&2
+  exit 1
+fi
+
+signalr_nuspec="$temporary_root/ViciOne.ServiceBus.SignalR.nuspec"
+unzip -p "$package_feed/ViciOne.ServiceBus.SignalR.1.0.0.nupkg" '*.nuspec' > "$signalr_nuspec"
+if ! grep -Fq '<dependency id="ViciOne.ServiceBus" version="1.0.0"' "$signalr_nuspec"; then
+  printf 'The SignalR package must depend on the Core package.\n' >&2
+  exit 1
+fi
+if grep -Fq 'ViciOne.ServiceBus.Initializers' "$signalr_nuspec"; then
+  printf 'The SignalR package must not depend on the optional Initializers package.\n' >&2
   exit 1
 fi
 
@@ -233,4 +257,4 @@ elif ! cmp -s "$committed_public_api_contract" "$public_api_contract"; then
   exit 1
 fi
 
-printf 'Developer journey package-consumer gate passed: 18 scenarios, 31 freshly packed ViciOne packages, 3 isolated provider testing consumers executed, and 30 runtime package APIs match the committed baseline.\n'
+printf 'Developer journey package-consumer gate passed: 18 scenarios, 31 freshly packed ViciOne packages, 4 isolated package consumers executed, and 30 runtime package APIs match the committed baseline.\n'

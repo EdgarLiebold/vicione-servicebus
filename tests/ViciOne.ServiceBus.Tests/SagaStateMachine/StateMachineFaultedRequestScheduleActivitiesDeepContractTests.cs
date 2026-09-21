@@ -707,11 +707,11 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         using var successCancellation = new CancellationTokenSource();
         MessageSchedulerContext successfulScheduler = NewScheduler((method, args) => method.Name switch
         {
-            "ScheduleSendAsync" => Schedule(args),
-            "CancelScheduledSendAsync" => Cancel(args),
+            "ScheduleSendAsync" => ScheduleAsync(args),
+            "CancelScheduledSendAsync" => CancelAsync(args),
             _ => throw new NotSupportedException(method.Name)
         });
-        Task<ScheduledMessage<Notice>> Schedule(object?[] args)
+        Task<ScheduledMessage<Notice>> ScheduleAsync(object?[] args)
         {
             trace.Add("schedule");
             Assert.Equal(DueAt, args[0]);
@@ -721,7 +721,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
             Assert.Equal(previousToken, successSaga.ScheduleId);
             return Task.FromResult<ScheduledMessage<Notice>>(NewScheduled(newToken));
         }
-        Task Cancel(object?[] args)
+        Task CancelAsync(object?[] args)
         {
             trace.Add("cancel");
             Assert.Equal(InputAddress, args[0]);
@@ -828,10 +828,10 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         MessageSchedulerContext scheduler = NewScheduler((method, args) => method.Name switch
         {
             "ScheduleSendAsync" => Task.FromResult<ScheduledMessage<Notice>>(NewScheduled(newToken)),
-            "CancelScheduledSendAsync" => FailCancel(args),
+            "CancelScheduledSendAsync" => FailCancelAsync(args),
             _ => throw new NotSupportedException(method.Name)
         });
-        Task FailCancel(object?[] args)
+        Task FailCancelAsync(object?[] args)
         {
             Assert.Equal(oldToken, args[1]);
             Assert.Equal(newToken, saga.ScheduleId);
@@ -1077,7 +1077,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
             "get_Headers" => headers,
             "get_ReceiveContext" => receive,
             "TryGetPayload" => SetPayload(method, args, scheduler),
-            "GetSendEndpointAsync" => GetEndpoint(args, endpoint, endpointAddress, endpointCancellation),
+            "GetSendEndpointAsync" => GetEndpointAsync(args, endpoint, endpointAddress, endpointCancellation),
             _ => throw new NotSupportedException(method.Name)
         });
     }
@@ -1093,7 +1093,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         return false;
     }
 
-    static Task<ISendEndpoint> GetEndpoint(object?[] args, IAdvancedSendEndpoint? endpoint, Action<Uri>? endpointAddress,
+    static Task<ISendEndpoint> GetEndpointAsync(object?[] args, IAdvancedSendEndpoint? endpoint, Action<Uri>? endpointAddress,
         Action<CancellationToken>? endpointCancellation)
     {
         endpointAddress?.Invoke(Assert.IsType<Uri>(args[0]));
@@ -1182,15 +1182,15 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
     sealed class NextBehavior(List<string>? trace = null, Task? completion = null) : IBehavior<Saga>
     {
         public List<object> Seen { get; } = [];
-        public Task ExecuteAsync(IBehaviorContext<Saga> context) => Record(context);
-        public Task ExecuteAsync<T>(IBehaviorContext<Saga, T> context) where T : class => Record(context);
+        public Task ExecuteAsync(IBehaviorContext<Saga> context) => RecordAsync(context);
+        public Task ExecuteAsync<T>(IBehaviorContext<Saga, T> context) where T : class => RecordAsync(context);
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<Saga, TException> context)
-            where TException : Exception => Record(context);
+            where TException : Exception => RecordAsync(context);
         public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<Saga, T, TException> context)
-            where T : class where TException : Exception => Record(context);
+            where T : class where TException : Exception => RecordAsync(context);
         public void Accept(IStateMachineVisitor visitor) { }
         public void Probe(ProbeContext context) { }
-        Task Record(object context)
+        Task RecordAsync(object context)
         {
             trace?.Add("next");
             Seen.Add(context);
@@ -1201,12 +1201,12 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
     sealed class TypedNextBehavior(Task? completion = null, List<string>? trace = null) : IBehavior<Saga, Data>
     {
         public List<object> Seen { get; } = [];
-        public Task ExecuteAsync(IBehaviorContext<Saga, Data> context) => Record(context);
+        public Task ExecuteAsync(IBehaviorContext<Saga, Data> context) => RecordAsync(context);
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<Saga, Data, TException> context)
-            where TException : Exception => Record(context);
+            where TException : Exception => RecordAsync(context);
         public void Accept(IStateMachineVisitor visitor) { }
         public void Probe(ProbeContext context) { }
-        Task Record(object context)
+        Task RecordAsync(object context)
         {
             trace?.Add("next");
             Seen.Add(context);

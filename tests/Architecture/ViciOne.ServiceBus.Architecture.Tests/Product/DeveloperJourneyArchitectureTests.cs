@@ -116,6 +116,8 @@ public sealed class DeveloperJourneyArchitectureTests
         Assert.True(File.Exists(verifier));
         string script = File.ReadAllText(verifier);
         Assert.Contains("\"$dotnet_cli\" pack", script, StringComparison.Ordinal);
+        Assert.Contains("\"$dotnet_cli\" restore \"$repository_root/ViciOne.ServiceBus.slnx\"", script, StringComparison.Ordinal);
+        Assert.Contains("--locked-mode", script, StringComparison.Ordinal);
         Assert.Contains("--no-restore", script, StringComparison.Ordinal);
         Assert.Contains("-p:RestoreLockedMode=true", script, StringComparison.Ordinal);
         Assert.Contains("-p:TreatWarningsAsErrors=true", script, StringComparison.Ordinal);
@@ -238,6 +240,11 @@ public sealed class DeveloperJourneyArchitectureTests
             "$repository_root/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
             script,
             StringComparison.Ordinal);
+        Assert.Contains("\"$dotnet_cli\" restore \"$project\"", script, StringComparison.Ordinal);
+        Assert.True(
+            script.IndexOf("\"$dotnet_cli\" restore \"$project\"", StringComparison.Ordinal)
+            < script.IndexOf("\"$dotnet_cli\" pack \"$project\"", StringComparison.Ordinal),
+            "Testing packages must be restored from their locked assets before no-restore packing.");
 
         string consumerRoot = Path.Combine(RepositoryLayout.Root, "samples", "PackageConsumers");
         string[] actualConsumers = Directory.GetDirectories(consumerRoot)
@@ -246,7 +253,7 @@ public sealed class DeveloperJourneyArchitectureTests
             .Order(StringComparer.Ordinal)
             .ToArray();
         Assert.Equal(
-            ExpectedIsolatedTestingConsumers.Keys.Append("PublicApiBaseline").Order(StringComparer.Ordinal),
+            ExpectedIsolatedTestingConsumers.Keys.Append("PublicApiBaseline").Append("SignalR").Order(StringComparer.Ordinal),
             actualConsumers);
 
         Assert.All(ExpectedIsolatedTestingConsumers, expected =>
@@ -272,6 +279,39 @@ public sealed class DeveloperJourneyArchitectureTests
             "workflows",
             "native-tests.yml"));
         Assert.Contains("tools/ci/verify_developer_journeys.sh", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-CAPABILITY-PACKAGES",
+        "signalr-package-restores-and-registers-without-initializers")]
+    public void SignalRPackageConsumer_ProvesTheInitializerIndependentPackageBoundary()
+    {
+        string directory = Path.Combine(RepositoryLayout.Root, "samples", "PackageConsumers", "SignalR");
+        string projectPath = Assert.Single(Directory.GetFiles(directory, "*.csproj"));
+        XDocument project = XDocument.Load(projectPath);
+
+        Assert.Empty(project.Descendants("ProjectReference"));
+        Assert.Equal("true", project.Descendants("ViciOnePackageConsumer").Single().Value);
+        XElement package = Assert.Single(project.Descendants("PackageReference"));
+        Assert.Equal("ViciOne.ServiceBus.SignalR", package.Attribute("Include")!.Value);
+        Assert.Equal("1.0.0", package.Attribute("Version")!.Value);
+
+        using JsonDocument lockFile = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "packages.lock.json")));
+        JsonElement signalR = lockFile.RootElement.GetProperty("dependencies").GetProperty("net10.0")
+            .GetProperty("ViciOne.ServiceBus.SignalR");
+        Assert.Equal("Direct", signalR.GetProperty("type").GetString());
+        JsonElement dependencies = signalR.GetProperty("dependencies");
+        Assert.Equal("1.0.0", dependencies.GetProperty("ViciOne.ServiceBus").GetString());
+        Assert.False(dependencies.TryGetProperty("ViciOne.ServiceBus.Initializers", out _));
+
+        string script = File.ReadAllText(Path.Combine(RepositoryLayout.Root, "tools", "ci", "verify_developer_journeys.sh"));
+        Assert.Contains("samples/PackageConsumers/SignalR/ViciOne.ServiceBus.Samples.SignalRPackageConsumer.csproj", script,
+            StringComparison.Ordinal);
+        Assert.Contains("signalr_nuspec=", script, StringComparison.Ordinal);
+        Assert.Contains("The SignalR package must depend on the Core package.", script, StringComparison.Ordinal);
+        Assert.Contains("The SignalR package must not depend on the optional Initializers package.", script,
+            StringComparison.Ordinal);
     }
 
     private static string ReadPackageId(string project)

@@ -9,6 +9,28 @@ public sealed class RabbitMqEndpointAddressTests
     private static readonly Uri HostAddress = new("rabbitmq://localhost/test");
 
     [Theory]
+    [InlineData("alternateexchange", true)]
+    [InlineData("autodelete", true)]
+    [InlineData("bindexchange", true)]
+    [InlineData("bind", true)]
+    [InlineData("delayedtype", true)]
+    [InlineData("durable", true)]
+    [InlineData("type", true)]
+    [InlineData("queue", true)]
+    [InlineData("singleactiveconsumer", true)]
+    [InlineData("temporary", true)]
+    [InlineData("heartbeat", false)]
+    [InlineData("prefetch", false)]
+    [InlineData("ttl", false)]
+    [InlineData("unknown", false)]
+    [InlineData("DURABLE", false)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-OPTIONS", "endpoint-option-classification")]
+    public void EndpointOptionClassification_DistinguishesEndpointHostAndUnknownKeys(string key, bool expected)
+    {
+        Assert.Equal(expected, RabbitMqAddressOptionNames.IsEndpointOption(key));
+    }
+
+    [Theory]
     [InlineData("rabbitmq://remote/input-queue", "/", "input-queue", "rabbitmq://remote/input-queue")]
     [InlineData("rabbitmq://remote/production/client/input-queue", "production/client", "input-queue", "rabbitmq://remote/production%2Fclient/input-queue")]
     [InlineData("rabbitmq://remote/production%2Fclient/input-queue", "production/client", "input-queue", "rabbitmq://remote/production%2Fclient/input-queue")]

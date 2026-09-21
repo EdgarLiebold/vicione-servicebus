@@ -7,9 +7,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Executes the pipeline for send saga.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Loads a correlated saga and applies the configured policy before updating its repository state.</summary>
+/// <typeparam name="TSaga">The saga instance stored by the repository.</typeparam>
+/// <typeparam name="T">The consumed message contract used to select the saga.</typeparam>
 public class SendSagaPipe<TSaga, T> :
     IPipe<ISagaRepositoryContext<TSaga, T>>
     where TSaga : class, ISaga
@@ -19,10 +19,10 @@ public class SendSagaPipe<TSaga, T> :
     readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
     readonly ISagaPolicy<TSaga, T> _policy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="policy">The policy.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <param name="correlationId">The correlation id.</param>
+    /// <summary>Creates a pipeline stage for one correlation identifier and saga policy.</summary>
+    /// <param name="policy">The policy that selects existing or missing-saga behavior.</param>
+    /// <param name="next">The consumer pipeline invoked for an existing saga.</param>
+    /// <param name="correlationId">The identifier used to load the saga when it is not pre-inserted.</param>
     public SendSagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next, Guid correlationId)
     {
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
@@ -52,13 +52,13 @@ public class SendSagaPipe<TSaga, T> :
             if (instance is null)
                 throw new InvalidOperationException("The saga policy returned a null pre-insert instance.");
 
-            sagaConsumeContext = await SagaRepositoryLifecycle.RequireTask(
+            sagaConsumeContext = await SagaRepositoryLifecycle.RequireTaskAsync(
                     context.InsertAsync(instance),
                     "The saga repository returned a null insert task.")
                 .ConfigureAwait(false);
         }
 
-        sagaConsumeContext ??= await SagaRepositoryLifecycle.RequireTask(
+        sagaConsumeContext ??= await SagaRepositoryLifecycle.RequireTaskAsync(
                 context.LoadAsync(_correlationId),
                 "The saga repository returned a null load task.")
             .ConfigureAwait(false);
@@ -94,14 +94,14 @@ static class SagaRepositoryLifecycle
 
             if (policy.IsReadOnly)
             {
-                await RequireTask(
+                await RequireTaskAsync(
                         repositoryContext.UndoAsync(sagaConsumeContext),
                         "The saga repository returned a null undo task.")
                     .ConfigureAwait(false);
             }
             else if (sagaConsumeContext.IsCompleted)
             {
-                await RequireTask(
+                await RequireTaskAsync(
                         repositoryContext.DeleteAsync(sagaConsumeContext),
                         "The saga repository returned a null delete task.")
                     .ConfigureAwait(false);
@@ -110,7 +110,7 @@ static class SagaRepositoryLifecycle
             }
             else
             {
-                await RequireTask(
+                await RequireTaskAsync(
                         repositoryContext.UpdateAsync(sagaConsumeContext),
                         "The saga repository returned a null update task.")
                     .ConfigureAwait(false);
@@ -128,10 +128,10 @@ static class SagaRepositoryLifecycle
             disposalFailure is null ? [] : [disposalFailure]);
     }
 
-    public static Task RequireTask(Task? task, string message) =>
+    public static Task RequireTaskAsync(Task? task, string message) =>
         task ?? throw new InvalidOperationException(message);
 
-    public static Task<T> RequireTask<T>(Task<T>? task, string message) =>
+    public static Task<T> RequireTaskAsync<T>(Task<T>? task, string message) =>
         task ?? throw new InvalidOperationException(message);
 
     public static async Task<Exception?> TryDisposeAsync(object value)

@@ -227,7 +227,7 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
         var selected = new ViciOneServiceBusStateMachine<ProxySaga>.SelectedEventObserver(selectedEvent, observer);
         var failure = new InvalidOperationException("fault");
 
-        Task forwarded = Invoke(selected, call, typed, context, dataContext, failure);
+        Task forwarded = InvokeAsync(selected, call, typed, context, dataContext, failure);
 
         Assert.Same(completion.Task, forwarded);
         Assert.Equal([CallName(call, typed)], observer.Calls);
@@ -239,7 +239,7 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
 
         observer.Calls.Clear();
         var mismatch = new ViciOneServiceBusStateMachine<ProxySaga>.SelectedEventObserver(fixture.Machine.Other, observer);
-        Task skipped = Invoke(mismatch, call, typed, context, dataContext, failure);
+        Task skipped = InvokeAsync(mismatch, call, typed, context, dataContext, failure);
         Assert.Same(Task.CompletedTask, skipped);
         Assert.Empty(observer.Calls);
     }
@@ -252,7 +252,7 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
     [InlineData(ObserverCall.Fault, false)]
     [InlineData(ObserverCall.Fault, true)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-OBSERVATION", "selected-observer-null-task-and-argument-boundary-matrix")]
-    public async Task SelectedObserver_RejectsNullTasksAndRequiredArguments(ObserverCall call, bool typed)
+    public async Task SelectedObserver_RejectsNullTasksAndRequiredArgumentsAsync(ObserverCall call, bool typed)
     {
         using BehaviorFixture fixture = await BehaviorFixture.CreateAsync();
         IBehaviorContext<ProxySaga> context = new ViciOneServiceBusStateMachine<ProxySaga>.BehaviorContextProxy(
@@ -267,13 +267,13 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
 
         InvalidOperationException nullTask = Assert.Throws<InvalidOperationException>(() =>
         {
-            _ = Invoke(selected, call, typed, context, dataContext, failure);
+            _ = InvokeAsync(selected, call, typed, context, dataContext, failure);
         });
         Assert.Contains("no notification task", nullTask.Message, StringComparison.Ordinal);
 
-        AssertArgument("context", () => Invoke(selected, call, typed, null!, null!, failure));
+        AssertArgument("context", () => InvokeAsync(selected, call, typed, null!, null!, failure));
         if (call == ObserverCall.Fault)
-            AssertArgument("exception", () => Invoke(selected, call, typed, context, dataContext, null!));
+            AssertArgument("exception", () => InvokeAsync(selected, call, typed, context, dataContext, null!));
         AssertArgument("event", () => new ViciOneServiceBusStateMachine<ProxySaga>.SelectedEventObserver(null!, observer));
         AssertArgument("observer", () => new ViciOneServiceBusStateMachine<ProxySaga>.SelectedEventObserver(selectedEvent, null!));
     }
@@ -301,7 +301,7 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
         using IDisposable secondHandle = observable.Connect(second);
         var failure = new InvalidOperationException("fault");
 
-        await Invoke(observable, call, typed, context, dataContext, failure);
+        await InvokeAsync(observable, call, typed, context, dataContext, failure);
 
         Assert.Equal([CallName(call, typed)], first.Calls);
         Assert.Equal([CallName(call, typed)], second.Calls);
@@ -364,7 +364,7 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
         using IDisposable secondHandle = observable.Connect(second);
         var notificationFailure = new InvalidOperationException("notification failure");
 
-        Task notification = Invoke(observable, call, typed, context, dataContext, notificationFailure);
+        Task notification = InvokeAsync(observable, call, typed, context, dataContext, notificationFailure);
 
         Assert.Equal([CallName(call, typed)], first.Calls);
         Assert.Equal([CallName(call, typed)], second.Calls);
@@ -526,7 +526,7 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
         Assert.Equal(cancellation.Token, rejectedCancellation.CancellationToken);
     }
 
-    private static Task Invoke(
+    private static Task InvokeAsync(
         IEventObserver<ProxySaga> observer,
         ObserverCall call,
         bool typed,
@@ -603,15 +603,15 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
         public Exception? LastException { get; private set; }
         public Task? NextTask { get; set; } = Task.CompletedTask;
 
-        public Task PreExecuteAsync(IBehaviorContext<ProxySaga> context) => Record("pre", context);
-        public Task PreExecuteAsync<T>(IBehaviorContext<ProxySaga, T> context) where T : class => Record("pre-typed", context);
-        public Task PostExecuteAsync(IBehaviorContext<ProxySaga> context) => Record("post", context);
-        public Task PostExecuteAsync<T>(IBehaviorContext<ProxySaga, T> context) where T : class => Record("post-typed", context);
-        public Task ExecuteFaultAsync(IBehaviorContext<ProxySaga> context, Exception exception) => Record("fault", context, exception);
+        public Task PreExecuteAsync(IBehaviorContext<ProxySaga> context) => RecordAsync("pre", context);
+        public Task PreExecuteAsync<T>(IBehaviorContext<ProxySaga, T> context) where T : class => RecordAsync("pre-typed", context);
+        public Task PostExecuteAsync(IBehaviorContext<ProxySaga> context) => RecordAsync("post", context);
+        public Task PostExecuteAsync<T>(IBehaviorContext<ProxySaga, T> context) where T : class => RecordAsync("post-typed", context);
+        public Task ExecuteFaultAsync(IBehaviorContext<ProxySaga> context, Exception exception) => RecordAsync("fault", context, exception);
         public Task ExecuteFaultAsync<T>(IBehaviorContext<ProxySaga, T> context, Exception exception) where T : class =>
-            Record("fault-typed", context, exception);
+            RecordAsync("fault-typed", context, exception);
 
-        Task Record(string call, object context, Exception? exception = null)
+        Task RecordAsync(string call, object context, Exception? exception = null)
         {
             Calls.Add(call);
             LastContext = context;

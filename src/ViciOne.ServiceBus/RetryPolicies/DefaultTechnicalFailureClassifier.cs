@@ -71,7 +71,7 @@ internal sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClass
             ConnectionException connectionException => connectionException.IsTransient
                 ? RetryFailureKind.Transient
                 : RetryFailureKind.NonRetryable,
-            ConcurrencyException or TransportUnavailableException or TimeoutException or CircuitBreakerOpenException
+            TransportUnavailableException or TimeoutException or CircuitBreakerOpenException
                 => RetryFailureKind.Transient,
             InvalidOperationException { InnerException: DbException { IsTransient: true } } => RetryFailureKind.Transient,
             DbException dbException => dbException.IsTransient
@@ -94,7 +94,7 @@ internal sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClass
     static bool IsContractFailure(Exception exception)
     {
         return exception is ConfigurationException or PipeConfigurationException or MessageException
-            or PayloadException or UnknownStateException or UnknownEventException or UnhandledEventException;
+            or PayloadException;
     }
 
     static bool IsSerializationOrSecurityFailure(Exception exception)

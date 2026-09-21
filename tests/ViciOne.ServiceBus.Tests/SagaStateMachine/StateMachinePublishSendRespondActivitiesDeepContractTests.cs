@@ -813,20 +813,20 @@ public sealed class StateMachinePublishSendRespondActivitiesDeepContractTests
         public int Calls => Volatile.Read(ref _calls);
         public int FaultCalls => Volatile.Read(ref _faultCalls);
         public object? LastContext { get; private set; }
-        public Task ExecuteAsync(IBehaviorContext<TestSaga> context) => RunExecute(context);
-        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context) where T : class => RunExecute(context);
-        public Task FaultedAsync<T>(IBehaviorExceptionContext<TestSaga, T> context) where T : Exception => RunFault(context);
+        public Task ExecuteAsync(IBehaviorContext<TestSaga> context) => RunExecuteAsync(context);
+        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context) where T : class => RunExecuteAsync(context);
+        public Task FaultedAsync<T>(IBehaviorExceptionContext<TestSaga, T> context) where T : Exception => RunFaultAsync(context);
         public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TestSaga, T, TException> context)
-            where T : class where TException : Exception => RunFault(context);
+            where T : class where TException : Exception => RunFaultAsync(context);
         public void Accept(IStateMachineVisitor visitor) { }
         public void Probe(ProbeContext context) { }
-        Task RunExecute(object context)
+        Task RunExecuteAsync(object context)
         {
             Interlocked.Increment(ref _calls);
             LastContext = context;
             return execute?.Invoke(context) ?? Task.CompletedTask;
         }
-        Task RunFault(object context)
+        Task RunFaultAsync(object context)
         {
             Interlocked.Increment(ref _calls);
             Interlocked.Increment(ref _faultCalls);

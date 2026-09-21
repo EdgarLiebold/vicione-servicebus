@@ -327,12 +327,12 @@ public sealed class CourierActivityContextApiContractTests
                 "get_Timestamp" => Timestamp,
                 "get_TrackingNumber" => TrackingNumber,
                 "get_Variables" => Variables,
-                nameof(ActivityContext.NotifyActivityConsumedAsync) => RecordNotification(args),
+                nameof(ActivityContext.NotifyActivityConsumedAsync) => RecordNotificationAsync(args),
                 _ => throw new InvalidOperationException($"The Courier context test has no behavior for {method.Name}."),
             };
         }
 
-        private Task RecordNotification(object?[]? arguments)
+        private Task RecordNotificationAsync(object?[]? arguments)
         {
             object?[] values = arguments ?? throw new InvalidOperationException("The notification arguments are missing.");
             NotificationCalls.Add(new NotificationCall(

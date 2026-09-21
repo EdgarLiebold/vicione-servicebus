@@ -4,7 +4,8 @@ namespace ViciOne.ServiceBus;
 
 /// <summary>Reports a transient optimistic-concurrency conflict while persisting a saga instance.</summary>
 public class ConcurrencyException :
-    SagaException
+    SagaException,
+    IRetryFailureClassification
 {
     /// <summary>Creates a concurrency exception without saga context.</summary>
     public ConcurrencyException()
@@ -29,4 +30,6 @@ public class ConcurrencyException :
         : base(message, sagaType, correlationId, innerException)
     {
     }
+
+    RetryFailureKind IRetryFailureClassification.RetryFailureKind => RetryFailureKind.Transient;
 }

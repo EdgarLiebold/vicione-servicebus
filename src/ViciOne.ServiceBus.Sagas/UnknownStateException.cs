@@ -4,7 +4,8 @@ namespace ViciOne.ServiceBus;
 
 /// <summary>Reports a state name that is not defined by a saga state machine.</summary>
 public sealed class UnknownStateException :
-    SagaStateMachineException
+    SagaStateMachineException,
+    IRetryFailureClassification
 {
     /// <summary>Creates an unknown-state exception without state-machine context.</summary>
     public UnknownStateException()
@@ -26,6 +27,8 @@ public sealed class UnknownStateException :
 
     /// <summary>Gets the undefined state name, when one was supplied.</summary>
     public string? StateName { get; }
+
+    RetryFailureKind IRetryFailureClassification.RetryFailureKind => RetryFailureKind.NonRetryable;
 
     static string FormatMessage(string machineName, string stateName)
     {

@@ -73,6 +73,12 @@ public class OutboxMessageSendPipe :
                 context.Headers.Set(headerValue.Key, headerValue.Value);
         }
 
+        // A copied raw body does not rerun the raw serializer's header projection.
+        // Restore only metadata headers that the original send actually persisted.
+        RestoreRawGuidHeader(headers, context.Headers, MessageHeaders.CorrelationId, _message.CorrelationId);
+        RestoreRawGuidHeader(headers, context.Headers, MessageHeaders.ConversationId, _message.ConversationId);
+        RestoreRawGuidHeader(headers, context.Headers, MessageHeaders.RequestId, _message.RequestId);
+
         foreach (KeyValuePair<string, object> header in serializerContext.Headers.GetAll())
             context.Headers.Set(header.Key, header.Value);
 
@@ -90,6 +96,12 @@ public class OutboxMessageSendPipe :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+    }
+
+    static void RestoreRawGuidHeader(Headers persistedHeaders, SendHeaders sendHeaders, string name, Guid? value)
+    {
+        if (value.HasValue && persistedHeaders.TryGetHeader(name, out _))
+            sendHeaders.Set(name, value.Value.ToString("D"));
     }
 
 

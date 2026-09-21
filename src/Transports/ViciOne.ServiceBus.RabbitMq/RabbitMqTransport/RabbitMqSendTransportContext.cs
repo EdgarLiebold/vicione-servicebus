@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Monitoring;
@@ -189,26 +190,17 @@ public class RabbitMqSendTransportContext :
         {
             try
             {
-                // Receive InputAddress retains its exchange-form public URI. Verify its same-name queue
-                // without creating a missing one. An active quorum redeclaration checks stable queue
-                // properties; incompatible additional arguments fail closed rather than falling back
-                // to a classic queue. This does not prove effective broker policies.
-                await transportContext.QueueDeclarePassiveAsync(acceptanceRequirement.Exchange, sendContext.CancellationToken)
-                    .ConfigureAwait(false);
-                await transportContext.QueueDeclareAsync(acceptanceRequirement.Exchange, durable: true, exclusive: false,
-                        autoDelete: false, new Dictionary<string, object?>
-                        {
-                            [RabbitMQ.Client.Headers.XQueueType] = "quorum"
-                        }, sendContext.CancellationToken)
-                    .ConfigureAwait(false);
-                await transportContext.QueueBindAsync(acceptanceRequirement.Exchange, acceptanceRequirement.Exchange, "",
-                        new Dictionary<string, object?>(), sendContext.CancellationToken)
+                await VerifyExistingQuorumQueueAsync(transportContext, acceptanceRequirement.Exchange,
+                        context.DestinationAddress?.ToString() ?? _exchange, sendContext.CancellationToken)
                     .ConfigureAwait(false);
             }
-            catch
+            catch (OperationCanceledException)
             {
-                oneTimeContext.Evict();
-                transportContext.ConnectionContext.TopologyEntityCache.Invalidate();
+                throw;
+            }
+            catch (Exception)
+            {
+                InvalidateTopology(oneTimeContext, transportContext);
                 throw;
             }
         }
@@ -264,12 +256,20 @@ public class RabbitMqSendTransportContext :
                 Activity.Current.SetTag(ServiceBusTelemetry.Attributes.RabbitMqRoutingKey, routingKey);
         }
 
-        var publishTask = transportContext.BasicPublishAsync(exchange, routingKey, context.Mandatory, context.BasicProperties, body,
-            context.AwaitAck, sendContext.CancellationToken);
-
         try
         {
-            await publishTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
+            await transportContext.BasicPublishAsync(exchange, routingKey, context.Mandatory, context.BasicProperties, body,
+                    context.AwaitAck, sendContext.CancellationToken)
+                .OrCanceledAsync(context.CancellationToken)
+                .ConfigureAwait(false);
+
+            if (acceptanceRequirement?.RequiresExistingQueueProof == true)
+            {
+                await VerifyExistingQuorumQueueAsync(transportContext, acceptanceRequirement.Exchange,
+                        context.DestinationAddress?.ToString() ?? _exchange, sendContext.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+
             acceptanceRequirement?.MarkAccepted();
         }
         catch (OperationCanceledException)
@@ -278,8 +278,63 @@ public class RabbitMqSendTransportContext :
         }
         catch (Exception)
         {
+            InvalidateTopology(oneTimeContext, transportContext);
+            throw;
+        }
+    }
+
+    static void InvalidateTopology(OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext,
+        ChannelContext transportContext)
+    {
+        try
+        {
             oneTimeContext.Evict();
+        }
+        catch (InvalidOperationException)
+        {
+            // Another sender already evicted this generation and is rebuilding topology. Preserve
+            // the broker failure from this sender while the shared replacement setup finishes.
+        }
+        finally
+        {
             transportContext.ConnectionContext.TopologyEntityCache.Invalidate();
+        }
+    }
+
+    static async Task VerifyExistingQuorumQueueAsync(ChannelContext transportContext, string queueName,
+        string destination, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Receive InputAddress retains its exchange-form public URI. Verify its same-name queue
+            // without changing routing. Repeating the proof after publisher confirmation detects a
+            // replacement that remains in place through the post-check. AMQP does not expose a stable
+            // queue identity, so privileged concurrent queue deletion or redeclaration remains an
+            // operational boundary.
+            await transportContext.QueueDeclarePassiveAsync(queueName, cancellationToken).ConfigureAwait(false);
+            await transportContext.QueueDeclareAsync(queueName, durable: true, exclusive: false,
+                    autoDelete: false, new Dictionary<string, object?>
+                    {
+                        [RabbitMQ.Client.Headers.XQueueType] = "quorum"
+                    }, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            // A broker 4xx reply to this required queue proof is a rejected destination,
+            // not a transient transport failure. Preserve the broker reason for diagnostics.
+            if (exception is OperationInterruptedException interrupted
+                && interrupted.ShutdownReason?.ReplyCode is >= 400 and < 500)
+            {
+                throw new ConfigurationException(
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                        "RabbitMQ durable transport acceptance",
+                        destination,
+                        $"RabbitMQ rejected the existing durable quorum queue proof with AMQP reply code {interrupted.ShutdownReason.ReplyCode}",
+                        "Verify the destination queue, its durable quorum properties, its binding, and broker permissions"),
+                    interrupted);
+            }
+
             throw;
         }
     }
@@ -288,57 +343,65 @@ public class RabbitMqSendTransportContext :
     {
         foreach (KeyValuePair<string, object> header in headers.GetAll())
         {
-            if (header.Key is RabbitMqHeaders.Exchange or RabbitMqHeaders.RoutingKey or RabbitMqHeaders.DeliveryTag or RabbitMqHeaders.ConsumerTag)
+            if (IsReceiveOnlyHeader(header.Key) || dictionary.ContainsKey(header.Key))
                 continue;
 
-            if (dictionary.ContainsKey(header.Key))
-                continue;
-
-            switch (header.Value)
-            {
-                case DateTimeOffset value:
-                    dictionary.SetAmqpTimestamp(header.Key, value.UtcDateTime);
-                    break;
-
-                case DateTime value:
-                    if (value.Kind == DateTimeKind.Local)
-                        value = value.ToUniversalTime();
-                    dictionary.SetAmqpTimestamp(header.Key, value);
-                    break;
-
-                case Guid value:
-                    dictionary[header.Key] = value.ToString("D");
-                    break;
-
-                case string value when header.Key == "CC" || header.Key == "BCC":
-                    dictionary[header.Key] = new[] { value };
-                    break;
-
-                case IEnumerable<string> strings when header.Key == "CC" || header.Key == "BCC":
-                    dictionary[header.Key] = strings.ToArray();
-                    break;
-
-                case Uri value:
-                    dictionary[header.Key] = value.ToString();
-                    break;
-
-                case string value:
-                    dictionary[header.Key] = value;
-                    break;
-
-                case bool value when value:
-                    dictionary[header.Key] = bool.TrueString;
-                    break;
-
-                case IFormattable formatValue:
-                    if (header.Value.GetType().IsValueType)
-                        dictionary[header.Key] = header.Value;
-                    else
-                        dictionary[header.Key] = formatValue.ToString(null, CultureInfo.InvariantCulture);
-                    break;
-            }
+            SetHeader(dictionary, header.Key, header.Value);
         }
     }
+
+    static bool IsReceiveOnlyHeader(string key) => key is
+        RabbitMqHeaders.Exchange or RabbitMqHeaders.RoutingKey or RabbitMqHeaders.DeliveryTag or RabbitMqHeaders.ConsumerTag;
+
+    static void SetHeader(IDictionary<string, object?> dictionary, string key, object value)
+    {
+        if (value is DateTimeOffset offset)
+        {
+            dictionary.SetAmqpTimestamp(key, offset.UtcDateTime);
+            return;
+        }
+
+        if (value is DateTime dateTime)
+        {
+            dictionary.SetAmqpTimestamp(key, dateTime.Kind == DateTimeKind.Local ? dateTime.ToUniversalTime() : dateTime);
+            return;
+        }
+
+        if (value is Guid identifier)
+        {
+            dictionary[key] = identifier.ToString("D");
+            return;
+        }
+
+        if (value is string text)
+        {
+            dictionary[key] = IsCopyHeader(key) ? new[] { text } : text;
+            return;
+        }
+
+        if (IsCopyHeader(key) && value is IEnumerable<string> addresses)
+        {
+            dictionary[key] = addresses.ToArray();
+            return;
+        }
+
+        if (value is Uri uri)
+        {
+            dictionary[key] = uri.ToString();
+            return;
+        }
+
+        if (value is bool boolean)
+        {
+            dictionary[key] = boolean ? bool.TrueString : bool.FalseString;
+            return;
+        }
+
+        if (value is IFormattable formattable)
+            dictionary[key] = value.GetType().IsValueType ? value : formattable.ToString(null, CultureInfo.InvariantCulture);
+    }
+
+    static bool IsCopyHeader(string key) => key is "CC" or "BCC";
 
     static void CopyIncomingPropertiesIfPresent<T>(RabbitMqSendContext<T> context)
         where T : class
@@ -352,7 +415,9 @@ public class RabbitMqSendTransportContext :
                     context.TrySetPriority(basicConsumeContext.Properties.Priority);
             }
 
-            if (!string.IsNullOrWhiteSpace(basicConsumeContext.Properties.ReplyTo) && context.ResponseAddress?.IsReplyToAddress() == true)
+            if (!context.BasicProperties.IsReplyToPresent()
+                && !string.IsNullOrWhiteSpace(basicConsumeContext.Properties.ReplyTo)
+                && context.ResponseAddress?.IsReplyToAddress() == true)
                 context.BasicProperties.ReplyTo = basicConsumeContext.Properties.ReplyTo;
         }
     }

@@ -12,7 +12,10 @@ entry below records what the current work changed for anyone reading the source.
 ### Fixed during the source review since 2026-09-06
 
 - RabbitMQ durable-send acceptance now requires a broker-confirmed, persistent, mandatory publish
-  (`6154ec2b4`).
+  to an existing durable quorum queue (`6154ec2b4`). Queue proof no longer changes broker routing,
+  synchronous and asynchronous publish failures both invalidate cached topology, and acceptance now
+  follows matching pre-publish and post-confirm queue checks. Concurrent failed sends retain their
+  original broker causes while a newer shared topology generation is being rebuilt.
 - Saga removal and nested request outcome forwarding were corrected (`6a43c31ed`); in-memory saga
   indexes and queries now preserve registered identities and consistent snapshots (`fd11887df`).
 - Semantic asynchronous API names and processor-lease handling were corrected (`7e5095b5a`).
@@ -46,6 +49,14 @@ entry below records what the current work changed for anyone reading the source.
 - EF JSON change tracking now compares and snapshots the value actually persisted. Selective
   `IEquatable<T>` implementations and shallow `ICloneable` snapshots can no longer silently drop
   changes to serialized fields; SQLite regression tests cover both cases.
+- EF saga repositories now isolate EF model-cache entries by repository configuration and rebuild
+  the model after a later saga-map registration. Repository probes return contexts through the
+  configured factory release path instead of disposing factory-owned contexts directly.
+- Raw Entity Framework outbox replay now restores persisted correlation, conversation, and request
+  identities together with user headers.
+- Direct Amazon SQS factories now require and enforce explicit body and transport-envelope limits.
+  The configured JSON depth remains mandatory after later serializer-option callbacks, child
+  endpoint overrides, and serialization resets.
 
 ### Removed
 
@@ -63,6 +74,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- The thirteen direct `ViciOne.ServiceBus.*` sibling projects retain their assembly boundaries, with
+  Abstractions documented as the mandatory foundation. Courier, Future, and Saga implementations
+  that were owned only by those optional capabilities have moved out of Abstractions into their
+  respective assemblies without changing their namespaces or retry behavior. Core now consumes the
+  neutral retry-classification contract instead of naming Saga exceptions, and SignalR no longer
+  references the optional Initializers project or package; an isolated package consumer and NuGet
+  metadata gate enforce that boundary. The API guide records every sibling project's use,
+  dependency direction, and selection point, plus the planned provider-specific Saga adapters for
+  Azure Service Bus and Event Hubs.
 - MessagePack serialization now has symmetric bus and receive-endpoint configuration, isolated
   forwarding snapshots, payload-admission-safe byte handling, normalized byte, Base64 and object
   payload overlays, and System.Text.Json-equivalent case-insensitive recursive overlay semantics.

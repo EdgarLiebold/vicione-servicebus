@@ -373,7 +373,7 @@ public sealed class SagaInitiationMessageFilterDeepContractTests
                 : collaboratorCancellation.Token;
             var failure = new OperationCanceledException("causal cancellation", expectedToken);
 
-            Task CancelStage()
+            Task CancelStageAsync()
             {
                 if (deliveryCancels)
                     deliveryCancellation.Cancel();
@@ -383,10 +383,10 @@ public sealed class SagaInitiationMessageFilterDeepContractTests
 
             var saga = new TestSaga(
                 Guid.NewGuid(),
-                _ => continuationCancels ? Task.CompletedTask : CancelStage());
+                _ => continuationCancels ? Task.CompletedTask : CancelStageAsync());
             TrackingSagaContext context = CreateContext(saga, deliveryCancellation.Token);
             var next = new RecordingPipe(
-                _ => continuationCancels ? CancelStage() : Task.CompletedTask);
+                _ => continuationCancels ? CancelStageAsync() : Task.CompletedTask);
 
             OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
                 CreateFilter(combinedRole).SendAsync(context, next));

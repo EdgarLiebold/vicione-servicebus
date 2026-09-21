@@ -70,16 +70,28 @@ public sealed class RabbitMqReceiveContext :
         if (!string.IsNullOrWhiteSpace(RoutingKey))
             properties.Value[RabbitMqTransportPropertyNames.RoutingKey] = RoutingKey;
 
-        if (Properties.IsAppIdPresent() && Properties.AppId is { } appId)
+        if (Properties.IsAppIdPresent() && !string.IsNullOrWhiteSpace(Properties.AppId))
+        {
+            var appId = Properties.AppId;
             properties.Value[RabbitMqTransportPropertyNames.AppId] = appId;
+        }
         if (Properties.IsPriorityPresent())
             properties.Value[RabbitMqTransportPropertyNames.Priority] = Properties.Priority;
-        if (Properties.IsReplyToPresent() && Properties.ReplyTo is { } replyTo)
+        if (Properties.IsReplyToPresent() && !string.IsNullOrWhiteSpace(Properties.ReplyTo))
+        {
+            var replyTo = Properties.ReplyTo;
             properties.Value[RabbitMqTransportPropertyNames.ReplyTo] = replyTo;
-        if (Properties.IsTypePresent() && Properties.Type is { } type)
+        }
+        if (Properties.IsTypePresent() && !string.IsNullOrWhiteSpace(Properties.Type))
+        {
+            var type = Properties.Type;
             properties.Value[RabbitMqTransportPropertyNames.Type] = type;
-        if (Properties.IsUserIdPresent() && Properties.UserId is { } userId)
+        }
+        if (Properties.IsUserIdPresent() && !string.IsNullOrWhiteSpace(Properties.UserId))
+        {
+            var userId = Properties.UserId;
             properties.Value[RabbitMqTransportPropertyNames.UserId] = userId;
+        }
 
         return properties.IsValueCreated ? properties.Value : null;
     }

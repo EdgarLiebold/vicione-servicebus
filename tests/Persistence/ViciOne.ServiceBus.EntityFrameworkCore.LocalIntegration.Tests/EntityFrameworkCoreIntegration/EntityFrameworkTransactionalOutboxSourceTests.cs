@@ -70,12 +70,14 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "raw-json-preserves-user-header")]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "raw-json-preserves-user-header-and-envelope-identity")]
     public async Task RawJsonDelivery_PreservesTheUserHeaderAndEnvelopeIdentityAsync()
     {
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(useRawJson: true);
         Guid messageId = Guid.NewGuid();
         Guid correlationId = Guid.NewGuid();
+        Guid conversationId = Guid.NewGuid();
+        Guid requestId = Guid.NewGuid();
 
         await fixture.PublishAndCommitAsync(
             new OutboxProbe(2),
@@ -83,6 +85,8 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
             {
                 context.MessageId = messageId;
                 context.CorrelationId = correlationId;
+                context.ConversationId = conversationId;
+                context.RequestId = requestId;
                 context.Headers.Set("tenant", "factory-a");
             });
 
@@ -92,6 +96,8 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         Assert.Equal(2, delivered.Sequence);
         Assert.Equal(messageId, delivered.MessageId);
         Assert.Equal(correlationId, delivered.CorrelationId);
+        Assert.Equal(conversationId, delivered.ConversationId);
+        Assert.Equal(requestId, delivered.RequestId);
         Assert.Equal("factory-a", delivered.Tenant);
         await fixture.AssertStoreIsEmptyAsync();
     }
@@ -317,6 +323,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
                 context.MessageId,
                 context.CorrelationId,
                 context.ConversationId,
+                context.RequestId,
                 tenant?.ToString(),
                 Activity.Current?.GetBaggageItem("suitcase")));
             return Task.CompletedTask;
@@ -336,6 +343,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         Guid? MessageId,
         Guid? CorrelationId,
         Guid? ConversationId,
+        Guid? RequestId,
         string? Tenant,
         string? Baggage);
 

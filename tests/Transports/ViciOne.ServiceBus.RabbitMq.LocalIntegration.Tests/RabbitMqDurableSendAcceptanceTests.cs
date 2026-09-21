@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -12,7 +13,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
     private static readonly MessageContractIdentity ContractIdentity = new("vicione.tests.rabbitmq-durable", 1);
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "confirm-persistent-mandatory-and-restart-retention")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "confirmed-persistent-quorum-queue-and-sender-stop-retention")]
     public async Task TransportAcceptance_IsPublisherConfirmedPersistentAndRetainedAfterSenderStopAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("durableaccept");
@@ -22,6 +23,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
         Guid correlationId = NewId.NextGuid();
         DurableSendId durableSendId = new(NewId.NextGuid());
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await DeclareDurableQuorumEndpointAsync(fixture, queue, cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -33,7 +35,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
 
             DurableSendDispatchResult result = await dispatcher.DispatchAsync(
-                    CreateContext(durableSendId, new Uri($"queue:{queue}"), body, messageId, correlationId),
+                    CreateContext(durableSendId, new Uri(fixture.Address, queue), body, messageId, correlationId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -58,11 +60,11 @@ public sealed class RabbitMqDurableSendAcceptanceTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "mandatory-unroutable-publish-is-not-accepted")]
-    public async Task UnroutablePublish_DoesNotReportTransportAcceptanceAsync()
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "missing-quorum-queue-is-not-accepted")]
+    public async Task MissingQuorumQueue_DoesNotReportTransportAcceptanceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("durablereject");
-        string exchange = fixture.Name("unroutable");
+        string queue = fixture.Name("missing");
         DurableSendId durableSendId = new(NewId.NextGuid());
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = CreateProvider(fixture);
@@ -75,10 +77,91 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             started = true;
             IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
 
-            await Assert.ThrowsAsync<MessageReturnedException>(() => dispatcher.DispatchAsync(
-                    CreateContext(durableSendId, new Uri($"exchange:{exchange}"), new byte[] { 42 }),
+            ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => dispatcher.DispatchAsync(
+                    CreateContext(durableSendId, new Uri(fixture.Address, queue), new byte[] { 42 }),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken));
+            var brokerReply = Assert.IsType<OperationInterruptedException>(exception.InnerException);
+            Assert.NotNull(brokerReply.ShutdownReason);
+            Assert.Equal((ushort)404, brokerReply.ShutdownReason.ReplyCode);
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await fixture.CleanupAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "mandatory-unroutable-shared-publish-boundary-rejects-success")]
+    public async Task MandatoryUnroutableSharedPublishBoundary_ThrowsReturnedMessageAsync()
+    {
+        using RabbitMqBroker fixture = RabbitMqBroker.Create("mandatoryreturn");
+        string exchange = fixture.Name("unroutable");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using ServiceProvider provider = CreateProvider(fixture);
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+        bool started = false;
+
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri(fixture.Address, exchange), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            MessageReturnedException exception = await Assert.ThrowsAsync<MessageReturnedException>(() => endpoint.SendAsync(
+                    new DurableAcceptanceMessage(NewId.NextGuid()),
+                    context =>
+                    {
+                        RabbitMqSendContext rabbitMqContext = context.GetPayload<RabbitMqSendContext>();
+                        rabbitMqContext.Mandatory = true;
+                        rabbitMqContext.AwaitAck = true;
+                    },
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+            Assert.NotNull(exception.InnerException);
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await fixture.CleanupAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "unbound-classic-queue-is-rejected-without-routing-mutation")]
+    public async Task ClassicQueue_DoesNotReportTransportAcceptanceAsync()
+    {
+        using RabbitMqBroker fixture = RabbitMqBroker.Create("durableclassic");
+        string queue = fixture.Name("classic");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await DeclareUnboundClassicEndpointAsync(fixture, queue, cancellationToken);
+        await using ServiceProvider provider = CreateProvider(fixture);
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+        bool started = false;
+
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
+
+            ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => dispatcher.DispatchAsync(
+                    CreateContext(new DurableSendId(NewId.NextGuid()), new Uri(fixture.Address, queue), new byte[] { 42 }),
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+            var brokerReply = Assert.IsType<OperationInterruptedException>(exception.InnerException);
+            Assert.NotNull(brokerReply.ShutdownReason);
+            Assert.Equal((ushort)406, brokerReply.ShutdownReason.ReplyCode);
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
+            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.QueueBindingsAsync(queue, cancellationToken);
+            Assert.DoesNotContain(bindings, binding =>
+                binding.Source == queue
+                && binding.Destination == queue
+                && binding.DestinationType == "queue");
         }
         finally
         {
@@ -96,7 +179,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
         string queue = fixture.Name("canceled");
         DurableSendId durableSendId = new(NewId.NextGuid());
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await fixture.DeclareEndpointTopologyAsync(queue, cancellationToken);
+        await DeclareDurableQuorumEndpointAsync(fixture, queue, cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -110,7 +193,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             canceled.Cancel();
 
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => dispatcher.DispatchAsync(
-                CreateContext(durableSendId, new Uri($"queue:{queue}"), new byte[] { 99 }),
+                CreateContext(durableSendId, new Uri(fixture.Address, queue), new byte[] { 99 }),
                 canceled.Token));
             Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
         }
@@ -130,7 +213,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
         string queue = fixture.Name("not-accepted");
         DurableSendId durableSendId = new(NewId.NextGuid());
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await fixture.DeclareEndpointTopologyAsync(queue, cancellationToken);
+        await DeclareDurableQuorumEndpointAsync(fixture, queue, cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture, publisherConfirmation: false);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -142,7 +225,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
 
             ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => dispatcher.DispatchAsync(
-                    CreateContext(durableSendId, new Uri($"queue:{queue}"), new byte[] { 73 }),
+                    CreateContext(durableSendId, new Uri(fixture.Address, queue), new byte[] { 73 }),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken));
 
@@ -155,6 +238,51 @@ public sealed class RabbitMqDurableSendAcceptanceTests
                 await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             await fixture.CleanupAsync();
         }
+    }
+
+    private static async Task DeclareDurableQuorumEndpointAsync(
+        RabbitMqBroker fixture,
+        string queue,
+        CancellationToken cancellationToken)
+    {
+        ConnectionFactory factory = fixture.CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await channel.ExchangeDeclareAsync(
+                queue, ExchangeType.Fanout, durable: true, autoDelete: false,
+                arguments: null, noWait: false, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await channel.QueueDeclareAsync(
+                queue, durable: true, exclusive: false, autoDelete: false,
+                arguments: new Dictionary<string, object?> { [RabbitMQ.Client.Headers.XQueueType] = "quorum" },
+                noWait: false, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await channel.QueueBindAsync(
+                queue, queue, routingKey: string.Empty, arguments: null,
+                noWait: false, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+    }
+
+    private static async Task DeclareUnboundClassicEndpointAsync(
+        RabbitMqBroker fixture,
+        string queue,
+        CancellationToken cancellationToken)
+    {
+        ConnectionFactory factory = fixture.CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await channel.ExchangeDeclareAsync(
+                queue, ExchangeType.Fanout, durable: true, autoDelete: false,
+                arguments: null, noWait: false, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await channel.QueueDeclareAsync(
+                queue, durable: true, exclusive: false, autoDelete: false,
+                arguments: null, noWait: false, cancellationToken: cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
     }
 
     private static ServiceProvider CreateProvider(

@@ -29,9 +29,14 @@ public sealed class CapabilityPackageArchitectureTests
     [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "dedicated-assemblies-own-capability-types")]
     public void CapabilityTypes_AreOwnedOnlyByTheirDedicatedAssemblies()
     {
-        AssertAssembly("ViciOne.ServiceBus.Sagas", typeof(ISaga), typeof(ISagaStateMachine<>), typeof(ICorrelatedBy<>));
-        AssertAssembly("ViciOne.ServiceBus.Courier", typeof(IActivity<,>), typeof(IExecuteActivity<>), typeof(IRoutingSlip));
-        AssertAssembly("ViciOne.ServiceBus.Futures", typeof(FutureState));
+        AssertAssembly("ViciOne.ServiceBus.Sagas", typeof(ISaga), typeof(ISagaStateMachine<>), typeof(ICorrelatedBy<>),
+            typeof(SagaException), typeof(ConcurrencyException), typeof(SagaStateMachineException), typeof(EventExecutionException),
+            typeof(NotAcceptedStateMachineException), typeof(UnhandledEventException), typeof(UnknownEventException), typeof(UnknownStateException));
+        AssertAssembly("ViciOne.ServiceBus.Courier", typeof(IActivity<,>), typeof(IExecuteActivity<>), typeof(IRoutingSlip),
+            typeof(CourierException), typeof(ActivityExecutionException), typeof(ActivityExecutionFaultedException),
+            typeof(ActivityCompensationException), typeof(InvalidCompensationAddressException));
+        AssertAssembly("ViciOne.ServiceBus.Futures", typeof(FutureState), typeof(FutureNotFoundException),
+            typeof(ViciOne.ServiceBus.Configuration.FutureEndpointDefinition<>));
         AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(IJobContext<>));
         AssertAssembly("ViciOne.ServiceBus.Mediator", typeof(IMediator));
         AssertAssembly("ViciOne.ServiceBus.Initializers", typeof(InVar), typeof(AdvancedMessageInitializerExtensions));
@@ -122,6 +127,15 @@ public sealed class CapabilityPackageArchitectureTests
         AssertAssembly("ViciOne.ServiceBus.EntityFrameworkCore.Sagas", typeof(SagaDbContext));
         Assert.DoesNotContain(ProductAssemblyFacts.ReferencedAssemblyNames(
             typeof(EntityFrameworkMessageJournalConfigurationExtensions).Assembly), CapabilityAssemblyNames.Contains);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "signalr-does-not-import-the-optional-initializer-capability")]
+    public void SignalRProject_HasOnlyTheCoreProductDependency()
+    {
+        AssertProductReferences(
+            "src/Transports/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj");
     }
 
     [Fact]

@@ -81,7 +81,7 @@ public sealed class SagaPolicyContextQueryDeepContractTests
     [InlineData("missing-context", "context")]
     [InlineData("missing-next", "next")]
     [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CONTEXT", "any-existing-policy-null-argument-matrix")]
-    public async Task AnyExistingPolicy_RejectsEveryNullArgument(string boundary, string parameterName)
+    public async Task AnyExistingPolicy_RejectsEveryNullArgumentAsync(string boundary, string parameterName)
     {
         ConsumeContext<PolicyMessage> consumeContext = CreateContext(new PolicyMessage());
         SagaConsumeContext<PolicySaga, PolicyMessage> sagaContext = await CreateSagaContextAsync(consumeContext);
@@ -215,7 +215,7 @@ public sealed class SagaPolicyContextQueryDeepContractTests
     [InlineData("missing-context", "context")]
     [InlineData("missing-next", "next")]
     [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CONTEXT", "new-or-existing-policy-null-argument-matrix")]
-    public async Task NewOrExistingPolicy_RejectsEveryNullArgument(string boundary, string parameterName)
+    public async Task NewOrExistingPolicy_RejectsEveryNullArgumentAsync(string boundary, string parameterName)
     {
         ConsumeContext<PolicyMessage> consumeContext = CreateContext(new PolicyMessage());
         SagaConsumeContext<PolicySaga, PolicyMessage> sagaContext = await CreateSagaContextAsync(consumeContext);

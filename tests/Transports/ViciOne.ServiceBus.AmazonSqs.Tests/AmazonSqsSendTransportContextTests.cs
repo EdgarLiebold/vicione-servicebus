@@ -1,6 +1,6 @@
-using System.Net.Mime;
 using Amazon;
 using Amazon.SimpleNotificationService.Model;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.AmazonSqs.Configuration;
 using ViciOne.ServiceBus.AmazonSqs.Tests.TestDoubles;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -11,6 +11,8 @@ namespace ViciOne.ServiceBus.AmazonSqs.Tests;
 
 public sealed class AmazonSqsSendTransportContextTests
 {
+    private static readonly TimeSpan OperationTimeout = TimeSpan.FromSeconds(10);
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -19,16 +21,22 @@ public sealed class AmazonSqsSendTransportContextTests
     {
         using var transportLifetime = new CancellationTokenSource();
         using var callerLifetime = new CancellationTokenSource();
+        using ServiceProvider provider = CreateAdmittedHost(out AmazonSqsBusConfiguration busConfiguration);
         var topologyPipe = new CancellationBlockingPipe();
-        SendTransportContext<ClientContext> transport = CreateSendTransport(topic, topologyPipe);
         ClientContext clientContext = CreateClientContext(transportLifetime.Token, null);
-        var sendContext = new AmazonSqsMessageSendContext<Message>(new Message(), CancellationToken.None);
+        var transport = new SendTransport<ClientContext>(CreateSendTransport(busConfiguration, topic, topologyPipe, clientContext));
 
-        Task send = transport.SendAsync(clientContext, sendContext, callerLifetime.Token);
-        await topologyPipe.Entered.WaitAsync(TestContext.Current.CancellationToken);
+        Task send = transport.SendAsync(
+            new Message(), new ConfiguredSendPipe(busConfiguration.Serialization.CreateSerializerCollection()), callerLifetime.Token);
 
         try
         {
+            Task first = await Task.WhenAny(send, topologyPipe.Entered)
+                .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            if (ReferenceEquals(first, send))
+                await send;
+            await topologyPipe.Entered;
+
             callerLifetime.Cancel();
             Task completed = await Task.WhenAny(send, Task.Delay(TimeSpan.FromMilliseconds(500), TestContext.Current.CancellationToken));
 
@@ -38,8 +46,9 @@ public sealed class AmazonSqsSendTransportContextTests
         }
         finally
         {
+            callerLifetime.Cancel();
             transportLifetime.Cancel();
-            await IgnoreCancellationAsync(send);
+            await IgnoreCancellationAsync(send).WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         }
     }
 
@@ -47,7 +56,9 @@ public sealed class AmazonSqsSendTransportContextTests
     [RequirementCoverage("REQ-VSB-AWS-SNS-TELEMETRY", "topic-identifies-aws-sns")]
     public void TopicTransport_ReportsTheCanonicalAmazonSnsMessagingSystem()
     {
-        var transport = Assert.IsType<TopicSendTransportContext>(CreateSendTransport(true, new CompletedPipe<ClientContext>()));
+        using ServiceProvider provider = CreateAdmittedHost(out AmazonSqsBusConfiguration busConfiguration);
+        var transport = Assert.IsType<TopicSendTransportContext>(CreateSendTransport(
+            busConfiguration, true, new CompletedPipe<ClientContext>(), CreateClientContext(CancellationToken.None, null)));
 
         Assert.Equal("aws.sns", transport.ActivitySystem);
     }
@@ -57,26 +68,29 @@ public sealed class AmazonSqsSendTransportContextTests
     public async Task TopicSend_UsesTheCanonicalCorrelationIdHeaderAsync()
     {
         PublishBatchRequestEntry? published = null;
+        using ServiceProvider provider = CreateAdmittedHost(out AmazonSqsBusConfiguration busConfiguration);
         ClientContext clientContext = CreateClientContext(CancellationToken.None, request => published = request);
-        var transport = Assert.IsType<TopicSendTransportContext>(CreateSendTransport(true, new CompletedPipe<ClientContext>()));
+        var transport = new SendTransport<ClientContext>(
+            CreateSendTransport(busConfiguration, true, new CompletedPipe<ClientContext>(), clientContext));
         var correlationId = Guid.NewGuid();
-        var sendContext = new AmazonSqsMessageSendContext<Message>(new Message(), CancellationToken.None)
-        {
-            CorrelationId = correlationId,
-            Serializer = CreateSerializer()
-        };
 
-        await transport.SendAsync(clientContext, sendContext, TestContext.Current.CancellationToken);
+        await transport.SendAsync(
+                new Message(),
+                new ConfiguredSendPipe(busConfiguration.Serialization.CreateSerializerCollection(), correlationId),
+                TestContext.Current.CancellationToken)
+            .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.NotNull(published);
         MessageAttributeValue attribute = Assert.Contains(MessageHeaders.CorrelationId, published.MessageAttributes);
         Assert.Equal(correlationId.ToString(), attribute.StringValue);
-        if (!string.Equals(MessageHeaders.CorrelationId, nameof(sendContext.CorrelationId), StringComparison.Ordinal))
-            Assert.DoesNotContain(nameof(sendContext.CorrelationId), published.MessageAttributes);
+        if (!string.Equals(MessageHeaders.CorrelationId, nameof(SendContext<Message>.CorrelationId), StringComparison.Ordinal))
+            Assert.DoesNotContain(nameof(SendContext<Message>.CorrelationId), published.MessageAttributes);
     }
 
-    private static SendTransportContext<ClientContext> CreateSendTransport(bool topic, IPipe<ClientContext> topologyPipe)
+    private static ServiceProvider CreateAdmittedHost(out AmazonSqsBusConfiguration busConfiguration)
     {
+        busConfiguration = new AmazonSqsBusConfiguration(
+            new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology()));
         var settings = new AmazonSqsHostSettings(
             RegionEndpoint.EUCentral1,
             null,
@@ -85,22 +99,38 @@ public sealed class AmazonSqsSendTransportContextTests
             new AmazonSqsClientContextCacheOptions(),
             () => throw new InvalidOperationException("The connection factory must not run in this unit test."),
             null);
-        IAmazonSqsHostConfiguration hostConfiguration = InterfaceProxy<IAmazonSqsHostConfiguration>.Create((method, _) => method.Name switch
+        var services = new ServiceCollection();
+        AmazonSqsBusConfiguration configuration = busConfiguration;
+        services.AddViciOneServiceBus(registration =>
         {
-            "get_Settings" => settings,
-            _ => Default(method.ReturnType)
+            registration.Limits(MessageLimits.Conservative);
+            registration.SetBusFactory(new AdmissionBusFactory(configuration, settings));
         });
-        ISerialization serialization = InterfaceProxy<ISerialization>.Create((method, _) => Default(method.ReturnType));
+        ServiceProvider provider = services.BuildServiceProvider();
+        _ = provider.GetRequiredService<IBusControl>();
+        return provider;
+    }
+
+    private static SendTransportContext<ClientContext> CreateSendTransport(
+        AmazonSqsBusConfiguration busConfiguration, bool topic, IPipe<ClientContext> topologyPipe, ClientContext clientContext)
+    {
         ReceiveEndpointContext receiveEndpointContext = InterfaceProxy<ReceiveEndpointContext>.Create((method, _) => method.Name switch
         {
-            "get_Serialization" => serialization,
+            "get_Serialization" => busConfiguration.Serialization.CreateSerializerCollection(),
             _ => Default(method.ReturnType)
         });
-        IClientContextSupervisor supervisor = InterfaceProxy<IClientContextSupervisor>.Create((method, _) => Default(method.ReturnType));
+        IClientContextSupervisor supervisor = InterfaceProxy<IClientContextSupervisor>.Create((method, args) => method.Name switch
+        {
+            "get_Ready" => Task.CompletedTask,
+            "get_Completed" => Task.CompletedTask,
+            "get_SendStopping" => CancellationToken.None,
+            nameof(IClientContextSupervisor.SendAsync) => ((IPipe<ClientContext>)args![0]!).SendAsync(clientContext),
+            _ => Default(method.ReturnType)
+        });
 
         return topic
-            ? new TopicSendTransportContext(hostConfiguration, receiveEndpointContext, supervisor, topologyPipe, "orders")
-            : new QueueSendTransportContext(hostConfiguration, receiveEndpointContext, supervisor, topologyPipe, "orders");
+            ? new TopicSendTransportContext(busConfiguration.HostConfiguration, receiveEndpointContext, supervisor, topologyPipe, "orders")
+            : new QueueSendTransportContext(busConfiguration.HostConfiguration, receiveEndpointContext, supervisor, topologyPipe, "orders");
     }
 
     private static ClientContext CreateClientContext(CancellationToken cancellationToken, Action<PublishBatchRequestEntry>? publish)
@@ -109,16 +139,6 @@ public sealed class AmazonSqsSendTransportContextTests
         {
             "get_CancellationToken" => cancellationToken,
             nameof(ClientContext.PublishAsync) => RecordPublishAsync(args, publish),
-            _ => Default(method.ReturnType)
-        });
-    }
-
-    private static IMessageSerializer CreateSerializer()
-    {
-        return InterfaceProxy<IMessageSerializer>.Create((method, _) => method.Name switch
-        {
-            "get_ContentType" => new ContentType("application/json"),
-            nameof(IMessageSerializer.GetMessageBody) => new StringMessageBody("{}"),
             _ => Default(method.ReturnType)
         });
     }
@@ -169,6 +189,40 @@ public sealed class AmazonSqsSendTransportContextTests
 
         public void Probe(ProbeContext context)
         {
+        }
+    }
+
+    private sealed class ConfiguredSendPipe(ISerialization serialization, Guid? correlationId = null) : IPipe<SendContext<Message>>
+    {
+        public Task SendAsync(SendContext<Message> context)
+        {
+            context.Serialization = serialization;
+            context.Serializer = serialization.GetMessageSerializer();
+            context.SourceAddress = new Uri("amazonsqs://eu-central-1/source");
+            context.DestinationAddress = new Uri("amazonsqs://eu-central-1/orders");
+            context.CorrelationId = correlationId;
+            return Task.CompletedTask;
+        }
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class AdmissionBusFactory(
+        AmazonSqsBusConfiguration busConfiguration,
+        AmazonSqsHostSettings settings)
+        : TransportRegistrationBusFactory<IAmazonSqsReceiveEndpointConfigurator>(busConfiguration.HostConfiguration)
+    {
+        public override IBusInstance CreateBus(
+            IBusRegistrationContext context,
+            IEnumerable<IBusInstanceSpecification> specifications,
+            string busName)
+        {
+            var configurator = new AmazonSqsBusFactoryConfigurator(busConfiguration);
+            configurator.Host(settings);
+            return CreateBus<AmazonSqsBusFactoryConfigurator, IAmazonSqsBusFactoryConfigurator>(
+                configurator, context, null, specifications);
         }
     }
 

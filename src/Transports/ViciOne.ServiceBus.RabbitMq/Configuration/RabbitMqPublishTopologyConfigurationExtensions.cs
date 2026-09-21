@@ -26,6 +26,8 @@ public static class RabbitMqPublishTopologyConfigurationExtensions
     public static void AddPublishMessageTypesFromNamespaceContaining(this IRabbitMqBusFactoryConfigurator configurator, Type type,
         Action<IRabbitMqMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
         if (type == null)
             throw new ArgumentNullException(nameof(type));
 
@@ -60,6 +62,11 @@ public static class RabbitMqPublishTopologyConfigurationExtensions
     public static void AddPublishMessageTypes(this IRabbitMqBusFactoryConfigurator configurator, IEnumerable<Type> messageTypes,
         Action<IRabbitMqMessagePublishTopologyConfigurator, Type>? configure = null)
     {
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
+        if (messageTypes == null)
+            throw new ArgumentNullException(nameof(messageTypes));
+
         foreach (var messageType in messageTypes)
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }

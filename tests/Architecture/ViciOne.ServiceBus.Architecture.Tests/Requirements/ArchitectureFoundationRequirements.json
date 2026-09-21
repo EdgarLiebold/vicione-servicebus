@@ -155,6 +155,13 @@
   },
   {
     "requirementId": "REQ-TEST-203",
+    "variantKey": "provider-runner-category-mode-uses-native-mtp-trait-and-preserves-exit-code",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
+    "testMethod": "CategoryMode_UsesNativeMtpTraitAndPreservesExitCodeAsync"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
     "variantKey": "provider-runner-refuses-non-loopback-publication-before-child",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
@@ -367,4 +374,6 @@
   ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-distinguishes-oblivious-and-known-reference-contracts", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ReferenceNullability_DistinguishesObliviousAndKnownContracts" }
   ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-excludes-private-property-accessor-promises", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "PropertyNullability_ExcludesPrivateAccessorPromises" }
   ,{ "requirementId": "REQ-VSB-PACKED-PUBLIC-API", "variantKey": "member-nullability-does-not-invent-reference-contracts-for-value-only-members", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.PublicApiMemberNullabilityTests", "testMethod": "ValueOnlyMembers_DoNotInventReferenceNullabilityContracts" }
+  ,{ "requirementId": "REQ-VSB-CAPABILITY-PACKAGES", "variantKey": "signalr-does-not-import-the-optional-initializer-capability", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.CapabilityPackageArchitectureTests", "testMethod": "SignalRProject_HasOnlyTheCoreProductDependency" }
+  ,{ "requirementId": "REQ-VSB-CAPABILITY-PACKAGES", "variantKey": "signalr-package-restores-and-registers-without-initializers", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.DeveloperJourneyArchitectureTests", "testMethod": "SignalRPackageConsumer_ProvesTheInitializerIndependentPackageBoundary" }
 ]

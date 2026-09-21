@@ -16,8 +16,11 @@ public class BrokerTopologyBuilder :
 
     enum SubscriptionKind
     {
+        /// <summary>Identifies a subscription that delivers messages to a consumer endpoint.</summary>
         Consumer,
+        /// <summary>Identifies a subscription that forwards messages to a queue.</summary>
         QueueForwarding,
+        /// <summary>Identifies a subscription that forwards messages to another topic.</summary>
         TopicForwarding,
     }
 

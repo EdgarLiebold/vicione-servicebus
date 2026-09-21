@@ -316,7 +316,7 @@ public sealed class SagaMessageFilterContractDeepContractTests
             {
                 DiagnosticOutcome.Failure => Task.FromException(eventFailure),
                 DiagnosticOutcome.Unhandled => Task.FromException(unhandled),
-                DiagnosticOutcome.Cancellation => CancelAndReturn(deliveryCancellation),
+                DiagnosticOutcome.Cancellation => CancelAndReturnAsync(deliveryCancellation),
                 _ => Task.CompletedTask,
             },
         };
@@ -384,7 +384,7 @@ public sealed class SagaMessageFilterContractDeepContractTests
                 UnhandledStateSource.WhitespaceAccessorState => Task.FromResult<IState<ContractSaga>?>(
                     SetStateName(inner.Initial, " \t ")),
                 UnhandledStateSource.NullState => Task.FromResult<IState<ContractSaga>?>(null),
-                UnhandledStateSource.SynchronousAccessorFailure => ThrowStateAccessorFailure(accessorFailure),
+                UnhandledStateSource.SynchronousAccessorFailure => ThrowStateAccessorFailureAsync(accessorFailure),
                 UnhandledStateSource.FaultedTask => Task.FromException<IState<ContractSaga>?>(accessorFailure),
                 UnhandledStateSource.CanceledTask => Task.FromCanceled<IState<ContractSaga>?>(accessorCancellation.Token),
                 UnhandledStateSource.NullTask => null!,
@@ -764,13 +764,13 @@ public sealed class SagaMessageFilterContractDeepContractTests
         ActivityStopped = stopped.Enqueue,
     };
 
-    static Task CancelAndReturn(CancellationTokenSource cancellation)
+    static Task CancelAndReturnAsync(CancellationTokenSource cancellation)
     {
         cancellation.Cancel();
         return Task.FromCanceled(cancellation.Token);
     }
 
-    static Task<IState<ContractSaga>?> ThrowStateAccessorFailure(Exception exception) => throw exception;
+    static Task<IState<ContractSaga>?> ThrowStateAccessorFailureAsync(Exception exception) => throw exception;
 
     static IState<ContractSaga> SetStateName(IState state, string name)
     {

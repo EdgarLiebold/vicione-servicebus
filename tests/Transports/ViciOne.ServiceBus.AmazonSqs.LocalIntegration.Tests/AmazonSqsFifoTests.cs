@@ -124,7 +124,7 @@ public sealed class AmazonSqsFifoTests
             });
             registration.UsingAmazonSqs((context, configurator) =>
             {
-                fixture.ConfigureHost(configurator);
+                fixture.ConfigureRegisteredHost(configurator);
                 configurator.MessageTopology.SetEntityNameFormatter(new FifoEntityNameFormatter());
                 configurator.PublishTopology.TopicAttributes[QueueAttributeName.ContentBasedDeduplication] = true;
                 configurator.ConfigureEndpoints(context);

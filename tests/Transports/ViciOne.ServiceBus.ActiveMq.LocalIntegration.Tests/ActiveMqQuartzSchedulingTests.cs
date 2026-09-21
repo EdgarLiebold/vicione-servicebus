@@ -67,6 +67,11 @@ public sealed class ActiveMqQuartzSchedulingTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
+            IScheduler scheduler = await Assert.IsType<QuartzSchedulerLease>(schedulerLease).SchedulerFactory
+                .GetScheduler(cancellationToken).AsTask()
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            var finalized = new TriggerFinalizationObserver();
+            scheduler.ListenerManager.AddSchedulerListener(finalized);
             ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             await input.SendAsync(new QuartzTrigger(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -76,15 +81,14 @@ public sealed class ActiveMqQuartzSchedulingTests
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
 
-            IScheduler scheduler = await Assert.IsType<QuartzSchedulerLease>(schedulerLease).SchedulerFactory
-                .GetScheduler(cancellationToken).AsTask()
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            TriggerKey finalizedKey = await finalized.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            Assert.Equal(schedule.TokenId.ToString("N"), finalizedKey.Name);
             IReadOnlyCollection<TriggerKey> remainingTriggers = await scheduler
                 .GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup(), cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.DoesNotContain(remainingTriggers, key => key.Name == schedule.TokenId.ToString("N"));
 
-            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
 
@@ -111,6 +115,19 @@ public sealed class ActiveMqQuartzSchedulingTests
 
     private static TaskCompletionSource<T> NewObservation<T>() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    private sealed class TriggerFinalizationObserver : ISchedulerListener
+    {
+        private readonly TaskCompletionSource<TriggerKey> _completed = NewObservation<TriggerKey>();
+
+        public Task<TriggerKey> Completed => _completed.Task;
+
+        public ValueTask TriggerFinalized(IScheduler scheduler, ITrigger trigger, CancellationToken cancellationToken)
+        {
+            _completed.TrySetResult(trigger.Key);
+            return ValueTask.CompletedTask;
+        }
+    }
 
     public sealed record QuartzTrigger(Guid FlowId);
     public sealed record QuartzDelivery(Guid FlowId);

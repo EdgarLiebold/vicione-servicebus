@@ -6,9 +6,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Dispatches a missing saga message to the saga policy, calling Add if necessary.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Adds a saga chosen by the missing-saga policy and saves or discards it after dispatch.</summary>
+/// <typeparam name="TSaga">The saga instance created for the missing correlation.</typeparam>
+/// <typeparam name="TMessage">The incoming message contract that initiates the saga.</typeparam>
 public class MissingSagaPipe<TSaga, TMessage> :
     IPipe<SagaConsumeContext<TSaga, TMessage>>
     where TSaga : class, ISaga
@@ -17,9 +17,9 @@ public class MissingSagaPipe<TSaga, TMessage> :
     readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _next;
     readonly ISagaRepositoryContext<TSaga, TMessage> _repositoryContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="repositoryContext">The repository context.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <summary>Creates the stage that owns addition and cleanup of a newly selected saga.</summary>
+    /// <param name="repositoryContext">The repository used to add, save, and discard the saga.</param>
+    /// <param name="next">The pipeline invoked after the saga has been added.</param>
     public MissingSagaPipe(ISagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         _repositoryContext = repositoryContext ?? throw new ArgumentNullException(nameof(repositoryContext));
@@ -32,14 +32,14 @@ public class MissingSagaPipe<TSaga, TMessage> :
         _next.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Adds the saga, dispatches its pipeline, and persists or discards it with cleanup on failure.</summary>
+    /// <param name="context">The proposed saga and initiating message from the missing-saga policy.</param>
+    /// <returns>A task that completes after repository action and consume-context disposal.</returns>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await SagaRepositoryLifecycle.RequireTask(
+        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await SagaRepositoryLifecycle.RequireTaskAsync(
                 _repositoryContext.AddAsync(context.Saga),
                 "The saga repository returned a null add task.")
             .ConfigureAwait(false)
@@ -58,14 +58,14 @@ public class MissingSagaPipe<TSaga, TMessage> :
             if (sagaConsumeContext.IsCompleted)
             {
                 discardAttempted = true;
-                await SagaRepositoryLifecycle.RequireTask(
+                await SagaRepositoryLifecycle.RequireTaskAsync(
                         _repositoryContext.DiscardAsync(sagaConsumeContext),
                         "The saga repository returned a null discard task.")
                     .ConfigureAwait(false);
             }
             else
             {
-                await SagaRepositoryLifecycle.RequireTask(
+                await SagaRepositoryLifecycle.RequireTaskAsync(
                         _repositoryContext.SaveAsync(sagaConsumeContext),
                         "The saga repository returned a null save task.")
                     .ConfigureAwait(false);
@@ -81,7 +81,7 @@ public class MissingSagaPipe<TSaga, TMessage> :
         {
             try
             {
-                await SagaRepositoryLifecycle.RequireTask(
+                await SagaRepositoryLifecycle.RequireTaskAsync(
                         _repositoryContext.DiscardAsync(sagaConsumeContext),
                         "The saga repository returned a null discard task.")
                     .ConfigureAwait(false);

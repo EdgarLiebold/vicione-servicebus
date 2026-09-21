@@ -22,11 +22,22 @@ internal sealed class ReliableLockStatementProvider : ILockStatementProvider
         try
         {
             providerName = context.Database.ProviderName
-                ?? throw new ConfigurationException(CreateMissingProviderMessage());
+                ?? throw new ConfigurationException(
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                        "Reliable messaging",
+                        "unknown",
+                        "The EF provider name is unavailable.",
+                        "Configure a relational DbContext before starting the host"));
         }
         catch (InvalidOperationException exception)
         {
-            throw new ConfigurationException(CreateMissingProviderMessage(), exception);
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Reliable messaging",
+                    "unknown",
+                    "The EF provider name is unavailable.",
+                    "Configure a relational DbContext before starting the host"),
+                exception);
         }
 
         return providerName switch
@@ -43,10 +54,4 @@ internal sealed class ReliableLockStatementProvider : ILockStatementProvider
         };
     }
 
-    static string CreateMissingProviderMessage() =>
-        global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-            "Reliable messaging",
-            "unknown",
-            "The EF provider name is unavailable.",
-            "Configure a relational DbContext before starting the host");
 }

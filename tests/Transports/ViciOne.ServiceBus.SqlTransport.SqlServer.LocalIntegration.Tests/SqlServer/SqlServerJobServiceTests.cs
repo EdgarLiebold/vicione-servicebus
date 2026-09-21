@@ -45,7 +45,7 @@ public sealed class SqlServerJobServiceTests
 
         await fixture.SubmitAsync(jobId, new SqlServerJob("status"));
         JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
-        IJobState started = await fixture.GetStateAsync(jobId);
+        IJobState started = await fixture.WaitForStateAsync(jobId, JobLifecycleStatus.Running);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "status-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await consumer.NextCancellationAsync(fixture);
         await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
@@ -373,9 +373,37 @@ public sealed class SqlServerJobServiceTests
         }
 
         public Task<IJobState> GetStateAsync(Guid jobId)
+            => QueryStateAsync(jobId, CancellationToken);
+
+        private Task<IJobState> QueryStateAsync(Guid jobId, CancellationToken cancellationToken)
         {
             IRequestClient<IGetJobState> client = Harness.CreateRequestClient<IGetJobState>();
-            return client.GetJobStateAsync(jobId).WaitAsync(OperationTimeout, CancellationToken);
+            return client.GetJobStateAsync(jobId, cancellationToken).WaitAsync(OperationTimeout, cancellationToken);
+        }
+
+        public async Task<IJobState> WaitForStateAsync(Guid jobId, JobLifecycleStatus expected)
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken);
+            timeout.CancelAfter(OperationTimeout);
+            JobLifecycleStatus lastObserved = JobLifecycleStatus.Unknown;
+
+            try
+            {
+                while (true)
+                {
+                    IJobState state = await QueryStateAsync(jobId, timeout.Token);
+                    lastObserved = state.Status;
+                    if (state.Status == expected)
+                        return state;
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(50), timeout.Token);
+                }
+            }
+            catch (OperationCanceledException) when (timeout.IsCancellationRequested && !CancellationToken.IsCancellationRequested)
+            {
+                throw new TimeoutException(
+                    $"Job {jobId} did not reach {expected} within {OperationTimeout}; last observed status: {lastObserved}.");
+            }
         }
 
         public async ValueTask DisposeAsync()

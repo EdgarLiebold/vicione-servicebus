@@ -252,7 +252,7 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "iteration-219-container-concurrent-resolution-isolation")]
-    public async Task ContainerFactory_SharedWrapperKeepsConcurrentContextResolutionAndTaskIdentityIsolated()
+    public async Task ContainerFactory_SharedWrapperKeepsConcurrentContextResolutionAndTaskIdentityIsolatedAsync()
     {
         const int invocationCount = 24;
         var wrapper = new ContainerFactoryActivity<TestSaga, RecordingActivity>();
@@ -616,10 +616,10 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
     public sealed class RecordingActivity : IStateMachineActivity<TestSaga>
     {
         public List<RecordedCall> Calls { get; } = [];
-        public Task UntypedExecuteTask { get; set; } = NewTask();
-        public Task TypedExecuteTask { get; set; } = NewTask();
-        public Task UntypedFaultTask { get; set; } = NewTask();
-        public Task TypedFaultTask { get; set; } = NewTask();
+        public Task UntypedExecuteTask { get; set; } = NewTaskAsync();
+        public Task TypedExecuteTask { get; set; } = NewTaskAsync();
+        public Task UntypedFaultTask { get; set; } = NewTaskAsync();
+        public Task TypedFaultTask { get; set; } = NewTaskAsync();
         public Exception? Failure { get; set; }
         public Exception? AcceptFailure { get; set; }
         public Exception? ProbeFailure { get; set; }
@@ -690,8 +690,8 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
     public sealed class RecordingTypedActivity : IStateMachineActivity<TestSaga, Message>
     {
         public List<RecordedCall> Calls { get; } = [];
-        public Task ExecuteTask { get; } = NewTask();
-        public Task FaultTask { get; } = NewTask();
+        public Task ExecuteTask { get; } = NewTaskAsync();
+        public Task FaultTask { get; } = NewTaskAsync();
 
         public void Accept(IStateMachineVisitor visitor) => throw Unexpected();
         public void Probe(ProbeContext context) => throw Unexpected();
@@ -722,8 +722,8 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
 
         public static FallbackActivity[] Instances => Created.ToArray();
         public List<RecordedCall> Calls { get; } = [];
-        public Task ExecuteTask { get; } = NewTask();
-        public Task FaultTask { get; } = NewTask();
+        public Task ExecuteTask { get; } = NewTaskAsync();
+        public Task FaultTask { get; } = NewTaskAsync();
 
         public static void Reset() => Created.Clear();
         public void Accept(IStateMachineVisitor visitor) => throw Unexpected();
@@ -763,7 +763,7 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
 
         public static FallbackTypedActivity[] Instances => Created.ToArray();
         public List<RecordedCall> Calls { get; } = [];
-        public Task ExecuteTask { get; } = NewTask();
+        public Task ExecuteTask { get; } = NewTaskAsync();
 
         public static void Reset() => Created.Clear();
         public void Accept(IStateMachineVisitor visitor) => throw Unexpected();
@@ -782,10 +782,10 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
 
     sealed class RecordingBehavior : IBehavior<TestSaga>
     {
-        public Task UntypedExecuteTask { get; } = NewTask();
-        public Task TypedExecuteTask { get; } = NewTask();
-        public Task UntypedFaultTask { get; } = NewTask();
-        public Task TypedFaultTask { get; } = NewTask();
+        public Task UntypedExecuteTask { get; } = NewTaskAsync();
+        public Task TypedExecuteTask { get; } = NewTaskAsync();
+        public Task UntypedFaultTask { get; } = NewTaskAsync();
+        public Task TypedFaultTask { get; } = NewTaskAsync();
         public Exception? Failure { get; set; }
         public object? LastContext { get; private set; }
         public int UntypedExecuteCalls { get; private set; }
@@ -844,8 +844,8 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
 
     sealed class RecordingTypedBehavior : IBehavior<TestSaga, Message>
     {
-        public Task ExecuteTask { get; } = NewTask();
-        public Task FaultTask { get; } = NewTask();
+        public Task ExecuteTask { get; } = NewTaskAsync();
+        public Task FaultTask { get; } = NewTaskAsync();
         public Exception? Failure { get; set; }
         public object? LastContext { get; private set; }
         public int ExecuteCalls { get; private set; }
@@ -962,7 +962,7 @@ public sealed class StateMachineContainerFaultActivitiesDeepContractTests
         }
     }
 
-    static Task NewTask() => new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously).Task;
+    static Task NewTaskAsync() => new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously).Task;
 
     static InvalidOperationException Unexpected(string? member = null) =>
         new($"Unexpected collaborator invocation{(member is null ? string.Empty : $" {member}")}.");

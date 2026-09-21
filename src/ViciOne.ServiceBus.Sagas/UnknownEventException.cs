@@ -4,7 +4,8 @@ namespace ViciOne.ServiceBus;
 
 /// <summary>Reports an event name that is not defined by a saga state machine.</summary>
 public sealed class UnknownEventException :
-    SagaStateMachineException
+    SagaStateMachineException,
+    IRetryFailureClassification
 {
     /// <summary>Creates an unknown-event exception without state-machine context.</summary>
     public UnknownEventException()
@@ -26,6 +27,8 @@ public sealed class UnknownEventException :
 
     /// <summary>Gets the undefined event name, when one was supplied.</summary>
     public string? EventName { get; }
+
+    RetryFailureKind IRetryFailureClassification.RetryFailureKind => RetryFailureKind.NonRetryable;
 
     static string FormatMessage(string machineName, string eventName)
     {

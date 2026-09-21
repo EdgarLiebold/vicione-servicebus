@@ -24,7 +24,9 @@ public sealed class PayloadAdmissionArchitectureTests
         Assert.True(provider > observer);
 
         string boundary = Source("src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionTransportBoundary.cs");
-        Assert.Contains("_ = transportContext.Body.Length", boundary, StringComparison.Ordinal);
+        Assert.Contains("MessageBody body = transportContext.Body", boundary, StringComparison.Ordinal);
+        Assert.Contains("long serializedLength = body.Length", boundary, StringComparison.Ordinal);
+        Assert.Contains("admission.HasCompleteAdmissionFor(serializedLength)", boundary, StringComparison.Ordinal);
         Assert.DoesNotContain("transportContext.Body.ToArray()", boundary, StringComparison.Ordinal);
     }
 
@@ -60,7 +62,7 @@ public sealed class PayloadAdmissionArchitectureTests
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ARCHITECTURE", "real-serializer-owner-order")]
     public void EveryEnvelopeOwner_UsesIndependentBoundedBodyAndEnvelopeBuffersInOrder()
     {
-        AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/Bodies/SystemTextJsonMessageBody.cs");
+        AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/Bodies/SystemTextJsonMessageBody.cs", bodyDecisionAfterEnvelopeEncoding: true);
         AssertOwnerOrder("src/ViciOne.ServiceBus/Serialization/Bodies/SystemTextJsonRawMessageBody.cs");
         AssertOwnerOrder("src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackMessageBody.cs");
     }
@@ -83,7 +85,7 @@ public sealed class PayloadAdmissionArchitectureTests
             owners);
     }
 
-    private static void AssertOwnerOrder(string relativePath)
+    private static void AssertOwnerOrder(string relativePath, bool bodyDecisionAfterEnvelopeEncoding = false)
     {
         string source = Source(relativePath);
         int bodyOwner = source.IndexOf("CreateSerializedBodyBuffer", StringComparison.Ordinal);
@@ -92,12 +94,16 @@ public sealed class PayloadAdmissionArchitectureTests
         int bodyDecision = source.IndexOf("EvaluateSerializedBody", bodyOwner, StringComparison.Ordinal);
         Assert.True(bodyDecision > bodyOwner, relativePath);
 
-        int envelopeOwner = source.IndexOf("CreateTransportEnvelopeBuffer", bodyDecision, StringComparison.Ordinal);
-        Assert.True(envelopeOwner > bodyDecision, relativePath);
+        int envelopeOwner = source.IndexOf("CreateTransportEnvelopeBuffer", bodyOwner, StringComparison.Ordinal);
+        Assert.True(envelopeOwner > bodyOwner, relativePath);
 
         int envelopeDecision = source.IndexOf("ValidateTransportEnvelope", envelopeOwner, StringComparison.Ordinal);
 
         Assert.True(envelopeDecision > envelopeOwner, relativePath);
+        Assert.True(bodyDecisionAfterEnvelopeEncoding
+                ? bodyDecision > envelopeOwner && bodyDecision < envelopeDecision
+                : bodyDecision < envelopeOwner,
+            relativePath);
     }
 
     private static string Source(string relativePath) =>

@@ -1411,10 +1411,10 @@ public sealed class StateMachineEventExceptionActivityBindersDeepContractTests
         public List<object> Contexts { get; } = [];
 
         public Task ExecuteAsync(IBehaviorContext<BinderSaga> context, IBehavior<BinderSaga> next) =>
-            Attempt(context, () => next.ExecuteAsync(context));
+            AttemptAsync(context, () => next.ExecuteAsync(context));
 
         public Task ExecuteAsync<T>(IBehaviorContext<BinderSaga, T> context, IBehavior<BinderSaga, T> next)
-            where T : class => Attempt(context, () => next.ExecuteAsync(context));
+            where T : class => AttemptAsync(context, () => next.ExecuteAsync(context));
 
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<BinderSaga, TException> context, IBehavior<BinderSaga> next)
             where TException : Exception => next.FaultedAsync(context);
@@ -1431,7 +1431,7 @@ public sealed class StateMachineEventExceptionActivityBindersDeepContractTests
         {
         }
 
-        Task Attempt(object context, Func<Task> next)
+        Task AttemptAsync(object context, Func<Task> next)
         {
             int attempt = Interlocked.Increment(ref _attempts);
             Contexts.Add(context);

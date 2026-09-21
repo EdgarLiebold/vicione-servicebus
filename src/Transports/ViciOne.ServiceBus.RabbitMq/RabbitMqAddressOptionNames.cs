@@ -1,7 +1,23 @@
+using System.Collections.Generic;
+
 namespace ViciOne.ServiceBus.RabbitMq;
 
 internal static class RabbitMqAddressOptionNames
 {
+    static readonly HashSet<string> _endpointOptions =
+    [
+        AlternateExchange,
+        AutoDelete,
+        BindExchange,
+        BindQueue,
+        DelayedType,
+        Durable,
+        ExchangeType,
+        QueueName,
+        SingleActiveConsumer,
+        Temporary,
+    ];
+
     public const string AlternateExchange = "alternateexchange";
     public const string AutoDelete = "autodelete";
     public const string BindExchange = "bindexchange";
@@ -16,7 +32,5 @@ internal static class RabbitMqAddressOptionNames
     public const string Temporary = "temporary";
     public const string TimeToLive = "ttl";
 
-    public static bool IsEndpointOption(string key) => key is
-        AlternateExchange or AutoDelete or BindExchange or BindQueue or DelayedType or Durable or ExchangeType
-        or QueueName or SingleActiveConsumer or Temporary;
+    public static bool IsEndpointOption(string key) => _endpointOptions.Contains(key);
 }

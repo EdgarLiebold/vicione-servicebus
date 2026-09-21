@@ -1343,16 +1343,16 @@ public sealed class StateMachineActionActivitiesDeepContractTests
         public Task? LastExecuteTask { get; private set; }
         public Task? LastFaultTask { get; private set; }
 
-        public Task ExecuteAsync(IBehaviorContext<TestSaga> context) => RecordExecute(context);
-        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context) where T : class => RecordExecute(context);
+        public Task ExecuteAsync(IBehaviorContext<TestSaga> context) => RecordExecuteAsync(context);
+        public Task ExecuteAsync<T>(IBehaviorContext<TestSaga, T> context) where T : class => RecordExecuteAsync(context);
         public Task FaultedAsync<T, TException>(IBehaviorExceptionContext<TestSaga, T, TException> context)
-            where T : class where TException : Exception => RecordFault(context);
+            where T : class where TException : Exception => RecordFaultAsync(context);
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<TestSaga, TException> context)
-            where TException : Exception => RecordFault(context);
+            where TException : Exception => RecordFaultAsync(context);
         public void Accept(IStateMachineVisitor visitor) { }
         public void Probe(ProbeContext context) { }
 
-        Task RecordExecute(object context)
+        Task RecordExecuteAsync(object context)
         {
             ExecuteContexts.Enqueue(context);
             Task task = _execute(context);
@@ -1361,7 +1361,7 @@ public sealed class StateMachineActionActivitiesDeepContractTests
             return task;
         }
 
-        Task RecordFault(object context)
+        Task RecordFaultAsync(object context)
         {
             FaultContexts.Enqueue(context);
             Task task = _fault(context);

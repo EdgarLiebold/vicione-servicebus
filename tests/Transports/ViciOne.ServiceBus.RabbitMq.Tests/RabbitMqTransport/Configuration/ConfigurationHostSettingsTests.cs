@@ -147,4 +147,57 @@ public sealed class ConfigurationHostSettingsTests
 
         Assert.Equal(expectsFailure, hasBatchSizeFailure);
     }
+
+    [Theory]
+    [InlineData("user", "broker", -1, null, null, "user@broker/")]
+    [InlineData(null, "broker", 5678, "/production", null, "broker:5678/production")]
+    [InlineData("configured", "logical", 5678, "production", "actual:5679", "configured@logical(actual:5679):5678/production")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "sanitized-connection-description")]
+    public void ConnectionDescription_FormatsConfiguredAndSelectedHostsWithoutPasswords(
+        string? username,
+        string host,
+        int port,
+        string? virtualHost,
+        string? actualHost,
+        string expected)
+    {
+        var settings = new ConfigurationHostSettings
+        {
+            Username = username,
+            Password = "must-not-appear",
+            Host = host,
+            Port = port,
+            VirtualHost = virtualHost,
+        };
+        if (actualHost != null)
+        {
+            var resolver = new SequentialEndpointResolver([ClusterNode.Parse(actualHost)], settings);
+            _ = resolver.All().Single();
+            settings.EndpointResolver = resolver;
+        }
+
+        string description = settings.ToDescription();
+
+        Assert.Equal(expected, description);
+        Assert.DoesNotContain(settings.Password, description, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "factory-username-precedes-stale-settings")]
+    public void ConnectionDescription_UsesTheRefreshedFactoryUsername()
+    {
+        var settings = new ConfigurationHostSettings
+        {
+            Username = "stale-user",
+            Host = "broker",
+            Port = -1,
+            VirtualHost = "production",
+        };
+        var factory = new ConnectionFactory { UserName = "refreshed-user" };
+
+        string description = settings.ToDescription(factory);
+
+        Assert.Equal("refreshed-user@broker/production", description);
+        Assert.DoesNotContain("stale-user", description, StringComparison.Ordinal);
+    }
 }

@@ -124,6 +124,32 @@ public sealed class SystemTextJsonIsolationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ISOLATION", "mandatory-depth-is-final-across-child-overrides-and-clear")]
+    public void MandatoryDepth_IsFinalAcrossChildOverridesAndClear()
+    {
+        var parent = new SerializationConfiguration();
+        parent.SetMaximumJsonDepth(3);
+        var child = Assert.IsType<SerializationConfiguration>(parent.CreateSerializationConfiguration());
+        child.Clear();
+        var factory = new SystemTextJsonMessageSerializerFactory();
+        child.AddSerializer(factory);
+        child.AddDeserializer(factory, true);
+        child.ConfigureSystemTextJsonSerializerOptions(options =>
+        {
+            options.MaxDepth = 64;
+            return options;
+        });
+
+        IObjectDeserializer serializer = Assert.IsAssignableFrom<IObjectDeserializer>(
+            child.CreateSerializerCollection().GetMessageSerializer());
+
+        Assert.NotEmpty(serializer.SerializeObject(CreateDepth(1)).ToArray());
+        var failure = Assert.Throws<System.Runtime.Serialization.SerializationException>(
+            () => serializer.SerializeObject(CreateDepth(4)).ToArray());
+        Assert.IsType<JsonException>(failure.InnerException);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ISOLATION", "materialization-closes-configuration")]
     public void Materialization_ClosesEveryConfigurationMutationPath()
     {
@@ -245,8 +271,16 @@ public sealed class SystemTextJsonIsolationTests
             .SerializeObject(new ConfiguredMessage { MessageId = 27 })
             .GetRequiredTransportText();
 
+    private static DepthMessage CreateDepth(int depth) =>
+        depth == 0 ? new DepthMessage() : new DepthMessage { Child = CreateDepth(depth - 1) };
+
     public sealed class ConfiguredMessage
     {
         public int MessageId { get; init; }
+    }
+
+    public sealed class DepthMessage
+    {
+        public DepthMessage? Child { get; init; }
     }
 }

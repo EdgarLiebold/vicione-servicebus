@@ -65,7 +65,7 @@ public class ConditionActivity<TSaga> :
     }
 
     /// <summary>Evaluates the configured condition, invokes the selected behavior, and continues message processing.</summary>
-    /// <typeparam name="T">The message contract processed by the operation.</typeparam>
+    /// <typeparam name="T">The message type delivered to the selected condition branch and subsequent behavior.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -175,7 +175,7 @@ public class ConditionActivity<TSaga, TMessage> :
     }
 
     /// <summary>Evaluates the configured condition for matching messages, invokes the selected behavior, and continues processing.</summary>
-    /// <typeparam name="T">The message contract processed by the operation.</typeparam>
+    /// <typeparam name="T">The incoming message type checked against <typeparamref name="TMessage"/> before a branch runs.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

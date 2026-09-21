@@ -7,6 +7,11 @@ namespace ViciOne.ServiceBus.RabbitMq.Topology;
 public class RabbitMqBrokerTopology :
     BrokerTopology
 {
+    readonly ExchangeToExchangeBinding[] _exchangeBindings;
+    readonly Exchange[] _exchanges;
+    readonly ExchangeToQueueBinding[] _queueBindings;
+    readonly Queue[] _queues;
+
     /// <summary>Creates a broker-topology snapshot from the supplied declarations.</summary>
     /// <param name="exchanges">The exchange declarations.</param>
     /// <param name="exchangeBindings">The exchange-to-exchange bindings.</param>
@@ -15,24 +20,24 @@ public class RabbitMqBrokerTopology :
     public RabbitMqBrokerTopology(IEnumerable<Exchange> exchanges, IEnumerable<ExchangeToExchangeBinding> exchangeBindings, IEnumerable<Queue> queues,
         IEnumerable<ExchangeToQueueBinding> queueBindings)
     {
-        Exchanges = exchanges.ToArray();
-        Queues = queues.ToArray();
-        ExchangeBindings = exchangeBindings.ToArray();
-        QueueBindings = queueBindings.ToArray();
+        _exchanges = exchanges.ToArray();
+        _queues = queues.ToArray();
+        _exchangeBindings = exchangeBindings.ToArray();
+        _queueBindings = queueBindings.ToArray();
     }
 
     /// <summary>Gets the exchange declarations.</summary>
-    public Exchange[] Exchanges { get; }
+    public Exchange[] Exchanges => (Exchange[])_exchanges.Clone();
     /// <summary>Gets the queue declarations.</summary>
-    public Queue[] Queues { get; }
+    public Queue[] Queues => (Queue[])_queues.Clone();
     /// <summary>Gets the exchange-to-exchange bindings.</summary>
-    public ExchangeToExchangeBinding[] ExchangeBindings { get; }
+    public ExchangeToExchangeBinding[] ExchangeBindings => (ExchangeToExchangeBinding[])_exchangeBindings.Clone();
     /// <summary>Gets the exchange-to-queue bindings.</summary>
-    public ExchangeToQueueBinding[] QueueBindings { get; }
+    public ExchangeToQueueBinding[] QueueBindings => (ExchangeToQueueBinding[])_queueBindings.Clone();
 
     void IProbeSite.Probe(ProbeContext context)
     {
-        foreach (var exchange in Exchanges)
+        foreach (var exchange in _exchanges)
         {
             var exchangeScope = context.CreateScope("exchange");
             exchangeScope.Set(new
@@ -51,7 +56,7 @@ public class RabbitMqBrokerTopology :
             }
         }
 
-        foreach (var queue in Queues)
+        foreach (var queue in _queues)
         {
             var exchangeScope = context.CreateScope("queue");
             exchangeScope.Set(new
@@ -70,7 +75,7 @@ public class RabbitMqBrokerTopology :
             }
         }
 
-        foreach (var binding in ExchangeBindings)
+        foreach (var binding in _exchangeBindings)
         {
             var exchangeScope = context.CreateScope("exchange-binding");
             exchangeScope.Set(new
@@ -88,7 +93,7 @@ public class RabbitMqBrokerTopology :
             }
         }
 
-        foreach (var binding in QueueBindings)
+        foreach (var binding in _queueBindings)
         {
             var exchangeScope = context.CreateScope("queue-binding");
             exchangeScope.Set(new

@@ -879,21 +879,21 @@ public sealed class SagaRepositoryLifecycleDeepContractTests
                         return LoadHandler(correlationId);
                     }
                 case "SaveAsync":
-                    return Record("Save", arguments, SaveContexts, SaveHandler);
+                    return RecordAsync("Save", arguments, SaveContexts, SaveHandler);
                 case "DiscardAsync":
-                    return Record("Discard", arguments, DiscardContexts, DiscardHandler);
+                    return RecordAsync("Discard", arguments, DiscardContexts, DiscardHandler);
                 case "UndoAsync":
-                    return Record("Undo", arguments, UndoContexts, UndoHandler);
+                    return RecordAsync("Undo", arguments, UndoContexts, UndoHandler);
                 case "UpdateAsync":
-                    return Record("Update", arguments, UpdateContexts, UpdateHandler);
+                    return RecordAsync("Update", arguments, UpdateContexts, UpdateHandler);
                 case "DeleteAsync":
-                    return Record("Delete", arguments, DeleteContexts, DeleteHandler);
+                    return RecordAsync("Delete", arguments, DeleteContexts, DeleteHandler);
                 default:
                     return DefaultReturn(method.ReturnType, QueryContext);
             }
         }
 
-        Task Record(
+        Task RecordAsync(
             string name,
             object?[] arguments,
             List<SagaConsumeContext<TestSaga, TestMessage>> contexts,

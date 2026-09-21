@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
@@ -22,7 +23,8 @@ public class QueueEntity :
         Durable = durable;
         AutoDelete = autoDelete;
         Exclusive = exclusive;
-        QueueArguments = arguments ?? new Dictionary<string, object?>();
+        QueueArguments = new ReadOnlyDictionary<string, object?>(
+            new Dictionary<string, object?>(arguments ?? new Dictionary<string, object?>()));
     }
 
     /// <summary>Gets a comparer that considers only the queue name.</summary>

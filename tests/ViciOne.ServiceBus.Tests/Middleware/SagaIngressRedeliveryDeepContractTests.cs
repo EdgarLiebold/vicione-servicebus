@@ -230,7 +230,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
         var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream", _ => Task.FromException(failure));
         FilterContext fixture = CreateFilterContext(events);
 
-        Task Operation() => queried
+        Task OperationAsync() => queried
             ? new QuerySagaFilter<IngressSaga, IngressMessage>(
                     repository,
                     new RecordingSagaPolicy(),
@@ -243,7 +243,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
                     new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
                 .SendAsync(fixture.Context, next);
 
-        IngressFailureException actual = await Assert.ThrowsAsync<IngressFailureException>(Operation);
+        IngressFailureException actual = await Assert.ThrowsAsync<IngressFailureException>(OperationAsync);
 
         Assert.Same(failure, actual);
         Assert.Equal("faulted", events[^1]);
@@ -264,7 +264,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
         fixture.Proxy.ConsumedNotificationFailure = observerFailure;
         var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream");
 
-        Task Operation() => queried
+        Task OperationAsync() => queried
             ? new QuerySagaFilter<IngressSaga, IngressMessage>(
                     repository,
                     new RecordingSagaPolicy(),
@@ -277,7 +277,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
                     new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
                 .SendAsync(fixture.Context, next);
 
-        IngressFailureException actual = await Assert.ThrowsAsync<IngressFailureException>(Operation);
+        IngressFailureException actual = await Assert.ThrowsAsync<IngressFailureException>(OperationAsync);
 
         Assert.Same(observerFailure, actual);
         Assert.Equal("consumed", events[^1]);
@@ -303,7 +303,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
         fixture.Proxy.FaultNotificationFailure = observerFailure;
         var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream");
 
-        Task Operation() => queried
+        Task OperationAsync() => queried
             ? new QuerySagaFilter<IngressSaga, IngressMessage>(
                     repository,
                     new RecordingSagaPolicy(),
@@ -316,7 +316,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
                     new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
                 .SendAsync(fixture.Context, next);
 
-        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(Operation);
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(OperationAsync);
 
         Assert.Collection(actual.InnerExceptions,
             exception => Assert.Same(operationFailure, exception),
@@ -344,7 +344,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
         FilterContext fixture = CreateFilterContext(events);
         var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream");
 
-        Task Operation() => queried
+        Task OperationAsync() => queried
             ? new QuerySagaFilter<IngressSaga, IngressMessage>(
                     repository,
                     new RecordingSagaPolicy(),
@@ -357,7 +357,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
                     new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
                 .SendAsync(fixture.Context, next);
 
-        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(Operation);
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(OperationAsync);
 
         Assert.Same(original, actual.InnerException);
         Assert.Same(original, fixture.Proxy.Faults.Single());
@@ -380,7 +380,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
         FilterContext fixture = CreateFilterContext(events);
         var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream");
 
-        Task Operation() => queried
+        Task OperationAsync() => queried
             ? new QuerySagaFilter<IngressSaga, IngressMessage>(
                     repository,
                     new RecordingSagaPolicy(),
@@ -393,7 +393,7 @@ public sealed class SagaIngressRedeliveryDeepContractTests
                     new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
                 .SendAsync(fixture.Context, next);
 
-        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(Operation);
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(OperationAsync);
 
         Assert.Same(original, actual);
         Assert.Same(original, fixture.Proxy.Faults.Single());

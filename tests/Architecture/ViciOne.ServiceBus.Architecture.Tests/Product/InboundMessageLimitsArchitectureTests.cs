@@ -51,7 +51,7 @@ public sealed class InboundMessageLimitsArchitectureTests
     [Fact]
     [RequirementCoverage("REQ-VSB-INBOUND-MESSAGE-LIMITS", "in-memory")]
     public void InMemoryReceivePath_RejectsOversizedWireBodiesBeforeDeserialization() =>
-        AssertGuardedTransportBody("src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveContext.cs");
+        AssertGuardedTransportBody("src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveContext.cs", "_body.Value");
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INBOUND-MESSAGE-LIMITS", "mediator")]
@@ -81,10 +81,10 @@ public sealed class InboundMessageLimitsArchitectureTests
         Assert.Contains("bodyStorage.Binary", clientContext, StringComparison.Ordinal);
     }
 
-    static void AssertGuardedTransportBody(string receiveContextPath)
+    static void AssertGuardedTransportBody(string receiveContextPath, string bodyExpression = "_body")
     {
         string receiveContext = Read(receiveContextPath);
-        Assert.Contains("MessageBody Body => EnforceMessageLimits(_body)", receiveContext, StringComparison.Ordinal);
+        Assert.Contains($"MessageBody Body => EnforceMessageLimits({bodyExpression})", receiveContext, StringComparison.Ordinal);
 
         string deserializeFilter = Read("src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs");
         Assert.Contains("MessageBody transportBody = context.Body", deserializeFilter, StringComparison.Ordinal);

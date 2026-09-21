@@ -420,7 +420,7 @@ public sealed class CourierRoutingSlipRequestResponseDeepContractTests
             FactoryCallCount++;
             CompletedContext = context;
             CompletedRequest = request;
-            return Create(outcome, response);
+            return CreateAsync(outcome, response);
         }
 
         protected override Task<FaultMessage> CreateFaultedResponseMessageAsync(
@@ -432,10 +432,10 @@ public sealed class CourierRoutingSlipRequestResponseDeepContractTests
             FaultedContext = context;
             FaultedRequest = request;
             FaultedRequestId = requestId;
-            return Create(outcome, fault);
+            return CreateAsync(outcome, fault);
         }
 
-        private Task<T> Create<T>(FactoryOutcome configuredOutcome, T value)
+        private Task<T> CreateAsync<T>(FactoryOutcome configuredOutcome, T value)
             where T : class => configuredOutcome switch
             {
                 FactoryOutcome.Success => Task.FromResult(value),

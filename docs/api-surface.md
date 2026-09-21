@@ -53,28 +53,109 @@ Harnesses and deterministic test helpers live in `ViciOne.ServiceBus.Testing` an
 
 ## Capability packages
 
-| Capability | Package | Dependencies |
-|---|---|---|
-| Core messaging and in-memory transport | `ViciOne.ServiceBus` | `ViciOne.ServiceBus.Abstractions` |
-| Sagas and state machines | `ViciOne.ServiceBus.Sagas` | Core |
-| Routing activities | `ViciOne.ServiceBus.Courier` | Core |
-| Futures | `ViciOne.ServiceBus.Futures` | Core, Sagas, Courier |
-| Job consumers | `ViciOne.ServiceBus.JobService` | Core, Sagas |
-| In-process mediator | `ViciOne.ServiceBus.Mediator` | Core |
-| Object initializers | `ViciOne.ServiceBus.Initializers` | Core |
-| EF Core reliable messaging and journal | `ViciOne.ServiceBus.EntityFrameworkCore` | Core |
-| EF Core saga, future, and job persistence | `ViciOne.ServiceBus.EntityFrameworkCore.Sagas` | EF Core, Sagas, Futures, JobService |
+The Core project has exactly one first-party project dependency:
+`ViciOne.ServiceBus.Abstractions`. Every other direct `ViciOne.ServiceBus.*` sibling below `src`
+is selected by a consumer, a higher-level capability, or the engineering toolchain. A project being
+part of the repository or a solution does not make it a runtime dependency of Core.
 
-Transport, persistence, scheduling, serialization, visualization, SignalR, analyzer, and testing
-packages follow the same `ViciOne.ServiceBus.<Capability>` naming convention.
+| Direct sibling project | Kind and use | Direct first-party dependencies | When it is required | Why it remains separate |
+|---|---|---|---|---|
+| `ViciOne.ServiceBus.Abstractions` | Mandatory foundation containing application contracts, extension SPI, transport-neutral contexts, pipeline primitives, message metadata, and shared value implementations | None | Always; Core references it directly | Keeps contracts and provider SPI below Core and prevents a Core-to-provider cycle |
+| `ViciOne.ServiceBus.Analyzers` | Roslyn compiler diagnostics for ServiceBus API conventions | None | Only while compiling a project that enables the analyzers | Runs in the compiler host on `netstandard2.0`; it is not runtime code |
+| `ViciOne.ServiceBus.Analyzers.CodeFixes` | IDE code fixes for analyzer diagnostics | Analyzers | Only in an IDE or other workspace-based Roslyn host | Keeps workspace dependencies out of the compiler-only analyzer assembly |
+| `ViciOne.ServiceBus.Analyzers.Package` | Packaging project that places analyzer and code-fix assemblies in one development NuGet package | Analyzers, Analyzer CodeFixes | Only when producing the analyzer package | It has no consumer library assembly; its only responsibility is package layout |
+| `ViciOne.ServiceBus.Courier` | Routing slips, activities, compensation, and activity orchestration | Core | When an application uses routing-slip workflows; also pulled by Futures | This is a substantial optional workflow model with its own contracts and runtime |
+| `ViciOne.ServiceBus.Futures` | Durable, state-machine-backed future requests and result routing | Core, Sagas, Courier | When future orchestration is configured | Its Saga and Courier dependencies must stay visible instead of becoming Core dependencies |
+| `ViciOne.ServiceBus.Initializers` | Anonymous-value and convention-based message construction extensions | Core | When callers use initializer convenience overloads | Keeps dynamic object conversion helpers outside the application API; an isolated fresh-package consumer verifies that SignalR does not depend on it |
+| `ViciOne.ServiceBus.JobService` | Distributed job submission, execution, retry, scheduling, and coordination | Core, Sagas | When the ServiceBus job runtime is configured | Jobs have their own lifecycle, persistence needs, and Saga coordination |
+| `ViciOne.ServiceBus.Mediator` | In-process request, send, and publish through ServiceBus pipelines | Core | When broker-free in-process mediation is selected | It is a distinct execution and dependency-injection model |
+| `ViciOne.ServiceBus.MessagePack` | MessagePack envelope serializer | Abstractions, Core | When MessagePack is selected instead of a built-in serializer | Keeps the external MessagePack dependency and serializer versioning optional |
+| `ViciOne.ServiceBus.Sagas` | Saga repositories, correlation, state machines, and Saga-specific failures | Core | When an application or selected provider uses Sagas; also pulled by Futures and JobService | Saga execution is a large optional domain and must not enter Core |
+| `ViciOne.ServiceBus.StateMachineVisualizer` | Graphviz DOT and Mermaid diagrams for Saga state machines | Abstractions, Sagas | Only for design, documentation, or diagnostics | Visualization must not add Saga or diagram APIs to the messaging runtime |
+| `ViciOne.ServiceBus.Testing` | Transport-independent harnesses, observations, and deterministic test helpers | Core, Courier, Futures, Mediator, Sagas | Only in test projects and provider-specific testing packages | Prevents test APIs and the complete optional capability closure from entering shipping applications |
+
+The table describes thirteen project boundaries. `ViciOne.ServiceBus.Analyzers.Package` is deliberately
+packaging-only; the other projects produce their named assemblies. Transport, persistence, scheduling,
+SignalR, and provider-specific testing projects follow the same `ViciOne.ServiceBus.<Capability>` naming
+rule in responsibility folders below `src`.
+
+The main runtime dependency direction is:
+
+```text
+ViciOne.ServiceBus.Abstractions
+└── ViciOne.ServiceBus (Core)
+    ├── Courier
+    ├── Initializers
+    ├── Mediator
+    ├── Sagas
+    │   └── JobService
+    └── Sagas + Courier
+        └── Futures
+```
+
+`ViciOne.ServiceBus.Testing` intentionally sits above most of this graph. It is an engineering
+consumer of the capabilities and never a dependency of them.
+
+### Abstractions ownership audit
+
+`ViciOne.ServiceBus.Abstractions` is the mandatory foundation assembly, not an interface-only
+assembly. A concrete type may remain there when it is a dependency-free implementation of a
+transport-neutral contract and is needed by Core, providers, or extension authors. Examples are
+message-body values, context proxies, pipe composition, observer fan-out, topology formatters,
+`NewId`, and host/message metadata projection.
+
+The ownership test applies these rules:
+
+1. Application contracts and provider-neutral SPI belong in Abstractions.
+2. A neutral concrete primitive may remain when moving it would force a Core dependency into the
+   lower layer or duplicate it across providers.
+3. Runtime composition, dependency injection, I/O providers, and feature-specific behavior belong
+   to Core or the owning capability.
+4. A type used only by one optional capability belongs to that capability, even when its namespace
+   is the shared `ViciOne.ServiceBus` application namespace.
+
+The current audit moved the remaining concrete ownership violations to their capability assemblies:
+
+- Courier now owns `CourierException`, the activity execution and compensation exceptions, and
+  `InvalidCompensationAddressException`.
+- Futures now owns `FutureNotFoundException` and `FutureEndpointDefinition<TFuture>`.
+- Sagas now owns `SagaException`, `ConcurrencyException`, all state-machine exceptions, and the
+  unknown or unhandled state/event exceptions.
+
+The neutral technical-retry classifier no longer names Saga exception types. Capability exceptions
+publish their retry classification through `IRetryFailureClassification`, preserving the dependency
+direction while keeping concurrency transient and invalid state-machine definitions terminal.
+Architecture tests verify the declaring assembly of these types and reject a capability reference
+from either foundation assembly.
+
+The Saga and activity context vocabulary that remains in Abstractions is intentional. Core middleware
+uses those transport-neutral context shapes for retry, timeout, outbox, scoping, observation, and the
+configuration-observer seam through which optional packages attach their behavior. Moving them would
+either create a reverse dependency from Core to an optional capability or require a duplicate contract.
+
+### Provider-specific Saga integrations
+
+The base Azure Service Bus and Event Hubs packages currently have direct Saga dependencies for real
+features:
+
+- Azure Service Bus contains the message-session-backed Saga repository and Saga dispatch entry points.
+- Event Hubs contains activities that produce events from a Saga state machine.
+
+This means selecting either provider currently brings `ViciOne.ServiceBus.Sagas` transitively, even
+when the application does not configure those features. The long-term package target is to move these
+features into provider adapters such as `ViciOne.ServiceBus.AzureServiceBus.Sagas` and
+`ViciOne.ServiceBus.EventHubs.Sagas`. The base providers would then depend only on Core, while the
+adapter packages would depend on both the base provider and Sagas. This is a public-package migration
+and requires its own API, package-consumer, and provider integration validation; folding Sagas into
+Core is not the migration path.
 
 ## Source ownership and navigation
 
 `src/ViciOne.ServiceBus` owns the Core assembly; it is not a container for every ServiceBus
 package. Independently compiled capability and contract projects are sibling directories under
 `src`. Persistence, scheduling, and transport integration projects are grouped by responsibility
-under `Persistence`, `Scheduling`, and `Transports`. These families include provider implementations and adapters,
-not merely interchangeable implementations of one common adapter contract.
+under `Persistence`, `Scheduling`, and `Transports`. These families include provider implementations
+and adapters, not merely interchangeable implementations of one common adapter contract.
 
 Within each project, files follow their type and namespace, with focused folders for related
 functionality. Moving another project beneath the Core project would obscure assembly ownership

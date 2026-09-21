@@ -422,9 +422,9 @@ public sealed class StateMachineRuntimeMetadataContractTests
         public void Accept(IStateMachineVisitor visitor) => visitor.Visit(this);
         public void Probe(ProbeContext context) => context.CreateScope("probe-activity");
         public Task ExecuteAsync(IBehaviorContext<MetadataSaga> context, IBehavior<MetadataSaga> next) =>
-            ExecuteAsyncCore(context, next);
+            ExecuteCoreAsync(context, next);
         public Task ExecuteAsync<T>(IBehaviorContext<MetadataSaga, T> context, IBehavior<MetadataSaga, T> next)
-            where T : class => ExecuteAsyncCore(context, next);
+            where T : class => ExecuteCoreAsync(context, next);
         public Task FaultedAsync<TException>(IBehaviorExceptionContext<MetadataSaga, TException> context, IBehavior<MetadataSaga> next)
             where TException : Exception => throw new NotSupportedException();
         public Task FaultedAsync<T, TException>(
@@ -433,7 +433,7 @@ public sealed class StateMachineRuntimeMetadataContractTests
             where T : class
             where TException : Exception => throw new NotSupportedException();
 
-        private Task ExecuteAsyncCore(IBehaviorContext<MetadataSaga> context, IBehavior<MetadataSaga> next)
+        private Task ExecuteCoreAsync(IBehaviorContext<MetadataSaga> context, IBehavior<MetadataSaga> next)
         {
             if (cancellationSource is null)
                 return next.ExecuteAsync(context);
@@ -442,7 +442,7 @@ public sealed class StateMachineRuntimeMetadataContractTests
             return Task.FromCanceled(cancellationSource.Token);
         }
 
-        private Task ExecuteAsyncCore<T>(IBehaviorContext<MetadataSaga, T> context, IBehavior<MetadataSaga, T> next)
+        private Task ExecuteCoreAsync<T>(IBehaviorContext<MetadataSaga, T> context, IBehavior<MetadataSaga, T> next)
             where T : class
         {
             if (cancellationSource is null)

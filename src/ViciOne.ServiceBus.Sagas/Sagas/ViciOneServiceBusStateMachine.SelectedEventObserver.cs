@@ -34,7 +34,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? RequireObserverTask(_observer.PreExecuteAsync(context))
+                ? RequireObserverTaskAsync(_observer.PreExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -47,7 +47,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? RequireObserverTask(_observer.PreExecuteAsync(context))
+                ? RequireObserverTaskAsync(_observer.PreExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -58,7 +58,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? RequireObserverTask(_observer.PostExecuteAsync(context))
+                ? RequireObserverTaskAsync(_observer.PostExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -71,7 +71,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             ArgumentNullException.ThrowIfNull(context);
             return _event.Equals(context.Event)
-                ? RequireObserverTask(_observer.PostExecuteAsync(context))
+                ? RequireObserverTaskAsync(_observer.PostExecuteAsync(context))
                 : Task.CompletedTask;
         }
 
@@ -84,7 +84,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             ArgumentNullException.ThrowIfNull(context);
             ArgumentNullException.ThrowIfNull(exception);
             return _event.Equals(context.Event)
-                ? RequireObserverTask(_observer.ExecuteFaultAsync(context, exception))
+                ? RequireObserverTaskAsync(_observer.ExecuteFaultAsync(context, exception))
                 : Task.CompletedTask;
         }
 
@@ -99,11 +99,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             ArgumentNullException.ThrowIfNull(context);
             ArgumentNullException.ThrowIfNull(exception);
             return _event.Equals(context.Event)
-                ? RequireObserverTask(_observer.ExecuteFaultAsync(context, exception))
+                ? RequireObserverTaskAsync(_observer.ExecuteFaultAsync(context, exception))
                 : Task.CompletedTask;
         }
 
-        static Task RequireObserverTask(Task? task)
+        static Task RequireObserverTaskAsync(Task? task)
         {
             return task ?? throw new InvalidOperationException("The event observer returned no notification task.");
         }

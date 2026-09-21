@@ -102,7 +102,11 @@ internal sealed class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
                 && implementation != ownedFactory))
         {
             throw new ConfigurationException(
-                $"The Entity Framework inbox outbox for DbContext '{typeof(TDbContext)}' is already owned by another bus.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Entity Framework inbox outbox",
+                    typeof(TBus).ToString(),
+                    $"DbContext '{typeof(TDbContext)}' is already owned by another bus.",
+                    "Use a separate DbContext type for each bus"));
         }
 
         _services.TryAddScoped<IOutboxContextFactory<TDbContext>, EntityFrameworkOutboxContextFactory<TBus, TDbContext>>();

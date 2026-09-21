@@ -21,7 +21,7 @@ public class RabbitMqMessageSendContext<T> :
     public RabbitMqMessageSendContext(BasicProperties basicProperties, string exchange, T message, CancellationToken cancellationToken)
         : base(message, cancellationToken)
     {
-        BasicProperties = basicProperties;
+        BasicProperties = basicProperties ?? throw new ArgumentNullException(nameof(basicProperties));
 
         AwaitAck = true;
 
@@ -66,15 +66,15 @@ public class RabbitMqMessageSendContext<T> :
         if (!string.IsNullOrWhiteSpace(RoutingKey))
             properties[RabbitMqTransportPropertyNames.RoutingKey] = RoutingKey;
 
-        if (BasicProperties.IsAppIdPresent())
+        if (BasicProperties.IsAppIdPresent() && !string.IsNullOrWhiteSpace(BasicProperties.AppId))
             properties[RabbitMqTransportPropertyNames.AppId] = BasicProperties.AppId;
         if (BasicProperties.IsPriorityPresent())
             properties[RabbitMqTransportPropertyNames.Priority] = BasicProperties.Priority;
-        if (BasicProperties.IsReplyToPresent())
+        if (BasicProperties.IsReplyToPresent() && !string.IsNullOrWhiteSpace(BasicProperties.ReplyTo))
             properties[RabbitMqTransportPropertyNames.ReplyTo] = BasicProperties.ReplyTo;
-        if (BasicProperties.IsTypePresent())
+        if (BasicProperties.IsTypePresent() && !string.IsNullOrWhiteSpace(BasicProperties.Type))
             properties[RabbitMqTransportPropertyNames.Type] = BasicProperties.Type;
-        if (BasicProperties.IsUserIdPresent())
+        if (BasicProperties.IsUserIdPresent() && !string.IsNullOrWhiteSpace(BasicProperties.UserId))
             properties[RabbitMqTransportPropertyNames.UserId] = BasicProperties.UserId;
     }
 }

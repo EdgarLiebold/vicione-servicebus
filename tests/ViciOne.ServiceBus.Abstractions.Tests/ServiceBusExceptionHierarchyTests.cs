@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using System.Reflection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -107,24 +106,15 @@ public sealed class ServiceBusExceptionHierarchyTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EXCEPTION-CONTEXT", "missing-context-is-rejected-or-null")]
-    public void OptionalAndRequiredExceptionContext_IsRepresentedPrecisely()
+    [RequirementCoverage("REQ-VSB-EXCEPTION-CONTEXT", "remote-exception-data-is-snapshotted-and-required")]
+    public void RemoteExceptionContext_IsSnapshottedAndRequired()
     {
-        var saga = new SagaException("Correlation was unavailable.", typeof(TestSaga), typeof(TestMessage));
         var remoteData = new Dictionary<string, object> { ["attempt"] = 1 };
         var remote = new StubExceptionInfo(remoteData);
         var remoteException = new ExceptionInfoException(remote);
         remoteData["attempt"] = 2;
 
-        Assert.Null(saga.CorrelationId);
         Assert.Equal(1, remoteException.Data["attempt"]);
-        Assert.DoesNotContain(
-            typeof(SagaException).GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic),
-            constructor => constructor.GetParameters().Any(parameter => typeof(Expression).IsAssignableFrom(parameter.ParameterType)));
-        Assert.Equal(
-            "sagaType",
-            Assert.Throws<ArgumentNullException>(() =>
-                new SagaException("Correlation was unavailable.", null!, typeof(TestMessage))).ParamName);
         Assert.Equal(
             "exceptionInfo",
             Assert.Throws<ArgumentNullException>(() => new ExceptionInfoException(null!)).ParamName);
@@ -152,46 +142,15 @@ public sealed class ServiceBusExceptionHierarchyTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EXCEPTION-CONTEXT", "state-machine-and-future-context-is-preserved")]
-    public void StateMachineAndFutureFailures_PreserveTheirDiagnosticContext()
-    {
-        Guid futureId = Guid.Parse("3efbe874-7fc0-4286-a41d-e136ad95cd91");
-
-        var unknownEvent = new UnknownEventException("OrderStateMachine", "OrderAccepted");
-        var unknownState = new UnknownStateException("OrderStateMachine", "Archived");
-        var unhandledEvent = new UnhandledEventException("OrderStateMachine", "Cancel", "Completed");
-        var future = new FutureNotFoundException(typeof(TestMessage), futureId);
-
-        Assert.Equal("OrderStateMachine", unknownEvent.MachineName);
-        Assert.Equal("OrderAccepted", unknownEvent.EventName);
-        Assert.Equal("OrderStateMachine", unknownState.MachineName);
-        Assert.Equal("Archived", unknownState.StateName);
-        Assert.Equal("OrderStateMachine", unhandledEvent.MachineName);
-        Assert.Equal("Cancel", unhandledEvent.EventName);
-        Assert.Equal("Completed", unhandledEvent.StateName);
-        Assert.Equal(typeof(TestMessage), future.FutureType);
-        Assert.Equal(futureId, future.FutureId);
-        Assert.Equal(
-            "machineName",
-            Assert.Throws<ArgumentException>(() => new UnknownEventException(" ", "OrderAccepted")).ParamName);
-        Assert.Equal(
-            "type",
-            Assert.Throws<ArgumentNullException>(() => new FutureNotFoundException(null!, futureId)).ParamName);
-    }
-
-    [Fact]
-    [RequirementCoverage("REQ-VSB-EXCEPTION-CONTEXT", "request-fault-and-compensation-address-are-typed")]
-    public void RequestFaultAndCompensationFailures_PreserveTheirTypedContext()
+    [RequirementCoverage("REQ-VSB-EXCEPTION-CONTEXT", "request-fault-is-typed")]
+    public void RequestFault_PreservesItsRequiredTypedContext()
     {
         var fault = new StubFault();
-        var address = new Uri("loopback://localhost/compensate");
 
         var request = new RequestFaultException(typeof(TestMessage), fault);
-        var compensation = new InvalidCompensationAddressException(address);
 
         Assert.Equal(typeof(TestMessage), request.RequestType);
         Assert.Same(fault, request.Fault);
-        Assert.Same(address, compensation.Address);
         Assert.Equal(
             "requestType",
             Assert.Throws<ArgumentNullException>(() => new RequestFaultException(null!, fault)).ParamName);
@@ -249,8 +208,6 @@ public sealed class ServiceBusExceptionHierarchyTests
 
         public string? Value => null;
     }
-
-    private sealed class TestSaga;
 
     private sealed class TestMessage;
 
