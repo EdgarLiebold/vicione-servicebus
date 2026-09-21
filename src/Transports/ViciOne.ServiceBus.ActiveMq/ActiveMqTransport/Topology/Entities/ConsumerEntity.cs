@@ -67,7 +67,7 @@ public class ConsumerEntity :
             new[]
             {
                 $"source: {Source.EntityName}",
-                $"destination: {Destination?.EntityName}",
+                Destination is null ? "" : $"destination: {Destination.EntityName}",
                 string.IsNullOrWhiteSpace(Selector) ? "" : $"selector: {Selector}",
                 string.IsNullOrWhiteSpace(ConsumerName) ? "" : $"consumerName: {ConsumerName}"
             }.Where(x => !string.IsNullOrWhiteSpace(x)));

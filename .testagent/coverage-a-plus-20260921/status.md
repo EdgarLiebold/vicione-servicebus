@@ -1,13 +1,12 @@
 # ServiceBus A+ coverage campaign — status
 
-## Baseline complete
+## Current quantitative baseline
 
-- 9,682/9,682 Unit/Architecture tests passed.
-- 526/526 tests across all 13 local-provider projects passed; 0 failed, 0 skipped.
-- Four canonical fixture runs exited 0 with empty `fixture-findings.json` arrays.
-- 29 fresh, parseable Cobertura reports cover 32/32 loadable product assemblies.
-- Current aggregate: 86.9862% lines, 76.5356–82.9676% branches, 198 methods
-  with CRAP > 30.
+- 36 fresh, parseable Cobertura reports cover 32/32 loadable product assemblies at commit
+  `e0cf987c845154fea81ec27b63592a910aceac37`.
+- Aggregate: 79,569/90,165 lines = 88.2482%.
+- Branch interval: 79.2182–86.0351%.
+- 142 methods exceed CRAP 30.
 
 ## Prior iteration closure
 
@@ -39,6 +38,11 @@ already delivered intent, so retry remains at-least-once and can duplicate.
 
 ## Active phase
 
-The next work is the product-wide A+ coverage and CRAP campaign. The quantitative
-baseline above remains the starting measurement; this closure does not claim
-that the A+ coverage target has already been reached.
+The RabbitMQ phase is complete in the inherited closure. The ActiveMQ phase is complete in the
+current change set: 9,788/9,788 Unit/Architecture tests, three targeted real-broker cases, focused
+coverage/CRAP, Microsoft test-quality assessment, and final adversarial review are green. Details are
+in `active-mq-phase.md`.
+
+The next phase selects the highest remaining product-risk cluster from the exact 142-method global
+baseline. A fresh product-wide aggregate will follow after coherent phases; the focused ActiveMQ
+report does not claim that the requested global A+ target is reached.

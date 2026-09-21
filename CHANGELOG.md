@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- ActiveMQ header projection now preserves both Boolean values, limits native values to the shared
+  OpenWire/AMQP message-property set, omits OpenWire-incompatible byte arrays, formats other
+  `IFormattable` values with invariant culture, and keeps every `DateTime` kind on the same instant.
+  Direct topic-consumer diagnostics no longer emit an empty destination field. Source-owned tests
+  cover header precedence, actual OpenWire marshalling and broker round-trips, foreign null-valued
+  header implementations, scheduled-delay consumption, transport-property round-trips, topology
+  lifecycle identity and runtime message destinations.
 - RabbitMQ durable-send acceptance now requires a broker-confirmed, persistent, mandatory publish
   to an existing durable quorum queue (`6154ec2b4`). Queue proof no longer changes broker routing,
   synchronous and asynchronous publish failures both invalidate cached topology, and acceptance now

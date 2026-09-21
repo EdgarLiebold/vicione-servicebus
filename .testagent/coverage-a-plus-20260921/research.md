@@ -1,8 +1,7 @@
 # ServiceBus A+ coverage campaign — research
 
-Snapshot: branch `feature/servicebus-a-plus-api`, HEAD
-`52944958115e719506f88c9f4bd5de1901bb6545`. The tracked `src`/`tests` binary-diff
-SHA-256 is `4561c1ba5bcf115195b243f2e924b8df37fbbd1f99edf0feef22eea37afe0732`.
+Snapshot baseline: branch `feature/servicebus-a-plus-api`, commit
+`e0cf987c845154fea81ec27b63592a910aceac37`.
 
 ## User acceptance checklist
 
@@ -17,20 +16,27 @@ SHA-256 is `4561c1ba5bcf115195b243f2e924b8df37fbbd1f99edf0feef22eea37afe0732`.
 ## Current measured universe
 
 - .NET 10, Microsoft Testing Platform, xUnit v3.
-- 32/32 loadable product assemblies observed in exactly 29 fresh Cobertura reports:
-  16 Unit/Architecture reports plus all 13 local-provider projects.
-- All current tests are green: 9,682 Unit/Architecture and 526 local-provider tests;
-  provider runs have 0 failed, 0 skipped, and four empty fixture-finding sets.
-- Line coverage: 78,405/90,135 = 86.9862%.
-- Branch coverage: 27,761–30,094/36,272 = 76.5356–82.9676%. The interval is
+- 32/32 loadable product assemblies observed in 36 fresh Cobertura reports.
+- Line coverage: 79,569/90,165 = 88.2482%.
+- Branch coverage: 79.2182–86.0351%. The interval is
   required because Cobertura does not identify branch arcs across reports.
-- CRAP: 21,346 methods; 198 methods exceed 30; median 1, p95 10, p99 29.13,
-  maximum 702.
+- CRAP: 142 methods exceed 30.
 - Static Microsoft Roslyn pairing heuristic: 4,287 source files, 1,416 test
   files, 2,379 paired and 1,908 unpaired. This is targeting information only,
   not coverage evidence.
 
-## Risk inventory
+## ActiveMQ phase result
+
+- 21 new behavior tests received Microsoft `grade-tests` A ratings.
+- 174/174 ActiveMQ Unit/Contract tests and 9,788/9,788 complete Unit/Architecture tests pass.
+- Three canonical broker cases pass across OpenWire, Classic AMQP, and Artemis AMQP.
+- All eight selected ActiveMQ baseline hotspots are now below CRAP 30.
+- Two real defects were found while hardening provider fidelity: non-native `IFormattable` values
+  could fail provider serialization, and `byte[]` was legal in a generic primitive map but forbidden
+  in OpenWire message properties.
+- Final adversarial review: PASS, no findings.
+
+## Baseline risk inventory
 
 The largest CRAP groups are RabbitMQ (33), Core (32), Amazon SQS (25), Azure
 Service Bus (24), Abstractions (20), ActiveMQ (16), generic SQL transport (14),

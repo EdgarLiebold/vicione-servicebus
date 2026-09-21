@@ -11,13 +11,14 @@
 
 ## Sequential implementation phases
 
-1. **RabbitMQ transport primitives and topology.** Add exact AMQP header,
+1. **RabbitMQ transport primitives and topology — complete.** Add exact AMQP header,
    transport-property, move-header, topology-probe, declaration equality/hash,
    send-setting, and persisted send-context contracts. Run the RabbitMQ unit
    project, empirically test selected mutations, then collect its coverage.
-2. **ActiveMQ topology and headers.** Exercise host failover formatting,
-   primitive-map conversion, and every declaration comparer with field-level
-   negative controls.
+2. **ActiveMQ topology and headers — complete.** Exercise primitive-map conversion through actual
+   NMS marshalling and real OpenWire/AMQP/Artemis brokers, persisted transport properties, runtime
+   destination metadata, diagnostics, and every declaration comparer with field-level negative
+   controls.
 3. **PostgreSQL and generic SQL topology.** Cover host parsing boundaries,
    address symbols/areas, declaration comparers, and validation errors.
 4. **Amazon SQS/SNS.** Cover subscription reconciliation, topology diagnostics,

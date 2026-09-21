@@ -113,6 +113,29 @@ public sealed class ActiveMqEndpointAddressTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-TOPOLOGY", "runtime-message-type-preserves-lifecycle-semantics")]
+    public void BusTopology_ResolvesRuntimeMessageTypesAndAppliesLifecycleOverrides()
+    {
+        var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
+        var bus = new ActiveMqBusConfiguration(topology);
+        bus.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker:61616"));
+
+        Uri durable = bus.HostConfiguration.Topology.GetDestinationAddress(
+            typeof(DurableMessage),
+            configurator => configurator.AutoDelete = true);
+        Uri temporary = bus.HostConfiguration.Topology.GetDestinationAddress(typeof(TemporaryMessage));
+        var durableAddress = new ActiveMqEndpointAddress(bus.HostConfiguration.HostAddress, durable);
+        var temporaryAddress = new ActiveMqEndpointAddress(bus.HostConfiguration.HostAddress, temporary);
+
+        Assert.True(durableAddress.Durable);
+        Assert.True(durableAddress.AutoDelete);
+        Assert.False(temporaryAddress.Durable);
+        Assert.True(temporaryAddress.AutoDelete);
+        Assert.Equal(ActiveMqEndpointAddress.AddressType.Topic, durableAddress.Type);
+        Assert.Equal(ActiveMqEndpointAddress.AddressType.Topic, temporaryAddress.Type);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "temporary-generated-name-is-broker-safe")]
     public void TemporaryEntityName_UsesBrokerSafeCanonicalForm()
     {
@@ -122,4 +145,8 @@ public sealed class ActiveMqEndpointAddressTests
         Assert.False(address.Durable);
         Assert.True(address.AutoDelete);
     }
+
+    public sealed record DurableMessage;
+
+    private sealed record TemporaryMessage;
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Apache.NMS;
 using ViciOne.ServiceBus.Initializers.TypeConverters;
 
@@ -31,52 +32,52 @@ public static class TransportHeaderExtensions
             if (dictionary.Contains(header.Key))
                 continue;
 
-            switch (header.Value)
-            {
-                case DateTimeOffset dateTimeOffset:
-                    if (_dateTimeOffsetConverter.TryConvert(dateTimeOffset, out long result))
-                        dictionary[header.Key] = result;
-                    else if (_dateTimeOffsetConverter.TryConvert(dateTimeOffset, out string text))
-                        dictionary[header.Key] = text;
-
-                    break;
-
-                case DateTime dateTime:
-                    DateTimeOffset instant = dateTime.Kind switch
-                    {
-                        DateTimeKind.Local => new DateTimeOffset(dateTime).ToUniversalTime(),
-                        DateTimeKind.Utc => new DateTimeOffset(dateTime),
-                        _ => new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)),
-                    };
-                    if (_dateTimeOffsetConverter.TryConvert(instant, out result))
-                        dictionary[header.Key] = result;
-                    else if (_dateTimeOffsetConverter.TryConvert(instant, out string text))
-                        dictionary[header.Key] = text;
-
-                    break;
-
-                case Uri value:
-                    dictionary[header.Key] = value.ToString();
-                    break;
-
-                case string s:
-                    dictionary[header.Key] = s;
-                    break;
-
-                case bool boolValue when boolValue:
-                    dictionary[header.Key] = bool.TrueString;
-                    break;
-
-                case IFormattable formatValue:
-                    if (header.Value.GetType().IsValueType)
-                        dictionary[header.Key] = header.Value;
-                    else
-                        dictionary[header.Key] = formatValue.ToString();
-                    break;
-            }
+            SetHeaderValue(dictionary, header.Key, header.Value);
 
             if (header.Key == "AMQ_SCHEDULED_DELAY")
                 headers.Set(header.Key, null);
+        }
+    }
+
+    static void SetHeaderValue(IPrimitiveMap dictionary, string key, object value)
+    {
+        switch (value)
+        {
+            case DateTimeOffset dateTimeOffset:
+                _dateTimeOffsetConverter.TryConvert(dateTimeOffset, out long offsetMilliseconds);
+                dictionary[key] = offsetMilliseconds;
+                break;
+
+            case DateTime dateTime:
+                DateTimeOffset instant = dateTime.Kind switch
+                {
+                    DateTimeKind.Local => new DateTimeOffset(dateTime).ToUniversalTime(),
+                    DateTimeKind.Utc => new DateTimeOffset(dateTime),
+                    _ => new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)),
+                };
+                _dateTimeOffsetConverter.TryConvert(instant, out long dateTimeMilliseconds);
+                dictionary[key] = dateTimeMilliseconds;
+                break;
+
+            case Uri uri:
+                dictionary[key] = uri.ToString();
+                break;
+
+            case string text:
+                dictionary[key] = text;
+                break;
+
+            case bool boolean:
+                dictionary[key] = boolean ? bool.TrueString : bool.FalseString;
+                break;
+
+            case byte or char or short or int or long or float or double:
+                dictionary[key] = value;
+                break;
+
+            case IFormattable formattable:
+                dictionary[key] = formattable.ToString(null, CultureInfo.InvariantCulture);
+                break;
         }
     }
 }
