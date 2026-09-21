@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +34,7 @@ public class TopicEntity :
     /// <summary>Gets a comparer that identifies topics by name.</summary>
     public static IEqualityComparer<TopicEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>Gets a comparer that identifies topics by name and lifetime.</summary>
+    /// <summary>Gets a comparer that identifies topics by name, lifetime, attributes, and tags.</summary>
     public static IEqualityComparer<TopicEntity> EntityComparer { get; } = new TopicEntityEqualityComparer();
 
     /// <inheritdoc />
@@ -90,9 +91,6 @@ public class TopicEntity :
             if (ReferenceEquals(y, null))
                 return false;
 
-            if (x.GetType() != y.GetType())
-                return false;
-
             return string.Equals(x.EntityName, y.EntityName);
         }
 
@@ -120,7 +118,11 @@ public class TopicEntity :
             if (x.GetType() != y.GetType())
                 return false;
 
-            return string.Equals(x.EntityName, y.EntityName) && x.Durable == y.Durable && x.AutoDelete == y.AutoDelete;
+            return string.Equals(x.EntityName, y.EntityName) && x.Durable == y.Durable && x.AutoDelete == y.AutoDelete
+                && AmazonSqsAttributeDictionary.Equivalent(x.TopicAttributes, y.TopicAttributes, StringComparer.Ordinal)
+                && AmazonSqsAttributeDictionary.Equivalent(x.TopicSubscriptionAttributes, y.TopicSubscriptionAttributes,
+                    StringComparer.OrdinalIgnoreCase)
+                && AmazonSqsAttributeDictionary.Equivalent(x.TopicTags, y.TopicTags, StringComparer.Ordinal);
         }
 
         public int GetHashCode(TopicEntity obj)

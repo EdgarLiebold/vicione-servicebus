@@ -21,6 +21,24 @@ internal static class AmazonSqsAttributeDictionary
         return result;
     }
 
+    /// <summary>Compares broker attributes or tags by their provider key rules and exact values.</summary>
+    public static bool Equivalent<TValue>(IDictionary<string, TValue> left, IDictionary<string, TValue> right,
+        StringComparer keyComparer)
+    {
+        if (left.Count != right.Count)
+            return false;
+
+        var lookup = new Dictionary<string, TValue>(right, keyComparer);
+        foreach (KeyValuePair<string, TValue> attribute in left)
+        {
+            if (!lookup.TryGetValue(attribute.Key, out TValue? value)
+                || !EqualityComparer<TValue>.Default.Equals(attribute.Value, value))
+                return false;
+        }
+
+        return true;
+    }
+
     /// <summary>Returns the provider-defined spelling for a known subscription attribute name.</summary>
     /// <param name="name">The attribute name.</param>
     /// <returns>The canonical provider name when known; otherwise, the supplied name.</returns>

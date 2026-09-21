@@ -10,8 +10,8 @@
 
 This 36-report baseline is retained for comparison with a complete profile. The latest partial
 19-report rerun (including fresh SQS coverage and one Event Hubs local integration project) observes
-32/32 assemblies but omits other provider integration projects: 76,249/92,823 lines = 82.1445%,
-27,595–29,191/36,550 branches = 75.4993–79.8659%, and 243 methods above CRAP 30. The two
+32/32 assemblies but omits other provider integration projects: 76,327/92,836 lines = 82.2170%,
+27,689–29,493/36,566 branches = 75.7233–80.6569%, and 237 methods above CRAP 30. The two
 profiles have different test scope and cannot be used as a before/after coverage comparison.
 
 ## Prior iteration closure
@@ -72,4 +72,8 @@ The inherited SQL receiver-loop and retention work is closed in commit `b90d5e74
 Amazon SQS naming and scoped-topology slice passed 165/165 SQS tests and final read-only adversarial
 review; its 18 new tests are graded A under the Microsoft rubric. The final complete
 Unit/Architecture gate passed 9,881/9,881 with no failures or skips. See
-`amazon-sqs-naming-phase.md`. Global A+ remains open.
+`amazon-sqs-naming-phase.md`. The subsequent SQS topology-declaration slice has 14 focused tests
+and passed 179/179 SQS tests with Microsoft CodeCoverage. Six selected comparer/diagnostic CRAP
+hotspots are now below 30, and its final read-only adversarial review returned PASS. The complete
+Unit/Architecture rerun passed 9,895/9,895 without failures or skips. See
+`amazon-sqs-topology-phase.md`. Global A+ remains open.

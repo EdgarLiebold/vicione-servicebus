@@ -88,6 +88,12 @@ entry below records what the current work changed for anyone reading the source.
   stable digest form within the SNS topic-name limit. Scoped topics remain within that limit too;
   opaque custom message-topology configurators reject scoped host settings because their cached
   names cannot be checked for consistency.
+- Amazon SQS/SNS topology now rejects two declarations of the same queue or topic when their
+  broker attributes, subscription attributes, or tags differ. Previously, the second declaration
+  could silently reuse the first handle and lose its settings, including an explicit SNS raw-delivery
+  choice. AWS names are unique even when an extension supplies a queue or topic entity subclass;
+  conflicting subtype declarations can no longer produce duplicate broker names. Diagnostic
+  descriptions and both equivalent and conflicting metadata declarations have source-owned tests.
 
 ### Removed
 

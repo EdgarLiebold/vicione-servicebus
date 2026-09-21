@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,7 +32,7 @@ public class QueueEntity :
     /// <summary>Gets a comparer that identifies queues by name.</summary>
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>Gets a comparer that identifies queues by name and lifetime.</summary>
+    /// <summary>Gets a comparer that identifies queues by name, lifetime, attributes, and tags.</summary>
     public static IEqualityComparer<QueueEntity> QueueComparer { get; } = new QueueEntityEqualityComparer();
 
     /// <inheritdoc />
@@ -82,7 +83,11 @@ public class QueueEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x.EntityName, y.EntityName) && x.Durable == y.Durable && x.AutoDelete == y.AutoDelete;
+            return string.Equals(x.EntityName, y.EntityName) && x.Durable == y.Durable && x.AutoDelete == y.AutoDelete
+                && AmazonSqsAttributeDictionary.Equivalent(x.QueueAttributes, y.QueueAttributes, StringComparer.Ordinal)
+                && AmazonSqsAttributeDictionary.Equivalent(x.QueueSubscriptionAttributes, y.QueueSubscriptionAttributes,
+                    StringComparer.OrdinalIgnoreCase)
+                && AmazonSqsAttributeDictionary.Equivalent(x.QueueTags, y.QueueTags, StringComparer.Ordinal);
         }
 
         public int GetHashCode(QueueEntity obj)
@@ -107,8 +112,6 @@ public class QueueEntity :
             if (ReferenceEquals(x, null))
                 return false;
             if (ReferenceEquals(y, null))
-                return false;
-            if (x.GetType() != y.GetType())
                 return false;
             return string.Equals(x.EntityName, y.EntityName);
         }
