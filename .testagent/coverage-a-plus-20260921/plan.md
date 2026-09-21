@@ -27,9 +27,9 @@
    provider-specific PostgreSQL runtime and SQL Server migration hotspots.
 4. **Amazon SQS/SNS — in progress.** Naming and scoped publish topology have hard collision,
    failure, boundary, and routing regressions plus adversarial review. Topology diagnostics,
-   declaration identity, broker metadata conflicts, and duplicate AWS names across entity
-   subclasses are covered. Continue with subscription reconciliation, failure classification,
-   receive validation, and persisted transport metadata.
+   declaration identity, broker metadata conflicts, duplicate AWS names across entity subclasses,
+   and logical subscription identity are covered. Continue with subscription reconciliation,
+   failure classification, receive validation, and persisted transport metadata.
 5. **Azure Service Bus and Event Hubs.** Cover exception classification,
    context property projections, entity validation/equality, producer failure
    and routing semantics using deterministic fakes or existing emulators.

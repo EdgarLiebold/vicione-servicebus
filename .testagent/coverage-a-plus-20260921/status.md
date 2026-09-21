@@ -10,8 +10,8 @@
 
 This 36-report baseline is retained for comparison with a complete profile. The latest partial
 19-report rerun (including fresh SQS coverage and one Event Hubs local integration project) observes
-32/32 assemblies but omits other provider integration projects: 76,327/92,836 lines = 82.2170%,
-27,689–29,493/36,566 branches = 75.7233–80.6569%, and 237 methods above CRAP 30. The two
+32/32 assemblies but omits other provider integration projects: 76,341/92,835 lines = 82.2330%,
+27,701–29,505/36,564 branches = 75.7603–80.6941%, and 235 methods above CRAP 30. The two
 profiles have different test scope and cannot be used as a before/after coverage comparison.
 
 ## Prior iteration closure
@@ -77,3 +77,8 @@ and passed 179/179 SQS tests with Microsoft CodeCoverage. Six selected comparer/
 hotspots are now below 30, and its final read-only adversarial review returned PASS. The complete
 Unit/Architecture rerun passed 9,895/9,895 without failures or skips. See
 `amazon-sqs-topology-phase.md`. Global A+ remains open.
+
+The SQS subscription-identity slice has eight focused tests and passed 187/187 SQS tests with
+Microsoft CodeCoverage. Its two selected comparers moved from CRAP 110 each to 12.7 and 11.38.
+Final read-only adversarial review returned PASS. The complete Unit/Architecture rerun passed
+9,903/9,903 without failures or skips. See `amazon-sqs-subscription-identity-phase.md`.

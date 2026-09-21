@@ -63,15 +63,16 @@ public class QueueSubscriptionEntity :
             if (x.GetType() != y.GetType())
                 return false;
 
-            return x._topic.Equals(y._topic) && x._queue.Equals(y._queue);
+            return TopicEntity.EntityComparer.Equals(x._topic, y._topic)
+                && QueueEntity.QueueComparer.Equals(x._queue, y._queue);
         }
 
         public int GetHashCode(QueueSubscriptionEntity obj)
         {
             unchecked
             {
-                var hashCode = obj._topic.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj._queue.GetHashCode();
+                var hashCode = TopicEntity.EntityComparer.GetHashCode(obj._topic);
+                hashCode = (hashCode * 397) ^ QueueEntity.QueueComparer.GetHashCode(obj._queue);
 
                 return hashCode;
             }
@@ -90,9 +91,6 @@ public class QueueSubscriptionEntity :
                 return false;
 
             if (ReferenceEquals(y, null))
-                return false;
-
-            if (x.GetType() != y.GetType())
                 return false;
 
             return string.Equals(x._topic.EntityName, y._topic.EntityName, StringComparison.Ordinal)

@@ -94,6 +94,11 @@ entry below records what the current work changed for anyone reading the source.
   choice. AWS names are unique even when an extension supplies a queue or topic entity subclass;
   conflicting subtype declarations can no longer produce duplicate broker names. Diagnostic
   descriptions and both equivalent and conflicting metadata declarations have source-owned tests.
+- Amazon SQS/SNS subscription declarations now compare the complete topic and queue definitions
+  rather than their object references. Extension collections reuse independently created equivalent
+  declarations, reject conflicting definitions for the same broker pair, and prevent duplicate
+  pairs supplied through a subscription subclass. The normal builder still reuses a repeated
+  topic-to-queue subscription handle.
 
 ### Removed
 
