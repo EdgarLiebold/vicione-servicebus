@@ -59,6 +59,17 @@ Snapshot baseline: branch `feature/servicebus-a-plus-api`, commit
   default-port precedence, and explicit collapse of multi-host state.
 - Final adversarial review and the separate post-refactoring review: PASS, no findings.
 
+## SQL receive-validation and taxonomy slice result
+
+- One added test and one hardened test received Microsoft `grade-tests` A ratings; the reused exact
+  provider taxonomy test is also A quality.
+- 191/191 SQL tests, 15/15 filtered SQL Server taxonomy cases, and 9,841/9,841 complete
+  Unit/Architecture tests pass.
+- `SqlReceiveEndpointConfiguration.Validate` fell from CRAP 34 to split methods at 18 or below.
+  `SqlServerConnectionContext.IsTransientErrorNumber` fell from CRAP 38 to CRAP 2 without changing
+  its exact 14-code retry taxonomy.
+- Final adversarial review: PASS, no findings.
+
 ## Baseline risk inventory
 
 The largest CRAP groups are RabbitMQ (33), Core (32), Amazon SQS (25), Azure

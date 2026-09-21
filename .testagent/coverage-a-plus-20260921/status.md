@@ -53,6 +53,11 @@ replacement, effective data-source projection, inline-port precedence, and multi
 have hard behavior regressions. Every selected host hotspot is below CRAP 30, and two final
 adversarial reviews returned PASS. Details are in `sql-host-phase.md`.
 
-The next SQL slice covers the remaining receiver, PostgreSQL runtime, and SQL Server hotspots from
-the exact 142-method global baseline. A fresh product-wide aggregate will follow after coherent
-phases; the focused reports do not claim that the requested global A+ target is reached.
+The receive-validation and SQL Server taxonomy CRAP slice is complete: 191/191 SQL tests, 15/15
+filtered provider taxonomy cases, and 9,841/9,841 complete Unit/Architecture tests pass. The two
+baseline methods fell from CRAP 34 and 38 to at most 18 and 2. The final adversarial review returned
+PASS. Details are in `sql-validation-taxonomy-phase.md`.
+
+The next SQL slice covers the remaining receiver loop, PostgreSQL runtime, and SQL Server migration
+hotspots from the exact 142-method global baseline. A fresh product-wide aggregate will follow after
+coherent phases; the focused reports do not claim that the requested global A+ target is reached.

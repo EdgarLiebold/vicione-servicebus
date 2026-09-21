@@ -54,28 +54,52 @@ public sealed class SqlConfigurationTests
 
         ValidationResult[] results = endpoint.Validate().ToArray();
 
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && result.Message.Contains("valid queue name", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Warning
-            && result.Message.Contains("purged", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "MaintenanceBatchSize", StringComparison.Ordinal)
-            && result.Message.Contains(">= 1", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "UnlockDelay", StringComparison.Ordinal)
-            && result.Message.Contains("TimeSpan.Zero", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "AutoDeleteOnIdle", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "PollingInterval", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "MaxLockDuration", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "MaxDeliveryCount", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "ConcurrentDeliveryLimit", StringComparison.Ordinal));
-        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
-            && string.Equals(result.Value, "ReceiveMode", StringComparison.Ordinal));
+        Assert.Equal(
+            [
+                (ValidationResultDisposition.Failure, "invalid queue/name", (string?)null, "Must be a valid queue name"),
+                (ValidationResultDisposition.Warning, "invalid queue/name", (string?)null, "Existing messages will be purged on service start"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "MaintenanceBatchSize", "Must be >= 1"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "AutoDeleteOnIdle", "Must be greater than zero when specified"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "PollingInterval", "Must be greater than zero"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "LockDuration", "Must be >= 1 second"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "MaxLockDuration", "Must be greater than or equal to LockDuration"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "MaxDeliveryCount", "Must be greater than zero when specified"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "UnlockDelay", "Must not be less than TimeSpan.Zero"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "ConcurrentDeliveryLimit", "Must be greater than zero"),
+                (ValidationResultDisposition.Failure, "invalid queue/name", "ReceiveMode", "Must be a defined SQL receive mode"),
+            ],
+            results.Select(result => (result.Disposition, result.Key, result.Value, result.Message)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-RECEIVE-VALIDATION", "valid-boundaries-are-accepted")]
+    public void ReceiveEndpointValidation_AcceptsEveryValidBoundary()
+    {
+        var topology = new SqlTopologyConfiguration(SqlBusFactory.CreateMessageTopology());
+        var bus = new SqlBusConfiguration(topology);
+        var host = Assert.IsType<SqlHostConfiguration>(bus.HostConfiguration);
+        host.Settings = new SqlServerHostSettings(new SqlTransportOptions
+        {
+            Host = "localhost",
+            Database = "transport_tests",
+            Schema = "transport",
+            Username = "test_user",
+            Password = "test_password",
+        });
+        var endpoint = Assert.IsType<SqlReceiveEndpointConfiguration>(
+            host.CreateReceiveEndpointConfiguration("valid-queue_1:segment.name", configurator =>
+            {
+                configurator.AutoDeleteOnIdle = TimeSpan.FromTicks(1);
+                configurator.MaintenanceBatchSize = 1;
+                configurator.PollingInterval = TimeSpan.FromTicks(1);
+                configurator.LockDuration = TimeSpan.FromSeconds(1);
+                configurator.MaxLockDuration = TimeSpan.FromSeconds(1);
+                configurator.MaxDeliveryCount = 1;
+                configurator.UnlockDelay = TimeSpan.Zero;
+                configurator.SetReceiveMode(SqlReceiveMode.Partitioned, 1);
+            }));
+
+        Assert.Empty(endpoint.Validate());
     }
 
     [Fact]

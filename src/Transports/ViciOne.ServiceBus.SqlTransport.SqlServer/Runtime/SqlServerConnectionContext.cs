@@ -19,6 +19,24 @@ internal sealed class SqlServerConnectionContext :
     ConnectionContext,
     IAsyncDisposable
 {
+    static readonly int[] _transientErrorNumbers =
+    [
+        -2,
+        20,
+        64,
+        233,
+        1205,
+        10053,
+        10054,
+        10060,
+        10928,
+        10929,
+        40143,
+        40197,
+        40501,
+        40613,
+    ];
+
     readonly TaskExecutor _executor;
     readonly ISqlHostConfiguration _hostConfiguration;
     readonly SqlServerHostSettings _hostSettings;
@@ -143,24 +161,7 @@ internal sealed class SqlServerConnectionContext :
 
     internal static bool IsTransientErrorNumber(int errorNumber)
     {
-        return errorNumber switch
-        {
-            -2 => true,
-            20 => true,
-            64 => true,
-            233 => true,
-            1205 => true,
-            10053 => true,
-            10054 => true,
-            10060 => true,
-            10928 => true,
-            10929 => true,
-            40197 => true,
-            40143 => true,
-            40501 => true,
-            40613 => true,
-            _ => false
-        };
+        return Array.BinarySearch(_transientErrorNumbers, errorNumber) >= 0;
     }
 
     static CancellationToken GetStoppedToken(ITransportSupervisor<ConnectionContext> supervisor)

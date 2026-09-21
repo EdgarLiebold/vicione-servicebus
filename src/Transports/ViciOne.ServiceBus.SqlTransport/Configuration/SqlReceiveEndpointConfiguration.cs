@@ -103,6 +103,18 @@ public class SqlReceiveEndpointConfiguration :
     /// <returns>Every configuration failure and startup warning detected for this endpoint.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
+        foreach (ValidationResult result in ValidateQueueSettings())
+            yield return result;
+
+        foreach (ValidationResult result in ValidateDeliverySettings())
+            yield return result;
+
+        foreach (ValidationResult result in base.Validate())
+            yield return result.WithParentKey(_settings.QueueName);
+    }
+
+    IEnumerable<ValidationResult> ValidateQueueSettings()
+    {
         if (!IsValidEntityName(_settings.QueueName))
             yield return this.Failure(_settings.QueueName, "Must be a valid queue name");
 
@@ -117,7 +129,10 @@ public class SqlReceiveEndpointConfiguration :
 
         if (_settings.PollingInterval <= TimeSpan.Zero)
             yield return this.Failure(_settings.QueueName, nameof(_settings.PollingInterval), "Must be greater than zero");
+    }
 
+    IEnumerable<ValidationResult> ValidateDeliverySettings()
+    {
         if (_settings.LockDuration < TimeSpan.FromSeconds(1))
             yield return this.Failure(_settings.QueueName, nameof(_settings.LockDuration), "Must be >= 1 second");
 
@@ -135,9 +150,6 @@ public class SqlReceiveEndpointConfiguration :
 
         if (!Enum.IsDefined(_settings.ReceiveMode))
             yield return this.Failure(_settings.QueueName, nameof(_settings.ReceiveMode), "Must be a defined SQL receive mode");
-
-        foreach (var result in base.Validate())
-            yield return result.WithParentKey(_settings.QueueName);
     }
 
     /// <summary>Gets or sets the auto delete on idle.</summary>

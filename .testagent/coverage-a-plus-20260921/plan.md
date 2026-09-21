@@ -22,8 +22,9 @@
 3. **PostgreSQL and generic SQL topology — in progress.** The declaration identity, complete
    topology diagnostic, publish scan, public input, invalid-contract, namespace-boundary, host
    parsing, address-symbol/area, validation, atomic replacement, and effective Npgsql-target slices
-   are complete. Continue with receiver behavior and provider-specific PostgreSQL/SQL Server
-   runtime hotspots.
+   are complete. Receive-endpoint validation and the SQL Server transient-error taxonomy are also
+   below the CRAP gate with exact boundary contracts. Continue with receiver-loop behavior and
+   provider-specific PostgreSQL runtime and SQL Server migration hotspots.
 4. **Amazon SQS/SNS.** Cover subscription reconciliation, topology diagnostics,
    failure classification, receive validation, and persisted transport metadata.
 5. **Azure Service Bus and Event Hubs.** Cover exception classification,
