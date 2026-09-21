@@ -65,10 +65,12 @@ public class AmazonSqsBusFactoryConfigurator :
     /// <summary>Gets the tags applied to the default bus queue.</summary>
     public IDictionary<string, string> QueueTags => _settings.QueueTags;
 
-    /// <summary>Applies frozen Amazon SQS host settings to the bus.</summary>
+    /// <summary>Applies frozen Amazon SQS host settings to the bus before scoped publish topology is created.</summary>
     /// <param name="settings">The host settings to use.</param>
+    /// <exception cref="InvalidOperationException">Scoped topic naming was requested after publish topology was created.</exception>
     public void Host(AmazonSqsHostSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(settings);
         _busConfiguration.HostConfiguration.Settings = settings;
     }
 

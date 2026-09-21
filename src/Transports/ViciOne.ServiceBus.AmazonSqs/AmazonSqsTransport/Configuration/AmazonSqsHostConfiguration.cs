@@ -1,7 +1,11 @@
 using System;
+using System.Security.Cryptography;
+using System.Text;
+using ViciOne.ServiceBus.Advanced.Topology;
 using ViciOne.ServiceBus.AmazonSqs.Topology;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Topology;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
@@ -15,6 +19,9 @@ public class AmazonSqsHostConfiguration :
     readonly IAmazonSqsBusTopology _busTopology;
     readonly Recycle<IConnectionContextSupervisor> _connectionContext;
     readonly IAmazonSqsTopologyConfiguration _topologyConfiguration;
+    IEntityNameFormatter? _unscopedEntityNameFormatter;
+    IEntityNameFormatter? _appliedEntityNameFormatter;
+    string _appliedTopicPrefix = "";
     AmazonSqsHostSettings? _hostSettings;
 
     /// <summary>Creates an Amazon SQS host configuration with transport retry and recyclable client supervision.</summary>
@@ -55,17 +62,30 @@ public class AmazonSqsHostConfiguration :
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-
-            _hostSettings = value;
-
             var hostAddress = new AmazonSqsHostAddress(value.HostAddress);
+            string topicPrefix = value.ScopeTopics && hostAddress.Scope != "/"
+                ? hostAddress.Scope.Trim('/') + "_"
+                : "";
+            if (topicPrefix.Length > 0 && _topologyConfiguration.Message is not MessageTopology)
+                throw new InvalidOperationException("Scoped Amazon SQS topics require the built-in message topology to preserve consistent names.");
 
-            if (value.ScopeTopics && hostAddress.Scope != "/")
-            {
-                var formatter = new PrefixEntityNameFormatter(_topologyConfiguration.Message.EntityNameFormatter, hostAddress.Scope.Trim('/') + "_");
+            if ((_topologyConfiguration.Message is MessageTopology { HasConfiguredMessageTopologies: true }
+                    || _topologyConfiguration.Publish is AmazonSqsPublishTopology { HasConfiguredMessageTopologies: true })
+                && !string.Equals(topicPrefix, _appliedTopicPrefix, StringComparison.Ordinal))
+                throw new InvalidOperationException("Configure a scoped Amazon SQS host before message topology.");
 
-                _topologyConfiguration.Message.SetEntityNameFormatter(formatter);
-            }
+            IEntityNameFormatter currentFormatter = _topologyConfiguration.Message.EntityNameFormatter;
+            if (!ReferenceEquals(currentFormatter, _appliedEntityNameFormatter))
+                _unscopedEntityNameFormatter = currentFormatter;
+
+            IEntityNameFormatter formatter = _unscopedEntityNameFormatter!;
+            if (topicPrefix.Length > 0)
+                formatter = new ScopedEntityNameFormatter(formatter, topicPrefix);
+
+            _topologyConfiguration.Message.SetEntityNameFormatter(formatter);
+            _appliedEntityNameFormatter = formatter;
+            _appliedTopicPrefix = topicPrefix;
+            _hostSettings = value;
         }
     }
 
@@ -176,5 +196,32 @@ public class AmazonSqsHostConfiguration :
             endpointConfiguration.Build(host);
 
         return host;
+    }
+
+    sealed class ScopedEntityNameFormatter : IEntityNameFormatter
+    {
+        readonly IEntityNameFormatter _formatter;
+        readonly string _prefix;
+
+        public ScopedEntityNameFormatter(IEntityNameFormatter formatter, string prefix)
+        {
+            _formatter = formatter;
+            _prefix = prefix;
+        }
+
+        public string FormatEntityName<T>()
+        {
+            string name = _formatter.FormatEntityName<T>();
+            string scopedName = _prefix + name;
+            if (scopedName.Length <= 256)
+                return scopedName;
+
+            string digest = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(scopedName)));
+            int readableLength = 256 - _prefix.Length - digest.Length - 3;
+            if (readableLength < 0)
+                throw new AmazonSqsTransportConfigurationException("The Amazon SQS topic scope is too long for a hashed topic name.");
+
+            return _prefix + "--" + name[..readableLength] + "-" + digest;
+        }
     }
 }

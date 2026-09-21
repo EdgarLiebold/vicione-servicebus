@@ -25,6 +25,9 @@ public class MessageTopology :
     /// <summary>Gets the formatter used by newly created message topologies.</summary>
     public IEntityNameFormatter EntityNameFormatter { get; private set; }
 
+    /// <summary>Indicates whether message-specific topology has already captured the current naming convention.</summary>
+    public bool HasConfiguredMessageTopologies => !_messageTypes.IsEmpty;
+
     /// <summary>Replaces the formatter used by subsequently created message topologies.</summary>
     /// <param name="entityNameFormatter">The replacement formatter.</param>
     public void SetEntityNameFormatter(IEntityNameFormatter entityNameFormatter)

@@ -11,6 +11,8 @@ public class AmazonSqsPublishTopology :
 {
     readonly IMessageTopology _messageTopology;
 
+    internal bool HasConfiguredMessageTopologies { get; private set; }
+
     /// <summary>Initializes Amazon SNS publish topology.</summary>
     /// <param name="messageTopology">The message-topology convention source.</param>
     public AmazonSqsPublishTopology(IMessageTopology messageTopology)
@@ -68,6 +70,8 @@ public class AmazonSqsPublishTopology :
         var messageTopology = new AmazonSqsMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());
 
         OnMessageTopologyCreated(messageTopology);
+
+        HasConfiguredMessageTopologies = true;
 
         return messageTopology;
     }

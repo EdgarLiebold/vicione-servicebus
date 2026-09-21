@@ -8,6 +8,12 @@
 - Branch interval: 79.2182–86.0351%.
 - 142 methods exceed CRAP 30.
 
+This 36-report baseline is retained for comparison with a complete profile. The latest partial
+19-report rerun (including fresh SQS coverage and one Event Hubs local integration project) observes
+32/32 assemblies but omits other provider integration projects: 76,249/92,823 lines = 82.1445%,
+27,595–29,191/36,550 branches = 75.4993–79.8659%, and 243 methods above CRAP 30. The two
+profiles have different test scope and cannot be used as a before/after coverage comparison.
+
 ## Prior iteration closure
 
 The inherited source-review and package-structure change set is closed on the
@@ -61,3 +67,9 @@ PASS. Details are in `sql-validation-taxonomy-phase.md`.
 The next SQL slice covers the remaining receiver loop, PostgreSQL runtime, and SQL Server migration
 hotspots from the exact 142-method global baseline. A fresh product-wide aggregate will follow after
 coherent phases; the focused reports do not claim that the requested global A+ target is reached.
+
+The inherited SQL receiver-loop and retention work is closed in commit `b90d5e744`. The current
+Amazon SQS naming and scoped-topology slice passed 165/165 SQS tests and final read-only adversarial
+review; its 18 new tests are graded A under the Microsoft rubric. The final complete
+Unit/Architecture gate passed 9,881/9,881 with no failures or skips. See
+`amazon-sqs-naming-phase.md`. Global A+ remains open.

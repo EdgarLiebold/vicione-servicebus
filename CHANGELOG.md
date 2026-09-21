@@ -80,6 +80,14 @@ entry below records what the current work changed for anyone reading the source.
 - Direct Amazon SQS factories now require and enforce explicit body and transport-envelope limits.
   The configured JSON depth remains mandatory after later serializer-option callbacks, child
   endpoint overrides, and serialization resets.
+- Amazon SQS/SNS message names now reject every open generic shape and distinguish contracts whose
+  namespace or type identifiers would otherwise collapse onto the same topic name. Type-based
+  destinations use the actual publish topology, repeated scoped host settings do not stack prefixes,
+  and the factory rejects a scoped host configured after message or publish topology was created.
+  Empty or duplicate naming separators are rejected, and long canonical names use a distinct,
+  stable digest form within the SNS topic-name limit. Scoped topics remain within that limit too;
+  opaque custom message-topology configurators reject scoped host settings because their cached
+  names cannot be checked for consistency.
 
 ### Removed
 
@@ -97,6 +105,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Generated Amazon SNS topic names containing separator characters in CLR identifiers now use a
+  reserved canonical encoding, so their durable topic names differ from earlier development builds.
+  Existing topics are not renamed automatically: migrate subscriptions and coordinate publisher and
+  consumer rollout before using those earlier builds with this version. Configure a scoped Amazon
+  SQS host before any message or publish topology to apply its prefix.
 - The thirteen direct `ViciOne.ServiceBus.*` sibling projects retain their assembly boundaries, with
   Abstractions documented as the mandatory foundation. Courier, Future, and Saga implementations
   that were owned only by those optional capabilities have moved out of Abstractions into their
