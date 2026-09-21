@@ -98,12 +98,16 @@ public readonly struct SqlHostAddress
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(host);
         ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+        if (!CanRepresentNetworkHost(host))
+            throw new ArgumentException("The SQL host must identify a network host; Unix socket paths are not supported.", nameof(host));
         if (port is <= 0 or > 65535)
             throw new ArgumentOutOfRangeException(nameof(port), port, "The SQL host port must be between 1 and 65535.");
         if (instanceName != null && string.IsNullOrWhiteSpace(instanceName))
             throw new ArgumentException("The SQL Server instance name cannot be empty or whitespace.", nameof(instanceName));
         if (virtualHost != "/" && !IsValidSymbol(virtualHost))
             throw new ArgumentException("The virtual host must start with a letter or underscore and contain only letters, digits, or underscores.", nameof(virtualHost));
+        if (virtualHost == "/" && area != null)
+            throw new ArgumentException("An area requires a named virtual host.", nameof(area));
         if (area != null && !IsValidSymbol(area))
             throw new ArgumentException("The area must start with a letter or underscore and contain only letters, digits, or underscores.", nameof(area));
 
@@ -207,7 +211,7 @@ public readonly struct SqlHostAddress
             yield return $"{InstanceNameKey}={Uri.EscapeDataString(InstanceName)}";
     }
 
-    static bool IsValidSymbol(string? className)
+    internal static bool IsValidSymbol(string? className)
     {
         if (string.IsNullOrEmpty(className))
             return false;
@@ -224,5 +228,11 @@ public readonly struct SqlHostAddress
         }
 
         return true;
+    }
+
+    internal static bool CanRepresentNetworkHost(string host)
+    {
+        char first = host.TrimStart()[0];
+        return first is not '/' and not '@';
     }
 }

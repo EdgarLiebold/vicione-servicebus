@@ -20,9 +20,10 @@
    destination metadata, diagnostics, and every declaration comparer with field-level negative
    controls.
 3. **PostgreSQL and generic SQL topology — in progress.** The declaration identity, complete
-   topology diagnostic, publish scan, public input, invalid-contract, and namespace-boundary slice
-   is complete. Continue with host parsing boundaries, address symbols/areas, validation errors,
-   receiver behavior, and provider-specific PostgreSQL/SQL Server hotspots.
+   topology diagnostic, publish scan, public input, invalid-contract, namespace-boundary, host
+   parsing, address-symbol/area, validation, atomic replacement, and effective Npgsql-target slices
+   are complete. Continue with receiver behavior and provider-specific PostgreSQL/SQL Server
+   runtime hotspots.
 4. **Amazon SQS/SNS.** Cover subscription reconciliation, topology diagnostics,
    failure classification, receive validation, and persisted transport metadata.
 5. **Azure Service Bus and Event Hubs.** Cover exception classification,

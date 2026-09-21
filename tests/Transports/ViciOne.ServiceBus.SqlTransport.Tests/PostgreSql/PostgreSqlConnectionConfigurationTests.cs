@@ -145,6 +145,109 @@ public sealed class PostgreSqlConnectionConfigurationTests
         Assert.Equal(-1, settings.HostAddress.Port);
     }
 
+    [Theory]
+    [InlineData("local", "local", -1, null)]
+    [InlineData("local:1234", "local", 1234, null)]
+    [InlineData("local:5432", "local", -1, null)]
+    [InlineData("::1", "[::1]", -1, null)]
+    [InlineData("[::1]", "[::1]", -1, null)]
+    [InlineData("[::1]:5544", "[::1]", 5544, null)]
+    [InlineData("local:1234,remote:5678", "local", -1, "local:1234,remote:5678")]
+    [InlineData("[::1]:1234,[::2]:5678", "[::1]", -1, "[::1]:1234,[::2]:5678")]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "supported-single-ipv6-and-multiple-host-shapes")]
+    public void HostSettings_ProjectEverySupportedHostShape(
+        string configuredHost,
+        string addressHost,
+        int addressPort,
+        string? multipleHosts)
+    {
+        var settings = new PostgreSqlHostSettings(Options(configuredHost));
+
+        Assert.Equal(addressHost, settings.HostAddress.Host);
+        Assert.Equal(addressPort, settings.HostAddress.Port);
+        Assert.Equal(multipleHosts, settings.MultipleHosts);
+    }
+
+    [Theory]
+    [InlineData("local:0")]
+    [InlineData("local:65536")]
+    [InlineData("local:not-a-port")]
+    [InlineData("[::1]:0")]
+    [InlineData("[::1]:65536")]
+    [InlineData("[::1]:not-a-port")]
+    [InlineData("[::1")]
+    [InlineData("[::1]garbage")]
+    [InlineData("local,,remote")]
+    [InlineData("local,remote:not-a-port")]
+    [InlineData("local,[::1]garbage")]
+    [InlineData("2001:db8::invalid")]
+    [InlineData("/var/run/postgresql")]
+    [InlineData("@transport")]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "malformed-host-segments-fail-at-configuration-boundary")]
+    public void HostSettings_RejectMalformedHostSegmentsBeforeRuntime(string configuredHost)
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => new PostgreSqlHostSettings(Options(configuredHost)));
+
+        Assert.Equal("host", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(1234, 1234)]
+    [InlineData(5432, -1)]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "connection-string-inline-port-matches-data-source")]
+    public async Task ConnectionStringInlinePort_UsesTheSameBusAndDataSourceTargetAsync(
+        int inlinePort,
+        int expectedAddressPort)
+    {
+        var settings = new PostgreSqlHostSettings(
+            $"Host=local:{inlinePort};Port=5544;Database=transport_tests;Username=test_user;Password=test_password");
+
+        await using NpgsqlDataSource dataSource = settings.GetDataSource();
+        var builder = new NpgsqlConnectionStringBuilder(dataSource.ConnectionString);
+
+        Assert.Equal("local", settings.HostAddress.Host);
+        Assert.Equal(expectedAddressPort, settings.HostAddress.Port);
+        Assert.Equal("local", builder.Host);
+        Assert.Equal(inlinePort, builder.Port);
+    }
+
+    [Theory]
+    [InlineData(1234, 1234)]
+    [InlineData(5432, -1)]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "options-inline-port-matches-data-source")]
+    public async Task OptionsInlinePort_UsesTheSameBusAndDataSourceTargetAsync(
+        int inlinePort,
+        int expectedAddressPort)
+    {
+        SqlTransportOptions options = Options($"local:{inlinePort}");
+        options.Port = 5544;
+        var settings = new PostgreSqlHostSettings(options);
+
+        await using NpgsqlDataSource dataSource = settings.GetDataSource();
+        var builder = new NpgsqlConnectionStringBuilder(dataSource.ConnectionString);
+
+        Assert.Equal("local", settings.HostAddress.Host);
+        Assert.Equal(expectedAddressPort, settings.HostAddress.Port);
+        Assert.Equal("local", builder.Host);
+        Assert.Equal(inlinePort, builder.Port);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "missing-host-remains-a-validation-failure")]
+    public void HostSettings_ReportMissingHostThroughConfigurationValidation(string? configuredHost)
+    {
+        var settings = new PostgreSqlHostSettings(Options(configuredHost));
+
+        ValidationResult failure = Assert.Single(settings.Validate());
+
+        Assert.Equal("Host", failure.Key);
+        Assert.Equal(ValidationResultDisposition.Failure, failure.Disposition);
+        Assert.Throws<ConfigurationException>(() => settings.HostAddress);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "connection-string-replacement-clears-derived-state")]
     public void ConnectionStringReplacement_ClearsPriorMultipleHostAndPortProjection()
@@ -157,6 +260,79 @@ public sealed class PostgreSqlConnectionConfigurationTests
         Assert.Null(settings.MultipleHosts);
         Assert.Equal("final", settings.HostAddress.Host);
         Assert.Equal(-1, settings.HostAddress.Port);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "failed-connection-string-replacement-is-atomic")]
+    public async Task FailedConnectionStringReplacement_PreservesEveryPriorSettingAsync()
+    {
+        const string initial =
+            "Host=first,second;Port=5544;Database=before;Username=old;Password=old-password;Persist Security Info=true;Application Name=baseline-app";
+        var settings = new PostgreSqlHostSettings(initial);
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            settings.ConnectionString =
+                "Host=valid,broken:not-a-port;Database=after;Username=new;Password=new-password");
+
+        await using NpgsqlDataSource dataSource = settings.GetDataSource();
+        var builder = new NpgsqlConnectionStringBuilder(dataSource.ConnectionString);
+
+        Assert.Equal("host", exception.ParamName);
+        Assert.Equal("first,second", settings.MultipleHosts);
+        Assert.Equal("first", settings.HostAddress.Host);
+        Assert.Equal(5544, settings.HostAddress.Port);
+        Assert.Equal("first,second", builder.Host);
+        Assert.Equal(5544, builder.Port);
+        Assert.Equal("before", builder.Database);
+        Assert.Equal("old", builder.Username);
+        Assert.Equal("old-password", builder.Password);
+        Assert.Equal("baseline-app", builder.ApplicationName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "current-settings-rebuild-data-source-without-security-downgrade")]
+    public async Task HostSettings_RebuildDataSourceFromCurrentValuesAndPreserveSecurityOptionsAsync()
+    {
+        var settings = new PostgreSqlHostSettings(
+            "Host=first,second;Port=5544;Database=before;Username=old;Password=old-password;Persist Security Info=true;Search Path=before_schema;SSL Mode=Require;Application Name=baseline-app");
+
+        settings.Host = "current";
+        settings.Port = null;
+        settings.Database = "after";
+        settings.Username = "new";
+        settings.Password = "new-password";
+        settings.Schema = "after_schema";
+
+        await using NpgsqlDataSource dataSource = settings.GetDataSource();
+        var builder = new NpgsqlConnectionStringBuilder(dataSource.ConnectionString);
+
+        Assert.Equal("current", builder.Host);
+        Assert.Equal(NpgsqlConnection.DefaultPort, builder.Port);
+        Assert.Equal("after", builder.Database);
+        Assert.Equal("new", builder.Username);
+        Assert.Equal("new-password", builder.Password);
+        Assert.Equal("after_schema", builder.SearchPath);
+        Assert.Equal(SslMode.Require, builder.SslMode);
+        Assert.Equal("baseline-app", builder.ApplicationName);
+        Assert.Equal("current", settings.HostAddress.Host);
+        Assert.Equal(-1, settings.HostAddress.Port);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-POSTGRES-HOST-PROJECTION", "explicit-first-host-override-collapses-multiple-host-list")]
+    public async Task HostSettings_ExplicitFirstHostOverride_CollapsesPriorMultipleHostListAsync()
+    {
+        var settings = new PostgreSqlHostSettings(
+            "Host=first,second;Database=transport_tests;Username=test_user;Password=test_password");
+
+        settings.Host = "first";
+
+        await using NpgsqlDataSource dataSource = settings.GetDataSource();
+        var builder = new NpgsqlConnectionStringBuilder(dataSource.ConnectionString);
+
+        Assert.Null(settings.MultipleHosts);
+        Assert.Equal("first", settings.HostAddress.Host);
+        Assert.Equal("first", builder.Host);
     }
 
     [Fact]
@@ -182,7 +358,7 @@ public sealed class PostgreSqlConnectionConfigurationTests
         Assert.DoesNotContain("Port=", builder.ConnectionString, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static SqlTransportOptions Options(string host) => new()
+    private static SqlTransportOptions Options(string? host) => new()
     {
         Host = host,
         Database = "transport_tests",

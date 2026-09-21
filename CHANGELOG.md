@@ -16,6 +16,12 @@ entry below records what the current work changed for anyone reading the source.
   now expose the queue delivery limit, and the public publish-topology registration extensions
   reject missing configurators, missing message-type collections, and null collection entries at
   their API boundary before registering any preceding type.
+- SQL host addresses now retain complete password suffixes and reject invalid mutable address
+  components before startup. PostgreSQL host lists validate every segment atomically, preserve IPv6
+  and inline-port semantics, reject unrepresentable Unix sockets, and rebuild data sources from the
+  current configurator values without discarding unrelated security options. Explicit inline
+  default ports override competing global ports, and an explicit single-host override clears prior
+  multi-host state.
 - ActiveMQ header projection now preserves both Boolean values, limits native values to the shared
   OpenWire/AMQP message-property set, omits OpenWire-incompatible byte arrays, formats other
   `IFormattable` values with invariant culture, and keeps every `DateTime` kind on the same instant.

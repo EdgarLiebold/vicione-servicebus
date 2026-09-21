@@ -47,6 +47,18 @@ Snapshot baseline: branch `feature/servicebus-a-plus-api`, commit
   boundaries have exact positive and negative controls.
 - Final adversarial review: PASS, no findings after its product and oracle corrections.
 
+## SQL host-configuration slice result
+
+- 16 new behavior test methods received Microsoft `grade-tests` A ratings.
+- 190/190 SQL Unit/Contract tests and 9,840/9,840 complete Unit/Architecture tests pass.
+- `ConfigurationSqlHostSettings.Validate` fell from CRAP 49.85 to helpers at CRAP 18 and 16;
+  `PostgreSqlHostSettings.ParseHost` fell from CRAP 203.47 to CRAP 14 with parser helpers at 12 or
+  below. Their selected validation and parsing paths have 100% line and branch coverage.
+- Tests prove complete credential suffixes, validation boundaries, supported and malformed host
+  shapes, atomic replacement, actual Npgsql target selection, provider-option preservation, inline
+  default-port precedence, and explicit collapse of multi-host state.
+- Final adversarial review and the separate post-refactoring review: PASS, no findings.
+
 ## Baseline risk inventory
 
 The largest CRAP groups are RabbitMQ (33), Core (32), Amazon SQS (25), Azure

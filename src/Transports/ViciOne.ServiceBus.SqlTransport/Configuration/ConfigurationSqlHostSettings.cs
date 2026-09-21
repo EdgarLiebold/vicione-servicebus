@@ -21,11 +21,11 @@ public abstract class ConfigurationSqlHostSettings :
 
         if (!string.IsNullOrWhiteSpace(address.UserInfo))
         {
-            var parts = address.UserInfo.Split(':');
-            Username = UriDecode(parts[0]);
+            int separator = address.UserInfo.IndexOf(':');
+            Username = UriDecode(separator < 0 ? address.UserInfo : address.UserInfo[..separator]);
 
-            if (parts.Length >= 2)
-                Password = UriDecode(parts[1]);
+            if (separator >= 0)
+                Password = UriDecode(address.UserInfo[(separator + 1)..]);
         }
 
         VirtualHost = hostAddress.VirtualHost;
@@ -48,7 +48,7 @@ public abstract class ConfigurationSqlHostSettings :
     }
 
     /// <summary>Gets or sets the host.</summary>
-    public string? Host { get; set; }
+    public virtual string? Host { get; set; }
     /// <summary>Gets or sets the instance name.</summary>
     public string? InstanceName { get; set; }
     /// <summary>Gets or sets the port.</summary>
@@ -97,9 +97,37 @@ public abstract class ConfigurationSqlHostSettings :
     /// <returns>The validation failures.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
+        foreach (ValidationResult result in ValidateAddress())
+            yield return result;
+
+        foreach (ValidationResult result in ValidateOperationalSettings())
+            yield return result;
+    }
+
+    IEnumerable<ValidationResult> ValidateAddress()
+    {
         if (string.IsNullOrWhiteSpace(Host))
             yield return this.Failure("Host", "Host must be specified");
+        else if (!SqlHostAddress.CanRepresentNetworkHost(Host))
+            yield return this.Failure("Host", "must identify a network host; Unix socket paths are not supported by SQL transport addresses");
 
+        if (InstanceName != null && string.IsNullOrWhiteSpace(InstanceName))
+            yield return this.Failure("InstanceName", "must not be empty or whitespace when specified");
+
+        if (VirtualHost != "/" && !SqlHostAddress.IsValidSymbol(VirtualHost))
+            yield return this.Failure("VirtualHost", "must start with a letter or underscore and contain only letters, digits, or underscores");
+
+        if (Area != null)
+        {
+            if (VirtualHost == "/")
+                yield return this.Failure("Area", "requires a named virtual host");
+            else if (!SqlHostAddress.IsValidSymbol(Area))
+                yield return this.Failure("Area", "must start with a letter or underscore and contain only letters, digits, or underscores");
+        }
+    }
+
+    IEnumerable<ValidationResult> ValidateOperationalSettings()
+    {
         if (ConnectionLimit < 1)
             yield return this.Failure("ConnectionLimit", "must be >= 1");
 

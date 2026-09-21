@@ -1,4 +1,8 @@
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using Npgsql;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 
@@ -10,6 +14,7 @@ internal sealed class PostgreSqlHostSettings :
 {
     readonly NpgsqlDataSource? _dataSource;
     NpgsqlConnectionStringBuilder? _builder;
+    bool _inlinePortSpecified;
 
     /// <summary>Initializes the settings from a PostgreSQL host address.</summary>
     /// <param name="hostAddress">The PostgreSQL host address.</param>
@@ -46,7 +51,7 @@ internal sealed class PostgreSqlHostSettings :
         var builder = PostgreSqlTransportConnection.CreateBuilder(options);
 
         ParseHost(builder.Host);
-        if (builder.Port > 0 && builder.Port != NpgsqlConnection.DefaultPort)
+        if (!_inlinePortSpecified && !Port.HasValue && builder.Port > 0 && builder.Port != NpgsqlConnection.DefaultPort)
             Port = options.Port;
 
         Database = builder.Database;
@@ -66,6 +71,18 @@ internal sealed class PostgreSqlHostSettings :
     /// <summary>Gets or sets the comma-separated PostgreSQL host list, including any per-host ports.</summary>
     public string? MultipleHosts { get; set; }
 
+    /// <inheritdoc />
+    public override string? Host
+    {
+        get => base.Host;
+        set
+        {
+            base.Host = value;
+            MultipleHosts = null;
+            _inlinePortSpecified = false;
+        }
+    }
+
     /// <summary>Gets whether the data source was supplied by the caller and therefore is not owned by the transport.</summary>
     public bool IsProvidedDataSource { get; private set; }
 
@@ -76,10 +93,8 @@ internal sealed class PostgreSqlHostSettings :
         {
             var builder = new NpgsqlConnectionStringBuilder(value);
 
-            MultipleHosts = null;
-            Port = null;
             ParseHost(builder.Host);
-            if (builder.Port > 0 && builder.Port != NpgsqlConnection.DefaultPort)
+            if (!_inlinePortSpecified && !Port.HasValue && builder.Port > 0 && builder.Port != NpgsqlConnection.DefaultPort)
                 Port = builder.Port;
 
             Database = builder.Database;
@@ -100,16 +115,20 @@ internal sealed class PostgreSqlHostSettings :
         if (_dataSource != null)
             return _dataSource;
 
-        var builder = _builder ??= new NpgsqlConnectionStringBuilder
-        {
-            Host = MultipleHosts ?? Host,
-            Username = Username,
-            Password = Password,
-            Database = Database
-        };
+        var builder = _builder is null
+            ? new NpgsqlConnectionStringBuilder()
+            : new NpgsqlConnectionStringBuilder(_builder.ConnectionString);
 
-        if (Port.HasValue && Port.Value != NpgsqlConnection.DefaultPort)
+        builder.Host = GetConfiguredHost();
+        builder.Username = Username;
+        builder.Password = Password;
+        builder.Database = Database;
+        builder.SearchPath = Schema;
+
+        if (Port.HasValue)
             builder.Port = Port.Value;
+        else
+            builder.Remove("Port");
 
         return NpgsqlDataSource.Create(builder);
     }
@@ -126,54 +145,96 @@ internal sealed class PostgreSqlHostSettings :
     {
         if (string.IsNullOrWhiteSpace(host))
         {
-            Host = host;
+            base.Host = host;
             MultipleHosts = null;
+            _inlinePortSpecified = false;
+            Port = null;
             return;
         }
 
-        string[] hostSegments = host.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (hostSegments.Length == 0)
-        {
-            Host = null;
-            MultipleHosts = null;
-            return;
-        }
+        string[] hostSegments = host.Split(',', StringSplitOptions.TrimEntries);
+        if (hostSegments.Any(string.IsNullOrWhiteSpace))
+            throw InvalidHost(host);
 
+        (string firstHost, int? firstPort) = ParseHostSegment(hostSegments[0], host);
+        for (var index = 1; index < hostSegments.Length; index++)
+            _ = ParseHostSegment(hostSegments[index], host);
+
+        bool inlinePortSpecified = hostSegments.Length == 1 && firstPort.HasValue;
+
+        base.Host = firstHost;
         MultipleHosts = hostSegments.Length > 1 ? host.Trim() : null;
-        string firstHost = hostSegments[0];
+        _inlinePortSpecified = inlinePortSpecified;
+        Port = inlinePortSpecified && firstPort != NpgsqlConnection.DefaultPort ? firstPort : null;
+    }
 
-        if (firstHost[0] == '[')
-        {
-            int closingBracket = firstHost.IndexOf(']');
-            if (closingBracket > 1)
-            {
-                Host = firstHost[1..closingBracket];
+    string? GetConfiguredHost()
+    {
+        return MultipleHosts ?? Host;
+    }
 
-                if (hostSegments.Length == 1
-                    && closingBracket + 1 < firstHost.Length
-                    && firstHost[closingBracket + 1] == ':'
-                    && int.TryParse(firstHost[(closingBracket + 2)..], out int port)
-                    && port is > 0 and <= 65535
-                    && port != NpgsqlConnection.DefaultPort)
-                    Port = port;
+    static (string Host, int? Port) ParseHostSegment(string segment, string originalHost)
+    {
+        if (segment[0] is '/' or '@')
+            throw InvalidHost(originalHost);
 
-                return;
-            }
-        }
+        if (segment[0] == '[')
+            return ParseBracketedIpv6Host(segment, originalHost);
 
-        int firstColon = firstHost.IndexOf(':');
-        int lastColon = firstHost.LastIndexOf(':');
-        if (firstColon > 0
-            && firstColon == lastColon
-            && int.TryParse(firstHost[(lastColon + 1)..], out int singleHostPort)
-            && singleHostPort is > 0 and <= 65535)
-        {
-            Host = firstHost[..lastColon];
-            if (hostSegments.Length == 1 && singleHostPort != NpgsqlConnection.DefaultPort)
-                Port = singleHostPort;
-            return;
-        }
+        int firstColon = segment.IndexOf(':');
+        if (firstColon < 0)
+            return (segment, null);
 
-        Host = firstHost;
+        return firstColon == segment.LastIndexOf(':')
+            ? ParseHostAndPort(segment, firstColon, originalHost)
+            : ParseUnbracketedIpv6Host(segment, originalHost);
+    }
+
+    static (string Host, int? Port) ParseBracketedIpv6Host(string segment, string originalHost)
+    {
+        int closingBracket = segment.IndexOf(']');
+        if (closingBracket <= 1
+            || !IPAddress.TryParse(segment[1..closingBracket], out IPAddress? address)
+            || address.AddressFamily != AddressFamily.InterNetworkV6)
+            throw InvalidHost(originalHost);
+
+        string suffix = segment[(closingBracket + 1)..];
+        if (suffix.Length == 0)
+            return (address.ToString(), null);
+
+        if (suffix[0] != ':' || !TryParsePort(suffix.AsSpan(1), out int port))
+            throw InvalidHost(originalHost);
+
+        return (address.ToString(), port);
+    }
+
+    static (string Host, int? Port) ParseHostAndPort(string segment, int separator, string originalHost)
+    {
+        if (separator == 0 || !TryParsePort(segment.AsSpan(separator + 1), out int port))
+            throw InvalidHost(originalHost);
+
+        return (segment[..separator], port);
+    }
+
+    static (string Host, int? Port) ParseUnbracketedIpv6Host(string segment, string originalHost)
+    {
+        if (!IPAddress.TryParse(segment, out IPAddress? ipv6Address)
+            || ipv6Address.AddressFamily != AddressFamily.InterNetworkV6)
+            throw InvalidHost(originalHost);
+
+        return (ipv6Address.ToString(), null);
+    }
+
+    static bool TryParsePort(ReadOnlySpan<char> value, out int port)
+    {
+        return int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out port)
+            && port is > 0 and <= 65535;
+    }
+
+    static ArgumentException InvalidHost(string host)
+    {
+        return new ArgumentException(
+            $"The PostgreSQL host list contains an invalid host or port: '{host}'.",
+            nameof(host));
     }
 }

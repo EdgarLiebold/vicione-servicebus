@@ -244,6 +244,7 @@ public sealed class SqlAddressTests
         Assert.Throws<ArgumentException>(() => new SqlHostAddress("localhost", " ", null, "transport", null));
         Assert.Throws<ArgumentException>(() => new SqlHostAddress("localhost", null, null, "invalid-host", null));
         Assert.Throws<ArgumentException>(() => new SqlHostAddress("localhost", null, null, "transport", "9invalid"));
+        Assert.Throws<ArgumentException>(() => new SqlHostAddress("localhost", null, null, "/", "billing"));
         Assert.Throws<InvalidOperationException>(() => _ = (Uri)default(SqlHostAddress));
     }
 

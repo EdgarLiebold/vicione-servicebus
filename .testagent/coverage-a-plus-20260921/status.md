@@ -47,7 +47,12 @@ The first generic SQL topology slice is also complete: 147/147 SQL tests and 9,7
 Unit/Architecture tests pass, its six selected baseline hotspots are below CRAP 30, and the final
 adversarial re-review returned PASS. Details are in `sql-topology-phase.md`.
 
-The next SQL slice covers the remaining configuration, receiver, PostgreSQL, and SQL Server
-hotspots from the exact 142-method global baseline. A fresh product-wide aggregate will follow
-after coherent phases; the focused reports do not claim that the requested global A+ target is
-reached.
+The SQL host-configuration slice is complete: 190/190 SQL tests and 9,840/9,840 complete
+Unit/Architecture tests pass. URI credentials, mutable validation, PostgreSQL host parsing, atomic
+replacement, effective data-source projection, inline-port precedence, and multi-host overrides
+have hard behavior regressions. Every selected host hotspot is below CRAP 30, and two final
+adversarial reviews returned PASS. Details are in `sql-host-phase.md`.
+
+The next SQL slice covers the remaining receiver, PostgreSQL runtime, and SQL Server hotspots from
+the exact 142-method global baseline. A fresh product-wide aggregate will follow after coherent
+phases; the focused reports do not claim that the requested global A+ target is reached.
