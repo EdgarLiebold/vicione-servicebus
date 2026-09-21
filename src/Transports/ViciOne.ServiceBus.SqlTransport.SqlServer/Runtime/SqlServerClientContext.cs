@@ -74,7 +74,7 @@ internal sealed class SqlServerClientContext :
         long? result = await ExecuteScalarAsync<long>(_createQueueSql, new
         {
             queueName = queue.QueueName,
-            autoDelete = (int?)queue.AutoDeleteOnIdle?.TotalSeconds,
+            autoDelete = SqlTransportDefaults.ToDatabaseAutoDeleteSeconds(queue.AutoDeleteOnIdle),
             maxDeliveryCount = queue.MaxDeliveryCount
         }, cancellationToken).ConfigureAwait(false);
 

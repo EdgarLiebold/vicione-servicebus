@@ -79,7 +79,7 @@ internal sealed class PostgreSqlClientContext :
             var command = new CommandDefinition(_createQueueSql, new
             {
                 queue_name = queue.QueueName,
-                auto_delete = (int?)queue.AutoDeleteOnIdle?.TotalSeconds,
+                auto_delete = SqlTransportDefaults.ToDatabaseAutoDeleteSeconds(queue.AutoDeleteOnIdle),
                 max_delivery_count = queue.MaxDeliveryCount
             }, transaction, cancellationToken: token);
 

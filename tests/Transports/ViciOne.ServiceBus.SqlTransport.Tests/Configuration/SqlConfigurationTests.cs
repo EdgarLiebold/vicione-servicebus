@@ -69,6 +69,15 @@ public sealed class SqlConfigurationTests
                 (ValidationResultDisposition.Failure, "invalid queue/name", "ReceiveMode", "Must be a defined SQL receive mode"),
             ],
             results.Select(result => (result.Disposition, result.Key, result.Value, result.Message)));
+
+        var oversizedEndpoint = Assert.IsType<SqlReceiveEndpointConfiguration>(
+            host.CreateReceiveEndpointConfiguration("oversized_queue", configurator =>
+                configurator.AutoDeleteOnIdle = TimeSpan.FromSeconds(int.MaxValue) + TimeSpan.FromTicks(1)));
+
+        Assert.Contains(oversizedEndpoint.Validate(), result =>
+            result.Disposition == ValidationResultDisposition.Failure
+            && result.Value == "AutoDeleteOnIdle"
+            && result.Message == "Must not exceed the SQL seconds limit");
     }
 
     [Fact]

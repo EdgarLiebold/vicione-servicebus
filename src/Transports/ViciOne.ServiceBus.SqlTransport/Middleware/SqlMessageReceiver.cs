@@ -19,12 +19,14 @@ public sealed class SqlMessageReceiver :
     readonly SqlReceiveEndpointContext _context;
     readonly IPartitionedTaskExecutor<SqlTransportMessage> _executorPool;
     readonly object _lock = new();
+    readonly object _pendingMessagesLock = new();
+    readonly SqlQueueMaintenance _maintenance;
     readonly ReceiveSettings _receiveSettings;
     readonly TimeProvider _timeProvider;
-    readonly TimeSpan? _touchQueueInterval;
     CancellationTokenSource? _cancellationTokenSource;
-    DateTime? _lastMaintenance;
-    DateTime? _lastTouched;
+    TaskCompletionSource? _pendingMessagesCompleted;
+    int _pendingMessageCount;
+    long _messageHandledVersion;
 
     /// <summary>Creates and starts a receiver for one SQL queue endpoint.</summary>
     /// <param name="client">The SQL client used for polling, settlement, and maintenance.</param>
@@ -37,9 +39,7 @@ public sealed class SqlMessageReceiver :
         _timeProvider = context.GetTimeProvider();
 
         _receiveSettings = client.GetPayload<ReceiveSettings>();
-
-        if (_receiveSettings.AutoDeleteOnIdle.HasValue)
-            _touchQueueInterval = new TimeSpan(_receiveSettings.AutoDeleteOnIdle.Value.Ticks / 2);
+        _maintenance = new SqlQueueMaintenance(client, _receiveSettings, _timeProvider);
 
         _executorPool = new PartitionedTaskExecutor<SqlTransportMessage>(
             PartitionKeyProvider,
@@ -56,6 +56,13 @@ public sealed class SqlMessageReceiver :
     {
         await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
+        Task? pendingMessages;
+        lock (_pendingMessagesLock)
+            pendingMessages = _pendingMessagesCompleted?.Task;
+
+        if (pendingMessages is not null)
+            await pendingMessages.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+
         await _executorPool.DisposeAsync().ConfigureAwait(false);
     }
 
@@ -70,19 +77,28 @@ public sealed class SqlMessageReceiver :
 
         SetReady();
 
-        Task HandleAsync(SqlTransportMessage message, CancellationToken cancellationToken)
+        async Task HandleAsync(SqlTransportMessage message, CancellationToken cancellationToken)
         {
-            var lockContext = new SqlReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, _timeProvider);
+            try
+            {
+                var lockContext = new SqlReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, _timeProvider);
 
-            return _receiveSettings.ReceiveMode == SqlReceiveMode.Normal
-                ? HandleMessageAsync(message, lockContext)
-                : _executorPool.ExecuteAsync(message, () => HandleMessageAsync(message, lockContext), cancellationToken);
+                if (_receiveSettings.ReceiveMode == SqlReceiveMode.Normal)
+                    await HandleMessageAsync(message, lockContext).ConfigureAwait(false);
+                else
+                    await _executorPool.ExecuteAsync(message, () => HandleMessageAsync(message, lockContext), cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                CompleteFetchedMessage();
+            }
         }
 
         try
         {
             while (!IsStopping)
-                await algorithm.RunAsync((messageLimit, token) => ReceiveMessagesAsync(messageLimit, token), (m, c) => HandleAsync(m, c), Stopping).ConfigureAwait(false);
+                await algorithm.RunAsync((messageLimit, _) => ReceiveMessagesAsync(messageLimit, Stopping), (m, c) => HandleAsync(m, c),
+                    CancellationToken.None).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (IsStopping)
         {
@@ -139,7 +155,7 @@ public sealed class SqlMessageReceiver :
         {
             await lockContext.ScheduleRedeliveryAsync(TimeSpan.Zero, null, CancellationToken.None).ConfigureAwait(false);
         }
-        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException or TransportException)
+        catch (Exception exception)
         {
             LogContext.Debug?.Log(exception, "Could not release a fetched SQL message while the receiver was stopping");
         }
@@ -149,48 +165,35 @@ public sealed class SqlMessageReceiver :
     {
         try
         {
+            long handledVersion;
+            lock (_lock)
+                handledVersion = _messageHandledVersion;
+
             IList<SqlTransportMessage> messages = (await _client.ReceiveMessagesAsync(_receiveSettings.EntityName, _receiveSettings.ReceiveMode, messageLimit,
                 _receiveSettings.ConcurrentDeliveryLimit, _receiveSettings.LockDuration, cancellationToken: cancellationToken).ConfigureAwait(false)).ToList();
 
             if (messages.Count > 0)
-                return messages;
-
-            try
             {
-                int? count = 0;
-
-                var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
-
-                if (_lastMaintenance.HasValue == false || _lastMaintenance.Value + TimeSpan.FromSeconds(30) < utcNow)
+                RegisterFetchedMessages(messages.Count);
+                if (IsStopping)
                 {
-                    count = await _client.DeadLetterQueueAsync(_receiveSettings.QueueName, _receiveSettings.MaintenanceBatchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                    if (count < _receiveSettings.MaintenanceBatchSize)
-                        _lastMaintenance = utcNow;
-                }
-
-                if (_touchQueueInterval.HasValue && count is null or 0)
-                {
-                    if (_lastTouched.HasValue == false || _lastTouched.Value + _touchQueueInterval.Value < utcNow)
+                    try
                     {
-                        await _client.TouchQueueAsync(_receiveSettings.EntityName, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                        _lastTouched = utcNow;
+                        return await ReleaseFetchedMessagesDuringShutdownAsync(messages).ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        for (int i = 0; i < messages.Count; i++)
+                            CompleteFetchedMessage();
                     }
                 }
-            }
-            catch (ObjectDisposedException) when (IsStopping)
-            {
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested || IsStopping)
-            {
-            }
-            catch (TimeoutException)
-            {
+
+                return messages;
             }
 
+            await _maintenance.RunAsync(cancellationToken, Stopping).ConfigureAwait(false);
 
-            await WaitForPollingIntervalOrMessageHandledAsync(cancellationToken).ConfigureAwait(false);
+            await WaitForPollingIntervalOrMessageHandledAsync(cancellationToken, handledVersion).ConfigureAwait(false);
 
             return messages;
         }
@@ -200,19 +203,38 @@ public sealed class SqlMessageReceiver :
         }
     }
 
-    async Task WaitForPollingIntervalOrMessageHandledAsync(CancellationToken cancellationToken)
+    async Task<IEnumerable<SqlTransportMessage>> ReleaseFetchedMessagesDuringShutdownAsync(IEnumerable<SqlTransportMessage> messages)
+    {
+        foreach (SqlTransportMessage message in messages)
+        {
+            var lockContext = new SqlReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, _timeProvider);
+            await ReleaseFetchedMessageDuringShutdownAsync(lockContext).ConfigureAwait(false);
+        }
+
+        return [];
+    }
+
+    async Task WaitForPollingIntervalOrMessageHandledAsync(CancellationToken cancellationToken, long handledVersion)
     {
         var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
         lock (_lock)
+        {
+            if (_messageHandledVersion != handledVersion)
+            {
+                cancellationTokenSource.Dispose();
+                return;
+            }
+
             _cancellationTokenSource = cancellationTokenSource;
+        }
 
         try
         {
             var delayTask = _receiveSettings.QueueId.HasValue
-                ? _client.ConnectionContext.DelayUntilMessageReadyAsync(_receiveSettings.QueueId.Value, _receiveSettings.PollingInterval,
+                ? _client.ConnectionContext.DelayUntilMessageReadyAsync(_receiveSettings.QueueId.Value, _maintenance.MaximumPollingInterval,
                     _timeProvider, cancellationTokenSource.Token)
-                : Task.Delay(_receiveSettings.PollingInterval, _timeProvider, cancellationTokenSource.Token);
+                : Task.Delay(_maintenance.MaximumPollingInterval, _timeProvider, cancellationTokenSource.Token);
 
             await delayTask.ConfigureAwait(false);
         }
@@ -235,7 +257,30 @@ public sealed class SqlMessageReceiver :
     public void MessageHandled()
     {
         lock (_lock)
+        {
+            _messageHandledVersion++;
             _cancellationTokenSource?.Cancel();
+        }
+    }
+
+    void RegisterFetchedMessages(int count)
+    {
+        lock (_pendingMessagesLock)
+        {
+            if (_pendingMessageCount == 0)
+                _pendingMessagesCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            _pendingMessageCount += count;
+        }
+    }
+
+    void CompleteFetchedMessage()
+    {
+        lock (_pendingMessagesLock)
+        {
+            if (--_pendingMessageCount == 0)
+                _pendingMessagesCompleted?.TrySetResult();
+        }
     }
 
     static byte[] PartitionKeyProvider(SqlTransportMessage message)

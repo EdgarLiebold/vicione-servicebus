@@ -93,12 +93,14 @@ public readonly struct SqlEndpointAddress
                     if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds)
                         || !double.IsFinite(seconds)
                         || seconds <= 0
-                        || seconds > TimeSpan.MaxValue.TotalSeconds)
+                        || seconds > int.MaxValue)
                     {
                         throw new SqlEndpointAddressException(address, "The auto-delete interval must be a positive number of seconds.");
                     }
 
                     AutoDeleteOnIdle = TimeSpan.FromSeconds(seconds);
+                    if (AutoDeleteOnIdle <= TimeSpan.Zero)
+                        throw new SqlEndpointAddressException(address, "The auto-delete interval must be a positive number of seconds.");
                     break;
 
                 case KindKey:
@@ -128,6 +130,8 @@ public readonly struct SqlEndpointAddress
         ValidateKind(kind, nameof(kind));
         if (autoDeleteOnIdle <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(autoDeleteOnIdle), autoDeleteOnIdle, "The auto-delete interval must be greater than zero.");
+        if (autoDeleteOnIdle > TimeSpan.FromSeconds(int.MaxValue))
+            throw new ArgumentOutOfRangeException(nameof(autoDeleteOnIdle), autoDeleteOnIdle, "The auto-delete interval exceeds the SQL seconds limit.");
         if (kind == SqlEndpointKind.Topic && autoDeleteOnIdle.HasValue)
             throw new ArgumentException("Topics do not support an auto-delete interval.", nameof(autoDeleteOnIdle));
 

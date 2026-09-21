@@ -260,6 +260,8 @@ public sealed class SqlAddressTests
         Assert.Throws<SqlEndpointAddressException>(() => new SqlEndpointAddress(host, "orders/path"));
         Assert.Throws<ArgumentOutOfRangeException>(() => new SqlEndpointAddress(host, "orders", kind: (SqlEndpointKind)42));
         Assert.Throws<ArgumentOutOfRangeException>(() => new SqlEndpointAddress(host, "orders", TimeSpan.Zero));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SqlEndpointAddress(host, "orders",
+            TimeSpan.FromSeconds(int.MaxValue) + TimeSpan.FromTicks(1)));
         Assert.Throws<ArgumentException>(() => new SqlEndpointAddress(host, "events", TimeSpan.FromMinutes(1), SqlEndpointKind.Topic));
         Assert.Throws<InvalidOperationException>(() => _ = (Uri)default(SqlEndpointAddress));
     }
@@ -281,6 +283,7 @@ public sealed class SqlAddressTests
 
         Assert.Throws<SqlEndpointAddressException>(() => new SqlEndpointAddress(host, new Uri("db://localhost/transport/orders?autodelete=-1")));
         Assert.Throws<SqlEndpointAddressException>(() => new SqlEndpointAddress(host, new Uri("db://localhost/transport/orders?autodelete=never")));
+        Assert.Throws<SqlEndpointAddressException>(() => new SqlEndpointAddress(host, new Uri("db://localhost/transport/orders?autodelete=2147483648")));
         Assert.Throws<SqlEndpointAddressException>(() => new SqlEndpointAddress(host, new Uri("db://localhost/transport/events?kind=unknown")));
         Assert.Throws<SqlEndpointAddressException>(() => new SqlEndpointAddress(
             host,

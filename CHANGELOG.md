@@ -22,6 +22,11 @@ entry below records what the current work changed for anyone reading the source.
   current configurator values without discarding unrelated security options. Explicit inline
   default ports override competing global ports, and an explicit single-host override clears prior
   multi-host state.
+- SQL receivers now retain ownership of fetched delivery locks through shutdown, release late
+  batches even when an earlier unlock fails, and wake promptly when a delivery completes during
+  queue maintenance. Empty polling is bounded by auto-delete keepalive. Both SQL providers round
+  fractional idle lifetimes up to database seconds, so sub-second settings cannot become immediate
+  deletion, and address and endpoint validation reject values beyond the SQL seconds range.
 - ActiveMQ header projection now preserves both Boolean values, limits native values to the shared
   OpenWire/AMQP message-property set, omits OpenWire-incompatible byte arrays, formats other
   `IFormattable` values with invariant culture, and keeps every `DateTime` kind on the same instant.

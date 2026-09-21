@@ -126,6 +126,8 @@ public class SqlReceiveEndpointConfiguration :
 
         if (_settings.AutoDeleteOnIdle.HasValue && _settings.AutoDeleteOnIdle <= TimeSpan.Zero)
             yield return this.Failure(_settings.QueueName, nameof(_settings.AutoDeleteOnIdle), "Must be greater than zero when specified");
+        else if (_settings.AutoDeleteOnIdle > TimeSpan.FromSeconds(int.MaxValue))
+            yield return this.Failure(_settings.QueueName, nameof(_settings.AutoDeleteOnIdle), "Must not exceed the SQL seconds limit");
 
         if (_settings.PollingInterval <= TimeSpan.Zero)
             yield return this.Failure(_settings.QueueName, nameof(_settings.PollingInterval), "Must be greater than zero");
