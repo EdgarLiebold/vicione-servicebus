@@ -190,12 +190,6 @@
           "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },
-      "vicione.servicebus.initializers": {
-        "type": "Project",
-        "dependencies": {
-          "ViciOne.ServiceBus": "[1.0.0, )"
-        }
-      },
       "vicione.servicebus.mediator": {
         "type": "Project",
         "dependencies": {
@@ -212,8 +206,7 @@
       "vicione.servicebus.signalr": {
         "type": "Project",
         "dependencies": {
-          "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.Initializers": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
       "vicione.servicebus.testing": {

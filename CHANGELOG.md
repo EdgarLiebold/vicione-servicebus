@@ -85,6 +85,8 @@ entry below records what the current work changed for anyone reading the source.
   timeout or HTTP status from turning an ActiveMQ configuration failure into a durable retry.
   Azure's own retry-stop connection wrapper remains classifiable; tests exercise the actual retry
   wrapper and verify immediate InMemory outbox quarantine with both transports registered.
+- SignalR's source and test NuGet lockfiles now reflect the earlier removal of their obsolete
+  Initializers project dependency. A locked restore succeeds with the current project graph.
 - Assembly directory scans now resolve candidates from their selected files instead of binding
   first by the file's simple name, which could substitute an unrelated already loaded assembly.
   Invalid images remain skippable; other load failures report the error from the selected path.
