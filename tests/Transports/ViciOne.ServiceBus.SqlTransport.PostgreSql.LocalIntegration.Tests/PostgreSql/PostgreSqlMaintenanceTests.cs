@@ -8,6 +8,62 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Post
 public sealed class PostgreSqlMaintenanceTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-POSTGRES-MAINTENANCE", "scheduled-orphan-cleanup-preserves-delivered-message")]
+    public async Task ScheduledMaintenance_RemovesOrphansAndPreservesADeliveredMessageAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
+            "scheduled-maintenance",
+            cancellationToken);
+        string queueName = fixture.Name("live-message");
+        await using NpgsqlConnection inspection = fixture.CreateConnection();
+        await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        await CreateQueueAsync(inspection, fixture.Schema, queueName, cancellationToken);
+
+        var live = new MaintenanceMessage(Guid.NewGuid(), "preserve");
+        await SendAsync(fixture, queueName, [live], cancellationToken);
+        Guid[] orphans = [Guid.NewGuid(), Guid.NewGuid()];
+        await using (var insert = new NpgsqlCommand(
+            $"INSERT INTO \"{fixture.Schema}\".message (transport_message_id) VALUES (@first), (@second)",
+            inspection))
+        {
+            insert.Parameters.AddWithValue("first", orphans[0]);
+            insert.Parameters.AddWithValue("second", orphans[1]);
+            Assert.Equal(2, await insert.ExecuteNonQueryAsync(cancellationToken));
+        }
+
+        Assert.Equal(2, await CountOrphansAsync(inspection, fixture.Schema, orphans, cancellationToken));
+        Assert.Equal(1, await CountLiveDeliveriesAsync(inspection, fixture.Schema, live.Id, cancellationToken));
+
+        IBusControl bus = SqlBusFactory.Create(configurator =>
+            configurator.UsePostgreSql(fixture.ConnectionString, host =>
+            {
+                host.Schema = fixture.Schema;
+                host.MaintenanceInterval = TimeSpan.FromMilliseconds(50);
+                host.QueueCleanupInterval = TimeSpan.FromMilliseconds(50);
+                host.MaintenanceBatchSize = 1;
+            }));
+        bool started = false;
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeout.CancelAfter(fixture.OperationTimeout);
+            while (await CountOrphansAsync(inspection, fixture.Schema, orphans, timeout.Token) != 0)
+                await Task.Delay(TimeSpan.FromMilliseconds(25), timeout.Token);
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+        }
+
+        Assert.Equal(0, await CountOrphansAsync(inspection, fixture.Schema, orphans, cancellationToken));
+        Assert.Equal(1, await CountLiveDeliveriesAsync(inspection, fixture.Schema, live.Id, cancellationToken));
+    }
+
+    [Fact]
     [RequirementCoverage("OBL-R0-SQL-0124", "postgresql-native-owner")]
     public async Task RequeueProcedures_MoveOneAndManyUnlockedDeliveriesWithRequestedDelayAndBudgetAsync()
     {
@@ -116,6 +172,34 @@ public sealed class PostgreSqlMaintenanceTests
         long queueId = Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
         Assert.True(queueId > 0);
         return queueId;
+    }
+
+    private static async Task<int> CountOrphansAsync(
+        NpgsqlConnection connection,
+        string schema,
+        Guid[] orphanIds,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new NpgsqlCommand(
+            $"SELECT COUNT(*) FROM \"{schema}\".message WHERE transport_message_id = ANY(@ids)",
+            connection);
+        command.Parameters.AddWithValue("ids", orphanIds);
+        return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
+    }
+
+    private static async Task<int> CountLiveDeliveriesAsync(
+        NpgsqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new NpgsqlCommand(
+            $"SELECT COUNT(*) FROM \"{schema}\".message m "
+            + $"JOIN \"{schema}\".message_delivery d ON d.transport_message_id = m.transport_message_id "
+            + "WHERE m.message_id = @messageId",
+            connection);
+        command.Parameters.AddWithValue("messageId", messageId);
+        return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
     private static async Task SendAsync(

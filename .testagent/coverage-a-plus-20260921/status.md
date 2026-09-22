@@ -296,3 +296,11 @@ the tracked `src`/`tests` diff is empty. It measures 83,067/93,200 lines = 89.12
 branch interval of 29,565–32,111/36,649 = 80.6707–87.6177%, and 97/25,886 methods above
 CRAP 30. The no-fixture and missing-outage-control attempts were excluded; details and current
 hotspots are in `product-wide-profile-4488b29fe.md`. Global A+ remains open.
+
+The PostgreSQL scheduled-maintenance slice adds one real-database behavior test: two orphaned
+messages are removed while a product-sent message and its delivery survive. The focused run
+passed 1/1 and the complete PostgreSQL provider suite passed 79/79 with Microsoft CodeCoverage;
+both fixture findings were empty. The selected callback moved from 0/8 lines and CRAP 156 in
+the last complete profile to 8/8 lines and CRAP 12 in the full provider report. Independent
+read-only adversarial review returned PASS. See `postgresql-maintenance-phase.md`. The last
+complete product-wide profile still predates this test, so global A+ remains open.
