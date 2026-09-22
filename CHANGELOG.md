@@ -74,6 +74,10 @@ entry below records what the current work changed for anyone reading the source.
   excludes those forged time entries; other application names remain exact, and raw identity
   headers retain their canonical GUID format. Regression tests also verify persisted routing
   metadata, UTF-8 values, blank values, and session/partition consistency.
+- Azure Service Bus receive transport properties now retain the broker's `ReplyTo` destination
+  alongside session, partition, reply-session, and label values. Scheduling or replay that
+  persists these properties no longer drops a reply destination; a forged application property
+  cannot replace the broker value.
 - Azure Service Bus host retries and reliable-send classification now inspect complete exception
   trees, including every aggregate sibling, and give permanent causes priority. Both paths share
   broker-reason decisions: recoverable timeouts and explicitly transient general errors retry;

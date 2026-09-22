@@ -223,3 +223,13 @@ The isolated exact source/test commit `2f3a4b6eb` also passed locked restores,
 zero-warning Release builds, Azure Unit 220/220 and official-emulator 28/28,
 both with Microsoft CodeCoverage. The emulator fixture had no findings; report
 hashes and the `/private/tmp` Docker mount diagnostic are in the phase record.
+
+The Azure Service Bus receive-metadata slice restores the broker's `ReplyTo` destination when a
+received delivery is persisted or replayed. Three hard regressions prove the complete five-field
+roundtrip, a reply-only message, and blank-value omission; the red phase exposed both lost-reply
+cases. Azure Unit passed 223/223 with Microsoft CodeCoverage, and the targeted method moved from
+CRAP 156 to 14 with full reported line and branch coverage. The zero-warning Release build and
+complete Unit/Architecture gate passed 9,992/9,992. The official emulator passed 28/28 with
+Microsoft CodeCoverage and empty fixture findings. Final read-only adversarial review returned
+PASS. See `azure-servicebus-receive-metadata-phase.md`. The last complete product-wide profile
+remains `44d9e3254`; global A+ is open.

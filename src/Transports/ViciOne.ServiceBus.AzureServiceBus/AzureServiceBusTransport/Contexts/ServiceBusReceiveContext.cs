@@ -105,6 +105,8 @@ public sealed class ServiceBusReceiveContext :
             properties.Value[AzureServiceBusTransportPropertyNames.SessionId] = SessionId;
         if (!string.IsNullOrWhiteSpace(ReplyToSessionId))
             properties.Value[AzureServiceBusTransportPropertyNames.ReplyToSessionId] = ReplyToSessionId;
+        if (!string.IsNullOrWhiteSpace(ReplyTo))
+            properties.Value[AzureServiceBusTransportPropertyNames.ReplyTo] = ReplyTo;
         if (!string.IsNullOrWhiteSpace(Label))
             properties.Value[AzureServiceBusTransportPropertyNames.Label] = Label;
 
