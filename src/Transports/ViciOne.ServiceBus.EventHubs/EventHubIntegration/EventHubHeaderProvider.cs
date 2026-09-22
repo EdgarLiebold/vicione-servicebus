@@ -16,10 +16,10 @@ public class EventHubHeaderProvider :
     /// <param name="eventData">The event whose identifiers and properties are exposed.</param>
     public EventHubHeaderProvider(EventData eventData)
     {
-        _eventData = eventData;
+        _eventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
     }
 
-    /// <summary>Enumerates non-null message identifiers and application properties.</summary>
+    /// <summary>Enumerates nonblank message identifiers and non-null application properties.</summary>
     /// <returns>The headers available on the event.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
@@ -40,19 +40,31 @@ public class EventHubHeaderProvider :
     /// <summary>Attempts to read a message identifier or application property by name.</summary>
     /// <param name="key">The case-insensitive identifier name or exact application-property key.</param>
     /// <param name="value">Receives the non-null header value when found.</param>
-    /// <returns><see langword="true" /> when a non-null value exists; otherwise, <see langword="false" />.</returns>
+    /// <returns><see langword="true" /> when a nonblank identifier or non-null application value exists; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (nameof(MessageContext.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
+            if (string.IsNullOrWhiteSpace(_eventData.MessageId))
+            {
+                value = null;
+                return false;
+            }
+
             value = _eventData.MessageId;
-            return value != null;
+            return true;
         }
 
         if (nameof(MessageContext.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
+            if (string.IsNullOrWhiteSpace(_eventData.CorrelationId))
+            {
+                value = null;
+                return false;
+            }
+
             value = _eventData.CorrelationId;
-            return value != null;
+            return true;
         }
 
         var found = _eventData.Properties.TryGetValue(key, out value);

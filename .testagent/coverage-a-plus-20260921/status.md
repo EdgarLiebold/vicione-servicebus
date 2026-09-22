@@ -270,3 +270,14 @@ findings. An earlier same-byte attempt passed 56/57 in the console because an ex
 consumer-retry test timed out; its failed coverage report, findings, and broker logs are retained
 separately, but no test-result file exists for it. Exact report hashes, the verifiable final TRX
 counters, and run identities are in `eventhub-route-activity-phase.md`.
+
+The Event Hubs receive-header slice adds four hard provider tests. A red run reproduced two
+errors: a null SDK event passed construction, and lookup reported blank identifiers that header
+enumeration omitted. The corrected provider passed 4/4 focused tests and the complete 61/61
+real-emulator suite with Microsoft CodeCoverage and TRX; fixture findings were empty. The
+complete Engineering Release build had zero warnings and errors, and the Unit/Architecture
+gate passed 9,997/9,997 without failures or skips. The selected `GetAll` iterator is now at
+CRAP 8 with 9/9 lines versus baseline CRAP 72.75 with
+0/9; `TryGetHeader` is at CRAP 12 with 17/17 lines. Independent read-only adversarial review
+returned PASS. See `eventhub-header-provider-phase.md`. The last complete product-wide profile
+remains `44d9e3254`; global A+ remains open.

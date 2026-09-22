@@ -82,6 +82,9 @@ entry below records what the current work changed for anyone reading the source.
   underlying transport context, so a rejected proxy cannot contaminate a later send. Event Hubs
   rechecks admission after send observers run, for both single messages and every batch member;
   observer changes to the serializer's content type are rejected before provider submission.
+- Event Hubs receive headers now reject a missing SDK event at construction and treat blank
+  message and correlation IDs consistently in enumeration and lookup. A lookup for a blank ID
+  returns no value; non-null application properties retain their exact names and values.
 - Azure Service Bus host retries and reliable-send classification now inspect complete exception
   trees, including every aggregate sibling, and give permanent causes priority. Both paths share
   broker-reason decisions: recoverable timeouts and explicitly transient general errors retry;
