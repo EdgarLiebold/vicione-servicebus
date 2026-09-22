@@ -17,14 +17,22 @@ namespace ViciOne.ServiceBus.RabbitMq;
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
+    readonly Func<ConnectionFactory, RabbitMqHostSettings, CancellationToken, Task<IConnection>> _connect;
     readonly Lazy<ConnectionFactory> _connectionFactory;
     readonly IRabbitMqHostConfiguration _hostConfiguration;
 
     /// <summary>Creates a connection factory from the effective RabbitMQ host configuration.</summary>
     /// <param name="hostConfiguration">The host configuration used for every connection attempt.</param>
     public ConnectionContextFactory(IRabbitMqHostConfiguration hostConfiguration)
+        : this(hostConfiguration, ConnectAsync)
     {
-        _hostConfiguration = hostConfiguration;
+    }
+
+    internal ConnectionContextFactory(IRabbitMqHostConfiguration hostConfiguration,
+        Func<ConnectionFactory, RabbitMqHostSettings, CancellationToken, Task<IConnection>> connect)
+    {
+        _hostConfiguration = hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration));
+        _connect = connect ?? throw new ArgumentNullException(nameof(connect));
 
         _connectionFactory = new Lazy<ConnectionFactory>(() =>
         {
@@ -41,49 +49,96 @@ public class ConnectionContextFactory :
     /// <returns>The connection-context agent.</returns>
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
-        Task<ConnectionContext> context = CreateConnectionAsync(supervisor);
-
-        IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
+        IAsyncPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddAsyncContext<ConnectionContext>();
+        RabbitMqConnectionContext? connectionContext = null;
 
         Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
-            // Invalidate immediately and defer disposal until every active connection lease has finished.
-            if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqConnectionContext connectionContext)
+            if (connectionContext is { } currentContext)
             {
-                connectionContext.TopologyEntityCache.Invalidate();
-                connectionContext.Lifetime.Invalidate(args);
+                currentContext.TopologyEntityCache.Invalidate();
+                currentContext.Lifetime.Invalidate(args);
             }
 
             // Application shutdown is raised by the connection disposal already in progress.
             // Re-entering the same context stop here would make CloseAsync wait for itself.
-            if (args.Initiator == ShutdownInitiator.Application)
+            if (args.Initiator == ShutdownInitiator.Application && contextHandle.Context.IsCompletedSuccessfully)
                 return Task.CompletedTask;
 
             return contextHandle.StopAsync(args.ReplyText);
         }
 
-        context.GetAwaiter().OnCompleted(() =>
+        async Task CreateAndPublishConnectionAsync()
         {
-            if (!context.IsCompletedSuccessfully)
-                return;
-
-            var connectionContext = context.Result;
-
-            connectionContext.Connection.ConnectionShutdownAsync += HandleShutdownAsync;
-
-            void RemoveHandler()
+            RabbitMqConnectionContext? created = null;
+            try
             {
-                try
-                {
-                    connectionContext.Connection.ConnectionShutdownAsync -= HandleShutdownAsync;
-                }
-                catch (ObjectDisposedException)
-                {
-                }
-            }
+                created = await CreateConnectionAsync(supervisor).ConfigureAwait(false);
+                RabbitMqConnectionContext registered = created;
+                connectionContext = registered;
+                registered.Connection.ConnectionShutdownAsync += HandleShutdownAsync;
 
-            contextHandle.Completed.GetAwaiter().OnCompleted(RemoveHandler);
-        });
+                void RemoveHandler()
+                {
+                    try
+                    {
+                        registered.Connection.ConnectionShutdownAsync -= HandleShutdownAsync;
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                    }
+                    catch (Exception exception)
+                    {
+                        try
+                        {
+                            LogContext.Error?.Log(exception,
+                                "Removing the RabbitMQ connection shutdown handler faulted after context completion");
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+
+                contextHandle.Completed.GetAwaiter().OnCompleted(RemoveHandler);
+
+                if (!registered.Connection.IsOpen)
+                {
+                    ShutdownEventArgs reason = registered.Connection.CloseReason
+                        ?? new ShutdownEventArgs(ShutdownInitiator.Library, 491, "The connection is no longer available");
+                    await HandleShutdownAsync(registered.Connection, reason).ConfigureAwait(false);
+                }
+
+                RabbitMqConnectionContext published = created;
+                created = null;
+                await contextHandle.CreatedAsync(published).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException exception)
+            {
+                if (created is not null)
+                {
+                    await DisposeUnpublishedConnectionAsync(created).ConfigureAwait(false);
+                    created = null;
+                }
+
+                CancellationToken cancellationToken = exception.CancellationToken.CanBeCanceled
+                    ? exception.CancellationToken
+                    : supervisor.Stopping;
+                await contextHandle.CreateCanceledAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                if (created is not null)
+                {
+                    await DisposeUnpublishedConnectionAsync(created).ConfigureAwait(false);
+                    created = null;
+                }
+
+                await contextHandle.CreateFaultedAsync(exception).ConfigureAwait(false);
+            }
+        }
+
+        CreateAndPublishConnectionAsync().IgnoreUnobservedExceptions();
 
         return contextHandle;
     }
@@ -117,11 +172,11 @@ public class ConnectionContextFactory :
         return new SharedConnectionContext(context, cancellationToken);
     }
 
-    async Task<ConnectionContext> CreateConnectionAsync(ISupervisor supervisor)
+    async Task<RabbitMqConnectionContext> CreateConnectionAsync(ISupervisor supervisor)
     {
-        await _hostConfiguration.Settings.RefreshAsync(_connectionFactory.Value).ConfigureAwait(false);
-
-        var description = _hostConfiguration.Settings.ToDescription(_connectionFactory.Value);
+        RabbitMqHostSettings settings = _hostConfiguration.Settings;
+        ConnectionFactory connectionFactory = _connectionFactory.Value;
+        var description = settings.ToDescription(connectionFactory);
 
         if (supervisor.Stopping.IsCancellationRequested)
             throw RabbitMqConnectionException.Stopping(description);
@@ -129,67 +184,103 @@ public class ConnectionContextFactory :
         IConnection? connection = null;
         try
         {
+            await settings.RefreshAsync(connectionFactory, supervisor.Stopping).ConfigureAwait(false);
+            description = settings.ToDescription(connectionFactory);
+
+            if (supervisor.Stopping.IsCancellationRequested)
+                throw RabbitMqConnectionException.Stopping(description);
+
             TransportLogMessages.ConnectHost(description);
 
-            if (_hostConfiguration.Settings.EndpointResolver != null)
-            {
-                connection = await _connectionFactory.Value.CreateConnectionAsync(_hostConfiguration.Settings.EndpointResolver,
-                    _hostConfiguration.Settings.ClientProvidedName).ConfigureAwait(false);
-            }
-            else
-            {
-                var hostName = _hostConfiguration.Settings.Host
-                    ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "A RabbitMQ host name is required when no endpoint resolver is configured.", "Correct the named configuration before starting the host"));
-                List<string> hostNames = [hostName];
-
-                connection = await _connectionFactory.Value.CreateConnectionAsync(hostNames, _hostConfiguration.Settings.ClientProvidedName)
-                    .ConfigureAwait(false);
-            }
+            connection = await _connect(connectionFactory, settings, supervisor.Stopping).ConfigureAwait(false);
 
             LogContext.Debug?.Log("Connected: {Host} (address: {RemoteAddress}, local: {LocalAddress})", description, connection.Endpoint,
                 connection.LocalPort);
 
             var connectionContext = new RabbitMqConnectionContext(connection, _hostConfiguration, description, supervisor.Stopped);
 
-            connectionContext.GetOrAddPayload(() => _hostConfiguration.Settings);
+            connectionContext.GetOrAddPayload(() => settings);
 
             return connectionContext;
         }
-        catch (ConnectFailureException ex)
-        {
-            connection?.Dispose();
-
-            LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
-
-            throw new RabbitMqConnectionException("Connect failed: " + description, ex);
-        }
-        catch (BrokerUnreachableException ex)
-        {
-            connection?.Dispose();
-
-            LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
-
-            throw new RabbitMqConnectionException("Broker unreachable: " + description, ex);
-        }
-        catch (OperationInterruptedException ex)
-        {
-            connection?.Dispose();
-
-            LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
-
-            throw new RabbitMqConnectionException("Operation interrupted: " + description, ex);
-        }
-        catch (OperationCanceledException)
-        {
-            throw;
-        }
         catch (Exception ex)
         {
-            connection?.Dispose();
+            DisposeConnection(connection);
 
-            LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
+            if (ex is ConfigurationException or OperationCanceledException or RabbitMqConnectionException)
+                throw;
 
-            throw new RabbitMqConnectionException("Create Connection Faulted: " + description, ex);
+            LogConnectionFailure(ex, _hostConfiguration.HostAddress);
+
+            string message = ex switch
+            {
+                ConnectFailureException => "Connect failed: ",
+                BrokerUnreachableException => "Broker unreachable: ",
+                OperationInterruptedException => "Operation interrupted: ",
+                _ => "Create Connection Faulted: ",
+            };
+
+            throw new RabbitMqConnectionException(message + description, ex);
         }
+    }
+
+    static void DisposeConnection(IConnection? connection)
+    {
+        try
+        {
+            connection?.Dispose();
+        }
+        catch (Exception exception)
+        {
+            try
+            {
+                LogContext.Error?.Log(exception, "Disposing a failed RabbitMQ connection faulted; the primary failure is preserved");
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
+
+    static async Task DisposeUnpublishedConnectionAsync(RabbitMqConnectionContext connectionContext)
+    {
+        try
+        {
+            await connectionContext.DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            try
+            {
+                LogContext.Error?.Log(exception, "Disposing an unpublished RabbitMQ connection context faulted");
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
+
+    static void LogConnectionFailure(Exception exception, Uri inputAddress)
+    {
+        try
+        {
+            LogContext.Warning?.Log(exception, "Connection Failed: {InputAddress}", inputAddress);
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    static Task<IConnection> ConnectAsync(ConnectionFactory connectionFactory, RabbitMqHostSettings settings,
+        CancellationToken cancellationToken)
+    {
+        if (settings.EndpointResolver != null)
+            return connectionFactory.CreateConnectionAsync(settings.EndpointResolver, settings.ClientProvidedName, cancellationToken);
+
+        var hostName = settings.Host
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "A RabbitMQ host name is required when no endpoint resolver is configured.", "Correct the named configuration before starting the host"));
+        List<string> hostNames = [hostName];
+
+        return connectionFactory.CreateConnectionAsync(hostNames, settings.ClientProvidedName, cancellationToken);
     }
 }

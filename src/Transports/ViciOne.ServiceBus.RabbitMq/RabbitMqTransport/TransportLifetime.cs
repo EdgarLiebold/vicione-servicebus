@@ -162,7 +162,13 @@ internal sealed class TransportLifetime :
         {
             failure = exception;
 
-            LogContext.Error?.Log(exception, "Disposing the {Subject} faulted after its last operation finished", _subject);
+            try
+            {
+                LogContext.Error?.Log(exception, "Disposing the {Subject} faulted after its last operation finished", _subject);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         _disposed.TrySetResult(failure);
