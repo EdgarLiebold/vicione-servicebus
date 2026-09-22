@@ -55,4 +55,23 @@ projection. The final tests and coverage run followed that review.
 
 ## Exact source/test commit
 
-Pending commit and isolated exact-commit verification.
+Commit `f3b886656c8aa95078c3c8c2b98cc6516370596c` was checked in a
+separate clean detached worktree. `identity-before.txt` and
+`identity-after.txt` both contain that full hash, and both tracked-status
+files are empty. A locked restore succeeded. The complete Unit/Architecture
+solution had a zero-warning, zero-error Release build. The SQS Unit suite
+passed 200/200 with canonical Microsoft CodeCoverage settings. The exact
+report reproduces all five target method line counts, complexity, and CRAP
+scores above. Its report SHA-256 is
+`49a86c6afec7095fb41f52c3a2b9113817167ed9d945816f8b6caf56a792170c`;
+the exact test-log SHA-256 is
+`eb57c55d14dfd7c371828677598b73969048882a2fc7b37c176c7dacf9bea8fa`.
+The build log SHA-256 is
+`c4bbe5e636dcb5610a910be2fcf7a0dfd82c9155ab72313bc4acd5e6537c6699`.
+Logs, report, and identity files are retained in
+`artifacts/coverage-a-plus-20260922-4488b29fe/exact-f3b886656/`.
+
+The initial sandboxed restore and build attempts produced no usable result
+and were stopped after stalling. Their approved reruns succeeded. Neither
+stalled attempt contributes validation evidence. The clean checkout was
+removed after recording its final identity and status.

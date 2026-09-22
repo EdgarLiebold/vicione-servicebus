@@ -6,12 +6,13 @@ The Amazon SQS receive-endpoint validation slice is complete on the current
 source and test bytes: 200/200 SQS Unit tests with Microsoft CodeCoverage,
 10,018/10,018 Unit/Architecture tests, zero-warning Release SQS build, and
 independent adversarial PASS. Five generated validation methods are all below
-CRAP 30; see `amazon-sqs-receive-validation-phase.md`. Exact-commit verification
-is pending. The PostgreSQL scheduled-maintenance behavior slice is complete and passed
-exact-commit verification; see `postgresql-maintenance-phase.md`. The dynamic
-request-rate limit correction passes 759/759 Abstractions tests with current
-coverage and independent code review; see `request-rate-dynamic-limit-phase.md`.
-The final Unit/Architecture gate passed 10,005/10,005. Neither targeted report is a new
+CRAP 30. The isolated exact commit `f3b886656` passed locked restore, a
+zero-warning Release solution build, and 200/200 SQS tests with the same target
+coverage; see `amazon-sqs-receive-validation-phase.md`. The PostgreSQL
+scheduled-maintenance behavior slice passed exact-commit verification; see
+`postgresql-maintenance-phase.md`. The dynamic request-rate limit correction
+passed 759/759 Abstractions tests and independent code review; see
+`request-rate-dynamic-limit-phase.md`. These focused reports are not a new
 product-wide A+ measurement.
 
 The latest complete quantitative baseline is the fresh 36-report profile at
