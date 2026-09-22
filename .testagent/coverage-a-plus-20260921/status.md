@@ -2,6 +2,44 @@
 
 ## Last complete quantitative baseline
 
+- At source/test commit `44d9e32546ccf1ffe60bc49e49cfc81c3aa348d6`, 36
+  fresh, parseable reports from 22 passing Unit/Infrastructure modules, all
+  13 passing local-provider modules, and one supplementary Abstractions run
+  with AVX2 disabled cover 32/32 product assemblies. The source/test diff was
+  empty at capture. Unit coverage runs passed 9,536/9,536;
+  local-provider coverage runs passed 530/530; the portability run passed
+  751/751. All had zero skips and empty fixture findings. A post-commit locked
+  restore, zero-warning Release build, and full Unit/Architecture gate passed
+  9,981/9,981 on this HEAD.
+- Aggregate: 82,927/93,153 lines = 89.0224%; branch interval
+  29,470–32,018/36,629 = 80.4554–87.4116%; 105 methods exceed CRAP 30.
+  The raw reports, hashes, methods, and summary are in
+  `artifacts/coverage-a-plus-20260922-8abfe1e8a/analysis-36-noavx2/`. See
+  `product-wide-profile-44d9e3254.md`. Global A+ remains open.
+- The 22 Unit reports were produced immediately before the lockfile-only
+  `44d9e3254` commit; the 13 provider reports and supplementary Abstractions
+  report were produced after it. The commit changed neither C# source nor test
+  code, and the prior SignalR assets already resolved the corrected graph.
+  A separate post-commit locked restore and current-HEAD Unit/Architecture
+  gate verified the committed lockfiles: 9,981/9,981, zero failures/skips.
+  Read-only adversarial review passed after the provenance correction.
+- This profile explicitly passes `tools/ci/coverage.settings.xml` to Microsoft
+  CodeCoverage. Its 93,153 valid lines differ from the older profile's 90,376
+  valid lines across nearly every assembly. Therefore the two percentage
+  series are not a controlled before/after comparison.
+
+### Same-byte 35-report control
+
+Before the supplementary no-AVX2 run, the same source/test bytes and coverage
+settings yielded 82,851/93,153 lines = 88.9408%, a branch interval of
+29,446–31,925/36,629 = 80.3899–87.1577%, and 106 methods above CRAP 30.
+Running the existing 751 Abstractions tests with AVX2 disabled covered the
+scalar `DashedHexFormatter.Format` path: 7/38 → 38/38 lines and CRAP 237.17 →
+20. Its 18/20 conservative branch count retains the runtime and endianness
+condition; it does not indicate an untested input-length boundary.
+
+### Previous complete profile
+
 - At commit `e1a965290fe532ec8ff86dc699305dd4086f0099`, 35 fresh,
   parseable reports from 22 passing Unit/Infrastructure modules and all 13
   passing local-provider modules cover 32/32 product assemblies. The 445
@@ -147,6 +185,6 @@ review returned PASS. The focused classifier methods are at CRAP 8, 14,
 14.27, and 28. The isolated Azure Service Bus emulator passed 25/25 with
 empty fixture findings. A clean detached checkout of exact source commit
 `6d0ecbbae` passed locked restore and 212/212 Azure Unit tests with Microsoft
-CodeCoverage. A fresh complete 35-report product profile remains
-the next verification step; global A+ is open. See
+CodeCoverage. A fresh complete product profile is recorded above; global A+
+is open. See
 `azure-servicebus-cross-transport-phase.md`.
