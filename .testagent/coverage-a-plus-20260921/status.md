@@ -199,6 +199,9 @@ had zero warnings and errors, and the complete Unit/Architecture gate passed
 9,982/9,982 without failures or skips. The final real emulator run passed
 28/28 with empty fixture findings. The six focused subscription methods are
 all below CRAP 30; `CreateTopicSubscriptionAsync` moved from 218 to 15.71.
+Exact source/test commit `84b6f2df7` passed a clean, isolated locked restore,
+zero-warning Release build, and 213/213 Azure Unit tests with Microsoft
+CodeCoverage.
 Final read-only adversarial review and the test-helper follow-up both returned
 PASS. See `azure-servicebus-subscription-phase.md`. These focused results do
 not replace the complete product-wide profile at `44d9e3254`; global A+ is

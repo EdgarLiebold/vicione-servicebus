@@ -58,6 +58,11 @@ test bodies passed 28/28, zero skips, and empty fixture findings
 `artifacts/coverage-a-plus-20260922-8abfe1e8a/generated-filter-final.cobertura.xml`.
 The complete Unit/Architecture gate passed 9,982/9,982 with zero failures
 and skips.
+An isolated, clean checkout of exact source/test commit `84b6f2df7` passed
+locked restore, zero-warning Release build, and 213/213 Azure Unit tests with
+Microsoft CodeCoverage. The preserved report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/azure-unit-exact-84b6f2df7.cobertura.xml`
+with SHA-256 `2c4c95c79e62e5a4279f2c5c696e593baf2488a14ac60b33df7736c1fae0c450`.
 
 Microsoft CodeCoverage on the final green emulator run measured the
 refactored source methods below CRAP 30:
