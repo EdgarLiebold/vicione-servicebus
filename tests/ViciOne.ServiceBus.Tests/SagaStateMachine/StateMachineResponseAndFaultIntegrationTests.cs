@@ -186,6 +186,10 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
 
             Assert.Equal(new CatchResponse(removedId, "removed"), removed.Message);
             Assert.Null((await removedConsumed.WaitAsync(timeout, cancellationToken)).Exception);
+            Assert.Equal(removedId, await ((ISagaRepository<CatchState>)repository).WaitForSagaRemovalAsync(
+                removedId,
+                timeout,
+                cancellationToken: cancellationToken));
             Assert.Null(await repository.LoadAsync(removedId, TestContext.Current.CancellationToken));
         }
         finally
