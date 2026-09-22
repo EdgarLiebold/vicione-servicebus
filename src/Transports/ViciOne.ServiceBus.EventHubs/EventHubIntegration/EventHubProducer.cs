@@ -175,7 +175,8 @@ public class EventHubProducer :
             EventHubSendContext<T> sendContext = await _context.CreateContextAsync(_message, _pipe, _sendPipe, _cancellationToken).ConfigureAwait(false);
 
             sendContext.CancellationToken.ThrowIfCancellationRequested();
-            if (_context is BaseSendTransportContext transportContext)
+            BaseSendTransportContext? transportContext = _context as BaseSendTransportContext;
+            if (transportContext is not null)
                 transportContext.ApplyPayloadAdmission(sendContext);
 
             StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);
@@ -186,6 +187,8 @@ public class EventHubProducer :
                 if (_context.SendObservers.Count > 0)
                     await _context.SendObservers.PreSendAsync(sendContext).ConfigureAwait(false);
 
+                if (transportContext is not null)
+                    transportContext.ApplyPayloadAdmission(sendContext);
                 await _context.SendAsync(context, sendContext).ConfigureAwait(false);
 
                 activity?.Update(sendContext);
@@ -241,9 +244,6 @@ public class EventHubProducer :
 
         public async Task SendAsync(ProducerContext context)
         {
-            if (_messages == null)
-                throw new ArgumentNullException(nameof(_messages));
-
             LogContext.SetCurrentIfNull(_context.LogContext);
 
             var contexts = new EventHubSendContext<T>[_messages.Length];
@@ -256,7 +256,8 @@ public class EventHubProducer :
                     _initializerPipes.Length > i ? _initializerPipes[i] : null, _cancellationToken).ConfigureAwait(false);
             }
 
-            if (_context is BaseSendTransportContext transportContext)
+            BaseSendTransportContext? transportContext = _context as BaseSendTransportContext;
+            if (transportContext is not null)
             {
                 foreach (EventHubSendContext<T> candidate in contexts)
                     transportContext.ApplyPayloadAdmission(candidate);
@@ -271,6 +272,12 @@ public class EventHubProducer :
             {
                 if (_context.SendObservers.Count > 0)
                     await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSendAsync(c))).ConfigureAwait(false);
+
+                if (transportContext is not null)
+                {
+                    foreach (EventHubSendContext<T> candidate in contexts)
+                        transportContext.ApplyPayloadAdmission(candidate);
+                }
 
                 await _context.SendAsync(context, contexts).ConfigureAwait(false);
 

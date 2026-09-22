@@ -47,7 +47,10 @@ public sealed class PayloadAdmissionArchitectureTests
         int singleProvider = single.IndexOf("_context.SendAsync(context, sendContext)", StringComparison.Ordinal);
         Assert.True(singleAdmission >= 0);
         Assert.True(singleObserver > singleAdmission);
-        Assert.True(singleProvider > singleObserver);
+        Assert.Contains("await _context.SendObservers.PreSendAsync(sendContext)", single, StringComparison.Ordinal);
+        int singleAdmissionAfterObserver = single.IndexOf("transportContext.ApplyPayloadAdmission(sendContext)", singleObserver, StringComparison.Ordinal);
+        Assert.True(singleAdmissionAfterObserver > singleObserver);
+        Assert.True(singleProvider > singleAdmissionAfterObserver);
 
         string batch = source[batchStart..];
         int batchAdmission = batch.IndexOf("transportContext.ApplyPayloadAdmission(candidate)", StringComparison.Ordinal);
@@ -55,7 +58,10 @@ public sealed class PayloadAdmissionArchitectureTests
         int batchProvider = batch.IndexOf("_context.SendAsync(context, contexts)", StringComparison.Ordinal);
         Assert.True(batchAdmission >= 0);
         Assert.True(batchObserver > batchAdmission);
-        Assert.True(batchProvider > batchObserver);
+        Assert.Contains("await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSendAsync(c)))", batch, StringComparison.Ordinal);
+        int batchAdmissionAfterObserver = batch.IndexOf("transportContext.ApplyPayloadAdmission(candidate)", batchObserver, StringComparison.Ordinal);
+        Assert.True(batchAdmissionAfterObserver > batchObserver);
+        Assert.True(batchProvider > batchAdmissionAfterObserver);
     }
 
     [Fact]

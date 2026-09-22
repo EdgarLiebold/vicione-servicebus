@@ -34,6 +34,16 @@ internal static class PayloadAdmissionTransportBoundary
                 "The send body was serialized before payload admission could be attached.");
         }
 
+        if (context is not TransportSendContext transportContext)
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Serialization",
+                    "unknown",
+                    "Payload admission requires a transport send context at the provider boundary.",
+                    "Correct the named configuration before starting the host"));
+        }
+
         bool messageDataOffloadObserved = context.TryGetPayload(out MessageDataAdmissionEvidence? evidence)
             && evidence.HasStoredReference;
 
@@ -47,16 +57,6 @@ internal static class PayloadAdmissionTransportBoundary
                     "unknown",
                     "The send context carries payload admission from a different bus.",
                     "Create a separate send context for each bus"));
-        }
-
-        if (context is not TransportSendContext transportContext)
-        {
-            throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-                    "Serialization",
-                    "unknown",
-                    "Payload admission requires a transport send context at the provider boundary.",
-                    "Correct the named configuration before starting the host"));
         }
 
         if (context.ContentType is not { } contentType

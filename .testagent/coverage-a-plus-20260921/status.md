@@ -239,3 +239,13 @@ builds, Azure Unit 223/223 with Microsoft CodeCoverage, and official emulator 28
 coverage instrumentation. The emulator fixture had no findings. Two earlier exact-checkout
 attempts stopped before test execution because of MSSQL fixture startup and MTP named-pipe
 startup; details and the retained report hash are in the phase record.
+
+The Core payload-admission and Event Hubs observer slice now rejects a nontransport proxy before
+an admission marker is attached and revalidates serialized metadata after awaited send observers.
+Core Unit passed 6,267/6,267 with Microsoft CodeCoverage; the final real Event Hubs emulator run
+passed 53/53 with coverage and empty fixture findings. The complete Release Unit/Architecture gate
+passed 9,997/9,997 after a zero-warning build, and final adversarial review returned PASS. The
+selected Core `Admit` method is at CRAP 23.31 versus baseline 128.99; Event Hubs single and batch
+send methods are at 24.02 and 28.16 versus 36.10 and 41.04. See
+`payload-admission-observer-phase.md`. The last complete product-wide profile remains
+`44d9e3254`; global A+ is open.
