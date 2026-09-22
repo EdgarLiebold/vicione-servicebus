@@ -233,3 +233,9 @@ complete Unit/Architecture gate passed 9,992/9,992. The official emulator passed
 Microsoft CodeCoverage and empty fixture findings. Final read-only adversarial review returned
 PASS. See `azure-servicebus-receive-metadata-phase.md`. The last complete product-wide profile
 remains `44d9e3254`; global A+ is open.
+
+The clean exact source/test commit `8cd224525` passed locked restores, zero-warning Release
+builds, Azure Unit 223/223 with Microsoft CodeCoverage, and official emulator 28/28 without
+coverage instrumentation. The emulator fixture had no findings. Two earlier exact-checkout
+attempts stopped before test execution because of MSSQL fixture startup and MTP named-pipe
+startup; details and the retained report hash are in the phase record.

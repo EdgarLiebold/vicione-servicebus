@@ -47,3 +47,21 @@ build also completed with zero warnings and errors. The official local emulator 
 SHA-256 `05c0f3e8989dd4667f04ed1a4cfa202a8ab0cbf4996fc6d1f541c1546265fbff`.
 That emulator profile does not exercise `GetTransportProperties`; the focused Azure Unit profile
 above provides the method's direct coverage. Both profiles are retained separately.
+
+## Exact-commit verification
+
+Clean detached worktree `8cd224525f80cd8912212f9c1c0cbd9f20a263bd` passed locked
+restores and zero-warning Release builds for Azure Unit and Azure emulator. Its Azure Unit suite
+passed 223/223 with Microsoft CodeCoverage and no skips. The retained report
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/receive-metadata-exact-8cd224525.cobertura.xml`
+has SHA-256 `b42eadbb9469fcd49f4e64b220b26523a0106851231401d5ced30c7e874be11f`;
+`GetTransportProperties` has line-rate 1, branch-rate 1, complexity 14.
+
+The first exact-commit emulator fixture failed before tests because its MSSQL dependency container
+exited during startup. A second fixture became ready, but the Microsoft Testing Platform test host
+failed during named-pipe startup before executing any tests (exit 134). A final exact-commit run
+without coverage instrumentation passed all 28 emulator tests with no failures or skips, run
+`vicione-17b097b4cdfd`. Its fixture findings were empty; the JSON is retained at
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/receive-metadata-exact-8cd224525-fixture-findings.json`.
+The worktree test result and earlier instrumented source-worktree emulator pass are distinct
+evidence; no exact-commit instrumented emulator success is claimed.
