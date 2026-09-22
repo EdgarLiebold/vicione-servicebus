@@ -28,19 +28,41 @@ internal class TimeoutConsumeContext<TMessage> :
 
     public TMessage Message => _context.Message;
 
-    public override async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
+    public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        ArgumentNullException.ThrowIfNull(exception);
+
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        return NotifyFaultedCoreAsync(context, duration, consumerType, exception, cancellationToken);
+    }
+
+    async Task NotifyFaultedCoreAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
+        CancellationToken cancellationToken)
+        where T : class
     {
         Exception reportedException = exception;
+        bool usesTimeoutContext = ReferenceEquals(context, this)
+            || context.TryGetPayload<TimeoutConsumeContext<TMessage>>(out var timeoutContext)
+            && ReferenceEquals(timeoutContext, this);
+        CancellationToken messageCancellationToken = usesTimeoutContext
+            ? _context.CancellationToken
+            : context.CancellationToken;
 
         switch (exception)
         {
-            case OperationCanceledException canceledException when canceledException.CancellationToken == _context.CancellationToken:
+            case OperationCanceledException canceledException when canceledException.CancellationToken == messageCancellationToken:
                 break;
 
             default:
-                if (!_context.CancellationToken.IsCancellationRequested)
+                if (!messageCancellationToken.IsCancellationRequested)
                 {
                     if (exception is OperationCanceledException timeoutException
+                        && timeoutException.CancellationToken == CancellationToken
                         && CancellationToken.IsCancellationRequested)
                     {
                         reportedException = new ConsumerCanceledException(
@@ -48,12 +70,18 @@ internal class TimeoutConsumeContext<TMessage> :
                             timeoutException);
                     }
 
-                    await GenerateFaultAsync(_context, reportedException).ConfigureAwait(false);
+                    Task generation = (usesTimeoutContext
+                        ? GenerateFaultAsync(_context, reportedException)
+                        : GenerateFaultAsync(context, reportedException))
+                        ?? throw new InvalidOperationException("The consume context returned no fault-generation task.");
+                    await generation.ConfigureAwait(false);
                 }
                 break;
         }
 
-        await ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, reportedException, cancellationToken: cancellationToken).ConfigureAwait(false);
+        Task notification = ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, reportedException, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The receive context returned no consume-fault notification task.");
+        await notification.ConfigureAwait(false);
     }
 
     public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
