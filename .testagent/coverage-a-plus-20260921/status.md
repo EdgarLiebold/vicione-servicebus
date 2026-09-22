@@ -28,6 +28,15 @@ product-wide aggregate below; global A+ remains open.
 
 ## Latest product-wide measurement
 
+At exact source/test commit `f7d924f9477bc95bfc46bda67e3d545b8721066b`, 36 fresh reports cover
+32/32 product assemblies. Unit/Infrastructure passed 9,602/9,602, providers passed 545/545, and the
+no-AVX2 Abstractions run passed 759/759, all without failures or skips. Four canonical fixtures have
+empty findings. The aggregate is 83,286/93,309 lines (89.2583%), a conservative branch interval of
+29,698–32,135/36,695 (80.9320–87.5732%), and 89/25,902 methods with CRAP above 30. See
+`product-wide-profile-f7d924f94.md` and the artifact-local `analysis-36/summary.json`,
+`methods.json`, and `provenance.json`. Independent read-only adversarial review reproduced the
+totals and hashes and returned PASS. Global A+ remains open.
+
 At exact source/test commit `a955052272b744ceb44333a51035ac9ce4f66e3d`,
 36 fresh reports from 22 Unit/Infrastructure projects, 13 local-provider
 projects, and one no-AVX2 Abstractions run cover 32/32 product assemblies.
