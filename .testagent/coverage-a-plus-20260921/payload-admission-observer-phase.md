@@ -60,3 +60,32 @@ checks were added. Final read-only adversarial re-review returned PASS. Microsof
 the focused cases, `run-tests` guided .NET 10 MTP commands, and `coverage-analysis` and
 `crap-score` guided hotspot selection and measurement. The last complete product-wide profile
 remains `44d9e3254`; global A+ remains open.
+
+## Exact source/test commit
+
+Commit `0ddaa99282337cc50ba961a53d765b99cad95b89` was checked in a clean detached worktree
+with no tracked source or test diff. Locked restores of the Core and Event Hubs test projects and
+the Unit and complete Engineering solutions succeeded. The Release Unit solution and Event Hubs
+test-project builds had zero warnings and errors. After the complete Engineering restore, the
+exact Unit/Architecture gate passed 9,997/9,997, with no skips. Core Unit passed 6,267/6,267
+with Microsoft CodeCoverage.
+The Event Hubs local emulator passed 53/53 with Microsoft CodeCoverage, no skips, and empty
+fixture findings, run `vicione-1261396b2900`.
+
+The exact Core report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/exact-0ddaa9928/payload-admission-exact-0ddaa9928-core.cobertura.xml`,
+SHA-256 `7d69b0fd142c92ba4c1bd21935e29f4b65da3c37ba5956403dc652c6ce7b18c7`.
+It measures `Admit` at 37/43 lines, 81.82% branches, complexity 22, and CRAP 23.31.
+The exact Event Hubs report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/exact-0ddaa9928/payload-admission-exact-0ddaa9928-eventhubs.cobertura.xml`,
+SHA-256 `e7b288fbd7ede9dd57f9c19cbac125c734192e1dae738092880e0b610a61d606`.
+It measures the single send at 28/29 lines, 70.83% branches, CRAP 24.02, and batch send at
+32/34 lines, 78.57% branches, CRAP 28.16. The exact fixture findings are retained beside the
+reports.
+
+The first isolated Unit/Architecture run passed 9,996/9,997: its one architecture failure
+evaluated an MTP property on an unrelated, not yet restored LocalIntegration project. The
+property was empty before the complete Engineering restore and `true` afterward. A filtered
+repeat passed 1/1. One sandboxed filtered attempt stopped before test execution because .NET's
+named-pipe host could not bind its socket; the successful repeat and complete gate ran outside
+that restriction. These diagnostic attempts are not counted as passing gates.

@@ -249,3 +249,9 @@ selected Core `Admit` method is at CRAP 23.31 versus baseline 128.99; Event Hubs
 send methods are at 24.02 and 28.16 versus 36.10 and 41.04. See
 `payload-admission-observer-phase.md`. The last complete product-wide profile remains
 `44d9e3254`; global A+ is open.
+
+Exact source/test commit `0ddaa9928` additionally passed locked restores including the full
+Engineering graph, zero-warning Release builds, the complete 9,997/9,997 Unit/Architecture gate,
+6,267/6,267 Core Unit tests with Microsoft CodeCoverage, and 53/53 Event Hubs emulator tests with
+Microsoft CodeCoverage and empty fixture findings. Exact report hashes and the initial
+incomplete-restore architecture diagnostic are in `payload-admission-observer-phase.md`.
