@@ -2,6 +2,14 @@
 
 ## Current focused work
 
+Runtime-typed recurring scheduler dispatch passes 14/14 focused tests and
+6,271/6,271 Core Unit tests with canonical Microsoft CodeCoverage; both
+selected converter methods are below CRAP 30 and independent adversarial
+review returned PASS. The full Unit/Architecture gate passed 10,022/10,022;
+exact-commit verification is pending. See `recurring-scheduler-dispatch-phase.md`.
+This focused slice has not established A+ line/branch coverage for the
+converter methods or all recurring scheduling variants.
+
 The Amazon SQS receive-endpoint validation slice is complete on the current
 source and test bytes: 200/200 SQS Unit tests with Microsoft CodeCoverage,
 10,018/10,018 Unit/Architecture tests, zero-warning Release SQS build, and

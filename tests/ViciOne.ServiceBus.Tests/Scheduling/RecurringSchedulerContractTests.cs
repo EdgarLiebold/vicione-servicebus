@@ -1,4 +1,5 @@
 using System.Reflection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -176,6 +177,86 @@ public sealed class RecurringSchedulerContractTests
         Assert.Equal(40, inspectedOverloads);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "runtime-typed-recurring-command-preserves-contract-and-payload")]
+    public async Task RuntimeTypedRecurringSend_PreservesTheActualContractAndPayloadAsync()
+    {
+        IRecurringMessageScheduler scheduler = CreateRecordingScheduler(out RecordingSendEndpointProxy recording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var payload = new RecurringPayload("order-42");
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage runtime = await scheduler.ScheduleRecurringSendAsync(
+            DestinationAddress, schedule, (object)payload, cancellation.Token);
+        var runtimeCommand = Assert.IsType<ScheduleRecurringMessageCommand<RecurringPayload>>(
+            Assert.Single(recording.Calls).Arguments[0]);
+        Assert.Same(schedule, runtimeCommand.Schedule);
+        Assert.Equal(DestinationAddress, runtimeCommand.Destination);
+        Assert.Same(payload, runtimeCommand.Payload);
+        Assert.Contains(MessageUrn.ForTypeString<RecurringPayload>(), runtimeCommand.PayloadType);
+        Assert.Equal(typeof(ScheduleRecurringMessage), recording.Calls[0].Method.GetGenericArguments()[0]);
+        Assert.Equal(cancellation.Token, recording.Calls[0].Arguments[^1]);
+        var runtimeHandle = Assert.IsType<ScheduledRecurringMessageHandle<RecurringPayload>>(runtime);
+        Assert.Same(payload, runtimeHandle.Payload);
+        Assert.Same(schedule, runtimeHandle.Schedule);
+        Assert.Equal(DestinationAddress, runtimeHandle.Destination);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "declared-recurring-contract-preserves-pipe-and-cancellation")]
+    public async Task DeclaredRecurringContract_PreservesTheSelectedContractPipeAndCancellationAsync()
+    {
+        IRecurringMessageScheduler scheduler = CreateRecordingScheduler(out RecordingSendEndpointProxy recording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var payload = new RecurringPayload("order-42");
+        IPipe<SendContext> pipe = DispatchProxy.Create<IPipe<SendContext>, UnexpectedInvocationProxy>();
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage declared = await scheduler.ScheduleRecurringSendAsync(
+            DestinationAddress, schedule, (object)payload, typeof(IRecurringPayload), pipe, cancellation.Token);
+        var call = Assert.Single(recording.Calls);
+        var declaredCommand = Assert.IsType<ScheduleRecurringMessageCommand<IRecurringPayload>>(call.Arguments[0]);
+        Assert.Same(payload, declaredCommand.Payload);
+        Assert.Same(schedule, declaredCommand.Schedule);
+        Assert.Equal(DestinationAddress, declaredCommand.Destination);
+        Assert.Equal([MessageUrn.ForTypeString<IRecurringPayload>()], declaredCommand.PayloadType);
+        Assert.DoesNotContain(MessageUrn.ForTypeString<RecurringPayload>(), declaredCommand.PayloadType);
+        Assert.Same(pipe, call.Arguments[1]);
+        Assert.Equal(cancellation.Token, call.Arguments[^1]);
+        Assert.Equal(typeof(ScheduleRecurringMessage), call.Method.GetGenericArguments()[0]);
+        var declaredHandle = Assert.IsType<ScheduledRecurringMessageHandle<IRecurringPayload>>(declared);
+        Assert.Same(payload, declaredHandle.Payload);
+        Assert.Same(schedule, declaredHandle.Schedule);
+        Assert.Equal(DestinationAddress, declaredHandle.Destination);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "declared-recurring-contract-rejects-mismatched-payload-before-send")]
+    public async Task DeclaredRecurringContract_RejectsMismatchedPayloadBeforeSendingAsync(bool withPipe)
+    {
+        IRecurringMessageScheduler scheduler = CreateRecordingScheduler(out RecordingSendEndpointProxy recording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        IPipe<SendContext> pipe = DispatchProxy.Create<IPipe<SendContext>, UnexpectedInvocationProxy>();
+
+        ArgumentException failure = withPipe
+            ? await Assert.ThrowsAsync<ArgumentException>(() => scheduler.ScheduleRecurringSendAsync(
+                DestinationAddress, schedule, new object(), typeof(IRecurringPayload), pipe, TestContext.Current.CancellationToken))
+            : await Assert.ThrowsAsync<ArgumentException>(() => scheduler.ScheduleRecurringSendAsync(
+                DestinationAddress, schedule, new object(), typeof(IRecurringPayload), TestContext.Current.CancellationToken));
+
+        Assert.Contains("Unexpected message type", failure.Message, StringComparison.Ordinal);
+        Assert.Empty(recording.Calls);
+    }
+
+    private static IRecurringMessageScheduler CreateRecordingScheduler(out RecordingSendEndpointProxy recording)
+    {
+        ISendEndpoint endpoint = DispatchProxy.Create<IAdvancedSendEndpoint, RecordingSendEndpointProxy>();
+        recording = (RecordingSendEndpointProxy)(object)endpoint;
+        return new EndpointRecurringMessageScheduler(endpoint);
+    }
+
     private static async Task<Exception> CaptureInvocationExceptionAsync(MethodInfo method, object target, object?[] arguments)
     {
         try
@@ -198,6 +279,13 @@ public sealed class RecurringSchedulerContractTests
 
     private sealed record ScheduledMessage;
 
+    private interface IRecurringPayload
+    {
+        string Id { get; }
+    }
+
+    private sealed record RecurringPayload(string Id) : IRecurringPayload;
+
     private sealed class TestTimeProvider : TimeProvider
     {
     }
@@ -217,5 +305,19 @@ public sealed class RecurringSchedulerContractTests
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
             throw new InvalidOperationException($"The invalid boundary invoked {targetMethod?.Name}.");
+    }
+
+    private class RecordingSendEndpointProxy : DispatchProxy
+    {
+        public List<(MethodInfo Method, object?[] Arguments)> Calls { get; } = [];
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(ISendEndpoint.SendAsync) || args is null)
+                throw new InvalidOperationException($"The recurring scheduler unexpectedly invoked {targetMethod?.Name}.");
+
+            Calls.Add((targetMethod, args.ToArray()));
+            return Task.CompletedTask;
+        }
     }
 }
