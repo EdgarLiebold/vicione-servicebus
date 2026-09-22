@@ -288,3 +288,11 @@ CodeCoverage, xUnit TRX, and empty fixture findings. Two earlier sandboxed resto
 did not produce a validated build; the successful run used the local NuGet cache in the approved
 execution context. Hashes, exact TRX counters, and broker-log evidence are in
 `eventhub-header-provider-phase.md`.
+
+A fresh product-wide profile on exact source/test commit `4488b29fe` passed 9,552/9,552 Unit,
+544/544 provider, and 751/751 supplementary no-AVX2 Abstractions tests. All 36 fresh reports
+are parseable, all 32 source assemblies are observed, six fixture finding files are empty, and
+the tracked `src`/`tests` diff is empty. It measures 83,067/93,200 lines = 89.1277%, a conservative
+branch interval of 29,565–32,111/36,649 = 80.6707–87.6177%, and 97/25,886 methods above
+CRAP 30. The no-fixture and missing-outage-control attempts were excluded; details and current
+hotspots are in `product-wide-profile-4488b29fe.md`. Global A+ remains open.

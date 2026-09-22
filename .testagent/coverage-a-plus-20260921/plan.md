@@ -4,7 +4,7 @@
 
 | Requirement | Planned evidence |
 | --- | --- |
-| `A+ für Line Coverage, Branch Coverage und CRAP` | Fresh 32-assembly, 29-report Unit/Architecture + local-provider aggregate after every completed phase; eliminate or explicitly dispose every CRAP > 30 method and retain the honest Cobertura branch interval. |
+| `A+ für Line Coverage, Branch Coverage und CRAP` | Fresh 32-assembly, 36-report Unit/Infrastructure + local-provider + no-AVX2 aggregate after completed phases; eliminate or explicitly dispose every CRAP > 30 method and retain the honest Cobertura branch interval. |
 | `nur hochwertige Tests, die echtes Produktverhalten, Fehlerfälle, Grenzen und Regressionen hart prüfen` | Each added test must name and assert an observable contract plus a negative, boundary, failure, or regression discriminator. Pseudo-mutation review must show which product mutations the assertions kill. |
 | Microsoft skills are mandatory | This campaign uses `code-testing-agent` for this plan, `find-untested-sources` for the static pairing inventory, `coverage-analysis` for ranked CRAP, `run-tests` for MTP commands, and performs `test-gap-analysis` plus `assertion-quality` before completion. |
 | adversarial red-team reviews | Read-only review after each coherent phase, followed by a green narrow run and a final product-wide rerun on the exact measured bytes. |
@@ -38,7 +38,7 @@
    only when a written risk disposition shows that a test would have no product
    value; a skipped method may not leave the requested CRAP gate red.
 7. **Final gates.** Run assertion-quality and verified pseudo-mutations, full
-   Unit/Architecture and all 13 provider projects, rebuild the 29-report
+   Unit/Architecture and all 13 provider projects, rebuild the 36-report
    aggregate, obtain adversarial read-only review, update changelog/evidence,
    and push only when repository authorization permits.
 
