@@ -19,6 +19,21 @@ internal sealed class JobStateMachine :
     /// <summary>Defines job submission, scheduling, execution, retry, cancellation, and finalization behavior.</summary>
     public JobStateMachine()
     {
+        ConfigureEventsAndSchedules();
+        ConfigureSubmissionAndSlotAllocation();
+        ConfigureAttemptLifecycle();
+        ConfigureTerminalAttemptEvents();
+        ConfigureStaleAttemptsAndUpdates();
+        ConfigureStateQuery();
+        ConfigureCancellation();
+        ConfigureRetries();
+        ConfigureManualExecutionAndFinalization();
+        ConfigureRecurringSubmissions();
+        ConfigureStateEntryActivities();
+    }
+
+    void ConfigureEventsAndSchedules()
+    {
         Event(() => JobSubmitted, x => x.CorrelateById(m => m.Message.JobId));
 
         Event(() => JobSlotAllocated, x =>
@@ -71,7 +86,10 @@ internal sealed class JobStateMachine :
 
         InstanceState(x => x.CurrentState, WaitingForSlot, Started, Completed, Faulted, Canceled, StartingJobAttempt,
             AllocatingJobSlot, WaitingToRetry, CancellationPending);
+    }
 
+    void ConfigureSubmissionAndSlotAllocation()
+    {
         Initially(
             When(JobSubmitted)
                 .InitializeJob()
@@ -120,7 +138,10 @@ internal sealed class JobStateMachine :
             Ignore(AttemptCompleted),
             Ignore(AttemptCanceled)
         );
+    }
 
+    void ConfigureAttemptLifecycle()
+    {
         During(StartingJobAttempt,
             When(StartJobAttemptFaulted, context => context.Saga.AttemptId == context.Message.Message.AttemptId)
                 .Then(context =>
@@ -191,7 +212,10 @@ internal sealed class JobStateMachine :
                         )
                 )
         );
+    }
 
+    void ConfigureTerminalAttemptEvents()
+    {
         During(Completed,
             When(AttemptCompleted, context => context.Saga.AttemptId == context.Message.AttemptId)
                 .Then(context => ApplyCheckpointUpdate(context.Saga, context.Message.CheckpointChanged, context.Message.Checkpoint))
@@ -242,7 +266,10 @@ internal sealed class JobStateMachine :
                         .TransitionTo(Canceled)
                 )
         );
+    }
 
+    void ConfigureStaleAttemptsAndUpdates()
+    {
         // AttemptId is the generation token for a job. Messages from an earlier generation are valid late deliveries,
         // not errors, and must never mutate the current saga. Current-generation events retain the existing state rules.
         During([WaitingToRetry, Canceled, CancellationPending],
@@ -280,7 +307,10 @@ internal sealed class JobStateMachine :
                     if (context.Saga.AttemptId == context.Message.AttemptId)
                         ReplaceCheckpoint(context.Saga, context.Message.Checkpoint);
                 }));
+    }
 
+    void ConfigureStateQuery()
+    {
         DuringAny(
             When(GetJobState)
                 .RespondAwaited(async context =>
@@ -307,7 +337,10 @@ internal sealed class JobStateMachine :
                     };
                 })
         );
+    }
 
+    void ConfigureCancellation()
+    {
         During([WaitingForSlot, WaitingToRetry],
             When(CancelJob)
                 .Unschedule(JobSlotWaitElapsed)
@@ -347,7 +380,10 @@ internal sealed class JobStateMachine :
                 .PublishJobCanceled(context => context.Saga.Reason ?? JobCancellationReasons.CancellationRequested)
                 .TransitionTo(Canceled)
         );
+    }
 
+    void ConfigureRetries()
+    {
         During([AllocatingJobSlot, StartingJobAttempt, Started, Completed, CancellationPending],
             Ignore(RetryJob));
 
@@ -367,8 +403,10 @@ internal sealed class JobStateMachine :
             Ignore(AttemptFaulted),
             When(JobRetryDelayElapsed.Received)
                 .RequestRetryJobSlot(this));
+    }
 
-
+    void ConfigureManualExecutionAndFinalization()
+    {
         // Explicit execution is valid only while the saga is waiting for capacity or its scheduled event.
         During([AllocatingJobSlot, StartingJobAttempt, Started, Completed, Canceled, Faulted, WaitingToRetry, CancellationPending],
             Ignore(RunJob));
@@ -387,8 +425,10 @@ internal sealed class JobStateMachine :
             When(FinalizeJob)
                 .FinalizeJobAttempts()
                 .Finalize());
+    }
 
-
+    void ConfigureRecurringSubmissions()
+    {
         // A repeated submission updates a recurring schedule; other duplicates leave saga state unchanged.
         DuringAny(
             When(JobSubmitted)
@@ -406,8 +446,10 @@ internal sealed class JobStateMachine :
                         .WaitForNextScheduledTime(this)
                 )
         );
+    }
 
-
+    void ConfigureStateEntryActivities()
+    {
         WhenEnter(Completed, x => x.SendJobSlotReleased(JobSlotDisposition.Completed));
         WhenEnter(Faulted, x => x.SendJobSlotReleased(JobSlotDisposition.Faulted));
         WhenEnter(WaitingToRetry, x => x.SendJobSlotReleased(JobSlotDisposition.Faulted));
