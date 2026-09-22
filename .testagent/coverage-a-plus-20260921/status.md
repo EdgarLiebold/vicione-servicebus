@@ -2,6 +2,22 @@
 
 ## Latest focused slice
 
+The Core timeout-consumer fault slice found semantic defects even though the
+old asynchronous path already reported 12/12 lines, 10/10 branches, and CRAP
+10. The corrected implementation separates its own wrapper/scope chain from
+foreign contexts, publishes owned timeout faults through the original delivery
+context, preserves the passed context for receive notification, recognizes
+only its exact canceled timeout token, and owns every asynchronous outcome.
+Three fail-first rounds and a complete-gate regression corrected direct,
+scoped, and publication behavior. The final 25 A-grade methods run as 26/26
+cases; Core passes 6,329/6,329, the Release Unit/Architecture build has zero
+warnings/errors, and the complete gate passes 10,096/10,096. The method family
+has 42/42 lines, full reported branch coverage, and maximum CRAP 24. A clean
+detached checkout of exact code/test commit `2c61c180a` passed locked restore,
+zero-warning build, 26/26 focused coverage, and 6,329/6,329 Core tests. Final
+read-only adversarial review returned PASS. See
+`timeout-consume-fault-phase.md`. Global A+ remains open.
+
 The Core timeout-activity fault slice corrects unrelated cancellation being
 reported as a configured timeout, message-context cancellation being decided
 from an owning activity token, pre-canceled caller side effects, deferred
