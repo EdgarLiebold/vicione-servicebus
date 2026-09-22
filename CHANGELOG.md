@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Circuit-breaker runtime settings now reject decreasing recovery-delay sequences even when an
+  internal caller bypasses the public options API. Runtime validation tests cover complete error
+  aggregation, exact scalar boundaries, nonfinite ratios, missing and nonpositive durations,
+  equal durations, and inner sequence inversions.
 - Timeout activity and consumer fault handling now use the active delivery context as the
   cancellation authority, reclassify only cancellation from the elapsed configured timeout,
   validate required inputs before honoring caller cancellation, and fully own fault generation and

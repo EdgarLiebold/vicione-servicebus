@@ -28,6 +28,8 @@ internal sealed record CircuitBreakerSettings(
             yield return this.Failure(nameof(BreakDurations), "must contain at least one duration");
         else if (BreakDurations.Any(duration => duration <= TimeSpan.Zero))
             yield return this.Failure(nameof(BreakDurations), "must contain only positive durations");
+        else if (!BreakDurations.SequenceEqual(BreakDurations.Order()))
+            yield return this.Failure(nameof(BreakDurations), "must be ordered from shortest to longest");
 
         if (TimeProvider is null)
             yield return this.Failure(nameof(TimeProvider), "must not be null");
