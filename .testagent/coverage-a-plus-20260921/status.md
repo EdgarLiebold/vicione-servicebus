@@ -6,7 +6,9 @@ Runtime-typed recurring scheduler dispatch passes 14/14 focused tests and
 6,271/6,271 Core Unit tests with canonical Microsoft CodeCoverage; both
 selected converter methods are below CRAP 30 and independent adversarial
 review returned PASS. The full Unit/Architecture gate passed 10,022/10,022;
-exact-commit verification is pending. See `recurring-scheduler-dispatch-phase.md`.
+the isolated exact commit `2419d384c` passed locked restore, a zero-warning
+Release build, and 6,271/6,271 Core tests with the same target coverage.
+See `recurring-scheduler-dispatch-phase.md`.
 This focused slice has not established A+ line/branch coverage for the
 converter methods or all recurring scheduling variants.
 

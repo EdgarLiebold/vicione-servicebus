@@ -57,5 +57,20 @@ claim A+ line or branch coverage for all recurring scheduling variants.
 The complete Unit/Architecture gate passed 10,022/10,022 with zero failures
 and skips. Its log SHA-256 is
 `f1d6c8fa44eee8306ec4dd44e772f526338cb369e9b60ee5d72083468f97e417`.
-The gate log is in the `recurring-phase/` artifact directory. Exact-commit
-verification is pending.
+The gate log is in the `recurring-phase/` artifact directory.
+
+Commit `2419d384c26841382644e20256b539a703498a5b` was checked in a
+separate clean detached worktree. The before/after identity files contain
+that exact hash, and both tracked-status files are empty. Locked restore
+passed; the Release Core test-project build had zero warnings and errors.
+The complete Core Unit suite passed 6,271/6,271 with canonical Microsoft
+CodeCoverage, reproducing the two target method results above. The exact
+report SHA-256 is
+`f45eb3715db01bb8a0ccb4eaae92e629b41876ee837bae38c34cbb8543d871f4`,
+the exact test-log SHA-256 is
+`7811bd4d29a1c04e3f1d92b3fd2a919c151935f605669dd0a570325c902a4ef0`,
+and the build-log SHA-256 is
+`e4d101835c0e2826e3500659bf51eb1945a0b4634b222fa16edbc2f746c89eff`.
+Those files are in
+`artifacts/coverage-a-plus-20260922-4488b29fe/exact-2419d384c/`.
+The checkout was removed after its final identity and status were recorded.
