@@ -4,6 +4,7 @@ using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 using ViciOne.ServiceBus.AzureServiceBus.Topology;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -11,6 +12,46 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 
 public sealed class ServiceBusHostRetryPolicyTests
 {
+    [Theory]
+    [InlineData(StoppingFailureCause.BrokerTimeout)]
+    [InlineData(StoppingFailureCause.HttpUnavailable)]
+    [InlineData(StoppingFailureCause.NoHttpResponse)]
+    [InlineData(StoppingFailureCause.SocketTimeout)]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "stopping-host-preserves-azure-cause")]
+    public async Task StoppingHost_PreservesAzureSendFailureForDurableClassificationAsync(StoppingFailureCause cause)
+    {
+        IServiceBusHostConfiguration host = CreateHost();
+        using var stopping = new CancellationTokenSource();
+        Exception brokerFailure = cause switch
+        {
+            StoppingFailureCause.BrokerTimeout => new ServiceBusException(true, "broker timeout", "queue",
+                ServiceBusFailureReason.ServiceTimeout, null),
+            StoppingFailureCause.HttpUnavailable => new RequestFailedException(503, "service unavailable"),
+            StoppingFailureCause.NoHttpResponse => new RequestFailedException(0, "no HTTP response"),
+            StoppingFailureCause.SocketTimeout => new TimeoutException("send timed out"),
+            _ => throw new ArgumentOutOfRangeException(nameof(cause))
+        };
+
+        ConnectionException stopped = await Assert.ThrowsAsync<ConnectionException>(() =>
+            host.RetryAsync(() =>
+            {
+                stopping.Cancel();
+                return Task.FromException(brokerFailure);
+            }, TimeProvider.System, stopping.Token));
+
+        Assert.Same(brokerFailure, stopped.InnerException);
+        Assert.True(new ServiceBusSendFailureClassifier().TryClassify(stopped, out TransportSendFailureKind kind));
+        Assert.Equal(TransportSendFailureKind.Transient, kind);
+    }
+
+    public enum StoppingFailureCause
+    {
+        BrokerTimeout,
+        HttpUnavailable,
+        NoHttpResponse,
+        SocketTimeout
+    }
+
     [Theory]
     [InlineData(ServiceBusFailureReason.MessagingEntityDisabled, false, true, false)]
     [InlineData(ServiceBusFailureReason.MessagingEntityNotFound, false, false, true)]

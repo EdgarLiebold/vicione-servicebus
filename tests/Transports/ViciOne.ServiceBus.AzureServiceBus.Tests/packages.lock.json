@@ -42,6 +42,16 @@
           "xunit.v3.core.mtp-v2": "[4.0.0]"
         }
       },
+      "AMQPNetLite.Core": {
+        "type": "Transitive",
+        "resolved": "2.4.3",
+        "contentHash": "ScD4522aae8u9pWaREuc0/EmbeYyI52YBoN0/HFfjkiPKH7GhSnUMEKidTCVYsPg+C1wcmLSJWa335OOqEptlw=="
+      },
+      "Apache.NMS": {
+        "type": "Transitive",
+        "resolved": "2.2.0",
+        "contentHash": "bp6v0CruKIawIOgCiP7+zIvcMo4qFm8E+Xh4pTbL0hq27ccd+mWZSRxox3kOb7eoGgPmmFxX+xRlVj6soxKtAw=="
+      },
       "Azure.Core": {
         "type": "Transitive",
         "resolved": "1.60.0",
@@ -321,6 +331,14 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.activemq": {
+        "type": "Project",
+        "dependencies": {
+          "Apache.NMS.AMQP": "[2.4.0, )",
+          "Apache.NMS.ActiveMQ": "[2.2.0, )",
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.azureservicebus": {
         "type": "Project",
         "dependencies": {
@@ -388,6 +406,34 @@
           "Microsoft.Extensions.Configuration.Binder": "[10.0.12, )",
           "Microsoft.Extensions.Configuration.Json": "[10.0.12, )",
           "Microsoft.Extensions.Configuration.UserSecrets": "[10.0.12, )"
+        }
+      },
+      "vicione.servicebus.tests.internalaccess": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "Apache.NMS.ActiveMQ": {
+        "type": "CentralTransitive",
+        "requested": "[2.2.0, )",
+        "resolved": "2.2.0",
+        "contentHash": "m0EPcmF6JtUuCEAoToy3opPIVmXCKbvgt5/+2tEk+7fROQw7zFsp1lOaPg9tS7vf+cqNbKEhqzhc+j6VRLgPow==",
+        "dependencies": {
+          "Apache.NMS": "2.2.0",
+          "SharpZipLib": "1.3.3"
+        }
+      },
+      "Apache.NMS.AMQP": {
+        "type": "CentralTransitive",
+        "requested": "[2.4.0, )",
+        "resolved": "2.4.0",
+        "contentHash": "05soAOUmtAuaza0kqNLijs9jdpYpszViLF105q0/26cz9CGRMh8X2hXOUWLnvHvX7HdUphqQU7EyJKnLoyW9kQ==",
+        "dependencies": {
+          "AMQPNetLite.Core": "2.4.3",
+          "Apache.NMS": "2.2.0"
         }
       },
       "Azure.Identity": {
@@ -511,6 +557,12 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
           "Microsoft.Extensions.Primitives": "10.0.12"
         }
+      },
+      "SharpZipLib": {
+        "type": "CentralTransitive",
+        "requested": "[1.4.2, )",
+        "resolved": "1.4.2",
+        "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
       }
     }
   }

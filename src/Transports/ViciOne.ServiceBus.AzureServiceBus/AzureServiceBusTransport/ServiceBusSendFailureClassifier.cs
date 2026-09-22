@@ -12,6 +12,12 @@ public sealed class ServiceBusSendFailureClassifier : ITransportSendFailureClass
     {
         ArgumentNullException.ThrowIfNull(exception);
 
+        if (HasForeignConnectionCause(exception) && !HasAzureTransportCause(exception))
+        {
+            failureKind = TransportSendFailureKind.Unclassified;
+            return false;
+        }
+
         var sawTransient = false;
         if (HasPermanentCause(exception, ref sawTransient))
         {
@@ -21,6 +27,45 @@ public sealed class ServiceBusSendFailureClassifier : ITransportSendFailureClass
 
         failureKind = sawTransient ? TransportSendFailureKind.Transient : TransportSendFailureKind.Unclassified;
         return sawTransient;
+    }
+
+    static bool HasForeignConnectionCause(Exception exception)
+    {
+        if (exception is ConnectionException and not ServiceBusConnectionException
+            && exception.GetType() != typeof(ConnectionException))
+            return true;
+
+        if (exception is AggregateException aggregate)
+        {
+            foreach (var cause in aggregate.InnerExceptions)
+            {
+                if (HasForeignConnectionCause(cause))
+                    return true;
+            }
+
+            return false;
+        }
+
+        return exception.InnerException is { } inner && HasForeignConnectionCause(inner);
+    }
+
+    static bool HasAzureTransportCause(Exception exception)
+    {
+        if (exception is ServiceBusConnectionException or ServiceBusException)
+            return true;
+
+        if (exception is AggregateException aggregate)
+        {
+            foreach (var cause in aggregate.InnerExceptions)
+            {
+                if (HasAzureTransportCause(cause))
+                    return true;
+            }
+
+            return false;
+        }
+
+        return exception.InnerException is { } inner && HasAzureTransportCause(inner);
     }
 
     static bool HasPermanentCause(Exception exception, ref bool sawTransient)

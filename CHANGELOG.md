@@ -80,6 +80,11 @@ entry below records what the current work changed for anyone reading the source.
   non-transient SDK failures outside entity recovery and permanent HTTP statuses stop. HTTP status 0 remains retryable,
   missing broker entities retain send-side recovery, and the Azure classifier leaves generic
   connection failures to the transport that raised them.
+- In applications that register Azure Service Bus before ActiveMQ, Azure's reliable-send classifier
+  now delegates failures marked by a foreign transport connection type. This prevents a nested
+  timeout or HTTP status from turning an ActiveMQ configuration failure into a durable retry.
+  Azure's own retry-stop connection wrapper remains classifiable; tests exercise the actual retry
+  wrapper and verify immediate InMemory outbox quarantine with both transports registered.
 - Assembly directory scans now resolve candidates from their selected files instead of binding
   first by the file's simple name, which could substitute an unrelated already loaded assembly.
   Invalid images remain skippable; other load failures report the error from the selected path.

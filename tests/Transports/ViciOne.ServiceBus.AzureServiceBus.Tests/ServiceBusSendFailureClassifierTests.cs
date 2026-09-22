@@ -2,6 +2,7 @@ using System.Net.WebSockets;
 using Azure;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.ActiveMq;
 using ViciOne.ServiceBus.AzureServiceBus;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -80,6 +81,57 @@ public sealed class ServiceBusSendFailureClassifierTests
         Assert.Equal(TransportSendFailureKind.Unclassified, kind);
     }
 
+    [Theory]
+    [InlineData(ForeignFailureCause.Timeout)]
+    [InlineData(ForeignFailureCause.WebSocket)]
+    [InlineData(ForeignFailureCause.HttpUnavailable)]
+    [InlineData(ForeignFailureCause.HttpForbidden)]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "foreign-connection-nested-typed-cause-delegates")]
+    public void ForeignConnectionWithTypedCause_DelegatesToItsTransport(ForeignFailureCause cause)
+    {
+        Exception nested = cause switch
+        {
+            ForeignFailureCause.Timeout => new TimeoutException("connection timed out"),
+            ForeignFailureCause.WebSocket => new WebSocketException("socket closed"),
+            ForeignFailureCause.HttpUnavailable => new RequestFailedException(503, "unavailable"),
+            ForeignFailureCause.HttpForbidden => new RequestFailedException(403, "forbidden"),
+            _ => throw new ArgumentOutOfRangeException(nameof(cause))
+        };
+        var failure = new ActiveMqConnectionException("broker connection",
+            new ActiveMqTransportConfigurationException("invalid endpoint", nested));
+
+        var azure = new ServiceBusSendFailureClassifier();
+        Assert.False(azure.TryClassify(failure, out TransportSendFailureKind azureKind));
+        Assert.Equal(TransportSendFailureKind.Unclassified, azureKind);
+
+        var activeMq = new ActiveMqSendFailureClassifier();
+        Assert.True(activeMq.TryClassify(failure, out TransportSendFailureKind activeMqKind));
+        Assert.Equal(TransportSendFailureKind.Permanent, activeMqKind);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "azure-permanent-aggregate-cause-retains-ownership")]
+    public void AggregateWithForeignConnection_PreservesPermanentAzureBrokerCause()
+    {
+        var foreign = new ActiveMqConnectionException("broker connection",
+            new ActiveMqTransportConfigurationException("invalid endpoint"));
+        var azureFailure = new ServiceBusException(true, "message too large", "queue",
+            ServiceBusFailureReason.MessageSizeExceeded, null);
+        var failure = new AggregateException(foreign, azureFailure);
+
+        AssertKind(new ServiceBusSendFailureClassifier(), failure, TransportSendFailureKind.Permanent);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "azure-connection-wrapper-retains-ownership")]
+    public void AzureConnectionWrapper_RetainsItsExplicitTransientClassification()
+    {
+        var failure = new ServiceBusConnectionException("service bus endpoint",
+            new ConnectionException("shared connection layer", isTransient: true));
+
+        AssertKind(new ServiceBusSendFailureClassifier(), failure, TransportSendFailureKind.Transient);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "reason-status-chain-and-permanent-precedence")]
     public void TypedFailures_UseReasonsStatusesAndTheCompleteChainWithPermanentPrecedence()
@@ -148,4 +200,12 @@ public sealed class ServiceBusSendFailureClassifierTests
     }
 
     public interface ISecondBus : IBus;
+
+    public enum ForeignFailureCause
+    {
+        Timeout,
+        WebSocket,
+        HttpUnavailable,
+        HttpForbidden
+    }
 }
