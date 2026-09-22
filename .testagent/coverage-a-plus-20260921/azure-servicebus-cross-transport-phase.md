@@ -55,6 +55,11 @@ their dependency direction remain unchanged.
 - The isolated Azure Service Bus emulator passed 25/25, with zero failures and
   skips. Run `vicione-c4222c1a5aae` completed with `fixture-findings.json`
   containing `"findings": []`.
+- A clean detached checkout of exact source commit `6d0ecbbae` passed locked
+  NuGet restore and 212/212 Release Azure Unit tests with Microsoft
+  CodeCoverage. Its raw report is
+  `artifacts/coverage-a-plus-20260922-asb-cross-transport/azure-servicebus-unit-exact-6d0ecbbae.cobertura.xml`;
+  SHA-256 `9167293bfe515c4b1f565fd0fd6845dadea32343280abc27b17410de39e37fad`.
 
 | Classifier method | Lines | Branches | CRAP |
 | --- | ---: | ---: | ---: |

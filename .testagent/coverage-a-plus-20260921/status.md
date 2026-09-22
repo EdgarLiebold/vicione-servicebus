@@ -145,6 +145,8 @@ The Azure Unit suite passed 212/212 with Microsoft CodeCoverage, the complete
 Release Unit/Architecture gate passed 9,981/9,981, and the final adversarial
 review returned PASS. The focused classifier methods are at CRAP 8, 14,
 14.27, and 28. The isolated Azure Service Bus emulator passed 25/25 with
-empty fixture findings. A fresh complete 35-report product profile remains
+empty fixture findings. A clean detached checkout of exact source commit
+`6d0ecbbae` passed locked restore and 212/212 Azure Unit tests with Microsoft
+CodeCoverage. A fresh complete 35-report product profile remains
 the next verification step; global A+ is open. See
 `azure-servicebus-cross-transport-phase.md`.
