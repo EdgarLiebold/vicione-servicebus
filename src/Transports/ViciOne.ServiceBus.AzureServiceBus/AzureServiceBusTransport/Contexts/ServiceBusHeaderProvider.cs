@@ -21,7 +21,7 @@ public class ServiceBusHeaderProvider :
         _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
-    /// <summary>Enumerates non-empty message identity, correlation, content-type, and application properties.</summary>
+    /// <summary>Enumerates present system headers and application properties other than the broker-owned sent time.</summary>
     /// <returns>The transport header sequence.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
@@ -35,16 +35,25 @@ public class ServiceBusHeaderProvider :
         if (_message.ApplicationProperties != null)
         {
             foreach (KeyValuePair<string, object> header in _message.ApplicationProperties)
-                yield return header;
+            {
+                if (!MessageHeaders.TransportSentTime.Equals(header.Key, StringComparison.OrdinalIgnoreCase))
+                    yield return header;
+            }
         }
     }
 
     /// <summary>Gets an application or mapped Azure Service Bus system property by header name.</summary>
-    /// <param name="key">The case-insensitive transport header name.</param>
+    /// <param name="key">The exact application-property name or a case-insensitive mapped system-property name.</param>
     /// <param name="value">The header value when present.</param>
     /// <returns><see langword="true"/> when a non-null mapped value is available.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
+        if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _message.EnqueuedTime.UtcDateTime;
+            return true;
+        }
+
         if (_message.ApplicationProperties != null)
         {
             if (_message.ApplicationProperties.TryGetValue(key, out value) && value != null)
@@ -66,12 +75,6 @@ public class ServiceBusHeaderProvider :
         {
             value = _message.CorrelationId;
             return !string.IsNullOrWhiteSpace(value as string);
-        }
-
-        if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
-        {
-            value = _message.EnqueuedTime.UtcDateTime;
-            return true;
         }
 
         if (MessageHeaders.ContentType.Equals(key, StringComparison.OrdinalIgnoreCase))

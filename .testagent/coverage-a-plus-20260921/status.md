@@ -2,6 +2,24 @@
 
 ## Current quantitative baseline
 
+- At commit `4965a84680b0a98f3b0126489b31e92c362330ad`, 35 fresh,
+  parseable reports from 22 passing Unit/Infrastructure modules and all 13
+  passing local-provider modules cover 32/32 product assemblies. The 445
+  Architecture tests pass separately without coverage instrumentation because
+  the collector injects types that invalidate one assembly-ownership test.
+  The failed collector run is excluded from the aggregate.
+- Aggregate: 80,091/90,318 lines = 88.6767%; branch interval
+  29,141–31,605/36,378 = 80.1061–86.8794%; 114 methods exceed CRAP 30.
+  Source/test diff was empty when the reports were captured. The complete
+  provider profile passed 25 Azure Service Bus, 405 broad-matrix, 69 SQL
+  Server, and 31 RabbitMQ tests, all without failures or skips. The raw reports
+  and calculated methods are in `artifacts/coverage-a-plus-20260922-current/`.
+  This is the last complete pre-Azure-Service-Bus-metadata profile; source and
+  tests have since changed, so a new complete profile is required after the
+  current phase.
+
+### Earlier comparison profile
+
 - 36 fresh, parseable Cobertura reports cover 32/32 loadable product assemblies at commit
   `e0cf987c845154fea81ec27b63592a910aceac37`.
 - Aggregate: 79,569/90,165 lines = 88.2482%.
@@ -82,3 +100,12 @@ The SQS subscription-identity slice has eight focused tests and passed 187/187 S
 Microsoft CodeCoverage. Its two selected comparers moved from CRAP 110 each to 12.7 and 11.38.
 Final read-only adversarial review returned PASS. The complete Unit/Architecture rerun passed
 9,903/9,903 without failures or skips. See `amazon-sqs-subscription-identity-phase.md`.
+
+The Azure Service Bus header and persisted-routing-metadata slice has nine A-grade behavioral
+tests. The broker-owned sent time is protected from application-header spoofing while exact
+application identity semantics remain intact. The complete Unit/Architecture gate passed
+9,912/9,912; Azure Service Bus Unit passed 151/151 with coverage and its local emulator profile
+passed 25/25 with empty fixture findings. Three selected method CRAP scores moved from 110 each
+to 10, 10, and 12. Final adversarial read-only re-review returned PASS. See
+`azure-servicebus-metadata-phase.md`. A new complete product-wide aggregate is still required,
+and global A+ remains open.

@@ -69,6 +69,11 @@ entry below records what the current work changed for anyone reading the source.
   conflicting broker identities across relationship kinds and case variants, bind forwarding to
   the declared destination, propagate partitioning through earlier relationships, and reject
   session-enabled autoforwarding before deployment.
+- Azure Service Bus receive headers now take the broker enqueue instant for `TransportSentTime`
+  even when an application property uses that name with different casing. Header enumeration
+  excludes those forged time entries; other application names remain exact, and raw identity
+  headers retain their canonical GUID format. Regression tests also verify persisted routing
+  metadata, UTF-8 values, blank values, and session/partition consistency.
 - EF JSON change tracking now compares and snapshots the value actually persisted. Selective
   `IEquatable<T>` implementations and shallow `ICloneable` snapshots can no longer silently drop
   changes to serialized fields; SQLite regression tests cover both cases.
