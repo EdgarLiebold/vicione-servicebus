@@ -1,5 +1,21 @@
 # ServiceBus A+ coverage campaign — status
 
+## Latest product-wide measurement
+
+At exact source/test commit `a955052272b744ceb44333a51035ac9ce4f66e3d`,
+36 fresh reports from 22 Unit/Infrastructure projects, 13 local-provider
+projects, and one no-AVX2 Abstractions run cover 32/32 product assemblies.
+The tests passed 9,577/9,577, 545/545, and 759/759 respectively, with zero
+failures and skips; all four fixture runs have empty findings. The deduplicated
+profile is 83,256/93,283 lines (89.2510%), a conservative branch interval of
+29,674–32,209/36,695 (80.8666–87.7749%), and 91/25,892 methods with CRAP
+above 30. The source/test diff was empty. Independent read-only adversarial
+review reproduced the totals, report and binary hashes, test counts, and
+fixture evidence after correcting one no-AVX2 output-path finding. See
+`product-wide-profile-a95505227.md` and the artifact-local
+`analysis-36/summary.json`, `methods.json`, and `provenance.json`. Global A+
+remains open.
+
 ## Current focused work
 
 Runtime-typed recurring scheduler dispatch passes 14/14 focused tests and
@@ -25,7 +41,7 @@ passed 759/759 Abstractions tests and independent code review; see
 `request-rate-dynamic-limit-phase.md`. These focused reports are not a new
 product-wide A+ measurement.
 
-The latest complete quantitative baseline is the fresh 36-report profile at
+The preceding complete quantitative baseline is the fresh 36-report profile at
 `4488b29fedb456defa8fdcd1f5984f8e165ee72a`: 83,067/93,200 lines
 (89.1277%), a conservative branch interval of 29,565–32,111/36,649
 (80.6707–87.6177%), and 97 methods with CRAP above 30. It covered 32/32
@@ -33,7 +49,7 @@ source assemblies. See `product-wide-profile-4488b29fe.md`. The focused
 PostgreSQL and request-rate tests were added after this baseline. Global A+
 remains open.
 
-## Last complete quantitative baseline
+## Earlier complete quantitative baseline
 
 - At source/test commit `44d9e32546ccf1ffe60bc49e49cfc81c3aa348d6`, 36
   fresh, parseable reports from 22 passing Unit/Infrastructure modules, all
