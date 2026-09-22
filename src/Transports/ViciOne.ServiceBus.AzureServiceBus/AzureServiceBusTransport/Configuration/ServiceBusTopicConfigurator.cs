@@ -24,8 +24,8 @@ public class ServiceBusTopicConfigurator :
     /// <returns>The topic configuration failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
-        if (!ServiceBusEntityNameValidator.Validator.IsValidEntityName(Path))
-            yield return this.Failure("Path", $"must be a valid topic path: {Path}");
+        if (!ServiceBusEntityNameValidator.Validator.IsValidEntityName(FullPath))
+            yield return this.Failure("Path", $"must be a valid topic path: {FullPath}");
 
         if (AutoDeleteOnIdle.HasValue && AutoDeleteOnIdle != TimeSpan.Zero && AutoDeleteOnIdle < TimeSpan.FromMinutes(5))
             yield return this.Failure("AutoDeleteOnIdle", "must be zero, or >= 5:00");

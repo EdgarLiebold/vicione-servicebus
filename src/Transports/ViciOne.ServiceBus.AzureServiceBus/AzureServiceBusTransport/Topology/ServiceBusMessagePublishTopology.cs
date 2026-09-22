@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
@@ -45,8 +46,22 @@ public class ServiceBusMessagePublishTopology<TMessage> :
         return true;
     }
 
-    /// <summary>Gets the lazily materialized Azure topic declaration options.</summary>
-    public CreateTopicOptions CreateTopicOptions => _createTopicOptions.Value;
+    /// <summary>Gets a separate copy of the lazily materialized Azure topic declaration options.</summary>
+    public CreateTopicOptions CreateTopicOptions
+    {
+        get
+        {
+            _ = _createTopicOptions.Value;
+            return _topicConfigurator.GetCreateTopicOptions();
+        }
+    }
+
+    /// <summary>Includes the Azure topic's path and idle-deletion constraints in publish-topology validation.</summary>
+    /// <returns>The topic configuration failures.</returns>
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return Exclude ? Array.Empty<ValidationResult>() : _topicConfigurator.Validate();
+    }
 
     /// <summary>Builds sender settings and topic topology for the message contract.</summary>
     /// <returns>The topic send settings.</returns>
@@ -76,7 +91,11 @@ public class ServiceBusMessagePublishTopology<TMessage> :
     public string? BasePath
     {
         get => _topicConfigurator.BasePath;
-        set => _topicConfigurator.BasePath = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(BasePath), _topicConfigurator.BasePath, value);
+            _topicConfigurator.BasePath = value;
+        }
     }
 
     /// <summary>Gets the topic path including its optional base path.</summary>
@@ -85,68 +104,111 @@ public class ServiceBusMessagePublishTopology<TMessage> :
     /// <summary>Sets how long the topic retains message identifiers for duplicate detection.</summary>
     public TimeSpan? DuplicateDetectionHistoryTimeWindow
     {
-        set => _topicConfigurator.DuplicateDetectionHistoryTimeWindow = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(DuplicateDetectionHistoryTimeWindow), _topicConfigurator.DuplicateDetectionHistoryTimeWindow, value);
+            _topicConfigurator.DuplicateDetectionHistoryTimeWindow = value;
+        }
     }
 
     /// <summary>Enables or disables topic partitioning.</summary>
     public bool? EnablePartitioning
     {
-        set => _topicConfigurator.EnablePartitioning = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(EnablePartitioning), _topicConfigurator.EnablePartitioning, value);
+            _topicConfigurator.EnablePartitioning = value;
+        }
     }
 
     /// <summary>Sets the maximum topic size in megabytes.</summary>
     public long? MaxSizeInMegabytes
     {
-        set => _topicConfigurator.MaxSizeInMegabytes = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(MaxSizeInMegabytes), _topicConfigurator.MaxSizeInMegabytes, value);
+            _topicConfigurator.MaxSizeInMegabytes = value;
+        }
     }
 
     /// <summary>Sets the maximum individual message size in kilobytes.</summary>
     public long? MaxMessageSizeInKilobytes
     {
-        set => _topicConfigurator.MaxMessageSizeInKilobytes = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(MaxMessageSizeInKilobytes), _topicConfigurator.MaxMessageSizeInKilobytes, value);
+            _topicConfigurator.MaxMessageSizeInKilobytes = value;
+        }
     }
 
     /// <summary>Enables or disables duplicate detection.</summary>
     public bool? RequiresDuplicateDetection
     {
-        set => _topicConfigurator.RequiresDuplicateDetection = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(RequiresDuplicateDetection), _topicConfigurator.RequiresDuplicateDetection, value);
+            _topicConfigurator.RequiresDuplicateDetection = value;
+        }
     }
 
     /// <summary>Enables or disables broker ordering support.</summary>
     public bool? SupportOrdering
     {
-        set => _topicConfigurator.SupportOrdering = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(SupportOrdering), _topicConfigurator.SupportOrdering, value);
+            _topicConfigurator.SupportOrdering = value;
+        }
     }
 
     /// <summary>Enables duplicate detection and sets the identifier-retention window.</summary>
     /// <param name="historyTimeWindow">How long the broker retains message identifiers.</param>
     public void EnableDuplicateDetection(TimeSpan historyTimeWindow)
     {
+        EnsureTopicOptionMutable(nameof(RequiresDuplicateDetection), _topicConfigurator.RequiresDuplicateDetection, true);
+        EnsureTopicOptionMutable(nameof(DuplicateDetectionHistoryTimeWindow), _topicConfigurator.DuplicateDetectionHistoryTimeWindow,
+            (TimeSpan?)historyTimeWindow);
         _topicConfigurator.EnableDuplicateDetection(historyTimeWindow);
     }
 
     /// <summary>Sets the idle interval after which the topic is deleted.</summary>
     public TimeSpan? AutoDeleteOnIdle
     {
-        set => _topicConfigurator.AutoDeleteOnIdle = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(AutoDeleteOnIdle), _topicConfigurator.AutoDeleteOnIdle, value);
+            _topicConfigurator.AutoDeleteOnIdle = value;
+        }
     }
 
     /// <summary>Sets the default time to live for messages sent to the topic.</summary>
     public TimeSpan? DefaultMessageTimeToLive
     {
-        set => _topicConfigurator.DefaultMessageTimeToLive = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(DefaultMessageTimeToLive), _topicConfigurator.DefaultMessageTimeToLive, value);
+            _topicConfigurator.DefaultMessageTimeToLive = value;
+        }
     }
 
     /// <summary>Enables or disables broker-side batching.</summary>
     public bool? EnableBatchedOperations
     {
-        set => _topicConfigurator.EnableBatchedOperations = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(EnableBatchedOperations), _topicConfigurator.EnableBatchedOperations, value);
+            _topicConfigurator.EnableBatchedOperations = value;
+        }
     }
 
     /// <summary>Sets provider metadata stored with the topic.</summary>
     public string UserMetadata
     {
-        set => _topicConfigurator.UserMetadata = value;
+        set
+        {
+            EnsureTopicOptionMutable(nameof(UserMetadata), _topicConfigurator.UserMetadata, value);
+            _topicConfigurator.UserMetadata = value;
+        }
     }
 
     /// <summary>Adds this topic and direct implemented-message topics to a publish topology builder.</summary>
@@ -174,6 +236,12 @@ public class ServiceBusMessagePublishTopology<TMessage> :
         var adapter = new ImplementedTypeAdapter<T>(configurator, direct);
 
         _implementedMessageTypes.Add(adapter);
+    }
+
+    void EnsureTopicOptionMutable<T>(string optionName, T currentValue, T newValue)
+    {
+        if (_createTopicOptions.IsValueCreated && !EqualityComparer<T>.Default.Equals(currentValue, newValue))
+            throw new InvalidOperationException($"Azure Service Bus topic options were already evaluated; {optionName} cannot change.");
     }
 
 

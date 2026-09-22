@@ -12,7 +12,7 @@ public interface IServiceBusMessagePublishTopology<TMessage> :
     IServiceBusMessagePublishTopology
     where TMessage : class
 {
-    /// <summary>Gets the topic declaration options for the message contract.</summary>
+    /// <summary>Gets a separate topic declaration snapshot; changing it does not configure the publish topic.</summary>
     CreateTopicOptions CreateTopicOptions { get; }
 
     /// <summary>Builds the settings used to publish to the message topic.</summary>

@@ -91,6 +91,14 @@ entry below records what the current work changed for anyone reading the source.
   rule sets fail closed. When another creator wins a subscription race, the winner's delivery and
   forwarding settings and configured rule are reconciled before setup succeeds. Real emulator
   regressions check the persisted rule set, and a controlled SDK race checks both updates.
+- Azure Service Bus publish-topology validation now reports invalid composed topic paths and idle
+  lifetimes while ignoring excluded topics. Topic settings freeze once evaluated for a subscription
+  or broker declaration, so later changes cannot make sender and broker options disagree. The public
+  `CreateTopicOptions` getter now returns a separate snapshot: mutating it no longer configures the
+  published topic. Use the publish configurator before evaluation; custom broker declarations can
+  supply SDK options directly through the provider topology builder. The Azure emulator test
+  project now includes its missing Microsoft CodeCoverage extension, so instrumented provider runs
+  execute the tests instead of reporting zero discovered tests.
 - SignalR's source and test NuGet lockfiles now reflect the earlier removal of their obsolete
   Initializers project dependency. A locked restore succeeds with the current project graph.
 - Assembly directory scans now resolve candidates from their selected files instead of binding

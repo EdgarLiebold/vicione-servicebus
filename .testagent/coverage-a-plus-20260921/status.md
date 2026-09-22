@@ -206,3 +206,15 @@ Final read-only adversarial review and the test-helper follow-up both returned
 PASS. See `azure-servicebus-subscription-phase.md`. These focused results do
 not replace the complete product-wide profile at `44d9e3254`; global A+ is
 still open.
+
+The Azure Service Bus publish-validation slice adds seven hard tests for invalid and composed
+paths, idle-lifetime boundary, excluded topics, evaluated option freezing, public SDK-options
+isolation, and exact broker/sender projection. Azure Unit passed 220/220 with Microsoft
+CodeCoverage. The full Release build had zero warnings and errors; the Unit/Architecture gate
+passed 9,989/9,989 on a bounded-parallelism rerun after a load-sensitive Quartz timeout in the
+first run. The official Azure Service Bus emulator passed 28/28 with Microsoft CodeCoverage and
+empty fixture findings. The emulator test project now explicitly references the coverage extension
+and has a matching lockfile. Selected validation, projection, getter, and freeze methods have CRAP
+12, 20, 2, 1, and 4 respectively. Final read-only adversarial review returned PASS. See
+`azure-servicebus-publish-validation-phase.md`. The last complete product-wide profile remains
+`44d9e3254`; global A+ is open.

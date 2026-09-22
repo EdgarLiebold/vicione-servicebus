@@ -39,6 +39,15 @@ The machine-readable support matrix is [provider-capabilities.json](provider-cap
 Unsupported reliable-messaging combinations fail during startup rather than selecting a weaker
 delivery boundary.
 
+For Azure Service Bus publishing, configure topic properties through
+`IServiceBusMessagePublishTopologyConfigurator` before a subscription or broker topology evaluates
+them. `IServiceBusMessagePublishTopology<T>.CreateTopicOptions` returns a separate SDK options
+snapshot; editing that result does not change the publisher or its broker declaration. Once topic
+options have been evaluated, changing a configured property throws. The high-level publish
+configurator does not expose topic `Status` or `AuthorizationRules`; provider extension authors can
+declare custom topics through `IBrokerTopologyBuilder.CreateTopic(CreateTopicOptions)` where those
+SDK properties are needed.
+
 ## Operations API
 
 Operational contracts live in `ViciOne.ServiceBus.Operations`. Use
