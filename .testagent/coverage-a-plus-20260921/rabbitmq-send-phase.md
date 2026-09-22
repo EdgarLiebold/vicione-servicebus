@@ -39,6 +39,11 @@ RabbitMQ LocalIntegration solution also built with zero warnings and errors. The
 runner passed 31/31 tests against a fresh RabbitMQ broker with the same coverage settings; its
 `fixture-findings.json` has an empty findings list. The local broker report is
 `artifacts/coverage-a-plus-20260922-rabbitmq-send/rabbitmq-local-canonical.cobertura.xml`.
+At exact code/test commit `edde4076f20fedd36d9171ca71b5e0802ab9b5ec`, a clean detached
+worktree passed locked restores, zero-warning Release builds, 340/340 RabbitMQ Unit tests with the
+canonical coverage settings, 6/6 affected architecture tests, and 31/31 tests against its own
+fresh RabbitMQ fixture with empty cleanup findings. The exact-commit Unit coverage report is
+`artifacts/coverage-a-plus-20260922-rabbitmq-send/rabbitmq-unit-exact-edde4076f.cobertura.xml`.
 
 | Method in RabbitMQ send source | Lines | Reported branches | Complexity / CRAP |
 | --- | ---: | ---: | ---: |

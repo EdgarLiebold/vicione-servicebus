@@ -9,7 +9,9 @@ settings. The Release Unit/Architecture build had zero warnings/errors and its f
 10,047/10,047. The isolated RabbitMQ LocalIntegration build had zero warnings/errors; 31/31 tests
 passed against a fresh broker with canonical coverage and empty fixture findings. The selected
 send-path methods have full reported line coverage, complexity and CRAP at most 20, and explicit
-remaining branch gaps. Read-only adversarial review returned PASS. See `rabbitmq-send-phase.md`.
+remaining branch gaps. An additional clean detached checkout of exact code/test commit `edde4076f`
+passed 340/340 Unit, 6/6 affected architecture, and 31/31 fresh-broker tests after locked restores
+and zero-warning builds. Read-only adversarial review returned PASS. See `rabbitmq-send-phase.md`.
 The 36-report aggregate below is still the latest product-wide profile; global A+ remains open.
 
 The reliable-messaging retry-jitter slice fixes nonfinite option acceptance,
