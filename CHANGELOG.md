@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- RabbitMQ connection creation now preserves supervisor cancellation, owner
+  registration, primary failures, and cleanup across settings refresh, both
+  real client-adapter routes, shutdown subscription, publication, and disposal.
+  Closed or concurrently closing connections cannot be published, subscription
+  failures cannot leak an unpublished context, and diagnostic failures cannot
+  block lifetime completion. Parallel RabbitMQ, SignalR, and Saga tests now
+  synchronize on their actual disposal, consumption, and repository-removal
+  boundaries instead of racing those asynchronous product transitions.
 - Circuit-breaker runtime settings now reject decreasing recovery-delay sequences even when an
   internal caller bypasses the public options API. Runtime validation tests cover complete error
   aggregation, exact scalar boundaries, nonfinite ratios, missing and nonpositive durations,

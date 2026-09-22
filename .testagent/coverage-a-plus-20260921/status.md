@@ -2,6 +2,21 @@
 
 ## Latest focused slice
 
+The RabbitMQ connection-context slice closes ownership and failure-preservation
+defects across supervisor stop, settings refresh, both real client-adapter
+routes, owner registration, shutdown subscription, publication, and cleanup.
+Twenty-three A-grade facts execute 38 deterministic cases. Two adversarial FAIL
+rounds exposed and closed five initial mutant families plus unexpected handler
+removal and subscribe/check ordering; final review returned PASS. At exact
+commit `c9926b8c4`, focused RabbitMQ passes 38/38, the complete RabbitMQ project
+passes 378/378, SignalR passes 97/97, Core passes 6,343/6,343, and the focused
+Saga regression passes 1/1. The complete Unit/Architecture gate is
+10,148/10,148 with zero failures and skips. Every reported
+`ConnectionContextFactory` method and compiler state has full line and branch
+coverage with maximum CRAP 20; the changed `TransportLifetime` disposal path
+is also fully covered. See
+`rabbitmq-connection-context-factory-phase.md`. Global A+ remains open.
+
 The Core circuit-breaker runtime-settings slice fixes defensive validation
 that accepted decreasing recovery delays when an internal caller bypassed the
 public options API. Eight A-grade methods execute fourteen hard boundary,
