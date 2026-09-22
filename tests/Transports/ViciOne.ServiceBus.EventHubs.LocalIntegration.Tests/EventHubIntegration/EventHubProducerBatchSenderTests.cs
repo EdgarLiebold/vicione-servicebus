@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Mime;
 using System.Runtime.Serialization;
 using Azure.Messaging.EventHubs;
@@ -54,6 +55,91 @@ public sealed class EventHubProducerBatchSenderTests
             [new Route("0", null), new Route("1", null), new Route(null, "customer-3")],
             producer.CreatedRoutes);
         Assert.Equal([1, 1, 1], producer.SentBatchSizes);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Theory]
+    [InlineData("0", null, "PartitionId", "PartitionKey")]
+    [InlineData(null, "customer-7", "PartitionKey", "PartitionId")]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "uniform-route-tags-only-its-own-partition-dimension")]
+    public async Task UniformRoute_TagsOnlyTheActualPartitionDimensionAsync(
+        string? partitionId,
+        string? partitionKey,
+        string expectedTag,
+        string otherTag)
+    {
+        using var activity = new Activity("eventhub-uniform-route") { IsAllDataRequested = true };
+        activity.Start();
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionId, partitionKey, TestContext.Current.CancellationToken),
+            CreateContext(2, partitionId, partitionKey, TestContext.Current.CancellationToken)
+        ];
+
+        await EventHubProducerBatchSender.SendAsync(
+            producer,
+            contexts,
+            TestContext.Current.CancellationToken,
+            producer.DisposeBatch);
+
+        Assert.True(activity.IsAllDataRequested);
+        Assert.Equal(partitionId ?? partitionKey, activity.GetTagItem(expectedTag));
+        Assert.Null(activity.GetTagItem(otherTag));
+        Assert.Equal([2], producer.SentBatchSizes);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "mixed-routes-do-not-advertise-a-false-single-route")]
+    public async Task MixedRoutes_DoNotTagTheActivityWithTheFirstRouteAsync()
+    {
+        using var activity = new Activity("eventhub-mixed-route") { IsAllDataRequested = true };
+        activity.Start();
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(2, partitionId: "1", cancellationToken: TestContext.Current.CancellationToken)
+        ];
+
+        await EventHubProducerBatchSender.SendAsync(
+            producer,
+            contexts,
+            TestContext.Current.CancellationToken,
+            producer.DisposeBatch);
+
+        Assert.True(activity.IsAllDataRequested);
+        Assert.Null(activity.GetTagItem("PartitionId"));
+        Assert.Null(activity.GetTagItem("PartitionKey"));
+        Assert.Equal([new Route("0", null), new Route("1", null)], producer.CreatedRoutes);
+        Assert.Equal([1, 1], producer.SentBatchSizes);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "unrecorded-activity-does-not-gain-route-tags")]
+    public async Task UnrecordedActivity_DoesNotGainRouteTagsAsync()
+    {
+        using var activity = new Activity("eventhub-unrecorded-route") { IsAllDataRequested = false };
+        activity.Start();
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionKey: "private-route", cancellationToken: TestContext.Current.CancellationToken)
+        ];
+
+        await EventHubProducerBatchSender.SendAsync(
+            producer,
+            contexts,
+            TestContext.Current.CancellationToken,
+            producer.DisposeBatch);
+
+        Assert.False(activity.IsAllDataRequested);
+        Assert.Null(activity.GetTagItem("PartitionId"));
+        Assert.Null(activity.GetTagItem("PartitionKey"));
+        Assert.Equal([new Route(null, "private-route")], producer.CreatedRoutes);
+        Assert.Equal([1], producer.SentBatchSizes);
         producer.AssertEveryBatchDisposed();
     }
 

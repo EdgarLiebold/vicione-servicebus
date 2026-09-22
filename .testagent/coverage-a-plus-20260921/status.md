@@ -255,3 +255,11 @@ Engineering graph, zero-warning Release builds, the complete 9,997/9,997 Unit/Ar
 6,267/6,267 Core Unit tests with Microsoft CodeCoverage, and 53/53 Event Hubs emulator tests with
 Microsoft CodeCoverage and empty fixture findings. Exact report hashes and the initial
 incomplete-restore architecture diagnostic are in `payload-admission-observer-phase.md`.
+
+The next Event Hubs batch activity-route slice adds four strong cases across three test
+methods for uniform partition IDs, uniform keys, mixed routes, and unrecorded activities.
+The focused cohort passed 11/11; the full real emulator suite passed 57/57 with Microsoft
+CodeCoverage and empty fixture findings. `SetActivityRoute` now measures 12/12 lines, all
+reported branches, and CRAP 12 versus 72.75 in the last complete profile. Final read-only
+adversarial review returned PASS. See `eventhub-route-activity-phase.md`. No product source
+changed, and the global A+ target remains open.
