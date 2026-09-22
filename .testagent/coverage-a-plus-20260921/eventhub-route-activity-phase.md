@@ -32,3 +32,36 @@ guided .NET 10 MTP syntax. The final read-only adversarial review returned PASS 
 positive and negative tag assertions, Activity setup, actual provider routes, disposal, and
 the three requirement-projection entries. No product source was changed. The last complete
 product-wide profile remains `44d9e3254`; global A+ remains open.
+
+## Exact source/test commit
+
+Commit `bc51b63c377eeb15d5debaee21e4d785f16ce7f8` was checked in a clean detached
+worktree with no tracked diff. Locked restore of the Event Hubs test project and its Release
+build passed with zero warnings and errors. The first full emulator attempt passed 56/57:
+the existing `ConsumerRetry_ExecutesOneOriginalAndThreeImmediateRetriesWithExactMetadataAsync`
+timed out waiting for consumer completion after the producer had sent. Fixture findings were
+empty; this failed attempt is retained as `attempt1-failed.cobertura.xml` and
+`attempt1-fixture-findings.json` with its broker logs beside the passing exact reports. This
+56/57 result and the test name were observed in the MTP console output; no test-result file was
+produced for that attempt, and it is not counted as green.
+
+A second full fixture run on the same commit passed 57/57 with Microsoft CodeCoverage and zero
+skips in the MTP console; Azurite/Event Hubs fixture findings were empty, run
+`vicione-38403ebd86af`. Its report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/exact-bc51b63c3/eventhub-route-exact-bc51b63c3-retry2.cobertura.xml`,
+SHA-256 `b6d17ebdd3117719ddcddd9bb06d0e45d21652b5f64305bae9d9c56c20939be6`.
+`SetActivityRoute` remains at 12/12 lines, all reported branches, complexity 12, and CRAP 12.
+The exact fixture findings, broker logs, and endpoint projection are retained next to the
+report; the broker log hashes match the findings file. This run also has no test-result file.
+
+The final same-commit fixture run added xUnit TRX test-result output, passed 57/57, and had empty
+fixture findings, run `vicione-8e28552b6a45`. The retained
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/exact-bc51b63c3/trx-run/eventhub-route-exact-bc51b63c3.trx`
+has SHA-256 `7dd0aec10d092466579d402bc1c5f9a8d502c48146d7aa1b4c33e9db7342b875` and
+machine-readable counters: total, executed, and passed are 57; failed, error, and notExecuted
+are zero. The same run's Microsoft CodeCoverage report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/exact-bc51b63c3/trx-run/eventhub-route-exact-bc51b63c3-trx.cobertura.xml`,
+SHA-256 `3c04ba246f70d8cd00e7f1ed98662267d3d21a527229473ee133529aac4fd810`, and confirms
+`SetActivityRoute` at 12/12 lines, all branches, and CRAP 12. Its fixture findings, broker logs,
+and endpoint projection are retained in `trx-run/`; log hashes match the findings file. No
+product source changed in this slice.

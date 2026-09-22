@@ -263,3 +263,10 @@ CodeCoverage and empty fixture findings. `SetActivityRoute` now measures 12/12 l
 reported branches, and CRAP 12 versus 72.75 in the last complete profile. Final read-only
 adversarial review returned PASS. See `eventhub-route-activity-phase.md`. No product source
 changed, and the global A+ target remains open.
+
+Exact test commit `bc51b63c3` passed locked restore, a zero-warning Release build, and a final
+57/57 full Event Hubs emulator run with Microsoft CodeCoverage, xUnit TRX, and empty fixture
+findings. An earlier same-byte attempt passed 56/57 in the console because an existing
+consumer-retry test timed out; its failed coverage report, findings, and broker logs are retained
+separately, but no test-result file exists for it. Exact report hashes, the verifiable final TRX
+counters, and run identities are in `eventhub-route-activity-phase.md`.
