@@ -218,3 +218,8 @@ and has a matching lockfile. Selected validation, projection, getter, and freeze
 12, 20, 2, 1, and 4 respectively. Final read-only adversarial review returned PASS. See
 `azure-servicebus-publish-validation-phase.md`. The last complete product-wide profile remains
 `44d9e3254`; global A+ is open.
+
+The isolated exact source/test commit `2f3a4b6eb` also passed locked restores,
+zero-warning Release builds, Azure Unit 220/220 and official-emulator 28/28,
+both with Microsoft CodeCoverage. The emulator fixture had no findings; report
+hashes and the `/private/tmp` Docker mount diagnostic are in the phase record.

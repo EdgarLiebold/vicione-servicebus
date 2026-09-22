@@ -53,3 +53,17 @@ coverage probe pass; the subsequent isolated official-emulator run passed 28/28 
 CodeCoverage and empty fixture findings (`vicione-8723ca9210b2`). The emulator report is
 `artifacts/coverage-a-plus-20260922-8abfe1e8a/topic-validation-emulator.cobertura.xml`, SHA-256
 `ca260908eea01c3794dc823cdda7c20ef3d42456dfd4748bde373dad8c2a38fa`.
+
+An isolated, clean checkout of exact source/test/documentation commit
+`2f3a4b6ebe93d688fc9346587f9d0f1c6325330a` passed locked restores and
+zero-warning Release builds for both Azure Unit and Azure emulator graphs.
+Azure Unit passed 220/220 with Microsoft CodeCoverage; its report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/azure-unit-exact-2f3a4b6.cobertura.xml`,
+SHA-256 `9e77250b611292761fa71000dc23d563a5715aabea22c99d12f099fa14442f7b`.
+The exact-commit official emulator passed 28/28 with Microsoft CodeCoverage
+and empty fixture findings (`vicione-4d220f5fb313`); its report is
+`artifacts/coverage-a-plus-20260922-8abfe1e8a/azure-emulator-exact-2f3a4b6.cobertura.xml`,
+SHA-256 `d56d9de80144c9329d2d62cf0830ff2b9ff2ddff3bcad72ef27f469356452012`.
+The first isolated emulator attempt under `/private/tmp` could not start Docker
+because that host path was not mountable; rerunning from a clean workspace
+checkout resolved the fixture issue without changing tracked files.
