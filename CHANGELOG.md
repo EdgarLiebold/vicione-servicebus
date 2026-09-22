@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Timeout activity fault handling now uses the active message context as the cancellation authority,
+  reclassifies only cancellation from the elapsed configured timeout, validates required inputs
+  before honoring caller cancellation, and fully owns fault generation and receive notification.
+  This prevents unrelated cancellation from being reported as a timeout, prevents an activity-owner
+  token from suppressing or publishing the wrong fault, and preserves exact asynchronous failures
+  and cancellation tokens.
 - RabbitMQ sends now round positive sub-millisecond message lifetimes and delayed-delivery
   intervals up to the next wire millisecond. This prevents a positive lifetime or delay from
   becoming zero and avoids shortening fractional intervals. Send tests also cover direct-reply

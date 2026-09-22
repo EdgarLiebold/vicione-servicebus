@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Middleware.Timeout;
 internal abstract class TimeoutActivityContextProxy :
     ActivityContextProxy
 {
-    readonly ActivityContext _activityContext;
     readonly TimeSpan _timeout;
 
     protected TimeoutActivityContextProxy(ActivityContext activityContext, CancellationToken cancellationToken, TimeSpan timeout)
@@ -17,34 +16,53 @@ internal abstract class TimeoutActivityContextProxy :
         if (timeout <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "The timeout must be greater than zero.");
 
-        _activityContext = activityContext;
         CancellationToken = cancellationToken;
         _timeout = timeout;
     }
 
     public override CancellationToken CancellationToken { get; }
 
-    public override async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
+    public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        ArgumentNullException.ThrowIfNull(exception);
+
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        return NotifyFaultedCoreAsync(context, duration, consumerType, exception, cancellationToken);
+    }
+
+    async Task NotifyFaultedCoreAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception,
+        CancellationToken cancellationToken)
+        where T : class
+    {
         Exception reportedException = exception;
+        CancellationToken messageCancellationToken = context.CancellationToken;
 
         if (exception is not OperationCanceledException canceledException
-            || canceledException.CancellationToken != _activityContext.CancellationToken)
+            || canceledException.CancellationToken != messageCancellationToken)
         {
-            if (!_activityContext.CancellationToken.IsCancellationRequested)
+            if (!messageCancellationToken.IsCancellationRequested)
             {
-                if (exception is OperationCanceledException timeoutException && CancellationToken.IsCancellationRequested)
+                if (exception is OperationCanceledException timeoutException
+                    && timeoutException.CancellationToken == CancellationToken
+                    && CancellationToken.IsCancellationRequested)
                 {
                     reportedException = new ConsumerCanceledException(
                         $"The operation exceeded the configured timeout of {_timeout}.", timeoutException);
                 }
 
-                await GenerateFaultAsync(context, reportedException).ConfigureAwait(false);
+                Task generation = GenerateFaultAsync(context, reportedException)
+                    ?? throw new InvalidOperationException("The consume context returned no fault-generation task.");
+                await generation.ConfigureAwait(false);
             }
         }
 
-        await ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, reportedException, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+        Task notification = ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, reportedException, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The receive context returned no consume-fault notification task.");
+        await notification.ConfigureAwait(false);
     }
 }
