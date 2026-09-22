@@ -2,6 +2,20 @@
 
 ## Latest focused slice
 
+The Job Service state-machine slice reduces its fully covered constructor from
+CRAP 104 to 1 by preserving the exact registration sequence across eleven
+private lifecycle configuration methods. No binder or behavior expression
+changed, and no structure-only test was added. Constructor plus configuration
+methods total 189/189 lines with full reported branch coverage and maximum CRAP
+26; this claim excludes compiler-generated lambdas that retain prior branch
+gaps. Core passes 6,329/6,329, the Release Unit/Architecture build has zero
+warnings/errors, and the complete gate passes 10,096/10,096. A detached exact
+`74d278654` checkout passed locked restore, zero-warning build, the complete
+Core suite, and the same target measurement. Read-only adversarial review
+returned PASS for registration order, initialization, API, reflection, and
+serialization. See `job-state-machine-complexity-phase.md`. Global A+ remains
+open.
+
 The Abstractions dictionary-extension slice removed two internal `SetValue`
 overloads and `SetValues<TValue>` after repository-wide analysis found no
 current caller, reflection binding, generator reference, or public contract.
