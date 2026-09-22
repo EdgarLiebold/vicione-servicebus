@@ -2,6 +2,19 @@
 
 ## Latest focused slice
 
+The Abstractions dictionary-extension slice removed two internal `SetValue`
+overloads and `SetValues<TValue>` after repository-wide analysis found no
+current caller, reflection binding, generator reference, or public contract.
+The prior complete profile measured them at 0/23 lines and CRAP 156, 42, and
+20. Adding tests would have preserved dead implementation only for coverage.
+The complete Friend Assembly graph builds with zero warnings/errors, the full
+gate passes 10,096/10,096, and a detached exact `01e77bc68` checkout passes
+locked restore, zero-warning build, and 759/759 Abstractions tests. Its
+Cobertura method list confirms that the removed symbols no longer exist. The
+two retained active helpers were already fully covered with CRAP 2 in the last
+complete profile. Read-only adversarial review returned PASS. See
+`dictionary-mutation-dead-code-phase.md`. Global A+ remains open.
+
 The Core timeout-consumer fault slice found semantic defects even though the
 old asynchronous path already reported 12/12 lines, 10/10 branches, and CRAP
 10. The corrected implementation separates its own wrapper/scope chain from
