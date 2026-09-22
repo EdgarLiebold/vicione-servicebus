@@ -188,3 +188,18 @@ empty fixture findings. A clean detached checkout of exact source commit
 CodeCoverage. A fresh complete product profile is recorded above; global A+
 is open. See
 `azure-servicebus-cross-transport-phase.md`.
+
+The Azure Service Bus subscription slice closes three silent-success paths:
+missing configured rules on existing subscriptions, unidentifiable generated
+filters, and concurrent creators whose winning subscription was not
+reconciled. Red phases reproduced the latter two failures; real emulator
+regressions verify persisted rules, and the SDK race test verifies both
+settings and rule updates. Azure Unit passed 213/213, the full Release build
+had zero warnings and errors, and the complete Unit/Architecture gate passed
+9,982/9,982 without failures or skips. The final real emulator run passed
+28/28 with empty fixture findings. The six focused subscription methods are
+all below CRAP 30; `CreateTopicSubscriptionAsync` moved from 218 to 15.71.
+Final read-only adversarial review and the test-helper follow-up both returned
+PASS. See `azure-servicebus-subscription-phase.md`. These focused results do
+not replace the complete product-wide profile at `44d9e3254`; global A+ is
+still open.

@@ -178,77 +178,11 @@ public class ServiceBusConnectionContext :
             subscriptionProperties = await GetSubscriptionAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, cancellationToken)
                 .ConfigureAwait(false);
 
-            string NormalizeForwardTo(string? forwardTo)
-            {
-                return string.IsNullOrEmpty(forwardTo)
-                    ? string.Empty
-                    : Uri.IsWellFormedUriString(forwardTo, UriKind.Absolute)
-                        ? new Uri(forwardTo).AbsolutePath.TrimStart('/')
-                        : forwardTo.Replace(Endpoint.ToString(), string.Empty).Trim('/');
-            }
-
-            var targetForwardTo = NormalizeForwardTo(createSubscriptionOptions.ForwardTo);
-            var currentForwardTo = NormalizeForwardTo(subscriptionProperties.ForwardTo);
-
-            if (!targetForwardTo.Equals(currentForwardTo)
-                || createSubscriptionOptions.LockDuration != subscriptionProperties.LockDuration
-                || createSubscriptionOptions.MaxDeliveryCount != subscriptionProperties.MaxDeliveryCount
-                || createSubscriptionOptions.EnableBatchedOperations != subscriptionProperties.EnableBatchedOperations
-                || createSubscriptionOptions.DeadLetteringOnMessageExpiration != subscriptionProperties.DeadLetteringOnMessageExpiration)
-            {
-                LogContext.Debug?.Log("Updating subscription: {Subscription} ({Topic} -> {ForwardTo})", subscriptionProperties.SubscriptionName,
-                    createSubscriptionOptions.TopicName, createSubscriptionOptions.ForwardTo);
-
-                subscriptionProperties.ForwardTo = createSubscriptionOptions.ForwardTo;
-                subscriptionProperties.LockDuration = createSubscriptionOptions.LockDuration;
-                subscriptionProperties.MaxDeliveryCount = createSubscriptionOptions.MaxDeliveryCount;
-                subscriptionProperties.EnableBatchedOperations = createSubscriptionOptions.EnableBatchedOperations;
-                subscriptionProperties.DeadLetteringOnMessageExpiration = createSubscriptionOptions.DeadLetteringOnMessageExpiration;
-
-                await UpdateSubscriptionAsync(subscriptionProperties, cancellationToken).ConfigureAwait(false);
-            }
-
-            if (rule != null)
-            {
-                var ruleProperties = await GetRuleAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, rule.Name, cancellationToken)
-                    .ConfigureAwait(false);
-                if (rule.Name == ruleProperties.Name && (!(rule.Filter?.Equals(ruleProperties.Filter) ?? ruleProperties.Filter == null)
-                        || !(rule.Action?.Equals(ruleProperties.Action) ?? ruleProperties.Action == null)))
-                {
-                    LogContext.Debug?.Log("Updating subscription Rule: {Rule} ({DescriptionFilter} -> {Filter})", rule.Name,
-                        ruleProperties.Filter?.ToString(), rule.Filter?.ToString());
-
-                    ruleProperties.Filter = rule.Filter;
-                    ruleProperties.Action = rule.Action;
-
-                    await UpdateRuleAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, ruleProperties, cancellationToken)
-                        .ConfigureAwait(false);
-                }
-            }
-            else if (filter != null)
-            {
-                IList<RuleProperties> rules = await GetRulesAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, cancellationToken)
-                    .ConfigureAwait(false);
-                if (rules.Count == 1)
-                {
-                    var existingRule = rules[0];
-
-                    if (Guid.TryParse(existingRule.Name, out _) && !(existingRule.Filter?.Equals(filter) ?? filter == null))
-                    {
-                        LogContext.Debug?.Log("Updating subscription filter: {Rule} ({DescriptionFilter} -> {Filter})", existingRule.Name,
-                            existingRule.Filter?.ToString(), filter?.ToString());
-
-                        existingRule.Filter = filter;
-
-                        await UpdateRuleAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, existingRule, cancellationToken)
-                            .ConfigureAwait(false);
-                    }
-                }
-            }
+            await ReconcileSubscriptionAsync(createSubscriptionOptions, subscriptionProperties, rule, filter, cancellationToken).ConfigureAwait(false);
 
             create = false;
         }
-        catch (ServiceBusException e) when (e.Reason == ServiceBusFailureReason.MessagingEntityNotFound)
+        catch (ServiceBusException e) when (subscriptionProperties == null && e.Reason == ServiceBusFailureReason.MessagingEntityNotFound)
         {
         }
 
@@ -277,6 +211,7 @@ public class ServiceBusConnectionContext :
             {
                 subscriptionProperties = await GetSubscriptionAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, cancellationToken)
                     .ConfigureAwait(false);
+                await ReconcileSubscriptionAsync(createSubscriptionOptions, subscriptionProperties, rule, filter, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -290,6 +225,82 @@ public class ServiceBusConnectionContext :
             subscriptionProperties.TopicName, subscriptionProperties.ForwardTo);
 
         return subscriptionProperties;
+    }
+
+    async Task ReconcileSubscriptionAsync(CreateSubscriptionOptions options, SubscriptionProperties properties,
+        CreateRuleOptions? rule, RuleFilter? filter, CancellationToken cancellationToken)
+    {
+        if (SubscriptionSettingsDiffer(options, properties))
+        {
+            LogContext.Debug?.Log("Updating subscription: {Subscription} ({Topic} -> {ForwardTo})", properties.SubscriptionName,
+                options.TopicName, options.ForwardTo);
+
+            properties.ForwardTo = options.ForwardTo;
+            properties.LockDuration = options.LockDuration;
+            properties.MaxDeliveryCount = options.MaxDeliveryCount;
+            properties.EnableBatchedOperations = options.EnableBatchedOperations;
+            properties.DeadLetteringOnMessageExpiration = options.DeadLetteringOnMessageExpiration;
+
+            await UpdateSubscriptionAsync(properties, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (rule != null)
+            await ReconcileNamedRuleAsync(options, rule, cancellationToken).ConfigureAwait(false);
+        else if (filter != null)
+            await ReconcileGeneratedFilterAsync(options, filter, cancellationToken).ConfigureAwait(false);
+    }
+
+    bool SubscriptionSettingsDiffer(CreateSubscriptionOptions options, SubscriptionProperties properties)
+    {
+        return !NormalizeForwardTo(options.ForwardTo).Equals(NormalizeForwardTo(properties.ForwardTo))
+            || options.LockDuration != properties.LockDuration
+            || options.MaxDeliveryCount != properties.MaxDeliveryCount
+            || options.EnableBatchedOperations != properties.EnableBatchedOperations
+            || options.DeadLetteringOnMessageExpiration != properties.DeadLetteringOnMessageExpiration;
+    }
+
+    string NormalizeForwardTo(string? forwardTo)
+    {
+        return string.IsNullOrEmpty(forwardTo)
+            ? string.Empty
+            : Uri.IsWellFormedUriString(forwardTo, UriKind.Absolute)
+                ? new Uri(forwardTo).AbsolutePath.TrimStart('/')
+                : forwardTo.Replace(Endpoint.ToString(), string.Empty).Trim('/');
+    }
+
+    async Task ReconcileNamedRuleAsync(CreateSubscriptionOptions options, CreateRuleOptions rule, CancellationToken cancellationToken)
+    {
+        var properties = await GetRuleAsync(options.TopicName, options.SubscriptionName, rule.Name, cancellationToken).ConfigureAwait(false);
+        if (rule.Name == properties.Name && (!(rule.Filter?.Equals(properties.Filter) ?? properties.Filter == null)
+                || !(rule.Action?.Equals(properties.Action) ?? properties.Action == null)))
+        {
+            LogContext.Debug?.Log("Updating subscription Rule: {Rule} ({DescriptionFilter} -> {Filter})", rule.Name,
+                properties.Filter?.ToString(), rule.Filter?.ToString());
+
+            properties.Filter = rule.Filter;
+            properties.Action = rule.Action;
+
+            await UpdateRuleAsync(options.TopicName, options.SubscriptionName, properties, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    async Task ReconcileGeneratedFilterAsync(CreateSubscriptionOptions options, RuleFilter filter, CancellationToken cancellationToken)
+    {
+        IList<RuleProperties> rules = await GetRulesAsync(options.TopicName, options.SubscriptionName, cancellationToken).ConfigureAwait(false);
+        if (rules.Count != 1 || !Guid.TryParse(rules[0].Name, out _))
+            throw new InvalidOperationException(
+                $"Cannot reconcile the generated filter for subscription '{options.SubscriptionName}' on topic '{options.TopicName}': expected one generated rule, found {rules.Count} rule(s).");
+
+        var existingRule = rules[0];
+        if (!(existingRule.Filter?.Equals(filter) ?? filter == null))
+        {
+            LogContext.Debug?.Log("Updating subscription filter: {Rule} ({DescriptionFilter} -> {Filter})", existingRule.Name,
+                existingRule.Filter?.ToString(), filter?.ToString());
+
+            existingRule.Filter = filter;
+
+            await UpdateRuleAsync(options.TopicName, options.SubscriptionName, existingRule, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     /// <summary>Attempts to delete a subscription, treating absence as success and logging other failures.</summary>

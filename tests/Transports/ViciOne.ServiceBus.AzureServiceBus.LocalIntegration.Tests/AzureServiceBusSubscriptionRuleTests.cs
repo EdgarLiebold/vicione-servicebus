@@ -157,6 +157,104 @@ public sealed class AzureServiceBusSubscriptionRuleTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-RULE", "missing-configured-rule-rejects-broad-existing-subscription")]
+    public async Task MissingConfiguredRule_RejectsExistingSubscriptionWithBroadDefaultRuleAsync()
+    {
+        await WithExistingSubscriptionAsync("missing-rule", null, async (context, admin, topic, subscription, cancellationToken) =>
+        {
+            var configuredRule = new CreateRuleOptions("only-27", new SqlRuleFilter("ClientId = 27"));
+            ServiceBusException exception = await Assert.ThrowsAsync<ServiceBusException>(() =>
+                context.CreateTopicSubscriptionAsync(
+                    new CreateSubscriptionOptions(topic, subscription), configuredRule, null, cancellationToken));
+
+            Assert.Equal(ServiceBusFailureReason.MessagingEntityNotFound, exception.Reason);
+            RuleProperties defaultRule = await GetOnlyRuleAsync(admin, topic, subscription, cancellationToken);
+            Assert.Equal("$Default", defaultRule.Name);
+            Assert.IsType<TrueRuleFilter>(defaultRule.Filter);
+        });
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-RULE", "existing-generated-rule-updates-filter-without-duplication")]
+    public async Task ExistingGeneratedRule_UpdatesItsFilterWithoutAddingAnotherRuleAsync()
+    {
+        string ruleName = Guid.NewGuid().ToString("D");
+        var initialRule = new CreateRuleOptions(ruleName, new SqlRuleFilter("ClientId = 69"));
+        await WithExistingSubscriptionAsync("generated-rule-update", initialRule,
+            async (context, admin, topic, subscription, cancellationToken) =>
+        {
+            var options = new CreateSubscriptionOptions(topic, subscription);
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                SubscriptionProperties result = await context.CreateTopicSubscriptionAsync(
+                    options, null, new SqlRuleFilter("ClientId = 27"), cancellationToken);
+
+                Assert.Equal(topic, result.TopicName);
+                Assert.Equal(subscription, result.SubscriptionName);
+                RuleProperties currentRule = await GetOnlyRuleAsync(admin, topic, subscription, cancellationToken);
+                Assert.Equal(ruleName, currentRule.Name);
+                Assert.Equal("ClientId = 27", Assert.IsType<SqlRuleFilter>(currentRule.Filter).SqlExpression);
+            }
+        });
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-RULE", "generated-filter-rejects-unmanaged-default-rule")]
+    public async Task GeneratedFilter_RejectsBroadDefaultRuleInsteadOfReportingSuccessAsync()
+    {
+        await WithExistingSubscriptionAsync("unmanaged-default-rule", null,
+            async (context, admin, topic, subscription, cancellationToken) =>
+        {
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                context.CreateTopicSubscriptionAsync(new CreateSubscriptionOptions(topic, subscription),
+                    null, new SqlRuleFilter("ClientId = 27"), cancellationToken));
+
+            Assert.Contains(topic, exception.Message, StringComparison.Ordinal);
+            Assert.Contains(subscription, exception.Message, StringComparison.Ordinal);
+            RuleProperties defaultRule = await GetOnlyRuleAsync(admin, topic, subscription, cancellationToken);
+            Assert.Equal("$Default", defaultRule.Name);
+            Assert.IsType<TrueRuleFilter>(defaultRule.Filter);
+        });
+    }
+
+    static async Task WithExistingSubscriptionAsync(string fixtureName, CreateRuleOptions? initialRule,
+        Func<ServiceBusConnectionContext, ServiceBusAdministrationClient, string, string, CancellationToken, Task> verify)
+    {
+        AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create(fixtureName);
+        ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
+        await using ServiceBusClient client = fixture.CreateClient();
+        string topic = fixture.Name("topic");
+        string subscription = $"vsb-{Guid.NewGuid():N}";
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        try
+        {
+            await admin.CreateTopicAsync(new CreateTopicOptions(topic)
+            {
+                DefaultMessageTimeToLive = EmulatorEntityTimeToLive,
+            }, cancellationToken);
+            if (initialRule == null)
+                await admin.CreateSubscriptionAsync(new CreateSubscriptionOptions(topic, subscription), cancellationToken);
+            else
+                await admin.CreateSubscriptionAsync(new CreateSubscriptionOptions(topic, subscription), initialRule, cancellationToken);
+            var context = new ServiceBusConnectionContext(client, admin, cancellationToken);
+            await verify(context, admin, topic, subscription, cancellationToken);
+        }
+        finally
+        {
+            await fixture.CleanupAsync(admin);
+        }
+    }
+
+    static async Task<RuleProperties> GetOnlyRuleAsync(ServiceBusAdministrationClient admin, string topic,
+        string subscription, CancellationToken cancellationToken)
+    {
+        var rules = new List<RuleProperties>();
+        await foreach (RuleProperties rule in admin.GetRulesAsync(topic, subscription, cancellationToken))
+            rules.Add(rule);
+        return Assert.Single(rules);
+    }
+
     static TaskCompletionSource<T> Observation<T>() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 

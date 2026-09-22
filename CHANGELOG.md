@@ -85,6 +85,12 @@ entry below records what the current work changed for anyone reading the source.
   timeout or HTTP status from turning an ActiveMQ configuration failure into a durable retry.
   Azure's own retry-stop connection wrapper remains classifiable; tests exercise the actual retry
   wrapper and verify immediate InMemory outbox quarantine with both transports registered.
+- Azure Service Bus subscription setup now propagates a missing configured rule on an existing
+  subscription instead of reporting success with a broad `$Default` rule. A generated filter on an
+  existing subscription requires one identifiable generated rule; ambiguous or externally named
+  rule sets fail closed. When another creator wins a subscription race, the winner's delivery and
+  forwarding settings and configured rule are reconciled before setup succeeds. Real emulator
+  regressions check the persisted rule set, and a controlled SDK race checks both updates.
 - SignalR's source and test NuGet lockfiles now reflect the earlier removal of their obsolete
   Initializers project dependency. A locked restore succeeds with the current project graph.
 - Assembly directory scans now resolve candidates from their selected files instead of binding
