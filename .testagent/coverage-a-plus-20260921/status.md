@@ -131,7 +131,9 @@ covering direct, wrapped, intermediate, and aggregate failure causes. The
 final Release build has zero warnings and errors; Azure Unit with Microsoft
 CodeCoverage passed 201/201, the complete Unit/Architecture gate passed
 9,970/9,970, and the isolated Service Bus emulator passed 25/25 with empty
-fixture findings. The two baseline host retry lambdas at CRAP 240 and 210
+fixture findings. A detached checkout of exact source commit `a628ecc3c`
+passed locked restore and 201/201 Azure Unit with Microsoft CodeCoverage.
+The two baseline host retry lambdas at CRAP 240 and 210
 were replaced by focused methods at CRAP 28 or lower. The final adversarial
 review returned PASS. See `azure-servicebus-retry-phase.md`. A fresh complete
 35-report aggregate is required before any current-byte global A+ claim.

@@ -85,6 +85,10 @@ were extracted with an equivalent inline XML calculation using
 - Complete Unit/Architecture gate: 9,970/9,970 passed, zero failures and skips.
 - Azure Service Bus Unit with Microsoft CodeCoverage: 201/201 passed; raw report
   `artifacts/coverage-a-plus-20260922-asb-retry/azure-servicebus-unit-final-bytes.cobertura.xml`.
+- Detached, clean checkout of exact source commit `a628ecc3c`: locked restore
+  and Release Azure Unit with Microsoft CodeCoverage passed 201/201. Its raw
+  report is `artifacts/coverage-a-plus-20260922-asb-retry/azure-servicebus-unit-exact-a628ecc3c.cobertura.xml`,
+  SHA-256 `5f592948c2196326dabe6cddf44c76a680f3e03345ba1c9e9902e0dfde0`.
 - Isolated Service Bus emulator: 25/25 passed, zero failures and skips;
   fixture run `vicione-199cfc8c3a87` has `findings: []`.
 
