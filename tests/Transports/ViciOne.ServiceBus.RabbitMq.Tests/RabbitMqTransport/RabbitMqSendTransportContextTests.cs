@@ -1,11 +1,15 @@
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Mime;
 using System.Reflection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.RabbitMq.Middleware;
 using ViciOne.ServiceBus.RabbitMq.Topology;
@@ -103,6 +107,20 @@ public sealed class RabbitMqSendTransportContextTests
         Assert.Equal(RabbitMqExchangeNames.ReplyTo, published.BasicProperties.ReplyTo);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "distinct-publish-payload-enforces-mandatory-routing")]
+    public async Task SendAsync_EnforcesMandatoryRoutingFromADistinctPublishPayloadAsync()
+    {
+        PublishContext publish = DispatchProxy.Create<PublishContext, MandatoryPublishPayloadProxy>();
+        var context = new PublishPayloadMessageContext(publish);
+        var channel = new RecordingChannelContext();
+
+        await CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken);
+
+        Assert.True(context.Mandatory);
+        Assert.True(Assert.Single(channel.Published).Mandatory);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(-250)]
@@ -116,6 +134,63 @@ public sealed class RabbitMqSendTransportContextTests
         await CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken);
 
         Assert.Equal("1000", Assert.Single(channel.Published).BasicProperties.Expiration);
+    }
+
+    [Theory]
+    [InlineData(1L, "1")]
+    [InlineData(5_000L, "1")]
+    [InlineData(11_000L, "2")]
+    [InlineData(12_500_000L, "1250")]
+    [InlineData(9_223_372_036_854_770_001L, "922337203685478")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "positive-ttl-never-rounds-to-zero-or-shorter")]
+    public async Task SendAsync_RoundsPositiveTimeToLiveUpToTheNextWireMillisecondAsync(long ticks, string expectedExpiration)
+    {
+        var context = CreateMessageContext("orders", new byte[] { 1 });
+        context.TimeToLive = TimeSpan.FromTicks(ticks);
+        var channel = new RecordingChannelContext();
+
+        await CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken);
+
+        Assert.Equal(expectedExpiration, Assert.Single(channel.Published).BasicProperties.Expiration);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "direct-reply-to-uses-default-exchange")]
+    public async Task SendAsync_DirectReplyToUsesTheDefaultExchangeAndPreservesTheReplyRoutingKeyAsync()
+    {
+        var context = CreateMessageContext(RabbitMqExchangeNames.ReplyTo, new byte[] { 1, 2 });
+        context.RoutingKey = "amq.rabbitmq.reply-to.reply-42";
+        var delayPipe = new CountingPipe();
+        var channel = new RecordingChannelContext();
+
+        await CreateTransport(EmptyTopology(), delayPipe, RabbitMqExchangeNames.ReplyTo)
+            .SendAsync(channel, context, TestContext.Current.CancellationToken);
+
+        PublishedFrame frame = Assert.Single(channel.Published);
+        Assert.Equal(string.Empty, frame.Exchange);
+        Assert.Equal("amq.rabbitmq.reply-to.reply-42", frame.RoutingKey);
+        Assert.Equal(new byte[] { 1, 2 }, frame.Body);
+        Assert.Equal(0, delayPipe.Calls);
+        Assert.DoesNotContain("x-delay", frame.BasicProperties.Headers!.Keys);
+    }
+
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData("orders.created", true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "routing-key-telemetry-only-for-a-present-route")]
+    public async Task SendAsync_RecordsRoutingKeyOnlyWhenTheActivityHasAConcreteRouteAsync(string? routingKey, bool expectTag)
+    {
+        using var activity = new Activity("rabbitmq-send") { IsAllDataRequested = true };
+        activity.Start();
+        var context = CreateMessageContext("orders", new byte[] { 1 });
+        context.RoutingKey = routingKey;
+        var channel = new RecordingChannelContext();
+
+        await CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken);
+
+        Assert.Single(channel.Published);
+        Assert.Equal(expectTag ? routingKey : null,
+            activity.GetTagItem(ServiceBusTelemetry.Attributes.RabbitMqRoutingKey));
     }
 
     [Fact]
@@ -135,6 +210,27 @@ public sealed class RabbitMqSendTransportContextTests
         Assert.Equal("orders_delay", published.Exchange);
         Assert.Equal("orders.created", published.RoutingKey);
         Assert.Equal(1750L, published.BasicProperties.Headers!["x-delay"]);
+    }
+
+    [Theory]
+    [InlineData(1L, 1L)]
+    [InlineData(5_000L, 1L)]
+    [InlineData(11_000L, 2L)]
+    [InlineData(9_223_372_036_854_770_001L, 922_337_203_685_478L)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "positive-delay-never-becomes-zero-on-the-wire")]
+    public async Task SendAsync_RoundsPositiveDelayUpToTheNextWireMillisecondAsync(long ticks, long expectedMilliseconds)
+    {
+        var context = CreateMessageContext("orders", new byte[] { 1 });
+        context.Delay = TimeSpan.FromTicks(ticks);
+        var delayPipe = new CountingPipe();
+        var channel = new RecordingChannelContext();
+
+        await CreateTransport(EmptyTopology(), delayPipe).SendAsync(channel, context, TestContext.Current.CancellationToken);
+
+        PublishedFrame frame = Assert.Single(channel.Published);
+        Assert.Equal("orders_delay", frame.Exchange);
+        Assert.Equal(expectedMilliseconds, frame.BasicProperties.Headers!["x-delay"]);
+        Assert.Equal(1, delayPipe.Calls);
     }
 
     [Theory]
@@ -215,6 +311,25 @@ public sealed class RabbitMqSendTransportContextTests
                 .SendAsync(channel, context, TestContext.Current.CancellationToken));
 
         Assert.Contains("publish route or delivery properties differ", exception.Message, StringComparison.Ordinal);
+        Assert.Equal(0, channel.ExchangeDeclarations);
+        Assert.Empty(channel.Published);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-DURABLE-ACCEPTANCE", "transport-exchange-must-match-validated-destination")]
+    public async Task DurableAcceptance_RejectsATransportExchangeThatDiffersFromTheValidatedDestinationAsync()
+    {
+        var context = CreateAcceptedMessageContext();
+        var requirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: false);
+        context.GetOrAddPayload(() => requirement);
+        var channel = new RecordingChannelContext();
+
+        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
+            CreateTransport(ExchangeTopology("orders"), exchange: "unvalidated")
+                .SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        Assert.Contains("publish route or delivery properties differ", exception.Message, StringComparison.Ordinal);
+        Assert.False(requirement.Accepted);
         Assert.Equal(0, channel.ExchangeDeclarations);
         Assert.Empty(channel.Published);
     }
@@ -393,6 +508,60 @@ public sealed class RabbitMqSendTransportContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-DURABLE-ACCEPTANCE", "canceled-prepublish-proof-preserves-topology")]
+    public async Task DurableAcceptance_CanceledQueueProofDoesNotPublishOrEvictValidTopologyAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var canceledContext = CreateAcceptedMessageContext(cancellation);
+        var canceledRequirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: true);
+        canceledContext.GetOrAddPayload(() => canceledRequirement);
+        var retryContext = CreateAcceptedMessageContext();
+        var retryRequirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: true);
+        retryContext.GetOrAddPayload(() => retryRequirement);
+        var channel = new RecordingChannelContext { CancelDuringQueueProof = cancellation };
+        RabbitMqSendTransportContext transport = CreateTransport(ExchangeTopology("orders"));
+
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            transport.SendAsync(channel, canceledContext, TestContext.Current.CancellationToken));
+        await transport.SendAsync(channel, retryContext, TestContext.Current.CancellationToken);
+
+        Assert.Equal(cancellation.Token, actual.CancellationToken);
+        Assert.False(canceledRequirement.Accepted);
+        Assert.True(retryRequirement.Accepted);
+        Assert.Equal(1, channel.ExchangeDeclarations);
+        Assert.Single(channel.Published);
+        Assert.Equal(new[] { "passive:orders", "passive:orders", "declare:orders", "passive:orders", "declare:orders" },
+            channel.QueueProofOperations);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-DURABLE-ACCEPTANCE", "canceled-publish-preserves-topology")]
+    public async Task DurableAcceptance_CanceledPublishDoesNotMarkAcceptanceOrEvictValidTopologyAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var canceledContext = CreateAcceptedMessageContext(cancellation);
+        var canceledRequirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: true);
+        canceledContext.GetOrAddPayload(() => canceledRequirement);
+        var retryContext = CreateAcceptedMessageContext();
+        var retryRequirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: true);
+        retryContext.GetOrAddPayload(() => retryRequirement);
+        var channel = new RecordingChannelContext { CancelDuringPublish = cancellation };
+        RabbitMqSendTransportContext transport = CreateTransport(ExchangeTopology("orders"));
+
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            transport.SendAsync(channel, canceledContext, TestContext.Current.CancellationToken));
+        await transport.SendAsync(channel, retryContext, TestContext.Current.CancellationToken);
+
+        Assert.Equal(cancellation.Token, actual.CancellationToken);
+        Assert.False(canceledRequirement.Accepted);
+        Assert.True(retryRequirement.Accepted);
+        Assert.Equal(1, channel.ExchangeDeclarations);
+        Assert.Equal(2, channel.Published.Count);
+        Assert.Equal(new[] { "passive:orders", "declare:orders", "passive:orders", "declare:orders",
+            "passive:orders", "declare:orders" }, channel.QueueProofOperations);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "incoming-reply-properties-copy-with-explicit-precedence")]
     public async Task CreateSendContextAsync_CopiesIncomingReplyPropertiesWithoutOverwritingExplicitValuesAsync()
     {
@@ -470,6 +639,17 @@ public sealed class RabbitMqSendTransportContextTests
         return context;
     }
 
+    private static RabbitMqMessageSendContext<TestMessage> CreateAcceptedMessageContext(CancellationTokenSource cancellation)
+    {
+        var context = new RabbitMqMessageSendContext<TestMessage>(
+            new BasicProperties(), "orders", new TestMessage(), cancellation.Token)
+        {
+            Serializer = new BinarySerializer(new byte[] { 1 }),
+            Mandatory = true,
+        };
+        return context;
+    }
+
     private static RabbitMqMessageSendContext<TestMessage> CreateMessageContext(string exchange, byte[] body)
     {
         var context = new RabbitMqMessageSendContext<TestMessage>(new BasicProperties(), exchange, new TestMessage(), CancellationToken.None)
@@ -520,6 +700,30 @@ public sealed class RabbitMqSendTransportContextTests
     }
 
     private sealed class TestMessage;
+
+    private sealed class PublishPayloadMessageContext : RabbitMqMessageSendContext<TestMessage>
+    {
+        private readonly PublishContext _publish;
+
+        public PublishPayloadMessageContext(PublishContext publish)
+            : base(new BasicProperties(), "orders", new TestMessage(), CancellationToken.None)
+        {
+            _publish = publish;
+            Serializer = new BinarySerializer(new byte[] { 1 });
+        }
+
+        public override bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
+            where TPayload : class
+        {
+            if (typeof(TPayload) == typeof(PublishContext))
+            {
+                payload = (TPayload)(object)_publish;
+                return true;
+            }
+
+            return base.TryGetPayload(out payload);
+        }
+    }
 
     private sealed class BinarySerializer(byte[] body) : IMessageSerializer
     {
@@ -624,6 +828,8 @@ public sealed class RabbitMqSendTransportContextTests
         public Exception? PostPublishQueueProofFailure { get; init; }
         public TaskCompletionSource? PostPublishQueueProofEntered { get; init; }
         public Exception? QueueProofFailure { get; init; }
+        public CancellationTokenSource? CancelDuringQueueProof { get; set; }
+        public CancellationTokenSource? CancelDuringPublish { get; set; }
         public TaskCompletionSource? ReleasePostPublishQueueProof { get; init; }
         public TaskCompletionSource? ReleaseSecondPostPublishQueueProof { get; init; }
         public TaskCompletionSource? ReleaseTopologyRebuild { get; init; }
@@ -640,6 +846,12 @@ public sealed class RabbitMqSendTransportContextTests
             bool awaitAck, CancellationToken cancellationToken)
         {
             Published.Add(new PublishedFrame(exchange, routingKey, mandatory, basicProperties, body, awaitAck));
+            if (CancelDuringPublish is { } source)
+            {
+                CancelDuringPublish = null;
+                source.Cancel();
+                return Task.FromCanceled(cancellationToken);
+            }
             if (RecreateQueueWhenQuorumDeclared && !_queueRoutable)
                 return Task.FromException(new MessageReturnedException("replacement queue is not bound"));
             Exception? outcome = PublishOutcomes.Count > 0 ? PublishOutcomes.Dequeue() : null;
@@ -662,6 +874,12 @@ public sealed class RabbitMqSendTransportContextTests
         public Task<QueueDeclareOk> QueueDeclarePassiveAsync(string queue, CancellationToken cancellationToken)
         {
             QueueProofOperations.Add($"passive:{queue}");
+            if (CancelDuringQueueProof is { } source)
+            {
+                CancelDuringQueueProof = null;
+                source.Cancel();
+                return Task.FromCanceled<QueueDeclareOk>(cancellationToken);
+            }
             if (QueueProofFailure != null)
                 return Task.FromException<QueueDeclareOk>(QueueProofFailure);
             return Task.FromResult<QueueDeclareOk>(null!);
@@ -766,5 +984,11 @@ public sealed class RabbitMqSendTransportContextTests
                 ? Activator.CreateInstance(method.ReturnType)
                 : null;
         }
+    }
+
+    private class MandatoryPublishPayloadProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.Name == "get_Mandatory" ? true : PassiveProxy.Default(targetMethod);
     }
 }

@@ -153,108 +153,28 @@ public class RabbitMqSendTransportContext :
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        if (context.TryGetPayload<RabbitMqTransportAcceptanceRequirement>(out var acceptanceRequirement)
-            && !transportContext.ConnectionContext.PublisherConfirmation)
-        {
-            throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-                    "RabbitMQ durable transport acceptance",
-                    context.DestinationAddress?.ToString() ?? _exchange,
-                    "RabbitMQ publisher confirmations are disabled, so broker acceptance cannot be proven",
-                    "Enable publisher confirmations on the RabbitMQ host"));
-        }
-
-        if (acceptanceRequirement is not null
-            && (!string.Equals(context.Exchange, acceptanceRequirement.Exchange, StringComparison.Ordinal)
-                || !string.Equals(_exchange, acceptanceRequirement.Exchange, StringComparison.Ordinal)
-                || context.Delay.GetValueOrDefault() > TimeSpan.Zero
-                || context.TimeToLive.HasValue
-                || !context.Durable
-                || !context.Mandatory
-                || !context.AwaitAck))
-        {
-            throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-                    "RabbitMQ durable transport acceptance",
-                    context.DestinationAddress?.ToString() ?? _exchange,
-                    "The publish route or delivery properties differ from the validated durable queue destination",
-                    "Use the validated durable queue without delayed routing or transport-property overrides"));
-        }
+        RabbitMqTransportAcceptanceRequirement? acceptanceRequirement = ValidateTransportAcceptance(transportContext, context);
 
         OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext =
             await _configureTopologyFilter.ConfigureAsync(transportContext, sendContext.CancellationToken).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        if (acceptanceRequirement?.RequiresExistingQueueProof == true)
-        {
-            try
-            {
-                await VerifyExistingQuorumQueueAsync(transportContext, acceptanceRequirement.Exchange,
-                        context.DestinationAddress?.ToString() ?? _exchange, sendContext.CancellationToken)
-                    .ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                InvalidateTopology(oneTimeContext, transportContext);
-                throw;
-            }
-        }
+        await VerifyBeforePublishAsync(transportContext, context, acceptanceRequirement, oneTimeContext,
+            sendContext.CancellationToken).ConfigureAwait(false);
 
-        var exchange = context.Exchange;
-        if (exchange.Equals(RabbitMqExchangeNames.ReplyTo))
-            exchange = "";
+        string exchange = context.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) ? "" : context.Exchange;
 
         byte[] body = context.Body.ToArray();
 
         if (context.TryGetPayload(out PublishContext? publishContext))
             context.Mandatory = context.Mandatory || publishContext.Mandatory;
 
-        context.BasicProperties.Headers ??= new Dictionary<string, object?>();
-
-        context.BasicProperties.ContentType = context.ContentType?.ToString();
-
-        SetHeaders(context.BasicProperties.Headers, context.Headers);
-
-        context.BasicProperties.Persistent = context.Durable;
-
-        if (context.MessageId.HasValue)
-            context.BasicProperties.MessageId = context.MessageId.ToString();
-
-        if (context.CorrelationId.HasValue)
-            context.BasicProperties.CorrelationId = context.CorrelationId.ToString();
-
-        if (context.TimeToLive.HasValue)
-        {
-            context.BasicProperties.Expiration =
-                (context.TimeToLive > TimeSpan.Zero ? context.TimeToLive.Value : TimeSpan.FromSeconds(1))
-                .TotalMilliseconds
-                .ToString("F0", CultureInfo.InvariantCulture);
-        }
-
-        if (context.RequestId.HasValue && context.ResponseAddress?.IsReplyToAddress() == true)
-            context.BasicProperties.ReplyTo ??= RabbitMqExchangeNames.ReplyTo;
-
-        var delay = context.Delay?.TotalMilliseconds;
-        if (delay > 0 && exchange != "")
-        {
-            await _delayConfigureTopologyPipe.SendAsync(transportContext).ConfigureAwait(false);
-            context.SetTransportHeader("x-delay", (long)delay.Value);
-
-            exchange = _delayExchange;
-        }
+        ApplyBasicProperties(context);
+        exchange = await ConfigureDelayedExchangeAsync(transportContext, context, exchange).ConfigureAwait(false);
 
         var routingKey = context.RoutingKey ?? "";
-
-        if (Activity.Current?.IsAllDataRequested ?? false)
-        {
-            if (!string.IsNullOrEmpty(routingKey))
-                Activity.Current.SetTag(ServiceBusTelemetry.Attributes.RabbitMqRoutingKey, routingKey);
-        }
+        TagRoutingKey(routingKey);
 
         try
         {
@@ -281,6 +201,122 @@ public class RabbitMqSendTransportContext :
             InvalidateTopology(oneTimeContext, transportContext);
             throw;
         }
+    }
+
+    RabbitMqTransportAcceptanceRequirement? ValidateTransportAcceptance<T>(ChannelContext transportContext,
+        RabbitMqMessageSendContext<T> context)
+        where T : class
+    {
+        context.TryGetPayload(out RabbitMqTransportAcceptanceRequirement? requirement);
+        if (requirement is null)
+            return null;
+
+        if (!transportContext.ConnectionContext.PublisherConfirmation)
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "RabbitMQ durable transport acceptance",
+                    context.DestinationAddress?.ToString() ?? _exchange,
+                    "RabbitMQ publisher confirmations are disabled, so broker acceptance cannot be proven",
+                    "Enable publisher confirmations on the RabbitMQ host"));
+        }
+
+        if (!HasValidatedRouteAndDelivery(context, requirement))
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "RabbitMQ durable transport acceptance",
+                    context.DestinationAddress?.ToString() ?? _exchange,
+                    "The publish route or delivery properties differ from the validated durable queue destination",
+                    "Use the validated durable queue without delayed routing or transport-property overrides"));
+        }
+
+        return requirement;
+    }
+
+    bool HasValidatedRouteAndDelivery<T>(RabbitMqMessageSendContext<T> context,
+        RabbitMqTransportAcceptanceRequirement requirement)
+        where T : class =>
+        string.Equals(context.Exchange, requirement.Exchange, StringComparison.Ordinal)
+        && string.Equals(_exchange, requirement.Exchange, StringComparison.Ordinal)
+        && context.Delay.GetValueOrDefault() <= TimeSpan.Zero
+        && !context.TimeToLive.HasValue
+        && context.Durable
+        && context.Mandatory
+        && context.AwaitAck;
+
+    async Task VerifyBeforePublishAsync<T>(ChannelContext transportContext, RabbitMqMessageSendContext<T> context,
+        RabbitMqTransportAcceptanceRequirement? requirement,
+        OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext, CancellationToken cancellationToken)
+        where T : class
+    {
+        if (requirement?.RequiresExistingQueueProof != true)
+            return;
+
+        try
+        {
+            await VerifyExistingQuorumQueueAsync(transportContext, requirement.Exchange,
+                    context.DestinationAddress?.ToString() ?? _exchange, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception)
+        {
+            InvalidateTopology(oneTimeContext, transportContext);
+            throw;
+        }
+    }
+
+    static void ApplyBasicProperties<T>(RabbitMqMessageSendContext<T> context)
+        where T : class
+    {
+        context.BasicProperties.Headers ??= new Dictionary<string, object?>();
+        context.BasicProperties.ContentType = context.ContentType?.ToString();
+        SetHeaders(context.BasicProperties.Headers, context.Headers);
+        context.BasicProperties.Persistent = context.Durable;
+
+        if (context.MessageId.HasValue)
+            context.BasicProperties.MessageId = context.MessageId.ToString();
+        if (context.CorrelationId.HasValue)
+            context.BasicProperties.CorrelationId = context.CorrelationId.ToString();
+        if (context.TimeToLive.HasValue)
+        {
+            TimeSpan timeToLive = context.TimeToLive.Value > TimeSpan.Zero
+                ? context.TimeToLive.Value
+                : TimeSpan.FromSeconds(1);
+            context.BasicProperties.Expiration = RoundPositiveDurationUpToMilliseconds(timeToLive)
+                .ToString(CultureInfo.InvariantCulture);
+        }
+        if (context.RequestId.HasValue && context.ResponseAddress?.IsReplyToAddress() == true)
+            context.BasicProperties.ReplyTo ??= RabbitMqExchangeNames.ReplyTo;
+    }
+
+    async Task<string> ConfigureDelayedExchangeAsync<T>(ChannelContext transportContext,
+        RabbitMqMessageSendContext<T> context, string exchange)
+        where T : class
+    {
+        if (context.Delay is not { } delay || delay <= TimeSpan.Zero || exchange.Length == 0)
+            return exchange;
+
+        await _delayConfigureTopologyPipe.SendAsync(transportContext).ConfigureAwait(false);
+        context.SetTransportHeader("x-delay", RoundPositiveDurationUpToMilliseconds(delay));
+        return _delayExchange;
+    }
+
+    static long RoundPositiveDurationUpToMilliseconds(TimeSpan duration)
+    {
+        long ticks = duration.Ticks;
+        return ticks / TimeSpan.TicksPerMillisecond
+            + (ticks % TimeSpan.TicksPerMillisecond == 0 ? 0 : 1);
+    }
+
+    static void TagRoutingKey(string routingKey)
+    {
+        if (Activity.Current is { IsAllDataRequested: true } activity && routingKey.Length > 0)
+            activity.SetTag(ServiceBusTelemetry.Attributes.RabbitMqRoutingKey, routingKey);
     }
 
     static void InvalidateTopology(OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext,

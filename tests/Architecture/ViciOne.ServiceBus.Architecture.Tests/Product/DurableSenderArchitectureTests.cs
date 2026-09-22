@@ -209,14 +209,33 @@ public sealed class DurableSenderArchitectureTests
 
         string transport = Source(
             "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportContext.cs");
-        int confirmationPreflight = transport.IndexOf(
-            "transportContext.ConnectionContext.PublisherConfirmation",
+        int acceptancePreflight = transport.IndexOf(
+            "ValidateTransportAcceptance(transportContext, context)",
             StringComparison.Ordinal);
         int topology = transport.IndexOf("_configureTopologyFilter.ConfigureAsync", StringComparison.Ordinal);
         int publish = transport.IndexOf("transportContext.BasicPublishAsync", StringComparison.Ordinal);
-        Assert.True(confirmationPreflight >= 0);
-        Assert.True(topology > confirmationPreflight);
+        int acceptedByTransport = transport.IndexOf("acceptanceRequirement?.MarkAccepted();", StringComparison.Ordinal);
+        Assert.True(acceptancePreflight >= 0);
+        Assert.True(topology > acceptancePreflight);
         Assert.True(publish > topology);
+        Assert.True(acceptedByTransport > publish);
+
+        int validationMethod = transport.IndexOf(
+            "RabbitMqTransportAcceptanceRequirement? ValidateTransportAcceptance<T>",
+            StringComparison.Ordinal);
+        int validatedDelivery = transport.IndexOf("bool HasValidatedRouteAndDelivery<T>", StringComparison.Ordinal);
+        Assert.True(validationMethod > acceptedByTransport);
+        Assert.True(validatedDelivery > validationMethod);
+        string validation = transport[validationMethod..validatedDelivery];
+        Assert.Contains("transportContext.ConnectionContext.PublisherConfirmation", validation, StringComparison.Ordinal);
+        Assert.Contains("HasValidatedRouteAndDelivery(context, requirement)", validation, StringComparison.Ordinal);
+
+        int proofMethod = transport.IndexOf("async Task VerifyBeforePublishAsync<T>", StringComparison.Ordinal);
+        Assert.True(proofMethod > validatedDelivery);
+        string delivery = transport[validatedDelivery..proofMethod];
+        Assert.Contains("context.Durable", delivery, StringComparison.Ordinal);
+        Assert.Contains("context.Mandatory", delivery, StringComparison.Ordinal);
+        Assert.Contains("context.AwaitAck", delivery, StringComparison.Ordinal);
 
         int send = dispatcher.IndexOf("await endpoint.SendAsync(", StringComparison.Ordinal);
         int accepted = dispatcher.IndexOf(

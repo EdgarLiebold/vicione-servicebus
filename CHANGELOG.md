@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- RabbitMQ sends now round positive sub-millisecond message lifetimes and delayed-delivery
+  intervals up to the next wire millisecond. This prevents a positive lifetime or delay from
+  becoming zero and avoids shortening fractional intervals. Send tests also cover direct-reply
+  routing, telemetry tags, durable destination validation, cancellation, and mandatory routing
+  supplied by a distinct publish payload.
 - Reliable-messaging configuration now rejects nonfinite retry jitter before the typed sender
   starts. The invalid-policy tests use a valid baseline and verify the rejected property's name;
   inclusive jitter limits and the frozen delivery policy have their own regression tests.

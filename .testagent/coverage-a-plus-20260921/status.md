@@ -2,6 +2,16 @@
 
 ## Latest focused slice
 
+The RabbitMQ send slice fixes positive TTL/delay values that became zero or were shortened by
+millisecond formatting. Eight fail-first cases reproduced the old defect. The focused class passed
+42/42; the full RabbitMQ Unit project passed 340/340 with Microsoft CodeCoverage and canonical
+settings. The Release Unit/Architecture build had zero warnings/errors and its full gate passed
+10,047/10,047. The isolated RabbitMQ LocalIntegration build had zero warnings/errors; 31/31 tests
+passed against a fresh broker with canonical coverage and empty fixture findings. The selected
+send-path methods have full reported line coverage, complexity and CRAP at most 20, and explicit
+remaining branch gaps. Read-only adversarial review returned PASS. See `rabbitmq-send-phase.md`.
+The 36-report aggregate below is still the latest product-wide profile; global A+ remains open.
+
 The reliable-messaging retry-jitter slice fixes nonfinite option acceptance,
 numeric jitter bounds and two-tick distribution, and due-date overflow on a
 real transient delivery. Invalid-policy tests now prove each named setting
