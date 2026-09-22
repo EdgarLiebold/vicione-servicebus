@@ -54,38 +54,9 @@ public sealed class ReliableMessagingOptions<TBus>
 
     internal ReliableMessagingPolicy<TBus> ValidateAndFreeze()
     {
-        if (!StoreLimitsConfigured)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Store limits were not configured.", "Call Store(new ReliableStoreLimits { ... }) inside UseReliableMessaging"));
-        if (!DeliveryConfigured)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Delivery policy was not configured.", "Call Delivery(...) inside UseReliableMessaging"));
-        if (!RetentionConfigured)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Retention was not configured.", "Call Retention(...) inside UseReliableMessaging"));
-        if (MaximumStoredCount < 1)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumStoredCount)} must be positive.", "Correct the named configuration before starting the host"));
-        if (MaximumStoredBytes < 1)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumStoredBytes)} must be positive.", "Correct the named configuration before starting the host"));
-        if (MaximumConcurrentDeliveries is < 1 or > DurableSendOperationLimits.AbsoluteMaximumClaimCount)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumConcurrentDeliveries)} must be between 1 and {DurableSendOperationLimits.AbsoluteMaximumClaimCount}.", "Correct the named configuration before starting the host"));
-        if (MaximumDeliveryAttempts < 1)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumDeliveryAttempts)} must be positive.", "Correct the named configuration before starting the host"));
-        if (InitialRetryDelay <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(InitialRetryDelay)} must be positive.", "Correct the named configuration before starting the host"));
-        if (MaximumRetryDelay < InitialRetryDelay)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumRetryDelay)} must not be less than {nameof(InitialRetryDelay)}.", "Correct the named configuration before starting the host"));
-        if (RetryJitterFraction is < 0 or > 0.50)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(RetryJitterFraction)} must be between 0 and 0.50.", "Correct the named configuration before starting the host"));
-        if (LeaseDuration <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(LeaseDuration)} must be positive.", "Correct the named configuration before starting the host"));
-        if (ConsumerCompletionTimeout <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(ConsumerCompletionTimeout)} must be positive.", "Correct the named configuration before starting the host"));
-        if (PollInterval <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(PollInterval)} must be positive.", "Correct the named configuration before starting the host"));
-        if (TelemetrySnapshotInterval <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(TelemetrySnapshotInterval)} must be positive.", "Correct the named configuration before starting the host"));
-        if (HealthDegradedAfter <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(HealthDegradedAfter)} must be positive.", "Correct the named configuration before starting the host"));
-        if (Retention <= TimeSpan.Zero)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(Retention)} must be positive.", "Correct the named configuration before starting the host"));
+        ValidateRequiredConfiguration();
+        ValidateCapacityAndRetry();
+        ValidateTiming();
 
         return new ReliableMessagingPolicy<TBus>(
             new DurableSendStoreLimits(MaximumStoredCount, MaximumStoredBytes),
@@ -100,5 +71,49 @@ public sealed class ReliableMessagingOptions<TBus>
             TelemetrySnapshotInterval,
             HealthDegradedAfter,
             Retention);
+    }
+
+    private void ValidateRequiredConfiguration()
+    {
+        if (!StoreLimitsConfigured)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Store limits were not configured.", "Call Store(new ReliableStoreLimits { ... }) inside UseReliableMessaging"));
+        if (!DeliveryConfigured)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Delivery policy was not configured.", "Call Delivery(...) inside UseReliableMessaging"));
+        if (!RetentionConfigured)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Retention was not configured.", "Call Retention(...) inside UseReliableMessaging"));
+    }
+
+    private void ValidateCapacityAndRetry()
+    {
+        if (MaximumStoredCount < 1)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumStoredCount)} must be positive.", "Correct the named configuration before starting the host"));
+        if (MaximumStoredBytes < 1)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumStoredBytes)} must be positive.", "Correct the named configuration before starting the host"));
+        if (MaximumConcurrentDeliveries is < 1 or > DurableSendOperationLimits.AbsoluteMaximumClaimCount)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumConcurrentDeliveries)} must be between 1 and {DurableSendOperationLimits.AbsoluteMaximumClaimCount}.", "Correct the named configuration before starting the host"));
+        if (MaximumDeliveryAttempts < 1)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumDeliveryAttempts)} must be positive.", "Correct the named configuration before starting the host"));
+        if (InitialRetryDelay <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(InitialRetryDelay)} must be positive.", "Correct the named configuration before starting the host"));
+        if (MaximumRetryDelay < InitialRetryDelay)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumRetryDelay)} must not be less than {nameof(InitialRetryDelay)}.", "Correct the named configuration before starting the host"));
+        if (!double.IsFinite(RetryJitterFraction) || RetryJitterFraction is < 0 or > 0.50)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(RetryJitterFraction)} must be between 0 and 0.50.", "Correct the named configuration before starting the host"));
+    }
+
+    private void ValidateTiming()
+    {
+        if (LeaseDuration <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(LeaseDuration)} must be positive.", "Correct the named configuration before starting the host"));
+        if (ConsumerCompletionTimeout <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(ConsumerCompletionTimeout)} must be positive.", "Correct the named configuration before starting the host"));
+        if (PollInterval <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(PollInterval)} must be positive.", "Correct the named configuration before starting the host"));
+        if (TelemetrySnapshotInterval <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(TelemetrySnapshotInterval)} must be positive.", "Correct the named configuration before starting the host"));
+        if (HealthDegradedAfter <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(HealthDegradedAfter)} must be positive.", "Correct the named configuration before starting the host"));
+        if (Retention <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(Retention)} must be positive.", "Correct the named configuration before starting the host"));
     }
 }

@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Reliable-messaging configuration now rejects nonfinite retry jitter before the typed sender
+  starts. The invalid-policy tests use a valid baseline and verify the rejected property's name;
+  inclusive jitter limits and the frozen delivery policy have their own regression tests.
+  Durable retry timing now preserves both outcomes even in a two-tick jitter window, avoids
+  numeric wraparound at the largest `TimeSpan`, and retains a failed delivery with a saturated
+  due date when adding its calculated delay to the current time would overflow.
 - SQL topology subscriptions now compare their nested queue and topic declarations by logical
   broker identity instead of object reference, with matching hash codes. SQL topology diagnostics
   now expose the queue delivery limit, and the public publish-topology registration extensions

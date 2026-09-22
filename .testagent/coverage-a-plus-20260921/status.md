@@ -1,5 +1,19 @@
 # ServiceBus A+ coverage campaign — status
 
+## Latest focused slice
+
+The reliable-messaging retry-jitter slice fixes nonfinite option acceptance,
+numeric jitter bounds and two-tick distribution, and due-date overflow on a
+real transient delivery. Invalid-policy tests now prove each named setting
+instead of failing on default store limits. The Release Unit solution build
+has zero warnings/errors; the Unit/Architecture gate passed 10,031/10,031 and
+the full Core Microsoft CodeCoverage run passed 6,280/6,280. The five selected
+methods have full reported line coverage; four have every instrumented branch,
+while `ValidateAndFreeze` has no branches. Their CRAP scores are 1, 6, 24, 12,
+and 12. Independent read-only adversarial review returned PASS. See
+`reliable-messaging-jitter-phase.md`. This focused result does not replace the
+product-wide aggregate below; global A+ remains open.
+
 ## Latest product-wide measurement
 
 At exact source/test commit `a955052272b744ceb44333a51035ac9ce4f66e3d`,

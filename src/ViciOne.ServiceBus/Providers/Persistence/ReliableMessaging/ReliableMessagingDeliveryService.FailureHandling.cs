@@ -74,11 +74,14 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
         if (failure == DurableSendFailureKind.Transient && attempt < RequirePolicy().MaximumDeliveryAttempts)
         {
             TimeSpan delay = CalculateRetryDelay(delivery.Message.Id, attempt);
+            DateTimeOffset nextAttemptAt = delay >= DateTimeOffset.MaxValue - now
+                ? DateTimeOffset.MaxValue
+                : now + delay;
             bool scheduled = await _store.ScheduleRetryAsync(
                     delivery.Message.Id,
                     delivery.Lease,
                     attempt,
-                    now + delay,
+                    nextAttemptAt,
                     DurableSendFailureKind.Transient,
                     failureType,
                     now,
@@ -180,16 +183,17 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
             ^ BinaryPrimitives.ReadUInt32LittleEndian(bytes[8..])
             ^ BinaryPrimitives.ReadUInt32LittleEndian(bytes[12..])
             ^ unchecked((uint)attempt * 2654435761u);
-        double normalized = seed / (double)uint.MaxValue;
-
         // Keep jitter even after exponential backoff reaches the configured ceiling. Returning the exact maximum for
         // every sender would re-synchronize a fleet during a long outage and create a retry storm at each interval.
-        long lowerTicks = Math.Max(1, (long)Math.Floor(ticks * (1d - policy.RetryJitterFraction)));
-        long upperTicks = Math.Min(maximumTicks, (long)Math.Ceiling(ticks * (1d + policy.RetryJitterFraction)));
-        long jitteredTicks = lowerTicks == upperTicks
-            ? lowerTicks
-            : lowerTicks + (long)Math.Floor(normalized * (upperTicks - lowerTicks + 1d));
-        return TimeSpan.FromTicks(Math.Clamp(jitteredTicks, lowerTicks, upperTicks));
+        decimal jitterFraction = (decimal)policy.RetryJitterFraction;
+        long lowerTicks = Math.Max(1, (long)decimal.Floor(ticks * (1m - jitterFraction)));
+        decimal upperCandidate = decimal.Ceiling(ticks * (1m + jitterFraction));
+        long upperTicks = upperCandidate >= maximumTicks ? maximumTicks : (long)upperCandidate;
+        long width = upperTicks - lowerTicks;
+        long offset = seed == uint.MaxValue
+            ? width
+            : (long)(((UInt128)seed * ((ulong)width + 1)) / ((UInt128)uint.MaxValue + 1));
+        return TimeSpan.FromTicks(lowerTicks + offset);
     }
 
     readonly record struct PersistedFailureOutcome(

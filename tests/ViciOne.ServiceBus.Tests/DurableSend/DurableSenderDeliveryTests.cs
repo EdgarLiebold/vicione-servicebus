@@ -332,6 +332,121 @@ public sealed class DurableSenderDeliveryTests
         Assert.Contains(first, delay => delay < TimeSpan.FromMinutes(5));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RETRY", "maximum-duration-jitter-remains-bounded")]
+    public void RetryDelay_WithMaximumRepresentableDurationRemainsDeterministicAndBounded()
+    {
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
+            Store(),
+            new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted),
+            new FakeTimeProvider(Epoch),
+            options =>
+            {
+                options.InitialRetryDelay = TimeSpan.MaxValue;
+                options.MaximumRetryDelay = TimeSpan.MaxValue;
+                options.RetryJitterFraction = 0.50;
+            });
+
+        TimeSpan[] first = Enumerable.Range(1, 16)
+            .Select(value => driver.CalculateRetryDelay(new DurableSendId(GuidFrom(value)), attempt: 1))
+            .ToArray();
+        TimeSpan[] second = Enumerable.Range(1, 16)
+            .Select(value => driver.CalculateRetryDelay(new DurableSendId(GuidFrom(value)), attempt: 1))
+            .ToArray();
+
+        Assert.Equal(first, second);
+        Assert.All(first, delay => Assert.InRange(delay,
+            TimeSpan.FromTicks(TimeSpan.MaxValue.Ticks / 2), TimeSpan.MaxValue));
+        Assert.True(first.Distinct().Count() > 1);
+
+        var upperBoundId = new DurableSendId(new Guid(0x61C8864E, 0, 0, new byte[8]));
+        Assert.Equal(TimeSpan.MaxValue, driver.CalculateRetryDelay(upperBoundId, attempt: 1));
+
+        using DurableSenderDeliveryTestDriver<ITestBus> tinyJitter = Driver(
+            Store(),
+            new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted),
+            new FakeTimeProvider(Epoch),
+            options =>
+            {
+                options.InitialRetryDelay = TimeSpan.MaxValue;
+                options.MaximumRetryDelay = TimeSpan.MaxValue;
+                options.RetryJitterFraction = double.Epsilon;
+            });
+        Assert.Equal(TimeSpan.MaxValue, tinyJitter.CalculateRetryDelay(upperBoundId, attempt: 1));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RETRY", "two-tick-jitter-distributes-both-outcomes")]
+    public void RetryDelay_TwoTickWindowSelectsBothRepresentableDelays()
+    {
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
+            Store(),
+            new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted),
+            new FakeTimeProvider(Epoch),
+            options =>
+            {
+                options.InitialRetryDelay = TimeSpan.FromTicks(2);
+                options.MaximumRetryDelay = TimeSpan.FromTicks(2);
+                options.RetryJitterFraction = 0.50;
+            });
+
+        var zeroSeed = new DurableSendId(new Guid(unchecked((int)0x9E3779B1u), 0, 0, new byte[8]));
+        var midpointSeed = new DurableSendId(new Guid(0x1E3779B1, 0, 0, new byte[8]));
+
+        Assert.Equal(TimeSpan.FromTicks(1), driver.CalculateRetryDelay(zeroSeed, attempt: 1));
+        Assert.Equal(TimeSpan.FromTicks(2), driver.CalculateRetryDelay(midpointSeed, attempt: 1));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RETRY", "pre-ceiling-jitter-keeps-both-bounds")]
+    public void RetryDelay_BeforeTheCeilingKeepsTheConfiguredJitterRange()
+    {
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
+            Store(),
+            new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted),
+            new FakeTimeProvider(Epoch),
+            options =>
+            {
+                options.InitialRetryDelay = TimeSpan.FromTicks(100);
+                options.MaximumRetryDelay = TimeSpan.FromTicks(1_000);
+                options.RetryJitterFraction = 0.20;
+            });
+
+        var zeroSeed = new DurableSendId(new Guid(unchecked((int)0x9E3779B1u), 0, 0, new byte[8]));
+        var upperBoundSeed = new DurableSendId(new Guid(0x61C8864E, 0, 0, new byte[8]));
+
+        Assert.Equal(TimeSpan.FromTicks(80), driver.CalculateRetryDelay(zeroSeed, attempt: 1));
+        Assert.Equal(TimeSpan.FromTicks(120), driver.CalculateRetryDelay(upperBoundSeed, attempt: 1));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RETRY", "maximum-duration-retry-persists-without-date-overflow")]
+    public async Task TransportFailure_WithMaximumRetryDelayRetainsTheIntentAtTheLastRepresentableDueDateAsync()
+    {
+        IOutboxStore<ITestBus> inner = Store();
+        var store = new ControlledStore(inner);
+        var dispatcher = new ThrowingDispatcher(new ExpectedDispatchException());
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
+            store,
+            dispatcher,
+            new FakeTimeProvider(Epoch),
+            options =>
+            {
+                options.InitialRetryDelay = TimeSpan.MaxValue;
+                options.MaximumRetryDelay = TimeSpan.MaxValue;
+                options.RetryJitterFraction = 0.50;
+            },
+            [new ConstantClassifier(TransportSendFailureKind.Transient)]);
+        await AdmitAsync(store);
+
+        Assert.True(await driver.DeliverDueBatchAsync(TestCancellationToken));
+
+        Assert.Equal(1, dispatcher.DispatchCount);
+        Assert.Equal(DateTimeOffset.MaxValue, store.LastScheduledRetryAt);
+        Assert.Equal(1, (await SnapshotAsync(inner)).RetryScheduledCount);
+        Assert.Empty(await inner.ClaimDueAsync(Epoch.AddDays(1), 1, TimeSpan.FromMinutes(1), TestCancellationToken));
+    }
+
     private static async Task<DurableSendFailureKind> DeliverOneFailureAsync(
         IEnumerable<ITransportSendFailureClassifier> classifiers,
         int maximumAttempts = 3)
@@ -514,6 +629,7 @@ public sealed class DurableSenderDeliveryTests
     {
         public IReadOnlyList<DurableSendDelivery>? ClaimResult { get; init; }
         public Exception? MarkDeliveredException { get; init; }
+        public DateTimeOffset? LastScheduledRetryAt { get; private set; }
 
         public Task<DurableSendAdmissionResult> AdmitAsync(
             SerializedDurableSend message,
@@ -566,8 +682,10 @@ public sealed class DurableSenderDeliveryTests
             DurableSendFailureKind failureKind,
             string? failureType,
             DateTimeOffset failedAt,
-            CancellationToken cancellationToken = default) =>
-            inner.ScheduleRetryAsync(
+            CancellationToken cancellationToken = default)
+        {
+            LastScheduledRetryAt = nextAttemptAt;
+            return inner.ScheduleRetryAsync(
                 id,
                 lease,
                 deliveryAttempts,
@@ -576,6 +694,7 @@ public sealed class DurableSenderDeliveryTests
                 failureType,
                 failedAt,
                 cancellationToken);
+        }
 
         public Task<bool> QuarantineAsync(
             DurableSendId id,

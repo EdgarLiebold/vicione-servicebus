@@ -611,41 +611,100 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
     [RequirementCoverage("REQ-VSB-DURABLE-SENDER-CONFIGURATION", "all-safety-bounds-fail-before-use")]
     public void Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes()
     {
-        Action<ReliableMessagingOptions<ITestBus>>[] invalidConfigurations =
+        (string InvalidProperty, Action<ReliableMessagingOptions<ITestBus>> Configure)[] invalidConfigurations =
         [
-            options => options.MaximumStoredCount = 0,
-            options => options.MaximumStoredBytes = 0,
-            options => options.MaximumConcurrentDeliveries = 0,
-            options => options.MaximumConcurrentDeliveries = DurableSendOperationLimits.AbsoluteMaximumClaimCount + 1,
-            options => options.MaximumDeliveryAttempts = 0,
-            options => options.InitialRetryDelay = TimeSpan.Zero,
-            options =>
+            (nameof(ReliableMessagingOptions<ITestBus>.MaximumStoredCount), options => options.MaximumStoredCount = 0),
+            (nameof(ReliableMessagingOptions<ITestBus>.MaximumStoredBytes), options => options.MaximumStoredBytes = 0),
+            (nameof(ReliableMessagingOptions<ITestBus>.MaximumConcurrentDeliveries), options => options.MaximumConcurrentDeliveries = 0),
+            (nameof(ReliableMessagingOptions<ITestBus>.MaximumConcurrentDeliveries), options => options.MaximumConcurrentDeliveries = DurableSendOperationLimits.AbsoluteMaximumClaimCount + 1),
+            (nameof(ReliableMessagingOptions<ITestBus>.MaximumDeliveryAttempts), options => options.MaximumDeliveryAttempts = 0),
+            (nameof(ReliableMessagingOptions<ITestBus>.InitialRetryDelay), options => options.InitialRetryDelay = TimeSpan.Zero),
+            (nameof(ReliableMessagingOptions<ITestBus>.MaximumRetryDelay), options =>
             {
                 options.InitialRetryDelay = TimeSpan.FromMinutes(2);
                 options.MaximumRetryDelay = TimeSpan.FromMinutes(1);
-            },
-            options => options.RetryJitterFraction = -0.01,
-            options => options.RetryJitterFraction = 0.51,
-            options => options.LeaseDuration = TimeSpan.Zero,
-            options => options.ConsumerCompletionTimeout = TimeSpan.Zero,
-            options => options.PollInterval = TimeSpan.Zero,
-            options => options.TelemetrySnapshotInterval = TimeSpan.Zero,
-            options => options.HealthDegradedAfter = TimeSpan.Zero,
-            options => options.Retention = TimeSpan.FromTicks(-1),
+            }),
+            (nameof(ReliableMessagingOptions<ITestBus>.RetryJitterFraction), options => options.RetryJitterFraction = -0.01),
+            (nameof(ReliableMessagingOptions<ITestBus>.RetryJitterFraction), options => options.RetryJitterFraction = 0.51),
+            (nameof(ReliableMessagingOptions<ITestBus>.LeaseDuration), options => options.LeaseDuration = TimeSpan.Zero),
+            (nameof(ReliableMessagingOptions<ITestBus>.ConsumerCompletionTimeout), options => options.ConsumerCompletionTimeout = TimeSpan.Zero),
+            (nameof(ReliableMessagingOptions<ITestBus>.PollInterval), options => options.PollInterval = TimeSpan.Zero),
+            (nameof(ReliableMessagingOptions<ITestBus>.TelemetrySnapshotInterval), options => options.TelemetrySnapshotInterval = TimeSpan.Zero),
+            (nameof(ReliableMessagingOptions<ITestBus>.HealthDegradedAfter), options => options.HealthDegradedAfter = TimeSpan.Zero),
+            (nameof(ReliableMessagingOptions<ITestBus>.Retention), options => options.Retention = TimeSpan.FromTicks(-1)),
         ];
 
-        foreach (Action<ReliableMessagingOptions<ITestBus>> configure in invalidConfigurations)
+        foreach ((string invalidProperty, Action<ReliableMessagingOptions<ITestBus>> configure) in invalidConfigurations)
         {
             using ServiceProvider provider = Services(
                     DurableSenderTestFactory.CreateInMemoryStore<ITestBus>(),
                     new FakeTimeProvider(Epoch),
                     builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion),
-                    configure)
+                    options =>
+                    {
+                        options.MaximumStoredCount = 100;
+                        options.MaximumStoredBytes = 1024 * 1024;
+                        configure(options);
+                    })
                 .BuildServiceProvider();
 
-            Assert.Throws<OptionsValidationException>(() =>
+            OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() =>
                 provider.GetRequiredService<IDurableSendAdmission<ITestBus>>());
+            Assert.Contains(invalidProperty, exception.Message, StringComparison.Ordinal);
         }
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    [RequirementCoverage("REQ-VSB-DURABLE-SENDER-CONFIGURATION", "nonfinite-retry-jitter-fails-before-use")]
+    public void Registration_NonfiniteRetryJitterFailsBeforeTheTypedSenderMaterializes(double jitter)
+    {
+        using ServiceProvider provider = Services(
+                DurableSenderTestFactory.CreateInMemoryStore<ITestBus>(),
+                new FakeTimeProvider(Epoch),
+                builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion),
+                options =>
+                {
+                    options.MaximumStoredCount = 100;
+                    options.MaximumStoredBytes = 1024 * 1024;
+                    options.RetryJitterFraction = jitter;
+                })
+            .BuildServiceProvider();
+
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() =>
+            provider.GetRequiredService<IDurableSendAdmission<ITestBus>>());
+
+        Assert.Contains(nameof(ReliableMessagingOptions<ITestBus>.RetryJitterFraction),
+            exception.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(0d)]
+    [InlineData(0.50d)]
+    [RequirementCoverage("REQ-VSB-DURABLE-SENDER-CONFIGURATION", "retry-jitter-inclusive-bounds-and-frozen-policy")]
+    public void Registration_InclusiveRetryJitterBoundsAreFrozenForDelivery(double jitter)
+    {
+        using ServiceProvider provider = Services(
+                DurableSenderTestFactory.CreateInMemoryStore<ITestBus>(),
+                new FakeTimeProvider(Epoch),
+                builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion),
+                options =>
+                {
+                    options.MaximumStoredCount = 100;
+                    options.MaximumStoredBytes = 1024 * 1024;
+                    options.RetryJitterFraction = jitter;
+                })
+            .BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<IDurableSendAdmission<ITestBus>>());
+        ReliableMessagingPolicy<ITestBus> policy = provider.GetRequiredService<ReliableMessagingPolicy<ITestBus>>();
+        Assert.Equal(jitter, policy.RetryJitterFraction);
+
+        provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<ReliableMessagingOptions<ITestBus>>>()
+            .Value.RetryJitterFraction = 0.20;
+        Assert.Equal(jitter, policy.RetryJitterFraction);
     }
 
     [Theory]
