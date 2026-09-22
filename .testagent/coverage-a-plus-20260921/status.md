@@ -304,3 +304,8 @@ both fixture findings were empty. The selected callback moved from 0/8 lines and
 the last complete profile to 8/8 lines and CRAP 12 in the full provider report. Independent
 read-only adversarial review returned PASS. See `postgresql-maintenance-phase.md`. The last
 complete product-wide profile still predates this test, so global A+ remains open.
+
+The clean detached exact source/test commit `eb04d4283` passed locked restore, a zero-warning
+Release build, and the complete 79/79 PostgreSQL provider suite under a canonical fixture with
+empty findings and matching broker-log hash. The worktree was removed after retaining the logs
+and fixture evidence; details are in `postgresql-maintenance-phase.md`.
