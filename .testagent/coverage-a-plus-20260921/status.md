@@ -281,3 +281,10 @@ CRAP 8 with 9/9 lines versus baseline CRAP 72.75 with
 0/9; `TryGetHeader` is at CRAP 12 with 17/17 lines. Independent read-only adversarial review
 returned PASS. See `eventhub-header-provider-phase.md`. The last complete product-wide profile
 remains `44d9e3254`; global A+ remains open.
+
+Exact source/test commit `e81be47b8` passed a clean detached locked restore, zero-warning
+Release build, and the complete 61/61 Event Hubs/Azurite emulator suite with Microsoft
+CodeCoverage, xUnit TRX, and empty fixture findings. Two earlier sandboxed restore attempts
+did not produce a validated build; the successful run used the local NuGet cache in the approved
+execution context. Hashes, exact TRX counters, and broker-log evidence are in
+`eventhub-header-provider-phase.md`.

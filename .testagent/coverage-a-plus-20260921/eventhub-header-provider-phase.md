@@ -47,3 +47,25 @@ execution; `coverage-analysis` guided the targeted risk review. The final indepe
 adversarial review returned PASS after checking the test oracles, requirement projection, and
 actual local Azure SDK acceptance of whitespace IDs and null application properties. The last
 complete product-wide profile remains `44d9e3254`; global A+ remains open.
+
+## Exact source/test commit
+
+Commit `e81be47b8cb66de636c4f1db8a8af31fc9a824cb` was checked in a clean detached
+worktree with no tracked diff. Its locked test-project restore succeeded from the local NuGet
+cache in the approved execution context, and its Release build had zero warnings and errors.
+Two earlier sandboxed restore attempts did not complete: the first was canceled after stalling
+before package resolution; the offline retry exited 1 during project discovery without an
+MSBuild error. Neither is counted as validation.
+
+The exact-commit Event Hubs/Azurite fixture passed all 61 tests with Microsoft CodeCoverage,
+xUnit TRX, zero skips, and empty fixture findings, run `vicione-e60c6ac4090e`. The retained
+report is `artifacts/coverage-a-plus-20260922-8abfe1e8a/exact-e81be47b8/eventhub-header-exact.cobertura.xml`,
+SHA-256 `bf4f5bccb77a91b71624e29ab7e7fd942cec1490b47ec280fee6a1ee2a940721`; the TRX
+beside it has SHA-256 `cc125dca5196814bbc23731dc3fc9ed68ff521de09d90900bea238eab63f74f7`.
+TRX counters show 61 total, executed, and passed, with zero failed, errors, and not executed;
+61 individual test results say Passed. Coverage reports 3/3 constructor, 17/17 lookup, and
+9/9 iterator lines with full reported branches and complexity 2, 12, and 8 respectively.
+The fixture findings, both broker logs, and endpoint projection are retained beside the two
+reports; log hashes match the findings record. A separate read-only adversarial evidence review
+returned PASS after checking the clean worktree, all four test results, coverage methods,
+report hashes, and fixture records. Restore and build console output were not archived separately.
