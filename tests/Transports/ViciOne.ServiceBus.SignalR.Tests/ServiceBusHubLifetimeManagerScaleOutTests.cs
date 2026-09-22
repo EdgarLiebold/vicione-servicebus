@@ -318,16 +318,19 @@ public sealed class ServiceBusHubLifetimeManagerScaleOutTests : IAsyncLifetime
     {
         using var cancellationSource = CancellationTokenSource.CreateLinkedTokenSource(
             TestContext.Current.CancellationToken);
-        cancellationSource.CancelAfter(TimeSpan.FromMilliseconds(250));
+        Task<bool> consumed = _first.GroupCommand.Consumed.AnyAsync<GroupCommand<TestHub>>(
+            TestContext.Current.CancellationToken);
+        Task operation = _second.Manager.AddToGroupAsync(
+            "unknown-connection",
+            "group",
+            cancellationSource.Token);
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            _second.Manager.AddToGroupAsync(
-                "unknown-connection",
-                "group",
-                cancellationSource.Token));
+        Assert.True(await consumed);
+        Assert.False(operation.IsCompleted);
+        cancellationSource.Cancel();
 
-        Assert.True(await _first.GroupCommand.Consumed.AnyAsync<GroupCommand<TestHub>>(
-            TestContext.Current.CancellationToken));
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => operation);
+        Assert.Equal(cancellationSource.Token, exception.CancellationToken);
     }
 
     private static async Task AssertInvocationAsync(HubConnectionTestClient client)

@@ -158,8 +158,10 @@ public sealed class ConnectionContextFactoryTests
         await stopTask;
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => agent.Context);
         await agent.Completed.WaitAsync(TestContext.Current.CancellationToken);
+        ConnectionProxy connectionProxy = GetConnectionProxy(connection);
+        await connectionProxy.AsyncDisposed.WaitAsync(TestContext.Current.CancellationToken);
         Assert.Equal(1, supervisor.TotalCount);
-        Assert.Equal(1, GetConnectionProxy(connection).AsyncDisposeCalls);
+        Assert.Equal(1, connectionProxy.AsyncDisposeCalls);
     }
 
     [Fact]
