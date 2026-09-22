@@ -125,3 +125,13 @@ hotspots moved from 272 and 156 to 16.02 and 12 in the focused report. The
 final read-only adversarial review returned PASS. See
 `assembly-scan-phase.md`. A complete product-wide profile on these changed
 bytes is still required, and global A+ remains open.
+
+The Azure Service Bus retry-taxonomy slice has 16 new A-grade test methods
+covering direct, wrapped, intermediate, and aggregate failure causes. The
+final Release build has zero warnings and errors; Azure Unit with Microsoft
+CodeCoverage passed 201/201, the complete Unit/Architecture gate passed
+9,970/9,970, and the isolated Service Bus emulator passed 25/25 with empty
+fixture findings. The two baseline host retry lambdas at CRAP 240 and 210
+were replaced by focused methods at CRAP 28 or lower. The final adversarial
+review returned PASS. See `azure-servicebus-retry-phase.md`. A fresh complete
+35-report aggregate is required before any current-byte global A+ claim.

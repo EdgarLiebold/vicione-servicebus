@@ -13,32 +13,50 @@ public sealed class ServiceBusSendFailureClassifier : ITransportSendFailureClass
         ArgumentNullException.ThrowIfNull(exception);
 
         var sawTransient = false;
-        for (Exception? current = exception; current is not null; current = current.InnerException)
+        if (HasPermanentCause(exception, ref sawTransient))
         {
-            switch (current)
-            {
-                case UnauthorizedAccessException:
-                case ServiceBusException { Reason: ServiceBusFailureReason.MessageSizeExceeded }:
-                case RequestFailedException requestFailedException when IsPermanentStatus(requestFailedException.Status):
-                case ServiceBusConnectionException { IsTransient: false }:
-                    failureKind = TransportSendFailureKind.Permanent;
-                    return true;
-
-                case ServiceBusException { IsTransient: true }:
-                case RequestFailedException requestFailedException when IsTransientStatus(requestFailedException.Status):
-                case WebSocketException:
-                case TimeoutException:
-                case ServiceBusConnectionException:
-                    sawTransient = true;
-                    break;
-            }
+            failureKind = TransportSendFailureKind.Permanent;
+            return true;
         }
 
         failureKind = sawTransient ? TransportSendFailureKind.Transient : TransportSendFailureKind.Unclassified;
         return sawTransient;
     }
 
-    internal static bool IsTransientStatus(int statusCode) => statusCode is 408 or 429 or >= 500;
+    static bool HasPermanentCause(Exception exception, ref bool sawTransient)
+    {
+        switch (exception)
+        {
+            case UnauthorizedAccessException:
+            case ServiceBusException broker when !ServiceBusFailureTaxonomy.CanRetryBrokerFailure(broker, receive: false):
+            case RequestFailedException request when IsPermanentStatus(request.Status):
+            case ServiceBusConnectionException { IsTransient: false }:
+                return true;
+
+            case ServiceBusException:
+            case RequestFailedException request when IsTransientStatus(request.Status):
+            case WebSocketException:
+            case TimeoutException:
+            case ServiceBusConnectionException:
+                sawTransient = true;
+                break;
+        }
+
+        if (exception is AggregateException aggregate)
+        {
+            foreach (var cause in aggregate.InnerExceptions)
+            {
+                if (HasPermanentCause(cause, ref sawTransient))
+                    return true;
+            }
+
+            return false;
+        }
+
+        return exception.InnerException is { } inner && HasPermanentCause(inner, ref sawTransient);
+    }
+
+    internal static bool IsTransientStatus(int statusCode) => statusCode is 0 or 408 or 429 or >= 500;
 
     internal static bool IsPermanentStatus(int statusCode) => statusCode is >= 400 and < 500 && !IsTransientStatus(statusCode);
 }

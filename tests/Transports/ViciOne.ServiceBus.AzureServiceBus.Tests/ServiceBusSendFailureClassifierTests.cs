@@ -11,6 +11,76 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 public sealed class ServiceBusSendFailureClassifierTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "missing-http-response-is-transient")]
+    public void RequestWithoutHttpResponse_IsTransientEvenWhenWrapped()
+    {
+        var classifier = new ServiceBusSendFailureClassifier();
+        var noResponse = new RequestFailedException(0, "no response");
+
+        AssertKind(classifier, noResponse, TransportSendFailureKind.Transient);
+        AssertKind(classifier, new ServiceBusConnectionException("endpoint", noResponse),
+            TransportSendFailureKind.Transient);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "aggregate-permanent-sibling-has-precedence")]
+    public void AggregateFailures_PermanentSiblingOverridesRecoverableFirstChild()
+    {
+        var classifier = new ServiceBusSendFailureClassifier();
+        var failure = new AggregateException(
+            new TimeoutException("request timed out"),
+            new RequestFailedException(403, "forbidden"));
+
+        AssertKind(classifier, failure, TransportSendFailureKind.Permanent);
+        AssertKind(classifier, new ServiceBusConnectionException("endpoint", failure),
+            TransportSendFailureKind.Permanent);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "aggregate-later-transient-sibling-is-visible")]
+    public void AggregateFailures_LaterRecoverableSiblingRemainsTransient()
+    {
+        var classifier = new ServiceBusSendFailureClassifier();
+        var failure = new AggregateException(
+            new IOException("cleanup failed"),
+            new RequestFailedException(503, "service unavailable"));
+
+        AssertKind(classifier, failure, TransportSendFailureKind.Transient);
+    }
+
+    [Theory]
+    [InlineData(ServiceBusFailureReason.GeneralError, false, TransportSendFailureKind.Permanent)]
+    [InlineData(ServiceBusFailureReason.GeneralError, true, TransportSendFailureKind.Transient)]
+    [InlineData(ServiceBusFailureReason.ServiceTimeout, false, TransportSendFailureKind.Permanent)]
+    [InlineData(ServiceBusFailureReason.MessageNotFound, false, TransportSendFailureKind.Permanent)]
+    [InlineData(ServiceBusFailureReason.MessagingEntityDisabled, false, TransportSendFailureKind.Permanent)]
+    [InlineData(ServiceBusFailureReason.MessagingEntityNotFound, false, TransportSendFailureKind.Transient)]
+    [InlineData(ServiceBusFailureReason.MessagingEntityAlreadyExists, false, TransportSendFailureKind.Transient)]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "broker-reason-direct-and-wrapped-send-taxonomy")]
+    public void BrokerFailures_KeepTheirSendEligibilityInsideConnectionWrappers(
+        ServiceBusFailureReason reason, bool isTransient, TransportSendFailureKind expected)
+    {
+        var classifier = new ServiceBusSendFailureClassifier();
+        var brokerFailure = new ServiceBusException(isTransient, "broker failure", "queue", reason, null);
+
+        AssertKind(classifier, new ServiceBusConnectionException("endpoint", brokerFailure), expected);
+        AssertKind(classifier, brokerFailure, expected);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "foreign-connection-failure-is-unclassified")]
+    public void ForeignConnectionFailure_IsNotClaimedByAzureClassifier(bool isTransient)
+    {
+        var classifier = new ServiceBusSendFailureClassifier();
+        var failure = new ConnectionException("another transport", new ArgumentException("invalid endpoint"), isTransient);
+
+        Assert.False(classifier.TryClassify(failure, out TransportSendFailureKind kind));
+        Assert.Equal(TransportSendFailureKind.Unclassified, kind);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SEND-FAILURE", "reason-status-chain-and-permanent-precedence")]
     public void TypedFailures_UseReasonsStatusesAndTheCompleteChainWithPermanentPrecedence()
     {

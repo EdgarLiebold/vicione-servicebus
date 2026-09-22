@@ -35,22 +35,8 @@ public class ServiceBusHostConfiguration :
         ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
         {
             x.Ignore<UnauthorizedAccessException>();
-
-            x.Handle<ConnectionException>();
-            x.Handle<TimeoutException>();
-            x.Handle<WebSocketException>();
-            x.Handle<RequestFailedException>();
-            x.Handle<ServiceBusException>(ex => ex.Reason switch
-            {
-                ServiceBusFailureReason.MessagingEntityDisabled => true,
-                ServiceBusFailureReason.MessagingEntityNotFound => false,
-                ServiceBusFailureReason.MessagingEntityAlreadyExists => false,
-                ServiceBusFailureReason.MessageNotFound => false,
-                ServiceBusFailureReason.MessageSizeExceeded => false,
-                ServiceBusFailureReason.ServiceCommunicationProblem => true,
-                ServiceBusFailureReason.ServiceBusy when ex.IsTransient => true,
-                _ => false
-            });
+            x.Ignore<Exception>(ex => HasNonRetryableCause(ex, receive: true));
+            x.Handle<Exception>(ex => HasRetryableCause(ex, receive: true));
 
             x.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
         });
@@ -58,26 +44,68 @@ public class ServiceBusHostConfiguration :
         SendTransportRetryPolicy = Retry.CreatePolicy(x =>
         {
             x.Ignore<UnauthorizedAccessException>();
-
-            x.Handle<ConnectionException>();
-            x.Handle<TimeoutException>();
-            x.Handle<WebSocketException>();
-            x.Handle<RequestFailedException>();
-            x.Handle<ServiceBusException>(ex => ex.Reason switch
-            {
-                ServiceBusFailureReason.MessagingEntityNotFound => true,
-                ServiceBusFailureReason.MessagingEntityAlreadyExists => true,
-                ServiceBusFailureReason.MessageNotFound => false,
-                ServiceBusFailureReason.MessageSizeExceeded => false,
-                ServiceBusFailureReason.ServiceCommunicationProblem => true,
-                ServiceBusFailureReason.ServiceBusy when ex.IsTransient => true,
-                _ => false
-            });
+            x.Ignore<Exception>(ex => HasNonRetryableCause(ex, receive: false));
+            x.Handle<Exception>(ex => HasRetryableCause(ex, receive: false));
 
             x.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
         });
 
         _connectionContext = new Recycle<IConnectionContextSupervisor>(() => new ConnectionContextSupervisor(this, topologyConfiguration));
+    }
+
+    static bool HasNonRetryableCause(Exception exception, bool receive)
+    {
+        switch (exception)
+        {
+            case UnauthorizedAccessException:
+            case ConnectionException { IsTransient: false }:
+                return true;
+            case RequestFailedException request when ServiceBusSendFailureClassifier.IsPermanentStatus(request.Status):
+                return true;
+            case ServiceBusException broker when !ServiceBusFailureTaxonomy.CanRetryBrokerFailure(broker, receive):
+                return true;
+        }
+
+        if (exception is AggregateException aggregate)
+        {
+            foreach (var cause in aggregate.InnerExceptions)
+            {
+                if (HasNonRetryableCause(cause, receive))
+                    return true;
+            }
+
+            return false;
+        }
+
+        return exception.InnerException is { } inner && HasNonRetryableCause(inner, receive);
+    }
+
+    static bool HasRetryableCause(Exception exception, bool receive)
+    {
+        switch (exception)
+        {
+            case ConnectionException { IsTransient: true }:
+            case TimeoutException:
+            case WebSocketException:
+                return true;
+            case RequestFailedException request when ServiceBusSendFailureClassifier.IsTransientStatus(request.Status):
+                return true;
+            case ServiceBusException broker when ServiceBusFailureTaxonomy.CanRetryBrokerFailure(broker, receive):
+                return true;
+        }
+
+        if (exception is AggregateException aggregate)
+        {
+            foreach (var cause in aggregate.InnerExceptions)
+            {
+                if (HasRetryableCause(cause, receive))
+                    return true;
+            }
+
+            return false;
+        }
+
+        return exception.InnerException is { } inner && HasRetryableCause(inner, receive);
     }
 
     /// <summary>Gets the configured Azure Service Bus namespace address.</summary>

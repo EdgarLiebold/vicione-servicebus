@@ -74,6 +74,12 @@ entry below records what the current work changed for anyone reading the source.
   excludes those forged time entries; other application names remain exact, and raw identity
   headers retain their canonical GUID format. Regression tests also verify persisted routing
   metadata, UTF-8 values, blank values, and session/partition consistency.
+- Azure Service Bus host retries and reliable-send classification now inspect complete exception
+  trees, including every aggregate sibling, and give permanent causes priority. Both paths share
+  broker-reason decisions: recoverable timeouts and explicitly transient general errors retry;
+  non-transient SDK failures outside entity recovery and permanent HTTP statuses stop. HTTP status 0 remains retryable,
+  missing broker entities retain send-side recovery, and the Azure classifier leaves generic
+  connection failures to the transport that raised them.
 - Assembly directory scans now resolve candidates from their selected files instead of binding
   first by the file's simple name, which could substitute an unrelated already loaded assembly.
   Invalid images remain skippable; other load failures report the error from the selected path.
