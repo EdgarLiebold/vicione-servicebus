@@ -2,6 +2,20 @@
 
 ## Latest focused slice
 
+The Core timeout-activity fault slice corrects unrelated cancellation being
+reported as a configured timeout, message-context cancellation being decided
+from an owning activity token, pre-canceled caller side effects, deferred
+argument validation, and incomplete ownership of generation/notification
+tasks. Two fail-first rounds reproduced six distinct failures. The final 22
+A-grade methods run as 23/23 focused cases; Core with Microsoft CodeCoverage
+passes 6,303/6,303, the Release Unit/Architecture build has zero
+warnings/errors, and the complete gate passes 10,070/10,070. The selected
+method family has 30/30 lines, full reported branch coverage, and maximum CRAP
+16. A clean detached checkout of exact code/test commit `5d94930e9` passed
+locked restore, zero-warning build, 23/23 focused coverage, and 6,303/6,303
+Core tests. Final read-only adversarial review returned PASS. See
+`timeout-activity-fault-phase.md`. Global A+ remains open.
+
 The RabbitMQ send slice fixes positive TTL/delay values that became zero or were shortened by
 millisecond formatting. Eight fail-first cases reproduced the old defect. The focused class passed
 42/42; the full RabbitMQ Unit project passed 340/340 with Microsoft CodeCoverage and canonical
