@@ -2,6 +2,19 @@
 
 ## Latest focused slice
 
+The Core circuit-breaker runtime-settings slice fixes defensive validation
+that accepted decreasing recovery delays when an internal caller bypassed the
+public options API. Eight A-grade methods execute fourteen hard boundary,
+aggregation, and sequence cases; two adversarial FAIL rounds exposed and
+closed scalar-boundary, diagnostic-order, and inner-inversion mutants before
+the final PASS. Focused tests pass 14/14, Core passes 6,343/6,343, the complete
+Unit/Architecture gate passes 10,110/10,110, and the relevant Release builds
+have zero warnings/errors. The validator has 17/17 lines, full reported branch
+coverage, and CRAP 26. A detached exact `c13ebf62e` checkout passed locked
+restore, zero-warning build, the focused suite, and complete Core suite with
+the same target measurement. See `circuit-breaker-settings-phase.md`. Global
+A+ remains open.
+
 The Job Service state-machine slice reduces its fully covered constructor from
 CRAP 104 to 1 by preserving the exact registration sequence across eleven
 private lifecycle configuration methods. No binder or behavior expression
