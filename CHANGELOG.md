@@ -147,6 +147,11 @@ entry below records what the current work changed for anyone reading the source.
   declarations, reject conflicting definitions for the same broker pair, and prevent duplicate
   pairs supplied through a subscription subclass. The normal builder still reuses a repeated
   topic-to-queue subscription handle.
+- Amazon SQS endpoint validation now rejects directly mutated visibility timeouts outside the AWS
+  range, maximum visibility durations outside the positive 12-hour range, and renewal intervals
+  below the effective 60-second floor. Diagnostics identify the setting that is invalid. The
+  existing concurrency, polling, purge, redrive, and SNS raw-delivery checks retain their order;
+  regression tests also protect the raw-delivery attribute's string-only boundary.
 
 ### Removed
 

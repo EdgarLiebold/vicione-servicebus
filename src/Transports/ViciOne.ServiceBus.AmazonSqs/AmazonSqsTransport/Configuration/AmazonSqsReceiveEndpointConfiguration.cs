@@ -104,6 +104,25 @@ public class AmazonSqsReceiveEndpointConfiguration :
     /// <returns>All detected validation failures and warnings.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
+        foreach (var result in ValidateReceiveLimits())
+            yield return result;
+
+        var queueName = $"{_settings.EntityName}";
+        foreach (var result in ValidateQueueSettings(queueName))
+            yield return result;
+
+        foreach (var result in ValidateVisibilitySettings())
+            yield return result;
+
+        foreach (var result in ValidateSubscriptionSettings())
+            yield return result;
+
+        foreach (var result in base.Validate())
+            yield return result.WithParentKey(queueName);
+    }
+
+    IEnumerable<ValidationResult> ValidateReceiveLimits()
+    {
         if (_settings.PrefetchCount <= 0)
             yield return this.Failure("PrefetchCount", "must be >= 1");
 
@@ -118,25 +137,41 @@ public class AmazonSqsReceiveEndpointConfiguration :
 
         if (_settings.RedeliverVisibilityTimeout is < 0 or > AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds)
             yield return this.Failure("RedeliverVisibilityTimeout", $"must be between 0 and {AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds}");
+    }
 
-        var queueName = $"{_settings.EntityName}";
-
+    IEnumerable<ValidationResult> ValidateQueueSettings(string queueName)
+    {
         if (!AmazonSqsEntityNameValidator.Validator.IsValidEntityName(_settings.EntityName))
             yield return this.Failure(queueName, "must be a valid queue name");
 
         if (_settings.PurgeOnStartup)
             yield return this.Warning(queueName, "Existing messages in the queue will be purged on service start");
+    }
 
-        var visibilityTimeout = TimeSpan.FromSeconds(_settings.VisibilityTimeout);
-        if (_settings.MaxVisibilityTimeout < visibilityTimeout)
+    IEnumerable<ValidationResult> ValidateVisibilitySettings()
+    {
+        if (_settings.VisibilityTimeout is < 0 or > AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds)
+            yield return this.Failure("VisibilityTimeout", $"must be between 0 and {AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds}");
+
+        if (_settings.MaxVisibilityTimeout <= TimeSpan.Zero)
+            yield return this.Failure("MaxVisibilityTimeout", "must be positive");
+        else if (_settings.MaxVisibilityTimeout > AmazonSqsReceiveSettingsLimits.MaximumVisibilityDuration)
+            yield return this.Failure("MaxVisibilityTimeout", "must not exceed 12 hours");
+        else if (_settings.VisibilityTimeout is >= 0 and <= AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds
+            && _settings.MaxVisibilityTimeout < TimeSpan.FromSeconds(_settings.VisibilityTimeout))
             yield return this.Failure("MaxVisibilityTimeout", "Must be greater than or equal to VisibilityTimeout");
 
         if (_settings.MaxVisibilityTimeoutRenewal < 0)
-            yield return this.Failure("MaxVisibilityTimeoutRenewal", "must be >= 0 (values less than 60 will be set to 60)");
+            yield return this.Failure("MaxVisibilityTimeoutRenewal", "must be >= 0");
+        else if (_settings.MaxVisibilityTimeoutRenewal < AmazonSqsReceiveSettingsLimits.MinimumVisibilityRenewalSeconds)
+            yield return this.Failure("MaxVisibilityTimeoutRenewal", $"must be >= {AmazonSqsReceiveSettingsLimits.MinimumVisibilityRenewalSeconds} seconds");
 
         if (_settings.MaxVisibilityTimeoutRenewal > AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds)
             yield return this.Failure("MaxVisibilityTimeoutRenewal", $"must be <= {AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds} seconds (12 hours per AWS SQS limits)");
+    }
 
+    IEnumerable<ValidationResult> ValidateSubscriptionSettings()
+    {
         if (_settings.QueueAttributes.Keys.Any(key => string.Equals(key, global::Amazon.SQS.QueueAttributeName.RedrivePolicy, StringComparison.Ordinal)))
             yield return this.Failure("RedrivePolicy", "must not be configured while ViciOne owns the distinct error and skipped queues");
 
@@ -153,9 +188,6 @@ public class AmazonSqsReceiveEndpointConfiguration :
         }
         else if (_settings.RequiresSnsNotificationEnvelope)
             yield return this.Failure("RawMessageDelivery", "must be 'false' when an Amazon SNS notification envelope is required");
-
-        foreach (var result in base.Validate())
-            yield return result.WithParentKey(queueName);
     }
 
     /// <summary>Sets whether the queue is retained when the endpoint stops.</summary>

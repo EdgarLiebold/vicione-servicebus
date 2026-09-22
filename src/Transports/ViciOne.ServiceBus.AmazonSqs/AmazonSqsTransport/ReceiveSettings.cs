@@ -47,7 +47,8 @@ public interface ReceiveSettings :
 
     /// <summary>
     /// The number of seconds to extend the visibility timeout when renewing message visibility during processing.
-    /// Values below the library's 60-second renewal floor are raised to 60 seconds to avoid excessive renewal traffic.
+    /// The endpoint configurator raises values below the 60-second renewal floor to 60 seconds.
+    /// Directly assigned settings below that floor fail endpoint validation to avoid excessive renewal traffic.
     /// See <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ChangeMessageVisibility.html">ChangeMessageVisibility</see>.
     /// </summary>
     int MaxVisibilityTimeoutRenewal { get; set; }
