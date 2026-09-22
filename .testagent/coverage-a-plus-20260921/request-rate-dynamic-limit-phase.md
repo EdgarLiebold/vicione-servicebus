@@ -60,3 +60,28 @@ product or test defect was found after the acquisition, fairness, and Dispose
 corrections. It independently matched the final report hash, 759/759 test log,
 53/56 line count, 87.5% branch rate, complexity 24, and CRAP approximately
 24.089. It does not prove fairness for every possible adversarial schedule.
+
+## Exact source/test commit
+
+Commit `a98ab309a06a2babd37cbd56c98fe28a491f939a` was checked in a
+separate clean detached worktree. `identity-before.txt` and
+`identity-after.txt` both contain that full hash; the corresponding tracked
+status files are empty. Their equality and emptiness were checked after the
+run. Locked restore succeeded. The Release build had zero warnings and errors.
+The complete Abstractions suite passed 759/759 with zero failures and skips.
+Its Microsoft CodeCoverage report gives the same target method result as the
+pre-commit same-byte run: 53/56 lines, 87.5% branch rate, complexity 24, and
+CRAP approximately 24.089. The exact-commit report SHA-256 is
+`ebef04f4103185ad6a2a502e47ddde758fd4fa450e664544a461001186ab2172`.
+The exact test log SHA-256 is
+`592bac1de6eb161f62d5e818284ea7dec4c204e6d25b7a260e0867a6a3ec307e`.
+All exact-commit logs, report, and identity files are in
+`artifacts/coverage-a-plus-20260922-4488b29fe/exact-a98ab309a/`.
+
+The first sandboxed restore failed without diagnostic output; the approved
+rerun succeeded. The first sandboxed build ended with exit code 1 but reported
+zero compiler warnings and errors; its approved rerun succeeded. Neither
+failed attempt contributes coverage or test evidence.
+The restore command's `--locked-mode` flag and the failed attempts' exit codes
+are retained in the tool transcript, not independently in the saved logs.
+Independent read-only evidence review returned PASS with that provenance limit.
