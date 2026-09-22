@@ -74,6 +74,11 @@ entry below records what the current work changed for anyone reading the source.
   excludes those forged time entries; other application names remain exact, and raw identity
   headers retain their canonical GUID format. Regression tests also verify persisted routing
   metadata, UTF-8 values, blank values, and session/partition consistency.
+- Assembly directory scans now resolve candidates from their selected files instead of binding
+  first by the file's simple name, which could substitute an unrelated already loaded assembly.
+  Invalid images remain skippable; other load failures report the error from the selected path.
+  Tests cover renamed assemblies, filename collisions, recursive filters, executable inclusion,
+  disappearing files, and calling-assembly discovery.
 - EF JSON change tracking now compares and snapshots the value actually persisted. Selective
   `IEquatable<T>` implementations and shallow `ICloneable` snapshots can no longer silently drop
   changes to serialized fields; SQLite regression tests cover both cases.

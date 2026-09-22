@@ -81,7 +81,7 @@ public class AssemblyFinder
             Assembly? loadedAssembly = null;
             try
             {
-                loadedAssembly = Assembly.Load(name);
+                loadedAssembly = Assembly.LoadFrom(file);
             }
             catch (BadImageFormatException exception)
             {
@@ -89,16 +89,9 @@ public class AssemblyFinder
 
                 continue;
             }
-            catch (Exception originalException)
+            catch (Exception exception)
             {
-                try
-                {
-                    loadedAssembly = Assembly.Load(file);
-                }
-                catch (Exception)
-                {
-                    loadFailure(file, originalException);
-                }
+                loadFailure(file, exception);
             }
 
             if (loadedAssembly != null)

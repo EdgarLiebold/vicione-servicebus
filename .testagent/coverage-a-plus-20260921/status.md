@@ -1,6 +1,6 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current quantitative baseline
+## Last complete quantitative baseline
 
 - At commit `e1a965290fe532ec8ff86dc699305dd4086f0099`, 35 fresh,
   parseable reports from 22 passing Unit/Infrastructure modules and all 13
@@ -14,7 +14,9 @@
   provider profile passed 25 Azure Service Bus, 405 broad-matrix, 69 SQL
   Server, and 31 RabbitMQ tests, all without failures or skips and with empty
   fixture findings. The raw reports and calculated methods are in
-  `artifacts/coverage-a-plus-20260922-e1a965290/`.
+  `artifacts/coverage-a-plus-20260922-e1a965290/`. The subsequent Core
+  assembly-scan correction has changed source and tests, so these totals are
+  the last complete comparison profile, not a current-byte global result.
 
 ### Earlier comparison profile
 
@@ -112,3 +114,14 @@ passed 25/25 with empty fixture findings. Three selected method CRAP scores move
 to 10, 10, and 12. Final adversarial read-only re-review returned PASS. See
 `azure-servicebus-metadata-phase.md`. The complete 35-report aggregate on
 `e1a965290` is recorded above; global A+ remains open.
+
+The Core assembly-scanning slice has eight A-grade file and caller behavior
+tests. A previously selected file could resolve to an unrelated loaded
+assembly by filename; the corrected finder uses the selected file's manifest
+identity. The final Release build has zero warnings and errors, the complete
+Unit/Architecture gate passed 9,920/9,920 without failures or skips, and the
+focused Core Unit coverage run passed 6,262/6,262. The two selected CRAP
+hotspots moved from 272 and 156 to 16.02 and 12 in the focused report. The
+final read-only adversarial review returned PASS. See
+`assembly-scan-phase.md`. A complete product-wide profile on these changed
+bytes is still required, and global A+ remains open.
