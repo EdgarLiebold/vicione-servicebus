@@ -1,5 +1,22 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current focused work
+
+The PostgreSQL scheduled-maintenance behavior slice is complete and passed
+exact-commit verification; see `postgresql-maintenance-phase.md`. The dynamic
+request-rate limit correction passes 759/759 Abstractions tests with current
+coverage and independent code review; see `request-rate-dynamic-limit-phase.md`.
+The final Unit/Architecture gate passed 10,005/10,005. Neither targeted report is a new
+product-wide A+ measurement.
+
+The latest complete quantitative baseline is the fresh 36-report profile at
+`4488b29fedb456defa8fdcd1f5984f8e165ee72a`: 83,067/93,200 lines
+(89.1277%), a conservative branch interval of 29,565–32,111/36,649
+(80.6707–87.6177%), and 97 methods with CRAP above 30. It covered 32/32
+source assemblies. See `product-wide-profile-4488b29fe.md`. The focused
+PostgreSQL and request-rate tests were added after this baseline. Global A+
+remains open.
+
 ## Last complete quantitative baseline
 
 - At source/test commit `44d9e32546ccf1ffe60bc49e49cfc81c3aa348d6`, 36

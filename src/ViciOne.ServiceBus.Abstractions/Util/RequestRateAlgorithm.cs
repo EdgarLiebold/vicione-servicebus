@@ -52,7 +52,8 @@ public class RequestRateAlgorithm :
     readonly int _concurrentResultLimit;
     readonly CancellationTokenSource _disposeToken;
     readonly RequestRateAlgorithmOptions _options;
-    readonly SemaphoreSlim? _rateLimitSemaphore;
+    readonly SemaphoreSlim _rateLimitChangeSemaphore = new SemaphoreSlim(1, 1);
+    readonly object _rateLimitLock = new object();
     readonly ITimer? _rateLimitTimer;
     readonly int _refreshThreshold;
     readonly TimeSpan _requestCancellationTimeout;
@@ -66,12 +67,15 @@ public class RequestRateAlgorithm :
 
     int _activeRequestCount;
     int _count;
-    bool _disposed;
+    volatile bool _disposed;
     int _maxRequestCount;
     long _nextId;
     int _pendingResultCount;
     int _rateLimit;
+    int _rateRemaining;
+    bool _rateReductionPending;
     int _requestCount;
+    TaskCompletionSource _rateCapacityChanged = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="options">The options that control the operation.</param>
@@ -117,7 +121,7 @@ public class RequestRateAlgorithm :
         if (options is { RequestRateLimit: not null, RequestRateInterval: not null })
         {
             _rateLimit = options.RequestRateLimit.Value;
-            _rateLimitSemaphore = new SemaphoreSlim(_rateLimit);
+            _rateRemaining = _rateLimit;
 
             var interval = options.RequestRateInterval.Value;
             _rateLimitTimer = _timeProvider.CreateTimer(Reset, null, interval, interval);
@@ -141,16 +145,18 @@ public class RequestRateAlgorithm :
     /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
-        if (_disposed)
-            return;
+        lock (_rateLimitLock)
+        {
+            if (_disposed)
+                return;
 
-        _disposed = true;
+            _disposed = true;
+        }
 
+        _disposeToken.Cancel();
         _rateLimitTimer?.Dispose();
-        _rateLimitSemaphore?.Dispose();
-
-        _requestSemaphore.Dispose();
-        _resultSemaphore.Dispose();
+        // Do not dispose the semaphores while their asynchronous waits unwind.
+        _disposeToken.Dispose();
     }
 
     /// <summary>Runs one adaptive pass of count-producing requests.</summary>
@@ -354,18 +360,16 @@ public class RequestRateAlgorithm :
     /// <returns>A task whose result owns the granted request slot and result capacity.</returns>
     public async Task<ActiveRequest> BeginRequestAsync(CancellationToken cancellationToken = default)
     {
+        var requestPermitAcquired = false;
         try
         {
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
 
             await _requestSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
+            requestPermitAcquired = true;
 
-            if (_rateLimitSemaphore != null)
-            {
-                await _rateLimitSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
-
-                Interlocked.Increment(ref _count);
-            }
+            if (_rateLimitTimer != null)
+                await WaitForRatePermitAsync(linked.Token).ConfigureAwait(false);
 
             var current = Interlocked.Increment(ref _activeRequestCount);
             while (current > _maxRequestCount)
@@ -390,9 +394,9 @@ public class RequestRateAlgorithm :
 
             return new ActiveRequest(this, resultLimit, cancellationToken, _requestCancellationTimeout, _timeProvider);
         }
-        catch (OperationCanceledException)
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException)
         {
-            if (!_disposed)
+            if (requestPermitAcquired && !_disposed)
                 _requestSemaphore.Release();
 
             throw;
@@ -449,6 +453,37 @@ public class RequestRateAlgorithm :
         _requestSemaphore.Release();
     }
 
+    async Task WaitForRatePermitAsync(CancellationToken cancellationToken)
+    {
+        while (true)
+        {
+            Task capacityChanged;
+            lock (_rateLimitLock)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (_disposed)
+                    throw new ObjectDisposedException(nameof(RequestRateAlgorithm));
+                if (_rateRemaining > 0 && !_rateReductionPending)
+                {
+                    _rateRemaining--;
+                    _count++;
+                    return;
+                }
+
+                capacityChanged = _rateCapacityChanged.Task;
+            }
+
+            await capacityChanged.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    void SignalRateCapacity()
+    {
+        var previous = _rateCapacityChanged;
+        _rateCapacityChanged = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        previous.TrySetResult();
+    }
+
     /// <summary>Changes the maximum number of requests admitted during each configured rate interval.</summary>
     /// <param name="newRateLimit">The new positive request limit per interval.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -458,31 +493,87 @@ public class RequestRateAlgorithm :
         if (newRateLimit < 1)
             throw new ArgumentOutOfRangeException(nameof(newRateLimit), "The rate limit must be >= 1");
 
-        if (_rateLimitSemaphore == null)
+        if (_rateLimitTimer == null)
             throw new InvalidOperationException("Rate limit can only be changed when an original rate limit was specified.");
 
         if (_disposed)
             throw new ObjectDisposedException("The RequestRateAlgorithm was disposed");
 
-        var previousLimit = _rateLimit;
-        if (newRateLimit > previousLimit)
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
+        await _rateLimitChangeSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
+
+        try
         {
-            var releaseCount = newRateLimit - previousLimit;
-
-            _rateLimitSemaphore.Release(releaseCount);
-
-            Interlocked.Add(ref _rateLimit, releaseCount);
-        }
-        else
-        {
-            using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
-
-            for (; previousLimit > newRateLimit; previousLimit--)
+            int previousLimit;
+            lock (_rateLimitLock)
             {
-                await _rateLimitSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
+                linked.Token.ThrowIfCancellationRequested();
+                if (_disposed)
+                    throw new ObjectDisposedException(nameof(RequestRateAlgorithm));
+                previousLimit = _rateLimit;
+                if (newRateLimit > previousLimit)
+                {
+                    _rateRemaining += newRateLimit - previousLimit;
+                    _rateLimit = newRateLimit;
+                    SignalRateCapacity();
+                    return;
+                }
 
-                Interlocked.Decrement(ref _rateLimit);
+                if (newRateLimit == previousLimit)
+                    return;
+
+                _rateReductionPending = true;
             }
+
+            var acquired = 0;
+            try
+            {
+                while (acquired < previousLimit - newRateLimit)
+                {
+                    Task? capacityChanged = null;
+                    lock (_rateLimitLock)
+                    {
+                        linked.Token.ThrowIfCancellationRequested();
+                        if (_disposed)
+                            throw new ObjectDisposedException(nameof(RequestRateAlgorithm));
+                        if (_rateRemaining > 0)
+                        {
+                            _rateRemaining--;
+                            acquired++;
+                        }
+                        else
+                            capacityChanged = _rateCapacityChanged.Task;
+                    }
+
+                    if (capacityChanged != null)
+                        await capacityChanged.WaitAsync(linked.Token).ConfigureAwait(false);
+                }
+
+                lock (_rateLimitLock)
+                {
+                    linked.Token.ThrowIfCancellationRequested();
+                    if (_disposed)
+                        throw new ObjectDisposedException(nameof(RequestRateAlgorithm));
+                    _rateLimit = newRateLimit;
+                    _rateReductionPending = false;
+                    SignalRateCapacity();
+                }
+            }
+            catch
+            {
+                lock (_rateLimitLock)
+                {
+                    _rateRemaining += acquired;
+                    _rateReductionPending = false;
+                    SignalRateCapacity();
+                }
+                throw;
+            }
+        }
+        finally
+        {
+            if (!_disposed)
+                _rateLimitChangeSemaphore.Release();
         }
     }
 
@@ -497,8 +588,6 @@ public class RequestRateAlgorithm :
             var releaseCount = newRequestCount - previousRequestCount;
 
             _requestSemaphore.Release(releaseCount);
-
-            Interlocked.Add(ref _rateLimit, releaseCount);
         }
         else
         {
@@ -508,16 +597,21 @@ public class RequestRateAlgorithm :
             {
                 await _requestSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
 
-                Interlocked.Decrement(ref _rateLimit);
             }
         }
     }
 
     void Reset(object? state)
     {
-        var processed = Interlocked.Exchange(ref _count, 0);
-        if (processed > 0)
-            _rateLimitSemaphore!.Release(processed);
+        lock (_rateLimitLock)
+        {
+            if (_disposed || _count == 0)
+                return;
+
+            _rateRemaining += _count;
+            _count = 0;
+            SignalRateCapacity();
+        }
     }
 
     void Add(Task task)

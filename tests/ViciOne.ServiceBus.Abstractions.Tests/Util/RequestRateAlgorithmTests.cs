@@ -234,6 +234,234 @@ public sealed class RequestRateAlgorithmTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "increase-releases-only-one-current-window-slot")]
+    public async Task IncreasingRateLimit_AdmitsOneMoreRequestBeforeTheWindowResetsAsync()
+    {
+        TimeSpan interval = TimeSpan.FromMinutes(1);
+        var clock = new FakeTimeProvider();
+        using var algorithm = CreateRateLimitedAlgorithm(1, interval, clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        using (ActiveRequest first = await algorithm.BeginRequestAsync(cancellationToken))
+            await first.CompleteAsync(0, cancellationToken);
+
+        Task<ActiveRequest> secondRequest = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(secondRequest.IsCompleted);
+
+        await algorithm.ChangeRateLimitAsync(2, cancellationToken);
+        using (ActiveRequest second = await secondRequest.WaitAsync(CompletionTimeout, cancellationToken))
+            await second.CompleteAsync(0, cancellationToken);
+
+        Task<ActiveRequest> thirdRequest = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(thirdRequest.IsCompleted);
+        clock.Advance(interval);
+        using ActiveRequest third = await thirdRequest.WaitAsync(CompletionTimeout, cancellationToken);
+        Assert.Equal(1, third.ResultLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "decrease-waits-and-enforces-next-window")]
+    public async Task DecreasingRateLimit_WaitsForTheWindowThenAdmitsOnlyOneRequestAsync()
+    {
+        TimeSpan interval = TimeSpan.FromMinutes(1);
+        var clock = new FakeTimeProvider();
+        using var algorithm = CreateRateLimitedAlgorithm(2, interval, clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        for (var index = 0; index < 2; index++)
+        {
+            using ActiveRequest request = await algorithm.BeginRequestAsync(cancellationToken);
+            await request.CompleteAsync(0, cancellationToken);
+        }
+
+        Task decrease = algorithm.ChangeRateLimitAsync(1, cancellationToken);
+        Assert.False(decrease.IsCompleted);
+        Task<ActiveRequest> waitingRequest = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(waitingRequest.IsCompleted);
+        clock.Advance(interval - TimeSpan.FromTicks(1));
+        Assert.False(decrease.IsCompleted);
+        Assert.False(waitingRequest.IsCompleted);
+        clock.Advance(TimeSpan.FromTicks(1));
+        await decrease.WaitAsync(CompletionTimeout, cancellationToken);
+
+        using (ActiveRequest first = await waitingRequest.WaitAsync(CompletionTimeout, cancellationToken))
+            await first.CompleteAsync(0, cancellationToken);
+        Task<ActiveRequest> blocked = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(blocked.IsCompleted);
+
+        clock.Advance(interval);
+        using ActiveRequest second = await blocked.WaitAsync(CompletionTimeout, cancellationToken);
+        Assert.Equal(1, second.ResultLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "cancellation-keeps-prior-window-capacity")]
+    public async Task CanceledDecrease_LeavesThePreviousRateAvailableInTheNextWindowAsync()
+    {
+        TimeSpan interval = TimeSpan.FromMinutes(1);
+        var clock = new FakeTimeProvider();
+        using var algorithm = CreateRateLimitedAlgorithm(3, interval, clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        for (var index = 0; index < 2; index++)
+        {
+            using ActiveRequest request = await algorithm.BeginRequestAsync(cancellationToken);
+            await request.CompleteAsync(0, cancellationToken);
+        }
+
+        using var changeCancellation = new CancellationTokenSource();
+        Task decrease = algorithm.ChangeRateLimitAsync(1, changeCancellation.Token);
+        Assert.False(decrease.IsCompleted);
+        changeCancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => decrease);
+
+        clock.Advance(interval);
+        for (var index = 0; index < 3; index++)
+        {
+            using ActiveRequest request = await algorithm.BeginRequestAsync(cancellationToken)
+                .WaitAsync(CompletionTimeout, cancellationToken);
+            await request.CompleteAsync(0, cancellationToken);
+        }
+
+        Task<ActiveRequest> fourth = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(fourth.IsCompleted);
+        clock.Advance(interval);
+        using ActiveRequest nextWindow = await fourth.WaitAsync(CompletionTimeout, cancellationToken);
+        Assert.Equal(1, nextWindow.ResultLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "parallel-decreases-share-one-limit-change")]
+    public async Task ConcurrentDecreases_ToTheSameLimit_LeaveOneRequestAvailableAsync()
+    {
+        TimeSpan interval = TimeSpan.FromMinutes(1);
+        var clock = new FakeTimeProvider();
+        using var algorithm = CreateRateLimitedAlgorithm(2, interval, clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        for (var index = 0; index < 2; index++)
+        {
+            using ActiveRequest request = await algorithm.BeginRequestAsync(cancellationToken);
+            await request.CompleteAsync(0, cancellationToken);
+        }
+
+        Task firstDecrease = algorithm.ChangeRateLimitAsync(1, cancellationToken);
+        Task secondDecrease = algorithm.ChangeRateLimitAsync(1, cancellationToken);
+        Assert.False(firstDecrease.IsCompleted);
+        Assert.False(secondDecrease.IsCompleted);
+
+        clock.Advance(interval);
+        await Task.WhenAll(firstDecrease, secondDecrease).WaitAsync(CompletionTimeout, cancellationToken);
+
+        using (ActiveRequest allowed = await algorithm.BeginRequestAsync(cancellationToken)
+                   .WaitAsync(CompletionTimeout, cancellationToken))
+            await allowed.CompleteAsync(0, cancellationToken);
+
+        Task<ActiveRequest> blocked = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(blocked.IsCompleted);
+        clock.Advance(interval);
+        using ActiveRequest nextWindow = await blocked.WaitAsync(CompletionTimeout, cancellationToken);
+        Assert.Equal(1, nextWindow.ResultLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "adaptive-request-count-does-not-change-rate-capacity")]
+    public async Task AdaptiveRequestGrowth_DoesNotConsumeTheDynamicRateIncreaseAsync()
+    {
+        var clock = new FakeTimeProvider();
+        using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        {
+            PrefetchCount = 2,
+            RequestResultLimit = 1,
+            RequestRateLimit = 1,
+            RequestRateInterval = TimeSpan.FromMinutes(1),
+        }, clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        using (ActiveRequest first = await algorithm.BeginRequestAsync(cancellationToken))
+            await first.CompleteAsync(1, cancellationToken);
+        Assert.Equal(2, algorithm.RequestCount);
+
+        await algorithm.ChangeRateLimitAsync(2, cancellationToken);
+        using (ActiveRequest second = await algorithm.BeginRequestAsync(cancellationToken)
+                   .WaitAsync(CompletionTimeout, cancellationToken))
+            await second.CompleteAsync(0, cancellationToken);
+
+        Task<ActiveRequest> third = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(third.IsCompleted);
+        clock.Advance(TimeSpan.FromMinutes(1));
+        using ActiveRequest nextWindow = await third.WaitAsync(CompletionTimeout, cancellationToken);
+        Assert.Equal(1, nextWindow.ResultLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "dispose-cancels-pending-decrease")]
+    public async Task DisposingAlgorithm_CancelsPendingRateDecreaseAsync()
+    {
+        var clock = new FakeTimeProvider();
+        using var algorithm = CreateRateLimitedAlgorithm(2, TimeSpan.FromMinutes(1), clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        for (var index = 0; index < 2; index++)
+        {
+            using ActiveRequest request = await algorithm.BeginRequestAsync(cancellationToken);
+            await request.CompleteAsync(0, cancellationToken);
+        }
+
+        Task decrease = algorithm.ChangeRateLimitAsync(1, cancellationToken);
+        Task queuedDecrease = algorithm.ChangeRateLimitAsync(1, cancellationToken);
+        Assert.False(decrease.IsCompleted);
+        Assert.False(queuedDecrease.IsCompleted);
+        algorithm.Dispose();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => decrease.WaitAsync(CompletionTimeout, cancellationToken));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => queuedDecrease.WaitAsync(CompletionTimeout, cancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CANCELLATION", "pre-canceled-request-does-not-create-capacity")]
+    public async Task PreCanceledRequest_DoesNotCreateAnExtraConcurrentRequestSlotAsync()
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 2, requestResultLimit: 1);
+        using var canceled = new CancellationTokenSource();
+        canceled.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => algorithm.BeginRequestAsync(canceled.Token));
+
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using ActiveRequest first = await algorithm.BeginRequestAsync(cancellationToken);
+        Task<ActiveRequest> second = algorithm.BeginRequestAsync(cancellationToken);
+        Assert.False(second.IsCompleted);
+        Assert.Equal(1, algorithm.ActiveRequestCount);
+
+        await first.CompleteAsync(0, cancellationToken);
+        using ActiveRequest admitted = await second.WaitAsync(CompletionTimeout, cancellationToken);
+        Assert.Equal(1, algorithm.MaxActiveRequestCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "invalid-and-unavailable-changes-are-rejected")]
+    public async Task RateLimitChanges_RejectInvalidValuesMissingConfigurationAndDisposedInstancesAsync()
+    {
+        var clock = new FakeTimeProvider();
+        using var configured = CreateRateLimitedAlgorithm(1, TimeSpan.FromMinutes(1), clock);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        foreach (int value in new[] { 0, -1 })
+        {
+            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+                () => configured.ChangeRateLimitAsync(value, cancellationToken));
+            Assert.Equal("newRateLimit", exception.ParamName);
+        }
+
+        using var unconfigured = CreateAlgorithm(prefetchCount: 1, requestResultLimit: 1);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => unconfigured.ChangeRateLimitAsync(1, cancellationToken));
+
+        configured.Dispose();
+        await Assert.ThrowsAsync<ObjectDisposedException>(() => configured.ChangeRateLimitAsync(1, cancellationToken));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-CLOCK", "active-request-cancellation-grace")]
     public async Task ParentCancellation_CancelsAnActiveRequestAtTheConfiguredClockBoundaryAsync()
     {
@@ -317,6 +545,17 @@ public sealed class RequestRateAlgorithmTests
             RequestResultLimit = requestResultLimit,
             ConcurrentResultLimit = concurrentResultLimit,
         });
+    }
+
+    private static RequestRateAlgorithm CreateRateLimitedAlgorithm(int rateLimit, TimeSpan interval, FakeTimeProvider clock)
+    {
+        return new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        {
+            PrefetchCount = 1,
+            RequestResultLimit = 1,
+            RequestRateLimit = rateLimit,
+            RequestRateInterval = interval,
+        }, clock);
     }
 
     private sealed record GroupedMessage(string GroupId, int SequenceNumber);
