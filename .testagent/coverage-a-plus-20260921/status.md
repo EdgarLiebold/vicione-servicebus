@@ -2,24 +2,27 @@
 
 ## Current quantitative baseline
 
-- At commit `4965a84680b0a98f3b0126489b31e92c362330ad`, 35 fresh,
+- At commit `e1a965290fe532ec8ff86dc699305dd4086f0099`, 35 fresh,
   parseable reports from 22 passing Unit/Infrastructure modules and all 13
   passing local-provider modules cover 32/32 product assemblies. The 445
   Architecture tests pass separately without coverage instrumentation because
   the collector injects types that invalidate one assembly-ownership test.
-  The failed collector run is excluded from the aggregate.
-- Aggregate: 80,091/90,318 lines = 88.6767%; branch interval
-  29,141–31,605/36,378 = 80.1061–86.8794%; 114 methods exceed CRAP 30.
+  Architecture coverage is excluded from the aggregate for that reason.
+- Aggregate: 80,159/90,376 lines = 88.6950%; branch interval
+  29,184–31,649/36,380 = 80.2199–86.9956%; 111 methods exceed CRAP 30.
   Source/test diff was empty when the reports were captured. The complete
   provider profile passed 25 Azure Service Bus, 405 broad-matrix, 69 SQL
-  Server, and 31 RabbitMQ tests, all without failures or skips. The raw reports
-  and calculated methods are in `artifacts/coverage-a-plus-20260922-current/`.
-  This is the last complete pre-Azure-Service-Bus-metadata profile; source and
-  tests have since changed, so a new complete profile is required after the
-  current phase.
+  Server, and 31 RabbitMQ tests, all without failures or skips and with empty
+  fixture findings. The raw reports and calculated methods are in
+  `artifacts/coverage-a-plus-20260922-e1a965290/`.
 
 ### Earlier comparison profile
 
+- The immediately preceding complete profile at `4965a8468` covered
+  80,091/90,318 lines (88.6767%), a branch interval of 80.1061–86.8794%,
+  and 114 methods above CRAP 30. The Azure Service Bus metadata phase added
+  68 covered lines and lowered the hotspot count by three under the same
+  35-report scope.
 - 36 fresh, parseable Cobertura reports cover 32/32 loadable product assemblies at commit
   `e0cf987c845154fea81ec27b63592a910aceac37`.
 - Aggregate: 79,569/90,165 lines = 88.2482%.
@@ -107,5 +110,5 @@ application identity semantics remain intact. The complete Unit/Architecture gat
 9,912/9,912; Azure Service Bus Unit passed 151/151 with coverage and its local emulator profile
 passed 25/25 with empty fixture findings. Three selected method CRAP scores moved from 110 each
 to 10, 10, and 12. Final adversarial read-only re-review returned PASS. See
-`azure-servicebus-metadata-phase.md`. A new complete product-wide aggregate is still required,
-and global A+ remains open.
+`azure-servicebus-metadata-phase.md`. The complete 35-report aggregate on
+`e1a965290` is recorded above; global A+ remains open.

@@ -5,8 +5,8 @@
 The current complete pre-phase profile at `4965a8468` consists of 35 passing
 Cobertura reports, including all 13 local providers and 32/32 product
 assemblies. It measures 80,091/90,318 lines (88.6767%), a branch interval of
-80.1061–86.8794%, and 114 methods with CRAP above 30. A complete profile on
-the changed bytes is still required; these numbers are not a post-phase claim.
+80.1061–86.8794%, and 114 methods with CRAP above 30. The complete profile
+on the changed bytes is recorded below.
 
 `ServiceBusHeaderProvider` previously let an application property named
 `TransportSentTime` override the broker enqueue instant during lookup. The
@@ -62,8 +62,15 @@ tests, wall-clock dependencies, or mocks.
 - Adversarial read-only review found three initial counterexamples. All were
   corrected; the final re-review returned PASS with no remaining concrete
   finding.
-- Complete current-byte global aggregate: pending at the time this note was
-  written.
+- Complete current-byte global aggregate at `e1a965290`: 35 fresh, passing
+  Cobertura reports from 22 Unit/Infrastructure and all 13 local-provider
+  modules; 32/32 product assemblies observed and no source/test diff. It
+  measures 80,159/90,376 lines (88.6950%), a branch interval of
+  29,184–31,649/36,380 (80.2199–86.9956%), and 111 methods above CRAP 30.
+  The 405 broad-matrix, 69 SQL Server, 31 RabbitMQ, and 25 Azure Service Bus
+  provider tests all passed without failures or skips. All four fixture runs
+  recorded empty findings. Raw reports and method scores are under
+  `artifacts/coverage-a-plus-20260922-e1a965290/`.
 
-The global A+ requirement remains open until a complete post-phase profile
-reaches the agreed Line, Branch, and CRAP gates with strong product tests.
+The global A+ requirement remains open; this complete profile is its next
+measured baseline.
