@@ -1,5 +1,7 @@
 using System.Net;
 using System.Reflection;
+using global::Amazon;
+using global::Amazon.Runtime;
 using global::Amazon.S3;
 using global::Amazon.S3.Model;
 using ViciOne.ServiceBus.Advanced.Observers;
@@ -362,7 +364,7 @@ public sealed class AmazonS3MessageDataObserverTests
         IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
         var proxy = (LifecycleS3DispatchProxy)(object)client;
         proxy.HeadBucketFailure = S3Failure(HttpStatusCode.NotFound, "NoSuchBucket");
-        proxy.ClientConfiguration = new AmazonS3Config();
+        proxy.ClientConfiguration = DispatchProxy.Create<IClientConfig, ClientRegionConfigProxy>();
         var repository = new AmazonS3MessageDataRepository(
             client,
             new AmazonS3MessageDataRepositoryOptions("regionless-message-data"));
@@ -372,6 +374,27 @@ public sealed class AmazonS3MessageDataObserverTests
 
         Assert.Contains("authentication region", exception.Message, StringComparison.Ordinal);
         Assert.Null(proxy.PutBucketRequest);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "bucket-creation-accepts-region-endpoint-without-authentication-region")]
+    public async Task EnsureReady_CreatesBucketWithRegionEndpointOnlyAsync()
+    {
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
+        var proxy = (LifecycleS3DispatchProxy)(object)client;
+        proxy.HeadBucketFailure = S3Failure(HttpStatusCode.NotFound, "NoSuchBucket");
+        IClientConfig config = DispatchProxy.Create<IClientConfig, ClientRegionConfigProxy>();
+        ((ClientRegionConfigProxy)config).RegionEndpointValue = RegionEndpoint.EUCentral1;
+        proxy.ClientConfiguration = config;
+        var repository = new AmazonS3MessageDataRepository(
+            client,
+            new AmazonS3MessageDataRepositoryOptions("endpoint-region-message-data"));
+
+        await repository.EnsureReadyAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal("endpoint-region-message-data", proxy.PutBucketRequest?.BucketName);
+        Assert.Null(proxy.PutBucketRequest?.BucketRegionName);
+        Assert.True(proxy.PutBucketRequest?.UseClientRegion);
     }
 
     private static AmazonS3Exception S3Failure(HttpStatusCode statusCode, string errorCode) =>
@@ -460,11 +483,22 @@ public sealed class AmazonS3MessageDataObserverTests
         }
     }
 
+    private class ClientRegionConfigProxy : DispatchProxy
+    {
+        public RegionEndpoint? RegionEndpointValue { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            Assert.Contains(targetMethod?.Name, new[] { "get_AuthenticationRegion", "get_RegionEndpoint" });
+            return targetMethod?.Name == "get_RegionEndpoint" ? RegionEndpointValue : null;
+        }
+    }
+
     private class LifecycleS3DispatchProxy : DispatchProxy
     {
         public Exception? HeadBucketFailure { get; set; }
 
-        public AmazonS3Config ClientConfiguration { get; set; } = new()
+        public IClientConfig ClientConfiguration { get; set; } = new AmazonS3Config
         {
             AuthenticationRegion = "eu-central-1",
         };

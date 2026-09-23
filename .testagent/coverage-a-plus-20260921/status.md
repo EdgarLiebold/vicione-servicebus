@@ -16,6 +16,26 @@ independent read-only review returned PASS for the profile with that limitation 
 
 ## Latest focused slice
 
+The Quartz suspect-attempt integration test now schedules its naturally due
+status check five minutes ahead while continuing to trigger all three checks
+manually. This separates Quartz's natural timer from the test's 30-second wait
+without changing its fault, retry, stale-completion, or terminal-state
+assertions. Both focused cases passed 2/2, the entire Quartz project 267/267,
+and the complete Unit/Architecture gate 10,226/10,226 while six brokers were
+still starting. That fixture failed on a RabbitMQ Erlang cookie permission
+error; Quartz finished before any broker was ready. A second run began with six
+brokers ready: Quartz passed alongside PostgreSQL provider tests (79/79), but
+the Unit/Architecture gate failed one Amazon S3 test because the fixture set
+`AWS_REGION`. A deterministic client-config proxy corrected that test and a
+positive `RegionEndpoint`-only case now checks bucket creation. A second
+broker-ready run passed S3 and Quartz but exposed a saga observation race;
+the saga test now waits for actual removal before checking the repository.
+Both failed gates remain archived. Read-only adversarial review passed the
+Quartz change; the original timeout's exact cause remains
+unproven. The complete Unit/Architecture gate with all three final test
+changes passed 10,227/10,227. See `quartz-suspect-manual-schedule-phase.md`. A new complete
+product-wide profile after this test-source change is still required.
+
 The RabbitMQ durable-send destination slice adds seven real-broker rejection
 variants for unsafe topology options. The test checks the specific
 configuration failure, an empty existing quorum queue, and its complete

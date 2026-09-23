@@ -172,7 +172,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
                 },
                 configureJobService: service =>
                 {
-                    service.StatusCheckInterval = TimeSpan.FromSeconds(30);
+                    service.StatusCheckInterval = TimeSpan.FromMinutes(5);
                     service.SuspectJobRetryCount = suspectRetryCount;
                     service.SuspectJobRetryDelay = TimeSpan.FromMinutes(1);
                 });

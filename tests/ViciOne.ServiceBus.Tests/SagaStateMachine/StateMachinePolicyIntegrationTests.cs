@@ -241,6 +241,7 @@ public sealed class StateMachinePolicyIntegrationTests
             await harness.Bus.PublishAsync(new ContainerCatchStart(correlationId), cancellationToken);
 
             Assert.Null((await consumed.WaitAsync(timeout, cancellationToken)).Exception);
+            Assert.Equal(correlationId, await sagaHarness.WaitForSagaRemovalAsync(correlationId, timeout, cancellationToken));
             Assert.Null(await repository.LoadAsync(correlationId, TestContext.Current.CancellationToken));
             Assert.Equal(1, recorder.FailureCount);
             Assert.Equal(1, recorder.CatchCount);
