@@ -13,6 +13,7 @@ internal sealed class CronExpression :
 {
     static readonly Regex _regex = new(@"^L(-\d{1,2})?(W(-\d{1,2})?)?$", RegexOptions.Compiled | RegexOptions.ExplicitCapture, TimeSpan.FromSeconds(5));
     static readonly Regex _offsetRegex = new("LW-(?<offset>[0-9]+)", RegexOptions.Compiled | RegexOptions.ExplicitCapture, TimeSpan.FromSeconds(5));
+    static readonly string[] _monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
     readonly CronField _daysOfMonth = [];
     readonly CronField _daysOfWeek = [];
@@ -883,22 +884,13 @@ internal sealed class CronExpression :
     /// <returns>The zero-based month ordinal, or <c>-1</c> when the abbreviation is unknown.</returns>
     static int GetMonthNumber(ReadOnlySpan<char> span)
     {
-        return span switch
+        for (var month = 0; month < _monthNames.Length; month++)
         {
-            "JAN" => 0,
-            "FEB" => 1,
-            "MAR" => 2,
-            "APR" => 3,
-            "MAY" => 4,
-            "JUN" => 5,
-            "JUL" => 6,
-            "AUG" => 7,
-            "SEP" => 8,
-            "OCT" => 9,
-            "NOV" => 10,
-            "DEC" => 11,
-            _ => -1
-        };
+            if (span.SequenceEqual(_monthNames[month]))
+                return month;
+        }
+
+        return -1;
     }
 
     static int GetDayOfWeekNumber(ReadOnlySpan<char> span)
