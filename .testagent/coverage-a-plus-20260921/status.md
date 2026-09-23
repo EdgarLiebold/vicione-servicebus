@@ -1,5 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
+## Latest product-wide profile
+
+The fresh exact-HEAD baseline at `ac363722c` passed 9,711/9,711 Unit/Infrastructure,
+545/545 provider, and 759/759 supplementary no-AVX2 Abstractions tests with zero failures and
+skips. All 36 new reports are parseable, all 32 source assemblies are present, the four canonical
+fixture finding files are empty, and the tracked `src`/`tests` diff is empty. Corrected aggregation
+measures 83,389/93,236 lines = 89.4386%, a conservative branch interval of
+29,798–32,315/36,715 = 81.1603–88.0158%, and 83/25,917 methods above CRAP 30. An adversarial
+review found and caused correction of branch-site and method-identity deduplication errors before
+publication; the corrected aggregate then received read-only adversarial PASS. See
+`product-wide-profile-ac363722c.md`. Global A+ remains open; Core scheduling is the next coherent
+risk slice.
+
 ## Latest focused slice
 
 The RabbitMQ registration-options slice fixes explicitly empty or mixed
