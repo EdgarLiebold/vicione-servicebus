@@ -17,6 +17,19 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+The public `SagaInstance<TSaga>` wrapper had the same subclass equality
+inconsistency previously found in keyed binding: typed equality accepted a
+derived wrapper around equal state, while object equality rejected it. The
+pre-fix regression failed at that comparison during development; its console
+output was not archived. The typed overload now matches the object overload's
+exact-runtime-type rule. The focused test passed 1/1 during development;
+complete Core with Microsoft CodeCoverage passed 6,376/6,376, and both
+`Equals` overloads reached 100% lines/branches and CRAP 6. The Engineering
+Release build had zero warnings/errors; the full Unit/Architecture gate passed
+10,234/10,234. Read-only Red Team returned PASS. See
+`saga-instance-equality-phase.md` and `CHANGELOG.md`. Global A+ and a new
+complete product profile remain open.
+
 The public Amazon SNS relative-topic projection had a scoped-host roundtrip
 defect: `topic:orders` under `production` became
 `topic:production/production_orders`, which the transport parser could not

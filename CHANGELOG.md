@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Saga instance wrappers now apply the same exact-runtime-type rule through
+  typed and object equality. A derived wrapper can no longer compare equal to
+  a base wrapper as a dictionary key while comparing unequal through
+  `object.Equals`; distinct wrappers around equal saga states remain equal.
 - Amazon SNS topic addresses now project to relative `topic:` URIs that resolve
   to the same entity under a scoped host. A topic name that cannot be represented
   relative to that scope fails explicitly instead of producing a misleading URI.

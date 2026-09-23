@@ -50,6 +50,9 @@ public class SagaInstance<TSaga> :
         if (ReferenceEquals(this, other))
             return true;
 
+        if (other.GetType() != GetType())
+            return false;
+
         return EqualityComparer<TSaga>.Default.Equals(Instance, other.Instance);
     }
 
