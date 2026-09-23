@@ -2,14 +2,17 @@
 
 ## Latest product-wide profile
 
-The fresh product/test baseline at `6a3689d33` has 36 parseable reports across all 32 product
+The fresh exact-HEAD profile at `7e184ded0` has 36 parseable reports across all 32 product
 assemblies: 22 Unit/Infrastructure, 13 local-provider, and one supplementary Abstractions run
-without AVX2. Its archived successful logs show 36/36 runs passing, 11,094 test executions,
-zero failures and skips; the Abstractions supplementary run repeats 768 tests. The four canonical
+without AVX2. Its archived successful logs show 36/36 runs passing, 11,101 test executions,
+zero failures and skips; the Abstractions supplementary run repeats 768 tests. The four successful
 fixture findings lists are empty and the tracked `src`/`tests` diff is empty. Aggregation measures
-83,702/93,411 lines = 89.6061%, branch observations of 29,939–32,419/36,668 =
-81.6488–88.4122%, and 64/25,943 methods above CRAP 30. Branch observations are not formal
-bounds on merged coverage. See `product-wide-profile-6a3689d33.md`. Global A+ remains open.
+83,702/93,411 lines = 89.6061%, branch observations of 29,947–32,426/36,668 =
+81.6707–88.4313%, and 63/25,943 methods above CRAP 30. Branch observations are not formal
+bounds on merged coverage. The complete Unit/Architecture gate passed 10,226/10,226 on retry;
+an earlier parallel run had a Quartz 30-second timeout whose cause remains unresolved. The
+independent read-only review returned PASS for the profile with that limitation documented. See
+`product-wide-profile-7e184ded0.md`. Global A+ remains open.
 
 ## Latest focused slice
 
