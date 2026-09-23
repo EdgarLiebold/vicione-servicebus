@@ -15,6 +15,16 @@ risk slice.
 
 ## Latest focused slice
 
+The runtime scheduled-send slice adds six A-grade behavior methods with seven cases for all four
+public runtime overloads: inferred versus explicit contract identity, payload, due time,
+destination, nondefault cancellation, pipe execution on the provider context, mismatched types,
+and twelve required-argument boundaries. Focused Microsoft CodeCoverage passed 7/7; the complete
+current-byte Unit/Architecture gate passed 10,163/10,163, with no failures or skips. Five former
+CRAP>30 runtime-dispatch methods now measure between CRAP 6 and 9.73 in the focused report; the
+explicit-type pipe overload has 9/9 lines and 8/8 reported branches, down from CRAP 72 to 8.
+Final read-only adversarial review returned PASS. See `message-scheduler-runtime-contract-phase.md`.
+The last complete product-wide profile remains `ac363722c`; global A+ remains open.
+
 The RabbitMQ registration-options slice fixes explicitly empty or mixed
 credentials being discarded and replaced by RabbitMQ.Client defaults. Three
 attributed methods execute eight hard DI, TLS, certificate-policy, credential,
