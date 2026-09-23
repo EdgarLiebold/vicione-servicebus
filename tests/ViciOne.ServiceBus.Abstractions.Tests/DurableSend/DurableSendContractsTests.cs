@@ -172,6 +172,72 @@ public sealed class DurableSendContractsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-QUARANTINE", "valid-terminal-evidence-page-boundary")]
+    public void DurableQuarantinePage_AcceptsAnAttemptAtTheAdmissionTimestamp()
+    {
+        DurableSendQuarantineEntry valid = QuarantineEntry();
+        DurableSendQuarantineEntry entry = valid with
+        {
+            QuarantinedAt = valid.EnqueuedAt,
+            DeliveryAttempts = 1,
+            FailureType = null,
+        };
+
+        DurableSendQuarantinePage page = DurableSendQuarantinePagination.CreatePage([entry], 1);
+
+        Assert.Same(entry, Assert.Single(page.Entries));
+        Assert.False(page.HasMore);
+        Assert.Null(page.NextQuery);
+        Assert.Throws<NotSupportedException>(() => ((IList<DurableSendQuarantineEntry>)page.Entries).Clear());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-QUARANTINE", "reject-corrupt-persisted-identity-and-destination")]
+    public void DurableQuarantinePage_RejectsCorruptIdentityAndDestinationBeforeExposure()
+    {
+        DurableSendQuarantineEntry valid = QuarantineEntry();
+
+        Assert.Equal("Id", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage([valid with { Id = default }], 1)).ParamName);
+        Assert.Equal("ContractIdentity", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage([valid with { ContractIdentity = default }], 1)).ParamName);
+        Assert.Equal("DestinationAddress", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage([valid with { DestinationAddress = null! }], 1)).ParamName);
+        Assert.Equal("DestinationAddress", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage(
+                [valid with { DestinationAddress = new Uri("relative", UriKind.Relative) }], 1)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-QUARANTINE", "reject-null-page-evidence")]
+    public void DurableQuarantinePage_RejectsANullEntryAtThePublicBoundary()
+    {
+        Assert.Equal("fetchedEntries", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage([null!], 1)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-QUARANTINE", "reject-impossible-terminal-evidence")]
+    public void DurableQuarantinePage_RejectsImpossibleTerminalStateBeforeExposure()
+    {
+        DurableSendQuarantineEntry valid = QuarantineEntry();
+
+        Assert.Equal("QuarantinedAt", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage(
+                [valid with { QuarantinedAt = valid.EnqueuedAt.AddTicks(-1) }], 1)).ParamName);
+        Assert.Equal("FailureKind", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage(
+                [valid with { FailureKind = DurableSendFailureKind.None }], 1)).ParamName);
+        Assert.Equal("FailureKind", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage(
+                [valid with { FailureKind = (DurableSendFailureKind)int.MaxValue }], 1)).ParamName);
+        Assert.Equal("FailureType", Assert.Throws<ArgumentException>(() =>
+            DurableSendQuarantinePagination.CreatePage([valid with { FailureType = " \t" }], 1)).ParamName);
+        Assert.Equal("DeliveryAttempts", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DurableSendQuarantinePagination.CreatePage([valid with { DeliveryAttempts = 0 }], 1)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-SEND-ADMISSION", "provider-result-invariants")]
     public void ProviderResults_RejectInvalidIdentitiesCountsAndCompletionBoundaries()
     {
@@ -339,6 +405,22 @@ public sealed class DurableSendContractsTests
         ContentType = "application/octet-stream",
         Body = new byte[] { 1 },
     };
+
+    private static DurableSendQuarantineEntry QuarantineEntry()
+    {
+        DateTimeOffset enqueuedAt = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
+        return new DurableSendQuarantineEntry
+        {
+            Id = new DurableSendId(Guid.Parse("88888888-2222-3333-4444-555555555555")),
+            ContractIdentity = new MessageContractIdentity("vicione.tests.durable", 1),
+            DestinationAddress = new Uri("https://example.test/durable"),
+            EnqueuedAt = enqueuedAt,
+            QuarantinedAt = enqueuedAt.AddMinutes(1),
+            DeliveryAttempts = 2,
+            FailureKind = DurableSendFailureKind.RetryLimitExceeded,
+            FailureType = typeof(InvalidOperationException).FullName,
+        };
+    }
 
     private static Uri AddressWithAbsoluteLength(int length)
     {
