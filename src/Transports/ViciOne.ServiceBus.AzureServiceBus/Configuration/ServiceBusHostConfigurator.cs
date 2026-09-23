@@ -150,9 +150,15 @@ public class ServiceBusHostConfigurator :
     /// <returns>The normalized <c>sb</c> endpoint, or <see langword="null"/> when no endpoint is present or its URI is invalid.</returns>
     public static Uri? ParseEndpoint(string connectionString)
     {
+        ArgumentNullException.ThrowIfNull(connectionString);
+        if (connectionString.Length == 0)
+            return null;
+
         var itemIndex = connectionString[0] == ';' ? 0 : 1;
         var startIndex = 0;
         var separatorIndex = 0;
+        Uri? endpoint = null;
+        bool endpointSeen = false;
         while (separatorIndex != -1)
         {
             separatorIndex = connectionString.IndexOf(';', startIndex + 1);
@@ -162,34 +168,33 @@ public class ServiceBusHostConfigurator :
             {
                 var key = item.Substring(1 - itemIndex, index - 1 + itemIndex);
                 var value = item.Substring(index + 1);
-                if ((!string.IsNullOrEmpty(key) && char.IsWhiteSpace(key[0])) || char.IsWhiteSpace(key[key.Length - 1]))
-                    key = key.Trim();
+                if (string.IsNullOrWhiteSpace(key))
+                    throw new FormatException("Invalid connection string");
+
+                key = key.Trim();
                 if (!string.IsNullOrEmpty(value) && (char.IsWhiteSpace(value[0]) || char.IsWhiteSpace(value[value.Length - 1])))
                     value = value.Trim();
                 if (string.IsNullOrEmpty(value))
                     throw new FormatException("Invalid connection string");
 
-                if (string.Compare("Endpoint", key, StringComparison.OrdinalIgnoreCase) == 0)
+                if (!endpointSeen && string.Compare("Endpoint", key, StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    if (!Uri.TryCreate(value, UriKind.Absolute, out var result))
-                        result = null;
-
-                    if ((object?)result == null)
-                        return null;
-
-                    var builder = new UriBuilder
+                    endpointSeen = true;
+                    if (Uri.TryCreate(value, UriKind.Absolute, out var result))
                     {
-                        Scheme = "sb",
-                        Host = result.Host,
-                        Path = result.AbsolutePath,
-                        Port = result.IsDefaultPort ? -1 : result.Port
-                    };
+                        var builder = new UriBuilder
+                        {
+                            Scheme = "sb",
+                            Host = result.Host,
+                            Path = result.AbsolutePath,
+                            Port = result.IsDefaultPort ? -1 : result.Port
+                        };
 
-                    if (string.Compare(builder.Scheme, "sb", StringComparison.OrdinalIgnoreCase) != 0
-                        || Uri.CheckHostName(builder.Host) == UriHostNameType.Unknown)
-                        throw new FormatException("Invalid connection string");
+                        if (Uri.CheckHostName(builder.Host) == UriHostNameType.Unknown)
+                            throw new FormatException("Invalid connection string");
 
-                    return builder.Uri;
+                        endpoint = builder.Uri;
+                    }
                 }
             }
             else if (item.Length != 1 || item[0] != ';')
@@ -199,6 +204,6 @@ public class ServiceBusHostConfigurator :
             startIndex = separatorIndex;
         }
 
-        return null;
+        return endpoint;
     }
 }

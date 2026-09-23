@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- The public Azure Service Bus connection-string endpoint parser now returns
+  no endpoint for empty input and rejects null or blank keys with the intended
+  argument or format error instead of leaking indexing exceptions or accepting
+  a malformed key. It validates trailing connection-string segments before
+  returning the first endpoint.
 - The Azure Service Bus emulator dead-letter capability test now waits for the
   broker to confirm dead-letter settlement before receiving from the dead-letter
   subqueue. This removes an overlapping emulator cursor race while retaining

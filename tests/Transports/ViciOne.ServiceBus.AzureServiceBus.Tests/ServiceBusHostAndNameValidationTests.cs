@@ -20,6 +20,38 @@ public sealed class ServiceBusHostAndNameValidationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "missing-endpoint-returns-null")]
+    public void ParseEndpoint_EmptyConnectionStringHasNoEndpoint()
+    {
+        Assert.Null(ServiceBusHostConfigurator.ParseEndpoint(string.Empty));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "null-connection-string-is-rejected")]
+    public void ParseEndpoint_RejectsANullConnectionString()
+    {
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(
+            () => ServiceBusHostConfigurator.ParseEndpoint(null!));
+
+        Assert.Equal("connectionString", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData("=value")]
+    [InlineData(";=value")]
+    [InlineData("  =value")]
+    [InlineData("Endpoint=sb://my.servicebus.windows.net;=value")]
+    [InlineData("Endpoint=sb://my.servicebus.windows.net;  =value")]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "empty-connection-string-key-is-rejected")]
+    public void ParseEndpoint_RejectsAnEmptyConnectionStringKey(string connectionString)
+    {
+        FormatException exception = Assert.Throws<FormatException>(
+            () => ServiceBusHostConfigurator.ParseEndpoint(connectionString));
+
+        Assert.Equal("Invalid connection string", exception.Message);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ASB-ENTITY-NAMES", "entity-and-subscription-boundaries")]
     public void EntityAndSubscriptionNames_EnforceProviderLimitsAndCharacters()
     {
