@@ -1131,120 +1131,143 @@ internal sealed class CronExpression :
 
     NextFireTimeCursor ProgressNextFireTimeDayOfWeek(DateTimeOffset date)
     {
+        if (_lastDayOfWeek)
+            return ProgressLastDayOfWeek(date);
+        if (_nthDayOfWeek != 0)
+            return ProgressNthDayOfWeek(date);
+        if (_everyNthWeek != 0)
+            return ProgressEveryNthWeek(date);
+
+        return ProgressOrdinaryDayOfWeek(date);
+    }
+
+    NextFireTimeCursor ProgressLastDayOfWeek(DateTimeOffset date)
+    {
         var day = date.Day;
         var month = date.Month;
+        var dayOfWeek = _daysOfWeek.Min;
+        var currentDayOfWeek = (int)date.DayOfWeek + 1;
+        var daysToAdd = 0;
+        if (currentDayOfWeek < dayOfWeek)
+            daysToAdd = dayOfWeek - currentDayOfWeek;
 
-        if (_lastDayOfWeek)
+        if (currentDayOfWeek > dayOfWeek)
+            daysToAdd = dayOfWeek + (7 - currentDayOfWeek);
+
+        var lastDayOfMonth = GetLastDayOfMonth(month, date.Year);
+
+        if (day + daysToAdd > lastDayOfMonth)
         {
-            var dayOfWeek = _daysOfWeek.Min;
-            var currentDayOfWeek = (int)date.DayOfWeek + 1;
-            var daysToAdd = 0;
-            if (currentDayOfWeek < dayOfWeek)
-                daysToAdd = dayOfWeek - currentDayOfWeek;
+            if (month == 12)
+                date = new DateTimeOffset(date.Year, month - 11, 1, 0, 0, 0, date.Offset).AddYears(1);
+            else
+                date = new DateTimeOffset(date.Year, month + 1, 1, 0, 0, 0, date.Offset);
 
-            if (currentDayOfWeek > dayOfWeek)
-                daysToAdd = dayOfWeek + (7 - currentDayOfWeek);
-
-            var lastDayOfMonth = GetLastDayOfMonth(month, date.Year);
-
-            if (day + daysToAdd > lastDayOfMonth)
-            {
-                if (month == 12)
-                    date = new DateTimeOffset(date.Year, month - 11, 1, 0, 0, 0, date.Offset).AddYears(1);
-                else
-                    date = new DateTimeOffset(date.Year, month + 1, 1, 0, 0, 0, date.Offset);
-
-                return new NextFireTimeCursor(true, date);
-            }
-
-            while (day + daysToAdd + 7 <= lastDayOfMonth)
-                daysToAdd += 7;
-
-            day += daysToAdd;
-
-            if (daysToAdd > 0)
-                return new NextFireTimeCursor(true, new DateTimeOffset(date.Year, month, day, 0, 0, 0, date.Offset));
+            return new NextFireTimeCursor(true, date);
         }
-        else if (_nthDayOfWeek != 0)
+
+        while (day + daysToAdd + 7 <= lastDayOfMonth)
+            daysToAdd += 7;
+
+        day += daysToAdd;
+
+        if (daysToAdd > 0)
+            return new NextFireTimeCursor(true, new DateTimeOffset(date.Year, month, day, 0, 0, 0, date.Offset));
+
+        return new NextFireTimeCursor(false, new DateTimeOffset(date.Year, date.Month, day, date.Hour, date.Minute, date.Second, date.Offset));
+    }
+
+    NextFireTimeCursor ProgressNthDayOfWeek(DateTimeOffset date)
+    {
+        var day = date.Day;
+        var month = date.Month;
+        var dayOfWeek = _daysOfWeek.Min;
+        var currentDayOfWeek = (int)date.DayOfWeek + 1;
+        var daysToAdd = 0;
+        if (currentDayOfWeek < dayOfWeek)
+            daysToAdd = dayOfWeek - currentDayOfWeek;
+        else if (currentDayOfWeek > dayOfWeek)
+            daysToAdd = dayOfWeek + (7 - currentDayOfWeek);
+
+        var dayShifted = daysToAdd > 0;
+
+        day += daysToAdd;
+        var weekOfMonth = day / 7;
+        if (day % 7 > 0)
+            weekOfMonth++;
+
+        daysToAdd = (_nthDayOfWeek - weekOfMonth) * 7;
+        day += daysToAdd;
+        if (daysToAdd < 0 || day > GetLastDayOfMonth(month, date.Year))
         {
-            var dayOfWeek = _daysOfWeek.Min;
-            var currentDayOfWeek = (int)date.DayOfWeek + 1;
-            var daysToAdd = 0;
-            if (currentDayOfWeek < dayOfWeek)
-                daysToAdd = dayOfWeek - currentDayOfWeek;
-            else if (currentDayOfWeek > dayOfWeek)
-                daysToAdd = dayOfWeek + (7 - currentDayOfWeek);
+            date = month == 12
+                ? new DateTimeOffset(date.Year, month - 11, 1, 0, 0, 0, date.Offset).AddYears(1)
+                : new DateTimeOffset(date.Year, month + 1, 1, 0, 0, 0, date.Offset);
 
-            var dayShifted = daysToAdd > 0;
-
-            day += daysToAdd;
-            var weekOfMonth = day / 7;
-            if (day % 7 > 0)
-                weekOfMonth++;
-
-            daysToAdd = (_nthDayOfWeek - weekOfMonth) * 7;
-            day += daysToAdd;
-            if (daysToAdd < 0 || day > GetLastDayOfMonth(month, date.Year))
-            {
-                date = month == 12
-                    ? new DateTimeOffset(date.Year, month - 11, 1, 0, 0, 0, date.Offset).AddYears(1)
-                    : new DateTimeOffset(date.Year, month + 1, 1, 0, 0, 0, date.Offset);
-
-                return new NextFireTimeCursor(true, date);
-            }
-
-            if (daysToAdd > 0 || dayShifted)
-                return new NextFireTimeCursor(true, new DateTimeOffset(date.Year, month, day, 0, 0, 0, date.Offset));
+            return new NextFireTimeCursor(true, date);
         }
-        else if (_everyNthWeek != 0)
+
+        if (daysToAdd > 0 || dayShifted)
+            return new NextFireTimeCursor(true, new DateTimeOffset(date.Year, month, day, 0, 0, 0, date.Offset));
+
+        return new NextFireTimeCursor(false, new DateTimeOffset(date.Year, date.Month, day, date.Hour, date.Minute, date.Second, date.Offset));
+    }
+
+    NextFireTimeCursor ProgressEveryNthWeek(DateTimeOffset date)
+    {
+        var day = date.Day;
+        var month = date.Month;
+        var currentDayOfWeek = (int)date.DayOfWeek + 1;
+        var dayOfWeek = _daysOfWeek.Min;
+        if (_daysOfWeek.TryGetMinValueStartingFrom(currentDayOfWeek, out var min))
+            dayOfWeek = min;
+
+        var daysToAdd = 0;
+        if (currentDayOfWeek < dayOfWeek)
+            daysToAdd = dayOfWeek - currentDayOfWeek + 7 * (_everyNthWeek - 1);
+
+        if (currentDayOfWeek > dayOfWeek)
+            daysToAdd = dayOfWeek + (7 - currentDayOfWeek) + 7 * (_everyNthWeek - 1);
+
+        if (daysToAdd > 0)
         {
-            var currentDayOfWeek = (int)date.DayOfWeek + 1;
-            var dayOfWeek = _daysOfWeek.Min;
-            if (_daysOfWeek.TryGetMinValueStartingFrom(currentDayOfWeek, out var min))
-                dayOfWeek = min;
-
-            var daysToAdd = 0;
-            if (currentDayOfWeek < dayOfWeek)
-                daysToAdd = dayOfWeek - currentDayOfWeek + 7 * (_everyNthWeek - 1);
-
-            if (currentDayOfWeek > dayOfWeek)
-                daysToAdd = dayOfWeek + (7 - currentDayOfWeek) + 7 * (_everyNthWeek - 1);
-
-            if (daysToAdd > 0)
-            {
-                date = new DateTimeOffset(date.Year, month, day, 0, 0, 0, date.Offset);
-                date = date.AddDays(daysToAdd);
-                return new NextFireTimeCursor(true, date);
-            }
+            date = new DateTimeOffset(date.Year, month, day, 0, 0, 0, date.Offset);
+            date = date.AddDays(daysToAdd);
+            return new NextFireTimeCursor(true, date);
         }
-        else
+
+        return new NextFireTimeCursor(false, new DateTimeOffset(date.Year, date.Month, day, date.Hour, date.Minute, date.Second, date.Offset));
+    }
+
+    NextFireTimeCursor ProgressOrdinaryDayOfWeek(DateTimeOffset date)
+    {
+        var day = date.Day;
+        var month = date.Month;
+        var currentDayOfWeek = (int)date.DayOfWeek + 1;
+        var dayOfWeek = _daysOfWeek.Min;
+        if (_daysOfWeek.TryGetMinValueStartingFrom(currentDayOfWeek, out var min))
+            dayOfWeek = min;
+
+        var daysToAdd = 0;
+        if (currentDayOfWeek < dayOfWeek)
+            daysToAdd = dayOfWeek - currentDayOfWeek;
+
+        if (currentDayOfWeek > dayOfWeek)
+            daysToAdd = dayOfWeek + (7 - currentDayOfWeek);
+
+        var lDay = GetLastDayOfMonth(month, date.Year);
+
+        if (day + daysToAdd > lDay)
         {
-            var currentDayOfWeek = (int)date.DayOfWeek + 1;
-            var dayOfWeek = _daysOfWeek.Min;
-            if (_daysOfWeek.TryGetMinValueStartingFrom(currentDayOfWeek, out var min))
-                dayOfWeek = min;
+            date = month == 12
+                ? new DateTimeOffset(date.Year, month - 11, 1, 0, 0, 0, date.Offset).AddYears(1)
+                : new DateTimeOffset(date.Year, month + 1, 1, 0, 0, 0, date.Offset);
 
-            var daysToAdd = 0;
-            if (currentDayOfWeek < dayOfWeek)
-                daysToAdd = dayOfWeek - currentDayOfWeek;
-
-            if (currentDayOfWeek > dayOfWeek)
-                daysToAdd = dayOfWeek + (7 - currentDayOfWeek);
-
-            var lDay = GetLastDayOfMonth(month, date.Year);
-
-            if (day + daysToAdd > lDay)
-            {
-                date = month == 12
-                    ? new DateTimeOffset(date.Year, month - 11, 1, 0, 0, 0, date.Offset).AddYears(1)
-                    : new DateTimeOffset(date.Year, month + 1, 1, 0, 0, 0, date.Offset);
-
-                return new NextFireTimeCursor(true, date);
-            }
-
-            if (daysToAdd > 0)
-                return new NextFireTimeCursor(true, new DateTimeOffset(date.Year, month, day + daysToAdd, 0, 0, 0, date.Offset));
+            return new NextFireTimeCursor(true, date);
         }
+
+        if (daysToAdd > 0)
+            return new NextFireTimeCursor(true, new DateTimeOffset(date.Year, month, day + daysToAdd, 0, 0, 0, date.Offset));
 
         return new NextFireTimeCursor(false, new DateTimeOffset(date.Year, date.Month, day, date.Hour, date.Minute, date.Second, date.Offset));
     }
