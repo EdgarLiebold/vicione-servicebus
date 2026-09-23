@@ -40,7 +40,7 @@ public class ServiceBusTopicConfigurator :
     {
         var options = new CreateTopicOptions(FullPath);
 
-        if (AutoDeleteOnIdle.HasValue)
+        if (AutoDeleteOnIdle.HasValue && AutoDeleteOnIdle.Value != TimeSpan.Zero)
             options.AutoDeleteOnIdle = AutoDeleteOnIdle.Value;
 
         if (DefaultMessageTimeToLive.HasValue)

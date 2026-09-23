@@ -63,7 +63,7 @@ public class ServiceBusQueueConfigurator :
     {
         var options = new CreateQueueOptions(FullPath);
 
-        if (AutoDeleteOnIdle.HasValue)
+        if (AutoDeleteOnIdle.HasValue && AutoDeleteOnIdle.Value != TimeSpan.Zero)
             options.AutoDeleteOnIdle = AutoDeleteOnIdle.Value;
 
         if (DefaultMessageTimeToLive.HasValue)

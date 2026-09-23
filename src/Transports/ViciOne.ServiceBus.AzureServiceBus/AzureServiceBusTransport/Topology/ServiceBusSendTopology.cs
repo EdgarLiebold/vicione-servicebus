@@ -93,7 +93,9 @@ public class ServiceBusSendTopology :
         var createQueueOptions = Defaults.GetCreateQueueOptions(address.Path);
 
         if (address.AutoDelete.HasValue)
-            createQueueOptions.AutoDeleteOnIdle = address.AutoDelete.Value;
+            createQueueOptions.AutoDeleteOnIdle = address.AutoDelete.Value == TimeSpan.Zero
+                ? TimeSpan.MaxValue
+                : address.AutoDelete.Value;
 
         return createQueueOptions;
     }
@@ -103,7 +105,9 @@ public class ServiceBusSendTopology :
         var createTopicOptions = Defaults.GetCreateTopicOptions(address.Path);
 
         if (address.AutoDelete.HasValue)
-            createTopicOptions.AutoDeleteOnIdle = address.AutoDelete.Value;
+            createTopicOptions.AutoDeleteOnIdle = address.AutoDelete.Value == TimeSpan.Zero
+                ? TimeSpan.MaxValue
+                : address.AutoDelete.Value;
 
         return createTopicOptions;
     }

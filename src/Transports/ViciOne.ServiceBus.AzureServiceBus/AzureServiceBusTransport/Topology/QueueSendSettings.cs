@@ -23,7 +23,9 @@ public class QueueSendSettings :
         set
         {
             if (value.HasValue)
-                _createQueueOptions.AutoDeleteOnIdle = value.Value;
+                _createQueueOptions.AutoDeleteOnIdle = value.Value == TimeSpan.Zero
+                    ? TimeSpan.MaxValue
+                    : value.Value;
         }
     }
 

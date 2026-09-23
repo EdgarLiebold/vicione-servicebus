@@ -59,7 +59,7 @@ public class ServiceBusSubscriptionConfigurator :
     {
         var options = new CreateSubscriptionOptions(TopicPath, SubscriptionName);
 
-        if (AutoDeleteOnIdle.HasValue)
+        if (AutoDeleteOnIdle.HasValue && AutoDeleteOnIdle.Value != TimeSpan.Zero)
             options.AutoDeleteOnIdle = AutoDeleteOnIdle.Value;
 
         if (DefaultMessageTimeToLive.HasValue)
