@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SNS topic addresses now project to relative `topic:` URIs that resolve
+  to the same entity under a scoped host. A topic name that cannot be represented
+  relative to that scope fails explicitly instead of producing a misleading URI.
 - Keyed `Bind<TKey, TValue>` values now apply the same exact-runtime-type
   equality rule through both typed and object comparisons. A derived binding
   can no longer compare equal to a base binding in a dictionary while

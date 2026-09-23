@@ -179,6 +179,9 @@ public readonly struct AmazonSqsEndpointAddress
     }
 
     /// <summary>Gets a relative Amazon SNS topic URI for this topic address and its lifecycle options.</summary>
+    /// <exception cref="AmazonSqsTransportConfigurationException">
+    /// The topic name cannot be represented relative to its configured scope.
+    /// </exception>
     public Uri TopicAddress
     {
         get
@@ -186,15 +189,22 @@ public readonly struct AmazonSqsEndpointAddress
             if (Type != AddressType.Topic)
                 throw new ArgumentException("Address was not a topic");
 
-            var path = Scope == "/"
-                ? $"{Name}"
-                : $"{Scope}/{Name}";
+            string relativeName;
+            if (Scope == "/")
+                relativeName = Name;
+            else
+            {
+                var prefix = $"{Scope}_";
+                if (!Name.StartsWith(prefix, StringComparison.Ordinal))
+                    throw new AmazonSqsTransportConfigurationException(
+                        $"Topic {Name} cannot be represented relative to scope {Scope}.");
 
-            var builder = new UriBuilder($"topic:{path}");
+                relativeName = Name[prefix.Length..];
+            }
 
-            builder.Query += string.Join("&", GetQueryStringOptions());
-
-            return builder.Uri;
+            var query = string.Join("&", GetQueryStringOptions());
+            var value = $"topic:{Uri.EscapeDataString(relativeName)}";
+            return new Uri($"{value}?{query}");
         }
     }
 

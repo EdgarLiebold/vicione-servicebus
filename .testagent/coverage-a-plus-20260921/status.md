@@ -17,6 +17,20 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+The public Amazon SNS relative-topic projection had a scoped-host roundtrip
+defect: `topic:orders` under `production` became
+`topic:production/production_orders`, which the transport parser could not
+resolve to the same entity. A red regression led to a fix that strips the exact
+scope prefix and rejects names with no valid relative representation. The
+root/scoped roundtrips and queue/ambiguous-name boundaries passed. Complete
+Amazon SQS Release coverage passed 211/211; the selected getter reached 100%
+lines and reported branches, CRAP 6. The Engineering Release build passed with
+zero warnings/errors. A first full gate timed out in a Quartz test while a
+coverage run was concurrent; the cause is unproven. The final serial gate
+passed 10,233/10,233, and read-only Red Team returned PASS. See
+`amazon-sns-relative-topic-address-phase.md` and `CHANGELOG.md`. Global A+
+and a fresh full product profile remain open.
+
 The public keyed-binding equality test exposed a real subclass inconsistency:
 typed equality accepted a derived binding that object equality rejected, so
 dictionary lookup contradicted object comparison. The pre-fix regression

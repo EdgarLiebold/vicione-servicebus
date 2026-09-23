@@ -69,6 +69,47 @@ public sealed class AmazonSqsEndpointAddressTests
     }
 
     [Theory]
+    [InlineData("amazonsqs://eu-central-1/", "orders", "orders")]
+    [InlineData("amazonsqs://eu-central-1/production", "production_orders", "orders")]
+    [RequirementCoverage("REQ-VSB-AWS-SNS-ADDRESS", "relative-topic-address-preserves-entity-and-lifetime")]
+    public void RelativeTopicAddress_ResolvesToTheSameEntityAndLifetime(
+        string hostUri, string expectedName, string relativeName)
+    {
+        var host = new Uri(hostUri);
+        var address = new AmazonSqsEndpointAddress(
+            host, new Uri($"topic:{relativeName}?durable=false&autodelete=true"));
+
+        Assert.Equal(expectedName, address.Name);
+        Assert.Equal(new Uri($"topic:{relativeName}?durable=false&autodelete=true&type=topic"), address.TopicAddress);
+
+        var roundTripped = new AmazonSqsEndpointAddress(host, address.TopicAddress);
+        Assert.Equal(address.Name, roundTripped.Name);
+        Assert.Equal(address.Type, roundTripped.Type);
+        Assert.Equal(address.Durable, roundTripped.Durable);
+        Assert.Equal(address.AutoDelete, roundTripped.AutoDelete);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SNS-ADDRESS", "queue-has-no-relative-topic-address")]
+    public void QueueAddress_RejectsRelativeTopicProjection()
+    {
+        var queue = new AmazonSqsEndpointAddress(HostAddress, new Uri("queue:orders"));
+
+        Assert.Throws<ArgumentException>(() => _ = queue.TopicAddress);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SNS-ADDRESS", "unscoped-name-cannot-be-projected-under-scoped-host")]
+    public void ExplicitTopicName_RejectsAnAmbiguousRelativeProjection()
+    {
+        var topic = new AmazonSqsEndpointAddress(
+            HostAddress, "orders", type: AmazonSqsEndpointAddress.AddressType.Topic);
+
+        Assert.Equal("orders", topic.Name);
+        Assert.Throws<AmazonSqsTransportConfigurationException>(() => _ = topic.TopicAddress);
+    }
+
+    [Theory]
     [InlineData("queue:orders?unknown=true")]
     [InlineData("queue:orders?durable=not-a-boolean")]
     [InlineData("queue:orders?durable=true&durable=false")]
