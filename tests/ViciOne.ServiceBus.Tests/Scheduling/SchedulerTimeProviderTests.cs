@@ -65,6 +65,49 @@ public sealed class SchedulerTimeProviderTests
         Assert.Equal(tokenId.ToString("D"), header);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULE-TOKEN", "accepted-transport-identity-is-stable-after-context-mutation")]
+    public async Task DelayedSendPipe_PreservesTheAcceptedTransportIdentityAsync()
+    {
+        var clock = new FakeTimeProvider(CommandTime);
+        var pipe = new ScheduleSendPipe<ClockProbe>(
+            Pipe.Empty<SendContext<ClockProbe>>(), CommandTime + TimeSpan.FromMinutes(10), clock);
+        Guid configuredToken = NewId.NextGuid();
+        Guid transportToken = NewId.NextGuid();
+        Guid transportMessageId = NewId.NextGuid();
+        var context = new InMemorySendContext<ClockProbe>(new ClockProbe());
+
+        Assert.Null(pipe.ScheduledMessageId);
+        Assert.Null(pipe.MessageId);
+        pipe.ScheduledMessageId = configuredToken;
+        Assert.Equal(configuredToken, pipe.ScheduledMessageId);
+
+        await ((IPipe<SendContext<ClockProbe>>)pipe).SendAsync(context);
+
+        Assert.Equal(configuredToken, context.ScheduledMessageId);
+        Assert.Equal(configuredToken, pipe.ScheduledMessageId);
+        Assert.Equal(context.MessageId, pipe.MessageId);
+        Assert.Equal(TimeSpan.FromMinutes(10), context.Delay);
+
+        context.ScheduledMessageId = transportToken;
+        context.MessageId = transportMessageId;
+        Assert.Equal(transportToken, pipe.ScheduledMessageId);
+        Assert.Equal(transportMessageId, pipe.MessageId);
+
+        ScheduleSendPipe<ClockProbe>.ScheduleSendResult accepted = pipe.AcceptResult();
+        Assert.Equal(transportToken, accepted.ScheduledMessageId);
+        Assert.Equal(transportMessageId, accepted.MessageId);
+
+        pipe.ScheduledMessageId = NewId.NextGuid();
+        context.ScheduledMessageId = NewId.NextGuid();
+        context.MessageId = NewId.NextGuid();
+        Assert.Equal(transportToken, pipe.ScheduledMessageId);
+        Assert.Equal(transportMessageId, pipe.MessageId);
+        Assert.Equal(accepted, pipe.AcceptResult());
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            ((IPipe<SendContext<ClockProbe>>)pipe).SendAsync(new InMemorySendContext<ClockProbe>(new ClockProbe())));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

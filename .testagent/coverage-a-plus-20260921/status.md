@@ -17,6 +17,17 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+The delayed-send accepted-identity test verifies configured, live-context,
+and accepted-snapshot token semantics with distinct GUIDs, including stable
+message identity after context mutation and rejection of pipe reuse. The
+focused test passed 1/1; complete Core with Microsoft CodeCoverage passed
+6,374/6,374 and measured the selected public getter at 5/5 lines and CRAP 6,
+down from 0/5 and CRAP 42 in the last full profile. The Engineering Release
+build had zero warnings/errors and the full Unit/Architecture gate passed
+10,228/10,228. Read-only adversarial review returned PASS. See
+`schedule-send-accepted-identity-phase.md`. The new test is not yet included
+in a complete product-wide profile; global A+ remains open.
+
 The Quartz suspect-attempt integration test now schedules its naturally due
 status check five minutes ahead while continuing to trigger all three checks
 manually. This separates Quartz's natural timer from the test's 30-second wait
