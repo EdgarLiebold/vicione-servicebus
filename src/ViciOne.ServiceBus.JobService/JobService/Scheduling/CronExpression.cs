@@ -359,116 +359,117 @@ internal sealed class CronExpression :
 
     void StoreExpressionGeneralValue(int type, ReadOnlySpan<char> span, int index)
     {
-        var incr = 0;
         if (span.Length - index < 3)
             throw new FormatException($"Incomplete named cron value: '{span}'.");
 
         ReadOnlySpan<char> sub = span[index..(index + 3)];
-        int sval;
-        var eval = -1;
-        if (type == CronExpressionConstants.Month)
+        (int sval, int eval, int incr) = type switch
         {
-            sval = GetMonthNumber(sub) + 1;
-            if (sval <= 0)
-                throw new FormatException($"Invalid Month value: '{sub}'");
-
-            int suffixIndex = index + 3;
-            if (span.Length > suffixIndex)
-            {
-                switch (span[suffixIndex])
-                {
-                    case '-':
-                        index = suffixIndex + 1;
-                        if (span.Length - index < 3)
-                            throw new FormatException($"Incomplete named cron range: '{span}'.");
-
-                        sub = span[index..(index + 3)];
-                        eval = GetMonthNumber(sub) + 1;
-                        if (eval <= 0)
-                            throw new FormatException($"Invalid Month value: '{sub}'");
-
-                        suffixIndex = index + 3;
-                        incr = 1;
-                        if (span.Length > suffixIndex)
-                        {
-                            if (span[suffixIndex] != '/')
-                                throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
-
-                            incr = ParseIncrement(span, suffixIndex, type);
-                        }
-
-                        break;
-                    case '/':
-                        incr = ParseIncrement(span, suffixIndex, type);
-                        break;
-                    default:
-                        throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
-                }
-            }
-        }
-        else if (type == CronExpressionConstants.DayOfWeek)
-        {
-            sval = GetDayOfWeekNumber(sub);
-            if (sval < 0)
-                throw new FormatException($"Invalid Day-of-Week value: '{sub}'");
-
-            if (span.Length > index + 3)
-            {
-                var c = span[index + 3];
-                switch (c)
-                {
-                    case '-':
-                        index += 4;
-                        if (span.Length - index < 3)
-                            throw new FormatException($"Incomplete named cron range: '{span}'.");
-
-                        sub = span[index..(index + 3)];
-                        eval = GetDayOfWeekNumber(sub);
-                        if (eval < 0)
-                            throw new FormatException($"Invalid Day-of-Week value: '{sub}'");
-
-                        int suffixIndex = index + 3;
-                        if (span.Length > suffixIndex)
-                        {
-                            if (span[suffixIndex] != '/')
-                                throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
-
-                            incr = ParseIncrement(span, suffixIndex, type);
-                        }
-
-                        break;
-                    case '#':
-                        index += 4;
-                        if (!TryParsePositiveInteger(span[index..], out _nthDayOfWeek)
-                            || _nthDayOfWeek is < 1 or > 5)
-                            throw new FormatException("A numeric value between 1 and 5 must follow the '#' option");
-
-                        break;
-                    case '/':
-                        index += 4;
-                        if (!TryParsePositiveInteger(span[index..], out _everyNthWeek)
-                            || _everyNthWeek is < 1 or > 5)
-                            throw new FormatException("A numeric value between 1 and 5 must follow the '/' option");
-
-                        break;
-                    case 'L':
-                        if (span.Length != index + 4)
-                            throw new FormatException($"Unexpected character '{span[index + 4]}'.");
-
-                        _lastDayOfWeek = true;
-                        break;
-                    default:
-                        throw new FormatException($"Illegal characters for this position: '{sub}'");
-                }
-            }
-        }
-        else
-            throw new FormatException($"Illegal characters for this position: '{sub}'");
+            CronExpressionConstants.Month => ParseNamedMonth(span, index, sub),
+            CronExpressionConstants.DayOfWeek => ParseNamedDayOfWeek(span, index, sub),
+            _ => throw new FormatException($"Illegal characters for this position: '{sub}'")
+        };
 
         if (eval != -1 && incr == 0)
             incr = 1;
 
         AddToSet(sval, eval, incr, type);
+    }
+
+    static (int Value, int End, int Increment) ParseNamedMonth(ReadOnlySpan<char> span, int index, ReadOnlySpan<char> sub)
+    {
+        int value = GetMonthNumber(sub) + 1;
+        if (value <= 0)
+            throw new FormatException($"Invalid Month value: '{sub}'");
+
+        int suffixIndex = index + 3;
+        if (span.Length <= suffixIndex)
+            return (value, -1, 0);
+
+        if (span[suffixIndex] == '/')
+            return (value, -1, ParseIncrement(span, suffixIndex, CronExpressionConstants.Month));
+
+        if (span[suffixIndex] != '-')
+            throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
+
+        index = suffixIndex + 1;
+        if (span.Length - index < 3)
+            throw new FormatException($"Incomplete named cron range: '{span}'.");
+
+        sub = span[index..(index + 3)];
+        int end = GetMonthNumber(sub) + 1;
+        if (end <= 0)
+            throw new FormatException($"Invalid Month value: '{sub}'");
+
+        suffixIndex = index + 3;
+        if (span.Length <= suffixIndex)
+            return (value, end, 1);
+
+        if (span[suffixIndex] != '/')
+            throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
+
+        return (value, end, ParseIncrement(span, suffixIndex, CronExpressionConstants.Month));
+    }
+
+    (int Value, int End, int Increment) ParseNamedDayOfWeek(ReadOnlySpan<char> span, int index, ReadOnlySpan<char> sub)
+    {
+        int value = GetDayOfWeekNumber(sub);
+        if (value < 0)
+            throw new FormatException($"Invalid Day-of-Week value: '{sub}'");
+
+        int suffixIndex = index + 3;
+        if (span.Length <= suffixIndex)
+            return (value, -1, 0);
+
+        switch (span[suffixIndex])
+        {
+            case '-':
+                return ParseNamedDayOfWeekRange(span, suffixIndex + 1, value);
+            case '#':
+                _nthDayOfWeek = ParseNamedWeekCount(span[(suffixIndex + 1)..], '#');
+                break;
+            case '/':
+                _everyNthWeek = ParseNamedWeekCount(span[(suffixIndex + 1)..], '/');
+                break;
+            case 'L':
+                if (span.Length != suffixIndex + 1)
+                    throw new FormatException($"Unexpected character '{span[suffixIndex + 1]}'.");
+
+                _lastDayOfWeek = true;
+                break;
+            default:
+                throw new FormatException($"Illegal characters for this position: '{sub}'");
+        }
+
+        return (value, -1, 0);
+    }
+
+    static int ParseNamedWeekCount(ReadOnlySpan<char> value, char option)
+    {
+        if (!TryParsePositiveInteger(value, out int count) || count is < 1 or > 5)
+            throw new FormatException($"A numeric value between 1 and 5 must follow the '{option}' option");
+
+        return count;
+    }
+
+    static (int Value, int End, int Increment) ParseNamedDayOfWeekRange(ReadOnlySpan<char> span, int index, int value)
+    {
+        if (span.Length - index < 3)
+            throw new FormatException($"Incomplete named cron range: '{span}'.");
+
+        ReadOnlySpan<char> sub = span[index..(index + 3)];
+        int end = GetDayOfWeekNumber(sub);
+        if (end < 0)
+            throw new FormatException($"Invalid Day-of-Week value: '{sub}'");
+
+        int suffixIndex = index + 3;
+        if (span.Length <= suffixIndex)
+            return (value, end, 1);
+
+        if (span[suffixIndex] != '/')
+            throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
+
+        return (value, end, ParseIncrement(span, suffixIndex, CronExpressionConstants.DayOfWeek));
     }
 
     void StoreExpressionValues(int position, ReadOnlySpan<char> span, int type)

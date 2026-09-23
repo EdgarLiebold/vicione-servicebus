@@ -105,6 +105,16 @@ public sealed class CronExpressionCalendarTests
         Assert.Equal([month], expression.GetSet(CronExpressionConstants.Month));
     }
 
+    [Fact]
+    public void NamedMonthRange_WrapsAcrossDecemberAndJanuaryWithoutSkippingAYear()
+    {
+        var expression = UtcExpression("0 0 9 1 DEC-JAN ?");
+
+        Assert.Equal(Utc(2025, 12, 1, 9, 0), expression.GetTimeAfter(Utc(2025, 11, 30, 9, 0)));
+        Assert.Equal(Utc(2026, 1, 1, 9, 0), expression.GetTimeAfter(Utc(2025, 12, 1, 9, 0)));
+        Assert.Equal(Utc(2026, 12, 1, 9, 0), expression.GetTimeAfter(Utc(2026, 1, 1, 9, 0)));
+    }
+
     private static CronExpression UtcExpression(string text) =>
         new(text) { TimeZone = TimeZoneInfo.Utc };
 
