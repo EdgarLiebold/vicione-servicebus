@@ -231,6 +231,10 @@ public sealed class RabbitMqEndpointAddressTests
     [InlineData("exchange:orders?temporary=true&durable=false")]
     [InlineData("exchange:orders?durable=false&temporary=true")]
     [InlineData("exchange:orders?autodelete=true&temporary=true")]
+    [InlineData("exchange:orders?temporary=true&autodelete=true")]
+    [InlineData("exchange:orders?durable=true&durable=false")]
+    [InlineData("exchange:orders?type=direct&type=topic")]
+    [InlineData("exchange:orders?queue=first&queue=second")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-OPTIONS", "invalid-or-ambiguous-values-fail-fast")]
     public void InvalidOrAmbiguousEndpointInputs_AreRejected(string source)
     {
@@ -244,6 +248,64 @@ public sealed class RabbitMqEndpointAddressTests
     public void ShortAddresses_RejectHostOptionsThatCannotTakeEffect(string source)
     {
         Assert.Throws<RabbitMqAddressException>(() => new RabbitMqEndpointAddress(HostAddress, new Uri(source)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-OPTIONS", "duplicate-bindings-are-canonicalized")]
+    public void RepeatedExchangeBindings_AreDeduplicatedWithoutChangingOrder()
+    {
+        var address = new RabbitMqEndpointAddress(
+            HostAddress,
+            new Uri("exchange:orders?bindexchange=first&bindexchange=first&bindexchange=second"));
+
+        Assert.Equal(["first", "second"], address.BindExchanges);
+        Assert.Equal(
+            new Uri("exchange:orders?bindexchange=first&bindexchange=second"),
+            address.ToShortAddress());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-OPTIONS", "full-address-combines-host-and-endpoint-options")]
+    public void FullAddress_AcceptsHostOptionsWhilePreservingEndpointTopology()
+    {
+        var source = new Uri(
+            "rabbitmq://remote/production/orders?heartbeat=30&prefetch=16&ttl=2500" +
+            "&temporary=true&queue=work&bind=true&bindexchange=source");
+
+        var host = new RabbitMqHostAddress(source);
+        var endpoint = new RabbitMqEndpointAddress(HostAddress, source);
+        var shortAddress = endpoint.ToShortAddress();
+        var resolved = new RabbitMqEndpointAddress(HostAddress, shortAddress);
+
+        Assert.Equal((ushort)30, host.Heartbeat);
+        Assert.Equal((ushort)16, host.Prefetch);
+        Assert.Equal(2500, host.TimeToLive);
+        Assert.Equal("remote", endpoint.Host);
+        Assert.Equal("production", endpoint.VirtualHost);
+        Assert.Equal("orders", endpoint.Name);
+        Assert.False(endpoint.Durable);
+        Assert.True(endpoint.AutoDelete);
+        Assert.True(endpoint.BindToQueue);
+        Assert.Equal("work", endpoint.QueueName);
+        Assert.Equal(["source"], endpoint.BindExchanges);
+        Assert.Equal(new Uri("queue:orders?temporary=true&queue=work&bindexchange=source"), shortAddress);
+        Assert.Equal("localhost", resolved.Host);
+        Assert.Equal(endpoint.QueueName, resolved.QueueName);
+        Assert.Equal(endpoint.BindExchanges, resolved.BindExchanges);
+    }
+
+    [Theory]
+    [InlineData("https")]
+    [InlineData("ftp")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "unsupported-transport-scheme")]
+    public void FullAddress_RejectsAnUnsupportedTransportScheme(string scheme)
+    {
+        var source = new Uri($"{scheme}://remote/production/orders?temporary=true");
+
+        RabbitMqAddressException exception = Assert.Throws<RabbitMqAddressException>(() =>
+            new RabbitMqEndpointAddress(HostAddress, source));
+
+        Assert.Contains($"The address scheme is not supported: {scheme}", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]

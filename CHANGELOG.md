@@ -207,6 +207,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- RabbitMQ endpoint query parsing now groups lifetime, exchange, Boolean, and entity-name
+  options in focused parsing steps. The public address behavior remains the same; source-owned
+  regressions check combined host and endpoint options, unsupported schemes, conflicting or
+  duplicated options, and stable deduplication of exchange bindings. An unreachable virtual-host
+  fallback was removed after confirming the path parser always assigns a value.
 - Generated Amazon SNS topic names containing separator characters in CLR identifiers now use a
   reserved canonical encoding, so their durable topic names differ from earlier development builds.
   Existing topics are not renamed automatically: migrate subscriptions and coordinate publisher and

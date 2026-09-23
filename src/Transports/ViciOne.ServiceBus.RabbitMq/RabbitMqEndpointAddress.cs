@@ -24,14 +24,7 @@ public readonly struct RabbitMqEndpointAddress
         ArgumentNullException.ThrowIfNull(hostAddress);
         ArgumentNullException.ThrowIfNull(address);
 
-        Durable = true;
-        AutoDelete = false;
-        SingleActiveConsumer = false;
-        ExchangeType = RabbitMQ.Client.ExchangeType.Fanout;
-        BindToQueue = false;
-        QueueName = null;
-        DelayedType = null;
-        AlternateExchange = null;
+        var bindToQueue = false;
         var containsHostSettings = false;
 
         switch (address.Scheme.ToLowerInvariant())
@@ -47,7 +40,7 @@ public readonly struct RabbitMqEndpointAddress
                 Port = port;
                 VirtualHost = virtualHost;
                 address.ParseHostPathAndEntityName(out virtualHost, out var name);
-                VirtualHost = virtualHost ?? "/";
+                VirtualHost = virtualHost;
                 Name = name;
                 break;
 
@@ -58,7 +51,7 @@ public readonly struct RabbitMqEndpointAddress
                 Port = port;
                 VirtualHost = virtualHost;
                 Name = Uri.UnescapeDataString(address.AbsolutePath);
-                BindToQueue = true;
+                bindToQueue = true;
                 break;
 
             case "exchange":
@@ -79,100 +72,20 @@ public readonly struct RabbitMqEndpointAddress
 
         ValidateEntityName(Name);
 
-        var bindExchanges = new List<string>();
-        var uniqueBindExchanges = new HashSet<string>(StringComparer.Ordinal);
-        var seenOptions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var hasTemporary = false;
-        var hasDurability = false;
-        var hasAutoDelete = false;
+        var options = new ParsedOptions(bindToQueue, containsHostSettings);
 
         foreach (var (key, value) in address.SplitQueryString())
-        {
-            switch (key)
-            {
-                case RabbitMqAddressOptionNames.Temporary:
-                    EnsureSingleValue(seenOptions, key);
-                    RejectTemporaryConflict(hasDurability || hasAutoDelete);
-                    hasTemporary = true;
-                    var temporary = ParseBoolean(key, value);
-                    AutoDelete = temporary;
-                    Durable = !temporary;
-                    break;
+            options.Apply(key, value);
 
-                case RabbitMqAddressOptionNames.Durable:
-                    EnsureSingleValue(seenOptions, key);
-                    RejectTemporaryConflict(hasTemporary);
-                    hasDurability = true;
-                    Durable = ParseBoolean(key, value);
-                    break;
-
-                case RabbitMqAddressOptionNames.AutoDelete:
-                    EnsureSingleValue(seenOptions, key);
-                    RejectTemporaryConflict(hasTemporary);
-                    hasAutoDelete = true;
-                    AutoDelete = ParseBoolean(key, value);
-                    break;
-
-                case RabbitMqAddressOptionNames.ExchangeType:
-                    EnsureSingleValue(seenOptions, key);
-                    ExchangeType = DecodeRequiredValue(key, value);
-                    break;
-
-                case RabbitMqAddressOptionNames.BindQueue:
-                    EnsureSingleValue(seenOptions, key);
-                    BindToQueue = ParseBoolean(key, value);
-                    break;
-
-                case RabbitMqAddressOptionNames.QueueName:
-                    EnsureSingleValue(seenOptions, key);
-                    QueueName = DecodeRequiredValue(key, value);
-                    ValidateEntityName(QueueName);
-                    break;
-
-                case RabbitMqAddressOptionNames.DelayedType:
-                    EnsureSingleValue(seenOptions, key);
-                    DelayedType = DecodeRequiredValue(key, value);
-                    ExchangeType = DelayedMessageExchangeType;
-                    break;
-
-                case RabbitMqAddressOptionNames.AlternateExchange:
-                    EnsureSingleValue(seenOptions, key);
-                    AlternateExchange = DecodeRequiredValue(key, value);
-                    ValidateEntityName(AlternateExchange);
-                    break;
-
-                case RabbitMqAddressOptionNames.BindExchange:
-                    var binding = DecodeRequiredValue(key, value);
-                    ValidateEntityName(binding);
-                    if (uniqueBindExchanges.Add(binding))
-                        bindExchanges.Add(binding);
-                    break;
-
-                case RabbitMqAddressOptionNames.SingleActiveConsumer:
-                    EnsureSingleValue(seenOptions, key);
-                    SingleActiveConsumer = ParseBoolean(key, value);
-                    break;
-
-                // Full transport addresses may carry host and endpoint options in the same query.
-                case RabbitMqAddressOptionNames.Heartbeat:
-                case RabbitMqAddressOptionNames.Prefetch:
-                case RabbitMqAddressOptionNames.TimeToLive:
-                    if (!containsHostSettings)
-                    {
-                        throw new RabbitMqAddressException(
-                            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ host option '{key}' is not valid on a short endpoint address.", "Correct the named configuration before starting the host"));
-                    }
-                    break;
-
-                default:
-                    throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' is not supported.", "Correct the named configuration before starting the host"));
-            }
-        }
-
-        if (DelayedType is not null)
-            ExchangeType = DelayedMessageExchangeType;
-
-        BindExchanges = new ReadOnlyCollection<string>(bindExchanges);
+        Durable = options.Durable;
+        AutoDelete = options.AutoDelete;
+        SingleActiveConsumer = options.SingleActiveConsumer;
+        ExchangeType = options.DelayedType is null ? options.ExchangeType : DelayedMessageExchangeType;
+        BindToQueue = options.BindToQueue;
+        QueueName = options.QueueName;
+        DelayedType = options.DelayedType;
+        AlternateExchange = options.AlternateExchange;
+        BindExchanges = options.BindExchanges;
     }
 
     /// <summary>Creates an endpoint address from explicit exchange and binding settings.</summary>
@@ -338,6 +251,137 @@ public readonly struct RabbitMqEndpointAddress
         };
 
         return builder.Uri;
+    }
+
+    private sealed class ParsedOptions(bool bindToQueue, bool containsHostSettings)
+    {
+        private readonly List<string> _bindExchanges = [];
+        private readonly HashSet<string> _uniqueBindExchanges = new(StringComparer.Ordinal);
+        private readonly HashSet<string> _seenOptions = new(StringComparer.OrdinalIgnoreCase);
+        private bool _hasTemporary;
+        private bool _hasDurability;
+        private bool _hasAutoDelete;
+
+        public bool Durable { get; private set; } = true;
+        public bool AutoDelete { get; private set; }
+        public bool SingleActiveConsumer { get; private set; }
+        public string ExchangeType { get; private set; } = RabbitMQ.Client.ExchangeType.Fanout;
+        public bool BindToQueue { get; private set; } = bindToQueue;
+        public string? QueueName { get; private set; }
+        public string? DelayedType { get; private set; }
+        public string? AlternateExchange { get; private set; }
+        public IReadOnlyList<string> BindExchanges => new ReadOnlyCollection<string>(_bindExchanges);
+
+        public void Apply(string key, string? value)
+        {
+            switch (key)
+            {
+                case RabbitMqAddressOptionNames.Temporary:
+                case RabbitMqAddressOptionNames.Durable:
+                case RabbitMqAddressOptionNames.AutoDelete:
+                    ApplyLifetime(key, value);
+                    return;
+
+                case RabbitMqAddressOptionNames.ExchangeType:
+                case RabbitMqAddressOptionNames.DelayedType:
+                    ApplyExchangeType(key, value);
+                    return;
+
+                case RabbitMqAddressOptionNames.BindQueue:
+                case RabbitMqAddressOptionNames.SingleActiveConsumer:
+                    ApplyBoolean(key, value);
+                    return;
+
+                case RabbitMqAddressOptionNames.QueueName:
+                case RabbitMqAddressOptionNames.AlternateExchange:
+                case RabbitMqAddressOptionNames.BindExchange:
+                    ApplyName(key, value);
+                    return;
+
+                // Full transport addresses may carry host and endpoint options in the same query.
+                case RabbitMqAddressOptionNames.Heartbeat:
+                case RabbitMqAddressOptionNames.Prefetch:
+                case RabbitMqAddressOptionNames.TimeToLive:
+                    if (!containsHostSettings)
+                    {
+                        throw new RabbitMqAddressException(
+                            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ host option '{key}' is not valid on a short endpoint address.", "Correct the named configuration before starting the host"));
+                    }
+                    return;
+
+                default:
+                    throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' is not supported.", "Correct the named configuration before starting the host"));
+            }
+        }
+
+        private void ApplyLifetime(string key, string? value)
+        {
+            EnsureSingleValue(_seenOptions, key);
+            switch (key)
+            {
+                case RabbitMqAddressOptionNames.Temporary:
+                    RejectTemporaryConflict(_hasDurability || _hasAutoDelete);
+                    _hasTemporary = true;
+                    var temporary = ParseBoolean(key, value);
+                    AutoDelete = temporary;
+                    Durable = !temporary;
+                    break;
+
+                case RabbitMqAddressOptionNames.Durable:
+                    RejectTemporaryConflict(_hasTemporary);
+                    _hasDurability = true;
+                    Durable = ParseBoolean(key, value);
+                    break;
+
+                case RabbitMqAddressOptionNames.AutoDelete:
+                    RejectTemporaryConflict(_hasTemporary);
+                    _hasAutoDelete = true;
+                    AutoDelete = ParseBoolean(key, value);
+                    break;
+            }
+        }
+
+        private void ApplyExchangeType(string key, string? value)
+        {
+            EnsureSingleValue(_seenOptions, key);
+            if (key == RabbitMqAddressOptionNames.DelayedType)
+                DelayedType = DecodeRequiredValue(key, value);
+            else
+                ExchangeType = DecodeRequiredValue(key, value);
+        }
+
+        private void ApplyBoolean(string key, string? value)
+        {
+            EnsureSingleValue(_seenOptions, key);
+            if (key == RabbitMqAddressOptionNames.BindQueue)
+                BindToQueue = ParseBoolean(key, value);
+            else
+                SingleActiveConsumer = ParseBoolean(key, value);
+        }
+
+        private void ApplyName(string key, string? value)
+        {
+            if (key != RabbitMqAddressOptionNames.BindExchange)
+                EnsureSingleValue(_seenOptions, key);
+
+            var name = DecodeRequiredValue(key, value);
+            ValidateEntityName(name);
+            switch (key)
+            {
+                case RabbitMqAddressOptionNames.QueueName:
+                    QueueName = name;
+                    break;
+
+                case RabbitMqAddressOptionNames.AlternateExchange:
+                    AlternateExchange = name;
+                    break;
+
+                case RabbitMqAddressOptionNames.BindExchange:
+                    if (_uniqueBindExchanges.Add(name))
+                        _bindExchanges.Add(name);
+                    break;
+            }
+        }
     }
 
     static string DecodeRequiredValue(string key, string? value)
