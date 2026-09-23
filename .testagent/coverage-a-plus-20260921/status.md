@@ -15,6 +15,17 @@ risk slice.
 
 ## Latest focused slice
 
+The initialized scheduled-send slice adds four A-grade behavior methods with six cases across
+values-only, typed-pipe, and untyped-pipe operations. Tests prove message initialization,
+convention-header and caller-pipe composition on the same provider context, pending input,
+cancellation before dispatch, and validation before any getter or provider runs. Focused Microsoft
+CodeCoverage passed 6/6; complete Core coverage passed 6,356/6,356; the complete current-byte
+Unit/Architecture gate passed 10,169/10,169, all without failures or skips. The three async
+values-path state machines measure 7/7, 9/9, and 9/9 lines with all reported branches; the two
+former CRAP-42 methods are now at CRAP 6. Read-only adversarial review first returned FAIL on two
+concrete mutants, then PASS after both corrections. See
+`message-scheduler-initialized-contract-phase.md`. Global A+ remains open.
+
 The runtime scheduled-send slice adds six A-grade behavior methods with seven cases for all four
 public runtime overloads: inferred versus explicit contract identity, payload, due time,
 destination, nondefault cancellation, pipe execution on the provider context, mismatched types,
