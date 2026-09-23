@@ -96,9 +96,11 @@ public sealed class TransformPipelineTests
     public Task HandlerTransform_WithoutReplace_ChangesOnlyTheConfiguredInterfaceHandlerAsync() =>
         AssertHandlerTransformAsync(replace: false);
 
-    [Fact]
+    [Theory]
+    [InlineData("Previous", "Hello:Previous")]
+    [InlineData(null, "Hello:<null>")]
     [RequirementCoverage("REQ-VSB-CONSUME-TRANSFORM-SPECIFICATION", "class-based-specification")]
-    public async Task ClassBasedTransform_ChangesEveryConfiguredPropertyAsync()
+    public async Task ClassBasedTransform_ChangesEveryConfiguredPropertyAsync(string? previous, string expectedSecond)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -118,14 +120,14 @@ public sealed class TransformPipelineTests
         try
         {
             await harness.InputQueueSendEndpoint.SendAsync(
-                    new TransformMessage { First = "Hello" },
+                    new TransformMessage { First = "Hello", Second = previous },
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
 
             TransformMessage consumed = await transformed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal("First", consumed.First);
-            Assert.Equal("Second", consumed.Second);
+            Assert.Equal(expectedSecond, consumed.Second);
         }
         finally
         {
@@ -314,7 +316,8 @@ public sealed class TransformPipelineTests
         public FullTransform()
         {
             Set(message => message.First, "First");
-            Set(message => message.Second, "Second");
+            Set(message => message.Second, context =>
+                context.HasValue ? $"{context.Input.First}:{context.Value ?? "<null>"}" : "missing");
         }
     }
 

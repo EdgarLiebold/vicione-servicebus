@@ -216,6 +216,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- The source-owned consume-transform pipeline test now checks the public
+  delegate-based property transformation with both present and null source
+  values. It verifies that the delegate sees the original message and
+  property value even when another property is changed in the same transform.
 - RabbitMQ endpoint query parsing now groups lifetime, exchange, Boolean, and entity-name
   options in focused parsing steps. The public address behavior remains the same; source-owned
   regressions check combined host and endpoint options, unsupported schemes, conflicting or
