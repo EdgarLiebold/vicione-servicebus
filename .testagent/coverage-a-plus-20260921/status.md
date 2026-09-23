@@ -13,6 +13,16 @@ bounds on merged coverage. See `product-wide-profile-6a3689d33.md`. Global A+ re
 
 ## Latest focused slice
 
+The RabbitMQ durable-send destination slice adds seven real-broker rejection
+variants for unsafe topology options. The test checks the specific
+configuration failure, an empty existing quorum queue, and its complete
+binding set before and after each attempt. RabbitMQ local integration and
+focused Microsoft CodeCoverage each passed 38/38; the full Unit/Architecture
+gate passed 10,226/10,226. `ValidateDestination` improved from 11/17 lines
+and CRAP 43.28 in the previous full profile to 17/17 lines and CRAP 22 in
+the focused report. Adversarial review found an assertion limit, which was
+corrected and rerun. See `rabbitmq-durable-destination-phase.md`.
+
 The SNS subscription reconciliation slice fixes two provider defects: a failed attribute read
 could be accepted as a usable existing subscription, and a changed configured attribute such as
 `RedrivePolicy` could be ignored. Regression tests cover failure identity, ordering, exact SNS

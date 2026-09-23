@@ -240,6 +240,62 @@ public sealed class RabbitMqDurableSendAcceptanceTests
         }
     }
 
+    [Theory]
+    [InlineData("queue-declaration")]
+    [InlineData("non-durable")]
+    [InlineData("auto-delete")]
+    [InlineData("non-fanout")]
+    [InlineData("alternate-exchange")]
+    [InlineData("additional-binding")]
+    [InlineData("direct-reply-to")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "unsafe-destination-options-rejected-before-publish")]
+    public async Task UnsafeDestinationOptions_RejectBeforePublishingToExistingQuorumQueueAsync(string option)
+    {
+        using RabbitMqBroker fixture = RabbitMqBroker.Create("durableunsafe");
+        string queue = fixture.Name("existing");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await DeclareDurableQuorumEndpointAsync(fixture, queue, cancellationToken);
+        await using ServiceProvider provider = CreateProvider(fixture);
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+        bool started = false;
+
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
+            IReadOnlyList<RabbitMqBroker.BindingState> originalBindings = await fixture.QueueBindingsAsync(queue, cancellationToken);
+            Assert.Contains(originalBindings, binding =>
+                binding.Source == queue && binding.Destination == queue && binding.DestinationType == "queue");
+            RabbitMqEndpointAddress destination = option switch
+            {
+                "queue-declaration" => new(fixture.Address, queue, bindToQueue: true),
+                "non-durable" => new(fixture.Address, queue, durable: false),
+                "auto-delete" => new(fixture.Address, queue, autoDelete: true),
+                "non-fanout" => new(fixture.Address, queue, exchangeType: ExchangeType.Direct),
+                "alternate-exchange" => new(fixture.Address, queue, alternateExchange: fixture.Name("fallback")),
+                "additional-binding" => new(fixture.Address, queue, bindExchanges: [fixture.Name("source")]),
+                "direct-reply-to" => new(fixture.Address, RabbitMqExchangeNames.ReplyTo),
+                _ => throw new ArgumentOutOfRangeException(nameof(option), option, null),
+            };
+
+            ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
+                dispatcher.DispatchAsync(
+                    CreateContext(new DurableSendId(NewId.NextGuid()), destination, new byte[] { 42 }), cancellationToken));
+            Assert.Contains("durable transport acceptance", exception.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
+            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.QueueBindingsAsync(queue, cancellationToken);
+            Assert.Equal(originalBindings.Count, bindings.Count);
+            Assert.Empty(originalBindings.Except(bindings));
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await fixture.CleanupAsync();
+        }
+    }
+
     private static async Task DeclareDurableQuorumEndpointAsync(
         RabbitMqBroker fixture,
         string queue,
