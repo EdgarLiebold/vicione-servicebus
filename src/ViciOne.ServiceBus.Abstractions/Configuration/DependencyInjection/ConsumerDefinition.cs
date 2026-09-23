@@ -43,10 +43,11 @@ public class ConsumerDefinition<TConsumer> :
         get => _concurrentMessageLimit;
         protected set
         {
-            _concurrentMessageLimit = value;
-            _concurrencyPolicy = value.HasValue
+            ConsumerConcurrencyPolicy? policy = value.HasValue
                 ? ConsumerConcurrencyPolicy.Parallel(value.Value)
                 : null;
+            _concurrentMessageLimit = value;
+            _concurrencyPolicy = policy;
         }
     }
 
