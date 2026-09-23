@@ -2,6 +2,17 @@
 
 ## Latest product-wide profile
 
+The exact-HEAD profile at `c073a5e30` has 36 parseable reports across all 32
+product assemblies and 11,123 passing executions with zero failures or skips.
+Four provider fixtures have empty findings; the tracked `src`/`tests` diff is
+empty. Aggregation measures 83,795/93,439 lines = 89.6788%, branch
+observations of 30,015–32,487/36,672 = 81.8472–88.5880%, and 56/25,953
+methods above CRAP 30. These branch observations are not formal bounds.
+JobService registration and NewId operator gains from the previous two slices
+are present in this full profile. Independent read-only adversarial review
+returned PASS. See `product-wide-profile-c073a5e30.md`.
+Global A+ remains open.
+
 The exact-HEAD profile at `c0cab32ba` has 36 parseable reports across all 32
 product assemblies: 22 Unit/Infrastructure, 13 local-provider, and one
 supplementary Abstractions run without AVX2. Its successful logs show 36/36
