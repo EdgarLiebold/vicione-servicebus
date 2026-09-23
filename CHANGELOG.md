@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SNS subscription setup now rejects a failed attribute-read response
+  for an existing subscription. A broker HTTP error can no longer skip filter
+  reconciliation while the stale subscription is recorded as configured and
+  its SQS queue policy is updated.
 - The public Azure Service Bus connection-string endpoint parser now returns
   no endpoint for empty input and rejects null or blank keys with the intended
   argument or format error instead of leaking indexing exceptions or accepting
@@ -220,6 +224,10 @@ entry below records what the current work changed for anyone reading the source.
   delegate-based property transformation with both present and null source
   values. It verifies that the delegate sees the original message and
   property value even when another property is changed in the same transform.
+- Existing Amazon SNS subscription tests now verify the exact broker update
+  request and failure propagation for changed filter policy, filter scope, and
+  raw-delivery settings. A failed update cannot be reported as a completed
+  queue subscription.
 - RabbitMQ endpoint query parsing now groups lifetime, exchange, Boolean, and entity-name
   options in focused parsing steps. The public address behavior remains the same; source-owned
   regressions check combined host and endpoint options, unsupported schemes, conflicting or

@@ -106,16 +106,21 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         Assert.Equal(1, Volatile.Read(ref queueCalls));
     }
 
-    [Fact]
+    [Theory]
+    [InlineData("FilterPolicy", "{\"RoutingKey\":[\"old\"]}", "{\"RoutingKey\":[\"new\"]}")]
+    [InlineData("FilterPolicyScope", "MessageAttributes", "MessageBody")]
+    [InlineData("RawMessageDelivery", "false", "true")]
     [RequirementCoverage("REQ-VSB-AWS-SNS-SUBSCRIPTION", "attribute-update-failure-propagates")]
-    public async Task ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync()
+    public async Task ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync(
+        string attributeName, string existingValue, string desiredValue)
     {
         const string topicArn = "arn:aws:sns:eu-central-1:123456789012:events";
         const string queueArn = "arn:aws:sqs:eu-central-1:123456789012:orders";
         const string subscriptionArn = "arn:aws:sns:eu-central-1:123456789012:events:subscription";
         var expected = new InvalidOperationException("attribute update failed");
+        SetSubscriptionAttributesRequest? observedUpdate = null;
 
-        IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create((method, _) => method.Name switch
+        IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create((method, arguments) => method.Name switch
         {
             nameof(IAmazonSimpleNotificationService.SubscribeAsync) => Task.FromException<SubscribeResponse>(
                 new InvalidParameterException("subscription already exists")),
@@ -136,9 +141,9 @@ public sealed class AmazonSqsLifecycleBoundaryTests
             nameof(IAmazonSimpleNotificationService.GetSubscriptionAttributesAsync) => Task.FromResult(new GetSubscriptionAttributesResponse
             {
                 HttpStatusCode = HttpStatusCode.OK,
-                Attributes = new Dictionary<string, string> { ["RawMessageDelivery"] = "false" }
+                Attributes = new Dictionary<string, string> { [attributeName] = existingValue }
             }),
-            nameof(IAmazonSimpleNotificationService.SetSubscriptionAttributesAsync) => Task.FromException<SetSubscriptionAttributesResponse>(expected),
+            nameof(IAmazonSimpleNotificationService.SetSubscriptionAttributesAsync) => CaptureUpdateAndFailAsync(arguments),
             _ => throw new NotSupportedException(method.Name)
         });
         IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, _) => throw new NotSupportedException(method.Name));
@@ -160,7 +165,7 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         var context = new AmazonSqsClientContext(connection, sqs, sns, CancellationToken.None);
         SqsTopic topic = InterfaceProxy<SqsTopic>.Create((method, _) => method.Name switch
         {
-            "get_TopicSubscriptionAttributes" => new Dictionary<string, object> { ["RawMessageDelivery"] = "true" },
+            "get_TopicSubscriptionAttributes" => new Dictionary<string, object> { [attributeName] = desiredValue },
             _ => throw new NotSupportedException(method.Name)
         });
         SqsQueue queue = InterfaceProxy<SqsQueue>.Create((method, _) => method.Name switch
@@ -173,7 +178,95 @@ public sealed class AmazonSqsLifecycleBoundaryTests
             () => context.CreateQueueSubscriptionAsync(topic, queue, CancellationToken.None));
 
         Assert.Same(expected, actual);
+        SetSubscriptionAttributesRequest update = Assert.IsType<SetSubscriptionAttributesRequest>(observedUpdate);
+        Assert.Equal(subscriptionArn, update.SubscriptionArn);
+        Assert.Equal(attributeName, update.AttributeName);
+        Assert.Equal(desiredValue, update.AttributeValue);
         Assert.Empty(queueInfo.SubscriptionArns);
+
+        Task<SetSubscriptionAttributesResponse> CaptureUpdateAndFailAsync(object?[]? arguments)
+        {
+            Assert.NotNull(arguments);
+            observedUpdate = Assert.IsType<SetSubscriptionAttributesRequest>(arguments[0]);
+            return Task.FromException<SetSubscriptionAttributesResponse>(expected);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SNS-SUBSCRIPTION", "attribute-read-failure-rejects-existing-subscription")]
+    public async Task ExistingSubscriptionAttributeReadFailure_DoesNotAcceptStaleSubscriptionAsync()
+    {
+        const string topicArn = "arn:aws:sns:eu-central-1:123456789012:events";
+        const string queueArn = "arn:aws:sqs:eu-central-1:123456789012:orders";
+        const string subscriptionArn = "arn:aws:sns:eu-central-1:123456789012:events:subscription";
+        var attributeReads = 0;
+
+        IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create((method, _) => method.Name switch
+        {
+            nameof(IAmazonSimpleNotificationService.SubscribeAsync) => Task.FromException<SubscribeResponse>(
+                new InvalidParameterException("subscription already exists")),
+            nameof(IAmazonSimpleNotificationService.ListSubscriptionsByTopicAsync) => Task.FromResult(new ListSubscriptionsByTopicResponse
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+                Subscriptions =
+                [
+                    new Subscription
+                    {
+                        TopicArn = topicArn,
+                        Endpoint = queueArn,
+                        Protocol = "sqs",
+                        SubscriptionArn = subscriptionArn
+                    }
+                ]
+            }),
+            nameof(IAmazonSimpleNotificationService.GetSubscriptionAttributesAsync) => ReadFailedAttributesAsync(),
+            _ => throw new NotSupportedException($"Unexpected SNS call after failed attribute read: {method.Name}")
+        });
+        IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, _) =>
+            throw new NotSupportedException($"Unexpected SQS call after failed attribute read: {method.Name}"));
+        var topicInfo = new TopicInfo("events", topicArn, sns, CancellationToken.None, true);
+        var queueInfo = new QueueInfo(
+            "orders",
+            "https://sqs.eu-central-1.amazonaws.com/123456789012/orders",
+            new Dictionary<string, string> { [QueueAttributeName.QueueArn] = queueArn },
+            sqs,
+            CancellationToken.None,
+            true);
+        ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
+        {
+            "get_CancellationToken" => CancellationToken.None,
+            nameof(ConnectionContext.GetTopicAsync) => Task.FromResult(topicInfo),
+            nameof(ConnectionContext.GetQueueAsync) => Task.FromResult(queueInfo),
+            _ => throw new NotSupportedException(method.Name)
+        });
+        var context = new AmazonSqsClientContext(connection, sqs, sns, CancellationToken.None);
+        SqsTopic topic = InterfaceProxy<SqsTopic>.Create((method, _) => method.Name switch
+        {
+            "get_TopicSubscriptionAttributes" => new Dictionary<string, object> { ["FilterPolicy"] = "{\"RoutingKey\":[\"new\"]}" },
+            _ => throw new NotSupportedException(method.Name)
+        });
+        SqsQueue queue = InterfaceProxy<SqsQueue>.Create((method, _) => method.Name switch
+        {
+            "get_QueueSubscriptionAttributes" => new Dictionary<string, object>(),
+            _ => throw new NotSupportedException(method.Name)
+        });
+
+        AmazonSqsTransportException error = await Assert.ThrowsAsync<AmazonSqsTransportException>(
+            () => context.CreateQueueSubscriptionAsync(topic, queue, CancellationToken.None));
+
+        Assert.Contains("ServiceUnavailable", error.Message, StringComparison.Ordinal);
+        Assert.Equal(1, attributeReads);
+        Assert.Empty(queueInfo.SubscriptionArns);
+
+        Task<GetSubscriptionAttributesResponse> ReadFailedAttributesAsync()
+        {
+            attributeReads++;
+            return Task.FromResult(new GetSubscriptionAttributesResponse
+            {
+                HttpStatusCode = HttpStatusCode.ServiceUnavailable,
+                Attributes = new Dictionary<string, string> { ["FilterPolicy"] = "{\"RoutingKey\":[\"old\"]}" }
+            });
+        }
     }
 
     [Fact]

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService;
@@ -111,24 +110,22 @@ public class AmazonSqsClientContext :
                 subscriptionArn = existingSubscription.SubscriptionArn;
                 var attributes = await _snsClient.GetSubscriptionAttributesAsync(subscriptionArn, cancellationToken)
                     .ConfigureAwait(false);
+                attributes.EnsureSuccessfulResponse();
 
-                if (attributes.HttpStatusCode is >= HttpStatusCode.OK and < HttpStatusCode.MultipleChoices)
+                foreach (var (name, value) in SubscriptionAttributesEqual(attributes.Attributes, subscriptionAttributes))
                 {
-                    foreach (var (name, value) in SubscriptionAttributesEqual(attributes.Attributes, subscriptionAttributes))
+                    var request = new SetSubscriptionAttributesRequest
                     {
-                        var request = new SetSubscriptionAttributesRequest
-                        {
-                            AttributeName = name,
-                            AttributeValue = value,
-                            SubscriptionArn = subscriptionArn
-                        };
+                        AttributeName = name,
+                        AttributeValue = value,
+                        SubscriptionArn = subscriptionArn
+                    };
 
-                        var updated = await _snsClient.SetSubscriptionAttributesAsync(request, cancellationToken).ConfigureAwait(false);
-                        updated.EnsureSuccessfulResponse();
+                    var updated = await _snsClient.SetSubscriptionAttributesAsync(request, cancellationToken).ConfigureAwait(false);
+                    updated.EnsureSuccessfulResponse();
 
-                        LogContext.Debug?.Log("Updated subscription attribute: {SubscriptionArn} {Name}={Value}", subscriptionArn, name,
-                            value);
-                    }
+                    LogContext.Debug?.Log("Updated subscription attribute: {SubscriptionArn} {Name}={Value}", subscriptionArn, name,
+                        value);
                 }
             }
 
