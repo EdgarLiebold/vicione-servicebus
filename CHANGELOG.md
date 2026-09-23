@@ -234,6 +234,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- NewId value tests now verify all four identity words through public equality
+  operators, typed and boxed equality, dictionary lookup, hash consistency,
+  and boxed comparison boundaries. The implementation is unchanged.
 - JobService correlation and SQL partition-key registration now use smaller
   domain-grouped methods without changing the 30 correlation identities, 31
   partition formatters, or registration order. Source-owned tests verify every

@@ -422,6 +422,27 @@
    {
       "requirementId" : "REQ-VSB-NEWID-VALUE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ChangingAnyIdentityWord_MakesTheValuesDistinct",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "each-identity-word-controls-equality"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "BoxedEquality_AcceptsEqualIdsAndRejectsOtherValues",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "boxed-equality-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "BoxedComparison_OrdersIdsAndRejectsForeignValues",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "boxed-ordering-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "EarlierValue_SatisfiesNonStrictOrdering",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
       "variantKey" : "non-strict-order"

@@ -39,6 +39,56 @@ public sealed class NewIdValueTests
 
         Assert.Equal(left, right);
         Assert.Equal(0, left.CompareTo(right));
+        Assert.True(left == right);
+        Assert.False(left != right);
+        Assert.True(left.Equals((object)right));
+        Assert.Equal(left.GetHashCode(), right.GetHashCode());
+        Assert.Equal("retained", new Dictionary<NewIdValue, string> { [left] = "retained" }[right]);
+    }
+
+    [Theory]
+    [InlineData(12, 22, 33, 44)]
+    [InlineData(11, 23, 33, 44)]
+    [InlineData(11, 22, 34, 44)]
+    [InlineData(11, 22, 33, 45)]
+    [RequirementCoverage("REQ-VSB-NEWID-VALUE", "each-identity-word-controls-equality")]
+    public void ChangingAnyIdentityWord_MakesTheValuesDistinct(int a, int b, int c, int d)
+    {
+        var left = new NewIdValue(11, 22, 33, 44);
+        var right = new NewIdValue(a, b, c, d);
+
+        Assert.False(left == right);
+        Assert.True(left != right);
+        Assert.False(left.Equals(right));
+        Assert.False(left.Equals((object)right));
+        Assert.NotEqual(0, left.CompareTo(right));
+        Assert.False(new Dictionary<NewIdValue, string> { [left] = "retained" }.ContainsKey(right));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-NEWID-VALUE", "boxed-equality-boundaries")]
+    public void BoxedEquality_AcceptsEqualIdsAndRejectsOtherValues()
+    {
+        var value = new NewIdValue(11, 22, 33, 44);
+
+        Assert.True(value.Equals((object)new NewIdValue(11, 22, 33, 44)));
+        Assert.False(value.Equals((object)new NewIdValue(11, 22, 33, 45)));
+        Assert.False(value.Equals((object?)null));
+        Assert.False(value.Equals("11-22-33-44"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-NEWID-VALUE", "boxed-ordering-boundaries")]
+    public void BoxedComparison_OrdersIdsAndRejectsForeignValues()
+    {
+        var lower = new NewIdValue(11, 22, 33, 44);
+        var higher = new NewIdValue(11, 22, 33, 45);
+
+        Assert.Equal(0, lower.CompareTo((object)new NewIdValue(11, 22, 33, 44)));
+        Assert.True(lower.CompareTo((object)higher) < 0);
+        Assert.True(higher.CompareTo((object)lower) > 0);
+        Assert.Equal(1, lower.CompareTo((object?)null));
+        Assert.Throws<ArgumentException>(() => lower.CompareTo("11-22-33-44"));
     }
 
     [Fact]

@@ -33,6 +33,17 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Public `NewId` equality previously had an unexecuted `==` operator in the
+complete product profile (CRAP 42). New tests distinguish each of its four
+identity words and check equality across operators, typed and boxed overloads,
+hashes, dictionary lookup, and boxed comparison boundaries. The full
+Abstractions Microsoft CodeCoverage suite passed 774/774; `==`, `!=`,
+`Equals(object)`, and `CompareTo(object)` each measure 100% lines and branches
+with CRAP 6, 1, 4, and 6. Read-only adversarial review returned PASS for
+identity and boxing. The full Release Unit/Architecture gate passed
+10,242/10,242. Per-word signed/unsigned ordering direction is a separate
+unproven contract. See `newid-identity-boxing-phase.md`. Global A+ remains open.
+
 The JobService correlation and SQL partition-key registration methods were
 split by contract family while preserving all 30 and 31 registrations in exact
 order. New source-owned tests assert the 30 correlation identities with distinct
