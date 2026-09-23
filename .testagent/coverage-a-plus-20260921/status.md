@@ -2,6 +2,19 @@
 
 ## Latest focused slice
 
+The RabbitMQ registration-options slice fixes explicitly empty or mixed
+credentials being discarded and replaced by RabbitMQ.Client defaults. Three
+attributed methods execute eight hard DI, TLS, certificate-policy, credential,
+and client-boundary cases. Three adversarial FAIL rounds closed EXTERNAL-auth,
+TLS, trust-policy, paired-credential, and trimming mutants before final PASS.
+RabbitMQ passes 386/386 with Microsoft CodeCoverage, the Release build has zero
+warnings/errors, and the current-byte Unit/Architecture gate passes
+10,156/10,156. At exact commit `22d0f5800`, locked restore, the same build, and
+386/386 RabbitMQ tests and the exact complete 10,156/10,156 gate pass.
+The former CRAP-72 registration closure is fully covered with maximum CRAP 8,
+and `GetConnectionFactory` is at CRAP 28.22. See
+`rabbitmq-registration-options-phase.md`. Global A+ remains open.
+
 The RabbitMQ connection-context slice closes ownership and failure-preservation
 defects across supervisor stop, settings refresh, both real client-adapter
 routes, owner registration, shutdown subscription, publication, and cleanup.

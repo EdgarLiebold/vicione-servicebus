@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- RabbitMQ dependency-injection options now preserve normal, empty, mixed, and
+  whitespace-containing credentials exactly through host and client-factory
+  projection. Explicit empty values therefore remain anonymous instead of
+  falling back to `guest/guest`; unspecified values retain the client defaults.
+  Registration tests also enforce TLS enablement, strict and relaxed
+  certificate policy, client-certificate identity, connection naming, and the
+  complete certificate settings projection.
 - RabbitMQ connection creation now preserves supervisor cancellation, owner
   registration, primary failures, and cleanup across settings refresh, both
   real client-adapter routes, shutdown subscription, publication, and disposal.
