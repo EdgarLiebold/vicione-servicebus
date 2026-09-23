@@ -2,17 +2,18 @@
 
 ## Latest product-wide profile
 
-The fresh exact-HEAD profile at `7e184ded0` has 36 parseable reports across all 32 product
+The fresh exact-HEAD profile at `b6ffcfbdf` has 36 parseable reports across all 32 product
 assemblies: 22 Unit/Infrastructure, 13 local-provider, and one supplementary Abstractions run
-without AVX2. Its archived successful logs show 36/36 runs passing, 11,101 test executions,
+without AVX2. Its archived successful logs show 36/36 runs passing, 11,102 test executions,
 zero failures and skips; the Abstractions supplementary run repeats 768 tests. The four successful
 fixture findings lists are empty and the tracked `src`/`tests` diff is empty. Aggregation measures
-83,702/93,411 lines = 89.6061%, branch observations of 29,947–32,426/36,668 =
+83,703/93,411 lines = 89.6072%, branch observations of 29,947–32,426/36,668 =
 81.6707–88.4313%, and 63/25,943 methods above CRAP 30. Branch observations are not formal
-bounds on merged coverage. The complete Unit/Architecture gate passed 10,226/10,226 on retry;
-an earlier parallel run had a Quartz 30-second timeout whose cause remains unresolved. The
-independent read-only review returned PASS for the profile with that limitation documented. See
-`product-wide-profile-7e184ded0.md`. Global A+ remains open.
+bounds on merged coverage. The one-line net increase versus `7e184ded0` reflects variable
+execution paths elsewhere and is not attributable to the new S3 tests. The complete
+Unit/Architecture gate passed 10,227/10,227; two earlier broker-load gates are retained as
+failed evidence with their test races corrected. Independent read-only review returned PASS for
+the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open.
 
 ## Latest focused slice
 
@@ -33,8 +34,8 @@ the saga test now waits for actual removal before checking the repository.
 Both failed gates remain archived. Read-only adversarial review passed the
 Quartz change; the original timeout's exact cause remains
 unproven. The complete Unit/Architecture gate with all three final test
-changes passed 10,227/10,227. See `quartz-suspect-manual-schedule-phase.md`. A new complete
-product-wide profile after this test-source change is still required.
+changes passed 10,227/10,227. See `quartz-suspect-manual-schedule-phase.md` and
+the new complete `product-wide-profile-b6ffcfbdf.md`.
 
 The RabbitMQ durable-send destination slice adds seven real-broker rejection
 variants for unsafe topology options. The test checks the specific
