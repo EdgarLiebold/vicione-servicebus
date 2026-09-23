@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- The Azure Service Bus emulator dead-letter capability test now waits for the
+  broker to confirm dead-letter settlement before receiving from the dead-letter
+  subqueue. This removes an overlapping emulator cursor race while retaining
+  strict completion checks and adding an exact payload assertion.
 - RabbitMQ dependency-injection options now preserve normal, empty, mixed, and
   whitespace-containing credentials exactly through host and client-factory
   projection. Explicit empty values therefore remain anonymous instead of

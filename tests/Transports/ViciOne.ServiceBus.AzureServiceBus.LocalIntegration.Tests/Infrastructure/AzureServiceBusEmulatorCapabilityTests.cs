@@ -210,13 +210,13 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
             await sender.SendMessageAsync(new ServiceBusMessage("failed") { MessageId = messageId }, timeout.Token);
             ServiceBusReceivedMessage received = await receiver.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
                 ?? throw new InvalidOperationException("The message to dead-letter was not delivered.");
-            Task<ServiceBusReceivedMessage?> deadLettered = deadLetter.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token);
             await receiver.DeadLetterMessageAsync(received, "capability-reason", "exact-description", timeout.Token);
 
-            ServiceBusReceivedMessage failed = await deadLettered
+            ServiceBusReceivedMessage failed = await deadLetter.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
                 ?? throw new InvalidOperationException("The dead-letter subqueue received no message.");
 
             Assert.Equal(messageId, failed.MessageId);
+            Assert.Equal("failed", failed.Body.ToString());
             Assert.Equal("capability-reason", failed.DeadLetterReason);
             Assert.Equal("exact-description", failed.DeadLetterErrorDescription);
             await deadLetter.CompleteMessageAsync(failed, timeout.Token);
