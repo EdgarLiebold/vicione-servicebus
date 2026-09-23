@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Keyed `Bind<TKey, TValue>` values now apply the same exact-runtime-type
+  equality rule through both typed and object comparisons. A derived binding
+  can no longer compare equal to a base binding in a dictionary while
+  comparing unequal through `object.Equals`; same-owner bindings with equal
+  values retain their equality and hash behavior.
 - Amazon SNS subscription setup now rejects a failed attribute-read response
   for an existing subscription. A broker HTTP error can no longer skip filter
   reconciliation while the stale subscription is recorded as configured and

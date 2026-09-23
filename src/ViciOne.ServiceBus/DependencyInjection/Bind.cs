@@ -29,6 +29,8 @@ public class Bind<TKey, TValue> :
             return false;
         if (ReferenceEquals(this, other))
             return true;
+        if (other.GetType() != GetType())
+            return false;
         return EqualityComparer<TValue>.Default.Equals(Value, other.Value);
     }
 

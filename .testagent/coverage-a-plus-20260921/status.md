@@ -17,6 +17,18 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+The public keyed-binding equality test exposed a real subclass inconsistency:
+typed equality accepted a derived binding that object equality rejected, so
+dictionary lookup contradicted object comparison. The pre-fix regression
+failed as expected. `Bind<TKey,TValue>` now requires matching runtime types
+through both overloads; equal base bindings still compare and hash equally.
+The focused test passed 1/1, complete Core with Microsoft CodeCoverage passed
+6,375/6,375, and both `Equals` overloads measure 7/7 lines and CRAP 6. The
+Engineering Release build had zero warnings/errors; the full Unit/Architecture
+gate passed 10,229/10,229. Read-only adversarial review returned PASS. See
+`bind-equality-identity-phase.md` and `CHANGELOG.md`. A complete product-wide
+profile after this source change remains open, as does global A+.
+
 The delayed-send accepted-identity test verifies configured, live-context,
 and accepted-snapshot token semantics with distinct GUIDs, including stable
 message identity after context mutation and rejection of pipe reuse. The
