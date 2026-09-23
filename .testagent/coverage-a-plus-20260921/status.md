@@ -2,29 +2,24 @@
 
 ## Latest product-wide profile
 
-The fresh exact-HEAD baseline at `ac363722c` passed 9,711/9,711 Unit/Infrastructure,
-545/545 provider, and 759/759 supplementary no-AVX2 Abstractions tests with zero failures and
-skips. All 36 new reports are parseable, all 32 source assemblies are present, the four canonical
-fixture finding files are empty, and the tracked `src`/`tests` diff is empty. Corrected aggregation
-measures 83,389/93,236 lines = 89.4386%, a conservative branch interval of
-29,798–32,315/36,715 = 81.1603–88.0158%, and 83/25,917 methods above CRAP 30. An adversarial
-review found and caused correction of branch-site and method-identity deduplication errors before
-publication; the corrected aggregate then received read-only adversarial PASS. See
-`product-wide-profile-ac363722c.md`. Global A+ remains open; Core scheduling is the next coherent
-risk slice.
+The fresh product/test baseline at `6a3689d33` has 36 parseable reports across all 32 product
+assemblies: 22 Unit/Infrastructure, 13 local-provider, and one supplementary Abstractions run
+without AVX2. Its archived successful logs show 36/36 runs passing, 11,094 test executions,
+zero failures and skips; the Abstractions supplementary run repeats 768 tests. The four canonical
+fixture findings lists are empty and the tracked `src`/`tests` diff is empty. Aggregation measures
+83,702/93,411 lines = 89.6061%, branch observations of 29,939–32,419/36,668 =
+81.6488–88.4122%, and 64/25,943 methods above CRAP 30. Branch observations are not formal
+bounds on merged coverage. See `product-wide-profile-6a3689d33.md`. Global A+ remains open.
 
 ## Latest focused slice
 
-The initialized scheduled-send slice adds four A-grade behavior methods with six cases across
-values-only, typed-pipe, and untyped-pipe operations. Tests prove message initialization,
-convention-header and caller-pipe composition on the same provider context, pending input,
-cancellation before dispatch, and validation before any getter or provider runs. Focused Microsoft
-CodeCoverage passed 6/6; complete Core coverage passed 6,356/6,356; the complete current-byte
-Unit/Architecture gate passed 10,169/10,169, all without failures or skips. The three async
-values-path state machines measure 7/7, 9/9, and 9/9 lines with all reported branches; the two
-former CRAP-42 methods are now at CRAP 6. Read-only adversarial review first returned FAIL on two
-concrete mutants, then PASS after both corrections. See
-`message-scheduler-initialized-contract-phase.md`. Global A+ remains open.
+The SNS subscription reconciliation slice fixes two provider defects: a failed attribute read
+could be accepted as a usable existing subscription, and a changed configured attribute such as
+`RedrivePolicy` could be ignored. Regression tests cover failure identity, ordering, exact SNS
+updates, and unchanged attributes. The full Release build has zero warnings/errors, the complete
+Unit/Architecture gate passed 10,226/10,226, and focused coverage passed 207/207. The adversarial
+review passed after independently finding the second defect. See
+`sns-subscription-attribute-read-phase.md` and `sns-subscription-all-attributes-phase.md`.
 
 The runtime scheduled-send slice adds six A-grade behavior methods with seven cases for all four
 public runtime overloads: inferred versus explicit contract identity, payload, due time,
