@@ -1,3 +1,4 @@
+using System.Reflection;
 using Azure.Messaging.ServiceBus;
 using ViciOne.ServiceBus.AzureServiceBus;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
@@ -9,6 +10,43 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 
 public sealed class ServiceBusConnectionContextTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-PROCESSOR-LIFECYCLE", "queue-entity-path-follows-initialized-processor-kind")]
+    public async Task QueueClientEntityPath_UsesTheInitializedMessageOrSessionProcessorAsync()
+    {
+        const string connectionString = "Endpoint=sb://unit.servicebus.invalid/;SharedAccessKeyName=unit;SharedAccessKey=dGVzdA==";
+        await using var client = new ServiceBusClient(connectionString);
+        ReceiveEndpointSettings settings = CreateSettings();
+        ConnectionContext connection = DispatchProxy.Create<ConnectionContext, ProcessorConnectionProxy>();
+        ((ProcessorConnectionProxy)(object)connection).Handler = (method, args) =>
+        {
+            Assert.Same(settings, Assert.Single(args));
+            return method.Name switch
+            {
+                nameof(ConnectionContext.CreateQueueProcessor) => client.CreateProcessor("sdk-message-queue"),
+                nameof(ConnectionContext.CreateQueueSessionProcessor) => client.CreateSessionProcessor("sdk-session-queue"),
+                _ => throw new NotSupportedException(method.Name),
+            };
+        };
+        var inputAddress = new Uri("sb://unit.servicebus.invalid/different-input");
+
+        await using var messageContext = new QueueClientContext(connection, inputAddress, settings, null!);
+        InvalidOperationException beforeMessage = Assert.Throws<InvalidOperationException>(() => messageContext.EntityPath);
+        Assert.Contains("not been initialized", beforeMessage.Message);
+        messageContext.ConfigureMessageProcessor(
+            static (_, _, _) => Task.CompletedTask,
+            static _ => Task.CompletedTask);
+        Assert.Equal("sdk-message-queue", messageContext.EntityPath);
+
+        await using var sessionContext = new QueueClientContext(connection, inputAddress, settings, null!);
+        InvalidOperationException beforeSession = Assert.Throws<InvalidOperationException>(() => sessionContext.EntityPath);
+        Assert.Contains("not been initialized", beforeSession.Message);
+        sessionContext.ConfigureSessionProcessor(
+            static (_, _, _) => Task.CompletedTask,
+            static _ => Task.CompletedTask);
+        Assert.Equal("sdk-session-queue", sessionContext.EntityPath);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-PROCESSOR-LIFECYCLE", "queue-start-forwards-caller-cancellation-token")]
     public async Task QueueClientStart_ForwardsTheCallerCancellationTokenAsync()
@@ -110,5 +148,13 @@ public sealed class ServiceBusConnectionContextTests
             StartToken = cancellationToken;
             return Task.CompletedTask;
         }
+    }
+
+    public class ProcessorConnectionProxy : DispatchProxy
+    {
+        public Func<MethodInfo, object?[], object?> Handler { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            Handler(Assert.IsAssignableFrom<MethodInfo>(targetMethod), args ?? []);
     }
 }
