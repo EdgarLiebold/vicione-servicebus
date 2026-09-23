@@ -112,7 +112,7 @@ public class AmazonSqsClientContext :
                     .ConfigureAwait(false);
                 attributes.EnsureSuccessfulResponse();
 
-                foreach (var (name, value) in SubscriptionAttributesEqual(attributes.Attributes, subscriptionAttributes))
+                foreach (var (name, value) in ChangedSubscriptionAttributes(attributes.Attributes, subscriptionAttributes))
                 {
                     var request = new SetSubscriptionAttributesRequest
                     {
@@ -291,26 +291,14 @@ public class AmazonSqsClientContext :
         response.EnsureSuccessfulResponse();
     }
 
-    static IEnumerable<(string, string)> SubscriptionAttributesEqual(Dictionary<string, string> existingAttributes,
+    static IEnumerable<(string, string)> ChangedSubscriptionAttributes(Dictionary<string, string> existingAttributes,
         Dictionary<string, string> updatedAttributes)
     {
-        if (updatedAttributes.TryGetValue("FilterPolicy", out var filterPolicy))
+        foreach (KeyValuePair<string, string> attribute in updatedAttributes)
         {
-            if (!existingAttributes.TryGetValue("FilterPolicy", out var existingFilterPolicy) || existingFilterPolicy != filterPolicy)
-                yield return ("FilterPolicy", filterPolicy);
-        }
-
-        if (updatedAttributes.TryGetValue("FilterPolicyScope", out var filterPolicyScope))
-        {
-            if (!existingAttributes.TryGetValue("FilterPolicyScope", out var existingFilterPolicyScope) || existingFilterPolicyScope != filterPolicyScope)
-                yield return ("FilterPolicyScope", filterPolicyScope);
-        }
-
-        if (updatedAttributes.TryGetValue("RawMessageDelivery", out var rawMessageDelivery))
-        {
-            if (!existingAttributes.TryGetValue("RawMessageDelivery", out var existingRawMessageDelivery)
-                || existingRawMessageDelivery != rawMessageDelivery)
-                yield return ("RawMessageDelivery", rawMessageDelivery);
+            if (!existingAttributes.TryGetValue(attribute.Key, out string? existingValue)
+                || existingValue != attribute.Value)
+                yield return (attribute.Key, attribute.Value);
         }
     }
 }
