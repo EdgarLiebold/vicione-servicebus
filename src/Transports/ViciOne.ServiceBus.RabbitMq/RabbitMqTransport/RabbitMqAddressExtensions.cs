@@ -79,10 +79,10 @@ public static class RabbitMqAddressExtensions
             factory.CredentialsProvider = settings.CredentialsProvider;
         else
         {
-            if (!string.IsNullOrWhiteSpace(settings.Username))
+            if (settings.Username is not null)
                 factory.UserName = settings.Username;
 
-            if (!string.IsNullOrWhiteSpace(settings.Password))
+            if (settings.Password is not null)
                 factory.Password = settings.Password;
         }
 

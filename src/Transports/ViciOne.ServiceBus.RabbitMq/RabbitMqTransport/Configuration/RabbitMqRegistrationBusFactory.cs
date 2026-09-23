@@ -44,11 +44,8 @@ public class RabbitMqRegistrationBusFactory :
 
         configurator.Host(options.Host, options.Port, options.VHost, options.ConnectionName, h =>
         {
-            if (!string.IsNullOrWhiteSpace(options.User))
-                h.Username(options.User);
-
-            if (!string.IsNullOrWhiteSpace(options.Pass))
-                h.Password(options.Pass);
+            h.Username(options.User);
+            h.Password(options.Pass);
 
             if (options.UseSsl)
             {

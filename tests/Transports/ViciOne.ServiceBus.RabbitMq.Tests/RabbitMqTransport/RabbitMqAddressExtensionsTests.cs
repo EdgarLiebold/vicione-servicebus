@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -95,6 +96,26 @@ public sealed class RabbitMqAddressExtensionsTests
 
         Assert.Equal(expectedUsername, settings.Username);
         Assert.Equal(expectedPassword, settings.Password);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CREDENTIALS", "uri-empty-values-remain-anonymous")]
+    public void ExplicitEmptyAndUnspecifiedCredentials_RemainDistinctAtTheClientBoundary()
+    {
+        RabbitMqHostSettings anonymous = new Uri("rabbitmq://anonymous.internal/").GetHostSettings();
+        RabbitMqHostSettings unspecified = new RabbitMqHostConfigurator("default.internal", "/").Settings;
+
+        RabbitMQ.Client.ConnectionFactory anonymousClient = anonymous.GetConnectionFactory();
+        RabbitMQ.Client.ConnectionFactory defaultClient = unspecified.GetConnectionFactory();
+
+        Assert.Equal("", anonymous.Username);
+        Assert.Equal("", anonymous.Password);
+        Assert.Equal("", anonymousClient.UserName);
+        Assert.Equal("", anonymousClient.Password);
+        Assert.Null(unspecified.Username);
+        Assert.Null(unspecified.Password);
+        Assert.Equal("guest", defaultClient.UserName);
+        Assert.Equal("guest", defaultClient.Password);
     }
 
     [Theory]
