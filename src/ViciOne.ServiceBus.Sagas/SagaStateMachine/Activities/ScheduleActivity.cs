@@ -12,7 +12,7 @@ public class ScheduleActivity<TSaga, TMessage> :
     where TMessage : class
 {
     readonly ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> _messageFactory;
-    readonly ISchedule<TSaga> _schedule = null!;
+    readonly ISchedule<TSaga> _schedule;
     readonly ScheduleTimeProvider<TSaga> _timeProvider;
 
     /// <summary>Initializes a new instance.</summary>
@@ -22,9 +22,9 @@ public class ScheduleActivity<TSaga, TMessage> :
     public ScheduleActivity(ISchedule<TSaga> schedule,
         ScheduleTimeProvider<TSaga> timeProvider, ContextMessageFactory<IBehaviorContext<TSaga>, TMessage> messageFactory)
     {
-        _messageFactory = messageFactory;
-        _schedule = schedule;
-        _timeProvider = timeProvider;
+        _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
     }
 
     /// <summary>Accepts the supplied value.</summary>
@@ -91,14 +91,16 @@ public class ScheduleActivity<TSaga, TMessage> :
 
     async Task ExecuteAsync(IBehaviorContext<TSaga> context)
     {
+        context.CancellationToken.ThrowIfCancellationRequested();
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
         ScheduledMessage<TMessage> message = await _messageFactory
-            .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),
+                context.CancellationToken).ConfigureAwait(false);
 
-        _schedule?.SetTokenId(context.Saga, message.TokenId);
+        _schedule.SetTokenId(context.Saga, message.TokenId);
 
         if (previousTokenId.HasValue)
         {
@@ -134,9 +136,9 @@ public class ScheduleActivity<TSaga, TMessage, T> :
     public ScheduleActivity(ISchedule<TSaga, T> schedule,
         ScheduleTimeProvider<TSaga, TMessage> timeProvider, ContextMessageFactory<IBehaviorContext<TSaga, TMessage>, T> messageFactory)
     {
-        _messageFactory = messageFactory;
         _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
-        _timeProvider = timeProvider;
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
     }
 
     /// <summary>Accepts the supplied value.</summary>
@@ -159,12 +161,14 @@ public class ScheduleActivity<TSaga, TMessage, T> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
+        context.CancellationToken.ThrowIfCancellationRequested();
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
         ScheduledMessage<T> message = await _messageFactory
-            .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),
+                context.CancellationToken).ConfigureAwait(false);
 
         _schedule.SetTokenId(context.Saga, message.TokenId);
 
