@@ -2,6 +2,22 @@
 
 ## Latest product-wide profile
 
+The exact-HEAD profile at `c0cab32ba` has 36 parseable reports across all 32
+product assemblies: 22 Unit/Infrastructure, 13 local-provider, and one
+supplementary Abstractions run without AVX2. Its successful logs show 36/36
+runs passing, 11,109 test executions, zero failures and skips; the additional
+Abstractions run repeats 768 tests. Four successful provider fixtures have
+empty findings, and the tracked `src`/`tests` diff is empty. Aggregation
+measures 83,751/93,419 lines = 89.6509%, branch observations of
+29,989–32,463/36,672 = 81.7763–88.5226%, and 59/25,943 methods above CRAP
+30. The branch observations are not formal bounds on combined coverage. The
+four selected methods from the binding, scheduling, SNS, and saga slices each
+moved from CRAP 42 to CRAP 6 in this complete profile. A first provider fixture
+attempt had an incorrect relative build-overlay path and produced no counted
+report; its console output was observed but not archived. It was rebuilt with
+an absolute path before the successful run. See
+`product-wide-profile-c0cab32ba.md`. Global A+ remains open.
+
 The fresh exact-HEAD profile at `b6ffcfbdf` has 36 parseable reports across all 32 product
 assemblies: 22 Unit/Infrastructure, 13 local-provider, and one supplementary Abstractions run
 without AVX2. Its archived successful logs show 36/36 runs passing, 11,102 test executions,
