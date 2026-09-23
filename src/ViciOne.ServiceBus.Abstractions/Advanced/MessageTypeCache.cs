@@ -216,8 +216,10 @@ public sealed class MessageTypeCache<T> :
     /// <returns>The valid contracts implemented by <typeparamref name="T" />.</returns>
     static IEnumerable<Type> GetMessageTypes()
     {
-        if (IsValidMessageType)
-            yield return typeof(T);
+        if (!IsValidMessageType)
+            yield break;
+
+        yield return typeof(T);
 
         if (typeof(T).TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
         {
@@ -251,6 +253,20 @@ public sealed class MessageTypeCache<T> :
     {
         var type = typeof(T);
 
+        if (!CheckReferenceShape(type))
+            return false;
+
+        if (!CheckNamespace(type, out bool isJsonObject))
+            return false;
+
+        if (isJsonObject)
+            return true;
+
+        return CheckContextRole(type) && CheckGenericShape(type);
+    }
+
+    bool CheckReferenceShape(Type type)
+    {
         if (!type.IsClass && !type.IsInterface)
         {
             _invalidMessageTypeReason = $"Message types must be reference types: {TypeCache<T>.ShortName}";
@@ -263,6 +279,12 @@ public sealed class MessageTypeCache<T> :
             return false;
         }
 
+        return true;
+    }
+
+    bool CheckNamespace(Type type, out bool isJsonObject)
+    {
+        isJsonObject = false;
         var ns = type.Namespace;
         if (ns == null)
         {
@@ -276,8 +298,11 @@ public sealed class MessageTypeCache<T> :
             return false;
         }
 
-        if (type is { Name: "JsonObject", Namespace: "System.Text.Json.Nodes" })
+        if (type == typeof(System.Text.Json.Nodes.JsonObject))
+        {
+            isJsonObject = true;
             return true;
+        }
 
         if (ns == "System" || ns.StartsWith("System."))
         {
@@ -291,6 +316,11 @@ public sealed class MessageTypeCache<T> :
             return false;
         }
 
+        return true;
+    }
+
+    bool CheckContextRole(Type type)
+    {
         if (type.ImplementsInterface<SendContext>()
             || type.ImplementsInterface<ConsumeContext>()
             || type.ImplementsInterface<ReceiveContext>())
@@ -299,6 +329,11 @@ public sealed class MessageTypeCache<T> :
             return false;
         }
 
+        return true;
+    }
+
+    bool CheckGenericShape(Type type)
+    {
         if (type.IsGenericType)
         {
             var typeDefinition = type.GetGenericTypeDefinition();

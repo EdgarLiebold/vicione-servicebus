@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Invalid message types now yield no message-contract metadata, even when an
+  infrastructure context implements an otherwise eligible base interface.
+  `SendContext`, `ConsumeContext`, and `ReceiveContext` can no longer leak
+  `PipeContext` into the contract list after their own validation fails. The
+  special `JsonObject` contract exception now requires the actual framework
+  type; a foreign type with the same namespace and name stays invalid.
 - Saga instance wrappers now apply the same exact-runtime-type rule through
   typed and object equality. A derived wrapper can no longer compare equal to
   a base wrapper as a dictionary key while comparing unequal through
