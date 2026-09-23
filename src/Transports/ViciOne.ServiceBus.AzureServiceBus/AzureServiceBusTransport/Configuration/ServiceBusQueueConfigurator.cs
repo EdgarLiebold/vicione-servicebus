@@ -63,6 +63,15 @@ public class ServiceBusQueueConfigurator :
     {
         var options = new CreateQueueOptions(FullPath);
 
+        ApplyLifetimeOptions(options);
+        ApplyRoutingAndDeliveryOptions(options);
+        ApplyCapacityAndIdentityOptions(options);
+
+        return options;
+    }
+
+    void ApplyLifetimeOptions(CreateQueueOptions options)
+    {
         if (AutoDeleteOnIdle.HasValue && AutoDeleteOnIdle.Value != TimeSpan.Zero)
             options.AutoDeleteOnIdle = AutoDeleteOnIdle.Value;
 
@@ -77,7 +86,10 @@ public class ServiceBusQueueConfigurator :
 
         if (EnableDeadLetteringOnMessageExpiration.HasValue)
             options.DeadLetteringOnMessageExpiration = EnableDeadLetteringOnMessageExpiration.Value;
+    }
 
+    void ApplyRoutingAndDeliveryOptions(CreateQueueOptions options)
+    {
         if (EnablePartitioning.HasValue)
             options.EnablePartitioning = EnablePartitioning.Value;
 
@@ -92,7 +104,10 @@ public class ServiceBusQueueConfigurator :
 
         if (MaxDeliveryCount.HasValue)
             options.MaxDeliveryCount = MaxDeliveryCount.Value;
+    }
 
+    void ApplyCapacityAndIdentityOptions(CreateQueueOptions options)
+    {
         if (MaxSizeInMegabytes.HasValue)
             options.MaxSizeInMegabytes = MaxSizeInMegabytes.Value;
 
@@ -107,8 +122,6 @@ public class ServiceBusQueueConfigurator :
 
         if (!string.IsNullOrWhiteSpace(UserMetadata))
             options.UserMetadata = UserMetadata;
-
-        return options;
     }
 
     /// <summary>Builds the transport address for this queue in a namespace.</summary>
