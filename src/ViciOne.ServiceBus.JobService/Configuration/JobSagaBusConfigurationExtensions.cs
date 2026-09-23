@@ -12,19 +12,40 @@ public static class JobSagaBusConfigurationExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
+        ConfigureJobTypePartitionKeys(configurator);
+        ConfigureInitialJobPartitionKeys(configurator);
+        ConfigureAttemptEventPartitionKeys(configurator);
+        ConfigureJobLifecyclePartitionKeys(configurator);
+        ConfigureAttemptCommandPartitionKeys(configurator);
+        ConfigureFinalJobPartitionKeys(configurator);
+    }
+
+    static void ConfigureJobTypePartitionKeys(IBusFactoryConfigurator configurator)
+    {
         configurator.SendTopology.UsePartitionKeyFormatter<IAllocateJobSlot>(x => x.Message.JobTypeId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobSlotReleased>(x => x.Message.JobTypeId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<ISetConcurrentJobLimit>(x => x.Message.JobTypeId.ToString("N"));
+    }
 
+    static void ConfigureInitialJobPartitionKeys(IBusFactoryConfigurator configurator)
+    {
         configurator.SendTopology.UsePartitionKeyFormatter<IJobSubmitted>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobSlotAllocated>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobSlotUnavailable>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<Fault<IAllocateJobSlot>>(x => x.Message.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<Fault<IStartJobAttempt>>(x => x.Message.Message.JobId.ToString("N"));
+    }
+
+    static void ConfigureAttemptEventPartitionKeys(IBusFactoryConfigurator configurator)
+    {
         configurator.SendTopology.UsePartitionKeyFormatter<IJobAttemptCanceled>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobAttemptCompleted>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobAttemptFaulted>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobAttemptStarted>(x => x.Message.AttemptId.ToString("N"));
+    }
+
+    static void ConfigureJobLifecyclePartitionKeys(IBusFactoryConfigurator configurator)
+    {
         configurator.SendTopology.UsePartitionKeyFormatter<IJobCompleted>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IGetJobState>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IStartJob>(x => x.Message.JobId.ToString("N"));
@@ -35,14 +56,20 @@ public static class JobSagaBusConfigurationExtensions
         configurator.SendTopology.UsePartitionKeyFormatter<ISetJobProgress>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobSlotWaitElapsed>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobRetryDelayElapsed>(x => x.Message.JobId.ToString("N"));
+    }
 
+    static void ConfigureAttemptCommandPartitionKeys(IBusFactoryConfigurator configurator)
+    {
         configurator.SendTopology.UsePartitionKeyFormatter<IStartJobAttempt>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IFinalizeJobAttempt>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<ICancelJobAttempt>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<Fault<IStartJob>>(x => x.Message.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobAttemptStatus>(x => x.Message.AttemptId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IJobStatusCheckRequested>(x => x.Message.AttemptId.ToString("N"));
+    }
 
+    static void ConfigureFinalJobPartitionKeys(IBusFactoryConfigurator configurator)
+    {
         configurator.SendTopology.UsePartitionKeyFormatter<ICompleteJob>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IFaultJob>(x => x.Message.JobId.ToString("N"));
         configurator.SendTopology.UsePartitionKeyFormatter<IGetJobAttemptStatus>(x => x.Message.JobId.ToString("N"));

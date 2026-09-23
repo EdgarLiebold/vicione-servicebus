@@ -234,6 +234,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- JobService correlation and SQL partition-key registration now use smaller
+  domain-grouped methods without changing the 30 correlation identities, 31
+  partition formatters, or registration order. Source-owned tests verify every
+  correlation identity, empty and null boundaries, and repeated registration
+  after the global topology is frozen.
 - The source-owned consume-transform pipeline test now checks the public
   delegate-based property transformation with both present and null source
   values. It verifies that the delegate sees the original message and

@@ -33,6 +33,22 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+The JobService correlation and SQL partition-key registration methods were
+split by contract family while preserving all 30 and 31 registrations in exact
+order. New source-owned tests assert the 30 correlation identities with distinct
+JobTypeId, JobId, and AttemptId values, selected-empty and null boundaries, and
+warm parallel registration after topology freeze. The complete Core suite and
+Microsoft CodeCoverage run each passed 6,378/6,378. Both classes measure 100%
+lines and branches in that Core run; the largest resulting method complexity
+and CRAP score is 22, versus 62 for each original registration method. The
+Engineering Release build passed with zero warnings and errors. Read-only
+adversarial review found no refactor regression. The complete Release
+Unit/Architecture gate passed 10,236/10,236. Four published Attempt events
+are consumed by both the Job and Attempt sagas with different identity keys;
+their single outgoing SQL partition key remains an open ordering-contract risk,
+not a demonstrated runtime failure. Global A+ remains open. See
+`jobservice-coordination-registration-phase.md`.
+
 The public `SagaInstance<TSaga>` wrapper had the same subclass equality
 inconsistency previously found in keyed binding: typed equality accepted a
 derived wrapper around equal state, while object equality rejected it. The
