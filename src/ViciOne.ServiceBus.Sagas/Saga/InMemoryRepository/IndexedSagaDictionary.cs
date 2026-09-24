@@ -97,39 +97,44 @@ public class IndexedSagaDictionary<TSaga>
                 if (_indexById[correlationId] != null)
                     throw new InvalidOperationException($"Saga {correlationId} is already registered in the in-memory repository.");
 
-                int applied = 0;
-                try
-                {
-                    for (; applied < registrations.Length; applied++)
-                        registrations[applied].Apply();
-                }
-                catch (Exception failure)
-                {
-                    List<Exception>? cleanupFailures = null;
-                    for (int index = applied - 1; index >= 0; index--)
-                    {
-                        try
-                        {
-                            registrations[index].Rollback();
-                        }
-                        catch (Exception cleanupFailure)
-                        {
-                            (cleanupFailures ??= new List<Exception>()).Add(cleanupFailure);
-                        }
-                    }
-                    if (cleanupFailures != null)
-                    {
-                        cleanupFailures.Insert(0, failure);
-                        throw new AggregateException(cleanupFailures);
-                    }
-                    throw;
-                }
+                ApplyRegistrations(registrations);
             }
         }
         finally
         {
             lock (_lock)
                 _pendingAdds.Remove(instance);
+        }
+    }
+
+    static void ApplyRegistrations(SagaIndexRegistration[] registrations)
+    {
+        int applied = 0;
+        try
+        {
+            for (; applied < registrations.Length; applied++)
+                registrations[applied].Apply();
+        }
+        catch (Exception failure)
+        {
+            List<Exception>? cleanupFailures = null;
+            for (int index = applied - 1; index >= 0; index--)
+            {
+                try
+                {
+                    registrations[index].Rollback();
+                }
+                catch (Exception cleanupFailure)
+                {
+                    (cleanupFailures ??= new List<Exception>()).Add(cleanupFailure);
+                }
+            }
+            if (cleanupFailures != null)
+            {
+                cleanupFailures.Insert(0, failure);
+                throw new AggregateException(cleanupFailures);
+            }
+            throw;
         }
     }
 

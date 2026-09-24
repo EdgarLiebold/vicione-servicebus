@@ -303,6 +303,50 @@ public sealed class InMemorySagaIndexDeepContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SAGA-INDEX-INTEGRITY", "batch-apply-failure-rolls-back-in-reverse-and-preserves-primary-fault")]
+    public void DictionaryRegistrationBatch_ApplyFailureRollsBackInReverseAndRethrowsTheSameFault()
+    {
+        var events = new List<string>();
+        var primary = new InvalidOperationException("third index could not publish");
+        RegistrationProbe[] registrations =
+        [
+            CreateRegistration("first", () => { events.Add("apply 0"); return true; }, () => events.Add("rollback 0")),
+            CreateRegistration("second", () => { events.Add("apply 1"); return true; }, () => events.Add("rollback 1")),
+            CreateRegistration("third", () => { events.Add("apply 2"); throw primary; }, () => events.Add("rollback 2")),
+        ];
+
+        InvalidOperationException failure = Assert.Throws<InvalidOperationException>(() => ApplyDictionaryBatch(registrations));
+
+        Assert.Same(primary, failure);
+        Assert.Equal(["apply 0", "apply 1", "apply 2", "rollback 1", "rollback 0"], events);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SAGA-INDEX-INTEGRITY", "batch-rollback-failures-retain-primary-and-all-cleanup-faults-in-order")]
+    public void DictionaryRegistrationBatch_RollbackFailuresContinueAndKeepEveryFaultInOrder()
+    {
+        var events = new List<string>();
+        var primary = new InvalidOperationException("fourth index could not publish");
+        var secondRollback = new InvalidOperationException("second rollback failed");
+        var firstRollback = new InvalidOperationException("first rollback failed");
+        RegistrationProbe[] registrations =
+        [
+            CreateRegistration("first", () => { events.Add("apply 0"); return true; }, () => events.Add("rollback 0")),
+            CreateRegistration("second", () => { events.Add("apply 1"); return true; }, () => { events.Add("rollback 1"); throw firstRollback; }),
+            CreateRegistration("third", () => { events.Add("apply 2"); return true; }, () => { events.Add("rollback 2"); throw secondRollback; }),
+            CreateRegistration("fourth", () => { events.Add("apply 3"); throw primary; }, () => events.Add("rollback 3")),
+        ];
+
+        AggregateException failure = Assert.Throws<AggregateException>(() => ApplyDictionaryBatch(registrations));
+
+        Assert.Equal(3, failure.InnerExceptions.Count);
+        Assert.Same(primary, failure.InnerExceptions[0]);
+        Assert.Same(secondRollback, failure.InnerExceptions[1]);
+        Assert.Same(firstRollback, failure.InnerExceptions[2]);
+        Assert.Equal(["apply 0", "apply 1", "apply 2", "apply 3", "rollback 2", "rollback 1", "rollback 0"], events);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-INDEX-INTEGRITY", "deep-concurrent-same-wrapper-registration-is-single-flight")]
     public async Task Dictionary_ConcurrentRegistrationOfTheSameWrapperRejectsThePendingAttemptAndPublishesOnceAsync()
     {
@@ -401,6 +445,18 @@ public sealed class InMemorySagaIndexDeepContractTests
         return new RegistrationProbe(Invoke(constructor, [key, apply, rollback]));
     }
 
+    private static void ApplyDictionaryBatch(params RegistrationProbe[] registrations)
+    {
+        Type type = registrations[0].Raw.GetType();
+        Array batch = Array.CreateInstance(type, registrations.Length);
+        for (int index = 0; index < registrations.Length; index++)
+            batch.SetValue(registrations[index].Raw, index);
+
+        MethodInfo method = typeof(IndexedSagaDictionary<IndexSaga>).GetMethod(
+            "ApplyRegistrations", BindingFlags.Static | BindingFlags.NonPublic)!;
+        Invoke(method, null, [batch]);
+    }
+
     private static object Invoke(ConstructorInfo constructor, object?[] arguments)
     {
         try
@@ -414,7 +470,7 @@ public sealed class InMemorySagaIndexDeepContractTests
         }
     }
 
-    private static object? Invoke(MethodInfo method, object target, object?[]? arguments = null)
+    private static object? Invoke(MethodInfo method, object? target, object?[]? arguments = null)
     {
         try
         {
@@ -444,6 +500,8 @@ public sealed class InMemorySagaIndexDeepContractTests
         }
 
         public object? Key => _key.GetValue(_registration);
+
+        public object Raw => _registration;
 
         public void Apply() => Invoke(_apply, _registration);
 

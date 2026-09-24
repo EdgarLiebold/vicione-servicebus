@@ -275,6 +275,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Saga-index registration now keeps captured-key publication and rollback in
+  one focused operation. The admission lock, exception order, and cleanup
+  behavior are preserved while the public `Add` path is simpler to review.
+  Transaction tests assert reverse rollback, continued cleanup after failures,
+  and the exact primary and cleanup exceptions.
 - Output-pipe and consume-output fault notification now run in focused methods
   so dispatch control flow and secondary observer failures are independently
   reviewable. New consume-output tests verify asynchronous callback order,
