@@ -33,6 +33,23 @@ public sealed class ReadOnlyPropertyTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-FALLBACK", "public-ref-return-getter-reflection-fallback")]
+    public void ObjectValuedAccessors_ReadTheCurrentValueOfARefReturnProperty()
+    {
+        var target = new RefReturnTarget(42);
+        PropertyInfo property = Property<RefReturnTarget>(nameof(RefReturnTarget.Count));
+        var accessor = new ReadOnlyProperty(property);
+        var typedTargetAccessor = new ReadOnlyProperty<RefReturnTarget>(property);
+
+        Assert.Equal(42, accessor.Get(target));
+        Assert.Equal(42, typedTargetAccessor.Get(target));
+
+        target.Count = 73;
+        Assert.Equal(73, accessor.Get(target));
+        Assert.Equal(73, typedTargetAccessor.Get(target));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-READ", "inherited-typed-accessor")]
     public void TypedAccessor_ReadsAnInheritedProperty()
     {
@@ -211,6 +228,13 @@ public sealed class ReadOnlyPropertyTests
     private struct ValueTarget
     {
         public int Count { get; set; }
+    }
+
+    private sealed class RefReturnTarget(int count)
+    {
+        private int _count = count;
+
+        public ref int Count => ref _count;
     }
 
     private sealed class UnrelatedTarget
