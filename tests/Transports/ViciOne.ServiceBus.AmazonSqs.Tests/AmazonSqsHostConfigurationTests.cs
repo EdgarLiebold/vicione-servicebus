@@ -63,6 +63,55 @@ public sealed class AmazonSqsHostConfigurationTests
         Assert.Same(credentials, explicitSettings.Credentials);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "default-host-with-explicit-credentials-creates-both-sdk-clients-in-the-configured-region")]
+    public void DefaultHost_WithExplicitCredentialsCreatesBothSdkClientsInTheConfiguredRegion()
+    {
+        var credentials = new AnonymousAWSCredentials();
+        AmazonSqsBusConfiguration bus = CreateBusConfiguration();
+        new AmazonSqsBusFactoryConfigurator(bus).UseDefaultHost(
+            RegionEndpoint.EUCentral1,
+            host => host.Credentials(credentials));
+        AmazonSqsHostSettings settings = bus.HostConfiguration.Settings;
+
+        using IConnection connection = settings.CreateConnection();
+
+        Assert.Same(credentials, settings.Credentials);
+        Assert.IsType<AmazonSQSClient>(connection.SqsClient);
+        Assert.IsType<AmazonSimpleNotificationServiceClient>(connection.SnsClient);
+        Assert.Equal("eu-central-1", connection.SqsClient.Config.RegionEndpoint.SystemName);
+        Assert.Equal("eu-central-1", connection.SnsClient.Config.RegionEndpoint.SystemName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "connection-preserves-distinct-sqs-and-sns-sdk-service-endpoints")]
+    public void Connection_PreservesDistinctSuppliedSdkServiceEndpoints()
+    {
+        var sqsConfig = new AmazonSQSConfig
+        {
+            ServiceURL = "http://127.0.0.1:4566",
+            AuthenticationRegion = "eu-central-1",
+        };
+        var snsConfig = new AmazonSimpleNotificationServiceConfig
+        {
+            ServiceURL = "http://127.0.0.1:4567",
+            AuthenticationRegion = "us-east-2",
+        };
+
+        using var connection = new Connection(
+            new AnonymousAWSCredentials(),
+            RegionEndpoint.USWest2,
+            sqsConfig,
+            snsConfig);
+
+        Assert.IsType<AmazonSQSClient>(connection.SqsClient);
+        Assert.IsType<AmazonSimpleNotificationServiceClient>(connection.SnsClient);
+        Assert.Equal("http://127.0.0.1:4566/", connection.SqsClient.Config.ServiceURL);
+        Assert.Equal("http://127.0.0.1:4567/", connection.SnsClient.Config.ServiceURL);
+        Assert.Equal("eu-central-1", connection.SqsClient.Config.AuthenticationRegion);
+        Assert.Equal("us-east-2", connection.SnsClient.Config.AuthenticationRegion);
+    }
+
     [Theory]
     [InlineData("amazonsqs://access:secret@eu-central-1/", "Credentials")]
     [InlineData("amazonsqs://eu-central-1/?accessKey=secret", "Query")]
