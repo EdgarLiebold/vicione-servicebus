@@ -20,7 +20,7 @@ public sealed class ConsumeObserverConverterTests
         var failure = new InvalidOperationException("consumer failed");
         using var cancellation = new CancellationTokenSource();
 
-        Task notification = Invoke(stage, converter, observer, context, failure, cancellation.Token);
+        Task notification = InvokeAsync(stage, converter, observer, context, failure, cancellation.Token);
 
         Assert.Same(observer.Completion.Task, notification);
         Assert.False(notification.IsCompleted);
@@ -49,7 +49,7 @@ public sealed class ConsumeObserverConverterTests
         var observer = new RecordingObserver();
         var observerFailure = new InvalidOperationException("observer rejected notification");
 
-        Task notification = Invoke(stage, converter, observer, context, new ApplicationException("consume fault"), CancellationToken.None);
+        Task notification = InvokeAsync(stage, converter, observer, context, new ApplicationException("consume fault"), CancellationToken.None);
         observer.Completion.SetException(observerFailure);
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => notification);
@@ -71,23 +71,23 @@ public sealed class ConsumeObserverConverterTests
         var failure = new InvalidOperationException("consumer failed");
 
         Assert.Equal("observer", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            Invoke(stage, converter, null!, context, failure, CancellationToken.None))).ParamName);
+            InvokeAsync(stage, converter, null!, context, failure, CancellationToken.None))).ParamName);
         Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            Invoke(stage, converter, observer, null!, failure, CancellationToken.None))).ParamName);
+            InvokeAsync(stage, converter, observer, null!, failure, CancellationToken.None))).ParamName);
         ArgumentException mismatch = await Assert.ThrowsAsync<ArgumentException>(() =>
-            Invoke(stage, converter, observer, wrongContext, failure, CancellationToken.None));
+            InvokeAsync(stage, converter, observer, wrongContext, failure, CancellationToken.None));
         Assert.Contains(wrongContext.GetType().Name, mismatch.Message, StringComparison.Ordinal);
         Assert.Empty(observer.Calls);
 
         using var canceled = new CancellationTokenSource();
         canceled.Cancel();
         OperationCanceledException cancellation = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            Invoke(stage, converter, null!, null!, failure, canceled.Token));
+            InvokeAsync(stage, converter, null!, null!, failure, canceled.Token));
         Assert.Equal(canceled.Token, cancellation.CancellationToken);
         Assert.Empty(observer.Calls);
     }
 
-    private static Task Invoke(ObservationStage stage, IConsumeObserverConverter converter, IConsumeObserver observer,
+    private static Task InvokeAsync(ObservationStage stage, IConsumeObserverConverter converter, IConsumeObserver observer,
         object context, Exception exception, CancellationToken cancellationToken) => stage switch
         {
             ObservationStage.Pre => converter.PreConsumeAsync(observer, context, cancellationToken),
@@ -110,14 +110,14 @@ public sealed class ConsumeObserverConverterTests
 
         public List<Observation> Calls { get; } = [];
 
-        public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Record(ObservationStage.Pre, context);
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => RecordAsync(ObservationStage.Pre, context);
 
-        public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Record(ObservationStage.Post, context);
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => RecordAsync(ObservationStage.Post, context);
 
         public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class =>
-            Record(ObservationStage.Fault, context, exception);
+            RecordAsync(ObservationStage.Fault, context, exception);
 
-        private Task Record<T>(ObservationStage stage, ConsumeContext<T> context, Exception? exception = null) where T : class
+        private Task RecordAsync<T>(ObservationStage stage, ConsumeContext<T> context, Exception? exception = null) where T : class
         {
             Calls.Add(new Observation(stage, typeof(T), context, exception));
             return Completion.Task;
