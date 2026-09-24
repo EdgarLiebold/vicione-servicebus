@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -98,19 +99,45 @@ public class OutputPipeFilter<TInput, TOutput> :
         {
             if (_observers.Count > 0)
             {
-                var sendFaultTask = _observers.SendFaultAsync(pipeContext, ex);
-                if (sendFaultTask.Status != TaskStatus.RanToCompletion)
-                    await sendFaultTask.ConfigureAwait(false);
+                try
+                {
+                    var sendFaultTask = _observers.SendFaultAsync(pipeContext, ex);
+                    if (sendFaultTask.Status != TaskStatus.RanToCompletion)
+                        await sendFaultTask.ConfigureAwait(false);
+                }
+                catch (Exception observerFailure)
+                {
+                    LogObserverFailure(observerFailure, "typed");
+                }
             }
 
             if (_outerObservers.Count > 0)
             {
-                var sendFaultTask = _outerObservers.SendFaultAsync(pipeContext, ex);
-                if (sendFaultTask.Status != TaskStatus.RanToCompletion)
-                    await sendFaultTask.ConfigureAwait(false);
+                try
+                {
+                    var sendFaultTask = _outerObservers.SendFaultAsync(pipeContext, ex);
+                    if (sendFaultTask.Status != TaskStatus.RanToCompletion)
+                        await sendFaultTask.ConfigureAwait(false);
+                }
+                catch (Exception observerFailure)
+                {
+                    LogObserverFailure(observerFailure, "outer");
+                }
             }
 
             throw;
+        }
+    }
+
+    static void LogObserverFailure(Exception observerFailure, string observerScope)
+    {
+        try
+        {
+            LogContext.Error?.Log(observerFailure, "An output-pipe {ObserverScope} fault observer failed after dispatch faulted: {OutputType}", observerScope, typeof(TOutput));
+        }
+        catch
+        {
+            // Diagnostic logging must not replace the dispatch failure.
         }
     }
 }

@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Output-pipe fault observers can no longer replace the original dispatch
+  failure with their own exception. A failed typed observer also no longer
+  prevents the outer observer from receiving the dispatch failure. A failing
+  diagnostic logger cannot override either guarantee.
 - Azure Service Bus host configuration now treats an endpoint-only connection
   string assigned through the public setter the same way as the string
   constructor. It remains compatible with a separate named-key, SAS, or token
@@ -267,6 +271,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Filter-observer tests now hold each typed and untyped pre-send, post-send,
+  and fault callback asynchronously. They verify that downstream work waits
+  for the active observer, callbacks stay ordered, and a failed dispatch
+  retains its original exception even if either fault observer fails.
 - Azure Service Bus session-batching tests now exercise the public consumer
   extension through real batch options and the endpoint callback. They verify
   that broker session identities group messages, batch limits reach the

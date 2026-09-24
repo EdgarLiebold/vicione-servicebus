@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Contracts;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -64,7 +66,150 @@ public sealed class FilterObserverTests
         Assert.Same(bodyContext, untyped.Context);
     }
 
-    private sealed class TypedObserver(List<string> trace) : IFilterObserver<CommandContext<SetConcurrencyLimit>>
+    [Theory]
+    [InlineData("typed-pre")]
+    [InlineData("untyped-pre")]
+    [InlineData("typed-post")]
+    [InlineData("untyped-post")]
+    [InlineData("typed-fault")]
+    [InlineData("untyped-fault")]
+    [RequirementCoverage("REQ-VSB-FILTER-OBSERVERS", "asynchronous-observers-preserve-order-and-original-fault")]
+    public async Task DelayedObserver_HoldsThePipelineAtItsStageAndPreservesTheOriginalOutcomeAsync(string delayedStage)
+    {
+        var trace = new List<string>();
+        var router = new PipeRouter();
+        var expectedFailure = new DispatchException("dispatch failed after asynchronous observation");
+        bool faults = delayedStage.EndsWith("fault", StringComparison.Ordinal);
+        string[] expectedTrace = faults
+            ? ["typed-pre", "untyped-pre", "body", "typed-fault", "untyped-fault"]
+            : ["typed-pre", "untyped-pre", "body", "typed-post", "untyped-post"];
+        var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task WaitAtStageAsync(string stage)
+        {
+            if (stage != delayedStage)
+                return Task.CompletedTask;
+            entered.TrySetResult();
+            return gate.Task;
+        }
+        CommandContext<SetConcurrencyLimit>? bodyContext = null;
+        router.ConnectPipe(Pipe.Execute<CommandContext<SetConcurrencyLimit>>(context =>
+        {
+            bodyContext = context;
+            trace.Add("body");
+            if (faults)
+                throw expectedFailure;
+        }));
+        var typed = new TypedObserver(trace, WaitAtStageAsync);
+        var untyped = new UntypedObserver(trace, WaitAtStageAsync);
+        var observerConnector = (IFilterObserverConnector)router;
+        using ConnectHandle typedHandle = observerConnector.ConnectObserver(typed);
+        using ConnectHandle untypedHandle = observerConnector.ConnectObserver(untyped);
+
+        Task operation = router.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken);
+        try
+        {
+            await entered.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            int blockedIndex = Array.IndexOf(expectedTrace, delayedStage);
+            Assert.True(blockedIndex >= 0);
+            Assert.Equal(expectedTrace.Take(blockedIndex + 1), trace);
+            Assert.False(operation.IsCompleted);
+            if (blockedIndex < 2)
+                Assert.Null(bodyContext);
+
+            gate.SetResult();
+            if (faults)
+                Assert.Same(expectedFailure, await Assert.ThrowsAsync<DispatchException>(() => operation));
+            else
+                await operation;
+        }
+        finally
+        {
+            gate.TrySetResult();
+            _ = await Record.ExceptionAsync(() => operation);
+        }
+
+        Assert.Equal(expectedTrace, trace);
+        Assert.NotNull(bodyContext);
+        Assert.Same(bodyContext, typed.Context);
+        Assert.Same(bodyContext, untyped.Context);
+        Assert.Same(faults ? expectedFailure : null, typed.Failure);
+        Assert.Same(faults ? expectedFailure : null, untyped.Failure);
+    }
+
+    [Theory]
+    [InlineData("typed-fault", false)]
+    [InlineData("typed-fault", true)]
+    [InlineData("untyped-fault", false)]
+    [InlineData("untyped-fault", true)]
+    [RequirementCoverage("REQ-VSB-FILTER-OBSERVERS", "fault-observer-failure-does-not-replace-dispatch-failure")]
+    public async Task FailingFaultObserver_DoesNotReplaceTheDispatchFailureOrSkipTheOtherObserverAsync(string failingStage, bool loggerThrows)
+    {
+        var trace = new List<string>();
+        var router = new PipeRouter();
+        var dispatchFailure = new DispatchException("dispatch failed");
+        var observerFailure = new InvalidOperationException("fault observer failed");
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task FailAtStageAsync(string stage)
+        {
+            if (stage != failingStage)
+                return Task.CompletedTask;
+            entered.TrySetResult();
+            return gate.Task;
+        }
+        router.ConnectPipe(Pipe.Execute<CommandContext<SetConcurrencyLimit>>(_ =>
+        {
+            trace.Add("body");
+            throw dispatchFailure;
+        }));
+        var typed = new TypedObserver(trace, FailAtStageAsync);
+        var untyped = new UntypedObserver(trace, FailAtStageAsync);
+        var observerConnector = (IFilterObserverConnector)router;
+        using ConnectHandle typedHandle = observerConnector.ConnectObserver(typed);
+        using ConnectHandle untypedHandle = observerConnector.ConnectObserver(untyped);
+        var logger = new ThrowingLogger();
+        var previousLogContext = LogContext.Current;
+        if (loggerThrows)
+            LogContext.ConfigureCurrentLogContext(logger);
+
+        try
+        {
+            Task operation = router.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken);
+            try
+            {
+                await entered.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+                Assert.Equal(failingStage == "typed-fault"
+                    ? ["typed-pre", "untyped-pre", "body", "typed-fault"]
+                    : ["typed-pre", "untyped-pre", "body", "typed-fault", "untyped-fault"], trace);
+                Assert.False(operation.IsCompleted);
+
+                gate.SetException(observerFailure);
+                Assert.Same(dispatchFailure, await Assert.ThrowsAsync<DispatchException>(() => operation));
+            }
+            finally
+            {
+                gate.TrySetException(observerFailure);
+                _ = await Record.ExceptionAsync(() => operation);
+            }
+
+            Assert.Equal(["typed-pre", "untyped-pre", "body", "typed-fault", "untyped-fault"], trace);
+            Assert.Same(dispatchFailure, typed.Failure);
+            Assert.Same(dispatchFailure, untyped.Failure);
+            if (loggerThrows)
+            {
+                Assert.Equal(1, logger.CallCount);
+                Assert.Same(observerFailure, logger.ObservedFailure);
+            }
+        }
+        finally
+        {
+            if (loggerThrows)
+                LogContext.Current = previousLogContext;
+        }
+    }
+
+    private sealed class TypedObserver(List<string> trace, Func<string, Task>? waitAtStage = null) : IFilterObserver<CommandContext<SetConcurrencyLimit>>
     {
         public CommandContext<SetConcurrencyLimit>? Context { get; private set; }
 
@@ -74,14 +219,14 @@ public sealed class FilterObserverTests
         {
             Context = context;
             trace.Add("typed-pre");
-            return Task.CompletedTask;
+            return waitAtStage?.Invoke("typed-pre") ?? Task.CompletedTask;
         }
 
         public Task PostSendAsync(CommandContext<SetConcurrencyLimit> context)
         {
             Assert.Same(Context, context);
             trace.Add("typed-post");
-            return Task.CompletedTask;
+            return waitAtStage?.Invoke("typed-post") ?? Task.CompletedTask;
         }
 
         public Task SendFaultAsync(CommandContext<SetConcurrencyLimit> context, Exception exception)
@@ -89,11 +234,11 @@ public sealed class FilterObserverTests
             Assert.Same(Context, context);
             Failure = exception;
             trace.Add("typed-fault");
-            return Task.CompletedTask;
+            return waitAtStage?.Invoke("typed-fault") ?? Task.CompletedTask;
         }
     }
 
-    private sealed class UntypedObserver(List<string> trace) : IFilterObserver
+    private sealed class UntypedObserver(List<string> trace, Func<string, Task>? waitAtStage = null) : IFilterObserver
     {
         public CommandContext? Context { get; private set; }
 
@@ -104,7 +249,7 @@ public sealed class FilterObserverTests
         {
             Context = Assert.IsAssignableFrom<CommandContext>(context);
             trace.Add("untyped-pre");
-            return Task.CompletedTask;
+            return waitAtStage?.Invoke("untyped-pre") ?? Task.CompletedTask;
         }
 
         public Task PostSendAsync<T>(T context)
@@ -112,7 +257,7 @@ public sealed class FilterObserverTests
         {
             Assert.Same(Context, context);
             trace.Add("untyped-post");
-            return Task.CompletedTask;
+            return waitAtStage?.Invoke("untyped-post") ?? Task.CompletedTask;
         }
 
         public Task SendFaultAsync<T>(T context, Exception exception)
@@ -121,9 +266,28 @@ public sealed class FilterObserverTests
             Assert.Same(Context, context);
             Failure = exception;
             trace.Add("untyped-fault");
-            return Task.CompletedTask;
+            return waitAtStage?.Invoke("untyped-fault") ?? Task.CompletedTask;
         }
     }
 
     private sealed class DispatchException(string message) : Exception(message);
+
+    private sealed class ThrowingLogger : ILogger
+    {
+        public int CallCount { get; private set; }
+
+        public Exception? ObservedFailure { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            CallCount++;
+            ObservedFailure = exception;
+            throw new InvalidOperationException("diagnostic logger failed");
+        }
+    }
 }

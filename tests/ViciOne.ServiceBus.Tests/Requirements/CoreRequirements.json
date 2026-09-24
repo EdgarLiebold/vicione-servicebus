@@ -701,6 +701,20 @@
       "variantKey" : "typed-and-untyped-fault-order"
    },
    {
+      "requirementId" : "REQ-VSB-FILTER-OBSERVERS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DelayedObserver_HoldsThePipelineAtItsStageAndPreservesTheOriginalOutcomeAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests",
+      "variantKey" : "asynchronous-observers-preserve-order-and-original-fault"
+   },
+   {
+      "requirementId" : "REQ-VSB-FILTER-OBSERVERS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailingFaultObserver_DoesNotReplaceTheDispatchFailureOrSkipTheOtherObserverAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests",
+      "variantKey" : "fault-observer-failure-does-not-replace-dispatch-failure"
+   },
+   {
       "requirementId" : "REQ-VSB-RESCUE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "Rescue_PassesTheExactHandledFailureToTheCustomRescueContextAsync",
