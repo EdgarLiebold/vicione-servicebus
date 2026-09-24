@@ -114,27 +114,40 @@ internal sealed class SqsMessageBody :
         {
             JsonElement root = document.RootElement;
             if (root.ValueKind != JsonValueKind.Object
-                || !TryGetString(root, "Type", out var type)
-                || !string.Equals(type, "Notification", StringComparison.Ordinal)
-                || !TryGetString(root, "MessageId", out var messageId)
-                || !Guid.TryParseExact(messageId, "D", out _)
-                || !TryGetString(root, "TopicArn", out var topicArn)
-                || !IsSnsTopicArn(topicArn)
-                || !TryGetString(root, "Message", out var payload)
-                || !TryGetString(root, "Timestamp", out var timestamp)
-                || !DateTimeOffset.TryParse(timestamp, CultureInfo.InvariantCulture,
-                    DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out _)
-                || !TryGetString(root, "SignatureVersion", out var signatureVersion)
-                || signatureVersion is not ("1" or "2")
-                || !TryGetString(root, "Signature", out var signature)
-                || string.IsNullOrWhiteSpace(signature)
-                || !TryGetString(root, "SigningCertURL", out var signingCertificateUrl)
-                || !Uri.TryCreate(signingCertificateUrl, UriKind.Absolute, out var signingCertificate)
-                || signingCertificate.Scheme is not ("https" or "http"))
+                || !TryGetNotificationIdentity(root, out var topicArn, out var payload)
+                || !HasValidNotificationSignature(root))
                 throw new InvalidDataException("The Amazon SQS body is not a structurally valid Amazon SNS notification envelope.");
 
             return new NotificationBody(payload, topicArn, ReadMessageAttributes(root));
         }
+    }
+
+    static bool TryGetNotificationIdentity(JsonElement root, [NotNullWhen(true)] out string? topicArn,
+        [NotNullWhen(true)] out string? payload)
+    {
+        topicArn = null;
+        payload = null;
+        return TryGetString(root, "Type", out var type)
+            && string.Equals(type, "Notification", StringComparison.Ordinal)
+            && TryGetString(root, "MessageId", out var messageId)
+            && Guid.TryParseExact(messageId, "D", out _)
+            && TryGetString(root, "TopicArn", out topicArn)
+            && IsSnsTopicArn(topicArn)
+            && TryGetString(root, "Message", out payload);
+    }
+
+    static bool HasValidNotificationSignature(JsonElement root)
+    {
+        return TryGetString(root, "Timestamp", out var timestamp)
+            && DateTimeOffset.TryParse(timestamp, CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out _)
+            && TryGetString(root, "SignatureVersion", out var signatureVersion)
+            && signatureVersion is ("1" or "2")
+            && TryGetString(root, "Signature", out var signature)
+            && !string.IsNullOrWhiteSpace(signature)
+            && TryGetString(root, "SigningCertURL", out var signingCertificateUrl)
+            && Uri.TryCreate(signingCertificateUrl, UriKind.Absolute, out var signingCertificate)
+            && signingCertificate.Scheme is ("https" or "http");
     }
 
     static IReadOnlyDictionary<string, string> ReadMessageAttributes(JsonElement root)
