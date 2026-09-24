@@ -94,3 +94,12 @@ CRAP is `complexity² × (1 − method line coverage)³ + complexity`.
   adapter, then test actual observer dispatch or remove only proven dead code.
 - The product-wide A+ goal remains open. `analysis-36/methods.json` contains
   the complete method ranking.
+
+## Later correction to the CRAP threshold count
+
+The archived analyzer used binary floating-point arithmetic for the strict
+`CRAP > 30` count. One method with mathematically exact CRAP 30 rounded
+slightly above the threshold in each compared profile. Exact integer
+threshold arithmetic over the unchanged archived method data gives **44**
+for `b4d370ac5` and **47** for comparison `4e7b54c22`, rather than archived
+45 and 48. The archived reports and hashes remain unchanged.

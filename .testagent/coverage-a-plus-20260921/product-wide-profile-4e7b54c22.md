@@ -77,3 +77,11 @@ CRAP is `complexity² × (1 − method line coverage)³ + complexity`.
   combinations need adversarial review.
 - The product-wide A+ goal remains open. The complete ranking is in
   `analysis-36/methods.json`; do not add tests solely to exercise dead code.
+
+## Later correction to the CRAP threshold count
+
+The archived analyzer counted one mathematically exact CRAP 30 as `> 30`
+in each compared profile because of binary floating-point rounding. Exact
+integer threshold arithmetic over the unchanged archived method data gives
+**47** for `4e7b54c22` and **51** for comparison `151bf0dc1`, rather than
+archived 48 and 52. The archived reports and hashes remain unchanged.

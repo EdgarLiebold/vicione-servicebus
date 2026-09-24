@@ -77,3 +77,12 @@ Neither is an exact union of branch identities. CRAP is
 
 The A+ line, branch, and CRAP objective remains open. The complete method
 ranking is in `analysis-36/methods.json`.
+
+## Later correction to the CRAP threshold count
+
+The archived analyzer used binary floating-point arithmetic for the strict
+`CRAP > 30` count. One method with mathematically exact CRAP 30 rounded to
+`30.000000000000004`, so both CRAP counts in this table are one too high.
+Exact integer threshold arithmetic over the unchanged archived method data
+gives **41** for `6352ef3e9` and **44** for comparison `b4d370ac5`, rather
+than archived 42 and 45. The archived reports and hashes remain unchanged.
