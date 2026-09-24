@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Middleware.Partitioning;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -10,6 +11,26 @@ namespace ViciOne.ServiceBus.Tests.JobService.Configuration;
 
 public sealed class JobServiceReceivePartitioningTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-ENDPOINT-CONFIGURATION", "registered-job-saga-shares-all-receive-partitions")]
+    public void RegisteredJobSaga_UsesOneCoordinatorForEveryCoordinationMessage()
+    {
+        using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBus(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.SetInMemorySagaRepositoryProvider();
+                configuration.AddJobSagaStateMachines(options => options.ConcurrentMessageLimit = 2)
+                    .ConfigureJobEndpoint(endpoint => endpoint.Name = "partitioned-job");
+                configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+            })
+            .BuildServiceProvider(validateScopes: true);
+
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+
+        AssertJobPartitionProbe(bus, TestContext.Current.CancellationToken);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-ENDPOINT-CONFIGURATION", "job-receive-registration-and-cross-message-serialization")]
     public async Task JobEndpoint_SerializesTheSameJobAcrossMessageTypesWhileAnotherPartitionContinuesAsync()
