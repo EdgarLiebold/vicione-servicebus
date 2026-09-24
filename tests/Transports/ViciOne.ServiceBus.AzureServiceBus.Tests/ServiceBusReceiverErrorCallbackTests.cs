@@ -1,6 +1,9 @@
 using System.Reflection;
+using System.Net.WebSockets;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.AzureServiceBus;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;
@@ -125,6 +128,8 @@ public sealed class ServiceBusReceiverErrorCallbackTests
             Assert.Same(failure, exception);
             Assert.Equal("pending/affected-entity", entityPath);
             Assert.False(callback.IsCompleted);
+            Assert.False(receiver.Stopping.IsCancellationRequested);
+            Assert.False(receiver.Completed.IsCompleted);
         }
         finally
         {
@@ -132,6 +137,87 @@ public sealed class ServiceBusReceiverErrorCallbackTests
         }
 
         await callback;
+        await receiver.Completed.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        Assert.True(receiver.Stopping.IsCancellationRequested);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-PROCESSOR-LIFECYCLE", "processor-errors-preserve-severity-structured-identity-and-quiet-cases")]
+    public async Task QueueProcessorErrorCallback_LogsTheClassifiedFailureWithExactStructuredIdentityAsync()
+    {
+        var cases = new (Exception Failure, LogLevel? Level, string? Template, bool Recycle)[]
+        {
+            (new ServiceBusException(true, "connection", "entity", ServiceBusFailureReason.ServiceCommunicationProblem,
+                new TimeoutException()), LogLevel.Debug,
+                "ServiceBusException on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})", true),
+            (new ServiceBusException(false, "connection", "entity", ServiceBusFailureReason.ServiceCommunicationProblem, null), LogLevel.Error,
+                "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})", true),
+            (new WebSocketException(WebSocketError.ConnectionClosedPrematurely, "socket", new TimeoutException()), LogLevel.Debug,
+                "WebSocketException on Receiver {InputAddress} code {Code} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})", true),
+            (new ServiceBusException(true, "timeout", "entity", ServiceBusFailureReason.ServiceTimeout, null), LogLevel.Warning,
+                "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})", false),
+            (new InvalidOperationException("unknown"), LogLevel.Error,
+                "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})", true),
+            (new ObjectDisposedException("$cbs"), null, null, true),
+            (new ObjectDisposedException("unrelated"), LogLevel.Error,
+                "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})", true),
+            (new ServiceBusException(false, "lock", "entity", ServiceBusFailureReason.MessageLockLost, null), null, null, false),
+            (new ServiceBusException(false, "session", "entity", ServiceBusFailureReason.SessionLockLost, null), null, null, false),
+            (new ServiceBusException(false, "disabled", "entity", ServiceBusFailureReason.MessagingEntityDisabled, null), null, null, false),
+            (new OperationCanceledException(), null, null, true),
+            (new InvalidOperationException("wrapped timeout", new TimeoutException()), null, null, true),
+        };
+
+        ILogContext? previous = LogContext.Current;
+        try
+        {
+            foreach ((Exception failure, LogLevel? level, string? template, bool recycle) in cases)
+            {
+                var logger = new RecordingLogger();
+                LogContext.ConfigureCurrentLogContext(logger);
+                (Receiver receiver, RecordingClientContext client) = CreateReceiver(session: false);
+                receiver.Start();
+                await receiver.Ready;
+
+                await Assert.IsType<Func<ProcessErrorEventArgs, Task>>(client.MessageErrorHandler)(
+                    CreateError(failure, "logged/affected-entity"));
+
+                Assert.Equal(recycle ? 1 : 0, client.FaultNotifications.Count);
+                if (recycle)
+                    Assert.Same(failure, client.FaultNotifications[0].Exception);
+
+                LogEntry[] receiverEntries = logger.Entries
+                    .Where(entry => entry.Template.Contains("on Receiver", StringComparison.Ordinal))
+                    .ToArray();
+                if (level is null)
+                {
+                    Assert.Empty(receiverEntries);
+                    continue;
+                }
+
+                LogEntry entry = Assert.Single(receiverEntries);
+                Assert.Equal(level, entry.Level);
+                Assert.Same(failure, entry.Exception);
+                Assert.Equal(template, entry.Template);
+                Assert.Equal(new Uri("sb://unit.servicebus.invalid/configured-input"), entry.Values["InputAddress"]);
+                Assert.Equal(0L, Assert.IsType<long>(entry.Values["activeDispatch"]));
+                Assert.Equal(recycle, entry.Values["requiresRecycle"]);
+                if (failure is WebSocketException socket)
+                {
+                    Assert.Equal(socket.WebSocketErrorCode, entry.Values["Code"]);
+                    Assert.Equal(5, entry.Values.Count);
+                }
+                else
+                {
+                    Assert.Equal(ServiceBusErrorSource.Receive, entry.Values["Action"]);
+                    Assert.Equal(5, entry.Values.Count);
+                }
+            }
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
     }
 
     [Fact]
@@ -241,4 +327,24 @@ public sealed class ServiceBusReceiverErrorCallbackTests
             _ => throw new NotSupportedException($"Unexpected dispatcher member: {targetMethod?.Name}"),
         };
     }
+
+    private sealed class RecordingLogger : ILogger
+    {
+        public List<LogEntry> Entries { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            var values = Assert.IsAssignableFrom<IEnumerable<KeyValuePair<string, object?>>>(state)
+                .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+            Entries.Add(new LogEntry(logLevel, exception, Assert.IsType<string>(values["{OriginalFormat}"]), values));
+        }
+    }
+
+    private sealed record LogEntry(LogLevel Level, Exception? Exception, string Template,
+        Dictionary<string, object?> Values);
 }

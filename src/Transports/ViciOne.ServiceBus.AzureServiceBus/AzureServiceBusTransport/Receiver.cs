@@ -41,7 +41,21 @@ public class Receiver :
     /// <returns>A task that completes after any required fault notification.</returns>
     protected async Task ExceptionHandlerAsync(ProcessErrorEventArgs args)
     {
-        var requiresRecycle = args.Exception switch
+        bool requiresRecycle = RequiresRecycle(args.Exception);
+
+        LogProcessorError(args, requiresRecycle);
+
+        if (requiresRecycle)
+        {
+            await _clientContext.NotifyFaultedAsync(args.Exception, args.EntityPath).ConfigureAwait(false);
+
+            TrySetConsumeException(args.Exception);
+        }
+    }
+
+    static bool RequiresRecycle(Exception exception)
+    {
+        return exception switch
         {
             MessageTimeToLiveExpiredException _ => false,
             MessageLockExpiredException _ => false,
@@ -57,46 +71,50 @@ public class Receiver :
 
             _ => true
         };
+    }
 
-        switch (args.Exception)
+    void LogProcessorError(ProcessErrorEventArgs args, bool requiresRecycle)
+    {
+        Exception exception = args.Exception;
+        if (exception is ServiceBusException { IsTransient: true, Reason: ServiceBusFailureReason.ServiceCommunicationProblem })
         {
-            case ServiceBusException { IsTransient: true, Reason: ServiceBusFailureReason.ServiceCommunicationProblem }:
-                LogContext.Debug?.Log(args.Exception,
-                    "ServiceBusException on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
-                    _clientContext.InputAddress, args.ErrorSource, ActiveDispatchCount, requiresRecycle);
-                break;
-            case WebSocketException exception:
-                LogContext.Debug?.Log(exception,
-                    "WebSocketException on Receiver {InputAddress} code {Code} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
-                    _clientContext.InputAddress, exception.WebSocketErrorCode, ActiveDispatchCount, requiresRecycle);
-                break;
-            case ObjectDisposedException { ObjectName: "$cbs" }:
-            case ServiceBusException { Reason: ServiceBusFailureReason.MessageLockLost }:
-            case ServiceBusException { Reason: ServiceBusFailureReason.SessionLockLost }:
-            case ServiceBusException { Reason: ServiceBusFailureReason.MessagingEntityDisabled }:
-                // These expected lifecycle conditions require no additional receiver log entry.
-                break;
-            default:
-                {
-                    if (!(args.Exception is OperationCanceledException) && !(args.Exception.InnerException is TimeoutException))
-                    {
-                        EnabledLogger? logger = requiresRecycle ? LogContext.Error : LogContext.Warning;
-
-                        logger?.Log(args.Exception,
-                            "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
-                            _clientContext.InputAddress, args.ErrorSource, ActiveDispatchCount, requiresRecycle);
-                    }
-
-                    break;
-                }
+            LogContext.Debug?.Log(exception,
+                "ServiceBusException on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
+                _clientContext.InputAddress, args.ErrorSource, ActiveDispatchCount, requiresRecycle);
+            return;
         }
 
-        if (requiresRecycle)
+        if (exception is WebSocketException webSocketException)
         {
-            await _clientContext.NotifyFaultedAsync(args.Exception, args.EntityPath).ConfigureAwait(false);
-
-            TrySetConsumeException(args.Exception);
+            LogContext.Debug?.Log(webSocketException,
+                "WebSocketException on Receiver {InputAddress} code {Code} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
+                _clientContext.InputAddress, webSocketException.WebSocketErrorCode, ActiveDispatchCount, requiresRecycle);
+            return;
         }
+
+        if (ShouldSuppressProcessorLog(exception))
+            return;
+
+        EnabledLogger? logger = requiresRecycle ? LogContext.Error : LogContext.Warning;
+        logger?.Log(exception,
+            "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
+            _clientContext.InputAddress, args.ErrorSource, ActiveDispatchCount, requiresRecycle);
+    }
+
+    static bool ShouldSuppressProcessorLog(Exception exception)
+    {
+        return IsQuietReceiverError(exception)
+            || exception is OperationCanceledException
+            || exception.InnerException is TimeoutException;
+    }
+
+    static bool IsQuietReceiverError(Exception exception)
+    {
+        // These expected lifecycle conditions require no additional receiver log entry.
+        return exception is ObjectDisposedException { ObjectName: "$cbs" }
+            or ServiceBusException { Reason: ServiceBusFailureReason.MessageLockLost }
+            or ServiceBusException { Reason: ServiceBusFailureReason.SessionLockLost }
+            or ServiceBusException { Reason: ServiceBusFailureReason.MessagingEntityDisabled };
     }
 
     /// <summary>Shuts down dispatch, waits for active agents, and closes the Azure processor context.</summary>
