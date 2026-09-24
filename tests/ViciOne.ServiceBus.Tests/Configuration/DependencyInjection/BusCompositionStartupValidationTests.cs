@@ -90,6 +90,33 @@ public sealed class BusCompositionStartupValidationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-COMPOSITION", "duplicate-feature-ownership-fails-before-bus-start")]
+    public async Task StartupValidation_RejectsDuplicatePayloadAdmissionOwnershipAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.UsingInMemory();
+        });
+        services.AddViciOnePayloadAdmission<IBus>(options =>
+        {
+            options.MaximumSerializedBodyBytes = 1024;
+            options.MaximumTransportEnvelopeBytes = 2048;
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider();
+
+        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
+            CompositionValidator<IBus>(provider).StartAsync(TestContext.Current.CancellationToken));
+
+        Assert.Single(exception.Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries));
+        Assert.StartsWith("Payload admission for bus 'default':", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("multiple feature owners are registered", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("Configure the feature exactly once", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BUS-COMPOSITION", "durable-components-report-every-missing-owner")]
     public async Task StartupValidation_AggregatesEveryMissingDurableOwnerAsync()
     {

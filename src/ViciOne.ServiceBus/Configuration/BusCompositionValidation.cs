@@ -147,99 +147,13 @@ internal sealed class BusCompositionStartupValidator<TBus>(IServiceProvider prov
             "Limits has multiple owners",
             "Call bus.Limits(...) with explicit byte limits");
 
-        Type[] registeredBusTypes = buses.Select(static registration => registration.BusType).Distinct().ToArray();
         IBusFeatureRegistration[] features = provider.GetServices<IBusFeatureRegistration>().ToArray();
-        foreach (IBusFeatureRegistration orphan in features
-                     .Where(registration => !registeredBusTypes.Contains(registration.BusType))
-                     .OrderBy(static registration => registration.BusKey, StringComparer.Ordinal)
-                     .ThenBy(static registration => registration.Feature, StringComparer.Ordinal))
-        {
-            failures.Add(ConfigurationMessages.Create(
-                orphan.Feature,
-                orphan.BusKey,
-                $"the feature targets {orphan.BusType.FullName}, but no matching bus is registered",
-                "Move the feature into the matching AddViciOneServiceBus<TBus>(...) block or register that bus"));
-        }
+        AddFeatureOwnershipFailures(failures, bus, buses, features);
 
-        foreach (IGrouping<string, IBusFeatureRegistration> duplicate in features
-                     .Where(static registration => registration.BusType == typeof(TBus))
-                     .GroupBy(static registration => registration.Feature, StringComparer.Ordinal)
-                     .Where(static group => group.Count() > 1)
-                     .OrderBy(static group => group.Key, StringComparer.Ordinal))
-        {
-            failures.Add(ConfigurationMessages.Create(
-                duplicate.Key,
-                bus,
-                "multiple feature owners are registered",
-                "Configure the feature exactly once inside its owning bus block"));
-        }
-
-        bool durableSenderConfigured = features.Any(registration =>
-            registration.BusType == typeof(TBus)
-            && string.Equals(registration.Feature, "Reliable messaging", StringComparison.Ordinal));
-        if (durableSenderConfigured)
-        {
-            AddCardinalityFailure(
-                failures,
-                "Reliable messaging",
-                bus,
-                CountServices(registration, typeof(IMessageContractCatalog)),
-                "no message-contract catalog is registered",
-                "multiple message-contract catalog owners are registered",
-                "Declare contracts once inside the owning bus.UseReliableMessaging(...) or bus.Contracts(...) block");
-            AddCardinalityFailure(
-                failures,
-                "Reliable messaging",
-                bus,
-                CountServices(registration, typeof(IOutboxStore<TBus>)),
-                "no persistence store is registered",
-                "multiple persistence store owners are registered",
-                "Select exactly one store inside bus.UseReliableMessaging(...)"
-            );
-            AddCardinalityFailure(
-                failures,
-                "Reliable messaging",
-                bus,
-                CountServices(registration, typeof(IInboxStore<TBus>)),
-                "no inbox store is registered",
-                "multiple inbox store owners are registered",
-                "Select exactly one store inside bus.UseReliableMessaging(...)"
-            );
-            AddCardinalityFailure(
-                failures,
-                "Reliable messaging",
-                bus,
-                CountServices(registration, typeof(IScheduleStore<TBus>)),
-                "no schedule store is registered",
-                "multiple schedule store owners are registered",
-                "Select exactly one store inside bus.UseReliableMessaging(...)"
-            );
-            AddCardinalityFailure(
-                failures,
-                "Reliable messaging",
-                bus,
-                CountServices(registration, typeof(IDurableSendDispatcher<TBus>)),
-                "no transport dispatcher is registered",
-                "multiple transport dispatcher owners are registered",
-                "Select a transport with a durable sender provider or configure exactly one dispatcher"
-            );
-
-            if (CountServices(registration, typeof(IMessageContractCatalog)) == 1)
-            {
-                try
-                {
-                    _ = provider.GetRequiredService<IMessageContractCatalog>();
-                }
-                catch (Exception exception)
-                {
-                    failures.Add(ConfigurationMessages.Create(
-                        "Reliable messaging",
-                        bus,
-                        Unwrap(exception).Message,
-                        "Declare a coherent contract catalog inside the owning bus block"));
-                }
-            }
-        }
+        if (features.Any(registration =>
+                registration.BusType == typeof(TBus)
+                && string.Equals(registration.Feature, "Reliable messaging", StringComparison.Ordinal)))
+            AddReliableMessagingFailures(failures, bus, registration);
 
         if (failures.Count == 0)
         {
@@ -272,6 +186,106 @@ internal sealed class BusCompositionStartupValidator<TBus>(IServiceProvider prov
     }
 
     Task IHostedService.StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    static void AddFeatureOwnershipFailures(
+        ICollection<string> failures,
+        string bus,
+        IBusCompositionRegistration[] buses,
+        IBusFeatureRegistration[] features)
+    {
+        Type[] registeredBusTypes = buses.Select(static registration => registration.BusType).Distinct().ToArray();
+        foreach (IBusFeatureRegistration orphan in features
+                     .Where(registration => !registeredBusTypes.Contains(registration.BusType))
+                     .OrderBy(static registration => registration.BusKey, StringComparer.Ordinal)
+                     .ThenBy(static registration => registration.Feature, StringComparer.Ordinal))
+        {
+            failures.Add(ConfigurationMessages.Create(
+                orphan.Feature,
+                orphan.BusKey,
+                $"the feature targets {orphan.BusType.FullName}, but no matching bus is registered",
+                "Move the feature into the matching AddViciOneServiceBus<TBus>(...) block or register that bus"));
+        }
+
+        foreach (IGrouping<string, IBusFeatureRegistration> duplicate in features
+                     .Where(static registration => registration.BusType == typeof(TBus))
+                     .GroupBy(static registration => registration.Feature, StringComparer.Ordinal)
+                     .Where(static group => group.Count() > 1)
+                     .OrderBy(static group => group.Key, StringComparer.Ordinal))
+        {
+            failures.Add(ConfigurationMessages.Create(
+                duplicate.Key,
+                bus,
+                "multiple feature owners are registered",
+                "Configure the feature exactly once inside its owning bus block"));
+        }
+    }
+
+    void AddReliableMessagingFailures(
+        ICollection<string> failures,
+        string bus,
+        IBusCompositionRegistration registration)
+    {
+        AddCardinalityFailure(
+            failures,
+            "Reliable messaging",
+            bus,
+            CountServices(registration, typeof(IMessageContractCatalog)),
+            "no message-contract catalog is registered",
+            "multiple message-contract catalog owners are registered",
+            "Declare contracts once inside the owning bus.UseReliableMessaging(...) or bus.Contracts(...) block");
+        AddCardinalityFailure(
+            failures,
+            "Reliable messaging",
+            bus,
+            CountServices(registration, typeof(IOutboxStore<TBus>)),
+            "no persistence store is registered",
+            "multiple persistence store owners are registered",
+            "Select exactly one store inside bus.UseReliableMessaging(...)"
+        );
+        AddCardinalityFailure(
+            failures,
+            "Reliable messaging",
+            bus,
+            CountServices(registration, typeof(IInboxStore<TBus>)),
+            "no inbox store is registered",
+            "multiple inbox store owners are registered",
+            "Select exactly one store inside bus.UseReliableMessaging(...)"
+        );
+        AddCardinalityFailure(
+            failures,
+            "Reliable messaging",
+            bus,
+            CountServices(registration, typeof(IScheduleStore<TBus>)),
+            "no schedule store is registered",
+            "multiple schedule store owners are registered",
+            "Select exactly one store inside bus.UseReliableMessaging(...)"
+        );
+        AddCardinalityFailure(
+            failures,
+            "Reliable messaging",
+            bus,
+            CountServices(registration, typeof(IDurableSendDispatcher<TBus>)),
+            "no transport dispatcher is registered",
+            "multiple transport dispatcher owners are registered",
+            "Select a transport with a durable sender provider or configure exactly one dispatcher"
+        );
+
+        if (CountServices(registration, typeof(IMessageContractCatalog)) == 1)
+        {
+            try
+            {
+                _ = provider.GetRequiredService<IMessageContractCatalog>();
+            }
+            catch (Exception exception)
+            {
+                failures.Add(ConfigurationMessages.Create(
+                    "Reliable messaging",
+                    bus,
+                    Unwrap(exception).Message,
+                    "Declare a coherent contract catalog inside the owning bus block"));
+            }
+        }
+    }
 
     static int CountServices(IBusCompositionRegistration registration, Type serviceType)
         => registration.Services.Count(descriptor => descriptor.ServiceType == serviceType);
