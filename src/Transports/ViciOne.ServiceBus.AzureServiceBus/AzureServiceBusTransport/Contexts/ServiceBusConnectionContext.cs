@@ -32,7 +32,14 @@ public class ServiceBusConnectionContext :
         Endpoint = new Uri($"sb://{_client.FullyQualifiedNamespace}");
     }
 
-    /// <summary>Gets the namespace URI derived from the messaging client.</summary>
+    internal ServiceBusConnectionContext(ServiceBusClient client, ServiceBusAdministrationClient administrationClient,
+        CancellationToken cancellationToken, Uri endpoint)
+        : this(client, administrationClient, cancellationToken)
+    {
+        Endpoint = endpoint;
+    }
+
+    /// <summary>Gets the namespace URI used to form entity addresses.</summary>
     public Uri Endpoint { get; }
 
     /// <summary>Creates a non-session processor for a queue.</summary>

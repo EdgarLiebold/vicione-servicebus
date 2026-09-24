@@ -11,6 +11,27 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Azure Service Bus host configuration now treats an endpoint-only connection
+  string assigned through the public setter the same way as the string
+  constructor. It remains compatible with a separate named-key, SAS, or token
+  credential in either assignment order; a credential-bearing string still
+  rejects a conflicting authentication mode. Both entry points reject partial
+  shared-key pairs and mixed shared-key/SAS values before connection creation.
+  The setter rejects another namespace or port without changing the existing
+  host or credential. Both entry points also reject duplicate or missing
+  namespace endpoints and entity-bound connection strings, which cannot back
+  a bus host with independent endpoints. Scoped host and entity addresses
+  retain a custom port, including schema-free local emulator endpoints accepted
+  by the Azure SDK. Explicit credential setters reject null instead of silently
+  clearing authentication and falling back to ambient Azure credentials.
+  Credentialless emulator and custom-port connection strings now fail before
+  their transport settings can be lost; URI-configured custom ports also require
+  a credential-bearing emulator connection string or both supplied SDK clients.
+  Credential-bearing custom-port strings without effective emulator mode are
+  rejected rather than silently connecting to the default endpoint. Factory
+  contexts now preserve the configured namespace port in their reported endpoint
+  and derived entity input addresses; caller-supplied messaging clients from a
+  different namespace are rejected before topology can advertise the wrong host.
 - The outbound HTTP boundary test now serializes its process-wide diagnostic
   listener with other global listener tests. Its synthetic positive control
   observes only its own request, while the default bus lifecycle test still

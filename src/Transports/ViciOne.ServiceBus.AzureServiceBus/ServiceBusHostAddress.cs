@@ -12,6 +12,8 @@ public readonly struct ServiceBusHostAddress
     public readonly string Scheme;
     /// <summary>The Azure Service Bus namespace host.</summary>
     public readonly string Host;
+    /// <summary>The optional namespace port, or -1 when no port is specified.</summary>
+    public readonly int Port;
     /// <summary>The optional namespace-relative entity-path scope.</summary>
     public readonly string Scope;
 
@@ -23,6 +25,7 @@ public readonly struct ServiceBusHostAddress
 
         Scheme = null!;
         Host = null!;
+        Port = -1;
         Scope = null!;
 
         var scheme = address.Scheme.ToLowerInvariant();
@@ -31,6 +34,7 @@ public readonly struct ServiceBusHostAddress
             case "sb":
                 Scheme = address.Scheme;
                 Host = address.Host;
+                Port = address.IsDefaultPort ? -1 : address.Port;
 
                 ParseLeft(address, out Scheme, out Host, out Scope);
                 break;
@@ -57,6 +61,7 @@ public readonly struct ServiceBusHostAddress
         {
             Scheme = address.Scheme,
             Host = address.Host,
+            Port = address.Port,
             Path = address.Scope == "/"
                 ? "/"
                 : $"/{Uri.EscapeDataString(address.Scope)}"

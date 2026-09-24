@@ -32,6 +32,8 @@ public readonly struct ServiceBusEndpointAddress
     public readonly string Scheme;
     /// <summary>The Azure Service Bus namespace host.</summary>
     public readonly string Host;
+    /// <summary>The optional namespace port, or -1 when no port is specified.</summary>
+    public readonly int Port;
     /// <summary>The optional namespace-relative scope preceding the entity name.</summary>
     public readonly string Scope;
 
@@ -53,6 +55,7 @@ public readonly struct ServiceBusEndpointAddress
 
         Scheme = null!;
         Host = null!;
+        Port = -1;
         Scope = null!;
         Name = null!;
 
@@ -65,18 +68,19 @@ public readonly struct ServiceBusEndpointAddress
             case "sb":
                 Scheme = address.Scheme;
                 Host = address.Host;
+                Port = address.IsDefaultPort ? -1 : address.Port;
 
                 address.ParseHostPathAndEntityName(out Scope, out Name);
                 break;
 
             case "queue":
-                ParseLeft(hostAddress, out Scheme, out Host, out Scope);
+                ParseLeft(hostAddress, out Scheme, out Host, out Port, out Scope);
 
                 Name = address.AbsolutePath;
                 break;
 
             case "topic":
-                ParseLeft(new Uri(hostAddress.GetLeftPart(UriPartial.Authority)), out Scheme, out Host, out Scope);
+                ParseLeft(new Uri(hostAddress.GetLeftPart(UriPartial.Authority)), out Scheme, out Host, out Port, out Scope);
 
                 Name = address.AbsolutePath;
                 Type = AddressType.Topic;
@@ -112,7 +116,7 @@ public readonly struct ServiceBusEndpointAddress
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("The Azure Service Bus entity name must not be empty.", nameof(name));
 
-        ParseLeft(hostAddress, out Scheme, out Host, out Scope);
+        ParseLeft(hostAddress, out Scheme, out Host, out Port, out Scope);
 
         Name = name;
 
@@ -123,11 +127,12 @@ public readonly struct ServiceBusEndpointAddress
     /// <summary>Gets the namespace-relative entity path, including its scope.</summary>
     public string Path => Scope == "/" ? Name : $"{Scope}/{Name}";
 
-    static void ParseLeft(Uri address, out string scheme, out string host, out string scope)
+    static void ParseLeft(Uri address, out string scheme, out string host, out int port, out string scope)
     {
         var hostAddress = new ServiceBusHostAddress(address);
         scheme = hostAddress.Scheme;
         host = hostAddress.Host;
+        port = hostAddress.Port;
         scope = hostAddress.Scope;
     }
 
@@ -140,6 +145,7 @@ public readonly struct ServiceBusEndpointAddress
         {
             Scheme = address.Scheme,
             Host = address.Host,
+            Port = address.Port,
             Path = address.Scope == "/" || address.Name.IndexOf('/') > 0
                 ? $"/{address.Name}"
                 : $"/{address.Scope}/{address.Name}"

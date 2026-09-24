@@ -43,6 +43,9 @@ public interface ServiceBusHostSettings
     /// <remarks>
     /// If the connection string contains no credential, configure exactly one of
     /// <see cref="NamedKeyCredential" />, <see cref="SasCredential" />, or <see cref="TokenCredential" />.
+    /// Endpoint-only strings with emulator mode or a custom port are not supported because
+    /// the separate credential client constructors cannot preserve those transport settings.
+    /// Credential-bearing custom-port strings require emulator mode.
     /// </remarks>
     string? ConnectionString { get; }
 

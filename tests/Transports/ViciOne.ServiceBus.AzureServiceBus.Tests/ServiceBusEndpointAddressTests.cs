@@ -8,6 +8,31 @@ public sealed class ServiceBusEndpointAddressTests
     static readonly Uri Host = new("sb://localhost/test-scope");
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-ENDPOINT-ADDRESS", "custom-namespace-port-survives-host-and-entity-address-projection")]
+    public void CustomPort_RemainsOnScopedHostAndEveryEntityAddressForm()
+    {
+        var host = new Uri("sb://localhost:5672/test-scope");
+        var hostAddress = new ServiceBusHostAddress(host);
+
+        Assert.Equal(5672, hostAddress.Port);
+        Assert.Equal(host, (Uri)hostAddress);
+
+        var named = new ServiceBusEndpointAddress(host, "input_queue");
+        var relative = new ServiceBusEndpointAddress(host, new Uri("queue:input_queue"));
+        var absolute = new ServiceBusEndpointAddress(host, new Uri("sb://localhost:5672/test-scope/input_queue"));
+        var topic = new ServiceBusEndpointAddress(host, new Uri("topic:private-topic"));
+
+        Assert.Equal(5672, named.Port);
+        Assert.Equal(5672, relative.Port);
+        Assert.Equal(5672, absolute.Port);
+        Assert.Equal(5672, topic.Port);
+        Assert.Equal(new Uri("sb://localhost:5672/test-scope/input_queue"), (Uri)named);
+        Assert.Equal((Uri)named, (Uri)relative);
+        Assert.Equal((Uri)named, (Uri)absolute);
+        Assert.Equal(new Uri("sb://localhost:5672/private-topic?type=topic"), (Uri)topic);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ASB-ENDPOINT-ADDRESS", "topic-short-address-canonical-roundtrip")]
     public void TopicShortAddress_RoundTripsWithItsProviderType()
     {

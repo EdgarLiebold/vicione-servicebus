@@ -57,6 +57,15 @@ public class ConnectionContextFactory :
         var client = settings.ServiceBusClient;
         var managementClient = settings.ServiceBusAdministrationClient;
 
+        if (client != null && !string.Equals(client.FullyQualifiedNamespace, settings.ServiceUri.Host, StringComparison.OrdinalIgnoreCase))
+            throw new ServiceBusConnectionException("The messaging client namespace does not match the configured host address");
+
+        if (!settings.ServiceUri.IsDefaultPort && (client == null || managementClient == null)
+            && (settings.ConnectionString == null || !HasSharedAccess(settings.ConnectionString)
+                || !ViciOne.ServiceBus.Configuration.ServiceBusHostConfigurator.IsDevelopmentEmulator(settings.ConnectionString)))
+            throw new ServiceBusConnectionException(
+                "A custom port requires a credential-bearing emulator connection string or both preconfigured Service Bus clients");
+
         var clientOptions = new ServiceBusClientOptions
         {
             TransportType = settings.TransportType,
@@ -110,7 +119,8 @@ public class ConnectionContextFactory :
             }
         }
 
-        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped);
+        var namespaceAddress = new UriBuilder(_hostConfiguration.HostAddress) { Path = "", Query = "", Fragment = "" }.Uri;
+        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped, namespaceAddress);
     }
 
     static bool HasSharedAccess(string connectionString)

@@ -33,7 +33,10 @@ public interface IServiceBusHostConfigurator
     /// <remarks>
     /// If a credential is not part of the connection string, one of the other authentication
     /// methods needs to be used. <see cref="NamedKeyCredential"/> or <see cref="SasCredential"/>
-    /// or <see cref="TokenCredential"/>
+    /// or <see cref="TokenCredential"/>. An endpoint-only string cannot use the local emulator
+    /// or a custom port because the separate credential client constructors do not preserve
+    /// those connection-string transport settings. A credential-bearing string with a custom
+    /// port must enable emulator mode.
     /// </remarks>
     string ConnectionString { set; }
 

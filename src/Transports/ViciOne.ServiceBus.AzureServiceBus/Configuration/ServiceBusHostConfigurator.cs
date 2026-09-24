@@ -32,11 +32,16 @@ public class ServiceBusHostConfigurator :
     {
         var hostAddress = new ServiceBusHostAddress(serviceAddress);
 
+        ArgumentNullException.ThrowIfNull(serviceBusClient);
+        ArgumentNullException.ThrowIfNull(serviceBusAdministrationClient);
+        if (!string.Equals(serviceBusClient.FullyQualifiedNamespace, hostAddress.Host, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("The messaging client namespace must match the configured host address", nameof(serviceBusClient));
+
         _settings = new HostSettings
         {
             ServiceUri = hostAddress,
-            ServiceBusClient = serviceBusClient ?? throw new ArgumentNullException(nameof(serviceBusClient)),
-            ServiceBusAdministrationClient = serviceBusAdministrationClient ?? throw new ArgumentNullException(nameof(serviceBusAdministrationClient)),
+            ServiceBusClient = serviceBusClient,
+            ServiceBusAdministrationClient = serviceBusAdministrationClient,
         };
     }
 
@@ -44,32 +49,34 @@ public class ServiceBusHostConfigurator :
     /// <param name="connectionString">The connection string containing at least an endpoint.</param>
     public ServiceBusHostConfigurator(string connectionString)
     {
-        var properties = ServiceBusConnectionStringProperties.Parse(connectionString);
+        (Uri endpoint, bool hasCredentials) = ValidateConnectionString(connectionString);
 
         _settings = new HostSettings
         {
-            ConnectionString = connectionString,
-            ServiceUri = ParseEndpoint(connectionString)!,
+            ConnectionString = hasCredentials ? connectionString : null,
+            ServiceUri = endpoint,
         };
-
-        if (IsMissingCredentials(properties))
-            _settings.ConnectionString = null;
     }
 
     /// <summary>Gets the accumulated namespace settings.</summary>
     public ServiceBusHostSettings Settings => _settings;
 
-    /// <summary>Sets the connection string, provided no other credential type is configured.</summary>
+    /// <summary>Sets a credential-bearing connection string, or clears it when the string contains only an endpoint.</summary>
     public string ConnectionString
     {
         set
         {
-            if (_settings.NamedKeyCredential != null
+            (Uri endpoint, bool hasCredentials) = ValidateConnectionString(value);
+            if (!string.Equals(endpoint.Host, _settings.ServiceUri.Host, StringComparison.OrdinalIgnoreCase)
+                || endpoint.Port != _settings.ServiceUri.Port)
+                throw new ArgumentException("The connection string endpoint must match the configured Service Bus namespace and port", nameof(value));
+
+            if (hasCredentials && (_settings.NamedKeyCredential != null
                 || _settings.SasCredential != null
-                || _settings.TokenCredential != null)
+                || _settings.TokenCredential != null))
                 throw new ArgumentException("Another type of authentication is already being used");
 
-            _settings.ConnectionString = value;
+            _settings.ConnectionString = hasCredentials ? value : null;
         }
     }
 
@@ -78,6 +85,7 @@ public class ServiceBusHostConfigurator :
     {
         set
         {
+            ArgumentNullException.ThrowIfNull(value);
             if (_settings.ConnectionString != null
                 || _settings.SasCredential != null
                 || _settings.TokenCredential != null)
@@ -92,6 +100,7 @@ public class ServiceBusHostConfigurator :
     {
         set
         {
+            ArgumentNullException.ThrowIfNull(value);
             if (_settings.ConnectionString != null
                 || _settings.NamedKeyCredential != null
                 || _settings.TokenCredential != null)
@@ -106,6 +115,7 @@ public class ServiceBusHostConfigurator :
     {
         set
         {
+            ArgumentNullException.ThrowIfNull(value);
             if (_settings.ConnectionString != null
                 || _settings.SasCredential != null
                 || _settings.NamedKeyCredential != null)
@@ -139,10 +149,50 @@ public class ServiceBusHostConfigurator :
         set => _settings.RetryLimit = value;
     }
 
-    static bool IsMissingCredentials(ServiceBusConnectionStringProperties properties)
+    static (Uri Endpoint, bool HasCredentials) ValidateConnectionString(string connectionString)
     {
-        return string.IsNullOrWhiteSpace(properties.SharedAccessKeyName) && string.IsNullOrWhiteSpace(properties.SharedAccessKey)
-            && string.IsNullOrWhiteSpace(properties.SharedAccessSignature);
+        var properties = ServiceBusConnectionStringProperties.Parse(connectionString);
+        if (!string.IsNullOrWhiteSpace(properties.EntityPath))
+            throw new FormatException("An entity-bound connection string cannot configure a Service Bus host");
+
+        bool hasCredentials = HasValidSharedAccessCredentials(properties);
+        Uri endpoint = ParseEndpoint(connectionString) ?? throw new FormatException("Invalid connection string: missing endpoint");
+        bool emulator = IsDevelopmentEmulator(connectionString);
+        if (!endpoint.IsDefaultPort && !emulator)
+            throw new FormatException("A custom-port connection string requires emulator mode");
+        if (!hasCredentials && emulator)
+            throw new FormatException("A credentialless emulator or custom-port connection string cannot configure a Service Bus host");
+
+        return (endpoint, hasCredentials);
+    }
+
+    static bool HasValidSharedAccessCredentials(ServiceBusConnectionStringProperties properties)
+    {
+        bool hasKeyName = !string.IsNullOrWhiteSpace(properties.SharedAccessKeyName);
+        bool hasKey = !string.IsNullOrWhiteSpace(properties.SharedAccessKey);
+        bool hasSignature = !string.IsNullOrWhiteSpace(properties.SharedAccessSignature);
+
+        if (hasKeyName != hasKey || hasSignature && hasKeyName)
+            throw new FormatException("The connection string must contain a complete shared-access key pair or a signature, not both");
+
+        return hasKeyName || hasSignature;
+    }
+
+    internal static bool IsDevelopmentEmulator(string connectionString)
+    {
+        bool emulator = false;
+        foreach (string segment in connectionString.Split(';'))
+        {
+            int separator = segment.IndexOf('=');
+            if (separator > 0 && string.Equals(segment.Substring(0, separator).Trim(), "UseDevelopmentEmulator",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                if (bool.TryParse(segment.Substring(separator + 1).Trim(), out bool enabled))
+                    emulator = enabled;
+            }
+        }
+
+        return emulator;
     }
 
     /// <summary>Extracts and normalizes the namespace endpoint from an Azure connection string.</summary>
@@ -177,10 +227,17 @@ public class ServiceBusHostConfigurator :
                 if (string.IsNullOrEmpty(value))
                     throw new FormatException("Invalid connection string");
 
-                if (!endpointSeen && string.Compare("Endpoint", key, StringComparison.OrdinalIgnoreCase) == 0)
+                if (string.Compare("Endpoint", key, StringComparison.OrdinalIgnoreCase) == 0)
                 {
+                    if (endpointSeen)
+                        throw new FormatException("Invalid connection string: duplicate endpoint");
+
                     endpointSeen = true;
-                    if (Uri.TryCreate(value, UriKind.Absolute, out var result))
+                    if ((!Uri.TryCreate(value, UriKind.Absolute, out var result) || string.IsNullOrEmpty(result.Host))
+                        && !value.Contains("://", StringComparison.Ordinal))
+                        Uri.TryCreate("sb://" + value, UriKind.Absolute, out result);
+
+                    if (result != null && !string.IsNullOrEmpty(result.Host))
                     {
                         var builder = new UriBuilder
                         {
