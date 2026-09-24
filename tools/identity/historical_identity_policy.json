@@ -1,34 +1,44 @@
 {
   "entries": [
     {
+      "path": ".testagent/iteration242/amazon-s3-source-area-review.md",
+      "category": "HISTORICAL_EVIDENCE",
       "allowedGates": [
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 4,
-      "authorizedLinesSha256": "c2fab394193c94409354a8b9c0aecde792cd0d1f7c84f5e966711103d2856efe",
-      "category": "HISTORICAL_EVIDENCE",
-      "path": "evidence/native-tests/obligation-maps/plan.md"
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "29dc271e137dc196a0324eb58d1dde9258cbe32d4a1cf7793e197fb644819f2d"
     },
     {
-      "allowedGates": [
-        "binary-scan",
-        "text-scan"
-      ],
-      "authorizedLineCount": 10,
-      "authorizedLinesSha256": "f67d1c3fc949287f8d397403df14d81bc1756b322ce128dfe3b5c06408bddf6f",
+      "path": ".testagent/iteration242/sqlserver-api-manual-packet.md",
       "category": "HISTORICAL_EVIDENCE",
-      "path": "evidence/native-tests/obligation-maps/research.md"
-    },
-    {
       "allowedGates": [
         "binary-scan",
         "text-scan"
       ],
       "authorizedLineCount": 2,
-      "authorizedLinesSha256": "1eead4443f5925171d8a98f1f6d6d4d23afc8ad0a0facea9bf47a06cf6bca713",
+      "authorizedLinesSha256": "c6b03bacb60213cf49f03bfc007d30d104c8ce56ee76beafa288e1cd6cdb1932"
+    },
+    {
+      "path": ".testagent/plan.md",
       "category": "HISTORICAL_EVIDENCE",
-      "path": "evidence/native-tests/obligation-maps/status.md"
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "ebaa25062139fd321bcc326fa444488f7609ee83f8aaec58a96d3ca6ba4706a5"
+    },
+    {
+      "path": ".testagent/research.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 5,
+      "authorizedLinesSha256": "2cf8c5987a5fc41b97d372ccb3f7e46eb20e43676e923db2b71bc62d82f835e6"
     },
     {
       "allowedGates": [
@@ -45,6 +55,16 @@
         "binary-scan",
         "text-scan"
       ],
+      "authorizedLineCount": 5632,
+      "authorizedLinesSha256": "92da36d37ca86f589d3e3778c02bae63b2a0516ab50cfc8e1609f51e76b704d3",
+      "category": "LEGAL_PROVENANCE",
+      "path": "CHANGELIST.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
       "authorizedLineCount": 1,
       "authorizedLinesSha256": "a067c7079fd85f26a94ec548277e576c359099cc50a357d07eda9e0eb5252211",
       "category": "HISTORICAL_EVIDENCE",
@@ -55,20 +75,20 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 5632,
-      "authorizedLinesSha256": "183479fe1890d438b9306bb138b92c86cf4227aac21749563e405728c1c18b35",
-      "category": "LEGAL_PROVENANCE",
-      "path": "CHANGELIST.md"
-    },
-    {
-      "allowedGates": [
-        "binary-scan",
-        "text-scan"
-      ],
       "authorizedLineCount": 2,
       "authorizedLinesSha256": "bf4d886a129673c8c3bce3dbe15164c7752cb129ab88c788577f00de4ae0c9b9",
       "category": "LEGAL_PROVENANCE",
       "path": "MODIFICATIONS.md"
+    },
+    {
+      "path": "docs/amazon-s3-message-data.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "49318d9e839f860fa9205064754908ca86d877224b21b896b136315b463761a1"
     },
     {
       "allowedGates": [
@@ -229,6 +249,106 @@
       "authorizedLinesSha256": "421b3f4791cdb933a28d8ffca2e882b95b282be10159f59ac85a2d9c74fcd490",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/reslice-0005/REQ-CI-002_RESLICE_0005_STATUS.json"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-DEEP-REVIEW-20260905/REPORT.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "b5a94dc9f66bd539bc2e8769eda5a4ef513dc1d4e52568e67ee534327cf3d40d"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-123/SAGA_TEST_REVIEW.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "56764235ad464238dc5a68f6e9d9656c876c7dbab9780be65dcfa614fd67f6e4"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-124/JOB_AND_RELIABILITY_TEST_REVIEW.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "fdd93bc7991a4a1a14870bb39b053448ad708f65e8fdb660ffc672635ae59d7d"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-131/CORE_OWNER_READING_COMPLETION_AND_SOURCE_CONTRACT_REVIEW.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "dc007dc9d403c7a484188d2edc7e0413f948a0750e14c751b77dfa5ccd5c73f4"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-72-CORE-TRANSPORT-ARCHITECTURE/VALIDATION.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "7853c2537bd88fce02df00dc21a702b39ad1e4921dafc1b8cf7eb734ec581125"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-73-SERIALIZATION-ARCHITECTURE/VALIDATION.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "7853c2537bd88fce02df00dc21a702b39ad1e4921dafc1b8cf7eb734ec581125"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-74-CONTEXT-ARCHITECTURE/VALIDATION.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "71a6ce0bd353d829b2ff73ebdf023be8240bf4e0718cfb6e8abf65ff5d19b368"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-76-RUNTIME-OPERATIONS-OBSERVABILITY/VALIDATION.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "71a6ce0bd353d829b2ff73ebdf023be8240bf4e0718cfb6e8abf65ff5d19b368"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-77-CACHING-CLIENTS/VALIDATION.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "6c9b0373ea0cbbd0d76a9574ba5ea5a2afde10e3f523c4ff893bc1369e94ae65"
+    },
+    {
+      "path": "evidence/WP-F2-SERVICEBUS-SOURCE-ARCHITECTURE-A-PLUS-01/ITERATION-78-CONSUMERS-EVENTS-MESSAGEDATA/VALIDATION.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "30f1a101b9c3bf30a48ff0c19319243513f40504ac04f434efbcbac6eed01891"
     },
     {
       "allowedGates": [
@@ -663,6 +783,36 @@
       "blobSha256": "280a00dd468369b41cc40af0db1eee804d489f10fbe38506b4c252222cfdc435",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "c2fab394193c94409354a8b9c0aecde792cd0d1f7c84f5e966711103d2856efe",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/native-tests/obligation-maps/plan.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 10,
+      "authorizedLinesSha256": "f67d1c3fc949287f8d397403df14d81bc1756b322ce128dfe3b5c06408bddf6f",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/native-tests/obligation-maps/research.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "1eead4443f5925171d8a98f1f6d6d4d23afc8ad0a0facea9bf47a06cf6bca713",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/native-tests/obligation-maps/status.md"
     },
     {
       "allowedGates": [

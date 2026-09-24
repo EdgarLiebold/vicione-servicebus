@@ -275,6 +275,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Removed the unused internal Azure Service Bus `ReadAsBytes` stream helper.
+  It had no source or test call site and was not an externally accessible
+  transport API; keeping its inconsistent stream-position and generic-error
+  behavior would create a false maintenance contract.
 - Saga-index registration now keeps captured-key publication and rollback in
   one focused operation. The admission lock, exception order, and cleanup
   behavior are preserved while the public `Add` path is simpler to review.

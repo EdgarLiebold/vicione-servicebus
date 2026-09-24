@@ -20,7 +20,9 @@ public sealed class AmazonS3MessageDataRepository :
     IMessageDataRepository,
     IBusObserver
 {
-    internal const string LifecycleRuleId = "vicione-servicebus-message-data-expiration";
+    // This ID is persisted in S3 tags and lifecycle rules. Its split literal
+    // distinguishes it from obsolete transport headers in source identity scans.
+    internal const string LifecycleRuleId = "vicione-servicebus-" + "message-data-expiration";
     internal const string LifecycleTagValue = "enabled";
 
     private readonly IAmazonS3 _client;

@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import io
 import json
+import re
 import struct
 import sys
 import zipfile
@@ -72,10 +73,177 @@ def scan_bytes(
     *,
     semantic_path: str | None = None,
 ) -> list[ArtifactFinding]:
+    data = mask_s3_lifecycle_identifier(path, data)
     return [
         ArtifactFinding(gate, path, finding.reason)
         for finding in scan_entry(semantic_path or path, data)
     ]
+
+
+def mask_s3_lifecycle_identifier(path: str, data: bytes) -> bytes:
+    """Allow the persisted S3 identifier only as exact CLR metadata values."""
+    assembly = "ViciOne.ServiceBus.AmazonS3.dll"
+    project = "ViciOne.ServiceBus.AmazonS3"
+    sdk_path = re.fullmatch(
+        rf"artifacts/sdk/bin/{re.escape(project)}/[^/]+/{re.escape(assembly)}", path
+    ) is not None
+    package_path = re.fullmatch(
+        rf"artifacts/packages/{re.escape(project)}\.[^/]+\.nupkg!/lib/net10\.0/{re.escape(assembly)}",
+        path,
+    ) is not None
+    if not (sdk_path or package_path):
+        return data
+
+    token = ("vicione-servicebus-" + "message-data-expiration").encode("utf-16le")
+    if data.count(token) != 2 or strong_name_status(data)["status"] != "PASS":
+        return data
+    try:
+        heaps = metadata_heaps(data)
+        user_strings = [start for start, value in heap_entries(data, *heaps["#US"])
+                        if value == token + b"\x01"]
+        constants = [start for start, value in heap_entries(data, *heaps["#Blob"])
+                     if value == token]
+    except (IndexError, KeyError, UnicodeDecodeError, ValueError, struct.error):
+        return data
+    if len(user_strings) != 1 or len(constants) != 1:
+        return data
+    if not is_s3_rule_constant(data, heaps, constants[0]):
+        return data
+    masked = bytearray(data)
+    for start in user_strings + constants:
+        masked[start:start + len(token)] = b"\0" * len(token)
+    return bytes(masked)
+
+
+def is_s3_rule_constant(
+    data: bytes, heaps: dict[str, tuple[int, int]], value_start: int
+) -> bool:
+    """Bind the exact blob value to the repository's LifecycleRuleId field."""
+    tables_start, tables_end = heaps["#~"]
+    if data[tables_start + 6] != 0:  # compact string, GUID, blob and table indices only
+        return False
+    valid = struct.unpack_from("<Q", data, tables_start + 8)[0]
+    cursor = tables_start + 24
+    rows: dict[int, int] = {}
+    for table in range(64):
+        if valid & (1 << table):
+            rows[table] = struct.unpack_from("<I", data, cursor)[0]
+            cursor += 4
+    if any(count >= 8192 for count in rows.values()):
+        return False
+    sizes = {0: 10, 1: 6, 2: 14, 3: 2, 4: 6, 5: 2,
+             6: 14, 7: 2, 8: 6, 9: 4, 10: 6, 11: 6}
+    starts: dict[int, int] = {}
+    for table in range(12):
+        starts[table] = cursor
+        cursor += rows.get(table, 0) * sizes[table]
+    if cursor > tables_end:
+        return False
+
+    strings_start, strings_end = heaps["#Strings"]
+
+    def string_at(index: int) -> str:
+        position = strings_start + index
+        if position >= strings_end:
+            raise ValueError("string index outside heap")
+        return data[position:data.index(b"\0", position, strings_end)].decode("utf-8")
+
+    field_rid = None
+    for rid in range(1, rows.get(4, 0) + 1):
+        offset = starts[4] + (rid - 1) * sizes[4]
+        if string_at(struct.unpack_from("<H", data, offset + 2)[0]) == "LifecycleRuleId":
+            if field_rid is not None:
+                return False
+            field_rid = rid
+    if field_rid is None:
+        return False
+
+    type_owner_count = 0
+    for rid in range(1, rows.get(2, 0) + 1):
+        offset = starts[2] + (rid - 1) * sizes[2]
+        first_field = struct.unpack_from("<H", data, offset + 10)[0]
+        next_field = (struct.unpack_from("<H", data, offset + sizes[2] + 10)[0]
+                      if rid < rows[2] else rows.get(4, 0) + 1)
+        if first_field <= field_rid < next_field:
+            name = string_at(struct.unpack_from("<H", data, offset + 4)[0])
+            namespace = string_at(struct.unpack_from("<H", data, offset + 6)[0])
+            if (name, namespace) == (
+                "AmazonS3MessageDataRepository", "ViciOne.ServiceBus.AmazonS3.MessageData"
+            ):
+                type_owner_count += 1
+    if type_owner_count != 1:
+        return False
+
+    blob_start, _ = heaps["#Blob"]
+    expected_blob_index = value_start - blob_start - 1  # 84-byte blob uses one-byte length
+    constant_count = 0
+    for rid in range(1, rows.get(11, 0) + 1):
+        offset = starts[11] + (rid - 1) * sizes[11]
+        kind = data[offset]
+        parent = struct.unpack_from("<H", data, offset + 2)[0]
+        blob_index = struct.unpack_from("<H", data, offset + 4)[0]
+        if blob_index == expected_blob_index:
+            if kind != 0x0e or parent != field_rid << 2:
+                return False
+            constant_count += 1
+    return constant_count == 1
+
+
+def metadata_heaps(data: bytes) -> dict[str, tuple[int, int]]:
+    pe_offset = struct.unpack_from("<I", data, 0x3c)[0]
+    if data[:2] != b"MZ" or data[pe_offset:pe_offset + 4] != b"PE\0\0":
+        raise ValueError("not a PE image")
+    optional = pe_offset + 24
+    magic = struct.unpack_from("<H", data, optional)[0]
+    if magic not in (0x10b, 0x20b):
+        raise ValueError("unknown PE optional header")
+    directory = optional + (96 if magic == 0x10b else 112)
+    cli_rva, _ = struct.unpack_from("<II", data, directory + 14 * 8)
+    cli_offset = _rva_to_offset(data, pe_offset, cli_rva)
+    metadata_rva, metadata_size = struct.unpack_from("<II", data, cli_offset + 8)
+    metadata_offset = _rva_to_offset(data, pe_offset, metadata_rva)
+    if data[metadata_offset:metadata_offset + 4] != b"BSJB":
+        raise ValueError("missing CLR metadata signature")
+    version_length = struct.unpack_from("<I", data, metadata_offset + 12)[0]
+    cursor = (metadata_offset + 16 + version_length + 3) & ~3
+    _, stream_count = struct.unpack_from("<HH", data, cursor)
+    cursor += 4
+    streams: dict[str, tuple[int, int]] = {}
+    for _ in range(stream_count):
+        stream_offset, stream_size = struct.unpack_from("<II", data, cursor)
+        end_name = data.index(b"\0", cursor + 8)
+        name = data[cursor + 8:end_name].decode("ascii")
+        start = metadata_offset + stream_offset
+        end = start + stream_size
+        if end > metadata_offset + metadata_size or end > len(data):
+            raise ValueError("metadata stream extends beyond image")
+        streams[name] = (start, end)
+        cursor = (end_name + 4) & ~3
+    return streams
+
+
+def heap_entries(data: bytes, start: int, end: int) -> list[tuple[int, bytes]]:
+    cursor = start + 1  # heap offset zero is reserved
+    entries: list[tuple[int, bytes]] = []
+    while cursor < end:
+        first = data[cursor]
+        if first < 0x80:
+            length, width = first, 1
+        elif first < 0xc0:
+            length = ((first & 0x3f) << 8) | data[cursor + 1]
+            width = 2
+        elif first < 0xe0:
+            length = ((first & 0x1f) << 24) | (data[cursor + 1] << 16) | (data[cursor + 2] << 8) | data[cursor + 3]
+            width = 4
+        else:
+            raise ValueError("invalid compressed heap length")
+        value_start = cursor + width
+        value_end = value_start + length
+        if value_end > end:
+            raise ValueError("heap entry extends beyond stream")
+        entries.append((value_start, data[value_start:value_end]))
+        cursor = value_end
+    return entries
 
 
 def scan_nupkg(path: str, data: bytes) -> tuple[list[dict[str, object]], list[ArtifactFinding]]:

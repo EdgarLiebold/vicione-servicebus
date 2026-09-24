@@ -9,6 +9,8 @@ namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.MessageData;
 
 public sealed class AmazonS3MessageDataRepositoryTests
 {
+    private static string PersistedRuleId => string.Join("-", "vicione", "servicebus", "message", "data", "expiration");
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-PERSISTENCE", "exact-bytes-round-trip-through-run-scoped-bucket")]
     public async Task PutAndGet_RoundTripExactBytesThroughRunScopedBucketAsync()
@@ -104,7 +106,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
                         Rules =
                         [
                             Rule("foreign-archive-rule", 30, "foreign/"),
-                            TaggedRule(AmazonS3MessageDataRepository.LifecycleRuleId, 3),
+                            TaggedRule(PersistedRuleId, 3),
                         ],
                     },
                 },
@@ -124,7 +126,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
             rule => rule.Id == "foreign-archive-rule");
         LifecycleRule owned = Assert.Single(
             response.Configuration.Rules,
-            rule => rule.Id == AmazonS3MessageDataRepository.LifecycleRuleId);
+            rule => rule.Id == PersistedRuleId);
         Assert.Equal(30, foreign.Expiration.Days);
         Assert.Equal(LifecycleRuleStatus.Enabled, foreign.Status);
         Assert.Equal(
@@ -133,7 +135,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
         Assert.Equal(14, owned.Expiration.Days);
         Assert.Equal(LifecycleRuleStatus.Enabled, owned.Status);
         Tag lifecycleTag = Assert.IsType<LifecycleTagPredicate>(owned.Filter.LifecycleFilterPredicate).Tag;
-        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, lifecycleTag.Key);
+        Assert.Equal(PersistedRuleId, lifecycleTag.Key);
         Assert.Equal("enabled", lifecycleTag.Value);
     }
 
@@ -157,7 +159,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
                     BucketName = fixture.BucketName,
                     Configuration = new LifecycleConfiguration
                     {
-                        Rules = [Rule(AmazonS3MessageDataRepository.LifecycleRuleId, 14, string.Empty)],
+                        Rules = [Rule(PersistedRuleId, 14, string.Empty)],
                     },
                 },
                 cancellationToken)
@@ -285,7 +287,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
 
         Assert.Empty(indefiniteTags.Tagging ?? []);
         Tag tag = Assert.Single(expiringTags.Tagging ?? []);
-        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, tag.Key);
+        Assert.Equal(PersistedRuleId, tag.Key);
         Assert.Equal("enabled", tag.Value);
     }
 

@@ -13,6 +13,8 @@ namespace ViciOne.ServiceBus.AmazonS3.Tests.MessageData;
 
 public sealed class AmazonS3MessageDataObserverTests
 {
+    private static string PersistedRuleId => string.Join("-", "vicione", "servicebus", "message", "data", "expiration");
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-OBSERVER", "lifecycle-no-op-and-prestart-fail-fast-boundary")]
     public async Task BusObserverLifecycle_IsNoOpExceptFailFastPreStartAsync()
@@ -93,7 +95,7 @@ public sealed class AmazonS3MessageDataObserverTests
         typeof(LifecycleRule).GetProperty("Prefix")!.SetValue(legacyForeign, "legacy/");
         var ownedWithUnconfiguredAction = new LifecycleRule
         {
-            Id = AmazonS3MessageDataRepository.LifecycleRuleId,
+            Id = PersistedRuleId,
             Status = LifecycleRuleStatus.Enabled,
             Filter = new LifecycleFilter
             {
@@ -101,7 +103,7 @@ public sealed class AmazonS3MessageDataObserverTests
                 {
                     Tag = new Tag
                     {
-                        Key = AmazonS3MessageDataRepository.LifecycleRuleId,
+                        Key = PersistedRuleId,
                         Value = AmazonS3MessageDataRepository.LifecycleTagValue,
                     },
                 },
@@ -143,7 +145,7 @@ public sealed class AmazonS3MessageDataObserverTests
         Assert.Equal(180, actualLegacyForeign.Expiration.Days);
         LifecycleRule actualOwned = Assert.Single(
             request.Configuration.Rules,
-            rule => rule.Id == AmazonS3MessageDataRepository.LifecycleRuleId);
+            rule => rule.Id == PersistedRuleId);
         Assert.Equal(LifecycleRuleStatus.Enabled, actualOwned.Status);
         Assert.Equal(14, actualOwned.Expiration.Days);
         Assert.Empty(actualOwned.Transitions ?? []);
@@ -151,7 +153,7 @@ public sealed class AmazonS3MessageDataObserverTests
         Assert.Null(actualOwned.NoncurrentVersionExpiration);
         Assert.Empty(actualOwned.NoncurrentVersionTransitions ?? []);
         Tag lifecycleTag = Assert.IsType<LifecycleTagPredicate>(actualOwned.Filter.LifecycleFilterPredicate).Tag;
-        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, lifecycleTag.Key);
+        Assert.Equal(PersistedRuleId, lifecycleTag.Key);
         Assert.Equal("enabled", lifecycleTag.Value);
     }
 
@@ -176,11 +178,12 @@ public sealed class AmazonS3MessageDataObserverTests
         PutLifecycleConfigurationRequest lifecycleRequest = Assert.IsType<PutLifecycleConfigurationRequest>(
             proxy.PutRequest);
         LifecycleRule owned = Assert.Single(lifecycleRequest.Configuration.Rules);
-        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, owned.Id);
+        string persistedRuleId = PersistedRuleId;
+        Assert.Equal(persistedRuleId, owned.Id);
         Assert.Equal(7, owned.Expiration.Days);
         Assert.Equal(LifecycleRuleStatus.Enabled, owned.Status);
         Tag lifecycleTag = Assert.IsType<LifecycleTagPredicate>(owned.Filter.LifecycleFilterPredicate).Tag;
-        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, lifecycleTag.Key);
+        Assert.Equal(persistedRuleId, lifecycleTag.Key);
         Assert.Equal("enabled", lifecycleTag.Value);
         Assert.Equal(cancellationToken, proxy.ObservedCancellationToken);
     }
@@ -407,7 +410,7 @@ public sealed class AmazonS3MessageDataObserverTests
     private static LifecycleRule CurrentOwnedRule(int expirationDays) =>
         new()
         {
-            Id = AmazonS3MessageDataRepository.LifecycleRuleId,
+            Id = PersistedRuleId,
             Status = LifecycleRuleStatus.Enabled,
             Filter = new LifecycleFilter
             {
@@ -415,7 +418,7 @@ public sealed class AmazonS3MessageDataObserverTests
                 {
                     Tag = new Tag
                     {
-                        Key = AmazonS3MessageDataRepository.LifecycleRuleId,
+                        Key = PersistedRuleId,
                         Value = AmazonS3MessageDataRepository.LifecycleTagValue,
                     },
                 },
