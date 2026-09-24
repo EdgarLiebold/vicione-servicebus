@@ -99,6 +99,56 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "relative-destination-rejection-does-not-reserve-idempotency-key")]
+    public async Task TypedSender_RelativeDestinationCannotReserveAnIdempotencyKeyAsync()
+    {
+        var destination = new Uri("loopback://typed-destination-boundary/orders");
+        var services = new ServiceCollection();
+        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://typed-destination-boundary/"));
+                bus.Route<TypedMessage>(destination);
+            });
+            configuration.UseReliableMessaging(durable =>
+            {
+                durable.UseInMemoryStore();
+                ConfigureReliablePolicy(durable);
+                durable.AddMessageContract<TypedMessage>("vicione.tests.destination-boundary");
+            });
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IDurableSender<IBus> sender = scope.ServiceProvider.GetRequiredService<IDurableSender<IBus>>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
+        var options = new DurableSendOptions { IdempotencyKey = new DurableSendId(GuidFrom(23)) };
+        var message = new TypedMessage("persist only for an absolute destination");
+
+        ArgumentException failure = await Assert.ThrowsAsync<ArgumentException>(() => sender.SendAsync(
+            new Uri("orders", UriKind.Relative), message, options, TestCancellationToken));
+
+        Assert.Equal("destinationAddress", failure.ParamName);
+        Assert.Contains("absolute URI", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(0, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+
+        DurableSendReceipt accepted = await sender.SendAsync(destination, message, options, TestCancellationToken);
+        DurableSendDelivery retained = Assert.Single(await store.ClaimDueAsync(
+            Epoch.AddYears(1), 1, TimeSpan.FromMinutes(1), TestCancellationToken));
+        Assert.True(accepted.IsNew);
+        Assert.Equal(options.IdempotencyKey, retained.Message.Id);
+        Assert.Equal(destination, retained.Message.DestinationAddress);
+        Assert.Equal(1, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "multibus-facades-routes-stores-and-identities-are-isolated")]
     public async Task TypedSender_MultiBusKeepsFacadeRouteStoreAndPersistenceIdentityIsolatedAsync()
     {

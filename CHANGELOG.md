@@ -267,6 +267,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- The typed Durable Sender regression suite now verifies that a relative
+  destination is rejected without reserving its idempotency key or writing an
+  outbox record. A retry with the same key and an absolute destination must
+  persist exactly one intent.
 - Request-rate construction now calculates the rounded-up request limit
   without overflowing and caps the default concurrent result capacity at the
   largest supported integer. Waiting for result capacity now responds to
