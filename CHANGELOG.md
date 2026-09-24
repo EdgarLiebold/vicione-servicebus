@@ -267,6 +267,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Endpoint QoS validation now resolves each endpoint in a focused helper while
+  preserving declaration order, canonical values, and aggregated diagnostics.
+  A new regression test verifies that endpoint-owned and consumer-owned QoS
+  for one dedicated endpoint must agree.
 - Recurring-publish scheduler tests now verify that both endpoint-backed and
   publish-backed schedulers resolve the runtime message type to the correct
   destination, preserve the schedule and payload in the command, forward the

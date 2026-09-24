@@ -33,44 +33,7 @@ public sealed class EndpointQosTopologyValidator
 
         foreach (IGrouping<string, EndpointQosDeclaration> endpoint in endpoints)
         {
-            EndpointQosDeclaration[] items = endpoint.ToArray();
-            Type[] consumers = items
-                .Select(static declaration => declaration.ConsumerType)
-                .Distinct()
-                .ToArray();
-            EndpointQosDeclaration[] endpointOwned = items
-                .Where(static declaration => declaration.Ownership == EndpointQosOwnership.Endpoint && declaration.Qos.IsSpecified)
-                .ToArray();
-            EndpointQosDeclaration[] consumerOwned = items
-                .Where(static declaration => declaration.Ownership == EndpointQosOwnership.ConsumerDefinition && declaration.Qos.IsSpecified)
-                .ToArray();
-
-            EndpointTransportQos? canonical = TryGetCanonical(endpoint.Key, endpointOwned, failures);
-
-            if (consumerOwned.Length > 0)
-            {
-                if (consumers.Length > 1)
-                {
-                    string offenders = string.Join(", ", consumerOwned
-                        .Select(static declaration => declaration.ConsumerType.FullName ?? declaration.ConsumerType.Name)
-                        .Distinct(StringComparer.Ordinal)
-                        .Order(StringComparer.Ordinal));
-                    failures.Add(
-                        $"Endpoint '{endpoint.Key}' is shared by {consumers.Length} consumers, but endpoint transport QoS was declared "
-                        + $"from consumer definition(s): {offenders}. Configure endpoint QoS at the endpoint boundary instead.");
-                }
-                else
-                {
-                    EndpointTransportQos? legacyCanonical = TryGetCanonical(endpoint.Key, consumerOwned, failures);
-                    if (canonical is not null && legacyCanonical is not null && canonical != legacyCanonical)
-                    {
-                        failures.Add(
-                            $"Endpoint '{endpoint.Key}' has conflicting endpoint-owned and consumer-owned transport QoS declarations.");
-                    }
-                    else
-                        canonical ??= legacyCanonical;
-                }
-            }
+            EndpointTransportQos? canonical = ResolveEndpoint(endpoint, failures);
 
             if (canonical is not null)
                 result.Add(endpoint.Key, canonical);
@@ -81,6 +44,52 @@ public sealed class EndpointQosTopologyValidator
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Aggregate(failures));
 
         return result.ToFrozenDictionary(StringComparer.Ordinal);
+    }
+
+    private static EndpointTransportQos? ResolveEndpoint(
+        IGrouping<string, EndpointQosDeclaration> endpoint,
+        List<string> failures)
+    {
+        EndpointQosDeclaration[] items = endpoint.ToArray();
+        Type[] consumers = items
+            .Select(static declaration => declaration.ConsumerType)
+            .Distinct()
+            .ToArray();
+        EndpointQosDeclaration[] endpointOwned = items
+            .Where(static declaration => declaration.Ownership == EndpointQosOwnership.Endpoint && declaration.Qos.IsSpecified)
+            .ToArray();
+        EndpointQosDeclaration[] consumerOwned = items
+            .Where(static declaration => declaration.Ownership == EndpointQosOwnership.ConsumerDefinition && declaration.Qos.IsSpecified)
+            .ToArray();
+
+        EndpointTransportQos? canonical = TryGetCanonical(endpoint.Key, endpointOwned, failures);
+
+        if (consumerOwned.Length > 0)
+        {
+            if (consumers.Length > 1)
+            {
+                string offenders = string.Join(", ", consumerOwned
+                    .Select(static declaration => declaration.ConsumerType.FullName ?? declaration.ConsumerType.Name)
+                    .Distinct(StringComparer.Ordinal)
+                    .Order(StringComparer.Ordinal));
+                failures.Add(
+                    $"Endpoint '{endpoint.Key}' is shared by {consumers.Length} consumers, but endpoint transport QoS was declared "
+                    + $"from consumer definition(s): {offenders}. Configure endpoint QoS at the endpoint boundary instead.");
+            }
+            else
+            {
+                EndpointTransportQos? legacyCanonical = TryGetCanonical(endpoint.Key, consumerOwned, failures);
+                if (canonical is not null && legacyCanonical is not null && canonical != legacyCanonical)
+                {
+                    failures.Add(
+                        $"Endpoint '{endpoint.Key}' has conflicting endpoint-owned and consumer-owned transport QoS declarations.");
+                }
+                else
+                    canonical ??= legacyCanonical;
+            }
+        }
+
+        return canonical;
     }
 
     private static EndpointTransportQos? TryGetCanonical(

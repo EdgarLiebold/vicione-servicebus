@@ -56,6 +56,35 @@ public sealed class EndpointQosTopologyValidatorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-V5-ENDPOINT-QOS-OWNERSHIP", "dedicated-endpoint-and-consumer-declarations-must-agree")]
+    public void DedicatedEndpoint_RequiresMatchingEndpointAndConsumerOwnedValues()
+    {
+        var endpointQos = new EndpointTransportQos { PrefetchCount = 4, ConcurrentDeliveryLimit = 2 };
+        var matchingConsumerQos = new EndpointTransportQos { PrefetchCount = 4, ConcurrentDeliveryLimit = 2 };
+        EndpointQosDeclaration endpoint = new("dedicated", typeof(FirstConsumer), endpointQos, EndpointQosOwnership.Endpoint);
+        EndpointQosDeclaration matching = new("dedicated", typeof(FirstConsumer), matchingConsumerQos,
+            EndpointQosOwnership.ConsumerDefinition);
+
+        FrozenDictionary<string, EndpointTransportQos> resolved = _validator.Validate([matching, endpoint]);
+        FrozenDictionary<string, EndpointTransportQos> reversed = _validator.Validate([endpoint, matching]);
+
+        Assert.Single(resolved);
+        Assert.Same(endpointQos, resolved["dedicated"]);
+        Assert.Single(reversed);
+        Assert.Same(endpointQos, reversed["dedicated"]);
+
+        EndpointQosDeclaration conflicting = new("dedicated", typeof(FirstConsumer),
+            new EndpointTransportQos { PrefetchCount = 4, ConcurrentDeliveryLimit = 3 },
+            EndpointQosOwnership.ConsumerDefinition);
+        EndpointQosConfigurationException failure = Assert.Throws<EndpointQosConfigurationException>(() =>
+            _validator.Validate([endpoint, conflicting]));
+
+        Assert.Contains("Endpoint 'dedicated'", failure.Message, StringComparison.Ordinal);
+        Assert.Contains("conflicting endpoint-owned and consumer-owned", failure.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain(Environment.NewLine, failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-V5-ENDPOINT-QOS-OWNERSHIP", "conflicts-aggregate-deterministically")]
     public void ConflictingEndpointValues_AggregateWithConsumerOwnershipFailures()
     {
