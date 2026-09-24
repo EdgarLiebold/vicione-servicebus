@@ -285,6 +285,11 @@ entry below records what the current work changed for anyone reading the source.
   Emulator regressions verify both mixed-client directions with real queue
   administration and exact message delivery: the factory fills in the missing
   client while continuing to use the caller-supplied client.
+- Azure Service Bus connection-string endpoint parsing now separates segment
+  validation from URI normalization. Direct public-parser tests reject a second
+  endpoint even when its key uses different casing, reject malformed segments
+  before or after a valid endpoint, and preserve a schemaless scoped endpoint
+  through leading, repeated, and trailing delimiters.
 - The source-owned consume-transform pipeline test now checks the public
   delegate-based property transformation with both present and null source
   values. It verifies that the delegate sees the original message and

@@ -476,6 +476,41 @@ public sealed class ServiceBusHostAndNameValidationTests
         Assert.Equal("Invalid connection string", exception.Message);
     }
 
+    [Theory]
+    [InlineData("Endpoint=sb://first.servicebus.windows.net/;Endpoint=sb://second.servicebus.windows.net/")]
+    [InlineData("endpoint=sb://first.servicebus.windows.net/;ENDPOINT=sb://second.servicebus.windows.net/")]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "public-parser-rejects-duplicate-endpoints")]
+    public void ParseEndpoint_RejectsASecondEndpointInsteadOfSelectingEitherNamespace(string connectionString)
+    {
+        FormatException exception = Assert.Throws<FormatException>(
+            () => ServiceBusHostConfigurator.ParseEndpoint(connectionString));
+
+        Assert.Equal("Invalid connection string: duplicate endpoint", exception.Message);
+    }
+
+    [Theory]
+    [InlineData("Endpoint=sb://namespace.servicebus.windows.net/;malformed")]
+    [InlineData("malformed;Endpoint=sb://namespace.servicebus.windows.net/")]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "public-parser-validates-all-segments")]
+    public void ParseEndpoint_RejectsMalformedSegmentBeforeOrAfterAValidEndpoint(string connectionString)
+    {
+        FormatException exception = Assert.Throws<FormatException>(
+            () => ServiceBusHostConfigurator.ParseEndpoint(connectionString));
+
+        Assert.Equal("Invalid connection string", exception.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "public-parser-preserves-delimiters-and-schemaless-scope")]
+    public void ParseEndpoint_LeadingRepeatedAndTrailingDelimitersPreserveSchemalessScopedEndpoint()
+    {
+        const string connectionString = ";Ignored=value;;Endpoint=localhost:5672/scope;";
+
+        Uri? endpoint = ServiceBusHostConfigurator.ParseEndpoint(connectionString);
+
+        Assert.Equal(new Uri("sb://localhost:5672/scope"), endpoint);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-ENTITY-NAMES", "entity-and-subscription-boundaries")]
     public void EntityAndSubscriptionNames_EnforceProviderLimitsAndCharacters()

@@ -208,54 +208,65 @@ public class ServiceBusHostConfigurator :
         {
             separatorIndex = connectionString.IndexOf(';', startIndex + 1);
             var item = separatorIndex < 0 ? connectionString.Substring(startIndex) : connectionString.Substring(startIndex, separatorIndex - startIndex);
-            var index = item.IndexOf('=');
-            if (index >= 0)
-            {
-                var key = item.Substring(1 - itemIndex, index - 1 + itemIndex);
-                var value = item.Substring(index + 1);
-                if (string.IsNullOrWhiteSpace(key))
-                    throw new FormatException("Invalid connection string");
-
-                key = key.Trim();
-                if (!string.IsNullOrEmpty(value) && (char.IsWhiteSpace(value[0]) || char.IsWhiteSpace(value[value.Length - 1])))
-                    value = value.Trim();
-                if (string.IsNullOrEmpty(value))
-                    throw new FormatException("Invalid connection string");
-
-                if (string.Compare("Endpoint", key, StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    if (endpointSeen)
-                        throw new FormatException("Invalid connection string: duplicate endpoint");
-
-                    endpointSeen = true;
-                    if ((!Uri.TryCreate(value, UriKind.Absolute, out var result) || string.IsNullOrEmpty(result.Host))
-                        && !value.Contains("://", StringComparison.Ordinal))
-                        Uri.TryCreate("sb://" + value, UriKind.Absolute, out result);
-
-                    if (result != null && !string.IsNullOrEmpty(result.Host))
-                    {
-                        var builder = new UriBuilder
-                        {
-                            Scheme = "sb",
-                            Host = result.Host,
-                            Path = result.AbsolutePath,
-                            Port = result.IsDefaultPort ? -1 : result.Port
-                        };
-
-                        if (Uri.CheckHostName(builder.Host) == UriHostNameType.Unknown)
-                            throw new FormatException("Invalid connection string");
-
-                        endpoint = builder.Uri;
-                    }
-                }
-            }
-            else if (item.Length != 1 || item[0] != ';')
-                throw new FormatException("Invalid connection string");
+            endpoint = ParseEndpointItem(item, itemIndex, endpoint, ref endpointSeen);
 
             itemIndex = 0;
             startIndex = separatorIndex;
         }
 
         return endpoint;
+    }
+
+    static Uri? ParseEndpointItem(string item, int itemIndex, Uri? endpoint, ref bool endpointSeen)
+    {
+        var index = item.IndexOf('=');
+        if (index < 0)
+        {
+            if (item.Length != 1 || item[0] != ';')
+                throw new FormatException("Invalid connection string");
+            return endpoint;
+        }
+
+        var key = item.Substring(1 - itemIndex, index - 1 + itemIndex);
+        var value = item.Substring(index + 1);
+        if (string.IsNullOrWhiteSpace(key))
+            throw new FormatException("Invalid connection string");
+
+        key = key.Trim();
+        if (!string.IsNullOrEmpty(value) && (char.IsWhiteSpace(value[0]) || char.IsWhiteSpace(value[value.Length - 1])))
+            value = value.Trim();
+        if (string.IsNullOrEmpty(value))
+            throw new FormatException("Invalid connection string");
+
+        if (string.Compare("Endpoint", key, StringComparison.OrdinalIgnoreCase) != 0)
+            return endpoint;
+        if (endpointSeen)
+            throw new FormatException("Invalid connection string: duplicate endpoint");
+
+        endpointSeen = true;
+        return NormalizeEndpoint(value);
+    }
+
+    static Uri? NormalizeEndpoint(string value)
+    {
+        if ((!Uri.TryCreate(value, UriKind.Absolute, out var result) || string.IsNullOrEmpty(result.Host))
+            && !value.Contains("://", StringComparison.Ordinal))
+            Uri.TryCreate("sb://" + value, UriKind.Absolute, out result);
+
+        if (result == null || string.IsNullOrEmpty(result.Host))
+            return null;
+
+        var builder = new UriBuilder
+        {
+            Scheme = "sb",
+            Host = result.Host,
+            Path = result.AbsolutePath,
+            Port = result.IsDefaultPort ? -1 : result.Port
+        };
+
+        if (Uri.CheckHostName(builder.Host) == UriHostNameType.Unknown)
+            throw new FormatException("Invalid connection string");
+
+        return builder.Uri;
     }
 }
