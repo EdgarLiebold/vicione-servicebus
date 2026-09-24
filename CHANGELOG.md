@@ -267,6 +267,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Recurring-publish scheduler tests now verify that both endpoint-backed and
+  publish-backed schedulers resolve the runtime message type to the correct
+  destination, preserve the schedule and payload in the command, forward the
+  cancellation token, and return a matching handle.
 - Amazon SQS host tests now construct the standard SQS and SNS SDK clients
   without sending requests. They verify that both use the configured host
   region when explicit credentials are supplied and that distinct

@@ -296,18 +296,54 @@ public sealed class RecurringSchedulerContractTests
         Assert.Empty(recording.Calls);
     }
 
-    private static IRecurringMessageScheduler CreateRecordingScheduler(out RecordingSendEndpointProxy recording)
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "runtime-recurring-publish-resolves-destination-and-preserves-command")]
+    public async Task RuntimeRecurringPublish_ResolvesDestinationAndPreservesTheCommandAsync(bool publishControlCommand)
+    {
+        IBusTopology topology = DispatchProxy.Create<IBusTopology, RecordingPublishAddressTopologyProxy>();
+        var addressLookup = (RecordingPublishAddressTopologyProxy)(object)topology;
+        RecordingSendEndpointProxy? sendRecording = null;
+        RecordingPublishEndpointProxy? publishRecording = null;
+        IRecurringMessageScheduler scheduler = publishControlCommand
+            ? CreateRecordingPublishScheduler(out publishRecording, topology)
+            : CreateRecordingScheduler(out sendRecording, topology);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var payload = new RecurringPayload("publish-order-45");
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage handle = await scheduler.ScheduleRecurringPublishAsync(schedule, (object)payload, cancellation.Token);
+
+        Assert.Equal(typeof(RecurringPayload), Assert.Single(addressLookup.Lookups));
+        var call = Assert.Single(publishControlCommand ? publishRecording!.Calls : sendRecording!.Calls);
+        var command = Assert.IsType<ScheduleRecurringMessageCommand<RecurringPayload>>(call.Arguments[0]);
+        Assert.Same(schedule, command.Schedule);
+        Assert.Same(payload, command.Payload);
+        Assert.Equal(DestinationAddress, command.Destination);
+        Assert.Contains(MessageUrn.ForTypeString<RecurringPayload>(), command.PayloadType);
+        Assert.Contains(MessageUrn.ForTypeString<IRecurringPayload>(), command.PayloadType);
+        Assert.Equal(2, command.PayloadType.Length);
+        Assert.Equal(typeof(ScheduleRecurringMessage), call.Method.GetGenericArguments()[0]);
+        Assert.Equal(cancellation.Token, call.Arguments[^1]);
+        var typedHandle = Assert.IsType<ScheduledRecurringMessageHandle<RecurringPayload>>(handle);
+        Assert.Same(schedule, typedHandle.Schedule);
+        Assert.Same(payload, typedHandle.Payload);
+        Assert.Equal(DestinationAddress, typedHandle.Destination);
+    }
+
+    private static IRecurringMessageScheduler CreateRecordingScheduler(out RecordingSendEndpointProxy recording, IBusTopology? topology = null)
     {
         ISendEndpoint endpoint = DispatchProxy.Create<IAdvancedSendEndpoint, RecordingSendEndpointProxy>();
         recording = (RecordingSendEndpointProxy)(object)endpoint;
-        return new EndpointRecurringMessageScheduler(endpoint);
+        return new EndpointRecurringMessageScheduler(endpoint, topology);
     }
 
-    private static IRecurringMessageScheduler CreateRecordingPublishScheduler(out RecordingPublishEndpointProxy recording)
+    private static IRecurringMessageScheduler CreateRecordingPublishScheduler(out RecordingPublishEndpointProxy recording, IBusTopology? topology = null)
     {
         IPublishEndpoint endpoint = DispatchProxy.Create<AdvancedPublishEndpoint, RecordingPublishEndpointProxy>();
         recording = (RecordingPublishEndpointProxy)(object)endpoint;
-        return new PublishRecurringMessageScheduler(endpoint);
+        return new PublishRecurringMessageScheduler(endpoint, topology);
     }
 
     private static async Task<Exception> CaptureInvocationExceptionAsync(MethodInfo method, object target, object?[] arguments)
@@ -353,6 +389,23 @@ public sealed class RecurringSchedulerContractTests
                 return false;
 
             throw new InvalidOperationException($"The topology boundary invoked {targetMethod?.Name}.");
+        }
+    }
+
+    private class RecordingPublishAddressTopologyProxy : DispatchProxy
+    {
+        public List<Type> Lookups { get; } = [];
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(IBusTopology.TryGetPublishAddress)
+                || args is not { Length: 2 }
+                || args[0] is not Type messageType)
+                throw new InvalidOperationException($"The topology boundary invoked {targetMethod?.Name}.");
+
+            Lookups.Add(messageType);
+            args[1] = DestinationAddress;
+            return true;
         }
     }
 
