@@ -267,6 +267,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- The EF Core reliable-inbox regression suite now verifies cancellation after
+  business data and the consumed fence have been flushed inside a transaction.
+  The cancellation must roll back both records, clear the scoped change
+  tracker, and permit the same delivery identity to commit on its first
+  subsequent attempt.
 - The typed Durable Sender regression suite now verifies that a relative
   destination is rejected without reserving its idempotency key or writing an
   outbox record. A retry with the same key and an absolute destination must

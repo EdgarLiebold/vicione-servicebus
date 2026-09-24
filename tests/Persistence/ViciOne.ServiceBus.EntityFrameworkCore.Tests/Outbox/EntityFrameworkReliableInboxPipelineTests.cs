@@ -2,9 +2,11 @@ using System.Threading.Channels;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
@@ -124,6 +126,92 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         Assert.Equal(0, fixture.Events.Count);
         await using ReliableInboxDbContext verification = fixture.CreateContext();
         Assert.Empty(await verification.BusinessRecords.ToListAsync(fixture.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "cancellation-after-save-rolls-back-business-and-consumed-fence-and-allows-first-attempt-retry")]
+    public async Task CancellationAfterSave_RollsBackBusinessAndConsumedFenceWithoutChargingAnAttemptAsync()
+    {
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
+        Guid messageId = Guid.NewGuid();
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        using var cancellation = new CancellationTokenSource();
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, cancellation.Token, messageId: messageId);
+            int invocations = 0;
+            IPipe<OutboxConsumeContext<ReliableInboxCommand>> next = Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(
+                async context =>
+                {
+                    invocations++;
+                    Assert.Equal(1, context.ReceiveCount);
+                    db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "canceled" });
+                    await context.SetConsumedAsync(cancellation.Token);
+                    Assert.Equal(1, await db.BusinessRecords.AsNoTracking().CountAsync(
+                        row => row.Id == command.CorrelationId, cancellation.Token));
+                    ReliableInboxRecord staged = await db.Set<ReliableInboxRecord>().AsNoTracking().SingleAsync(
+                        row => row.MessageId == messageId && row.ConsumerId == options.ConsumerId,
+                        cancellation.Token);
+                    Assert.Equal(ReliableInboxStatus.Consumed, staged.Status);
+                    cancellation.Cancel();
+                    throw new OperationCanceledException(cancellation.Token);
+                });
+
+            OperationCanceledException failure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                factory.SendAsync(input, options, next, cancellation.Token));
+
+            Assert.Equal(cancellation.Token, failure.CancellationToken);
+            Assert.Equal(1, invocations);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+
+        await using (ReliableInboxDbContext verification = fixture.CreateContext())
+        {
+            Assert.False(await verification.BusinessRecords.AnyAsync(
+                row => row.Id == command.CorrelationId, fixture.CancellationToken));
+            Assert.False(await verification.Set<ReliableInboxRecord>().AnyAsync(
+                row => row.MessageId == messageId && row.ConsumerId == options.ConsumerId,
+                fixture.CancellationToken));
+        }
+
+        await using (AsyncServiceScope retryScope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = retryScope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            var factory = retryScope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, fixture.CancellationToken, messageId: messageId);
+            await factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(
+                async context =>
+                {
+                    Assert.Equal(1, context.ReceiveCount);
+                    db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "committed" });
+                    await context.SetConsumedAsync(fixture.CancellationToken);
+                }), fixture.CancellationToken);
+        }
+
+        await using ReliableInboxDbContext final = fixture.CreateContext();
+        ReliableInboxRecord inbox = await final.Set<ReliableInboxRecord>().AsNoTracking().SingleAsync(
+            row => row.MessageId == messageId && row.ConsumerId == options.ConsumerId,
+            fixture.CancellationToken);
+        ReliableBusinessRecord business = await final.BusinessRecords.AsNoTracking().SingleAsync(
+            row => row.Id == command.CorrelationId, fixture.CancellationToken);
+        Assert.Equal(ReliableInboxStatus.Consumed, inbox.Status);
+        Assert.Equal(1, inbox.Attempts);
+        Assert.Null(inbox.FailedAt);
+        Assert.Null(inbox.FailureType);
+        Assert.Equal("committed", business.Value);
     }
 
     public sealed record ReliableInboxCommand(Guid CorrelationId, int FailuresBeforeSuccess);
