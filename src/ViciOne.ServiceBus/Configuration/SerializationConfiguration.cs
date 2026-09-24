@@ -140,6 +140,15 @@ public class SerializationConfiguration :
     /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
+        foreach (ValidationResult failure in ValidateSerializers())
+            yield return failure;
+
+        foreach (ValidationResult failure in ValidateDeserializers())
+            yield return failure;
+    }
+
+    IEnumerable<ValidationResult> ValidateSerializers()
+    {
         var serializers = ResolveFactories(static x => x._serializers);
         var serializerMediaTypes = serializers.Keys.ToArray();
         if (serializerMediaTypes.Length == 0)
@@ -152,7 +161,10 @@ public class SerializationConfiguration :
             yield return this.Failure("SerializerContentType", "must be specified when more than one serializer is supported");
         else if (serializerMediaType != null && !serializers.ContainsKey(serializerMediaType))
             yield return this.Failure("SerializerContentType", "matching serializer was not added");
+    }
 
+    IEnumerable<ValidationResult> ValidateDeserializers()
+    {
         var deserializers = ResolveFactories(static x => x._deserializers);
         var deserializerMediaTypes = deserializers.Keys.ToArray();
         if (deserializerMediaTypes.Length == 0)

@@ -267,6 +267,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Serialization validation now checks serializer and deserializer registrations
+  in separate methods while preserving the existing failure order and member
+  names. Contract tests cover an empty registration, ambiguous multi-format
+  selections, and successful collection creation after explicit selection.
 - Amazon SQS topology diagnostics now have a contract test that verifies all
   declared topics and queues, their lifetime flags, and every SNS-to-SQS
   subscription pair in the public probe result.
