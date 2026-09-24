@@ -420,7 +420,7 @@ public sealed class ConnectionContextFactoryTests
             await agent.DisposeAsync();
 
         await agent.Completed.WaitAsync(TestContext.Current.CancellationToken);
-        await connectionProxy.ShutdownHandlerRemovalAttempted.WaitAsync(TestContext.Current.CancellationToken);
+        await connectionProxy.ShutdownHandlerRemoved.WaitAsync(TestContext.Current.CancellationToken);
         Assert.False(connectionProxy.HasShutdownHandler);
         Assert.Equal(1, connectionProxy.AsyncDisposeCalls);
         Assert.Equal(1, connectionProxy.ShutdownHandlerRemoveCalls);
@@ -535,7 +535,7 @@ public sealed class ConnectionContextFactoryTests
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => agent.Context);
         await agent.Completed.WaitAsync(TestContext.Current.CancellationToken);
-        await connectionProxy.ShutdownHandlerRemovalAttempted.WaitAsync(TestContext.Current.CancellationToken);
+        await connectionProxy.ShutdownHandlerRemoved.WaitAsync(TestContext.Current.CancellationToken);
         await connectionProxy.AsyncDisposed.WaitAsync(TestContext.Current.CancellationToken);
         Assert.Equal(1, connectionProxy.AsyncDisposeCalls);
         Assert.False(connectionProxy.HasShutdownHandler);
@@ -798,6 +798,7 @@ public sealed class ConnectionContextFactoryTests
         private readonly TaskCompletionSource _shutdownHandlerAdded = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _shutdownHandlerRemovalAttempted = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _asyncDisposed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _shutdownHandlerRemoved = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public int AsyncDisposeCalls { get; private set; }
         public Task AsyncDisposed => _asyncDisposed.Task;
@@ -810,6 +811,7 @@ public sealed class ConnectionContextFactoryTests
         public bool IsOpen { get; set; } = true;
         public Task ShutdownHandlerAdded => _shutdownHandlerAdded.Task;
         public Task ShutdownHandlerRemovalAttempted => _shutdownHandlerRemovalAttempted.Task;
+        public Task ShutdownHandlerRemoved => _shutdownHandlerRemoved.Task;
         public Exception? ShutdownHandlerAdditionFailure { get; set; }
         public int ShutdownHandlerRemoveCalls { get; private set; }
         public Exception? ShutdownHandlerRemovalFailure { get; set; }
@@ -860,6 +862,7 @@ public sealed class ConnectionContextFactoryTests
             if (ShutdownHandlerRemovalFailure is not null)
                 throw ShutdownHandlerRemovalFailure;
             _shutdownHandlers -= Assert.IsType<AsyncEventHandler<ShutdownEventArgs>>(Assert.Single(args!));
+            _shutdownHandlerRemoved.TrySetResult();
             return null;
         }
 
