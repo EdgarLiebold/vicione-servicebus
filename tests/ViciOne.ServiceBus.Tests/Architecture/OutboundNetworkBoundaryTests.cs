@@ -6,10 +6,12 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Architecture;
 
+[Collection(OpenTelemetryGlobalCollection.Name)]
 public sealed class OutboundNetworkBoundaryTests
 {
     [Fact]
@@ -48,9 +50,9 @@ public sealed class OutboundNetworkBoundaryTests
     public void HttpDiagnosticListener_ObservesASyntheticRequestStartWithoutOpeningASocket()
     {
         var requests = new ConcurrentQueue<string>();
-        using IDisposable subscription = DiagnosticListener.AllListeners.Subscribe(new ListenerObserver(requests));
-        using var listener = new DiagnosticListener("HttpHandlerDiagnosticListener");
         using var request = new HttpRequestMessage(HttpMethod.Get, "http://127.0.0.1/vicione-detector-control");
+        using IDisposable subscription = DiagnosticListener.AllListeners.Subscribe(new ListenerObserver(requests, request));
+        using var listener = new DiagnosticListener("HttpHandlerDiagnosticListener");
 
         listener.Write("System.Net.Http.HttpRequestOut.Start", new { Request = request });
 
@@ -118,12 +120,13 @@ public sealed class OutboundNetworkBoundaryTests
         public Task ConsumeAsync(ConsumeContext<QuietMessage> context) => Task.CompletedTask;
     }
 
-    private sealed class ListenerObserver(ConcurrentQueue<string> requests) : IObserver<DiagnosticListener>
+    private sealed class ListenerObserver(ConcurrentQueue<string> requests, HttpRequestMessage? expectedRequest = null) :
+        IObserver<DiagnosticListener>
     {
         public void OnNext(DiagnosticListener listener)
         {
             if (listener.Name == "HttpHandlerDiagnosticListener")
-                listener.Subscribe(new EventObserver(requests));
+                listener.Subscribe(new EventObserver(requests, expectedRequest));
         }
 
         public void OnCompleted()
@@ -135,7 +138,8 @@ public sealed class OutboundNetworkBoundaryTests
         }
     }
 
-    private sealed class EventObserver(ConcurrentQueue<string> requests) : IObserver<KeyValuePair<string, object?>>
+    private sealed class EventObserver(ConcurrentQueue<string> requests, HttpRequestMessage? expectedRequest) :
+        IObserver<KeyValuePair<string, object?>>
     {
         public void OnNext(KeyValuePair<string, object?> value)
         {
@@ -143,6 +147,9 @@ public sealed class OutboundNetworkBoundaryTests
                 return;
 
             var request = value.Value?.GetType().GetProperty("Request")?.GetValue(value.Value) as HttpRequestMessage;
+            if (expectedRequest is not null && !ReferenceEquals(request, expectedRequest))
+                return;
+
             requests.Enqueue(request?.RequestUri?.ToString() ?? value.Key);
         }
 

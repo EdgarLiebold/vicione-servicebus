@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- The outbound HTTP boundary test now serializes its process-wide diagnostic
+  listener with other global listener tests. Its synthetic positive control
+  observes only its own request, while the default bus lifecycle test still
+  detects any unexpected outbound HTTP request. This removes a parallel-test
+  false failure seen in the complete Unit/Architecture gate.
 - Invalid message types now yield no message-contract metadata, even when an
   infrastructure context implements an otherwise eligible base interface.
   `SendContext`, `ConsumeContext`, and `ReceiveContext` can no longer leak
