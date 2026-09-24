@@ -6,18 +6,22 @@
   No `src` file changed since the preceding `e8976fc62` profile. This commit
   adds a source-owned Amazon SQS topology probe contract test, its requirement
   mapping, and a changelog entry.
-- The Release Unit/Architecture solution build passed with zero warnings and
-  errors. The serial full gate passed **10,351/10,351**, with zero failures and
+- The Release Unit/Architecture solution build was observed to pass with zero
+  warnings and errors; its console output was not persisted. The serial full
+  gate passed **10,351/10,351**, with zero failures and
   skipped tests. Its log is
   `artifacts/coverage-a-plus-20260924-e51c446f2/unit-architecture-gate-final.log`
   (SHA-256 `3c14d7e7e83cfd945da6f180e08be1fbd4f0db16af2e0c0ea39d0d4b33347063`).
   An earlier gate command incorrectly passed an MSBuild option to Microsoft
   Testing Platform and discovered zero tests. That unsuccessful invocation is
   preserved as `unit-architecture-gate.log`; it does not count as a test result.
-- The fresh Amazon SQS project run under Microsoft CodeCoverage passed
-  **212/212**. Its Cobertura report is SHA-256
+- The fresh Amazon SQS project run under Microsoft CodeCoverage was observed
+  to pass **212/212**; its test console output was not persisted. The Cobertura report is SHA-256
   `10be702db2a3569c0e7f37f4beba0fe2ea3e293235360468271501c2a900db9d`.
-  The newly added topology test also passed in the focused **4/4** class run.
+  The newly added topology test was also observed to pass in the focused
+  **4/4** class run; that console output was not persisted either. The saved
+  full-gate log establishes the aggregate 10,351 result, while the Cobertura
+  file itself contains no test count.
 - `artifacts/coverage-a-plus-20260924-e51c446f2/raw/` contains 40 parseable
   Cobertura reports for 32 product assemblies. The 39 inherited reports are
   individually hash-identical to the preceding profile; one Amazon SQS report
@@ -51,10 +55,10 @@ and returned PASS.
 - `analysis-40/summary.json`, `methods.json`, `provenance.json`, and
   `overlay-policy.json` record counts, report hashes, method threshold
   decisions, source continuity, and the fixture chain. Their SHA-256 values
-  are respectively `018feb08b09ddd4bdeeefccc642bf40c7e0cba8d6cf2b6426bdcb55666283f42`,
+  are respectively `ff12ed408fe7f40e30e0e7083a366fc2193cafa2e376090fc3d63e838c4844a2`,
   `96d1a44d6a3d7f80c8427132cfda8733b5e634a27fb5eaf262739d6e0d41b535`,
-  `fe7282f7d83aab7a3d79bce1f651b224979869f0a953b2753552ea47944f8d11`,
-  and `5b9743f1c426f8a7d6ff62105c2ac42bc796e9905dffaae511f27dc36336bcf5`.
+  `bd9c1d385240fca14cda60fe4b122147106615ddc6f8ee01e52ef7f58e102819`,
+  and `fc2f148f747d643f2808193e3de84fdec50f6a116865c2116db8aac3d3e0cff9`.
 - Cobertura lacks stable branch identities. The conservative merge takes the
   largest observed covered count at each source location. The capped sum can
   overstate coverage across repeated observations and is excluded from the
