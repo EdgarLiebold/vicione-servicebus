@@ -137,43 +137,7 @@ public static class PipeRetryExtensions
         while (true)
         {
             if (retryContext != null)
-            {
-                CancellationToken retryToken = retryContext.CancellationToken;
-                using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled && retryToken.CanBeCanceled
-                    && cancellationToken != retryToken
-                    ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, retryToken)
-                    : null;
-                CancellationToken preparationToken = linkedCancellation?.Token
-                    ?? (retryToken.CanBeCanceled ? retryToken : cancellationToken);
-
-                try
-                {
-                    preparationToken.ThrowIfCancellationRequested();
-
-                    if (log)
-                        LogContext.Warning?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay,
-                            retryContext.Exception.Message);
-
-                    if (retryContext.Delay.HasValue)
-                    {
-                        await Task.Delay(retryContext.Delay.Value, timeProvider, preparationToken)
-                            .ConfigureAwait(false);
-                    }
-
-                    Task preRetryTask = retryContext.PreRetryAsync(cancellationToken: preparationToken)
-                        ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
-                    await preRetryTask.ConfigureAwait(false);
-                    preparationToken.ThrowIfCancellationRequested();
-                }
-                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException(cancellationToken);
-                }
-                catch (OperationCanceledException) when (retryToken.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException(retryToken);
-                }
-            }
+                await PrepareRetryAsync(retryContext, log, timeProvider, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
             retryContext?.CancellationToken.ThrowIfCancellationRequested();
@@ -212,6 +176,46 @@ public static class PipeRetryExtensions
 
                 retryContext = nextRetryContext;
             }
+        }
+    }
+
+    static async Task PrepareRetryAsync(RetryContext<InlinePipeContext> retryContext, bool log,
+        TimeProvider timeProvider, CancellationToken cancellationToken)
+    {
+        CancellationToken retryToken = retryContext.CancellationToken;
+        using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled && retryToken.CanBeCanceled
+            && cancellationToken != retryToken
+            ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, retryToken)
+            : null;
+        CancellationToken preparationToken = linkedCancellation?.Token
+            ?? (retryToken.CanBeCanceled ? retryToken : cancellationToken);
+
+        try
+        {
+            preparationToken.ThrowIfCancellationRequested();
+
+            if (log)
+                LogContext.Warning?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay,
+                    retryContext.Exception.Message);
+
+            if (retryContext.Delay.HasValue)
+            {
+                await Task.Delay(retryContext.Delay.Value, timeProvider, preparationToken)
+                    .ConfigureAwait(false);
+            }
+
+            Task preRetryTask = retryContext.PreRetryAsync(cancellationToken: preparationToken)
+                ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
+            await preRetryTask.ConfigureAwait(false);
+            preparationToken.ThrowIfCancellationRequested();
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(cancellationToken);
+        }
+        catch (OperationCanceledException) when (retryToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(retryToken);
         }
     }
 

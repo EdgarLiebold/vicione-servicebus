@@ -267,6 +267,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Retry execution now keeps preparation of a scheduled attempt in a separate
+  method. Contract tests verify that caller cancellation during the operation
+  and independent caller or policy cancellation during pre-retry stop further
+  attempts and report the originating token; concurrent cancellation retains
+  caller precedence.
 - Serialization validation now checks serializer and deserializer registrations
   in separate methods while preserving the existing failure order and member
   names. Contract tests cover an empty registration, ambiguous multi-format
