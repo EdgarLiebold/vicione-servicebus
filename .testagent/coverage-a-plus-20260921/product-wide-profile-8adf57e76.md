@@ -9,7 +9,7 @@
 - The serial Release Unit/Architecture build completed with zero warnings and
   errors. Its log SHA-256 is
   `1989d3628745c390c4b8b8ac8599cbf2ae0d7d138ff8d67feccc0406d5f21b16`.
-  The Core test DLL and all ten fresh coverage-report assembly DLLs embed the
+  The Core test DLL and all nine fresh coverage-report product DLLs embed the
   full product/test revision.
 - The serial full Unit/Architecture gate passed **10,364/10,364** with zero
   failures and skips. Its log SHA-256 is
