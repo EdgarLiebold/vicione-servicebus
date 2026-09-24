@@ -275,6 +275,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Mermaid state-machine label encoding now handles Unicode scalars and control
+  characters in a focused helper. The exact generated documents and syntax
+  escaping remain unchanged; the encoding tests still cover reserved Mermaid
+  characters, control characters, and paired or unpaired surrogates.
 - Removed the unused internal Azure Service Bus `ReadAsBytes` stream helper.
   It had no source or test call site and was not an externally accessible
   transport API; keeping its inconsistent stream-position and generic-error

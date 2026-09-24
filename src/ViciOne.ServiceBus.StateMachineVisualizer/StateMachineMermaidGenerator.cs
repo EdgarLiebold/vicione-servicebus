@@ -96,33 +96,38 @@ public sealed class StateMachineMermaidGenerator
                     escaped.Append("#10;");
                     break;
                 default:
-                    if (char.IsHighSurrogate(character)
-                        && index + 1 < label.Length
-                        && char.IsLowSurrogate(label[index + 1]))
-                    {
-                        escaped.Append(character).Append(label[++index]);
-                    }
-                    else if (char.IsControl(character))
-                    {
-                        escaped.Append('#')
-                            .Append(((int)character).ToString(CultureInfo.InvariantCulture))
-                            .Append(';');
-                    }
-                    else if (char.IsSurrogate(character))
-                    {
-                        escaped.Append("#92;u")
-                            .Append(((int)character).ToString("X4", CultureInfo.InvariantCulture));
-                    }
-                    else
-                    {
-                        escaped.Append(character);
-                    }
-
+                    AppendUnicodeCharacter(escaped, label, ref index);
                     break;
             }
         }
 
         return escaped.ToString();
+    }
+
+    static void AppendUnicodeCharacter(StringBuilder escaped, string label, ref int index)
+    {
+        char character = label[index];
+        if (char.IsHighSurrogate(character)
+            && index + 1 < label.Length
+            && char.IsLowSurrogate(label[index + 1]))
+        {
+            escaped.Append(character).Append(label[++index]);
+        }
+        else if (char.IsControl(character))
+        {
+            escaped.Append('#')
+                .Append(((int)character).ToString(CultureInfo.InvariantCulture))
+                .Append(';');
+        }
+        else if (char.IsSurrogate(character))
+        {
+            escaped.Append("#92;u")
+                .Append(((int)character).ToString("X4", CultureInfo.InvariantCulture));
+        }
+        else
+        {
+            escaped.Append(character);
+        }
     }
 
     static string FormatNode(StateMachineGraphNode node, int index)
