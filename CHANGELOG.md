@@ -275,6 +275,10 @@ entry below records what the current work changed for anyone reading the source.
   partition formatters, or registration order. Source-owned tests verify every
   correlation identity, empty and null boundaries, and repeated registration
   after the global topology is frozen.
+- JobService receive partition registration now groups the 18 job-ID message
+  selectors into smaller methods. Their registration order, shared partition
+  coordinator, endpoint concurrency limit, and runtime serialization behavior
+  remain covered by the existing source-owned regression test.
 - The source-owned consume-transform pipeline test now checks the public
   delegate-based property transformation with both present and null source
   values. It verifies that the delegate sees the original message and

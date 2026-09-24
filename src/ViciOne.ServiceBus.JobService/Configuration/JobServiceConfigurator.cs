@@ -201,37 +201,7 @@ internal sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
             UseVolatileOutbox(e);
 
             if (_options.ConcurrentMessageLimit.HasValue)
-            {
-                e.ConcurrentMessageLimit = _options.ConcurrentMessageLimit;
-
-                var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
-
-                e.UsePartitioner<IJobSubmitted>(partition, p => p.Message.JobId);
-
-                e.UsePartitioner<IJobSlotAllocated>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IJobSlotUnavailable>(partition, p => p.Message.JobId);
-                e.UsePartitioner<Fault<IAllocateJobSlot>>(partition, p => p.Message.Message.JobId);
-
-                e.UsePartitioner<Fault<IStartJobAttempt>>(partition, p => p.Message.Message.JobId);
-
-                e.UsePartitioner<IJobAttemptCanceled>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IJobAttemptCompleted>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IJobAttemptFaulted>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IJobAttemptStarted>(partition, p => p.Message.JobId);
-
-                e.UsePartitioner<IGetJobState>(partition, p => p.Message.JobId);
-
-                e.UsePartitioner<IJobCompleted>(partition, p => p.Message.JobId);
-                e.UsePartitioner<ICancelJob>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IRetryJob>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IRunJob>(partition, p => p.Message.JobId);
-
-                e.UsePartitioner<ISaveJobCheckpoint>(partition, p => p.Message.JobId);
-                e.UsePartitioner<ISetJobProgress>(partition, p => p.Message.JobId);
-
-                e.UsePartitioner<IJobSlotWaitElapsed>(partition, p => p.Message.JobId);
-                e.UsePartitioner<IJobRetryDelayElapsed>(partition, p => p.Message.JobId);
-            }
+                ConfigureJobPartitions(e, _options.ConcurrentMessageLimit.Value);
 
             var stateMachine = new JobStateMachine();
             e.StateMachineSaga(stateMachine, _jobRepository ?? new InMemorySagaRepository<JobSaga>(),
@@ -305,5 +275,50 @@ internal sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         });
 
         _endpointsConfigured = true;
+    }
+
+    static void ConfigureJobPartitions(IReceiveEndpointConfigurator endpoint, int concurrentMessageLimit)
+    {
+        endpoint.ConcurrentMessageLimit = concurrentMessageLimit;
+
+        var partition = new PartitionCoordinator(concurrentMessageLimit);
+        ConfigureJobSubmissionPartitions(endpoint, partition);
+        ConfigureJobAttemptEventPartitions(endpoint, partition);
+        ConfigureJobCommandPartitions(endpoint, partition);
+        ConfigureJobCheckpointAndTimerPartitions(endpoint, partition);
+    }
+
+    static void ConfigureJobSubmissionPartitions(IReceiveEndpointConfigurator endpoint, PartitionCoordinator partition)
+    {
+        endpoint.UsePartitioner<IJobSubmitted>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobSlotAllocated>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobSlotUnavailable>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<Fault<IAllocateJobSlot>>(partition, p => p.Message.Message.JobId);
+        endpoint.UsePartitioner<Fault<IStartJobAttempt>>(partition, p => p.Message.Message.JobId);
+    }
+
+    static void ConfigureJobAttemptEventPartitions(IReceiveEndpointConfigurator endpoint, PartitionCoordinator partition)
+    {
+        endpoint.UsePartitioner<IJobAttemptCanceled>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobAttemptCompleted>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobAttemptFaulted>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobAttemptStarted>(partition, p => p.Message.JobId);
+    }
+
+    static void ConfigureJobCommandPartitions(IReceiveEndpointConfigurator endpoint, PartitionCoordinator partition)
+    {
+        endpoint.UsePartitioner<IGetJobState>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobCompleted>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<ICancelJob>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IRetryJob>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IRunJob>(partition, p => p.Message.JobId);
+    }
+
+    static void ConfigureJobCheckpointAndTimerPartitions(IReceiveEndpointConfigurator endpoint, PartitionCoordinator partition)
+    {
+        endpoint.UsePartitioner<ISaveJobCheckpoint>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<ISetJobProgress>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobSlotWaitElapsed>(partition, p => p.Message.JobId);
+        endpoint.UsePartitioner<IJobRetryDelayElapsed>(partition, p => p.Message.JobId);
     }
 }
