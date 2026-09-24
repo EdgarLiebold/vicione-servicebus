@@ -279,6 +279,12 @@ entry below records what the current work changed for anyone reading the source.
   selectors into smaller methods. Their registration order, shared partition
   coordinator, endpoint concurrency limit, and runtime serialization behavior
   remain covered by the existing source-owned regression test.
+- Azure Service Bus connection creation now separates custom-port validation,
+  SDK option setup, and the four explicit credential routes from the namespace
+  context. Custom-port rejection checks now include named-key and SAS settings.
+  Emulator regressions verify both mixed-client directions with real queue
+  administration and exact message delivery: the factory fills in the missing
+  client while continuing to use the caller-supplied client.
 - The source-owned consume-transform pipeline test now checks the public
   delegate-based property transformation with both present and null source
   values. It verifies that the delegate sees the original message and

@@ -1,5 +1,8 @@
+using System.Reflection;
 using global::Azure.Messaging.ServiceBus;
 using global::Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.Advanced.Middleware;
+using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -7,6 +10,98 @@ namespace ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.Infrastructu
 
 public sealed class AzureServiceBusEmulatorCapabilityTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "factory-retains-caller-messaging-client-and-creates-administration-client")]
+    public async Task FactoryWithCallerMessagingClient_CreatesWorkingAdministrationClientAndPreservesMessagingClientAsync()
+    {
+        AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("factory-mixed-clients");
+        ServiceBusAdministrationClient cleanup = fixture.CreateAdministrationClient();
+        await using ServiceBusClient messagingClient = fixture.CreateClient();
+        string queue = fixture.Name("queue");
+        string messageId = Guid.NewGuid().ToString("N");
+        using CancellationTokenSource timeout = fixture.OperationCancellation();
+        Uri address = ServiceBusConnectionStringProperties.Parse(fixture.ManagementConnectionString).Endpoint;
+        IServiceBusHostConfiguration configuration = DispatchProxy.Create<IServiceBusHostConfiguration, HostConfigurationProxy>();
+        var proxy = (HostConfigurationProxy)(object)configuration;
+        proxy.Address = address;
+        proxy.Settings = new HostSettings
+        {
+            ServiceUri = address,
+            ConnectionString = fixture.ManagementConnectionString,
+            ServiceBusClient = messagingClient,
+            RetryLimit = 0,
+        };
+        IPipeContextFactory<ConnectionContext> factory = new ConnectionContextFactory(configuration);
+
+        try
+        {
+            IPipeContextAgent<ConnectionContext> agent = factory.CreateContext(new Supervisor());
+            await using ServiceBusConnectionContext connection = Assert.IsType<ServiceBusConnectionContext>(await agent.Context);
+            QueueProperties created = await connection.CreateQueueAsync(new CreateQueueOptions(queue), timeout.Token);
+            await using ServiceBusSender sender = connection.CreateMessageSender(queue);
+            await using ServiceBusReceiver receiver = messagingClient.CreateReceiver(queue);
+            await sender.SendMessageAsync(new ServiceBusMessage("factory-payload") { MessageId = messageId }, timeout.Token);
+            ServiceBusReceivedMessage received = await receiver.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
+                ?? throw new InvalidOperationException("The factory's messaging client delivered no message.");
+
+            Assert.Equal(queue, created.Name);
+            Assert.Equal(messageId, received.MessageId);
+            Assert.Equal("factory-payload", received.Body.ToString());
+            await receiver.CompleteMessageAsync(received, timeout.Token);
+        }
+        finally
+        {
+            if (await cleanup.QueueExistsAsync(queue, timeout.Token))
+                await cleanup.DeleteQueueAsync(queue, timeout.Token);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "factory-retains-caller-administration-client-and-creates-messaging-client")]
+    public async Task FactoryWithCallerAdministrationClient_CreatesWorkingMessagingClientAndPreservesAdministrationClientAsync()
+    {
+        AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("factory-mixed-clients");
+        ServiceBusAdministrationClient administrationClient = fixture.CreateAdministrationClient();
+        await using ServiceBusClient receiverClient = fixture.CreateClient();
+        string queue = fixture.Name("queue");
+        string messageId = Guid.NewGuid().ToString("N");
+        using CancellationTokenSource timeout = fixture.OperationCancellation();
+        Uri address = ServiceBusConnectionStringProperties.Parse(fixture.DataConnectionString).Endpoint;
+        IServiceBusHostConfiguration configuration = DispatchProxy.Create<IServiceBusHostConfiguration, HostConfigurationProxy>();
+        var proxy = (HostConfigurationProxy)(object)configuration;
+        proxy.Address = address;
+        proxy.Settings = new HostSettings
+        {
+            ServiceUri = address,
+            ConnectionString = fixture.DataConnectionString,
+            ServiceBusAdministrationClient = administrationClient,
+            RetryLimit = 0,
+        };
+        IPipeContextFactory<ConnectionContext> factory = new ConnectionContextFactory(configuration);
+
+        try
+        {
+            IPipeContextAgent<ConnectionContext> agent = factory.CreateContext(new Supervisor());
+            await using ServiceBusConnectionContext connection = Assert.IsType<ServiceBusConnectionContext>(await agent.Context);
+            QueueProperties created = await connection.CreateQueueAsync(new CreateQueueOptions(queue), timeout.Token);
+            await using ServiceBusSender sender = connection.CreateMessageSender(queue);
+            await using ServiceBusReceiver receiver = receiverClient.CreateReceiver(queue);
+            await sender.SendMessageAsync(new ServiceBusMessage("factory-payload") { MessageId = messageId }, timeout.Token);
+            ServiceBusReceivedMessage received = await receiver.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
+                ?? throw new InvalidOperationException("The factory's messaging client delivered no message.");
+
+            Assert.Equal(queue, created.Name);
+            Assert.Equal(messageId, received.MessageId);
+            Assert.Equal("factory-payload", received.Body.ToString());
+            await receiver.CompleteMessageAsync(received, timeout.Token);
+        }
+        finally
+        {
+            if (await administrationClient.QueueExistsAsync(queue, timeout.Token))
+                await administrationClient.DeleteQueueAsync(queue, timeout.Token);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "administration-queues-topics-subscriptions-rules-and-update")]
     public async Task AdministrationClient_ManagesQueuesTopicsSubscriptionsAndRulesAsync()
@@ -262,5 +357,18 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
             if (await admin.QueueExistsAsync(destination, timeout.Token))
                 await admin.DeleteQueueAsync(destination, timeout.Token);
         }
+    }
+
+    public class HostConfigurationProxy : DispatchProxy
+    {
+        public Uri Address { get; set; } = null!;
+        public ServiceBusHostSettings Settings { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        {
+            "get_HostAddress" => Address,
+            "get_Settings" => Settings,
+            _ => throw new NotSupportedException(targetMethod?.Name),
+        };
     }
 }

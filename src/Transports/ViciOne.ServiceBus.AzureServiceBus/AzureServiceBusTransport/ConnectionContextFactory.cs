@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Core;
 using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
@@ -57,12 +58,32 @@ public class ConnectionContextFactory :
         var client = settings.ServiceBusClient;
         var managementClient = settings.ServiceBusAdministrationClient;
 
-        if (!settings.ServiceUri.IsDefaultPort && (client == null || managementClient == null)
-            && (settings.ConnectionString == null || !HasSharedAccess(settings.ConnectionString)
-                || !ViciOne.ServiceBus.Configuration.ServiceBusHostConfigurator.IsDevelopmentEmulator(settings.ConnectionString)))
-            throw new ServiceBusConnectionException(
-                "A custom port requires a credential-bearing emulator connection string or both preconfigured Service Bus clients");
+        ValidateCustomPort(settings, client, managementClient);
 
+        (client, managementClient) = CreateMissingClients(settings, endpoint, client, managementClient);
+
+        var namespaceAddress = new UriBuilder(_hostConfiguration.HostAddress) { Path = "", Query = "", Fragment = "" }.Uri;
+        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped, namespaceAddress);
+    }
+
+    static void ValidateCustomPort(ServiceBusHostSettings settings, ServiceBusClient? client,
+        ServiceBusAdministrationClient? managementClient)
+    {
+        if (settings.ServiceUri.IsDefaultPort || (client != null && managementClient != null))
+            return;
+
+        if (settings.ConnectionString != null && HasSharedAccess(settings.ConnectionString)
+            && ViciOne.ServiceBus.Configuration.ServiceBusHostConfigurator.IsDevelopmentEmulator(settings.ConnectionString))
+            return;
+
+        throw new ServiceBusConnectionException(
+            "A custom port requires a credential-bearing emulator connection string or both preconfigured Service Bus clients");
+    }
+
+    static (ServiceBusClient Client, ServiceBusAdministrationClient ManagementClient) CreateMissingClients(
+        ServiceBusHostSettings settings, string endpoint, ServiceBusClient? client,
+        ServiceBusAdministrationClient? managementClient)
+    {
         var clientOptions = new ServiceBusClientOptions
         {
             TransportType = settings.TransportType,
@@ -85,39 +106,38 @@ public class ConnectionContextFactory :
             }
         };
 
-        if (settings.TokenCredential != null)
-        {
-            client ??= new ServiceBusClient(endpoint, settings.TokenCredential, clientOptions);
-            managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.TokenCredential, managementOptions);
-        }
-        else if (settings.NamedKeyCredential != null)
-        {
-            client ??= new ServiceBusClient(endpoint, settings.NamedKeyCredential, clientOptions);
-            managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.NamedKeyCredential, managementOptions);
-        }
-        else if (settings.SasCredential != null)
-        {
-            client ??= new ServiceBusClient(endpoint, settings.SasCredential, clientOptions);
-            managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.SasCredential, managementOptions);
-        }
-        else
-        {
-            if (settings.ConnectionString != null && HasSharedAccess(settings.ConnectionString))
-            {
-                client ??= new ServiceBusClient(settings.ConnectionString, clientOptions);
-                managementClient ??= new ServiceBusAdministrationClient(settings.ConnectionString, managementOptions);
-            }
-            else
-            {
-                var defaultAzureCredential = new DefaultAzureCredential();
+        TokenCredential? tokenCredential = settings.TokenCredential;
+        if (tokenCredential == null && settings.NamedKeyCredential == null && settings.SasCredential == null
+            && (settings.ConnectionString == null || !HasSharedAccess(settings.ConnectionString)))
+            tokenCredential = new DefaultAzureCredential();
 
-                client ??= new ServiceBusClient(endpoint, defaultAzureCredential, clientOptions);
-                managementClient ??= new ServiceBusAdministrationClient(endpoint, defaultAzureCredential, managementOptions);
-            }
-        }
+        client ??= CreateMessagingClient(settings, endpoint, tokenCredential, clientOptions);
+        managementClient ??= CreateAdministrationClient(settings, endpoint, tokenCredential, managementOptions);
+        return (client, managementClient);
+    }
 
-        var namespaceAddress = new UriBuilder(_hostConfiguration.HostAddress) { Path = "", Query = "", Fragment = "" }.Uri;
-        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped, namespaceAddress);
+    static ServiceBusClient CreateMessagingClient(ServiceBusHostSettings settings, string endpoint,
+        TokenCredential? tokenCredential, ServiceBusClientOptions options)
+    {
+        if (tokenCredential != null)
+            return new ServiceBusClient(endpoint, tokenCredential, options);
+        if (settings.NamedKeyCredential != null)
+            return new ServiceBusClient(endpoint, settings.NamedKeyCredential, options);
+        if (settings.SasCredential != null)
+            return new ServiceBusClient(endpoint, settings.SasCredential, options);
+        return new ServiceBusClient(settings.ConnectionString!, options);
+    }
+
+    static ServiceBusAdministrationClient CreateAdministrationClient(ServiceBusHostSettings settings, string endpoint,
+        TokenCredential? tokenCredential, ServiceBusAdministrationClientOptions options)
+    {
+        if (tokenCredential != null)
+            return new ServiceBusAdministrationClient(endpoint, tokenCredential, options);
+        if (settings.NamedKeyCredential != null)
+            return new ServiceBusAdministrationClient(endpoint, settings.NamedKeyCredential, options);
+        if (settings.SasCredential != null)
+            return new ServiceBusAdministrationClient(endpoint, settings.SasCredential, options);
+        return new ServiceBusAdministrationClient(settings.ConnectionString!, options);
     }
 
     static bool HasSharedAccess(string connectionString)

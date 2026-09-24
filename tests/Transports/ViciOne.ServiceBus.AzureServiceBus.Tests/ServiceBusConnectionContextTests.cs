@@ -1,4 +1,5 @@
 using System.Reflection;
+using Azure;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.Advanced.Middleware;
@@ -15,6 +16,8 @@ public sealed class ServiceBusConnectionContextTests
     [Theory]
     [InlineData("ambient")]
     [InlineData("token")]
+    [InlineData("named-key")]
+    [InlineData("sas")]
     [InlineData("messaging-client")]
     [InlineData("administration-client")]
     [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "custom-port-requires-credential-bearing-string-or-complete-clients")]
@@ -26,6 +29,12 @@ public sealed class ServiceBusConnectionContextTests
         {
             case "token":
                 settings.TokenCredential = new Azure.Identity.DefaultAzureCredential();
+                break;
+            case "named-key":
+                settings.NamedKeyCredential = new AzureNamedKeyCredential("owner", "secret");
+                break;
+            case "sas":
+                settings.SasCredential = new AzureSasCredential("SharedAccessSignature sr=localhost&sig=unit&se=4102444800&skn=owner");
                 break;
             case "messaging-client":
                 settings.ServiceBusClient = new RecordingServiceBusClient(namespaceName: "localhost");
