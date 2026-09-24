@@ -267,6 +267,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Consume-observer converter tests now verify that each lifecycle stage
+  forwards the exact typed context and fault, preserves the observer's
+  asynchronous result and failure even when the caller cancels after
+  notification, and rejects missing, wrong-type, or pre-canceled inputs
+  before notifying an observer.
 - Recurring scheduler tests now verify that both endpoint-backed and
   publish-backed schedulers initialize a scheduled message from supplied
   values and preserve its fields, destination, schedule, cancellation token,
