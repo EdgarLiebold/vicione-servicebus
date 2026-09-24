@@ -332,6 +332,43 @@ public sealed class RecurringSchedulerContractTests
         Assert.Equal(DestinationAddress, typedHandle.Destination);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "declared-recurring-publish-resolves-contract-and-preserves-pipe")]
+    public async Task DeclaredRecurringPublish_ResolvesContractAndPreservesThePipeAsync(bool publishControlCommand)
+    {
+        IBusTopology topology = DispatchProxy.Create<IBusTopology, RecordingPublishAddressTopologyProxy>();
+        var addressLookup = (RecordingPublishAddressTopologyProxy)(object)topology;
+        RecordingSendEndpointProxy? sendRecording = null;
+        RecordingPublishEndpointProxy? publishRecording = null;
+        IRecurringMessageScheduler scheduler = publishControlCommand
+            ? CreateRecordingPublishScheduler(out publishRecording, topology)
+            : CreateRecordingScheduler(out sendRecording, topology);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var payload = new RecurringPayload("publish-order-46");
+        IPipe<SendContext> pipe = DispatchProxy.Create<IPipe<SendContext>, UnexpectedInvocationProxy>();
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage handle = await scheduler.ScheduleRecurringPublishAsync(
+            schedule, (object)payload, typeof(IRecurringPayload), pipe, cancellation.Token);
+
+        Assert.Equal(typeof(IRecurringPayload), Assert.Single(addressLookup.Lookups));
+        var call = Assert.Single(publishControlCommand ? publishRecording!.Calls : sendRecording!.Calls);
+        var command = Assert.IsType<ScheduleRecurringMessageCommand<IRecurringPayload>>(call.Arguments[0]);
+        Assert.Same(schedule, command.Schedule);
+        Assert.Same(payload, command.Payload);
+        Assert.Equal(DestinationAddress, command.Destination);
+        Assert.Equal([MessageUrn.ForTypeString<IRecurringPayload>()], command.PayloadType);
+        Assert.Equal(typeof(ScheduleRecurringMessage), call.Method.GetGenericArguments()[0]);
+        Assert.Same(pipe, call.Arguments[1]);
+        Assert.Equal(cancellation.Token, call.Arguments[^1]);
+        var typedHandle = Assert.IsType<ScheduledRecurringMessageHandle<IRecurringPayload>>(handle);
+        Assert.Same(schedule, typedHandle.Schedule);
+        Assert.Same(payload, typedHandle.Payload);
+        Assert.Equal(DestinationAddress, typedHandle.Destination);
+    }
+
     private static IRecurringMessageScheduler CreateRecordingScheduler(out RecordingSendEndpointProxy recording, IBusTopology? topology = null)
     {
         ISendEndpoint endpoint = DispatchProxy.Create<IAdvancedSendEndpoint, RecordingSendEndpointProxy>();
