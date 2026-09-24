@@ -2,6 +2,7 @@ using System.Reflection;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Scheduling;
@@ -369,6 +370,87 @@ public sealed class RecurringSchedulerContractTests
         Assert.Equal(DestinationAddress, typedHandle.Destination);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "initialized-recurring-send-preserves-message-values-and-handle")]
+    public async Task InitializedRecurringSend_PreservesMessageValuesAndHandleAsync(bool publishControlCommand)
+    {
+        RecordingSendEndpointProxy? sendRecording = null;
+        RecordingPublishEndpointProxy? publishRecording = null;
+        IRecurringMessageScheduler scheduler = publishControlCommand
+            ? CreateRecordingPublishScheduler(out publishRecording)
+            : CreateRecordingScheduler(out sendRecording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        object values = new { Id = "initialized-order-47", Attempt = 3 };
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage<InitializedRecurringPayload> handle =
+            await scheduler.ScheduleRecurringSendAsync<InitializedRecurringPayload>(
+                DestinationAddress, schedule, values, cancellation.Token);
+
+        var call = Assert.Single(publishControlCommand ? publishRecording!.Calls : sendRecording!.Calls);
+        var command = Assert.IsType<ScheduleRecurringMessageCommand<InitializedRecurringPayload>>(call.Arguments[0]);
+        Assert.Equal(DestinationAddress, command.Destination);
+        Assert.Same(schedule, command.Schedule);
+        InitializedRecurringPayload initialized = Assert.IsType<InitializedRecurringPayload>(command.Payload);
+        Assert.Equal("initialized-order-47", initialized.Id);
+        Assert.Equal(3, initialized.Attempt);
+        Assert.Equal([MessageUrn.ForTypeString<InitializedRecurringPayload>()], command.PayloadType);
+        Assert.Equal(typeof(ScheduleRecurringMessage), call.Method.GetGenericArguments()[0]);
+        Assert.Equal(cancellation.Token, call.Arguments[^1]);
+        var typedHandle = Assert.IsType<ScheduledRecurringMessageHandle<InitializedRecurringPayload>>(handle);
+        Assert.Same(initialized, typedHandle.Payload);
+        Assert.Same(schedule, typedHandle.Schedule);
+        Assert.Equal(DestinationAddress, typedHandle.Destination);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "initialized-recurring-send-applies-typed-pipe-to-payload-and-command")]
+    public async Task InitializedRecurringSend_AppliesTypedPipeToPayloadAndCommandAsync(bool publishControlCommand)
+    {
+        RecordingSendEndpointProxy? sendRecording = null;
+        RecordingPublishEndpointProxy? publishRecording = null;
+        IRecurringMessageScheduler scheduler = publishControlCommand
+            ? CreateRecordingPublishScheduler(out publishRecording)
+            : CreateRecordingScheduler(out sendRecording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        object values = new { Id = "initialized-order-48", Attempt = 4 };
+        var correlationId = Guid.NewGuid();
+        var pipe = new RecordingInitializedPipe(correlationId);
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage<InitializedRecurringPayload> handle =
+            await scheduler.ScheduleRecurringSendAsync<InitializedRecurringPayload>(
+                DestinationAddress, schedule, values, pipe, cancellation.Token);
+
+        var call = Assert.Single(publishControlCommand ? publishRecording!.Calls : sendRecording!.Calls);
+        var command = Assert.IsType<ScheduleRecurringMessageCommand<InitializedRecurringPayload>>(call.Arguments[0]);
+        InitializedRecurringPayload initialized = Assert.IsType<InitializedRecurringPayload>(command.Payload);
+        Assert.Equal("initialized-order-48", initialized.Id);
+        Assert.Equal(4, initialized.Attempt);
+        Assert.Equal(DestinationAddress, command.Destination);
+        Assert.Same(schedule, command.Schedule);
+        Assert.Equal(cancellation.Token, call.Arguments[^1]);
+        Assert.Equal(0, pipe.SendCount);
+        var typedHandle = Assert.IsType<ScheduledRecurringMessageHandle<InitializedRecurringPayload>>(handle);
+        Assert.Same(initialized, typedHandle.Payload);
+        Assert.Same(schedule, typedHandle.Schedule);
+        Assert.Equal(DestinationAddress, typedHandle.Destination);
+
+        var commandContext = new MessageSendContext<ScheduleRecurringMessage>(command, cancellation.Token);
+        if (publishControlCommand)
+            await Assert.IsAssignableFrom<IPipe<PublishContext<ScheduleRecurringMessage>>>(call.Arguments[1]).SendAsync(commandContext);
+        else
+            await Assert.IsAssignableFrom<IPipe<SendContext<ScheduleRecurringMessage>>>(call.Arguments[1]).SendAsync(commandContext);
+
+        Assert.Equal(1, pipe.SendCount);
+        Assert.Same(initialized, pipe.SeenMessage);
+        Assert.Equal(correlationId, commandContext.CorrelationId);
+    }
+
     private static IRecurringMessageScheduler CreateRecordingScheduler(out RecordingSendEndpointProxy recording, IBusTopology? topology = null)
     {
         ISendEndpoint endpoint = DispatchProxy.Create<IAdvancedSendEndpoint, RecordingSendEndpointProxy>();
@@ -411,6 +493,30 @@ public sealed class RecurringSchedulerContractTests
     }
 
     private sealed record RecurringPayload(string Id) : IRecurringPayload;
+
+    public sealed class InitializedRecurringPayload
+    {
+        public string Id { get; set; } = string.Empty;
+
+        public int Attempt { get; set; }
+    }
+
+    private sealed class RecordingInitializedPipe(Guid correlationId) : IPipe<SendContext<InitializedRecurringPayload>>
+    {
+        public int SendCount { get; private set; }
+
+        public InitializedRecurringPayload? SeenMessage { get; private set; }
+
+        public void Probe(ProbeContext context) => ArgumentNullException.ThrowIfNull(context);
+
+        public Task SendAsync(SendContext<InitializedRecurringPayload> context)
+        {
+            SendCount++;
+            SeenMessage = context.Message;
+            context.CorrelationId = correlationId;
+            return Task.CompletedTask;
+        }
+    }
 
     private interface AdvancedPublishEndpoint : IPublishEndpoint, IAdvancedPublishEndpoint;
 

@@ -267,6 +267,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Recurring scheduler tests now verify that both endpoint-backed and
+  publish-backed schedulers initialize a scheduled message from supplied
+  values and preserve its fields, destination, schedule, cancellation token,
+  and returned handle. They also execute the typed pipe adapter and verify
+  that the supplied pipe sees the initialized payload and its correlation
+  write reaches the outgoing schedule command context.
 - Endpoint QoS validation now resolves each endpoint in a focused helper while
   preserving declaration order, canonical values, and aggregated diagnostics.
   A new regression test verifies that endpoint-owned and consumer-owned QoS
