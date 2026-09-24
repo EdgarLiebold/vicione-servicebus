@@ -267,6 +267,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Request-rate construction now calculates the rounded-up request limit
+  without overflowing and caps the default concurrent result capacity at the
+  largest supported integer. Waiting for result capacity now responds to
+  caller cancellation and disposal, releases the abandoned request lease,
+  and returns an unused rate permit only within its original rate window.
+  Boundary tests verify maximum prefetch size, cancellation, disposal, and
+  rate-window rollover without issuing large result batches.
 - Retry execution now keeps preparation of a scheduled attempt in a separate
   method. Contract tests verify that caller cancellation during the operation
   and independent caller or policy cancellation during pre-retry stop further

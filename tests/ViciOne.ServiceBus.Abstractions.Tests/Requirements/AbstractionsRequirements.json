@@ -637,6 +637,13 @@
       "variantKey" : "single-request-full-and-empty-results"
    },
    {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-LIMITS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "MaximumPrefetch_DoesNotOverflowRequestOrResultCapacityAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "maximum-prefetch-preserves-request-and-result-capacity"
+   },
+   {
       "requirementId" : "REQ-VSB-REQUEST-RATE-VALIDATION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "Constructor_RejectsEveryInvalidStaticOption",
@@ -2228,6 +2235,9 @@
   ,{ "requirementId": "REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "variantKey": "adaptive-request-count-does-not-change-rate-capacity", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "AdaptiveRequestGrowth_DoesNotConsumeTheDynamicRateIncreaseAsync" }
   ,{ "requirementId": "REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "variantKey": "dispose-cancels-pending-decrease", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "DisposingAlgorithm_CancelsPendingRateDecreaseAsync" }
   ,{ "requirementId": "REQ-VSB-REQUEST-RATE-CANCELLATION", "variantKey": "pre-canceled-request-does-not-create-capacity", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "PreCanceledRequest_DoesNotCreateAnExtraConcurrentRequestSlotAsync" }
+  ,{ "requirementId": "REQ-VSB-REQUEST-RATE-CANCELLATION", "variantKey": "waiting-for-result-capacity-releases-request-lease", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "WaitingForResultCapacity_CallerCancellationOrDisposalReleasesTheLeaseAsync" }
+  ,{ "requirementId": "REQ-VSB-REQUEST-RATE-CANCELLATION", "variantKey": "canceled-admission-refunds-only-its-own-rate-window", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "CanceledAdmission_RefundsItsRatePermitOnlyWithinTheSameWindowAsync" }
+  ,{ "requirementId": "REQ-VSB-REQUEST-RATE-CANCELLATION", "variantKey": "refunded-permit-wakes-existing-rate-waiter", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "CanceledAdmission_WakesAnAlreadyWaitingRateLimitedRequestAsync" }
   ,{ "requirementId": "REQ-VSB-REQUEST-RATE-DYNAMIC-LIMIT", "variantKey": "invalid-and-unavailable-changes-are-rejected", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests", "testMethod": "RateLimitChanges_RejectInvalidValuesMissingConfigurationAndDisposedInstancesAsync" }
   ,{ "requirementId": "REQ-VSB-V5-CONSUMER-CONCURRENCY", "variantKey": "definition-policy-projects-legacy-limit-and-actual-consumer-configuration", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Consumers.Concurrency.ConsumerDefinitionConcurrencyPolicyContractTests", "testMethod": "PolicyTransitions_ProjectTheLegacyLimitAndConfiguredConsumerPolicy" }
   ,{ "requirementId": "REQ-VSB-V5-CONSUMER-CONCURRENCY", "variantKey": "definition-rejects-untyped-partitioned-policy-without-changing-effective-policy", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Consumers.Concurrency.ConsumerDefinitionConcurrencyPolicyContractTests", "testMethod": "PartitionedPolicy_IsRejectedWithoutChangingTheEffectivePolicy" }

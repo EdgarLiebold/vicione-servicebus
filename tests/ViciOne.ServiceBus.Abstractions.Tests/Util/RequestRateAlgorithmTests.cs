@@ -201,6 +201,35 @@ public sealed class RequestRateAlgorithmTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-LIMITS", "maximum-prefetch-preserves-request-and-result-capacity")]
+    public async Task MaximumPrefetch_DoesNotOverflowRequestOrResultCapacityAsync()
+    {
+        using var algorithm = CreateAlgorithm(int.MaxValue, int.MaxValue - 1);
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        timeout.CancelAfter(CompletionTimeout);
+        CancellationToken cancellationToken = timeout.Token;
+
+        using (ActiveRequest completed = await algorithm.BeginRequestAsync(cancellationToken))
+        {
+            Assert.Equal(int.MaxValue - 1, completed.ResultLimit);
+            await completed.CompleteAsync(completed.ResultLimit, cancellationToken);
+        }
+
+        Assert.Equal(2, algorithm.RequestCount);
+        using (ActiveRequest first = await algorithm.BeginRequestAsync(cancellationToken))
+        {
+            Assert.Equal(int.MaxValue - 1, first.ResultLimit);
+            using (ActiveRequest second = await algorithm.BeginRequestAsync(cancellationToken))
+            {
+                Assert.Equal(1, second.ResultLimit);
+                Assert.Equal(2, algorithm.ActiveRequestCount);
+            }
+        }
+
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-CLOCK", "rate-window-exact-boundary")]
     public async Task RateLimitWindow_ReopensOnlyWhenTheConfiguredClockReachesTheExactIntervalAsync()
     {
@@ -437,6 +466,228 @@ public sealed class RequestRateAlgorithmTests
         await first.CompleteAsync(0, cancellationToken);
         using ActiveRequest admitted = await second.WaitAsync(CompletionTimeout, cancellationToken);
         Assert.Equal(1, algorithm.MaxActiveRequestCount);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CANCELLATION", "waiting-for-result-capacity-releases-request-lease")]
+    public async Task WaitingForResultCapacity_CallerCancellationOrDisposalReleasesTheLeaseAsync(bool disposeAlgorithm)
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 2, requestResultLimit: 1, concurrentResultLimit: 1);
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        using (ActiveRequest completed = await algorithm.BeginRequestAsync(testToken))
+            await completed.CompleteAsync(1, testToken);
+        Assert.Equal(2, algorithm.RequestCount);
+
+        using var first = await algorithm.BeginRequestAsync(testToken);
+        using var pendingCancellation = CancellationTokenSource.CreateLinkedTokenSource(testToken);
+        pendingCancellation.CancelAfter(CompletionTimeout);
+        Task<ActiveRequest> waiting = Task.Run(() => algorithm.BeginRequestAsync(pendingCancellation.Token));
+        try
+        {
+            Assert.True(SpinWait.SpinUntil(() => algorithm.ActiveRequestCount == 2, CompletionTimeout));
+            Assert.False(waiting.IsCompleted);
+
+            if (disposeAlgorithm)
+                algorithm.Dispose();
+            else
+                pendingCancellation.Cancel();
+
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                waiting.WaitAsync(CompletionTimeout, testToken));
+            if (disposeAlgorithm)
+                Assert.False(pendingCancellation.IsCancellationRequested);
+            else
+                Assert.Equal(pendingCancellation.Token, actual.CancellationToken);
+            Assert.Equal(1, algorithm.ActiveRequestCount);
+
+            if (!disposeAlgorithm)
+            {
+                using var probeCancellation = CancellationTokenSource.CreateLinkedTokenSource(testToken);
+                probeCancellation.CancelAfter(CompletionTimeout);
+                Task<ActiveRequest> probe = Task.Run(() => algorithm.BeginRequestAsync(probeCancellation.Token));
+                try
+                {
+                    Assert.True(SpinWait.SpinUntil(() => algorithm.ActiveRequestCount == 2, CompletionTimeout));
+                    Assert.False(probe.IsCompleted);
+                    probeCancellation.Cancel();
+                    await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                        probe.WaitAsync(CompletionTimeout, testToken));
+                    Assert.Equal(1, algorithm.ActiveRequestCount);
+                }
+                finally
+                {
+                    probeCancellation.Cancel();
+                    if (probe.IsCompletedSuccessfully)
+                        (await probe).Dispose();
+                }
+            }
+        }
+        finally
+        {
+            pendingCancellation.Cancel();
+            first.Dispose();
+            if (waiting.IsCompletedSuccessfully)
+                (await waiting).Dispose();
+        }
+
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+        if (!disposeAlgorithm)
+        {
+            using ActiveRequest later = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+            Assert.Equal(1, later.ResultLimit);
+        }
+    }
+
+    [Theory]
+    [InlineData(false, 1)]
+    [InlineData(true, 3)]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CANCELLATION", "canceled-admission-refunds-only-its-own-rate-window")]
+    public async Task CanceledAdmission_RefundsItsRatePermitOnlyWithinTheSameWindowAsync(
+        bool resetBeforeCancellation, int availableInCurrentWindow)
+    {
+        TimeSpan interval = TimeSpan.FromMinutes(1);
+        var clock = new FakeTimeProvider();
+        using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        {
+            PrefetchCount = 2,
+            RequestResultLimit = 1,
+            ConcurrentResultLimit = 1,
+            RequestRateLimit = 3,
+            RequestRateInterval = interval,
+        }, clock);
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+
+        using (ActiveRequest completed = await algorithm.BeginRequestAsync(testToken))
+            await completed.CompleteAsync(1, testToken);
+        Assert.Equal(2, algorithm.RequestCount);
+
+        using var first = await algorithm.BeginRequestAsync(testToken);
+        using var pendingCancellation = CancellationTokenSource.CreateLinkedTokenSource(testToken);
+        pendingCancellation.CancelAfter(CompletionTimeout);
+        Task<ActiveRequest> pending = Task.Run(() => algorithm.BeginRequestAsync(pendingCancellation.Token));
+        try
+        {
+            Assert.True(SpinWait.SpinUntil(() => algorithm.ActiveRequestCount == 2, CompletionTimeout));
+            Assert.False(pending.IsCompleted);
+            if (resetBeforeCancellation)
+                clock.Advance(interval);
+
+            pendingCancellation.Cancel();
+            OperationCanceledException failure = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                pending.WaitAsync(CompletionTimeout, testToken));
+            Assert.Equal(pendingCancellation.Token, failure.CancellationToken);
+            Assert.Equal(1, algorithm.ActiveRequestCount);
+        }
+        finally
+        {
+            pendingCancellation.Cancel();
+            first.Dispose();
+            if (pending.IsCompletedSuccessfully)
+                (await pending).Dispose();
+        }
+
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+        await ConsumeAvailableAsync(availableInCurrentWindow);
+        await AssertNoRateCapacityAsync();
+
+        if (!resetBeforeCancellation)
+        {
+            clock.Advance(interval);
+            await ConsumeAvailableAsync(3);
+            await AssertNoRateCapacityAsync();
+        }
+
+        async Task ConsumeAvailableAsync(int count)
+        {
+            for (int index = 0; index < count; index++)
+            {
+                using ActiveRequest request = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+                Assert.Equal(1, request.ResultLimit);
+                await request.CompleteAsync(0, testToken);
+            }
+        }
+
+        async Task AssertNoRateCapacityAsync()
+        {
+            using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(testToken);
+            Task<ActiveRequest> beyondLimit = algorithm.BeginRequestAsync(cancellation.Token);
+            try
+            {
+                Assert.False(beyondLimit.IsCompleted);
+                cancellation.Cancel();
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                    beyondLimit.WaitAsync(CompletionTimeout, testToken));
+            }
+            finally
+            {
+                cancellation.Cancel();
+                if (beyondLimit.IsCompletedSuccessfully)
+                    (await beyondLimit).Dispose();
+            }
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CANCELLATION", "refunded-permit-wakes-existing-rate-waiter")]
+    public async Task CanceledAdmission_WakesAnAlreadyWaitingRateLimitedRequestAsync()
+    {
+        var clock = new FakeTimeProvider();
+        using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        {
+            PrefetchCount = 3,
+            RequestResultLimit = 1,
+            ConcurrentResultLimit = 1,
+            RequestRateLimit = 4,
+            RequestRateInterval = TimeSpan.FromMinutes(1),
+        }, clock);
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        for (int index = 0; index < 2; index++)
+        {
+            using ActiveRequest completed = await algorithm.BeginRequestAsync(testToken);
+            await completed.CompleteAsync(1, testToken);
+        }
+        Assert.Equal(3, algorithm.RequestCount);
+
+        using var first = await algorithm.BeginRequestAsync(testToken);
+        using var resultCancellation = CancellationTokenSource.CreateLinkedTokenSource(testToken);
+        using var rateCancellation = CancellationTokenSource.CreateLinkedTokenSource(testToken);
+        resultCancellation.CancelAfter(CompletionTimeout);
+        rateCancellation.CancelAfter(CompletionTimeout);
+        Task<ActiveRequest> waitingForResults = Task.Run(() => algorithm.BeginRequestAsync(resultCancellation.Token));
+        Task<ActiveRequest>? waitingForRate = null;
+        try
+        {
+            Assert.True(SpinWait.SpinUntil(() => algorithm.ActiveRequestCount == 2, CompletionTimeout));
+            Assert.False(waitingForResults.IsCompleted);
+            waitingForRate = algorithm.BeginRequestAsync(rateCancellation.Token);
+            Assert.False(waitingForRate.IsCompleted);
+            Assert.Equal(2, algorithm.ActiveRequestCount);
+
+            resultCancellation.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                waitingForResults.WaitAsync(CompletionTimeout, testToken));
+
+            Assert.True(SpinWait.SpinUntil(() => algorithm.ActiveRequestCount == 2, CompletionTimeout));
+            Assert.False(waitingForRate.IsCompleted);
+            rateCancellation.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                waitingForRate.WaitAsync(CompletionTimeout, testToken));
+            Assert.Equal(1, algorithm.ActiveRequestCount);
+        }
+        finally
+        {
+            resultCancellation.Cancel();
+            rateCancellation.Cancel();
+            first.Dispose();
+            if (waitingForResults.IsCompletedSuccessfully)
+                (await waitingForResults).Dispose();
+            if (waitingForRate?.IsCompletedSuccessfully == true)
+                (await waitingForRate).Dispose();
+        }
+
+        Assert.Equal(0, algorithm.ActiveRequestCount);
     }
 
     [Fact]

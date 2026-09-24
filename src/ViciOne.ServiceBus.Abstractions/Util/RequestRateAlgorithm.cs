@@ -73,6 +73,7 @@ public class RequestRateAlgorithm :
     int _pendingResultCount;
     int _rateLimit;
     int _rateRemaining;
+    long _rateWindowVersion;
     bool _rateReductionPending;
     int _requestCount;
     TaskCompletionSource _rateCapacityChanged = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -81,6 +82,41 @@ public class RequestRateAlgorithm :
     /// <param name="options">The options that control the operation.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
     public RequestRateAlgorithm(RequestRateAlgorithmOptions options, TimeProvider? timeProvider = null)
+    {
+        ValidateOptions(options);
+
+        _options = options;
+        _timeProvider = timeProvider ?? TimeProvider.System;
+
+        _requestCancellationTimeout = _options.RequestCancellationTimeout ?? TimeSpan.FromSeconds(1);
+
+        _disposeToken = new CancellationTokenSource();
+        _requestCount = 1;
+        _requestSemaphore = new SemaphoreSlim(_requestCount);
+
+        _requestLimit = 1 + (_options.PrefetchCount - 1) / _options.RequestResultLimit;
+
+        _resultLimit = Math.Min(_options.PrefetchCount, _options.RequestResultLimit);
+        _concurrentResultLimit = options.ConcurrentResultLimit
+            ?? (int)Math.Min(int.MaxValue, (long)_requestLimit * _resultLimit);
+
+        _refreshThreshold = 1;
+
+        _resultSemaphore = new SemaphoreSlim(_concurrentResultLimit);
+
+        _tasks = new ConcurrentDictionary<long, Task>();
+
+        if (options is { RequestRateLimit: not null, RequestRateInterval: not null })
+        {
+            _rateLimit = options.RequestRateLimit.Value;
+            _rateRemaining = _rateLimit;
+
+            var interval = options.RequestRateInterval.Value;
+            _rateLimitTimer = _timeProvider.CreateTimer(Reset, null, interval, interval);
+        }
+    }
+
+    static void ValidateOptions(RequestRateAlgorithmOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
         if (options.PrefetchCount <= 0)
@@ -97,35 +133,6 @@ public class RequestRateAlgorithm :
             throw new ArgumentException("RequestRateInterval must be > TimeSpan.Zero when specified", nameof(options));
         if (options.RequestCancellationTimeout.HasValue && options.RequestCancellationTimeout.Value <= TimeSpan.Zero)
             throw new ArgumentException("RequestCancellationTimeout must be > TimeSpan.Zero when specified", nameof(options));
-
-        _options = options;
-        _timeProvider = timeProvider ?? TimeProvider.System;
-
-        _requestCancellationTimeout = _options.RequestCancellationTimeout ?? TimeSpan.FromSeconds(1);
-
-        _disposeToken = new CancellationTokenSource();
-        _requestCount = 1;
-        _requestSemaphore = new SemaphoreSlim(_requestCount);
-
-        _requestLimit = (_options.PrefetchCount + _options.RequestResultLimit - 1) / _options.RequestResultLimit;
-
-        _resultLimit = Math.Min(_options.PrefetchCount, _options.RequestResultLimit);
-        _concurrentResultLimit = options.ConcurrentResultLimit ?? _requestLimit * _resultLimit;
-
-        _refreshThreshold = 1;
-
-        _resultSemaphore = new SemaphoreSlim(_concurrentResultLimit);
-
-        _tasks = new ConcurrentDictionary<long, Task>();
-
-        if (options is { RequestRateLimit: not null, RequestRateInterval: not null })
-        {
-            _rateLimit = options.RequestRateLimit.Value;
-            _rateRemaining = _rateLimit;
-
-            var interval = options.RequestRateInterval.Value;
-            _rateLimitTimer = _timeProvider.CreateTimer(Reset, null, interval, interval);
-        }
     }
 
     /// <summary>The number of concurrent requests that should be performed based upon current response volume.</summary>
@@ -361,6 +368,8 @@ public class RequestRateAlgorithm :
     public async Task<ActiveRequest> BeginRequestAsync(CancellationToken cancellationToken = default)
     {
         var requestPermitAcquired = false;
+        var activeRequestCountIncremented = false;
+        long ratePermitWindow = -1;
         try
         {
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
@@ -369,9 +378,10 @@ public class RequestRateAlgorithm :
             requestPermitAcquired = true;
 
             if (_rateLimitTimer != null)
-                await WaitForRatePermitAsync(linked.Token).ConfigureAwait(false);
+                ratePermitWindow = await WaitForRatePermitAsync(linked.Token).ConfigureAwait(false);
 
             var current = Interlocked.Increment(ref _activeRequestCount);
+            activeRequestCountIncremented = true;
             while (current > _maxRequestCount)
                 Interlocked.CompareExchange(ref _maxRequestCount, current, _maxRequestCount);
 
@@ -385,6 +395,7 @@ public class RequestRateAlgorithm :
 
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
+                    linked.Token.ThrowIfCancellationRequested();
 
                     resultLimit = Math.Min(_concurrentResultLimit - ActiveResultCount - _pendingResultCount, ResultLimit);
                 }
@@ -396,8 +407,12 @@ public class RequestRateAlgorithm :
         }
         catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException)
         {
+            if (activeRequestCountIncremented)
+                Interlocked.Decrement(ref _activeRequestCount);
             if (requestPermitAcquired && !_disposed)
                 _requestSemaphore.Release();
+            if (ratePermitWindow >= 0)
+                ReturnRatePermit(ratePermitWindow);
 
             throw;
         }
@@ -453,7 +468,7 @@ public class RequestRateAlgorithm :
         _requestSemaphore.Release();
     }
 
-    async Task WaitForRatePermitAsync(CancellationToken cancellationToken)
+    async Task<long> WaitForRatePermitAsync(CancellationToken cancellationToken)
     {
         while (true)
         {
@@ -467,13 +482,26 @@ public class RequestRateAlgorithm :
                 {
                     _rateRemaining--;
                     _count++;
-                    return;
+                    return _rateWindowVersion;
                 }
 
                 capacityChanged = _rateCapacityChanged.Task;
             }
 
             await capacityChanged.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    void ReturnRatePermit(long windowVersion)
+    {
+        lock (_rateLimitLock)
+        {
+            if (_rateWindowVersion != windowVersion)
+                return;
+
+            _rateRemaining++;
+            _count--;
+            SignalRateCapacity();
         }
     }
 
@@ -610,6 +638,7 @@ public class RequestRateAlgorithm :
 
             _rateRemaining += _count;
             _count = 0;
+            _rateWindowVersion++;
             SignalRateCapacity();
         }
     }
