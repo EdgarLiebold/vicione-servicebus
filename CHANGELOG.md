@@ -290,6 +290,11 @@ entry below records what the current work changed for anyone reading the source.
   endpoint even when its key uses different casing, reject malformed segments
   before or after a valid endpoint, and preserve a schemaless scoped endpoint
   through leading, repeated, and trailing delimiters.
+- Recurring publish scheduling now has a source-owned regression for the
+  declared runtime message contract: the published command retains the
+  destination, schedule, payload and contract identity, while the chosen pipe
+  and cancellation token reach the publish endpoint. A failed publication
+  propagates to the caller instead of returning a scheduling handle.
 - The source-owned consume-transform pipeline test now checks the public
   delegate-based property transformation with both present and null source
   values. It verifies that the delegate sees the original message and

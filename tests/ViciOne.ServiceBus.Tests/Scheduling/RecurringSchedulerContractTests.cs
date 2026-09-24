@@ -230,6 +230,52 @@ public sealed class RecurringSchedulerContractTests
         Assert.Equal(DestinationAddress, declaredHandle.Destination);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "publish-declared-contract-preserves-command-pipe-and-handle")]
+    public async Task PublishDeclaredRecurringContract_PreservesCommandPipeAndHandleAsync()
+    {
+        IRecurringMessageScheduler scheduler = CreateRecordingPublishScheduler(out RecordingPublishEndpointProxy recording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var payload = new RecurringPayload("order-43");
+        IPipe<SendContext> pipe = DispatchProxy.Create<IPipe<SendContext>, UnexpectedInvocationProxy>();
+        using var cancellation = new CancellationTokenSource();
+
+        ScheduledRecurringMessage handle = await scheduler.ScheduleRecurringSendAsync(
+            DestinationAddress, schedule, (object)payload, typeof(IRecurringPayload), pipe, cancellation.Token);
+
+        var call = Assert.Single(recording.Calls);
+        var command = Assert.IsType<ScheduleRecurringMessageCommand<IRecurringPayload>>(call.Arguments[0]);
+        Assert.Same(schedule, command.Schedule);
+        Assert.Same(payload, command.Payload);
+        Assert.Equal(DestinationAddress, command.Destination);
+        Assert.Equal([MessageUrn.ForTypeString<IRecurringPayload>()], command.PayloadType);
+        Assert.Same(pipe, call.Arguments[1]);
+        Assert.Equal(cancellation.Token, call.Arguments[^1]);
+        Assert.Equal(typeof(ScheduleRecurringMessage), call.Method.GetGenericArguments()[0]);
+        var typedHandle = Assert.IsType<ScheduledRecurringMessageHandle<IRecurringPayload>>(handle);
+        Assert.Same(schedule, typedHandle.Schedule);
+        Assert.Same(payload, typedHandle.Payload);
+        Assert.Equal(DestinationAddress, typedHandle.Destination);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "publish-failure-does-not-return-recurring-handle")]
+    public async Task PublishDeclaredRecurringContract_PropagatesPublicationFailureAsync()
+    {
+        IRecurringMessageScheduler scheduler = CreateRecordingPublishScheduler(out RecordingPublishEndpointProxy recording);
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var failure = new InvalidOperationException("publication rejected");
+        recording.Failure = failure;
+        IPipe<SendContext> pipe = DispatchProxy.Create<IPipe<SendContext>, UnexpectedInvocationProxy>();
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            scheduler.ScheduleRecurringSendAsync(DestinationAddress, schedule,
+                (object)new RecurringPayload("order-44"), typeof(IRecurringPayload), pipe, TestContext.Current.CancellationToken));
+
+        Assert.Same(failure, exception);
+        Assert.Single(recording.Calls);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -255,6 +301,13 @@ public sealed class RecurringSchedulerContractTests
         ISendEndpoint endpoint = DispatchProxy.Create<IAdvancedSendEndpoint, RecordingSendEndpointProxy>();
         recording = (RecordingSendEndpointProxy)(object)endpoint;
         return new EndpointRecurringMessageScheduler(endpoint);
+    }
+
+    private static IRecurringMessageScheduler CreateRecordingPublishScheduler(out RecordingPublishEndpointProxy recording)
+    {
+        IPublishEndpoint endpoint = DispatchProxy.Create<AdvancedPublishEndpoint, RecordingPublishEndpointProxy>();
+        recording = (RecordingPublishEndpointProxy)(object)endpoint;
+        return new PublishRecurringMessageScheduler(endpoint);
     }
 
     private static async Task<Exception> CaptureInvocationExceptionAsync(MethodInfo method, object target, object?[] arguments)
@@ -285,6 +338,8 @@ public sealed class RecurringSchedulerContractTests
     }
 
     private sealed record RecurringPayload(string Id) : IRecurringPayload;
+
+    private interface AdvancedPublishEndpoint : IPublishEndpoint, IAdvancedPublishEndpoint;
 
     private sealed class TestTimeProvider : TimeProvider
     {
@@ -318,6 +373,22 @@ public sealed class RecurringSchedulerContractTests
 
             Calls.Add((targetMethod, args.ToArray()));
             return Task.CompletedTask;
+        }
+    }
+
+    private class RecordingPublishEndpointProxy : DispatchProxy
+    {
+        public List<(MethodInfo Method, object?[] Arguments)> Calls { get; } = [];
+
+        public Exception? Failure { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(IPublishEndpoint.PublishAsync) || args is null)
+                throw new InvalidOperationException($"The recurring scheduler unexpectedly invoked {targetMethod?.Name}.");
+
+            Calls.Add((targetMethod, args.ToArray()));
+            return Failure is null ? Task.CompletedTask : Task.FromException(Failure);
         }
     }
 }
