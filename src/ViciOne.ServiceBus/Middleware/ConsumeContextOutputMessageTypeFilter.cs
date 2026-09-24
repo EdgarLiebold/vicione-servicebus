@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -109,21 +110,51 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         }
         catch (Exception ex)
         {
-            if (_observers.Count > 0)
-            {
-                var consumeFaultTask = _observers.ConsumeFaultAsync(pipeContext, ex);
-                if (consumeFaultTask.Status != TaskStatus.RanToCompletion)
-                    await consumeFaultTask.ConfigureAwait(false);
-            }
-
-            if (_consumeObservers.Count > 0)
-            {
-                var consumeFaultTask = _consumeObservers.ConsumeFaultAsync(pipeContext, ex);
-                if (consumeFaultTask.Status != TaskStatus.RanToCompletion)
-                    await consumeFaultTask.ConfigureAwait(false);
-            }
-
+            await NotifyFaultObserversAsync(pipeContext, ex).ConfigureAwait(false);
             throw;
+        }
+    }
+
+    async Task NotifyFaultObserversAsync(ConsumeContext<TMessage> pipeContext, Exception dispatchFailure)
+    {
+        if (_observers.Count > 0)
+        {
+            try
+            {
+                var consumeFaultTask = _observers.ConsumeFaultAsync(pipeContext, dispatchFailure);
+                if (consumeFaultTask.Status != TaskStatus.RanToCompletion)
+                    await consumeFaultTask.ConfigureAwait(false);
+            }
+            catch (Exception observerFailure)
+            {
+                LogObserverFailure(observerFailure, "typed");
+            }
+        }
+
+        if (_consumeObservers.Count > 0)
+        {
+            try
+            {
+                var consumeFaultTask = _consumeObservers.ConsumeFaultAsync(pipeContext, dispatchFailure);
+                if (consumeFaultTask.Status != TaskStatus.RanToCompletion)
+                    await consumeFaultTask.ConfigureAwait(false);
+            }
+            catch (Exception observerFailure)
+            {
+                LogObserverFailure(observerFailure, "outer");
+            }
+        }
+    }
+
+    static void LogObserverFailure(Exception observerFailure, string observerScope)
+    {
+        try
+        {
+            LogContext.Error?.Log(observerFailure, "A consume-output {ObserverScope} fault observer failed after dispatch faulted: {MessageType}", observerScope, typeof(TMessage));
+        }
+        catch
+        {
+            // Diagnostic logging must not replace the consume failure.
         }
     }
 }

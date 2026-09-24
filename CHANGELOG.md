@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Typed and outer consume-output fault observers can no longer replace the
+  original consume-dispatch failure with their own exception. Both groups are
+  notified even when the typed observer fails, and diagnostic logger failures
+  remain secondary to the dispatch failure.
 - Output-pipe fault observers can no longer replace the original dispatch
   failure with their own exception. A failed typed observer also no longer
   prevents the outer observer from receiving the dispatch failure. A failing
@@ -271,6 +275,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Output-pipe and consume-output fault notification now run in focused methods
+  so dispatch control flow and secondary observer failures are independently
+  reviewable. New consume-output tests verify asynchronous callback order,
+  pending pipeline state, exact context and exception identity, and failures
+  from either observer group and the diagnostic logger.
 - Filter-observer tests now hold each typed and untyped pre-send, post-send,
   and fault callback asynchronously. They verify that downstream work waits
   for the active observer, callbacks stay ordered, and a failed dispatch

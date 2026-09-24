@@ -97,35 +97,39 @@ public class OutputPipeFilter<TInput, TOutput> :
         }
         catch (Exception ex)
         {
-            if (_observers.Count > 0)
-            {
-                try
-                {
-                    var sendFaultTask = _observers.SendFaultAsync(pipeContext, ex);
-                    if (sendFaultTask.Status != TaskStatus.RanToCompletion)
-                        await sendFaultTask.ConfigureAwait(false);
-                }
-                catch (Exception observerFailure)
-                {
-                    LogObserverFailure(observerFailure, "typed");
-                }
-            }
-
-            if (_outerObservers.Count > 0)
-            {
-                try
-                {
-                    var sendFaultTask = _outerObservers.SendFaultAsync(pipeContext, ex);
-                    if (sendFaultTask.Status != TaskStatus.RanToCompletion)
-                        await sendFaultTask.ConfigureAwait(false);
-                }
-                catch (Exception observerFailure)
-                {
-                    LogObserverFailure(observerFailure, "outer");
-                }
-            }
-
+            await NotifyFaultObserversAsync(pipeContext, ex).ConfigureAwait(false);
             throw;
+        }
+    }
+
+    async Task NotifyFaultObserversAsync(TOutput pipeContext, Exception dispatchFailure)
+    {
+        if (_observers.Count > 0)
+        {
+            try
+            {
+                var sendFaultTask = _observers.SendFaultAsync(pipeContext, dispatchFailure);
+                if (sendFaultTask.Status != TaskStatus.RanToCompletion)
+                    await sendFaultTask.ConfigureAwait(false);
+            }
+            catch (Exception observerFailure)
+            {
+                LogObserverFailure(observerFailure, "typed");
+            }
+        }
+
+        if (_outerObservers.Count > 0)
+        {
+            try
+            {
+                var sendFaultTask = _outerObservers.SendFaultAsync(pipeContext, dispatchFailure);
+                if (sendFaultTask.Status != TaskStatus.RanToCompletion)
+                    await sendFaultTask.ConfigureAwait(false);
+            }
+            catch (Exception observerFailure)
+            {
+                LogObserverFailure(observerFailure, "outer");
+            }
         }
     }
 
