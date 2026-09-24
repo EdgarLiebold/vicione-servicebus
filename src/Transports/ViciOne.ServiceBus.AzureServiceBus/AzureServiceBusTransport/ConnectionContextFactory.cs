@@ -57,9 +57,6 @@ public class ConnectionContextFactory :
         var client = settings.ServiceBusClient;
         var managementClient = settings.ServiceBusAdministrationClient;
 
-        if (client != null && !string.Equals(client.FullyQualifiedNamespace, settings.ServiceUri.Host, StringComparison.OrdinalIgnoreCase))
-            throw new ServiceBusConnectionException("The messaging client namespace does not match the configured host address");
-
         if (!settings.ServiceUri.IsDefaultPort && (client == null || managementClient == null)
             && (settings.ConnectionString == null || !HasSharedAccess(settings.ConnectionString)
                 || !ViciOne.ServiceBus.Configuration.ServiceBusHostConfigurator.IsDevelopmentEmulator(settings.ConnectionString)))

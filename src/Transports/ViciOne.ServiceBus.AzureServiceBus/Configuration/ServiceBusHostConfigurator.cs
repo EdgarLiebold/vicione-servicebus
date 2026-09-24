@@ -32,16 +32,11 @@ public class ServiceBusHostConfigurator :
     {
         var hostAddress = new ServiceBusHostAddress(serviceAddress);
 
-        ArgumentNullException.ThrowIfNull(serviceBusClient);
-        ArgumentNullException.ThrowIfNull(serviceBusAdministrationClient);
-        if (!string.Equals(serviceBusClient.FullyQualifiedNamespace, hostAddress.Host, StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("The messaging client namespace must match the configured host address", nameof(serviceBusClient));
-
         _settings = new HostSettings
         {
             ServiceUri = hostAddress,
-            ServiceBusClient = serviceBusClient,
-            ServiceBusAdministrationClient = serviceBusAdministrationClient,
+            ServiceBusClient = serviceBusClient ?? throw new ArgumentNullException(nameof(serviceBusClient)),
+            ServiceBusAdministrationClient = serviceBusAdministrationClient ?? throw new ArgumentNullException(nameof(serviceBusAdministrationClient)),
         };
     }
 

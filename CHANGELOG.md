@@ -30,8 +30,9 @@ entry below records what the current work changed for anyone reading the source.
   Credential-bearing custom-port strings without effective emulator mode are
   rejected rather than silently connecting to the default endpoint. Factory
   contexts now preserve the configured namespace port in their reported endpoint
-  and derived entity input addresses; caller-supplied messaging clients from a
-  different namespace are rejected before topology can advertise the wrong host.
+  and derived entity input addresses. Caller-supplied SDK clients may use a
+  different physical emulator host or port while the configured logical host
+  remains the address advertised to endpoints.
 - The outbound HTTP boundary test now serializes its process-wide diagnostic
   listener with other global listener tests. Its synthetic positive control
   observes only its own request, while the default bus lifecycle test still

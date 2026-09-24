@@ -111,32 +111,26 @@ public sealed class ServiceBusConnectionContextTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "preconfigured-client-namespace-must-match-host")]
-    public async Task PreconfiguredMessagingClientFromAnotherNamespace_IsRejectedAtConfigurationAndFactoryBoundariesAsync()
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "preconfigured-client-physical-host-can-differ-from-logical-host")]
+    public async Task PreconfiguredMessagingClientFromAnotherHost_PreservesTheConfiguredLogicalAddressAsync()
     {
         var address = new Uri("sb://localhost:5672/");
         var client = new RecordingServiceBusClient();
         var administration = new RecordingServiceBusAdministrationClient();
 
-        ArgumentException configurationFailure = Assert.Throws<ArgumentException>(
-            () => new ViciOne.ServiceBus.Configuration.ServiceBusHostConfigurator(address, client, administration));
-        Assert.Equal("serviceBusClient", configurationFailure.ParamName);
-
-        var settings = new HostSettings
-        {
-            ServiceUri = address,
-            ServiceBusClient = client,
-            ServiceBusAdministrationClient = administration,
-        };
+        var host = new ViciOne.ServiceBus.Configuration.ServiceBusHostConfigurator(address, client, administration);
+        Assert.Same(client, host.Settings.ServiceBusClient);
         IServiceBusHostConfiguration configuration = DispatchProxy.Create<IServiceBusHostConfiguration, HostConfigurationProxy>();
         var proxy = (HostConfigurationProxy)(object)configuration;
         proxy.Address = address;
-        proxy.Settings = settings;
+        proxy.Settings = host.Settings;
         IPipeContextFactory<ConnectionContext> factory = new ConnectionContextFactory(configuration);
         IPipeContextAgent<ConnectionContext> agent = factory.CreateContext(new Supervisor());
 
-        ServiceBusConnectionException factoryFailure = await Assert.ThrowsAsync<ServiceBusConnectionException>(() => agent.Context);
-        Assert.Contains("namespace", factoryFailure.Message, StringComparison.OrdinalIgnoreCase);
+        var connection = Assert.IsType<ServiceBusConnectionContext>(await agent.Context);
+        Assert.Equal(address, connection.Endpoint);
+        _ = connection.CreateQueueProcessor(CreateSettings());
+        Assert.NotNull(client.ProcessorOptions);
     }
 
     [Fact]
