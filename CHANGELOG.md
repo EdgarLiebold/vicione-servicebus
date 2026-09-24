@@ -267,6 +267,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Amazon SQS topology diagnostics now have a contract test that verifies all
+  declared topics and queues, their lifetime flags, and every SNS-to-SQS
+  subscription pair in the public probe result.
 - Azure Service Bus queue and subscription fault-notification tests now verify
   that processor callbacks return while supervised shutdown is pending,
   overlapping and simultaneous fault reports share one stop attempt, and an already canceled
