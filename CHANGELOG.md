@@ -267,6 +267,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Azure Service Bus session-batching tests now exercise the public consumer
+  extension through real batch options and the endpoint callback. They verify
+  that broker session identities group messages, batch limits reach the
+  queue and subscription endpoints, existing prefetch settings follow the
+  configured boundary, and invalid options or endpoint kinds fail before
+  endpoint mutation. The invalid-endpoint diagnostic now names the actual
+  shared Azure Service Bus endpoint contract.
 - Consume-observer converter tests now verify that each lifecycle stage
   forwards the exact typed context and fault, preserves the observer's
   asynchronous result and failure even when the caller cancels after

@@ -34,7 +34,7 @@ public static class ServiceBusBatchingExtensions
                 .SetConfigurationCallback((name, configurator) =>
                 {
                     if (configurator is not IServiceBusEndpointConfigurator sb)
-                        throw new ArgumentException("Expecting IServiceBusReceiveEndpointConfigurator", nameof(configurator));
+                        throw new ArgumentException($"Expecting {nameof(IServiceBusEndpointConfigurator)}", nameof(configurator));
 
                     sb.RequiresSession = true;
 
