@@ -25,25 +25,6 @@ internal static class QueryStringExtensions
         return found;
     }
 
-    public static T GetValueFromQueryString<T>(this Uri uri, string key, T defaultValue)
-        where T : struct
-    {
-        if (string.IsNullOrEmpty(uri.Query))
-            return defaultValue;
-
-        try
-        {
-            if (!uri.TryGetValueFromQueryString(key, out var value) || string.IsNullOrEmpty(value))
-                return defaultValue;
-
-            return (T)Convert.ChangeType(value, typeof(T));
-        }
-        catch
-        {
-            return defaultValue;
-        }
-    }
-
     /// <summary>Parse the host path, which on a host address might be a virtual host, a scope, etc.</summary>
     /// <param name="address">The address.</param>
     /// <returns>The parsed host path.</returns>

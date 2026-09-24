@@ -177,16 +177,6 @@ internal static class TypeExtensions
         return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
     }
 
-    /// <summary>Determines if a type can be null.</summary>
-    /// <param name="type">The type.</param>
-    /// <returns>True if the type can be null.</returns>
-    public static bool CanBeNull(this Type type)
-    {
-        return !type.IsValueType
-            || type == typeof(string)
-            || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
-    }
-
     /// <summary>Returns the first attribute of the specified type for the object specified.</summary>
     /// <typeparam name="T">The type of attribute.</typeparam>
     /// <param name="provider">An attribute provider, which can be a MethodInfo, PropertyInfo, Type, etc.</param>
