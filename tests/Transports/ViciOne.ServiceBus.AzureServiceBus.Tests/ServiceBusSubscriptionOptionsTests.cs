@@ -1,6 +1,7 @@
 using Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 using ViciOne.ServiceBus.AzureServiceBus.Topology;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -8,6 +9,66 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 
 public sealed class ServiceBusSubscriptionOptionsTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-OPTIONS", "validation-reports-all-independent-errors-in-order")]
+    public void Validate_ReportsEveryIndependentSubscriptionErrorInOrder()
+    {
+        var configurator = new ServiceBusSubscriptionConfigurator("invalid subscription", "invalid topic")
+        {
+            AutoDeleteOnIdle = TimeSpan.FromMinutes(4),
+            Filter = new SqlRuleFilter("subject = 'orders'"),
+            Rule = new CreateRuleOptions("orders-only", new SqlRuleFilter("subject = 'orders'")),
+        };
+
+        ValidationResult[] failures = configurator.Validate().ToArray();
+
+        Assert.Equal(["TopicPath", "SubscriptionName", "AutoDeleteOnIdle", "Rule/Filter"],
+            failures.Select(failure => failure.Key));
+        Assert.All(failures, failure => Assert.Equal(ValidationResultDisposition.Failure, failure.Disposition));
+        Assert.Equal([
+            "must be a valid topic path: invalid topic",
+            "must be a valid subscription name: invalid subscription",
+            "must be zero, or >= 5:00",
+            "only a rule or a filter may be specified",
+        ], failures.Select(failure => failure.Message));
+        Assert.All(failures, failure => Assert.Null(failure.Value));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-OPTIONS", "validation-enforces-idle-bounds-and-either-rule-form")]
+    public void Validate_EnforcesIdleBoundsWithEitherRuleForm()
+    {
+        var configurator = new ServiceBusSubscriptionConfigurator("orders-worker", "orders-topic")
+        {
+            AutoDeleteOnIdle = TimeSpan.FromMinutes(5),
+            Filter = new SqlRuleFilter("subject = 'orders'"),
+        };
+        Assert.Empty(configurator.Validate());
+
+        configurator.Filter = null;
+        configurator.Rule = new CreateRuleOptions("orders-only", new SqlRuleFilter("subject = 'orders'"));
+        configurator.AutoDeleteOnIdle = TimeSpan.Zero;
+        Assert.Empty(configurator.Validate());
+
+        configurator.AutoDeleteOnIdle = null;
+        Assert.Empty(configurator.Validate());
+
+        configurator.AutoDeleteOnIdle = TimeSpan.FromTicks(-1);
+        ValidationResult negativeIdle = Assert.Single(configurator.Validate());
+        Assert.Equal("AutoDeleteOnIdle", negativeIdle.Key);
+        Assert.Equal("must be zero, or >= 5:00", negativeIdle.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-OPTIONS", "validation-uses-distinct-topic-and-subscription-name-rules")]
+    public void Validate_UsesDistinctTopicAndSubscriptionNameRules()
+    {
+        var names = new ServiceBusSubscriptionConfigurator("orders/worker", "orders/topic");
+        ValidationResult invalidSubscriptionName = Assert.Single(names.Validate());
+        Assert.Equal("SubscriptionName", invalidSubscriptionName.Key);
+        Assert.Equal("must be a valid subscription name: orders/worker", invalidSubscriptionName.Message);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-OPTIONS", "configured-settings-reach-sdk-subscription-creation")]
     public void ConfiguredSettings_ReachTheSdkSubscriptionCreationBoundary()
