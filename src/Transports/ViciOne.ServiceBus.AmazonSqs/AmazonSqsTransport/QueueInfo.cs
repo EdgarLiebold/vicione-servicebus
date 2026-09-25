@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 using Amazon.Auth.AccessControlPolicy;
 using Amazon.SQS;
 using Amazon.SQS.Model;
@@ -176,39 +176,28 @@ public class QueueInfo :
             ? new Policy()
             : Policy.FromJson(policyValue);
 
+        if (policy.Statements.Any(statement => statement.Effect == Statement.StatementEffect.Deny
+            && DenyMayBlockSnsSend(statement, sqsQueueArn, topicArn)))
+            throw new AmazonSqsTransportException($"The queue policy contains an explicit Deny that may block Amazon SNS topic '{topicArn}' from sending to '{sqsQueueArn}'.");
+
         if (QueueHasTopicPermission(policy, topicArn, sqsQueueArn))
             return false;
 
-        var statement = policy.Statements.FirstOrDefault(x => x.Effect == Statement.StatementEffect.Allow
-            && x.Actions.Any(a => a.ActionName.Equals(SendMessageIAMActionName, StringComparison.Ordinal))
-            && x.Resources.Any(a => a.Id.Equals(sqsQueueArn, StringComparison.OrdinalIgnoreCase))
-            && x.Principals.Any(a => string.Equals(a.Provider, "Service", StringComparison.OrdinalIgnoreCase)
-                && a.Id.Equals("sns.amazonaws.com", StringComparison.OrdinalIgnoreCase)));
-
-        if (statement is null)
+        var reusable = policy.Statements.FirstOrDefault(statement => IsDedicatedSnsAllow(statement, sqsQueueArn));
+        if (reusable is not null)
         {
-            statement = new Statement(Statement.StatementEffect.Allow);
+            var sourceArns = reusable.Conditions[0].Values;
+            reusable.Conditions[0].Values = sourceArns.Append(topicArn).Distinct(StringComparer.Ordinal).ToArray();
+        }
+        else
+        {
+            // Never carry unrelated conditions or additional permissions into the new statement.
+            var statement = new Statement(Statement.StatementEffect.Allow);
             statement.Actions.Add(SendMessageIAMActionName);
             statement.Resources.Add(new Resource(sqsQueueArn));
             statement.Principals.Add(new Principal("Service", "sns.amazonaws.com"));
-            policy.Statements.Add(statement);
-        }
-        var condition = statement.Conditions.FirstOrDefault(x =>
-            string.Equals(ConditionFactory.SOURCE_ARN_CONDITION_KEY, x.ConditionKey, StringComparison.Ordinal) &&
-            x.Type.Equals(ConditionFactory.ArnComparisonType.ArnLike.ToString(), StringComparison.Ordinal));
-
-        if (condition is not null && condition.Values.Any(x => x.Equals(topicArn, StringComparison.OrdinalIgnoreCase)))
-            return false;
-
-        if (condition is null)
             statement.Conditions.Add(ConditionFactory.NewSourceArnCondition(topicArn));
-        else
-        {
-            condition.Values = condition
-                .Values
-                .Append(topicArn)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+            policy.Statements.Add(statement);
         }
 
         var jsonPolicy = policy.ToJson();
@@ -225,15 +214,84 @@ public class QueueInfo :
 
     static bool QueueHasTopicPermission(Policy policy, string topicArn, string sqsQueueArn)
     {
-        var topicArnPattern = topicArn.Substring(0, topicArn.LastIndexOf(':') + 1) + "*";
+        return policy.Statements.Any(statement =>
+            statement.Effect == Statement.StatementEffect.Allow
+            && StatementAppliesToSnsSend(statement, sqsQueueArn)
+            && SourceArnConditionMatches(statement, topicArn));
+    }
 
-        IEnumerable<Condition> conditions = policy.Statements
-            .Where(s => s.Resources.Any(r => r.Id.Equals(sqsQueueArn)))
-            .SelectMany(s => s.Conditions);
+    static bool StatementAppliesToSnsSend(Statement statement, string sqsQueueArn) =>
+        statement.Actions.Any(action => action.ActionName.Equals(SendMessageIAMActionName, StringComparison.Ordinal))
+        && statement.Resources.Any(resource => resource.Id.Equals(sqsQueueArn, StringComparison.Ordinal))
+        && statement.Principals.Any(principal =>
+            string.Equals(principal.Provider, "Service", StringComparison.OrdinalIgnoreCase)
+            && string.Equals(principal.Id, "sns.amazonaws.com", StringComparison.OrdinalIgnoreCase));
 
-        return conditions.Any(c =>
-            string.Equals(c.Type, ConditionFactory.ArnComparisonType.ArnLike.ToString(), StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(c.ConditionKey, ConditionFactory.SOURCE_ARN_CONDITION_KEY, StringComparison.OrdinalIgnoreCase) &&
-            c.Values.Any(v => v == topicArnPattern || v == topicArn));
+    static bool IsDedicatedSnsAllow(Statement statement, string sqsQueueArn) =>
+        statement.Effect == Statement.StatementEffect.Allow
+        && statement.Actions.Count == 1
+        && statement.Actions[0].ActionName == SendMessageIAMActionName
+        && statement.Resources.Count == 1
+        && statement.Resources[0].Id == sqsQueueArn
+        && statement.Principals.Count == 1
+        && string.Equals(statement.Principals[0].Provider, "Service", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(statement.Principals[0].Id, "sns.amazonaws.com", StringComparison.OrdinalIgnoreCase)
+        && statement.Conditions.Count == 1
+        && string.Equals(statement.Conditions[0].ConditionKey, ConditionFactory.SOURCE_ARN_CONDITION_KEY, StringComparison.OrdinalIgnoreCase)
+        && IsPositiveArnComparison(statement.Conditions[0].Type);
+
+    static bool DenyMayBlockSnsSend(Statement statement, string sqsQueueArn, string topicArn) =>
+        statement.Actions.Any(action => PolicyPatternMatches(action.ActionName, SendMessageIAMActionName, true))
+        && statement.Resources.Any(resource => PolicyPatternMatches(resource.Id, sqsQueueArn, false))
+        && statement.Principals.Any(principal =>
+            (principal.Provider == "*" || string.Equals(principal.Provider, "Service", StringComparison.OrdinalIgnoreCase))
+            && PolicyPatternMatches(principal.Id, "sns.amazonaws.com", true))
+        && DenyConditionsMayMatch(statement, topicArn);
+
+    static bool DenyConditionsMayMatch(Statement statement, string topicArn)
+    {
+        if (statement.Conditions.Count == 0)
+            return true;
+        if (statement.Conditions.Count != 1)
+            return true; // Unknown combinations must not be reported as an effective permission.
+
+        var condition = statement.Conditions[0];
+        if (!string.Equals(condition.ConditionKey, ConditionFactory.SOURCE_ARN_CONDITION_KEY, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (IsPositiveArnComparison(condition.Type))
+            return condition.Values.Any(value => PolicyPatternMatches(value, topicArn, false));
+
+        if (string.Equals(condition.Type, "ArnNotEquals", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(condition.Type, "ArnNotLike", StringComparison.OrdinalIgnoreCase))
+            return !condition.Values.Any(value => PolicyPatternMatches(value, topicArn, false));
+
+        return true;
+    }
+
+    static bool PolicyPatternMatches(string pattern, string value, bool ignoreCase)
+    {
+        var expression = "\\A" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "\\z";
+        return Regex.IsMatch(value, expression,
+            RegexOptions.CultureInvariant | RegexOptions.Singleline | (ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None),
+            TimeSpan.FromMilliseconds(100));
+    }
+
+    static bool IsPositiveArnComparison(string type) =>
+        string.Equals(type, ConditionFactory.ArnComparisonType.ArnLike.ToString(), StringComparison.OrdinalIgnoreCase)
+        || string.Equals(type, "ArnEquals", StringComparison.OrdinalIgnoreCase);
+
+    static bool SourceArnConditionMatches(Statement statement, string topicArn)
+    {
+        if (statement.Conditions.Count == 0)
+            return true;
+        if (statement.Conditions.Count != 1)
+            return false;
+
+        var condition = statement.Conditions[0];
+        var topicArnPattern = topicArn[..(topicArn.LastIndexOf(':') + 1)] + "*";
+        return string.Equals(condition.ConditionKey, ConditionFactory.SOURCE_ARN_CONDITION_KEY, StringComparison.OrdinalIgnoreCase)
+            && IsPositiveArnComparison(condition.Type)
+            && condition.Values.Any(value => value == topicArnPattern || value == topicArn);
     }
 }
