@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ publish-topology tests now verify topic and fanout parent routing,
+  exclusion without builder mutation, an alternate-exchange queue route, and
+  direct implemented-contract hierarchy bindings using real broker-topology
+  snapshots. The full RabbitMQ unit project passes 411 tests.
 - Coverage receipts can limit MSBuild restore/build parallelism on constrained
   hosts and reject a restore that exits without the test project's assets file.
   The selected node limit is recorded in the receipt.
