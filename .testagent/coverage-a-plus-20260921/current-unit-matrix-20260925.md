@@ -1,4 +1,16 @@
-# Aktuelle Unit-Coverage-Matrix vom 25.09.2026
+# Unit-Coverage-Matrix vom 25.09.2026
+
+**Aktualisierung nach `fb2f92b3a`:** Die nachfolgende 17er-Matrix ist eine
+historische Baseline auf `tests`-Tree
+`fe688c658a68b75191fe90a2de51537e8bdf8c36`. Die NewId-Grenztests
+änderten den aktuellen `tests`-Tree zu
+`71163720aa77639bd0d1be63fd402a1922b55440`; diese alten Receipts
+sind deshalb kein Profil des aktuellen Teststands. Auf `fb2f92b3a` liegen
+derzeit zwei frische Abstractions-Receipts mit jeweils 828 bestandenen Tests
+(normal und deklarierter No-AVX2-Lauf). Der aktuelle Produktbereichsstand
+benötigt noch 17 Unit-Receipts und alle 13 lokalen Provider-Receipts auf
+demselben Mess-Commit. Details stehen in
+`newid-guid-batch-rollover-20260925.md`.
 
 ## Gültige Produktbereichs-Receipts
 
