@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS move requests now have provider-boundary tests for the admitted
+  body, custom string and binary attributes, FIFO identifiers only on FIFO
+  destinations, removal of stale transport headers, and fresh move headers.
+  A failed provider send must redeclare topology on retry; a successful retry
+  must keep it cached.
 - Amazon SQS FIFO receiving now has provider-facing tests for numeric sequence
   order, per-group ordering in an interleaved batch, and progress of a second
   group while the first group's dispatch is blocked. Missing or invalid FIFO
@@ -28,6 +33,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SQS moves now reject a request with more than ten message attributes
+  before provider submission, naming the destination and actual count. A
+  dead-letter move can add a reason to nine custom attributes; ten existing
+  custom attributes plus that reason exceed the provider limit and fail with
+  a local diagnostic instead of sending an invalid request.
 - Amazon SQS queue-policy reconciliation now checks the Allow statement's
   effect, action, resource, SNS service principal and SourceArn condition
   together. Unrelated statements no longer masquerade as send permission or

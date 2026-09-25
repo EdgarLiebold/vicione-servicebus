@@ -34,6 +34,7 @@ public class SqsMoveTransport<TSettings>
     /// <param name="preSend">The callback that adds move-specific headers before sending.</param>
     /// <param name="cancellationToken">The caller token used to cancel topology declaration and provider submission.</param>
     /// <returns>A task that completes when the destination accepts the message.</returns>
+    /// <exception cref="InvalidOperationException">The move would exceed Amazon SQS's ten-message-attribute limit.</exception>
     protected async Task MoveAsync(ReceiveContext context, Action<SendMessageBatchRequestEntry, IDictionary<string, MessageAttributeValue>> preSend,
         CancellationToken cancellationToken)
     {
@@ -79,6 +80,10 @@ public class SqsMoveTransport<TSettings>
         }
 
         preSend(message, message.MessageAttributes);
+
+        if (message.MessageAttributes.Count > 10)
+            throw new InvalidOperationException(
+                $"Amazon SQS permits at most 10 message attributes; moving to '{_destination}' would send {message.MessageAttributes.Count}.");
 
         try
         {
