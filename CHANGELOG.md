@@ -18,6 +18,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SQS queue-policy reconciliation now checks the Allow statement's
+  effect, action, resource, SNS service principal and SourceArn condition
+  together. Unrelated statements no longer masquerade as send permission or
+  contribute extra conditions to a new grant. A matching explicit Deny,
+  including wildcard principals and actions, is reported before a policy
+  write. Dedicated ArnLike and ArnEquals grants safely collect multiple
+  topics in one statement; existing unrestricted grants are left intact.
 - Amazon SNS publish-topology discovery and explicit registration now reject
   a missing configurator or type list with named argument errors. An explicit
   list containing a null or invalid message type, and a namespace scan whose
