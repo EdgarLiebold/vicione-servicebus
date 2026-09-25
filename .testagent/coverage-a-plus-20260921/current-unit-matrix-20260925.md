@@ -1,5 +1,15 @@
 # Unit-Coverage-Matrix vom 25.09.2026
 
+**Aktueller Messstand auf `71867c7d8`:** Drei Abstractions-Receipts (normal,
+ohne AVX2, ohne Hardware-Intrinsics) bestanden mit je 913/913 Tests; der
+Amazon-SQS-Receipt bestand mit 215/215. Alle vier sind an denselben
+`src`-/`tests`-Tree gebunden. Das Teilaggregat enthält 3/32
+Produktassemblies, 2.954 Testausführungen, 11.064/43.761 Zeilen,
+konservativ 4.074/17.555 Branches und 704 Methoden mit CRAP > 30. Es
+fehlen 16 Produkt-Unit-Receipts, 13 lokale Provider-Receipts und 29
+Assemblies. Dies ist kein produktweiter A+-Stand. Der neue Abbruch- und
+Drain-Vertrag ist in `pending-task-completion-20260925.md` belegt.
+
 **Aktueller Messstand auf `06a7f5dc7`:** Drei frische Abstractions-Receipts
 (normal, ohne AVX2, ohne Hardware-Intrinsics) bestanden mit je 910/910 Tests;
 der Amazon-SQS-Receipt bestand mit 215/215. Alle vier sind an denselben
