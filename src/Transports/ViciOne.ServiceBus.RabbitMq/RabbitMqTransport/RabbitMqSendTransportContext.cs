@@ -89,26 +89,11 @@ public class RabbitMqSendTransportContext :
     /// <param name="pipe">The send-context configuration pipeline.</param>
     /// <param name="cancellationToken">Cancellation for the send context.</param>
     /// <returns>The configured RabbitMQ send context.</returns>
-    public async Task<SendContext<T>> CreateSendContextAsync<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
+    public Task<SendContext<T>> CreateSendContextAsync<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        var properties = new BasicProperties();
-
-        var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
-
-        await pipe.SendAsync(sendContext).ConfigureAwait(false);
-
-        CopyIncomingPropertiesIfPresent(sendContext);
-
-        if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
-        {
-            var destinationAddress = sendContext.DestinationAddress
-                ?? throw new InvalidOperationException("The RabbitMQ send context does not have a destination address.");
-            throw new TransportException(destinationAddress, "RoutingKey must be specified when sending to reply-to address");
-        }
-
-        return sendContext;
+        return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
     /// <summary>Creates and configures a typed RabbitMQ send context.</summary>

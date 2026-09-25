@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ now uses one send-context configuration path for channel-bound and
+  direct sends. Channel-bound reply tests verify the final broker frame,
+  inherited priority and reply address, cancellation token, and rejection of
+  a blank reply route before publish. Omitting the inherited AMQP properties
+  failed both the new publish test and the existing direct-context test.
 - RabbitMQ startup purge now serializes passive queue inspection and purge
   across concurrent channel starts for the same endpoint filter. A second
   channel cannot purge twice or enter the receive pipeline while an earlier

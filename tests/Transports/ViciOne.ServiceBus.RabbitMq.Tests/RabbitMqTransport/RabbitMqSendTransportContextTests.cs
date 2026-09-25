@@ -610,6 +610,62 @@ public sealed class RabbitMqSendTransportContextTests
         Assert.Contains("RoutingKey must be specified", exception.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "channel-bound-reply-preserves-wire-properties")]
+    public async Task CreateSendContextAsync_ChannelBoundReplyPreservesIncomingPropertiesThroughPublishAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var message = new TestMessage();
+        ConsumeContext incoming = CreateIncomingContext(new BasicProperties
+        {
+            Priority = 7,
+            ReplyTo = "incoming.reply",
+        });
+        var pipe = new ConfigureSendPipe(context =>
+        {
+            context.DestinationAddress = new Uri("rabbitmq://localhost/amq.rabbitmq.reply-to");
+            context.ResponseAddress = new Uri("rabbitmq://localhost/amq.rabbitmq.reply-to");
+            context.RoutingKey = "reply.queue";
+            context.Serializer = new BinarySerializer(new byte[] { 1, 2 });
+            context.GetOrAddPayload(() => incoming);
+        });
+        var channel = new RecordingChannelContext();
+        RabbitMqSendTransportContext transport = CreateTransport(EmptyTopology(), exchange: RabbitMqExchangeNames.ReplyTo);
+
+        var sendContext = Assert.IsType<RabbitMqMessageSendContext<TestMessage>>(
+            await transport.CreateSendContextAsync(channel, message, pipe, cancellation.Token));
+        await transport.SendAsync(channel, sendContext, cancellation.Token);
+
+        Assert.Same(message, sendContext.Message);
+        Assert.Equal(cancellation.Token, sendContext.CancellationToken);
+        PublishedFrame published = Assert.Single(channel.Published);
+        Assert.Equal("", published.Exchange);
+        Assert.Equal("reply.queue", published.RoutingKey);
+        Assert.Equal(new byte[] { 1, 2 }, published.Body);
+        Assert.Equal<byte>(7, published.BasicProperties.Priority);
+        Assert.Equal("incoming.reply", published.BasicProperties.ReplyTo);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "channel-bound-reply-rejects-missing-route")]
+    public async Task CreateSendContextAsync_ChannelBoundReplyRejectsMissingRouteBeforePublishAsync()
+    {
+        var channel = new RecordingChannelContext();
+        var pipe = new ConfigureSendPipe(context =>
+        {
+            context.DestinationAddress = new Uri("rabbitmq://localhost/amq.rabbitmq.reply-to");
+            context.RoutingKey = "   ";
+        });
+        RabbitMqSendTransportContext transport = CreateTransport(EmptyTopology(), exchange: RabbitMqExchangeNames.ReplyTo);
+
+        TransportException exception = await Assert.ThrowsAsync<TransportException>(() =>
+            transport.CreateSendContextAsync(channel, new TestMessage(), pipe, TestContext.Current.CancellationToken));
+
+        Assert.Equal(new Uri("rabbitmq://localhost/amq.rabbitmq.reply-to"), exception.Uri);
+        Assert.Contains("RoutingKey must be specified", exception.Message, StringComparison.Ordinal);
+        Assert.Empty(channel.Published);
+    }
+
     private static void ApplyInvalidAcceptance(RabbitMqMessageSendContext<TestMessage> context, InvalidAcceptance invalid)
     {
         switch (invalid)
