@@ -42,10 +42,11 @@ public class RabbitMqHostConfiguration :
 
         ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
         {
-            // Exclusive-resource conflicts are terminal because retrying cannot acquire a queue owned
-            // by another connection. The client may surface that refusal directly, after transport
-            // conversion, or through an already-closed channel, so every carrier applies the same rule.
-            x.Handle<ConnectionException>(exception => !exception.IsExclusiveResourceConflict());
+            // Respect the explicit connection classification. Exclusive-resource conflicts are
+            // terminal because retrying cannot acquire a queue owned by another connection.
+            // The client may surface that refusal directly, after transport conversion, or
+            // through an already-closed channel, so every carrier applies the same rule.
+            x.Handle<ConnectionException>(exception => exception.IsTransient);
             x.Handle<AlreadyClosedException>(exception => !exception.IsExclusiveResourceConflict());
             x.Handle<EndOfStreamException>();
             x.Handle<OperationInterruptedException>(exception =>
@@ -55,6 +56,8 @@ public class RabbitMqHostConfiguration :
             x.Ignore<AuthenticationFailureException>();
             // A configuration failure can retain a broker reply as its inner exception.
             x.Ignore<ConfigurationException>();
+            // A nested stream or broker failure cannot override the connection owner's terminal verdict.
+            x.Ignore<ConnectionException>(exception => !exception.IsTransient || exception.IsExclusiveResourceConflict());
 
             x.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
         });

@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ receive-transport retries now respect the explicit `IsTransient`
+  decision on connection failures. A nested stream error can no longer turn a
+  permanent outer failure into a retry, and an exclusive queue conflict remains
+  terminal even if an outer connection exception claims transience. Host-policy
+  tests cover AMQP reply-code boundaries, nested 405 conflicts, authentication,
+  configuration, stream drops, and selective pipelining retries. A deliberately
+  changed AMQP 300 boundary failed its test.
 - RabbitMQ consumer-delivery tests now exercise the broker callback through
   receive dispatch and acknowledgement. They check AMQP metadata and body,
   both acknowledgement modes, pre-canceled and late callbacks, two broker
