@@ -17,6 +17,8 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
     readonly BrokerTopology _brokerTopology;
     readonly SqsReceiveEndpointContext? _context;
     readonly TSettings _settings;
+    readonly object _autoDeleteAgentLock = new();
+    RemoveAmazonSqsTopologyAgent? _autoDeleteAgent;
 
     /// <summary>Initializes a topology-configuration filter.</summary>
     /// <param name="settings">The entity settings added to the client context.</param>
@@ -69,7 +71,7 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
             context.GetOrAddPayload(() => _settings);
 
             if (_context != null && AnyAutoDelete())
-                _context.AddSendAgent(new RemoveAmazonSqsTopologyAgent(context, _brokerTopology));
+                RegisterAutoDeleteAgent(context);
 
             return ConfigureTopologyAsync(context, cancellationToken);
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -91,6 +93,29 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
     bool AnyAutoDelete()
     {
         return _brokerTopology.Topics.Any(x => x.AutoDelete) || _brokerTopology.Queues.Any(x => x.AutoDelete);
+    }
+
+    void RegisterAutoDeleteAgent(ClientContext context)
+    {
+        lock (_autoDeleteAgentLock)
+        {
+            while (context is ScopeClientContext or SharedClientContext)
+            {
+                context = context switch
+                {
+                    ScopeClientContext scope => scope.ParentClientContext,
+                    SharedClientContext shared => shared.ParentClientContext,
+                    _ => throw new InvalidOperationException("The client context cannot be unwrapped.")
+                };
+            }
+
+            if (_autoDeleteAgent is { } current && current.TryUpdateContext(context))
+                return;
+
+            var agent = new RemoveAmazonSqsTopologyAgent(context, _brokerTopology);
+            _context!.AddSendAgent(agent);
+            _autoDeleteAgent = agent;
+        }
     }
 
     internal static async Task<TopicInfo> DeclareAsync(ClientContext context, Topic topic, CancellationToken cancellationToken)

@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS topology cleanup now has lifecycle tests for every combination
+  of auto-delete topic and queue flags. They verify single registration after
+  repeated configuration, exact cleanup selection, and propagation of the
+  endpoint stop token to provider deletion calls.
 - Amazon SQS move requests now have provider-boundary tests for the admitted
   body, custom string and binary attributes, FIFO identifiers only on FIFO
   destinations, removal of stale transport headers, and fresh move headers.
@@ -33,6 +37,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SQS auto-delete cleanup now retains one agent registration across a
+  failed topology declaration and its retry, even when each attempt has a new
+  scoped client context. Previously each retry could add another agent and
+  attempt to delete the same queue or topic more than once. Cleanup uses the
+  longer-lived client context after an attempt scope ends; a restarted
+  endpoint registers a fresh agent for its new lifecycle.
 - Amazon SQS moves now reject a request with more than ten message attributes
   before provider submission, naming the destination and actual count. A
   dead-letter move can add a reason to nine custom attributes; ten existing

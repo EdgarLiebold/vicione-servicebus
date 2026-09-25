@@ -15,6 +15,8 @@ public class SharedClientContext :
 {
     readonly ClientContext _context;
 
+    internal ClientContext ParentClientContext => _context;
+
     /// <summary>Initializes a shared client-context proxy.</summary>
     /// <param name="context">The underlying Amazon client context.</param>
     /// <param name="cancellationToken">The nested supervisor's cancellation token.</param>

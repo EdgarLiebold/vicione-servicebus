@@ -13,7 +13,8 @@ public sealed class RemoveAmazonSqsTopologyAgent :
     Agent
 {
     readonly BrokerTopology _brokerTopology;
-    readonly ClientContext _context;
+    readonly object _contextLock = new();
+    ClientContext _context;
 
     /// <summary>Initializes a topology-removal agent in the ready state.</summary>
     /// <param name="context">The client context used for entity deletion.</param>
@@ -26,14 +27,32 @@ public sealed class RemoveAmazonSqsTopologyAgent :
         SetReady();
     }
 
+    internal bool TryUpdateContext(ClientContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        lock (_contextLock)
+        {
+            if (Stopping.IsCancellationRequested)
+                return false;
+
+            _context = context;
+            return true;
+        }
+    }
+
     /// <summary>Deletes auto-delete entities and then stops the agent.</summary>
     /// <param name="context">The stop context whose token cancels topology deletion.</param>
     /// <returns>A task that completes when deletion has been attempted and the agent has stopped.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
+        ClientContext clientContext;
+        lock (_contextLock)
+            clientContext = _context;
+
         try
         {
-            await DeleteAutoDeleteAsync(_context, context.CancellationToken).ConfigureAwait(false);
+            await DeleteAutoDeleteAsync(clientContext, context.CancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

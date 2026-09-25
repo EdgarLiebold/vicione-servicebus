@@ -19,6 +19,8 @@ public class ScopeClientContext :
     readonly ClientContext _context;
     CancellationTokenSource? _tokenSource;
 
+    internal ClientContext ParentClientContext => _context;
+
     /// <summary>Initializes an operation-scoped client context.</summary>
     /// <param name="context">The underlying Amazon client context.</param>
     /// <param name="cancellationToken">The operation cancellation token linked to the underlying context lifetime.</param>
