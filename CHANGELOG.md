@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Coverage receipts can limit MSBuild restore/build parallelism on constrained
+  hosts and reject a restore that exits without the test project's assets file.
+  The selected node limit is recorded in the receipt.
 - RabbitMQ Durable Sender unit tests now reject ten unsafe destination forms
   before endpoint resolution, including explicit queue names, short addresses,
   and direct reply-to variants. A valid exchange address reaches resolution

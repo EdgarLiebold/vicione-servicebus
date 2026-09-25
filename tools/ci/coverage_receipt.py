@@ -137,12 +137,15 @@ def main():
     parser.add_argument("--project", required=True)
     parser.add_argument("--run-dir", required=True)
     parser.add_argument("--minimum-expected-tests", type=int, default=1)
+    parser.add_argument("--maxcpucount", type=int, help="Limit MSBuild restore/build nodes (for constrained hosts)")
     parser.add_argument("--required-assembly", help="Product assembly that must be covered; defaults to the test project name without its test suffix")
     parser.add_argument("--disable-avx2", action="store_true", help="Run restore, build, and tests with DOTNET_EnableAVX2=0 for the portability report")
     parser.add_argument("--disable-hw-intrinsics", action="store_true", help="Run restore, build, and tests with DOTNET_EnableHWIntrinsic=0 for scalar fallback coverage")
     args = parser.parse_args()
     if args.minimum_expected_tests < 1:
         raise ValueError("Minimum expected tests must be positive")
+    if args.maxcpucount is not None and args.maxcpucount < 1:
+        raise ValueError("MSBuild max CPU count must be positive")
     if args.disable_avx2 and args.disable_hw_intrinsics:
         raise ValueError("Select only one portability mode per receipt")
 
@@ -167,8 +170,14 @@ def main():
         dotnet_env["DOTNET_EnableAVX2"] = "0"
     if args.disable_hw_intrinsics:
         dotnet_env["DOTNET_EnableHWIntrinsic"] = "0"
-    run_and_log(["dotnet", "restore", str(project), "--locked-mode", "--artifacts-path", str(sdk), "-v:minimal"], run_dir / "restore.log", dotnet_env)
-    run_and_log(["dotnet", "build", str(project), "--no-restore", "--configuration", "Release", "--artifacts-path", str(sdk), "-v:minimal"], run_dir / "build.log", dotnet_env)
+    msbuild_parallelism = [f"/m:{args.maxcpucount}"] if args.maxcpucount is not None else []
+    run_and_log(["dotnet", "restore", str(project), "--locked-mode", "--artifacts-path", str(sdk), "-v:minimal", *msbuild_parallelism], run_dir / "restore.log", dotnet_env)
+    if not any(
+        json.loads(path.read_text(encoding="utf-8")).get("project", {}).get("restore", {}).get("projectPath") == str(project)
+        for path in (sdk / "obj").glob("*/project.assets.json")
+    ):
+        raise ValueError("Restore exited successfully without the requested test project's assets file")
+    run_and_log(["dotnet", "build", str(project), "--no-restore", "--configuration", "Release", "--artifacts-path", str(sdk), "-v:minimal", *msbuild_parallelism], run_dir / "build.log", dotnet_env)
     build_log = (run_dir / "build.log").read_text(encoding="utf-8")
     if re.search(r":\s*(?:warning|error)\b", build_log, re.I):
         raise ValueError("Build log contains warnings or errors")
@@ -217,6 +226,7 @@ def main():
         "testCount": total,
         "assemblies": assemblies,
         "requiredAssembly": required_assembly,
+        "msbuildMaxCpuCount": args.maxcpucount,
         "dotnetEnvironment": {
             "DOTNET_EnableAVX2": "0" if args.disable_avx2 else None,
             "DOTNET_EnableHWIntrinsic": "0" if args.disable_hw_intrinsics else None,
