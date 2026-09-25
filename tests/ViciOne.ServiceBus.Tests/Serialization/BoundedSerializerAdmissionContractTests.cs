@@ -224,6 +224,81 @@ public sealed class BoundedSerializerAdmissionContractTests
         Assert.Equal(1, locator.Calls);
     }
 
+    [Theory]
+    [InlineData("application/json")]
+    [InlineData("application/vnd.example.event+json")]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ENVELOPE", "send-only-json-charges-entire-envelope-and-preserves-text")]
+    public void CopiedSendOnlyJson_ChargesTheWholeEnvelopeAndExposesLosslessText(string mediaType)
+    {
+        byte[] source = "{\"value\":7}"u8.ToArray();
+        var contentType = new ContentType(mediaType);
+        var locator = new TestCopiedLocator { LocatedRange = (true, 0, 1) };
+        var admission = Admission(source.Length, source.Length);
+
+        AdmittedCopyMessageBody body = AdmittedCopyMessageBody.Create(
+            source.AsMemory(), contentType, Serialization(locator), admission, durableProof: null);
+
+        Assert.Equal(0, locator.Calls);
+        Assert.Equal(source.Length, body.Length);
+        Assert.True(admission.HasCompleteAdmissionFor(source.Length));
+        Assert.True(admission.TryCreateDurableProof(contentType.ToString(), out DurablePayloadAdmissionProof proof));
+        Assert.Equal(source.Length, proof.SerializedBodyBytes);
+        Assert.True(body.TryGetTransportText(out string? text));
+        Assert.Equal("{\"value\":7}", text);
+        Assert.Equal(source, Encoding.UTF8.GetBytes(text));
+
+        source[1] = (byte)'X';
+        Assert.Equal("{\"value\":7}"u8.ToArray(), body.ToArray());
+        Assert.True(body.TryGetTransportText(out string? retainedText));
+        Assert.Equal("{\"value\":7}", retainedText);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-BODY", "send-only-json-rejects-whole-envelope-at-body-limit")]
+    public void CopiedSendOnlyJson_RejectsTheWholeEnvelopeAtTheBodyLimit()
+    {
+        byte[] source = "{\"value\":7}"u8.ToArray();
+        var locator = new TestCopiedLocator { LocatedRange = (true, 0, 1) };
+        var admission = Admission(source.Length - 1, source.Length);
+
+        PayloadAdmissionException exception = Assert.Throws<PayloadAdmissionException>(() =>
+            AdmittedCopyMessageBody.Create(source.AsMemory(), new ContentType("application/json"),
+                Serialization(locator), admission, durableProof: null));
+
+        Assert.Equal(PayloadAdmissionStage.SerializedBody, exception.Stage);
+        Assert.Equal(source.Length, exception.ActualBytes);
+        Assert.Equal(source.Length - 1, exception.ConfiguredLimitBytes);
+        Assert.Equal(0, locator.Calls);
+        Assert.False(admission.HasCompleteAdmissionFor(source.Length));
+    }
+
+    [Theory]
+    [InlineData("application/json")]
+    [InlineData("application/vnd.example.event+json")]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ENVELOPE", "send-only-invalid-json-is-retained-without-text")]
+    public void CopiedSendOnlyJson_KeepsInvalidBytesWithoutOfferingJsonText(string mediaType)
+    {
+        byte[][] invalidEnvelopes = ["{\"value\":"u8.ToArray(), [0xff]];
+        var contentType = new ContentType(mediaType);
+        var locator = new TestCopiedLocator { LocatedRange = (true, 0, 1) };
+
+        foreach (byte[] source in invalidEnvelopes)
+        {
+            var admission = Admission(source.Length, source.Length);
+
+            AdmittedCopyMessageBody body = AdmittedCopyMessageBody.Create(
+                source.AsMemory(), contentType, Serialization(locator), admission, durableProof: null);
+
+            Assert.Equal(0, locator.Calls);
+            Assert.True(admission.HasCompleteAdmissionFor(source.Length));
+            Assert.True(admission.TryCreateDurableProof(contentType.ToString(), out DurablePayloadAdmissionProof proof));
+            Assert.Equal(source.Length, proof.SerializedBodyBytes);
+            Assert.Equal(source, body.ToArray());
+            Assert.False(body.TryGetTransportText(out string? text));
+            Assert.Null(text);
+        }
+    }
+
     private static BoundedSerializerMessageBody Create(
         TestBoundedSerializer serializer, PayloadAdmissionSerializationContext admission)
         => BoundedSerializerMessageBody.Create(new MessageSendContext<TestMessage>(new TestMessage()), serializer, admission);

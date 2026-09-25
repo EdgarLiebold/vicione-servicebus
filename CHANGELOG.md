@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Copied send-only JSON envelopes now have behavioral admission tests for
+  exact whole-envelope body accounting, the one-byte-over-body-limit boundary,
+  lossless text after source mutation, and withheld text for malformed JSON
+  or invalid UTF-8. A deliberate invalid-text classification mutation failed.
 - The native-test architecture inventory now includes the two retained
   coverage receipt tools, so the path-complete verification gate recognizes
   every tracked Python utility under `tools/ci` and `tools/identity`.
