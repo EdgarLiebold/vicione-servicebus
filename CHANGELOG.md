@@ -63,6 +63,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Default typed transport headers now return `false` with an empty result from
+  both wire-value conversion methods. Previously a default string header was
+  accepted as text, while default numeric and Boolean headers could throw for
+  their missing key. Valid typed strings retain their exact key and value.
 - Amazon SQS auto-delete cleanup now retains one agent registration across a
   failed topology declaration and its retry, even when each attempt has a new
   scoped client context. Previously each retry could add another agent and

@@ -32,14 +32,7 @@ public readonly struct HeaderValue<TValue>
     /// <returns><see langword="true" /> when the value has a supported text representation; otherwise, <see langword="false" />.</returns>
     public bool IsStringValue([NotNullWhen(true)] out HeaderValue<string> result)
     {
-        switch (this)
-        {
-            case HeaderValue<string> resultValue:
-                result = resultValue;
-                return true;
-            default:
-                return HeaderValue.IsValueStringValue(Key, Value, out result);
-        }
+        return HeaderValue.IsValueStringValue(Key, Value, out result);
     }
 
     /// <summary>Attempts to preserve the value as a transport-safe scalar.</summary>
@@ -106,6 +99,12 @@ public readonly struct HeaderValue
 
     internal static bool IsValueStringValue(string key, object? value, [NotNullWhen(true)] out HeaderValue<string> result)
     {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            result = default;
+            return false;
+        }
+
         switch (value)
         {
             case null:
@@ -138,6 +137,12 @@ public readonly struct HeaderValue
 
     internal static bool IsValueSimpleValue(string key, object? value, [NotNullWhen(true)] out HeaderValue result)
     {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            result = default;
+            return false;
+        }
+
         switch (value)
         {
             case null:
