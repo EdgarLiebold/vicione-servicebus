@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Durable copied-envelope replay tests now verify that an exact prior
+  admission proof preserves the original body length without consulting a
+  mutable locator. Changed body bytes, envelope suffix or content type
+  invalidate the proof. A tighter current body limit still rejects a
+  previously admitted envelope, while a current MessageData threshold uses
+  the offload evidence bound to the proof rather than the new replay context.
+  Replacing the proven offload flag with the replay context's flag made both
+  positive and negative threshold tests fail; the restored code passes.
 - Endpoint-scheduler provider tests now verify that an accepted command keeps
   the configured token consistent across the command, send context, scheduling
   header, correlation and returned handle. They reject a dispatch that skips
