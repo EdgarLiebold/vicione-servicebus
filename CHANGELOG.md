@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ Durable Sender unit tests now reject ten unsafe destination forms
+  before endpoint resolution, including explicit queue names, short addresses,
+  and direct reply-to variants. A valid exchange address reaches resolution
+  exactly once. Removing the alternate-exchange guard makes the intended test
+  fail; the restored implementation passes all 406 RabbitMQ unit tests.
 - All thirteen local integration test projects now reference the centrally
   versioned Microsoft CodeCoverage extension directly. Eleven previously
   lacked it, preventing their runs from producing the Cobertura reports
