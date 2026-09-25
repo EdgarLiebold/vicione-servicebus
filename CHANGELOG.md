@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Generic transport-header adapters now reject a null converter at construction
+  instead of failing later during a send. Their policy is covered for typed and
+  untyped headers, including host and fault-detail filtering. An Amazon SQS
+  queue-send regression test also checks the actual provider request: ordinary
+  headers, fault input address and fault message survive, while host and fault
+  detail headers are omitted.
 - Diagnostic duration formatting now preserves the sign and natural units of
   negative values, including `TimeSpan.MinValue`. A negative millisecond no
   longer appears as a large nanosecond count in chart or transport diagnostics.

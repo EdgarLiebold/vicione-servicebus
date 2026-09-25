@@ -1,5 +1,16 @@
 # Unit-Coverage-Matrix vom 25.09.2026
 
+**Aktueller Messstand auf `06a7f5dc7`:** Drei frische Abstractions-Receipts
+(normal, ohne AVX2, ohne Hardware-Intrinsics) bestanden mit je 910/910 Tests;
+der Amazon-SQS-Receipt bestand mit 215/215. Alle vier sind an denselben
+`src`-/`tests`-Tree gebunden. Der SQS-Bericht führt den untypisierten
+`TransportSetHeaderAdapter.Set` jetzt mit 4/7 Zeilen und 5/8 beobachteten
+Branches aus. Das Teilaggregat enthält 3/32 Produktassemblies, 2.945
+Testausführungen, 11.030/43.753 Zeilen, konservativ 4.059/17.549 Branches
+und 705 Methoden mit CRAP > 30. Es fehlen 16 Produkt-Unit- und 13 lokale
+Provider-Receipts sowie 29 Assemblies. Die Teilzahlen sind keine
+produktweiten A+-Kennzahlen. Details: `generic-header-policy-20260925.md`.
+
 **Aktualisierung nach `9fca34c5a`:** Die nachfolgende 17er-Matrix ist eine
 historische Baseline auf `tests`-Tree
 `fe688c658a68b75191fe90a2de51537e8bdf8c36`. Die NewId-Rollover-,
