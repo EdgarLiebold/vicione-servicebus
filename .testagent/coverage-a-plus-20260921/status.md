@@ -52,6 +52,15 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Copied send-only JSON admission now checks full-envelope body accounting,
+one-byte-over-limit rejection, exact retained text after source mutation, and
+invalid syntax/UTF-8 for both JSON media types. A deliberate product mutation
+failed; read-only adversarial review returned PASS. The complete Core suite
+passed 6,432/6,432 with coverage; the selected method's branch coverage rose
+from 66.7% to 80%, while 27/36 lines and CRAP 44.06 remain unchanged. The
+isolated exact-commit restore/build did not complete, so this is limited
+evidence; see `copied-send-only-json-20260925.md`. Global A+ remains open.
+
 Amazon SQS created send transports now have provider-boundary dispatch tests
 for queue, relative topic, and absolute `type=topic` addresses. A deliberate
 Topic-to-Queue context mutation failed both topic variants. The complete SQS
