@@ -10,6 +10,7 @@ coverage runner's scope.
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -50,9 +51,9 @@ def clean_git_state():
     }
 
 
-def run_and_log(command, log):
+def run_and_log(command, log, env):
     with log.open("x", encoding="utf-8") as stream:
-        result = subprocess.run(command, cwd=REPO, stdout=stream, stderr=subprocess.STDOUT, check=False)
+        result = subprocess.run(command, cwd=REPO, env=env, stdout=stream, stderr=subprocess.STDOUT, check=False)
     if result.returncode:
         raise ValueError(f"Command exited {result.returncode}; see {log}")
 
@@ -137,6 +138,7 @@ def main():
     parser.add_argument("--run-dir", required=True)
     parser.add_argument("--minimum-expected-tests", type=int, default=1)
     parser.add_argument("--required-assembly", help="Product assembly that must be covered; defaults to the test project name without its test suffix")
+    parser.add_argument("--disable-avx2", action="store_true", help="Run restore, build, and tests with DOTNET_EnableAVX2=0 for the portability report")
     args = parser.parse_args()
     if args.minimum_expected_tests < 1:
         raise ValueError("Minimum expected tests must be positive")
@@ -155,8 +157,12 @@ def main():
     settings = REPO / "tools/ci/coverage.settings.xml"
     settings_hash = sha256(settings)
     runner_hash = sha256(Path(__file__))
-    run_and_log(["dotnet", "restore", str(project), "--locked-mode", "--artifacts-path", str(sdk), "-v:minimal"], run_dir / "restore.log")
-    run_and_log(["dotnet", "build", str(project), "--no-restore", "--configuration", "Release", "--artifacts-path", str(sdk), "-v:minimal"], run_dir / "build.log")
+    dotnet_env = os.environ.copy()
+    dotnet_env.pop("DOTNET_EnableAVX2", None)
+    if args.disable_avx2:
+        dotnet_env["DOTNET_EnableAVX2"] = "0"
+    run_and_log(["dotnet", "restore", str(project), "--locked-mode", "--artifacts-path", str(sdk), "-v:minimal"], run_dir / "restore.log", dotnet_env)
+    run_and_log(["dotnet", "build", str(project), "--no-restore", "--configuration", "Release", "--artifacts-path", str(sdk), "-v:minimal"], run_dir / "build.log", dotnet_env)
     build_log = (run_dir / "build.log").read_text(encoding="utf-8")
     if re.search(r":\s*(?:warning|error)\b", build_log, re.I):
         raise ValueError("Build log contains warnings or errors")
@@ -178,7 +184,7 @@ def main():
         "--artifacts-path", str(sdk), "--coverage", "--coverage-output-format", "cobertura",
         "--coverage-settings", str(settings), "--coverage-output", str(report),
         "--minimum-expected-tests", str(args.minimum_expected_tests), "--progress", "off",
-    ], run_dir / "tests.log")
+    ], run_dir / "tests.log", dotnet_env)
     if not report.is_file() or not report.stat().st_size:
         raise ValueError("Coverage report is missing or empty")
     total = test_count(run_dir / "tests.log", test_dll, report, args.minimum_expected_tests)
@@ -205,6 +211,7 @@ def main():
         "testCount": total,
         "assemblies": assemblies,
         "requiredAssembly": required_assembly,
+        "dotnetEnvironment": {"DOTNET_EnableAVX2": "0" if args.disable_avx2 else None},
         "trackedSourceCount": source_count,
         "reports": {relative(report): sha256(report)},
         "logsSha256": {relative(path): sha256(path) for path in sorted(run_dir.glob("*.log"))},
