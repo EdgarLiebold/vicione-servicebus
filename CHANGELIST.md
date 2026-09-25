@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10749 |
+| Added | 10750 |
 | Modified | 844 |
 | Deleted | 4806 |
 | Renamed | 1 |
@@ -129,6 +129,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-f6d2ec3ec.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-f7d924f94.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-job-attempt-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-mermaid-newid-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-transport-factory-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/property-accessor-ref-return-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/quartz-suspect-manual-schedule-phase.md` | Added |  |
