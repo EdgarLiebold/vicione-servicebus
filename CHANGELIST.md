@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10744 |
+| Added | 10745 |
 | Modified | 844 |
 | Deleted | 4806 |
 | Renamed | 1 |
@@ -15849,6 +15849,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryReliableStoreTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingProviderGuardTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DurableSend/TypedDurableSenderConfigurationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Events/BusReadyEventTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Events/HostReadyEventTests.cs` | Added |  |
