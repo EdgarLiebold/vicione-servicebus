@@ -15,7 +15,7 @@ public sealed class AmazonSqsSendTransportSelectionTests
     [InlineData("topic:events", false, "events")]
     [InlineData("amazonsqs://eu-central-1/orders?type=topic", false, "orders")]
     [RequirementCoverage("REQ-VSB-AWS-SQS-TOPOLOGY", "send-transport-queue-topology-lookup-follows-address-kind")]
-    public async Task CreateSendTransport_SelectsQueueTopologyAndRegistersOwnedAgents(
+    public async Task CreateSendTransport_SelectsQueueTopologyAndRegistersOwnedAgentsAsync(
         string destination, bool isQueue, string expectedName)
     {
         var registrations = new List<IAgent>();
@@ -65,7 +65,7 @@ public sealed class AmazonSqsSendTransportSelectionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-CANCELLATION", "canceled-transport-creation-does-not-register-agents")]
-    public async Task CreateSendTransport_CanceledRequestDoesNotResolveAddressOrRegisterAgents()
+    public async Task CreateSendTransport_CanceledRequestDoesNotResolveAddressOrRegisterAgentsAsync()
     {
         var registrations = 0;
         (ConnectionContextSupervisor supervisor, SqsReceiveEndpointContext endpoint) = CreateSupervisor();

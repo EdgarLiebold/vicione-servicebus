@@ -2,6 +2,14 @@
 
 ## Latest product-wide profile
 
+An attempted refresh at `f3848534c` produced 24 passing reports and exposed
+architecture-gate bookkeeping defects, which were repaired. The complete
+Architecture suite then passed 445/445 and Amazon SQS passed 295/295; read-only
+adversarial review returned PASS. Docker and
+`protoc` host stalls prevented a complete current profile. The partial metrics
+must not replace the last complete profile below; see
+`product-wide-attempt-f3848534c-20260925.md`.
+
 The exact-HEAD profile at `c073a5e30` has 36 parseable reports across all 32
 product assemblies and 11,123 passing executions with zero failures or skips.
 Four provider fixtures have empty findings; the tracked `src`/`tests` diff is

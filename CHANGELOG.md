@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The native-test architecture inventory now includes the two retained
+  coverage receipt tools, so the path-complete verification gate recognizes
+  every tracked Python utility under `tools/ci` and `tools/identity`.
+- The SQS publish-discovery fixtures now occupy their own source file and
+  matching namespace folder, satisfying the native-test source layout gate.
+- SQS lifecycle tests now name asynchronous test cases and provider stubs with
+  the `Async` suffix required by the repository's bidirectional naming gate.
 - Amazon SQS connection creation now has lifecycle tests for the configured
   provider connection, release on supervised handle stop, failure cause
   preservation, provider cancellation passthrough, and stopping before a new

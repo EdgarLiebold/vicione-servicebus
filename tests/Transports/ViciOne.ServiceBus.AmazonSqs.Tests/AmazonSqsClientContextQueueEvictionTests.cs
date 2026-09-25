@@ -24,8 +24,8 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         var providerCalls = 0;
         IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, args) => method.Name switch
         {
-            nameof(IAmazonSQS.SendMessageBatchAsync) => Send(Assert.IsType<SendMessageBatchRequest>(args![0])),
-            nameof(IAmazonSQS.DeleteMessageBatchAsync) => Delete(Assert.IsType<DeleteMessageBatchRequest>(args![0])),
+            nameof(IAmazonSQS.SendMessageBatchAsync) => SendAsync(Assert.IsType<SendMessageBatchRequest>(args![0])),
+            nameof(IAmazonSQS.DeleteMessageBatchAsync) => DeleteAsync(Assert.IsType<DeleteMessageBatchRequest>(args![0])),
             _ => throw new NotSupportedException(method.Name)
         });
         IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create(
@@ -35,18 +35,18 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         await using QueueInfo fresh = CreateQueue(sqs);
         ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, args) => method.Name switch
         {
-            nameof(ConnectionContext.GetQueueByNameAsync) => Resolve(Assert.IsType<string>(args![0])),
+            nameof(ConnectionContext.GetQueueByNameAsync) => ResolveAsync(Assert.IsType<string>(args![0])),
             _ => throw new NotSupportedException(method.Name)
         });
         var client = new AmazonSqsClientContext(connection, sqs, sns, TestContext.Current.CancellationToken);
 
-        Task<QueueInfo> Resolve(string name)
+        Task<QueueInfo> ResolveAsync(string name)
         {
             Assert.Equal(QueueName, name);
             return Task.FromResult(Interlocked.Increment(ref lookups) == 1 ? stale : fresh);
         }
 
-        Task<SendMessageBatchResponse> Send(SendMessageBatchRequest request)
+        Task<SendMessageBatchResponse> SendAsync(SendMessageBatchRequest request)
         {
             Interlocked.Increment(ref providerCalls);
             Assert.Equal(QueueUrl, request.QueueUrl);
@@ -60,7 +60,7 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
             });
         }
 
-        Task<DeleteMessageBatchResponse> Delete(DeleteMessageBatchRequest request)
+        Task<DeleteMessageBatchResponse> DeleteAsync(DeleteMessageBatchRequest request)
         {
             Interlocked.Increment(ref providerCalls);
             Assert.Equal(QueueUrl, request.QueueUrl);
@@ -95,8 +95,8 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         var providerCalls = 0;
         IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, _) => method.Name switch
         {
-            nameof(IAmazonSQS.SendMessageBatchAsync) => FailSend(),
-            nameof(IAmazonSQS.DeleteMessageBatchAsync) => FailDelete(),
+            nameof(IAmazonSQS.SendMessageBatchAsync) => FailSendAsync(),
+            nameof(IAmazonSQS.DeleteMessageBatchAsync) => FailDeleteAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
         IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create(
@@ -104,24 +104,24 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         await using QueueInfo queue = CreateQueue(sqs);
         ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
         {
-            nameof(ConnectionContext.GetQueueByNameAsync) => Resolve(),
+            nameof(ConnectionContext.GetQueueByNameAsync) => ResolveAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
         var client = new AmazonSqsClientContext(connection, sqs, sns, TestContext.Current.CancellationToken);
 
-        Task<QueueInfo> Resolve()
+        Task<QueueInfo> ResolveAsync()
         {
             Interlocked.Increment(ref lookups);
             return Task.FromResult(queue);
         }
 
-        Task<SendMessageBatchResponse> FailSend()
+        Task<SendMessageBatchResponse> FailSendAsync()
         {
             Interlocked.Increment(ref providerCalls);
             return Task.FromException<SendMessageBatchResponse>(providerFailure);
         }
 
-        Task<DeleteMessageBatchResponse> FailDelete()
+        Task<DeleteMessageBatchResponse> FailDeleteAsync()
         {
             Interlocked.Increment(ref providerCalls);
             return Task.FromException<DeleteMessageBatchResponse>(providerFailure);
@@ -152,12 +152,12 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         await stale.DisposeAsync();
         ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
         {
-            nameof(ConnectionContext.GetQueueByNameAsync) => Resolve(),
+            nameof(ConnectionContext.GetQueueByNameAsync) => ResolveAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
         var client = new AmazonSqsClientContext(connection, sqs, sns, TestContext.Current.CancellationToken);
 
-        Task<QueueInfo> Resolve()
+        Task<QueueInfo> ResolveAsync()
         {
             Interlocked.Increment(ref lookups);
             return Task.FromResult(stale);
@@ -186,8 +186,8 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         var lookups = 0;
         IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, args) => method.Name switch
         {
-            nameof(IAmazonSQS.SendMessageBatchAsync) => Send(Assert.IsType<SendMessageBatchRequest>(args![0])),
-            nameof(IAmazonSQS.DeleteMessageBatchAsync) => Delete(Assert.IsType<DeleteMessageBatchRequest>(args![0])),
+            nameof(IAmazonSQS.SendMessageBatchAsync) => SendAsync(Assert.IsType<SendMessageBatchRequest>(args![0])),
+            nameof(IAmazonSQS.DeleteMessageBatchAsync) => DeleteAsync(Assert.IsType<DeleteMessageBatchRequest>(args![0])),
             _ => throw new NotSupportedException(method.Name)
         });
         IAmazonSimpleNotificationService sns = InterfaceProxy<IAmazonSimpleNotificationService>.Create(
@@ -203,7 +203,7 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
         });
         var client = new AmazonSqsClientContext(connection, sqs, sns, TestContext.Current.CancellationToken);
 
-        async Task<SendMessageBatchResponse> Send(SendMessageBatchRequest request)
+        async Task<SendMessageBatchResponse> SendAsync(SendMessageBatchRequest request)
         {
             await WaitIfOldAsync(request.QueueUrl);
             CountTarget(request.QueueUrl, request.Entries.Any(x => x.MessageBody == "target"));
@@ -215,7 +215,7 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
             };
         }
 
-        async Task<DeleteMessageBatchResponse> Delete(DeleteMessageBatchRequest request)
+        async Task<DeleteMessageBatchResponse> DeleteAsync(DeleteMessageBatchRequest request)
         {
             await WaitIfOldAsync(request.QueueUrl);
             CountTarget(request.QueueUrl, request.Entries.Any(x => x.ReceiptHandle == "target"));
@@ -249,14 +249,14 @@ public sealed class AmazonSqsClientContextQueueEvictionTests
                 throw new InvalidOperationException($"Unexpected queue URL: {url}");
         }
 
-        Task Fill(int number) => delete
+        Task FillAsync(int number) => delete
             ? old.DeleteAsync($"filler-{number}", TestContext.Current.CancellationToken)
             : old.SendAsync(new SendMessageBatchRequestEntry($"filler-{number}", $"filler-{number}"),
                 TestContext.Current.CancellationToken);
 
-        Task first = Fill(0);
+        Task first = FillAsync(0);
         await oldStarted.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
-        Task[] filler = [first, .. Enumerable.Range(1, 299).Select(Fill)];
+        Task[] filler = [first, .. Enumerable.Range(1, 299).Select(FillAsync)];
         Task target = delete
             ? client.DeleteMessageAsync(QueueName, "target", TestContext.Current.CancellationToken)
             : client.SendMessageAsync(QueueName, new SendMessageBatchRequestEntry("target", "target"),

@@ -14,7 +14,7 @@ public sealed class AmazonSqsConnectionCreationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "connection-factory-handle-owns-provider-connection")]
-    public async Task CreateContext_UsesConfiguredConnectionAndOwnsItsLifetime()
+    public async Task CreateContext_UsesConfiguredConnectionAndOwnsItsLifetimeAsync()
     {
         var creations = 0;
         var disposals = 0;
@@ -46,7 +46,7 @@ public sealed class AmazonSqsConnectionCreationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "connection-factory-preserves-provider-failure-cause")]
-    public async Task CreateContext_PreservesProviderFailureAsConnectionFailure()
+    public async Task CreateContext_PreservesProviderFailureAsConnectionFailureAsync()
     {
         var cause = new InvalidOperationException("provider unavailable");
         var creations = 0;
@@ -66,7 +66,7 @@ public sealed class AmazonSqsConnectionCreationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-CANCELLATION", "connection-factory-stopping-guard-prevents-provider-open")]
-    public async Task CreateContext_WhenStopping_DoesNotOpenAConnection()
+    public async Task CreateContext_WhenStopping_DoesNotOpenAConnectionAsync()
     {
         using var stopping = new CancellationTokenSource();
         stopping.Cancel();
@@ -90,7 +90,7 @@ public sealed class AmazonSqsConnectionCreationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-CANCELLATION", "connection-factory-propagates-provider-cancellation")]
-    public async Task CreateContext_PropagatesProviderCancellationWithoutWrapping()
+    public async Task CreateContext_PropagatesProviderCancellationWithoutWrappingAsync()
     {
         var canceled = new OperationCanceledException("provider canceled");
         var factory = CreateFactory(() => throw canceled);

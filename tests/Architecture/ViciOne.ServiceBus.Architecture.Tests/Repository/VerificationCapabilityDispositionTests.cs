@@ -25,6 +25,8 @@ public sealed class VerificationCapabilityDispositionTests
 
     private static readonly string[] ExpectedPythonFiles =
     [
+        "tools/ci/aggregate_coverage_receipts.py",
+        "tools/ci/coverage_receipt.py",
         "tools/ci/fixtures/__init__.py",
         "tools/ci/fixtures/broker_logs.py",
         "tools/ci/fixtures/compose_fixture.py",

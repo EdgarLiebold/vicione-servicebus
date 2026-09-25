@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.AmazonSqs.Tests.TestDoubles;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.AmazonSqs.Tests
-{
+namespace ViciOne.ServiceBus.AmazonSqs.Tests;
+
     public sealed class AmazonSqsPublishTopologyDiscoveryTests
     {
         [Fact]
@@ -133,12 +133,3 @@ namespace ViciOne.ServiceBus.AmazonSqs.Tests
             }
         }
     }
-}
-
-namespace ViciOne.ServiceBus.AmazonSqs.Tests.PublishDiscoveryFixtures
-{
-    public interface IScanMessage;
-    public sealed record ScanMessage;
-    public sealed record ScanGenericMessage<T>;
-    public sealed record ScanExcludedMessage;
-}

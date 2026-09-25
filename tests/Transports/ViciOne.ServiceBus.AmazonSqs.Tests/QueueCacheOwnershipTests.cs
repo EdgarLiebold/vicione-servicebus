@@ -305,7 +305,7 @@ public sealed class QueueCacheOwnershipTests
         var providerCalls = 0;
         IAmazonSQS client = InterfaceProxy<IAmazonSQS>.Create((method, _) => method.Name switch
         {
-            nameof(IAmazonSQS.GetQueueUrlAsync) => ResolveUrl(),
+            nameof(IAmazonSQS.GetQueueUrlAsync) => ResolveUrlAsync(),
             nameof(IAmazonSQS.GetQueueAttributesAsync) => Task.FromResult(new GetQueueAttributesResponse
             {
                 HttpStatusCode = HttpStatusCode.OK,
@@ -314,7 +314,7 @@ public sealed class QueueCacheOwnershipTests
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<GetQueueUrlResponse> ResolveUrl()
+        Task<GetQueueUrlResponse> ResolveUrlAsync()
         {
             Interlocked.Increment(ref providerCalls);
             return Task.FromResult(new GetQueueUrlResponse { QueueUrl = QueueUrl, HttpStatusCode = HttpStatusCode.OK });
@@ -342,11 +342,11 @@ public sealed class QueueCacheOwnershipTests
         var writeCalls = 0;
         IAmazonSQS client = InterfaceProxy<IAmazonSQS>.Create((method, _) => method.Name switch
         {
-            nameof(IAmazonSQS.SetQueueAttributesAsync) => WritePolicy(),
+            nameof(IAmazonSQS.SetQueueAttributesAsync) => WritePolicyAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<SetQueueAttributesResponse> WritePolicy()
+        Task<SetQueueAttributesResponse> WritePolicyAsync()
         {
             Interlocked.Increment(ref writeCalls);
             writeEntered.TrySetResult();

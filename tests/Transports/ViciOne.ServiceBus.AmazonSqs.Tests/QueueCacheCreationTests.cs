@@ -22,27 +22,27 @@ public sealed class QueueCacheCreationTests
         CreateQueueRequest? submitted = null;
         IAmazonSQS client = InterfaceProxy<IAmazonSQS>.Create((method, args) => method.Name switch
         {
-            nameof(IAmazonSQS.GetQueueUrlAsync) => Missing(),
-            nameof(IAmazonSQS.CreateQueueAsync) => Create(Assert.IsType<CreateQueueRequest>(args![0])),
-            nameof(IAmazonSQS.GetQueueAttributesAsync) => Attributes(
+            nameof(IAmazonSQS.GetQueueUrlAsync) => MissingAsync(),
+            nameof(IAmazonSQS.CreateQueueAsync) => CreateAsync(Assert.IsType<CreateQueueRequest>(args![0])),
+            nameof(IAmazonSQS.GetQueueAttributesAsync) => AttributesAsync(
                 Assert.IsType<string>(args![0]), Assert.IsAssignableFrom<IEnumerable<string>>(args[1])),
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<GetQueueUrlResponse> Missing()
+        Task<GetQueueUrlResponse> MissingAsync()
         {
             calls.Add("lookup");
             return Task.FromException<GetQueueUrlResponse>(new QueueDoesNotExistException("missing"));
         }
 
-        Task<CreateQueueResponse> Create(CreateQueueRequest request)
+        Task<CreateQueueResponse> CreateAsync(CreateQueueRequest request)
         {
             calls.Add("create");
             submitted = request;
             return Task.FromResult(new CreateQueueResponse { QueueUrl = QueueUrl, HttpStatusCode = HttpStatusCode.OK });
         }
 
-        Task<GetQueueAttributesResponse> Attributes(string url, IEnumerable<string> requestedAttributes)
+        Task<GetQueueAttributesResponse> AttributesAsync(string url, IEnumerable<string> requestedAttributes)
         {
             calls.Add("attributes");
             Assert.Equal(QueueUrl, url);
@@ -97,7 +97,7 @@ public sealed class QueueCacheCreationTests
         {
             nameof(IAmazonSQS.GetQueueUrlAsync) => Task.FromException<GetQueueUrlResponse>(
                 new QueueDoesNotExistException("missing")),
-            nameof(IAmazonSQS.CreateQueueAsync) => Create(Assert.IsType<CreateQueueRequest>(args![0])),
+            nameof(IAmazonSQS.CreateQueueAsync) => CreateAsync(Assert.IsType<CreateQueueRequest>(args![0])),
             nameof(IAmazonSQS.GetQueueAttributesAsync) => Task.FromResult(new GetQueueAttributesResponse
             {
                 HttpStatusCode = HttpStatusCode.OK,
@@ -106,7 +106,7 @@ public sealed class QueueCacheCreationTests
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<CreateQueueResponse> Create(CreateQueueRequest request)
+        Task<CreateQueueResponse> CreateAsync(CreateQueueRequest request)
         {
             submitted = request;
             return Task.FromResult(new CreateQueueResponse { QueueUrl = fifoUrl, HttpStatusCode = HttpStatusCode.OK });
@@ -139,19 +139,19 @@ public sealed class QueueCacheCreationTests
         var attributeCalls = 0;
         IAmazonSQS client = InterfaceProxy<IAmazonSQS>.Create((method, _) => method.Name switch
         {
-            nameof(IAmazonSQS.GetQueueUrlAsync) => Missing(),
-            nameof(IAmazonSQS.CreateQueueAsync) => Create(),
-            nameof(IAmazonSQS.GetQueueAttributesAsync) => Attributes(),
+            nameof(IAmazonSQS.GetQueueUrlAsync) => MissingAsync(),
+            nameof(IAmazonSQS.CreateQueueAsync) => CreateAsync(),
+            nameof(IAmazonSQS.GetQueueAttributesAsync) => AttributesAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<GetQueueUrlResponse> Missing()
+        Task<GetQueueUrlResponse> MissingAsync()
         {
             Interlocked.Increment(ref lookupCalls);
             return Task.FromException<GetQueueUrlResponse>(new QueueDoesNotExistException("missing"));
         }
 
-        Task<CreateQueueResponse> Create()
+        Task<CreateQueueResponse> CreateAsync()
         {
             int call = Interlocked.Increment(ref createCalls);
             return Task.FromResult(new CreateQueueResponse
@@ -161,7 +161,7 @@ public sealed class QueueCacheCreationTests
             });
         }
 
-        Task<GetQueueAttributesResponse> Attributes()
+        Task<GetQueueAttributesResponse> AttributesAsync()
         {
             Interlocked.Increment(ref attributeCalls);
             return Task.FromResult(new GetQueueAttributesResponse
@@ -196,14 +196,14 @@ public sealed class QueueCacheCreationTests
         var attributeReads = 0;
         IAmazonSQS client = InterfaceProxy<IAmazonSQS>.Create((method, args) => method.Name switch
         {
-            nameof(IAmazonSQS.GetQueueUrlAsync) => Lookup(),
-            nameof(IAmazonSQS.CreateQueueAsync) => Create(),
-            nameof(IAmazonSQS.GetQueueAttributesAsync) => Attributes(
+            nameof(IAmazonSQS.GetQueueUrlAsync) => LookupAsync(),
+            nameof(IAmazonSQS.CreateQueueAsync) => CreateAsync(),
+            nameof(IAmazonSQS.GetQueueAttributesAsync) => AttributesAsync(
                 Assert.IsType<string>(args![0]), Assert.IsAssignableFrom<IEnumerable<string>>(args[1])),
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<GetQueueUrlResponse> Lookup()
+        Task<GetQueueUrlResponse> LookupAsync()
         {
             calls.Add("lookup");
             return Interlocked.Increment(ref lookups) == 1
@@ -211,13 +211,13 @@ public sealed class QueueCacheCreationTests
                 : Task.FromResult(new GetQueueUrlResponse { QueueUrl = QueueUrl, HttpStatusCode = HttpStatusCode.OK });
         }
 
-        Task<CreateQueueResponse> Create()
+        Task<CreateQueueResponse> CreateAsync()
         {
             calls.Add("create");
             return Task.FromResult(new CreateQueueResponse { QueueUrl = QueueUrl, HttpStatusCode = HttpStatusCode.OK });
         }
 
-        Task<GetQueueAttributesResponse> Attributes(string url, IEnumerable<string> requestedAttributes)
+        Task<GetQueueAttributesResponse> AttributesAsync(string url, IEnumerable<string> requestedAttributes)
         {
             calls.Add("attributes");
             Assert.Equal(QueueUrl, url);
