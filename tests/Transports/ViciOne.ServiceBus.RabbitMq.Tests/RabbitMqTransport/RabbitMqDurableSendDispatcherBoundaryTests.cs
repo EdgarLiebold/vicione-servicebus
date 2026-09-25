@@ -112,12 +112,12 @@ public sealed class RabbitMqDurableSendDispatcherBoundaryTests
             return targetMethod?.Name switch
             {
                 "get_Address" => HostAddress,
-                nameof(IBus.GetSendEndpointAsync) => ResolveEndpoint(args),
+                nameof(IBus.GetSendEndpointAsync) => ResolveEndpointAsync(args),
                 _ => throw new NotSupportedException(targetMethod?.Name),
             };
         }
 
-        private Task<ISendEndpoint> ResolveEndpoint(object?[]? args)
+        private Task<ISendEndpoint> ResolveEndpointAsync(object?[]? args)
         {
             EndpointResolutionCount++;
             LastDestination = Assert.IsType<Uri>(args![0]);

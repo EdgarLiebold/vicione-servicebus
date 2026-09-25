@@ -11,6 +11,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Nine RabbitMQ test-double methods now carry the required `Async` suffix,
+  matching their task-returning contracts and clearing the repository's
+  bidirectional asynchronous naming gate.
+- RabbitMQ channel leases now dispose their scoped cancellation links when a
+  borrowed use ends. The active agent keeps the scope alive through an in-flight
+  pipe operation even if the supervisor begins stopping concurrently. A stop
+  budget can still cancel the wait and a later stop can finish after the use.
+  A new regression test failed before the fix because a canceled owner still
+  canceled a released lease. Channel-lease tests also verify that a borrower
+  retains its owner, links caller and owner cancellation, rejects a closed broker channel
+  with its exact close reason or an actionable fallback, cancels a pending
+  acquisition without disposing the owner, and preserves channel-creation
+  failures. A deliberately weakened closed-channel check failed both broker
+  shutdown variants.
 - RabbitMQ now uses one send-context configuration path for channel-bound and
   direct sends. Channel-bound reply tests verify the final broker frame,
   inherited priority and reply address, cancellation token, and rejection of

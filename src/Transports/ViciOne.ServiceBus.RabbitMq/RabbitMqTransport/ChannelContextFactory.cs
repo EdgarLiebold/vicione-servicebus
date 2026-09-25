@@ -6,6 +6,7 @@ using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
@@ -94,7 +95,72 @@ public class ChannelContextFactory :
     public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<ChannelContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedChannelAsync(context.Context, cancellationToken));
+        Task<ChannelContext> scopedContext = CreateSharedChannelAsync(context.Context, cancellationToken);
+        var borrowed = new ActivePipeContext<ChannelContext>(context, scopedContext);
+        var releasing = new ScopeReleasingActiveContextHandle(borrowed, scopedContext);
+        var agent = new ActivePipeContextAgent<ChannelContext>(releasing);
+        try
+        {
+            supervisor.Add(agent);
+            return agent;
+        }
+        catch
+        {
+            _ = releasing.DisposeAsync();
+            throw;
+        }
+    }
+
+    sealed class ScopeReleasingActiveContextHandle : IActivePipeContextHandle<ChannelContext>
+    {
+        readonly IActivePipeContextHandle<ChannelContext> _borrowed;
+        readonly Task<ChannelContext> _scopedContext;
+        int _disposed;
+
+        public ScopeReleasingActiveContextHandle(IActivePipeContextHandle<ChannelContext> borrowed, Task<ChannelContext> scopedContext)
+        {
+            _borrowed = borrowed;
+            _scopedContext = scopedContext;
+        }
+
+        public bool IsDisposed => _borrowed.IsDisposed;
+        public Task<ChannelContext> Context => _borrowed.Context;
+
+        public Task FaultedAsync(Exception exception) => _borrowed.FaultedAsync(exception);
+
+        public ValueTask DisposeAsync()
+        {
+            if (Interlocked.Exchange(ref _disposed, 1) == 0)
+            {
+                if (_scopedContext.IsCompletedSuccessfully)
+                    ((ScopeChannelContext)_scopedContext.Result).Dispose();
+                else
+                    _scopedContext.GetAwaiter().OnCompleted(ReleaseAfterCompletion);
+            }
+
+            return _borrowed.DisposeAsync();
+        }
+
+        void ReleaseAfterCompletion()
+        {
+            try
+            {
+                if (_scopedContext.IsCompletedSuccessfully)
+                    ((ScopeChannelContext)_scopedContext.Result).Dispose();
+                else if (_scopedContext.IsFaulted)
+                    _ = _scopedContext.Exception;
+            }
+            catch (Exception exception)
+            {
+                try
+                {
+                    LogContext.Error?.Log(exception, "Releasing a borrowed RabbitMQ channel scope failed");
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
     }
 
     static async Task<ChannelContext> CreateSharedChannelAsync(Task<ChannelContext> contextTask, CancellationToken cancellationToken)

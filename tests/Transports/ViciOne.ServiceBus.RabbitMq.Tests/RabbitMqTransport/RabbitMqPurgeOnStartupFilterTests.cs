@@ -171,14 +171,14 @@ public sealed class RabbitMqPurgeOnStartupFilterTests
             ((ChannelProxy)(object)channel).Handler = (method, args) => method.Name switch
             {
                 "get_CancellationToken" => token,
-                "QueueDeclarePassiveAsync" => Declare(args!),
-                "QueuePurgeAsync" => Purge(args!),
+                "QueueDeclarePassiveAsync" => DeclareAsync(args!),
+                "QueuePurgeAsync" => PurgeAsync(args!),
                 _ => throw new NotSupportedException($"Unexpected channel call: {method.Name}"),
             };
             return channel;
         }
 
-        private Task<QueueDeclareOk> Declare(object?[] args)
+        private Task<QueueDeclareOk> DeclareAsync(object?[] args)
         {
             PassiveDeclareCalls++;
             DeclaredQueue = Assert.IsType<string>(args[0]);
@@ -188,7 +188,7 @@ public sealed class RabbitMqPurgeOnStartupFilterTests
                 : new QueueDeclareOk("orders", 3, 0));
         }
 
-        private Task<uint> Purge(object?[] args)
+        private Task<uint> PurgeAsync(object?[] args)
         {
             PurgeCalls++;
             PurgedQueue = Assert.IsType<string>(args[0]);

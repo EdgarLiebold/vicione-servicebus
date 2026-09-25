@@ -244,13 +244,13 @@ public sealed class RabbitMqConsumerFilterTests
                 "add_ZeroActivity" or "remove_ZeroActivity" => null,
                 "get_ActiveDispatchCount" or "get_MaxConcurrentDispatchCount" => 0,
                 "get_DispatchCount" => 0L,
-                "DispatchAsync" => RecordDispatch(_!),
+                "DispatchAsync" => RecordDispatchAsync(_!),
                 _ => throw Unexpected(method),
             });
             IReceiveTransportObserver observers = Proxy<IReceiveTransportObserver>((method, args) => method.Name switch
             {
-                "ReadyAsync" => RecordReady((ReceiveTransportReady)args![0]!),
-                "CompletedAsync" => RecordCompleted((ReceiveTransportCompleted)args![0]!),
+                "ReadyAsync" => RecordReadyAsync((ReceiveTransportReady)args![0]!),
+                "CompletedAsync" => RecordCompletedAsync((ReceiveTransportCompleted)args![0]!),
                 _ => throw Unexpected(method),
             });
             RabbitMqReceiveEndpointContext endpoint = Proxy<RabbitMqReceiveEndpointContext>((method, args) => method.Name switch
@@ -273,7 +273,7 @@ public sealed class RabbitMqConsumerFilterTests
                 "get_Channel" => channel,
                 "get_ConnectionContext" => connection,
                 "get_CancellationToken" => CancellationToken,
-                "BasicAckAsync" => RecordAck(args!),
+                "BasicAckAsync" => RecordAckAsync(args!),
                 "NotifyFaulted" => RecordFault(args!),
                 "BasicConsumeAsync" => ConsumeAsync(args!),
                 _ => throw Unexpected(method),
@@ -345,7 +345,7 @@ public sealed class RabbitMqConsumerFilterTests
             return null;
         }
 
-        private Task RecordReady(ReceiveTransportReady ready)
+        private Task RecordReadyAsync(ReceiveTransportReady ready)
         {
             Events.Enqueue("ready");
             ReadyAddress = ready.InputAddress;
@@ -354,7 +354,7 @@ public sealed class RabbitMqConsumerFilterTests
             return Task.CompletedTask;
         }
 
-        private Task RecordCompleted(ReceiveTransportCompleted completed)
+        private Task RecordCompletedAsync(ReceiveTransportCompleted completed)
         {
             Events.Enqueue("completed");
             CompletedAddress = completed.InputAddress;
@@ -371,7 +371,7 @@ public sealed class RabbitMqConsumerFilterTests
             return Task.CompletedTask;
         }
 
-        private async Task RecordDispatch(object?[]? args)
+        private async Task RecordDispatchAsync(object?[]? args)
         {
             DispatchCalls++;
             DispatchedContext = Assert.IsAssignableFrom<ReceiveContext>(args![0]);
@@ -389,7 +389,7 @@ public sealed class RabbitMqConsumerFilterTests
             return null;
         }
 
-        private ValueTask RecordAck(object?[] args)
+        private ValueTask RecordAckAsync(object?[] args)
         {
             AckCalls++;
             AckTag = Assert.IsType<ulong>(args[0]);

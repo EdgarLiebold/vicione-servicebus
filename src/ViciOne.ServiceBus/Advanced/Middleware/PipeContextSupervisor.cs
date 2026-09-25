@@ -47,9 +47,11 @@ public class PipeContextSupervisor<TContext> :
         cancellationToken.ThrowIfCancellationRequested();
 
         IActivePipeContextAgent<TContext> activeContext = CreateActiveContext(cancellationToken);
+        IDisposable? activeUse = null;
 
         try
         {
+            activeUse = (activeContext as ActivePipeContextAgent<TContext>)?.BeginUse();
             TContext context = activeContext.Context.Status == TaskStatus.RanToCompletion
                 ? activeContext.Context.Result
                 : await activeContext.Context.ConfigureAwait(false);
@@ -77,6 +79,7 @@ public class PipeContextSupervisor<TContext> :
         }
         finally
         {
+            activeUse?.Dispose();
             // Cleanup failures remain diagnostic. Reporting them as operation failures after a
             // successful send could trigger a duplicate; replacing a real failure would hide its cause.
             try

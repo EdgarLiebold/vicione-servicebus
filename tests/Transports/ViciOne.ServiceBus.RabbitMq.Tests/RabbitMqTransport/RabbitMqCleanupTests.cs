@@ -142,13 +142,13 @@ public sealed class RabbitMqCleanupTests
             return targetMethod?.Name switch
             {
                 "get_IsOpen" => IsOpenFailure is null ? IsOpen : throw IsOpenFailure,
-                "CloseAsync" => Close(args),
-                "DisposeAsync" => Dispose(),
+                "CloseAsync" => CloseAsync(args),
+                "DisposeAsync" => DisposeAsync(),
                 _ => throw new InvalidOperationException($"Unexpected RabbitMQ client call: {targetMethod?.Name}"),
             };
         }
 
-        private Task Close(object?[]? args)
+        private Task CloseAsync(object?[]? args)
         {
             Calls.Add("close");
             Assert.NotNull(args);
@@ -159,7 +159,7 @@ public sealed class RabbitMqCleanupTests
             return CloseFailure is null ? Task.CompletedTask : Task.FromException(CloseFailure);
         }
 
-        private ValueTask Dispose()
+        private ValueTask DisposeAsync()
         {
             Calls.Add("dispose");
             return DisposeFailure is null ? ValueTask.CompletedTask : ValueTask.FromException(DisposeFailure);
