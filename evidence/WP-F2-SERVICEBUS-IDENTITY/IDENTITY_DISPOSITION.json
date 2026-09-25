@@ -164,13 +164,12 @@
     "categories": {
       "HISTORICAL_EVIDENCE": 88,
       "IDENTITY_TOOL_SELF_REFERENCE": 2,
-      "LEGAL_PROVENANCE": 2,
-      "NEGATIVE_TEST_ORACLE": 1
+      "LEGAL_PROVENANCE": 2
     },
-    "entryCount": 93,
+    "entryCount": 92,
     "path": "tools/identity/historical_identity_policy.json",
     "schemaVersion": 1,
-    "sha256": "44306d95ac41abefb0f1a41da6bacad1fef1a1d75cd7c544ed13b7c8f7d65a07"
+    "sha256": "8e0ffaf3988496eeee0ae2f01ae91ffee34de701a368684abc9f2881a9284e75"
   },
   "mappingPolicy": "single-declarative-family-registry-identity_rules.py",
   "retainedLegalProvenanceContexts": [
