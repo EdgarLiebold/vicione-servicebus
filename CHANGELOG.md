@@ -9,6 +9,13 @@ baseline.
 ViciOne.ServiceBus has not been released. The repository is in a private development state, and the
 entry below records what the current work changed for anyone reading the source.
 
+### Verification added during the source review
+
+- Amazon SQS queue creation now has provider-facing regression tests for
+  declared attributes and tags, the missing FIFO flag, unsuccessful creation,
+  and an attribute-read failure after creation. The recovery test proves that
+  a retry finds the existing queue without issuing a second create request.
+
 ### Fixed during the source review since 2026-09-06
 
 - Amazon SQS queue metadata now coordinates resolution, durable ownership
