@@ -190,6 +190,34 @@ public sealed class AmazonSqsBatcherCancellationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-BATCH-CANCELLATION", "queue-disposal-drains-admitted-send-and-delete")]
+    public async Task QueueInfoDispose_WaitsForAdmittedSendAndDeleteProviderWorkAsync()
+    {
+        using var client = new BlockingSqsClient();
+        var queue = CreateQueueInfo(client);
+        Task send = queue.SendAsync(new SendMessageBatchRequestEntry("", "message"), TestContext.Current.CancellationToken);
+        Task delete = queue.DeleteAsync("receipt-handle", TestContext.Current.CancellationToken);
+        await Task.WhenAll(client.SendStarted.Task, client.DeleteStarted.Task)
+            .WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+
+        Task disposal = queue.DisposeAsync().AsTask();
+        try
+        {
+            Assert.False(disposal.IsCompleted);
+            Assert.False(send.IsCompleted);
+            Assert.False(delete.IsCompleted);
+        }
+        finally
+        {
+            client.ReleaseSend();
+            client.ReleaseDelete();
+        }
+
+        await Task.WhenAll(send, delete, disposal).WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+        await queue.DisposeAsync();
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AWS-BATCH-CANCELLATION", "topic-publish-caller-cancellation-after-dispatch")]
     public async Task TopicInfoPublishAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync()
     {

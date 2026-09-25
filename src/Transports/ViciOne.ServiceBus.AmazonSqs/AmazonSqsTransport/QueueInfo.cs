@@ -18,7 +18,11 @@ public class QueueInfo :
     readonly Lazy<IBatcher<DeleteMessageBatchRequestEntry>> _batchDeleter;
     readonly Lazy<IBatcher<SendMessageBatchRequestEntry>> _batchSender;
     readonly IAmazonSQS _client;
+    readonly object _lifecycleLock = new();
     readonly SemaphoreSlim _updateSemaphore;
+    TaskCompletionSource? _policyUpdatesDrained;
+    int _activePolicyUpdates;
+    Task? _disposeTask;
     bool _disposed;
 
     const string SendMessageIAMActionName = "sqs:SendMessage";
@@ -69,12 +73,21 @@ public class QueueInfo :
 
     /// <summary>Disposes the policy-update semaphore and any initialized message batchers.</summary>
     /// <returns>A task that completes when initialized batchers have drained and stopped.</returns>
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        if (_disposed)
-            return;
+        lock (_lifecycleLock)
+            return new ValueTask(_disposeTask ??= DisposeCoreAsync());
+    }
 
+    async Task DisposeCoreAsync()
+    {
         _disposed = true;
+
+        if (_activePolicyUpdates > 0)
+        {
+            _policyUpdatesDrained = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            await _policyUpdatesDrained.Task.ConfigureAwait(false);
+        }
 
         _updateSemaphore.Dispose();
 
@@ -91,7 +104,11 @@ public class QueueInfo :
     public Task SendAsync(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
     {
         Used?.Invoke();
-        return _batchSender.Value.ExecuteAsync(entry, cancellationToken);
+        lock (_lifecycleLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return _batchSender.Value.ExecuteAsync(entry, cancellationToken);
+        }
     }
 
     /// <summary>Queues deletion of a received message and waits for its batch result.</summary>
@@ -101,9 +118,12 @@ public class QueueInfo :
     public Task DeleteAsync(string receiptHandle, CancellationToken cancellationToken)
     {
         Used?.Invoke();
-        var entry = new DeleteMessageBatchRequestEntry("", receiptHandle);
-
-        return _batchDeleter.Value.ExecuteAsync(entry, cancellationToken);
+        lock (_lifecycleLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            var entry = new DeleteMessageBatchRequestEntry("", receiptHandle);
+            return _batchDeleter.Value.ExecuteAsync(entry, cancellationToken);
+        }
     }
 
     /// <summary>Ensures that the queue policy permits an Amazon SNS topic to send messages.</summary>
@@ -114,64 +134,86 @@ public class QueueInfo :
     public async Task<bool> UpdatePolicyAsync(string sqsQueueArn, string topicArn, CancellationToken cancellationToken)
     {
         Used?.Invoke();
-        await _updateSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        lock (_lifecycleLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            _activePolicyUpdates++;
+        }
+
         try
         {
-            Attributes.TryGetValue(QueueAttributeName.Policy, out var policyValue);
-            var policy = string.IsNullOrEmpty(policyValue)
-                ? new Policy()
-                : Policy.FromJson(policyValue);
-
-            if (QueueHasTopicPermission(policy, topicArn, sqsQueueArn))
-                return false;
-
-            var statement = policy.Statements.FirstOrDefault(x => x.Effect == Statement.StatementEffect.Allow
-                && x.Actions.Any(a => a.ActionName.Equals(SendMessageIAMActionName, StringComparison.Ordinal))
-                && x.Resources.Any(a => a.Id.Equals(sqsQueueArn, StringComparison.OrdinalIgnoreCase))
-                && x.Principals.Any(a => string.Equals(a.Provider, "Service", StringComparison.OrdinalIgnoreCase)
-                    && a.Id.Equals("sns.amazonaws.com", StringComparison.OrdinalIgnoreCase)));
-
-            if (statement is null)
+            await _updateSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
             {
-                statement = new Statement(Statement.StatementEffect.Allow);
-                statement.Actions.Add(SendMessageIAMActionName);
-                statement.Resources.Add(new Resource(sqsQueueArn));
-                statement.Principals.Add(new Principal("Service", "sns.amazonaws.com"));
-                policy.Statements.Add(statement);
+                return await UpdatePolicyCoreAsync(sqsQueueArn, topicArn, cancellationToken).ConfigureAwait(false);
             }
-            var condition = statement.Conditions.FirstOrDefault(x =>
-                string.Equals(ConditionFactory.SOURCE_ARN_CONDITION_KEY, x.ConditionKey, StringComparison.Ordinal) &&
-                x.Type.Equals(ConditionFactory.ArnComparisonType.ArnLike.ToString(), StringComparison.Ordinal));
-
-            if (condition is not null && condition.Values.Any(x => x.Equals(topicArn, StringComparison.OrdinalIgnoreCase)))
-                return false;
-
-            if (condition is null)
-                statement.Conditions.Add(ConditionFactory.NewSourceArnCondition(topicArn));
-            else
+            finally
             {
-                condition.Values = condition
-                    .Values
-                    .Append(topicArn)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
+                _updateSemaphore.Release();
             }
-
-            var jsonPolicy = policy.ToJson();
-
-            var setAttributes = new Dictionary<string, string> { { QueueAttributeName.Policy, jsonPolicy } };
-            var setAttributesResponse = await _client.SetQueueAttributesAsync(Url, setAttributes, cancellationToken).ConfigureAwait(false);
-
-            setAttributesResponse.EnsureSuccessfulResponse();
-
-            Attributes[QueueAttributeName.Policy] = jsonPolicy;
-
-            return true;
         }
         finally
         {
-            _updateSemaphore.Release();
+            lock (_lifecycleLock)
+            {
+                if (--_activePolicyUpdates == 0)
+                    _policyUpdatesDrained?.TrySetResult();
+            }
         }
+    }
+
+    async Task<bool> UpdatePolicyCoreAsync(string sqsQueueArn, string topicArn, CancellationToken cancellationToken)
+    {
+        Attributes.TryGetValue(QueueAttributeName.Policy, out var policyValue);
+        var policy = string.IsNullOrEmpty(policyValue)
+            ? new Policy()
+            : Policy.FromJson(policyValue);
+
+        if (QueueHasTopicPermission(policy, topicArn, sqsQueueArn))
+            return false;
+
+        var statement = policy.Statements.FirstOrDefault(x => x.Effect == Statement.StatementEffect.Allow
+            && x.Actions.Any(a => a.ActionName.Equals(SendMessageIAMActionName, StringComparison.Ordinal))
+            && x.Resources.Any(a => a.Id.Equals(sqsQueueArn, StringComparison.OrdinalIgnoreCase))
+            && x.Principals.Any(a => string.Equals(a.Provider, "Service", StringComparison.OrdinalIgnoreCase)
+                && a.Id.Equals("sns.amazonaws.com", StringComparison.OrdinalIgnoreCase)));
+
+        if (statement is null)
+        {
+            statement = new Statement(Statement.StatementEffect.Allow);
+            statement.Actions.Add(SendMessageIAMActionName);
+            statement.Resources.Add(new Resource(sqsQueueArn));
+            statement.Principals.Add(new Principal("Service", "sns.amazonaws.com"));
+            policy.Statements.Add(statement);
+        }
+        var condition = statement.Conditions.FirstOrDefault(x =>
+            string.Equals(ConditionFactory.SOURCE_ARN_CONDITION_KEY, x.ConditionKey, StringComparison.Ordinal) &&
+            x.Type.Equals(ConditionFactory.ArnComparisonType.ArnLike.ToString(), StringComparison.Ordinal));
+
+        if (condition is not null && condition.Values.Any(x => x.Equals(topicArn, StringComparison.OrdinalIgnoreCase)))
+            return false;
+
+        if (condition is null)
+            statement.Conditions.Add(ConditionFactory.NewSourceArnCondition(topicArn));
+        else
+        {
+            condition.Values = condition
+                .Values
+                .Append(topicArn)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
+        var jsonPolicy = policy.ToJson();
+
+        var setAttributes = new Dictionary<string, string> { { QueueAttributeName.Policy, jsonPolicy } };
+        var setAttributesResponse = await _client.SetQueueAttributesAsync(Url, setAttributes, cancellationToken).ConfigureAwait(false);
+
+        setAttributesResponse.EnsureSuccessfulResponse();
+
+        Attributes[QueueAttributeName.Policy] = jsonPolicy;
+
+        return true;
     }
 
     static bool QueueHasTopicPermission(Policy policy, string topicArn, string sqsQueueArn)

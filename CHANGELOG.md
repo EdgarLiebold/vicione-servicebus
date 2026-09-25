@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SQS queue metadata now coordinates resolution, durable ownership
+  transitions and removal per queue name. A durable queue can no longer start
+  a second provider lookup while an evictable lookup for the same name is
+  still being created, and a name lookup cannot create an evictable copy while
+  durable creation is pending. Caller cancellation releases only that caller's
+  wait; it does not release the queue-name gate before the cache-owned
+  operation ends. Independent queue names continue to resolve concurrently.
+  Evicted queue metadata now rejects late send and delete requests before a
+  lazy batch worker can be created. Disposal waits for policy updates already
+  admitted, preserving successful provider writes and their local result.
 - Pending delivery-work waits now keep their captured tasks when the caller
   cancels the wait. A later `CompletedAsync` call still observes unfinished
   receive, mediator, queue, or job work instead of reporting completion early.
