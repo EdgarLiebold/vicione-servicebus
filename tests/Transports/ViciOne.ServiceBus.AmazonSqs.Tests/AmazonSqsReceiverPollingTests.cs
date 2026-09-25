@@ -38,6 +38,7 @@ public sealed class AmazonSqsReceiverPollingTests
         var lookupEntered = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         var pollEntered = new TaskCompletionSource<(string Name, int Limit, int Wait)>(TaskCreationOptions.RunContinuationsAsynchronously);
         var polls = 0;
+        CancellationToken observedPollToken = default;
         IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, _) => throw new NotSupportedException(method.Name));
         var attributes = new Dictionary<string, string> { [QueueAttributeName.QueueArn] = QueueArn };
         if (providerVisibility is not null)
@@ -102,6 +103,7 @@ public sealed class AmazonSqsReceiverPollingTests
         }
 
         Assert.True(receiver.Stopped.IsCancellationRequested);
+        Assert.True(observedPollToken.IsCancellationRequested);
 
         object? TryGetPayload(MethodInfo method, object?[]? args)
         {
@@ -127,8 +129,9 @@ public sealed class AmazonSqsReceiverPollingTests
         {
             Assert.NotNull(args);
             Interlocked.Increment(ref polls);
+            observedPollToken = Assert.IsType<CancellationToken>(args[3]);
             pollEntered.TrySetResult((Assert.IsType<string>(args[0]), Assert.IsType<int>(args[1]), Assert.IsType<int>(args[2])));
-            await Task.Delay(Timeout.InfiniteTimeSpan, Assert.IsType<CancellationToken>(args[3]));
+            await Task.Delay(Timeout.InfiniteTimeSpan, observedPollToken);
             return Array.Empty<Message>();
         }
     }

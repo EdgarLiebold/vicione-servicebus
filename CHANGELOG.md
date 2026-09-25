@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS receiver startup now has provider-facing regression tests proving
+  queue metadata is resolved before polling, valid visibility settings are
+  adopted, malformed or missing settings leave the configured value intact,
+  the first poll uses the exact request limit and wait time, and shutdown
+  cancels the outstanding provider poll.
 - Amazon SQS queue creation now has provider-facing regression tests for
   declared attributes and tags, the missing FIFO flag, unsuccessful creation,
   and an attribute-read failure after creation. The recovery test proves that
