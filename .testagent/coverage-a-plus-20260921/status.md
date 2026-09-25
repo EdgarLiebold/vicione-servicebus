@@ -44,6 +44,15 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS consumer topology connection tests now cover the endpoint,
+connection-option, and message-level subscription gates, including the
+ordinary overload used by handlers and consumers. The complete SQS suite
+passed 284/284. The exact-commit SQS unit receipt at `1cdac5ea6` measured
+75.11% line and 78.70% branch coverage, with two SQS methods above CRAP 30;
+`ConnectConsumePipe` fell to CRAP 6. Independent read-only Red Team returned
+PASS after the default-overload case was added. See
+`amazon-sqs-consume-topology-connection-20260925.md`. Global A+ remains open.
+
 Amazon SQS topology cleanup now registers one agent across failed-declaration
 retries in separate operation scopes, updates the retained agent to a new
 client after reconnect, and registers a fresh agent after restart. Tests
