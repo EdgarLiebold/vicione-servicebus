@@ -44,6 +44,18 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS moves now reject more than ten message attributes before provider
+submission, including headers added during dead-letter handling. A red 10+1
+boundary test preceded the fix; the 9+1 case succeeds. Provider-boundary
+tests also verify the admitted body, string and binary attributes, FIFO
+identifiers, stale-header removal, failure-triggered topology redeclaration,
+and post-success cache stability. The complete SQS suite passed 274/274.
+The exact-commit SQS unit receipt at `5549a5b4b` measured 73.64% line and
+76.98% branch coverage with four SQS methods above CRAP 30; MoveAsync fell
+to CRAP 18.01. Independent read-only Red Team returned PASS after three
+test-oracle corrections. See `amazon-sqs-move-20260925.md`. Global A+ remains
+open.
+
 Amazon SQS FIFO receiver tests now verify numeric sequence order, per-group
 order, independent dispatch progress under a blocked group, and fail-fast
 diagnostics for invalid ordering attributes. The complete SQS suite passed
