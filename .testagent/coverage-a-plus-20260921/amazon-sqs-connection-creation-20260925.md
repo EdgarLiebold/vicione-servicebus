@@ -33,4 +33,5 @@ connection-creation callback in `ConnectionContextFactory` rose from 0/11
 to 11/11 covered lines and fell from CRAP 42 to 6. The callback's observed
 branch coverage is 66.67%. This is a subset measurement; a fresh complete
 product-wide profile and the strict A+ gate remain open. The provider-dispatch
-gap identified in the preceding send-transport selection slice is also open.
+gap identified in the preceding send-transport selection slice was closed by
+the later `0ced761dc` slice.

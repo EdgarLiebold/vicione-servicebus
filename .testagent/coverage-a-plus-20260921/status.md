@@ -44,6 +44,15 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS created send transports now have provider-boundary dispatch tests
+for queue, relative topic, and absolute `type=topic` addresses. A deliberate
+Topic-to-Queue context mutation failed both topic variants. The complete SQS
+suite passed 295/295; the exact-commit SQS receipt at `0ced761dc` measured
+78.23% line, 79.54% branch, and zero methods above CRAP 30. Read-only Red
+Team returned PASS after transport and entity-info cleanup was made safe on
+assertion failures. The preceding provider-dispatch P2 is closed; see
+`amazon-sqs-send-transport-dispatch-20260925.md`. Global A+ remains open.
+
 Amazon SQS connection creation now checks provider ownership and release on
 handle stop, failure-cause preservation, cancellation passthrough, and
 stopping before a connection opens. The complete SQS suite passed 292/292.
@@ -58,8 +67,8 @@ cancellation-before-registration tests. The complete SQS suite passed
 288/288. The exact-commit SQS unit receipt at `e4b0fa57b` measured 76.45%
 line and 79.09% branch coverage, with one SQS method above CRAP 30;
 `CreateSendTransportAsync` fell to CRAP 6. Read-only Red Team identified a
-remaining provider-dispatch test gap: a wrong context inside the correct
-Topic branch could still send to SQS. See
+provider-dispatch test gap at that commit; the later `0ced761dc` slice closes
+it. See
 `amazon-sqs-send-transport-selection-20260925.md`. Global A+ remains open.
 
 Amazon SQS consumer topology connection tests now cover the endpoint,

@@ -18,6 +18,8 @@ also found a remaining P2: replacing `TopicSendTransportContext` with
 `QueueSendTransportContext` inside the correct Topic branch would pass these
 tests. A provider-boundary test must prove SNS `PublishAsync` versus SQS
 `SendMessageAsync`; this slice does not close that gap.
+The later `0ced761dc` provider-dispatch slice closed it with a send through
+the created transport and a targeted Topic-to-Queue mutation check.
 
 ## Exact-commit receipt
 
