@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ dead-letter moves now copy the incoming AMQP header table, retaining
+  a dictionary's key comparer, before adding move and host headers. The
+  received message remains unchanged, and case-insensitive keys cannot split
+  into duplicate reason entries.
+  Move-transport tests verify the copied body, properties, routing, mandatory
+  publish, closed-channel causes, and topology retry after publish failure.
 - RabbitMQ consumer-filter tests verify broker start parameters, readiness and
   completion order, startup cancellation, and reuse of a broker-assigned
   consumer tag after a channel restart.

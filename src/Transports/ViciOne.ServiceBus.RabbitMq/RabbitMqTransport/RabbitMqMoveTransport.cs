@@ -54,6 +54,10 @@ public class RabbitMqMoveTransport<TSettings>
         if (context.TryGetPayload(out RabbitMqBasicConsumeContext? basicConsumeContext))
         {
             properties = new BasicProperties(basicConsumeContext.Properties);
+            if (basicConsumeContext.Properties.Headers is { } originalHeaders)
+                properties.Headers = originalHeaders is Dictionary<string, object?> dictionary
+                    ? new Dictionary<string, object?>(dictionary, dictionary.Comparer)
+                    : new Dictionary<string, object?>(originalHeaders);
             routingKey = basicConsumeContext.RoutingKey!;
             body = context.GetBodyContent();
         }
