@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ cleanup tests verify that open channels and connections close before
+  disposal, closed clients skip the handshake, and reply codes and cancellation
+  tokens reach the client. Close and state-query failures still dispose the
+  resource; channel disposal failures are suppressed while connection disposal
+  failures retain their original exception. Removing connection disposal makes
+  five of the eleven focused cases fail.
 - RabbitMQ dead-letter moves now copy the incoming AMQP header table, retaining
   a dictionary's key comparer, before adding move and host headers. The
   received message remains unchanged, and case-insensitive keys cannot split
