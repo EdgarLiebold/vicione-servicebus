@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 using NewIdValue = global::ViciOne.ServiceBus.Advanced.NewId;
@@ -130,6 +131,44 @@ public sealed class NewIdGeneratorTests
         Assert.Equal([1, 2, 3], rendered.Select(value => int.Parse(value.Substring(4, 2))).ToArray());
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "guid-batch-rollover")]
+    public void GuidBatch_RolloverPreservesIdentityTimestampAndSqlOrder(bool crossesTickWord)
+    {
+        const int Rollover = 65535;
+        var ticks = crossesTickWord
+            ? (NewIdTestInputs.Moment.Ticks & ~0xffffffffL) | 0xffffffffL
+            : NewIdTestInputs.Moment.Ticks;
+        var moment = new DateTime(ticks, DateTimeKind.Utc);
+        var generator = NewIdTestInputs.CreateGenerator(ticks);
+        var scalar = NewIdTestInputs.CreateGenerator(ticks);
+        var sentinel = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+        var ids = new Guid[Rollover + 4];
+        ids[0] = sentinel;
+        ids[^1] = sentinel;
+
+        var segment = generator.NextGuid(ids, 1, Rollover + 2);
+
+        Assert.Equal(1, segment.Offset);
+        Assert.Equal(Rollover + 2, segment.Count);
+        Assert.Same(ids, segment.Array);
+        Assert.Equal(sentinel, ids[0]);
+        Assert.Equal(sentinel, ids[^1]);
+        Assert.Equal(Rollover + 2, ids.Skip(1).Take(Rollover + 2).Distinct().Count());
+        Assert.Equal(moment, NewIdValue.FromGuid(ids[Rollover]).Timestamp);
+        Assert.Equal(moment.AddTicks(1), NewIdValue.FromGuid(ids[Rollover + 1]).Timestamp);
+        Assert.Equal(moment.AddTicks(1), NewIdValue.FromGuid(ids[Rollover + 2]).Timestamp);
+        Assert.True(new SqlGuid(ids[Rollover]).CompareTo(new SqlGuid(ids[Rollover + 1])) < 0);
+        Assert.True(new SqlGuid(ids[Rollover + 1]).CompareTo(new SqlGuid(ids[Rollover + 2])) < 0);
+
+        Advance(scalar, Rollover - 1);
+        Assert.Equal(scalar.NextGuid(), ids[Rollover]);
+        Assert.Equal(scalar.NextGuid(), ids[Rollover + 1]);
+        Assert.Equal(scalar.NextGuid(), ids[Rollover + 2]);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "sequential-layout")]
     public void SequentialGuidLayout_PreservesTickAndAdvancesSequence()
@@ -143,6 +182,45 @@ public sealed class NewIdGeneratorTests
         Assert.All(rendered, value => Assert.Equal(first[..14], value[..14]));
         Assert.All(rendered, value => Assert.Equal(first.Substring(19, 13), value.Substring(19, 13)));
         Assert.Equal([1, 2, 3], rendered.Select(value => int.Parse(value.Substring(32, 2))).ToArray());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "sequential-guid-batch-rollover")]
+    public void SequentialGuidBatch_RolloverPreservesIdentityTimestampAndOrder(bool crossesTickWord)
+    {
+        const int Rollover = 65535;
+        var ticks = crossesTickWord
+            ? (NewIdTestInputs.Moment.Ticks & ~0xffffffffL) | 0xffffffffL
+            : NewIdTestInputs.Moment.Ticks;
+        var moment = new DateTime(ticks, DateTimeKind.Utc);
+        var generator = NewIdTestInputs.CreateGenerator(ticks);
+        var scalar = NewIdTestInputs.CreateGenerator(ticks);
+        var sentinel = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+        var ids = new Guid[Rollover + 4];
+        ids[0] = sentinel;
+        ids[^1] = sentinel;
+
+        var segment = generator.NextSequentialGuid(ids, 1, Rollover + 2);
+
+        Assert.Equal(1, segment.Offset);
+        Assert.Equal(Rollover + 2, segment.Count);
+        Assert.Same(ids, segment.Array);
+        Assert.Equal(sentinel, ids[0]);
+        Assert.Equal(sentinel, ids[^1]);
+        Assert.Equal(Rollover + 2, ids.Skip(1).Take(Rollover + 2).Distinct().Count());
+        Assert.Equal(moment, NewIdValue.FromSequentialGuid(ids[Rollover]).Timestamp);
+        Assert.Equal(moment.AddTicks(1), NewIdValue.FromSequentialGuid(ids[Rollover + 1]).Timestamp);
+        Assert.Equal(moment.AddTicks(1), NewIdValue.FromSequentialGuid(ids[Rollover + 2]).Timestamp);
+        Assert.True(ids[Rollover].CompareTo(ids[Rollover + 1]) < 0);
+        Assert.True(ids[Rollover + 1].CompareTo(ids[Rollover + 2]) < 0);
+
+        for (var index = 0; index < Rollover - 1; index++)
+            scalar.NextSequentialGuid();
+        Assert.Equal(scalar.NextSequentialGuid(), ids[Rollover]);
+        Assert.Equal(scalar.NextSequentialGuid(), ids[Rollover + 1]);
+        Assert.Equal(scalar.NextSequentialGuid(), ids[Rollover + 2]);
     }
 
     [Fact]

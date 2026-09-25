@@ -240,6 +240,13 @@
    {
       "requirementId" : "REQ-VSB-NEWID-GENERATOR",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidBatch_RolloverPreservesIdentityTimestampAndSqlOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "guid-batch-rollover"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "ConcurrentGeneration_ProducesNoDuplicates",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
       "variantKey" : "parallel-uniqueness"
@@ -264,6 +271,13 @@
       "testMethod" : "SequentialGuidLayout_PreservesTickAndAdvancesSequence",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
       "variantKey" : "sequential-layout"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SequentialGuidBatch_RolloverPreservesIdentityTimestampAndOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "sequential-guid-batch-rollover"
    },
    {
       "requirementId" : "REQ-VSB-NEWID-GENERATOR",
