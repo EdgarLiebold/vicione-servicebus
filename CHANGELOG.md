@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ consumer-delivery tests now exercise the broker callback through
+  receive dispatch and acknowledgement. They check AMQP metadata and body,
+  both acknowledgement modes, pre-canceled and late callbacks, two broker
+  failure types, and continued consumption after an ordinary handler failure.
+  Disabling the late-delivery guard makes its regression test fail.
 - RabbitMQ cleanup tests verify that open channels and connections close before
   disposal, closed clients skip the handshake, and reply codes and cancellation
   tokens reach the client. Close and state-query failures still dispose the

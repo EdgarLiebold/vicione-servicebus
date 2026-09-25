@@ -1,6 +1,9 @@
 using System.Collections.Concurrent;
+using System.IO;
 using System.Reflection;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.RabbitMq.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
@@ -10,6 +13,123 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport;
 
 public sealed class RabbitMqConsumerFilterTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE", "delivery-metadata-and-ack-mode")]
+    public async Task HandleBasicDeliverAsync_ForwardsBrokerDeliveryWithTheConfiguredAckModeAsync(bool noAck)
+    {
+        var harness = new ConsumerHarness(noAck: noAck);
+        Task send = harness.Filter.SendAsync(harness.ChannelContext, harness.Next);
+        var properties = new BasicProperties { MessageId = "order-17" };
+        byte[] body = [1, 2, 3, 4];
+
+        await harness.Consumer.HandleBasicDeliverAsync("assigned-tag", 17, true, "orders", "orders.created",
+            properties, body, TestContext.Current.CancellationToken);
+
+        RabbitMqReceiveContext received = Assert.IsType<RabbitMqReceiveContext>(harness.DispatchedContext);
+        Assert.Equal("orders", received.Exchange);
+        Assert.Equal("orders.created", received.RoutingKey);
+        Assert.Equal("assigned-tag", received.ConsumerTag);
+        Assert.Equal(17UL, received.DeliveryTag);
+        Assert.True(received.Redelivered);
+        Assert.Same(properties, received.Properties);
+        Assert.Equal(body, harness.DispatchedBody);
+        Assert.Equal(noAck ? 0 : 1, harness.AckCalls);
+        if (!noAck)
+            Assert.Equal(17UL, harness.AckTag);
+
+        await harness.Consumer.HandleBasicCancelOkAsync("assigned-tag", TestContext.Current.CancellationToken);
+        await send.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        Assert.Equal(1, harness.DispatchCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE", "pre-canceled-delivery-skips-dispatch")]
+    public async Task HandleBasicDeliverAsync_PreCanceledCallbackDoesNotDispatchAsync()
+    {
+        var harness = new ConsumerHarness();
+        Task send = harness.Filter.SendAsync(harness.ChannelContext, harness.Next);
+        using var canceled = new CancellationTokenSource();
+        canceled.Cancel();
+
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            harness.Consumer.HandleBasicDeliverAsync("assigned-tag", 18, false, "orders", "orders.created",
+                new BasicProperties(), new byte[] { 1 }, canceled.Token));
+
+        Assert.Equal(canceled.Token, actual.CancellationToken);
+        Assert.Equal(0, harness.DispatchCalls);
+        await harness.Consumer.HandleBasicCancelOkAsync("assigned-tag", TestContext.Current.CancellationToken);
+        await send.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE", "broker-dispatch-fault-invalidates-consumer")]
+    public async Task HandleBasicDeliverAsync_BrokerDispatchFailureFaultsChannelAndCompletesConsumerAsync(bool streamEnded)
+    {
+        var harness = new ConsumerHarness();
+        Exception failure = streamEnded
+            ? new EndOfStreamException("broker stream ended")
+            : new OperationInterruptedException(new ShutdownEventArgs(ShutdownInitiator.Peer, 404, "queue removed"));
+        harness.DispatchFailure = failure;
+        Task send = harness.Filter.SendAsync(harness.ChannelContext, harness.Next);
+
+        await harness.Consumer.HandleBasicDeliverAsync("assigned-tag", 19, false, "orders", "orders.created",
+            new BasicProperties(), new byte[] { 9 }, TestContext.Current.CancellationToken);
+        await send.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, harness.DispatchCalls);
+        Assert.Same(failure, harness.NotifiedFault);
+        Assert.Equal(harness.InputAddress, harness.FaultedAddress);
+        Assert.Equal(0, harness.AckCalls);
+        Assert.Equal(1, harness.NextCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE", "ordinary-dispatch-fault-keeps-consumer-active")]
+    public async Task HandleBasicDeliverAsync_OrdinaryDispatchFailureDoesNotFaultTheChannelAsync()
+    {
+        var harness = new ConsumerHarness();
+        harness.DispatchFailure = new InvalidOperationException("handler failed");
+        Task send = harness.Filter.SendAsync(harness.ChannelContext, harness.Next);
+
+        await harness.Consumer.HandleBasicDeliverAsync("assigned-tag", 20, false, "orders", "orders.created",
+            new BasicProperties(), new byte[] { 1 }, TestContext.Current.CancellationToken);
+
+        Assert.Null(harness.NotifiedFault);
+        Assert.Equal(0, harness.AckCalls);
+        Assert.False(send.IsCompleted);
+
+        harness.DispatchFailure = null;
+        await harness.Consumer.HandleBasicDeliverAsync("assigned-tag", 21, false, "orders", "orders.created",
+            new BasicProperties(), new byte[] { 2 }, TestContext.Current.CancellationToken);
+
+        Assert.Equal(2, harness.DispatchCalls);
+        Assert.Equal(1, harness.AckCalls);
+        Assert.Equal(21UL, harness.AckTag);
+        await harness.Consumer.HandleBasicCancelOkAsync("assigned-tag", TestContext.Current.CancellationToken);
+        await send.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE", "late-delivery-after-stop-is-ignored")]
+    public async Task HandleBasicDeliverAsync_DoesNotDispatchAfterConsumerStoppedAsync()
+    {
+        var harness = new ConsumerHarness();
+        Task send = harness.Filter.SendAsync(harness.ChannelContext, harness.Next);
+        await harness.Consumer.HandleBasicCancelOkAsync("assigned-tag", TestContext.Current.CancellationToken);
+        await send.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+
+        await harness.Consumer.HandleBasicDeliverAsync("assigned-tag", 22, false, "orders", "orders.created",
+            new BasicProperties(), new byte[] { 3 }, TestContext.Current.CancellationToken);
+
+        Assert.Equal(0, harness.DispatchCalls);
+        Assert.Equal(0, harness.AckCalls);
+        Assert.Null(harness.NotifiedFault);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE", "broker-start-ready-complete-before-next")]
     public async Task SendAsync_UsesBrokerSettingsAndWaitsForConsumerCompletionBeforeContinuingAsync()
@@ -101,13 +221,13 @@ public sealed class RabbitMqConsumerFilterTests
         public readonly TaskCompletionSource<bool> ReadyObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public readonly CancellationToken CancellationToken = new CancellationTokenSource().Token;
 
-        public ConsumerHarness(string requestedTag = "requested-tag", bool autoConfirmConsumer = true)
+        public ConsumerHarness(string requestedTag = "requested-tag", bool autoConfirmConsumer = true, bool noAck = false)
         {
             _autoConfirmConsumer = autoConfirmConsumer;
             ReceiveSettings settings = Proxy<ReceiveSettings>((method, _) => method.Name switch
             {
                 "get_QueueName" => "orders.queue",
-                "get_NoAck" => false,
+                "get_NoAck" => noAck,
                 "get_ConsumerTag" => requestedTag,
                 "get_ConsumeArguments" => ConsumeArguments,
                 _ => throw Unexpected(method),
@@ -116,6 +236,7 @@ public sealed class RabbitMqConsumerFilterTests
             {
                 "add_ChannelShutdownAsync" or "remove_ChannelShutdownAsync" => null,
                 "get_IsOpen" => true,
+                "get_IsClosed" => false,
                 _ => throw Unexpected(method),
             });
             IReceivePipeDispatcher dispatcher = Proxy<IReceivePipeDispatcher>((method, _) => method.Name switch
@@ -123,6 +244,7 @@ public sealed class RabbitMqConsumerFilterTests
                 "add_ZeroActivity" or "remove_ZeroActivity" => null,
                 "get_ActiveDispatchCount" or "get_MaxConcurrentDispatchCount" => 0,
                 "get_DispatchCount" => 0L,
+                "DispatchAsync" => RecordDispatch(_!),
                 _ => throw Unexpected(method),
             });
             IReceiveTransportObserver observers = Proxy<IReceiveTransportObserver>((method, args) => method.Name switch
@@ -134,6 +256,7 @@ public sealed class RabbitMqConsumerFilterTests
             RabbitMqReceiveEndpointContext endpoint = Proxy<RabbitMqReceiveEndpointContext>((method, args) => method.Name switch
             {
                 "CreateReceivePipeDispatcher" => dispatcher,
+                "TryGetPayload" => NoPayload(args!),
                 "get_TransportObservers" => observers,
                 "get_InputAddress" => InputAddress,
                 "get_ExclusiveConsumer" => true,
@@ -142,11 +265,16 @@ public sealed class RabbitMqConsumerFilterTests
                 "AddConsumeAgent" => RecordAgent((IAgent)args![0]!),
                 _ => throw Unexpected(method),
             });
+            ConnectionContext connection = Proxy<ConnectionContext>((_, _) =>
+                throw new InvalidOperationException("Connection data was requested."));
             ChannelContext = Proxy<ChannelContext>((method, args) => method.Name switch
             {
                 "TryGetPayload" => SupplySettings(args!, settings),
                 "get_Channel" => channel,
+                "get_ConnectionContext" => connection,
                 "get_CancellationToken" => CancellationToken,
+                "BasicAckAsync" => RecordAck(args!),
+                "NotifyFaulted" => RecordFault(args!),
                 "BasicConsumeAsync" => ConsumeAsync(args!),
                 _ => throw Unexpected(method),
             });
@@ -177,6 +305,15 @@ public sealed class RabbitMqConsumerFilterTests
         public long DeliveryCount { get; private set; }
         public int MaxConcurrentDeliveryCount { get; private set; }
         public int NextCalls { get; private set; }
+        public Exception? DispatchFailure { get; set; }
+        public Exception? NotifiedFault { get; private set; }
+        public Uri? FaultedAddress { get; private set; }
+        public int DispatchCalls { get; private set; }
+        public ReceiveContext? DispatchedContext { get; private set; }
+        public ReceiveLockContext? DispatchedLock { get; private set; }
+        public byte[]? DispatchedBody { get; private set; }
+        public int AckCalls { get; private set; }
+        public ulong AckTag { get; private set; }
         private readonly bool _autoConfirmConsumer;
 
         private Task<string> ConsumeAsync(object?[] args)
@@ -234,10 +371,42 @@ public sealed class RabbitMqConsumerFilterTests
             return Task.CompletedTask;
         }
 
+        private async Task RecordDispatch(object?[]? args)
+        {
+            DispatchCalls++;
+            DispatchedContext = Assert.IsAssignableFrom<ReceiveContext>(args![0]);
+            DispatchedLock = Assert.IsAssignableFrom<ReceiveLockContext>(args[1]);
+            DispatchedBody = DispatchedContext.Body.ToArray();
+            if (DispatchFailure is { } failure)
+                throw failure;
+            await DispatchedLock.CompleteAsync(TestContext.Current.CancellationToken);
+        }
+
+        private object? RecordFault(object?[] args)
+        {
+            NotifiedFault = Assert.IsAssignableFrom<Exception>(args[0]);
+            FaultedAddress = Assert.IsType<Uri>(args[1]);
+            return null;
+        }
+
+        private ValueTask RecordAck(object?[] args)
+        {
+            AckCalls++;
+            AckTag = Assert.IsType<ulong>(args[0]);
+            Assert.False(Assert.IsType<bool>(args[1]));
+            return ValueTask.CompletedTask;
+        }
+
         private static bool SupplySettings(object?[] args, ReceiveSettings settings)
         {
             args[0] = settings;
             return true;
+        }
+
+        private static bool NoPayload(object?[] args)
+        {
+            args[0] = null;
+            return false;
         }
 
         private static Exception Unexpected(MethodInfo method) => new NotSupportedException($"Unexpected call: {method.Name}");
