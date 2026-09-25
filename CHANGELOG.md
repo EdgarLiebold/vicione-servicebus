@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Diagnostic duration formatting now preserves the sign and natural units of
+  negative values, including `TimeSpan.MinValue`. A negative millisecond no
+  longer appears as a large nanosecond count in chart or transport diagnostics.
+  The formatter was split into bounded calendar, clock, and submillisecond
+  steps so each method remains below the CRAP risk threshold.
 - NewId array-batch generation now validates null arrays, negative indices and
   counts, end bounds, and integer-overflow-sized ranges before reading the
   clock or entering the spin lock. Invalid requests leave the target array and
