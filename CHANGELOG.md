@@ -275,6 +275,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Durable-send intent validation now keeps destination and media-type checks
+  together in a focused operation. Validation order remains unchanged. Existing
+  boundary tests cover the exception parameters, exact length limits, and
+  acceptance of empty serialized bodies.
 - Mermaid state-machine label encoding now handles Unicode scalars and control
   characters in a focused helper. The exact generated documents and syntax
   escaping remain unchanged; the encoding tests still cover reserved Mermaid

@@ -75,6 +75,20 @@ public sealed record SerializedDurableSend
         if (string.IsNullOrWhiteSpace(ContractIdentity.Name)
             || ContractIdentity.MajorVersion is < 1 or > ushort.MaxValue)
             throw new ArgumentException("A durable send requires a valid stable message contract identity.", nameof(ContractIdentity));
+        ValidateDestinationAndContentType();
+        if (MessageId == Guid.Empty)
+            throw new ArgumentException("A durable send message id cannot be empty.", nameof(MessageId));
+        if (CorrelationId == Guid.Empty)
+            throw new ArgumentException("A durable send correlation id cannot be empty.", nameof(CorrelationId));
+
+        // A zero-byte serialized body is a legitimate transport payload. Count capacity still provides a hard bound even
+        // when both payload and infrastructure metadata are empty. Do not invent a non-empty-payload requirement here.
+        _ = StorageSize;
+        return this;
+    }
+
+    void ValidateDestinationAndContentType()
+    {
         if (DestinationAddress is null || !DestinationAddress.IsAbsoluteUri)
             throw new ArgumentException("A durable send destination must be an absolute URI.", nameof(DestinationAddress));
         if (DestinationAddress.AbsoluteUri.Length > MaximumDestinationAddressCharacters)
@@ -87,14 +101,5 @@ public sealed record SerializedDurableSend
                 $"A durable send content type cannot exceed {MaximumContentTypeCharacters} characters.");
         if (ContentType.Any(char.IsControl) || !MediaTypeHeaderValue.TryParse(ContentType, out _))
             throw new ArgumentException("A durable send content type must be a valid media type without control characters.", nameof(ContentType));
-        if (MessageId == Guid.Empty)
-            throw new ArgumentException("A durable send message id cannot be empty.", nameof(MessageId));
-        if (CorrelationId == Guid.Empty)
-            throw new ArgumentException("A durable send correlation id cannot be empty.", nameof(CorrelationId));
-
-        // A zero-byte serialized body is a legitimate transport payload. Count capacity still provides a hard bound even
-        // when both payload and infrastructure metadata are empty. Do not invent a non-empty-payload requirement here.
-        _ = StorageSize;
-        return this;
     }
 }
