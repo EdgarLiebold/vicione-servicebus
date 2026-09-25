@@ -115,6 +115,24 @@ public sealed class QueuePolicyPermissionTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SNS-SUBSCRIPTION", "wildcard-principal-deny-blocks-sns-send")]
+    public async Task WildcardPrincipalDeny_RejectsAnIneffectivePolicyUpdateAsync()
+    {
+        const string existingJson = """
+            {"Version":"2012-10-17","Statement":[{"Effect":"Deny","Principal":"*","Action":"sqs:SendMessage","Resource":"arn:aws:sqs:eu-central-1:123456789012:orders"}]}
+            """;
+        IAmazonSQS client = InterfaceProxy<IAmazonSQS>.Create((method, _) =>
+            throw new NotSupportedException($"Unexpected policy rewrite: {method.Name}"));
+        await using var queue = NewQueue(client, existingJson);
+
+        AmazonSqsTransportException error = await Assert.ThrowsAsync<AmazonSqsTransportException>(
+            () => queue.UpdatePolicyAsync(QueueArn, TopicArn, TestContext.Current.CancellationToken));
+
+        Assert.Contains("explicit Deny", error.Message, StringComparison.Ordinal);
+        Assert.Equal(existingJson, queue.Attributes[QueueAttributeName.Policy]);
+    }
+
     [Theory]
     [InlineData(TopicArn)]
     [InlineData("arn:aws:sns:eu-central-1:123456789012:*")]

@@ -244,8 +244,9 @@ public class QueueInfo :
         statement.Actions.Any(action => PolicyPatternMatches(action.ActionName, SendMessageIAMActionName, true))
         && statement.Resources.Any(resource => PolicyPatternMatches(resource.Id, sqsQueueArn, false))
         && statement.Principals.Any(principal =>
-            (principal.Provider == "*" || string.Equals(principal.Provider, "Service", StringComparison.OrdinalIgnoreCase))
-            && PolicyPatternMatches(principal.Id, "sns.amazonaws.com", true))
+            principal.Id == "*"
+            || (string.Equals(principal.Provider, "Service", StringComparison.OrdinalIgnoreCase)
+                && PolicyPatternMatches(principal.Id, "sns.amazonaws.com", true)))
         && DenyConditionsMayMatch(statement, topicArn);
 
     static bool DenyConditionsMayMatch(Statement statement, string topicArn)
