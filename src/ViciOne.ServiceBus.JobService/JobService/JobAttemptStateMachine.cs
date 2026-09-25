@@ -14,6 +14,12 @@ internal sealed class JobAttemptStateMachine :
     /// <summary>Defines attempt startup, liveness supervision, cancellation, and finalization behavior.</summary>
     public JobAttemptStateMachine()
     {
+        ConfigureEvents();
+        ConfigureStateBehavior();
+    }
+
+    void ConfigureEvents()
+    {
         Event(() => StartJobAttempt, x =>
         {
             x.CorrelateById(context => context.Message.AttemptId);
@@ -45,7 +51,10 @@ internal sealed class JobAttemptStateMachine :
             x.CorrelateById(context => context.Message.AttemptId);
             x.ConfigureConsumeTopology = false;
         });
+    }
 
+    void ConfigureStateBehavior()
+    {
         Schedule(() => StatusCheckRequested, instance => instance.StatusCheckTokenId, x =>
         {
             x.DelayProvider = context => (context.GetPayload<IJobSagaSettings>()

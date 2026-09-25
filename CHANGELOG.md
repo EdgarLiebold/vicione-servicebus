@@ -279,6 +279,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Job-attempt state-machine setup now separates event correlation registration
+  from schedule and state behavior registration while preserving their order.
+  The existing transition tests still verify startup, liveness escalation,
+  cancellation, fault handling, and finalization.
 - EF-Core reliable inbox delivery now keeps lease acquisition separate from
   the existing commit and failure-handling path. A quarantined delivery is
   explicitly tested against duplicate dispatch: its consumer is not invoked
