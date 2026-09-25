@@ -12,21 +12,36 @@ internal static class TimeSpanExtensions
 
     public static string ToFriendlyString(this TimeSpan ts)
     {
-        if (ts.Equals(_month))
-            return "1M";
-        if (ts.Equals(_year))
-            return "1y";
-        if (ts.Equals(_day))
-            return "1d";
-        if (ts.Equals(_hour))
-            return "1h";
+        long signedTicks = ts.Ticks;
+        ulong ticks = signedTicks < 0
+            ? (ulong)(-(signedTicks + 1)) + 1
+            : (ulong)signedTicks;
+        string sign = signedTicks < 0 ? "-" : "";
+
+        if (ticks == (ulong)_month.Ticks)
+            return sign + "1M";
+        if (ticks == (ulong)_year.Ticks)
+            return sign + "1y";
+        if (ticks == (ulong)_day.Ticks)
+            return sign + "1d";
+        if (ticks == (ulong)_hour.Ticks)
+            return sign + "1h";
 
         var sb = new StringBuilder();
 
-        var years = ts.Days / 365;
-        var months = ts.Days % 365 / 30;
-        var weeks = ts.Days % 365 % 30 / 7;
-        var days = ts.Days % 365 % 30 % 7;
+        ulong totalDays = ticks / (ulong)TimeSpan.TicksPerDay;
+        ulong years = totalDays / 365;
+        ulong months = totalDays % 365 / 30;
+        ulong weeks = totalDays % 365 % 30 / 7;
+        ulong days = totalDays % 365 % 30 % 7;
+        ulong remainingTicks = ticks % (ulong)TimeSpan.TicksPerDay;
+        ulong hours = remainingTicks / (ulong)TimeSpan.TicksPerHour;
+        remainingTicks %= (ulong)TimeSpan.TicksPerHour;
+        ulong minutes = remainingTicks / (ulong)TimeSpan.TicksPerMinute;
+        remainingTicks %= (ulong)TimeSpan.TicksPerMinute;
+        ulong seconds = remainingTicks / (ulong)TimeSpan.TicksPerSecond;
+        remainingTicks %= (ulong)TimeSpan.TicksPerSecond;
+        ulong milliseconds = remainingTicks / (ulong)TimeSpan.TicksPerMillisecond;
 
         if (years > 0)
             sb.Append(years).Append("y");
@@ -40,26 +55,26 @@ internal static class TimeSpanExtensions
         if (days > 0)
             sb.Append(days).Append("d");
 
-        if (ts.Hours > 0)
-            sb.Append(ts.Hours).Append("h");
-        if (ts.Minutes > 0)
-            sb.Append(ts.Minutes).Append("m");
-        if (ts.Seconds > 0)
-            sb.Append(ts.Seconds).Append("s");
-        if (ts.Milliseconds > 0)
-            sb.Append(ts.Milliseconds).Append("ms");
+        if (hours > 0)
+            sb.Append(hours).Append("h");
+        if (minutes > 0)
+            sb.Append(minutes).Append("m");
+        if (seconds > 0)
+            sb.Append(seconds).Append("s");
+        if (milliseconds > 0)
+            sb.Append(milliseconds).Append("ms");
 
-        if (ts.Ticks == 0)
+        if (ticks == 0)
             sb.Append("-0-");
         else if (sb.Length == 0)
         {
-            var nanos = ts.Ticks * 100;
+            ulong nanos = ticks * 100;
             if (nanos > 1000)
                 sb.Append((nanos + 500) / 1000).Append("\x00B5s");
             else
                 sb.Append(nanos).Append("ns");
         }
 
-        return sb.ToString();
+        return sign + sb;
     }
 }
