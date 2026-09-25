@@ -7,6 +7,29 @@ namespace ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions;
 public sealed class QueryStringExtensionsTests
 {
     [Theory]
+    [InlineData("rabbitmq://broker/", "/")]
+    [InlineData("rabbitmq://broker/team%2Fblue", "team/blue")]
+    [InlineData("rabbitmq://broker/team%2Fblue/orders", "team/blue")]
+    [RequirementCoverage("REQ-VSB-QUERY-STRING", "host-path-root-and-escaped-virtual-host")]
+    public void ParseHostPath_PreservesRootAndDecodesTheVirtualHost(string source, string expectedHostPath)
+    {
+        Assert.Equal(expectedHostPath, new Uri(source).ParseHostPath());
+    }
+
+    [Theory]
+    [InlineData("rabbitmq://broker/orders%2Furgent", "/", "orders/urgent")]
+    [InlineData("rabbitmq://broker/team%2Fblue/orders%2Furgent", "team/blue", "orders/urgent")]
+    [RequirementCoverage("REQ-VSB-QUERY-STRING", "endpoint-path-decoding-keeps-host-and-entity-separate")]
+    public void ParseHostPathAndEntityName_DecodesBothSegmentsWithoutMovingTheBoundary(
+        string source, string expectedHostPath, string expectedEntityName)
+    {
+        new Uri(source).ParseHostPathAndEntityName(out string hostPath, out string entityName);
+
+        Assert.Equal(expectedHostPath, hostPath);
+        Assert.Equal(expectedEntityName, entityName);
+    }
+
+    [Theory]
     [InlineData("loopback:item?key=value=with=suffix", "value=with=suffix")]
     [InlineData("loopback:item?key=", "")]
     [InlineData("loopback:item?key", null)]
