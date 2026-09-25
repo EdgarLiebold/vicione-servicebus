@@ -18,6 +18,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Amazon SNS publish-topology discovery and explicit registration now reject
+  a missing configurator or type list with named argument errors. An explicit
+  list containing a null or invalid message type, and a namespace scan whose
+  filter fails, are evaluated before any type is registered. These invalid
+  inputs cannot leave a partly configured publish topology.
 - Amazon SQS queue metadata now coordinates resolution, durable ownership
   transitions and removal per queue name. A durable queue can no longer start
   a second provider lookup while an evictable lookup for the same name is

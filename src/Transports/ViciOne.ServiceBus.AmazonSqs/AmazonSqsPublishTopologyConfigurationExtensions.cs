@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
@@ -26,6 +27,8 @@ public static class AmazonSqsPublishTopologyConfigurationExtensions
     public static void AddPublishMessageTypesFromNamespaceContaining(this IAmazonSqsBusFactoryConfigurator configurator, Type type,
         Action<IAmazonSqsMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         if (type == null)
             throw new ArgumentNullException(nameof(type));
 
@@ -49,7 +52,7 @@ public static class AmazonSqsPublishTopologyConfigurationExtensions
         else
             types = AssemblyTypeCache.FindTypesInNamespace(type, MessageTypeCache.IsValidMessageType, typeClassification);
 
-        foreach (var messageType in types)
+        foreach (var messageType in types.ToArray())
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }
 
@@ -60,7 +63,14 @@ public static class AmazonSqsPublishTopologyConfigurationExtensions
     public static void AddPublishMessageTypes(this IAmazonSqsBusFactoryConfigurator configurator, IEnumerable<Type> messageTypes,
         Action<IAmazonSqsMessagePublishTopologyConfigurator, Type>? configure = null)
     {
-        foreach (var messageType in messageTypes)
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(messageTypes);
+
+        Type[] types = messageTypes.ToArray();
+        if (types.Any(type => type is null || !MessageTypeCache.IsValidMessageType(type)))
+            throw new ArgumentException("The message type collection contains an invalid message contract.", nameof(messageTypes));
+
+        foreach (var messageType in types)
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }
 }
