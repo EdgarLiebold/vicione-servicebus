@@ -130,6 +130,12 @@ public sealed class JobStateMachineLifecycleTests
         Assert.Null(consumedOneTime.StartDate);
         Assert.Equal(Now, consumedOneTime.NextStartDate);
 
+        DateTimeOffset laterStart = Now.AddHours(2);
+        var newOneTime = new JobSaga { StartDate = laterStart };
+        Assert.True(await CalculateNextStartDateAsync(newOneTime, settings));
+        Assert.Null(newOneTime.StartDate);
+        Assert.Equal(laterStart, newOneTime.NextStartDate);
+
         var clearedSchedule = new JobSaga { NextStartDate = Now };
         Assert.False(await CalculateNextStartDateAsync(clearedSchedule, settings));
         Assert.Null(clearedSchedule.NextStartDate);
@@ -143,6 +149,24 @@ public sealed class JobStateMachineLifecycleTests
         Assert.False(await CalculateNextStartDateAsync(boundedRecurring, settings));
         Assert.Null(boundedRecurring.NextStartDate);
         Assert.Equal(["factory-zone"], resolvedIdentifiers);
+
+        TimeZoneInfo twoHoursAhead = TimeZoneInfo.CreateCustomTimeZone(
+            "factory-zone", TimeSpan.FromHours(2), "factory-zone", "factory-zone");
+        settings.TimeZoneResolver = id =>
+        {
+            resolvedIdentifiers.Add(id);
+            return twoHoursAhead;
+        };
+        var localNineOClock = new JobSaga
+        {
+            CronExpression = "0 0 9 ? * *",
+            TimeZoneId = "factory-zone",
+        };
+
+        Assert.True(await CalculateNextStartDateAsync(localNineOClock, settings));
+        Assert.Equal(new DateTimeOffset(2045, 4, 5, 7, 0, 0, TimeSpan.Zero), localNineOClock.NextStartDate);
+        Assert.False(await CalculateNextStartDateAsync(localNineOClock, settings));
+        Assert.Equal(["factory-zone", "factory-zone", "factory-zone"], resolvedIdentifiers);
     }
 
     [Fact]

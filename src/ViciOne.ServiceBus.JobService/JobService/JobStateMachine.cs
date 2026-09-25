@@ -623,13 +623,7 @@ static class JobStateMachineBehaviorExtensions
             }
         }
 
-        var timeZone = TimeZoneInfo.Utc;
-        if (!string.IsNullOrWhiteSpace(context.Saga.TimeZoneId))
-        {
-            var settings = context.GetPayload<IJobSagaSettings>()
-                ?? throw new InvalidOperationException("The job saga settings payload is required.");
-            timeZone = TimeZoneResolver.FindTimeZoneById(context.Saga.TimeZoneId, settings.TimeZoneResolver);
-        }
+        TimeZoneInfo timeZone = ResolveScheduleTimeZone(context);
 
         if (string.IsNullOrWhiteSpace(context.Saga.CronExpression))
         {
@@ -659,6 +653,16 @@ static class JobStateMachineBehaviorExtensions
 
         context.Saga.NextStartDate = nextStartDate;
         return true;
+    }
+
+    static TimeZoneInfo ResolveScheduleTimeZone(SagaConsumeContext<JobSaga> context)
+    {
+        if (string.IsNullOrWhiteSpace(context.Saga.TimeZoneId))
+            return TimeZoneInfo.Utc;
+
+        var settings = context.GetPayload<IJobSagaSettings>()
+            ?? throw new InvalidOperationException("The job saga settings payload is required.");
+        return TimeZoneResolver.FindTimeZoneById(context.Saga.TimeZoneId, settings.TimeZoneResolver);
     }
 
     public static IEventActivityBinder<JobSaga, IJobSubmitted> InitializeJob(this IEventActivityBinder<JobSaga, IJobSubmitted> binder)
