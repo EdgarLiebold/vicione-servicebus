@@ -2,8 +2,8 @@
 """Merge verified coverage receipts from one unchanged ServiceBus source/test tree.
 
 Without --partial, require every product test project, all local integration
-projects, the no-AVX2 run, all product assemblies, and one exact measurement
-commit before publishing metrics.
+projects, the no-AVX2 and scalar-fallback runs, all product assemblies, and
+one exact measurement commit before publishing metrics.
 The Cobertura branch figure is a conservative observation: branch identities
 cannot be reliably joined across independent reports.
 """
@@ -90,6 +90,10 @@ def check_receipt(path, src_tree, tests_tree):
         runner = subprocess.check_output(["git", "show", f"{head}:tools/ci/coverage_receipt.py"], cwd=REPO).decode()
         if "--disable-avx2" not in runner or 'dotnet_env["DOTNET_EnableAVX2"] = "0"' not in runner:
             raise ValueError(f"No-AVX2 mode is absent from receipt runner: {path}")
+    if receipt.get("dotnetEnvironment", {}).get("DOTNET_EnableHWIntrinsic") == "0":
+        runner = subprocess.check_output(["git", "show", f"{head}:tools/ci/coverage_receipt.py"], cwd=REPO).decode()
+        if "--disable-hw-intrinsics" not in runner or 'dotnet_env["DOTNET_EnableHWIntrinsic"] = "0"' not in runner:
+            raise ValueError(f"Scalar mode is absent from receipt runner: {path}")
     if receipt["testCount"] < 1:
         raise ValueError(f"No tests in receipt: {path}")
     build = checked_path(next(name for name in receipt["logsSha256"] if name.endswith("/build.log"))).read_text()
@@ -232,38 +236,44 @@ def main():
         if not path.is_relative_to(REPO / "artifacts") or path.name != "receipt.json":
             raise ValueError(f"Receipt must be under artifacts: {path}")
         receipt = check_receipt(path, src_tree, tests_tree)
-        avx2 = receipt.get("dotnetEnvironment", {}).get("DOTNET_EnableAVX2")
-        if avx2 not in (None, "0"):
-            raise ValueError(f"Unexpected AVX2 setting in {path}: {avx2}")
-        portability = avx2 == "0"
-        key = (receipt["project"], portability)
+        environment = receipt.get("dotnetEnvironment", {})
+        avx2 = environment.get("DOTNET_EnableAVX2")
+        hw_intrinsics = environment.get("DOTNET_EnableHWIntrinsic")
+        if avx2 not in (None, "0") or hw_intrinsics not in (None, "0") or (avx2 == "0" and hw_intrinsics == "0"):
+            raise ValueError(f"Unexpected portability settings in {path}: {environment}")
+        mode = "noavx2" if avx2 == "0" else "scalar" if hw_intrinsics == "0" else "normal"
+        key = (receipt["project"], mode)
         if key in seen:
             raise ValueError(f"Duplicate test project/mode: {key}")
         seen.add(key)
         if receipt["project"] not in normal | local:
             raise ValueError(f"Unexpected test project: {receipt['project']}")
         receipts.append(receipt)
-    normal_seen = {project for project, portability in seen if not portability}
-    noavx_seen = {project for project, portability in seen if portability}
+    normal_seen = {project for project, mode in seen if mode == "normal"}
+    noavx_seen = {project for project, mode in seen if mode == "noavx2"}
+    scalar_seen = {project for project, mode in seen if mode == "scalar"}
     expected_noavx = {next(project for project in normal if Path(project).stem == "ViciOne.ServiceBus.Abstractions.Tests")}
+    expected_scalar = expected_noavx
     missing_normal = sorted(normal - normal_seen)
     missing_local = sorted(local - normal_seen)
     missing_noavx = sorted(expected_noavx - noavx_seen)
-    unexpected_noavx = noavx_seen - expected_noavx
-    if unexpected_noavx:
-        raise ValueError(f"Unexpected no-AVX2 projects: {sorted(unexpected_noavx)}")
+    missing_scalar = sorted(expected_scalar - scalar_seen)
+    unexpected_portability = (noavx_seen - expected_noavx) | (scalar_seen - expected_scalar)
+    if unexpected_portability:
+        raise ValueError(f"Unexpected portability projects: {sorted(unexpected_portability)}")
     result = merge(receipts, tracked, expected_assemblies)
     missing_assemblies = sorted(expected_assemblies - set(result["assemblies"]))
     aggregate_head = git("rev-parse", "HEAD").decode()
     receipt_heads = sorted({item["head"] for item in receipts})
     same_commit = receipt_heads == [aggregate_head]
-    complete = same_commit and not (missing_normal or missing_local or missing_noavx or missing_assemblies)
+    complete = same_commit and not (missing_normal or missing_local or missing_noavx or missing_scalar or missing_assemblies)
     result.update({"status": "complete" if complete else "partial", "aggregateHead": aggregate_head,
                    "receiptHeads": receipt_heads, "sameCommit": same_commit,
                    "srcTree": src_tree, "testsTree": tests_tree, "receiptCount": len(receipts),
                    "testCount": sum(item["testCount"] for item in receipts),
                    "missingUnitProjects": missing_normal, "missingLocalProjects": missing_local,
-                   "missingNoAvx2Projects": missing_noavx, "missingAssemblies": missing_assemblies})
+                   "missingNoAvx2Projects": missing_noavx, "missingScalarProjects": missing_scalar,
+                   "missingAssemblies": missing_assemblies})
     if not complete and not args.partial:
         raise ValueError("Product-wide profile is incomplete; use --partial for diagnostic output")
     if args.output:
