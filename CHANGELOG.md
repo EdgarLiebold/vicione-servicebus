@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ consumer-filter tests verify broker start parameters, readiness and
+  completion order, startup cancellation, and reuse of a broker-assigned
+  consumer tag after a channel restart.
 - RabbitMQ exchange-address tests verify that configured delayed and alternate
   arguments reach the exchange declaration, while removed and incorrectly typed
   arguments cannot silently become endpoint routing options.
