@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Endpoint-scheduler provider tests now verify that an accepted command keeps
+  the configured token consistent across the command, send context, scheduling
+  header, correlation and returned handle. They reject a dispatch that skips
+  its send pipe, a token change after command serialization, and replay of a
+  pipe after acceptance. A deliberately corrupted scheduling header failed the
+  accepted-command test; the restored implementation passes.
 - Nine RabbitMQ test-double methods now carry the required `Async` suffix,
   matching their task-returning contracts and clearing the repository's
   bidirectional asynchronous naming gate.
