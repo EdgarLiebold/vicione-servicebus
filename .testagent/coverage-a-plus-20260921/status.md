@@ -44,6 +44,15 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS FIFO receiver tests now verify numeric sequence order, per-group
+order, independent dispatch progress under a blocked group, and fail-fast
+diagnostics for invalid ordering attributes. The complete SQS suite passed
+269/269. The exact-commit SQS unit receipt at `1ff3e6ee6` measured 72.97%
+line and 75.65% branch coverage, with five SQS methods above CRAP 30, down
+from eight. Red Team found and had corrected an overclaim in the original
+interleaved-group test and a failure-path teardown hang. See
+`amazon-sqs-fifo-receiver-20260925.md`. Global A+ remains open.
+
 Public `NewId` equality previously had an unexecuted `==` operator in the
 complete product profile (CRAP 42). New tests distinguish each of its four
 identity words and check equality across operators, typed and boxed overloads,
