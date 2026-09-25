@@ -14994,10 +14994,10 @@
     "baselineSha256": "a3de5d5cebbb1cf895dfe9c8635224b7644bfccc8adfed5372927063c1e83ede",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "3b812c50adeb9329b7e5649ffada43bc0f42d218",
+    "targetGitBlobOid": "49b89e671c6db9ad0ccdc009a7504b23ddfdd666",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.StateMachineVisualizer/StateMachineMermaidGenerator.cs",
-    "targetSha256": "e50637f53141a3988d87cfc00f4422d37dfdd61925f3526d79d27a48f267f2fd"
+    "targetSha256": "876e962dae0b876b92ba7e05d5f56b2674a6bd8062e2e086c20aa666bcfb2111"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
