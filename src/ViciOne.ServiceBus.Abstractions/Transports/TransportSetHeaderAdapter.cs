@@ -16,6 +16,8 @@ public class TransportSetHeaderAdapter<TValueType> :
     /// <param name="options">The options that control the operation.</param>
     public TransportSetHeaderAdapter(IHeaderValueConverter<TValueType> converter, TransportHeaderOptions options = TransportHeaderOptions.Default)
     {
+        ArgumentNullException.ThrowIfNull(converter);
+
         _converter = converter;
         _options = options;
     }
