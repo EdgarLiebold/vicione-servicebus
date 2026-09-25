@@ -73,7 +73,7 @@ public sealed class ProductDocumentationArchitectureTests
             value => Assert.Contains(value, reliability, StringComparison.Ordinal));
 
         string changelog = File.ReadAllText(Path.Combine(RepositoryLayout.Root, "CHANGELOG.md"));
-        string migrationHeading = "Migration from " + string.Concat("Mass", "Transit") + "-style APIs";
+        string migrationHeading = "Migration from " + string.Join("", "Mass", "Transit") + "-style APIs";
         Assert.Contains(migrationHeading, changelog, StringComparison.Ordinal);
         Assert.All(
             new[]

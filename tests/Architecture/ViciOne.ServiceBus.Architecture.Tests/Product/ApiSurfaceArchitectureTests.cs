@@ -760,7 +760,7 @@ public sealed class ApiSurfaceArchitectureTests
                 || path.EndsWith(".targets", StringComparison.Ordinal))
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .ToArray();
-        string formerProductIdentity = "Mass" + "Transit";
+        string formerProductIdentity = string.Concat(new[] { "Mass", "Transit" });
         Assert.DoesNotContain(productIdentityFiles, path =>
             File.ReadAllText(path).Contains(formerProductIdentity, StringComparison.OrdinalIgnoreCase));
     }

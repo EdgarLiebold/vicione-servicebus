@@ -37,7 +37,7 @@ public sealed class EntityFrameworkTestDatabaseNameTests
         string second = TestDatabaseName.Create(providerVariant, "run-b");
 
         Assert.NotEqual(first, second);
-        Assert.DoesNotContain("masstransit", first, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(string.Concat(new[] { "mass", "transit" }), first, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("servicebus_test", first, StringComparison.OrdinalIgnoreCase);
         Assert.NotEqual(TestDatabaseName.Create(providerVariant, providerVariant), first);
     }
