@@ -58,8 +58,10 @@ invalid syntax/UTF-8 for both JSON media types. A deliberate product mutation
 failed; read-only adversarial review returned PASS. The complete Core suite
 passed 6,432/6,432 with coverage; the selected method's branch coverage rose
 from 66.7% to 80%, while 27/36 lines and CRAP 44.06 remain unchanged. The
-isolated exact-commit restore/build did not complete, so this is limited
-evidence; see `copied-send-only-json-20260925.md`. Global A+ remains open.
+test project was subsequently rebuilt and tested at the exact commit with
+6,432/6,432 passing, but the isolated locked restore did not complete and
+Docker remained unavailable. See `copied-send-only-json-20260925.md`.
+Global A+ remains open.
 
 Amazon SQS created send transports now have provider-boundary dispatch tests
 for queue, relative topic, and absolute `type=topic` addresses. A deliberate
