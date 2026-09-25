@@ -1,18 +1,20 @@
 # Unit-Coverage-Matrix vom 25.09.2026
 
-**Aktualisierung nach `848bd1c96`:** Die nachfolgende 17er-Matrix ist eine
+**Aktualisierung nach `e1ccf182c`:** Die nachfolgende 17er-Matrix ist eine
 historische Baseline auf `tests`-Tree
-`fe688c658a68b75191fe90a2de51537e8bdf8c36`. Die NewId-Grenztests
-und die Bereichsvalidierung änderten den aktuellen `tests`-Tree zu
-`39f0948acf39e04393c445d3ad5119b739d31307`; diese alten Receipts
-sind deshalb kein Profil des aktuellen Teststands. Auf `848bd1c96` liegen
-derzeit drei frische Abstractions-Receipts mit jeweils 849 bestandenen Tests
+`fe688c658a68b75191fe90a2de51537e8bdf8c36`. Die NewId-Rollover-,
+NewId-Bereichs- und MessageLimits-Grenztests änderten den aktuellen
+`tests`-Tree zu `5e747c7e0ba78c7cb18bd6726f3d70b215b2c06c`;
+diese alten Receipts sind deshalb kein Profil des aktuellen Teststands.
+Auf `e1ccf182c` liegen derzeit drei frische Abstractions-Receipts mit
+jeweils 867 bestandenen Tests
 (normal, deklarierter No-AVX2-Lauf und deklarierter Lauf ohne Hardware-Intrinsics). Der aktuelle Produktbereichsstand
 benötigt noch 17 Unit-Receipts und alle 13 lokalen Provider-Receipts auf
 demselben Mess-Commit. Details stehen in
 `newid-guid-batch-rollover-20260925.md`,
 `newid-scalar-fallback-20260925.md` und
-`newid-batch-range-20260925.md`.
+`newid-batch-range-20260925.md` und
+`message-limits-validation-20260925.md`.
 
 ## Gültige Produktbereichs-Receipts
 

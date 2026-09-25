@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- NewId array-batch generation now validates null arrays, negative indices and
+  counts, end bounds, and integer-overflow-sized ranges before reading the
+  clock or entering the spin lock. Invalid requests leave the target array and
+  identifier sequence untouched; an empty segment at the array end remains
+  valid. Previously a negative index could fault while the lock was held.
 - Typed exception predicates now inspect nested aggregate failures when the
   aggregate itself has the requested type but does not satisfy the predicate.
   They test both each direct inner failure and its root cause; previously a
@@ -285,6 +290,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Message-limit tests now exercise inclusive body and envelope boundaries,
+  independently optional warning and offload thresholds, and exact failure
+  fields and reasons for invalid settings. A targeted `>` to `>=` mutation of
+  the optional upper bound failed the intended two valid-boundary cases; the
+  product implementation was restored and the normal suite passed.
 - Mermaid label encoding now keeps the syntax-entity table separate from the
   Unicode and control-character loop. Exact syntax, control, and surrogate
   output remains covered by the visualizer behavior tests.
