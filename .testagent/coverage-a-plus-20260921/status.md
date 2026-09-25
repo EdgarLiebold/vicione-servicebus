@@ -44,6 +44,15 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS connection creation now checks provider ownership and release on
+handle stop, failure-cause preservation, cancellation passthrough, and
+stopping before a connection opens. The complete SQS suite passed 292/292.
+The exact-commit SQS unit receipt at `1e737afcd` measured 77.39% line and
+79.28% branch coverage, with zero SQS methods above CRAP 30; the async
+factory callback fell to CRAP 6. Red Team prompted stronger stopping and
+lifecycle oracles. See `amazon-sqs-connection-creation-20260925.md`.
+Global A+ remains open.
+
 Amazon SQS send-transport creation now has queue-topology selection and
 cancellation-before-registration tests. The complete SQS suite passed
 288/288. The exact-commit SQS unit receipt at `e4b0fa57b` measured 76.45%
