@@ -200,9 +200,8 @@ public class AmazonSqsClientContext :
     /// <returns>A task that completes when Amazon SQS accepts the batch entry.</returns>
     public async Task SendMessageAsync(string queueName, SendMessageBatchRequestEntry request, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
-
-        await queueInfo.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        await ExecuteQueueBatchAsync(queueName, queue => queue.TrySendAsync(request, cancellationToken), cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>Deletes a received message from the named Amazon SQS queue.</summary>
@@ -212,9 +211,32 @@ public class AmazonSqsClientContext :
     /// <returns>A task that completes when Amazon SQS accepts the delete request.</returns>
     public async Task DeleteMessageAsync(string queueName, string receiptHandle, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
+        await ExecuteQueueBatchAsync(queueName, queue => queue.TryDeleteAsync(receiptHandle, cancellationToken), cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        await queueInfo.DeleteAsync(receiptHandle, cancellationToken).ConfigureAwait(false);
+    async Task ExecuteQueueBatchAsync(string queueName, Func<QueueInfo, Task?> start, CancellationToken cancellationToken)
+    {
+        for (var attempt = 0; attempt < 2; attempt++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
+            Task? operation = start(queueInfo);
+            if (operation is null)
+                continue;
+
+            try
+            {
+                await operation.ConfigureAwait(false);
+                return;
+            }
+            catch (BatchAdmissionClosedException) when (attempt == 0 && !cancellationToken.IsCancellationRequested)
+            {
+                // The closed channel did not accept this entry, so one fresh lookup is safe.
+            }
+        }
+
+        throw new ObjectDisposedException(nameof(QueueInfo), $"Queue '{queueName}' was evicted during batch admission.");
     }
 
     /// <summary>Requests removal of all available messages from the named Amazon SQS queue.</summary>

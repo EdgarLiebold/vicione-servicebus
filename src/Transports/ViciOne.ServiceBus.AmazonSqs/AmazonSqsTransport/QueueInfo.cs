@@ -102,12 +102,14 @@ public class QueueInfo :
     /// <param name="cancellationToken">The token used to cancel admission to the batch queue.</param>
     /// <returns>A task that completes when Amazon SQS reports the entry result.</returns>
     public Task SendAsync(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
+        => TrySendAsync(entry, cancellationToken) ?? throw new ObjectDisposedException(nameof(QueueInfo));
+
+    internal Task? TrySendAsync(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
     {
         Used?.Invoke();
         lock (_lifecycleLock)
         {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-            return _batchSender.Value.ExecuteAsync(entry, cancellationToken);
+            return _disposed ? null : _batchSender.Value.ExecuteAsync(entry, cancellationToken);
         }
     }
 
@@ -116,11 +118,16 @@ public class QueueInfo :
     /// <param name="cancellationToken">The token used to cancel admission to the batch queue.</param>
     /// <returns>A task that completes when Amazon SQS reports the deletion result.</returns>
     public Task DeleteAsync(string receiptHandle, CancellationToken cancellationToken)
+        => TryDeleteAsync(receiptHandle, cancellationToken) ?? throw new ObjectDisposedException(nameof(QueueInfo));
+
+    internal Task? TryDeleteAsync(string receiptHandle, CancellationToken cancellationToken)
     {
         Used?.Invoke();
         lock (_lifecycleLock)
         {
-            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (_disposed)
+                return null;
+
             var entry = new DeleteMessageBatchRequestEntry("", receiptHandle);
             return _batchDeleter.Value.ExecuteAsync(entry, cancellationToken);
         }

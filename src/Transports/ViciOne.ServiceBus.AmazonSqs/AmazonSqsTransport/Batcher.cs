@@ -43,6 +43,11 @@ abstract class Batcher<TEntry> :
         {
             await _channel.Writer.WriteAsync(batchEntry, cancellationToken).ConfigureAwait(false);
         }
+        catch (ChannelClosedException exception)
+        {
+            batchEntry.Dispose();
+            throw new BatchAdmissionClosedException(exception);
+        }
         catch
         {
             batchEntry.Dispose();
@@ -210,3 +215,6 @@ abstract class Batcher<TEntry> :
         }
     }
 }
+
+sealed class BatchAdmissionClosedException(Exception innerException)
+    : ChannelClosedException("The batch queue closed before accepting the entry.", innerException);

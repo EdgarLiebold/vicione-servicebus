@@ -21,6 +21,11 @@ entry below records what the current work changed for anyone reading the source.
   Evicted queue metadata now rejects late send and delete requests before a
   lazy batch worker can be created. Disposal waits for policy updates already
   admitted, preserving successful provider writes and their local result.
+  An SQS client send or delete that resolves an already evicted queue now
+  resolves the name once more before batch admission. If eviction closes a
+  full batch channel while the entry still waits for admission, that entry
+  also receives one safe retry. Provider failures after admission are never
+  replayed, and repeated eviction ends after two lookups.
 - Pending delivery-work waits now keep their captured tasks when the caller
   cancels the wait. A later `CompletedAsync` call still observes unfinished
   receive, mediator, queue, or job work instead of reporting completion early.
