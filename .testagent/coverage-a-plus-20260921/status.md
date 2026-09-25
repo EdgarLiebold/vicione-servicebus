@@ -44,6 +44,15 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS send-transport creation now has queue-topology selection and
+cancellation-before-registration tests. The complete SQS suite passed
+288/288. The exact-commit SQS unit receipt at `e4b0fa57b` measured 76.45%
+line and 79.09% branch coverage, with one SQS method above CRAP 30;
+`CreateSendTransportAsync` fell to CRAP 6. Read-only Red Team identified a
+remaining provider-dispatch test gap: a wrong context inside the correct
+Topic branch could still send to SQS. See
+`amazon-sqs-send-transport-selection-20260925.md`. Global A+ remains open.
+
 Amazon SQS consumer topology connection tests now cover the endpoint,
 connection-option, and message-level subscription gates, including the
 ordinary overload used by handlers and consumers. The complete SQS suite
