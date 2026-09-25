@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Build and test one MTP project from clean Git trees in a fresh artifact directory."""
+"""Build and test one product MTP project from clean Git trees in a fresh artifact directory.
+
+The target product assembly is inferred from a .Tests or .LocalIntegration.Tests
+project name. Pass --required-assembly when that inferred product name is wrong.
+Test-only infrastructure projects without a product assembly are outside this
+coverage runner's scope.
+"""
 
 import argparse
 import hashlib
@@ -89,7 +95,7 @@ def test_count(log, test_dll, report, minimum):
     return total
 
 
-def report_sources(report, built_binaries):
+def report_sources(report, built_binaries, required_assembly):
     root = ET.parse(report).getroot()
     if root.tag != "coverage":
         raise ValueError("Report is not a Cobertura coverage document")
@@ -118,8 +124,10 @@ def report_sources(report, built_binaries):
                 raise ValueError(f"Untracked source in report: {source}")
             assemblies.add(assembly)
             sources.add(source)
-    if assemblies != expected or not sources:
-        raise ValueError(f"Report assemblies {sorted(assemblies)} do not match built products {sorted(expected)}")
+    if required_assembly not in expected:
+        raise ValueError(f"Required product assembly {required_assembly} is not in the fresh build")
+    if required_assembly not in assemblies or not sources:
+        raise ValueError(f"Report does not contain the required product assembly {required_assembly}")
     return sorted(assemblies), len(sources)
 
 
@@ -128,6 +136,7 @@ def main():
     parser.add_argument("--project", required=True)
     parser.add_argument("--run-dir", required=True)
     parser.add_argument("--minimum-expected-tests", type=int, default=1)
+    parser.add_argument("--required-assembly", help="Product assembly that must be covered; defaults to the test project name without its test suffix")
     args = parser.parse_args()
     if args.minimum_expected_tests < 1:
         raise ValueError("Minimum expected tests must be positive")
@@ -177,7 +186,14 @@ def main():
         raise ValueError("Test or product DLL/PDB bytes changed during tests")
     if clean_git_state() != start_state or sha256(settings) != settings_hash or sha256(Path(__file__)) != runner_hash:
         raise ValueError("Git tree, coverage settings, or runner changed during the run")
-    assemblies, source_count = report_sources(report, built_binaries)
+    required_assembly = args.required_assembly
+    if required_assembly is None:
+        required_assembly = project.stem
+        for suffix in (".LocalIntegration.Tests", ".Tests"):
+            if required_assembly.endswith(suffix):
+                required_assembly = required_assembly[:-len(suffix)]
+                break
+    assemblies, source_count = report_sources(report, built_binaries, required_assembly)
     receipt = {
         **start_state,
         "completedUtc": datetime.now(timezone.utc).isoformat(),
@@ -188,6 +204,7 @@ def main():
         "runnerSha256": runner_hash,
         "testCount": total,
         "assemblies": assemblies,
+        "requiredAssembly": required_assembly,
         "trackedSourceCount": source_count,
         "reports": {relative(report): sha256(report)},
         "logsSha256": {relative(path): sha256(path) for path in sorted(run_dir.glob("*.log"))},
