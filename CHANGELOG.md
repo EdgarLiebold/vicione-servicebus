@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS send-transport creation now has contract tests for queue topology
+  lookup based on the destination kind, ownership of the scoped client and
+  transport agents, and cancellation before address validation or registration.
+  Provider-level queue versus topic dispatch remains a separate test gap.
 - Amazon SQS consumer connection now has a contract test for all three
   subscription gates: endpoint topology setting, connection option, and
   message-level topology setting. The default overload used by ordinary
