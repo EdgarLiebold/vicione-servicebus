@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ startup purge now serializes passive queue inspection and purge
+  across concurrent channel starts for the same endpoint filter. A second
+  channel cannot purge twice or enter the receive pipeline while an earlier
+  purge remains in flight, even when its queue snapshot is empty. Failed
+  purges remain retryable; canceled waiters leave the owner untouched. The
+  pre-fix parallel test reproduced two purge calls for one startup.
 - RabbitMQ receive-transport retries now respect the explicit `IsTransient`
   decision on connection failures. A nested stream error can no longer turn a
   permanent outer failure into a retry, and an exclusive queue conflict remains
