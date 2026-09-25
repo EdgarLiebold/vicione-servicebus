@@ -30,4 +30,40 @@ public sealed class QueryStringExtensionsTests
         Assert.True(found);
         Assert.Equal("value=with=suffix", value);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUERY-STRING", "duplicate-key-rejected-case-insensitively")]
+    public void TryGetValueFromQueryString_RejectsAmbiguousKeysRegardlessOfCase()
+    {
+        var address = new Uri("loopback:item?mode=send&Id=first&other=ignored&id=second");
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            address.TryGetValueFromQueryString("iD", out _));
+
+        Assert.Equal("The query string contains the key 'iD' more than once.", exception.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUERY-STRING", "missing-key-does-not-return-another-value")]
+    public void TryGetValueFromQueryString_MissingKeyReturnsFalseAndNull()
+    {
+        var address = new Uri("loopback:item?mode=send&temporary=true");
+
+        bool found = address.TryGetValueFromQueryString("id", out string? value);
+
+        Assert.False(found);
+        Assert.Null(value);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUERY-STRING", "valueless-present-key-is-empty")]
+    public void TryGetValueFromQueryString_ValuelessKeyIsPresentWithEmptyValue()
+    {
+        var address = new Uri("loopback:item?id&mode=send");
+
+        bool found = address.TryGetValueFromQueryString("id", out string? value);
+
+        Assert.True(found);
+        Assert.Equal(string.Empty, value);
+    }
 }

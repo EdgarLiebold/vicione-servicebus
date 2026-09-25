@@ -1645,6 +1645,27 @@
       "variantKey" : "lookup-preserves-complete-value"
    },
    {
+      "requirementId" : "REQ-VSB-QUERY-STRING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetValueFromQueryString_RejectsAmbiguousKeysRegardlessOfCase",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.QueryStringExtensionsTests",
+      "variantKey" : "duplicate-key-rejected-case-insensitively"
+   },
+   {
+      "requirementId" : "REQ-VSB-QUERY-STRING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetValueFromQueryString_MissingKeyReturnsFalseAndNull",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.QueryStringExtensionsTests",
+      "variantKey" : "missing-key-does-not-return-another-value"
+   },
+   {
+      "requirementId" : "REQ-VSB-QUERY-STRING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetValueFromQueryString_ValuelessKeyIsPresentWithEmptyValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.QueryStringExtensionsTests",
+      "variantKey" : "valueless-present-key-is-empty"
+   },
+   {
       "requirementId" : "REQ-VSB-PROPERTY-METADATA-READ",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "UntypedAccessor_ReadsPublicValueProperty",
