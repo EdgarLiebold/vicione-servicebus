@@ -1,5 +1,6 @@
 using Amazon;
 using Amazon.SimpleNotificationService.Model;
+using SendMessageBatchRequestEntry = Amazon.SQS.Model.SendMessageBatchRequestEntry;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.AmazonSqs.Configuration;
 using ViciOne.ServiceBus.AmazonSqs.Tests.TestDoubles;
@@ -87,6 +88,41 @@ public sealed class AmazonSqsSendTransportContextTests
             Assert.DoesNotContain(nameof(SendContext<Message>.CorrelationId), published.MessageAttributes);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-HEADERS", "queue-send-filters-host-and-fault-detail-at-provider-boundary")]
+    public async Task QueueSend_EmitsOnlyPermittedHeadersInProviderRequestAsync()
+    {
+        SendMessageBatchRequestEntry? sent = null;
+        using ServiceProvider provider = CreateAdmittedHost(out AmazonSqsBusConfiguration busConfiguration);
+        ClientContext clientContext = CreateClientContext(CancellationToken.None, null, request => sent = request);
+        var transport = new SendTransport<ClientContext>(
+            CreateSendTransport(busConfiguration, false, new CompletedPipe<ClientContext>(), clientContext));
+
+        await transport.SendAsync(
+                new Message(),
+                new ConfiguredSendPipe(busConfiguration.Serialization.CreateSerializerCollection(), configure: context =>
+                {
+                    context.Headers.Set("OrderKind", "retail");
+                    context.Headers.Set(MessageHeaders.FaultInputAddress, "queue:orders");
+                    context.Headers.Set(MessageHeaders.FaultMessage, "rejected");
+                    context.Headers.Set(MessageHeaders.FaultStackTrace, "sensitive stack");
+                    context.Headers.Set(MessageHeaders.FaultExceptionType, "sensitive type");
+                    context.Headers.Set(MessageHeaders.Host.MachineName, "sensitive machine");
+                    context.Headers.Set(MessageHeaders.Host.ProcessName, "sensitive process");
+                }),
+                TestContext.Current.CancellationToken)
+            .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(sent);
+        Assert.Equal("retail", Assert.Contains("OrderKind", sent.MessageAttributes).StringValue);
+        Assert.Equal("queue:orders", Assert.Contains(MessageHeaders.FaultInputAddress, sent.MessageAttributes).StringValue);
+        Assert.Equal("rejected", Assert.Contains(MessageHeaders.FaultMessage, sent.MessageAttributes).StringValue);
+        Assert.DoesNotContain(MessageHeaders.FaultStackTrace, sent.MessageAttributes);
+        Assert.DoesNotContain(MessageHeaders.FaultExceptionType, sent.MessageAttributes);
+        Assert.DoesNotContain(MessageHeaders.Host.MachineName, sent.MessageAttributes);
+        Assert.DoesNotContain(MessageHeaders.Host.ProcessName, sent.MessageAttributes);
+    }
+
     private static ServiceProvider CreateAdmittedHost(out AmazonSqsBusConfiguration busConfiguration)
     {
         busConfiguration = new AmazonSqsBusConfiguration(
@@ -133,12 +169,14 @@ public sealed class AmazonSqsSendTransportContextTests
             : new QueueSendTransportContext(busConfiguration.HostConfiguration, receiveEndpointContext, supervisor, topologyPipe, "orders");
     }
 
-    private static ClientContext CreateClientContext(CancellationToken cancellationToken, Action<PublishBatchRequestEntry>? publish)
+    private static ClientContext CreateClientContext(CancellationToken cancellationToken, Action<PublishBatchRequestEntry>? publish,
+        Action<SendMessageBatchRequestEntry>? send = null)
     {
         return InterfaceProxy<ClientContext>.Create((method, args) => method.Name switch
         {
             "get_CancellationToken" => cancellationToken,
             nameof(ClientContext.PublishAsync) => RecordPublishAsync(args, publish),
+            nameof(ClientContext.SendMessageAsync) => RecordSendAsync(args, send),
             _ => Default(method.ReturnType)
         });
     }
@@ -146,6 +184,12 @@ public sealed class AmazonSqsSendTransportContextTests
     private static Task RecordPublishAsync(object?[]? arguments, Action<PublishBatchRequestEntry>? publish)
     {
         publish?.Invoke(Assert.IsType<PublishBatchRequestEntry>(arguments![1]));
+        return Task.CompletedTask;
+    }
+
+    private static Task RecordSendAsync(object?[]? arguments, Action<SendMessageBatchRequestEntry>? send)
+    {
+        send?.Invoke(Assert.IsType<SendMessageBatchRequestEntry>(arguments![1]));
         return Task.CompletedTask;
     }
 
@@ -192,7 +236,8 @@ public sealed class AmazonSqsSendTransportContextTests
         }
     }
 
-    private sealed class ConfiguredSendPipe(ISerialization serialization, Guid? correlationId = null) : IPipe<SendContext<Message>>
+    private sealed class ConfiguredSendPipe(ISerialization serialization, Guid? correlationId = null,
+        Action<SendContext<Message>>? configure = null) : IPipe<SendContext<Message>>
     {
         public Task SendAsync(SendContext<Message> context)
         {
@@ -201,6 +246,7 @@ public sealed class AmazonSqsSendTransportContextTests
             context.SourceAddress = new Uri("amazonsqs://eu-central-1/source");
             context.DestinationAddress = new Uri("amazonsqs://eu-central-1/orders");
             context.CorrelationId = correlationId;
+            configure?.Invoke(context);
             return Task.CompletedTask;
         }
 
