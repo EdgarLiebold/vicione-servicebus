@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- All thirteen local integration test projects now reference the centrally
+  versioned Microsoft CodeCoverage extension directly. Eleven previously
+  lacked it, preventing their runs from producing the Cobertura reports
+  required by the product-wide coverage receipt gate.
 - Copied send-only JSON envelopes now have behavioral admission tests for
   exact whole-envelope body accounting, the one-byte-over-body-limit boundary,
   lossless text after source mutation, and withheld text for malformed JSON
