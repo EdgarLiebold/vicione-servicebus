@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Azure Service Bus now registers error-queue and dead-letter move sender
+  supervisors with the connection lifecycle. A faulted delivery
+  previously reached both its error queue and correlated fault consumer, but
+  bus shutdown hung because the error transport retained a connection lease.
+  The existing local fault-flow test reproduced the timeout before the fix and
+  passes afterward; all 30 Azure local integration tests and 336 unit tests
+  pass with the corrected lifecycle.
 - Durable copied-envelope replay tests now verify that an exact prior
   admission proof preserves the original body length without consulting a
   mutable locator. Changed body bytes, envelope suffix or content type

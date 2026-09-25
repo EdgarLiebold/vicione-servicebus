@@ -19,7 +19,12 @@ public class ServiceBusQueueMoveTransport
     /// <param name="settings">The destination entity declaration and sender settings.</param>
     protected ServiceBusQueueMoveTransport(IConnectionContextSupervisor supervisor, SendSettings settings)
     {
-        _sendEndpointContext = new Recycle<ISendEndpointContextSupervisor>(() => supervisor.CreateSendEndpointContextSupervisor(settings));
+        _sendEndpointContext = new Recycle<ISendEndpointContextSupervisor>(() =>
+        {
+            ISendEndpointContextSupervisor endpointSupervisor = supervisor.CreateSendEndpointContextSupervisor(settings);
+            supervisor.AddSendAgent(endpointSupervisor);
+            return endpointSupervisor;
+        });
     }
 
     /// <summary>Copies the current delivery to the destination while preserving provider metadata.</summary>
