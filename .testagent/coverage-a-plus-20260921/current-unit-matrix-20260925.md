@@ -57,8 +57,26 @@ noch auf dem aktuellen Tree erhoben werden. Insbesondere die Läufe für
 PostgreSQL, SQL Server, RabbitMQ, Azure Service Bus und EventHubs warten auf
 eine funktionsfähige Colima-/Docker-Umgebung. Ein harter Neustart der
 Standard-VM wurde angefragt, aber ohne Freigabe nicht ausgeführt.
-Der separate Abstractions-Lauf ohne AVX2 für die Portabilitätsmessung fehlt
-ebenfalls auf dem aktuellen Tree.
+
+## Ergänzende Portabilitätsmessung ohne AVX2
+
+Der separate Abstractions-Lauf liegt unter
+`artifacts/coverage-receipt-abstractions-noavx2-4d6be6c08/receipt.json`.
+Er wurde auf Commit `4d6be6c08bb544715e6b9279c2a2fca92bc46f7f`
+mit denselben `src`- und `tests`-Trees wie die 17 obigen Läufe erhoben.
+Der Runner setzte für Restore, Build und Test `DOTNET_EnableAVX2=0`;
+der Receipt hält diese Eingabe unter `dotnetEnvironment` fest. 824 von 824
+Tests bestanden, ohne Fehler, Skips, Buildwarnungen oder Buildfehler. Die
+Binärdateien und der Cobertura-Bericht sind im Receipt gehasht.
+
+Das Red Team verglich die beiden Abstractions-Cobertura-Berichte unabhängig:
+Unter den 16 `src/.../NewId/`-Dateien stehen in beiden Berichten dieselben
+756 eindeutigen Quellpositionen. Der normale Lauf deckt 487 ab, der Lauf
+ohne AVX2 452; die Schnittmenge umfasst 376. Nur im normalen Lauf sind
+111 Positionen gedeckt, nur im Lauf ohne AVX2 76, zusammen 563. Dies ist
+ein gemessener Coverage-Unterschied. Der Receipt beweist die gesetzte
+Laufzeitvariable, aber keinen im Prozess ausgelesenen ISA-Status und keinen
+Test auf Hardware ohne AVX2.
 
 Diese 17 Berichte sind **kein produktweites A+-Profil**. Line-, konservative
 Branch- und methodische CRAP-Werte für das ganze Produkt dürfen erst nach
