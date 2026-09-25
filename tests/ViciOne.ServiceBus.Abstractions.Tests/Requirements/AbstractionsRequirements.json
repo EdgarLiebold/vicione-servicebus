@@ -289,6 +289,20 @@
    {
       "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FormatCaseAndSequentialSuffix_MatchTheirGuidRepresentations",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "format-case-and-sequential-suffix-parity"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FormatDefaultsAndInvalidShapes_PreserveTheDocumentedBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "format-defaults-and-invalid-shapes"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "FromGuid_ReturnsTheGeneratedValueAndReadableTimestamp",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
       "variantKey" : "from-guid-preserves-generated-value"

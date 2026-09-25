@@ -59,50 +59,31 @@ public sealed class StateMachineMermaidGenerator
 
         for (var index = 0; index < label.Length; index++)
         {
-            char character = label[index];
-            switch (character)
-            {
-                case '&':
-                    escaped.Append("#38;");
-                    break;
-                case '"':
-                    escaped.Append("#quot;");
-                    break;
-                case '#':
-                    escaped.Append("#35;");
-                    break;
-                case '<':
-                    escaped.Append("#60;");
-                    break;
-                case '>':
-                    escaped.Append("#62;");
-                    break;
-                case '\\':
-                    escaped.Append("#92;");
-                    break;
-                case '[':
-                    escaped.Append("#91;");
-                    break;
-                case ']':
-                    escaped.Append("#93;");
-                    break;
-                case '`':
-                    escaped.Append("#96;");
-                    break;
-                case '\r':
-                    escaped.Append("#13;");
-                    break;
-                case '\n':
-                    escaped.Append("#10;");
-                    break;
-                default:
-                    AppendUnicodeCharacter(escaped, label, ref index);
-                    break;
-            }
+            string? entity = SyntaxEntity(label[index]);
+            if (entity is not null)
+                escaped.Append(entity);
+            else
+                AppendUnicodeCharacter(escaped, label, ref index);
         }
 
         return escaped.ToString();
     }
+
+    static string? SyntaxEntity(char character) => character switch
+    {
+        '&' => "#38;",
+        '"' => "#quot;",
+        '#' => "#35;",
+        '<' => "#60;",
+        '>' => "#62;",
+        '\\' => "#92;",
+        '[' => "#91;",
+        ']' => "#93;",
+        '`' => "#96;",
+        '\r' => "#13;",
+        '\n' => "#10;",
+        _ => null
+    };
 
     static void AppendUnicodeCharacter(StringBuilder escaped, string label, ref int index)
     {

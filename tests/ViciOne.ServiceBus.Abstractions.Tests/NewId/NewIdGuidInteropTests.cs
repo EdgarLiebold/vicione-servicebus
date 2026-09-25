@@ -133,4 +133,40 @@ public sealed class NewIdGuidInteropTests
         if (string.Equals(format, "Ds", StringComparison.Ordinal))
             Assert.NotEqual(id.ToGuid(), parsed);
     }
+
+    [Theory]
+    [InlineData("B")]
+    [InlineData("D")]
+    [InlineData("N")]
+    [InlineData("P")]
+    [InlineData("b")]
+    [InlineData("d")]
+    [InlineData("n")]
+    [InlineData("p")]
+    [RequirementCoverage("REQ-VSB-NEWID-GUID-INTEROP", "format-case-and-sequential-suffix-parity")]
+    public void FormatCaseAndSequentialSuffix_MatchTheirGuidRepresentations(string format)
+    {
+        var id = new NewIdValue(OrderedBytes);
+        string canonicalFormat = format.ToUpperInvariant();
+        var expectedStandard = new Guid(OrderedBytes);
+        var expectedSequential = Guid.Parse("0a0b0c0d-0e0f-0809-0706-050403020001");
+
+        Assert.Equal(expectedStandard.ToString(canonicalFormat), id.ToString(format));
+        Assert.Equal(expectedSequential.ToString(canonicalFormat), id.ToString(format + "S"));
+        Assert.Equal(expectedSequential.ToString(canonicalFormat), id.ToString(format + "s"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-NEWID-GUID-INTEROP", "format-defaults-and-invalid-shapes")]
+    public void FormatDefaultsAndInvalidShapes_PreserveTheDocumentedBoundary()
+    {
+        var id = new NewIdValue(OrderedBytes);
+        string expectedDefault = new Guid(OrderedBytes).ToString("D");
+
+        Assert.Equal(expectedDefault, id.ToString((string?)null));
+        Assert.Equal(expectedDefault, id.ToString(string.Empty));
+
+        foreach (string invalid in new[] { "Q", "QS", "DD", "Dss", " " })
+            Assert.Throws<FormatException>(() => id.ToString(invalid));
+    }
 }

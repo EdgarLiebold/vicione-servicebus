@@ -279,6 +279,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Mermaid label encoding now keeps the syntax-entity table separate from the
+  Unicode and control-character loop. Exact syntax, control, and surrogate
+  output remains covered by the visualizer behavior tests.
 - Job-attempt state-machine setup now separates event correlation registration
   from schedule and state behavior registration while preserving their order.
   The existing transition tests still verify startup, liveness escalation,
@@ -391,6 +394,9 @@ entry below records what the current work changed for anyone reading the source.
 - NewId value tests now verify all four identity words through public equality
   operators, typed and boxed equality, dictionary lookup, hash consistency,
   and boxed comparison boundaries. The implementation is unchanged.
+- NewId format tests now compare standard and sequential B/D/N/P output,
+  case variants, defaults, and invalid format boundaries against independent
+  Guid values. The formatting implementation is unchanged.
 - JobService correlation and SQL partition-key registration now use smaller
   domain-grouped methods without changing the 30 correlation identities, 31
   partition formatters, or registration order. Source-owned tests verify every
