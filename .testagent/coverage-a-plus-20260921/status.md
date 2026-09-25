@@ -44,6 +44,17 @@ the new profile. See `product-wide-profile-b6ffcfbdf.md`. Global A+ remains open
 
 ## Latest focused slice
 
+Amazon SQS topology cleanup now registers one agent across failed-declaration
+retries in separate operation scopes, updates the retained agent to a new
+client after reconnect, and registers a fresh agent after restart. Tests
+cover all four topic/queue auto-delete combinations and exact deletion on
+stop. Three red counterexamples preceded the final fix. The complete SQS
+suite passed 279/279. The exact-commit SQS unit receipt at `df008b502`
+measured 74.96% line and 78.31% branch coverage, with three SQS methods
+above CRAP 30; `AnyAutoDelete` fell to CRAP 6. Independent read-only Red
+Team returned PASS. See `amazon-sqs-topology-cleanup-20260925.md`. Global
+A+ remains open.
+
 Amazon SQS moves now reject more than ten message attributes before provider
 submission, including headers added during dead-letter handling. A red 10+1
 boundary test preceded the fix; the 9+1 case succeeds. Provider-boundary
