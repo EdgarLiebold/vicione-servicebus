@@ -850,16 +850,6 @@
         "text-scan"
       ],
       "authorizedLineCount": 1,
-      "authorizedLinesSha256": "53ec91c31a66faa4e738e40f1fbd09e2b567de09faff8cc568f0f4f81082344d",
-      "category": "NEGATIVE_TEST_ORACLE",
-      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs"
-    },
-    {
-      "allowedGates": [
-        "binary-scan",
-        "text-scan"
-      ],
-      "authorizedLineCount": 1,
       "authorizedLinesSha256": "cda97a52348b5090eed895302cf80965bf600ca4801aecbc675a6a068015f48e",
       "category": "IDENTITY_TOOL_SELF_REFERENCE",
       "path": "tools/identity/change_list.py"
