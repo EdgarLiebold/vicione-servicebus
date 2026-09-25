@@ -45,6 +45,7 @@ public sealed class TimeSpanExtensionsTests
         var duration = new TimeSpan(365 + 60 + 21 + 4, 5, 6, 7).Add(TimeSpan.FromMilliseconds(8));
 
         Assert.Equal("1y2M3w4d5h6m7s8ms", duration.ToFriendlyString());
+        Assert.Equal("-1y2M3w4d5h6m7s8ms", (-duration).ToFriendlyString());
     }
 
     [Theory]
