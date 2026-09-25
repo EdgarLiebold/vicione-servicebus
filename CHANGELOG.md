@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS connection creation now has lifecycle tests for the configured
+  provider connection, release on supervised handle stop, failure cause
+  preservation, provider cancellation passthrough, and stopping before a new
+  connection is opened.
 - Amazon SQS send-transport creation now has contract tests for queue topology
   lookup based on the destination kind, ownership of the scoped client and
   transport agents, and cancellation before address validation or registration.
