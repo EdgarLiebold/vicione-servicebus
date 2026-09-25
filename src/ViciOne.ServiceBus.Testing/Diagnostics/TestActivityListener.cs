@@ -64,6 +64,27 @@ sealed class TestActivityListener :
 
     void GenerateOutput()
     {
+        ChartTable chart = BuildChart();
+        var table = _includeDetails
+            ? TextTable.Create(chart.GetRows().Select(x => new
+            {
+                x.Title,
+                x.Duration,
+                x.Timeline,
+                Details = x.GetColumn(0)
+            }))
+            : TextTable.Create(chart.GetRows());
+
+        table
+            .SetColumn(0, _className ?? "Operation Name")
+            .SetColumn(1, "Duration", typeof(int))
+            .SetRightNumberAlignment()
+            .OutputTo(_writer)
+            .Write();
+    }
+
+    ChartTable BuildChart()
+    {
         var chart = new ChartTable(50);
 
         foreach (var trace in _traces.Values.OrderBy(x => x.StartTime))
@@ -101,22 +122,7 @@ sealed class TestActivityListener :
             }
         }
 
-        var table = _includeDetails
-            ? TextTable.Create(chart.GetRows().Select(x => new
-            {
-                x.Title,
-                x.Duration,
-                x.Timeline,
-                Details = x.GetColumn(0)
-            }))
-            : TextTable.Create(chart.GetRows());
-
-        table
-            .SetColumn(0, _className ?? "Operation Name")
-            .SetColumn(1, "Duration", typeof(int))
-            .SetRightNumberAlignment()
-            .OutputTo(_writer)
-            .Write();
+        return chart;
     }
 
     static ActivitySamplingResult Sample(ref ActivityCreationOptions<System.Diagnostics.ActivityContext> options)

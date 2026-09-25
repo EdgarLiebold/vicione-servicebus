@@ -149,6 +149,34 @@ public sealed class DiagnosticOutputTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "activity-tree-compact-output-omits-details")]
+    public async Task ActivityListener_CompactOutputOmitsDetailColumnButRetainsTheTraceAsync()
+    {
+        using var writer = new StringWriter();
+        await using var listener = new TestActivityListener(writer, "compact-root", "Test Operation", includeDetails: false);
+        using var source = new ActivitySource("ViciOne.ServiceBus.Tests.CompactDiagnosticOutput");
+
+        using (Activity? activity = source.StartActivity("compact-child"))
+        {
+            Assert.NotNull(activity);
+            activity.SetTag(ServiceBusTelemetry.Attributes.ProcessorName, "HiddenConsumer");
+        }
+
+        await listener.DisposeAsync();
+
+        string output = writer.ToString();
+        Assert.Contains("Test Operation", output, StringComparison.Ordinal);
+        string rootRow = Assert.Single(
+            output.Split('\n'), line => line.Contains("compact-root", StringComparison.Ordinal));
+        string childRow = Assert.Single(
+            output.Split('\n'), line => line.Contains("compact-child", StringComparison.Ordinal));
+        Assert.Contains("compact-root", rootRow, StringComparison.Ordinal);
+        Assert.Contains("└ compact-child", childRow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Details", output, StringComparison.Ordinal);
+        Assert.DoesNotContain("HiddenConsumer", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "required-output-destinations")]
     public async Task DiagnosticWriters_RejectMissingOutputDestinationsPreciselyAsync()
     {
