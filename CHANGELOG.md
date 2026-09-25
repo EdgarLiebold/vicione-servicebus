@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Pending delivery-work waits now keep their captured tasks when the caller
+  cancels the wait. A later `CompletedAsync` call still observes unfinished
+  receive, mediator, queue, or job work instead of reporting completion early.
+  Successfully awaited or faulted snapshots are removed by their original
+  task identities, so work added during the wait is still drained.
 - Generic transport-header adapters now reject a null converter at construction
   instead of failing later during a send. Their policy is covered for typed and
   untyped headers, including host and fault-detail filtering. An Amazon SQS

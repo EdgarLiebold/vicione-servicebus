@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
@@ -50,7 +51,7 @@ public class PendingTaskCollection
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CompletedAsync(CancellationToken cancellationToken = default)
     {
-        Task[] tasks;
+        KeyValuePair<long, Task>[] pending;
         do
         {
             lock (_tasks)
@@ -58,20 +59,37 @@ public class PendingTaskCollection
                 if (_tasks.Count == 0)
                     return;
 
-                tasks = new Task[_tasks.Count];
-                _tasks.Values.CopyTo(tasks, 0);
-
-                _tasks.Clear();
+                pending = [.. _tasks];
             }
 
-            var whenAll = Task.WhenAll(tasks);
+            var whenAll = Task.WhenAll(pending.Select(static entry => entry.Value));
 
             if (cancellationToken.CanBeCanceled)
                 whenAll = whenAll.OrCanceledAsync(cancellationToken);
 
-            await whenAll.ConfigureAwait(false);
+            bool canceledByCaller = false;
+            try
+            {
+                await whenAll.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                canceledByCaller = true;
+                throw;
+            }
+            finally
+            {
+                if (!canceledByCaller)
+                {
+                    lock (_tasks)
+                    {
+                        foreach (KeyValuePair<long, Task> entry in pending)
+                            _tasks.Remove(entry.Key);
+                    }
+                }
+            }
         }
-        while (tasks.Length > 0);
+        while (pending.Length > 0);
     }
 
     void Remove(long id)
