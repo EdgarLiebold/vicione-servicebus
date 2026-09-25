@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS consumer connection now has a contract test for all three
+  subscription gates: endpoint topology setting, connection option, and
+  message-level topology setting. The default overload used by ordinary
+  handlers and consumers must enable topology configuration. Every variant
+  still connects the requested consumer pipe exactly once.
 - Amazon SQS topology cleanup now has lifecycle tests for every combination
   of auto-delete topic and queue flags. They verify single registration after
   repeated configuration, exact cleanup selection, and propagation of the
