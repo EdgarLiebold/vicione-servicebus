@@ -128,8 +128,8 @@ public abstract class ExceptionSpecification :
     static bool Match<T>(Exception exception, Func<T, bool> filter)
         where T : Exception
     {
-        if (exception is T ofT)
-            return filter(ofT);
+        if (exception is T ofT && filter(ofT))
+            return true;
 
         var baseException = exception.GetBaseException();
 
@@ -137,13 +137,17 @@ public abstract class ExceptionSpecification :
         {
             foreach (var innerException in aggregateException.InnerExceptions)
             {
+                if (innerException is T directInnerOfT && filter(directInnerOfT))
+                    return true;
+
                 var baseInnerException = innerException.GetBaseException();
 
-                if (baseInnerException is T innerExceptionOfT && filter(innerExceptionOfT))
+                if (!ReferenceEquals(baseInnerException, innerException) &&
+                    baseInnerException is T innerExceptionOfT && filter(innerExceptionOfT))
                     return true;
             }
         }
 
-        return baseException is T exceptionOfT && filter(exceptionOfT);
+        return !ReferenceEquals(baseException, exception) && baseException is T exceptionOfT && filter(exceptionOfT);
     }
 }

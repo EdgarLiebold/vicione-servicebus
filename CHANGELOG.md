@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Typed exception predicates now inspect nested aggregate failures when the
+  aggregate itself has the requested type but does not satisfy the predicate.
+  They test both each direct inner failure and its root cause; previously a
+  direct match with its own inner exception was skipped. This applies equally
+  to include and exclude rules, so a matching inner failure can be handled or
+  vetoed as configured.
 - Transport bus creation now keeps its configuration and fault-notification
   boundary explicit. A DI regression test proves that a bus-instance
   specification failure remains the reported cause even when a creation-fault

@@ -42,6 +42,58 @@ public sealed class ExceptionSpecificationTests
     }
 
     [Fact]
+    public void BroadPredicate_ExaminesAggregateInnersWhenTheAggregateDoesNotPass()
+    {
+        var specification = new TestExceptionSpecification();
+        specification.Handle<Exception>(exception => exception.Message == "retryable");
+        var aggregate = new AggregateException(
+            new InvalidOperationException("other"),
+            new TimeoutException("retryable"));
+
+        Assert.True(specification.Matches(aggregate));
+    }
+
+    [Fact]
+    public void IgnoredAggregateInner_VetoesAnOtherwiseHandledException()
+    {
+        var specification = new TestExceptionSpecification();
+        specification.Handle<Exception>();
+        specification.Ignore<Exception>(exception => exception is TimeoutException && exception.Message == "retryable");
+        var aggregate = new AggregateException(
+            new InvalidOperationException("other"),
+            new TimeoutException("retryable"));
+
+        Assert.False(specification.Matches(aggregate));
+        Assert.True(specification.Matches(new AggregateException(
+            new InvalidOperationException("other"),
+            new TimeoutException("fatal"))));
+    }
+
+    [Fact]
+    public void TypedPredicate_ExaminesDirectAggregateInnerBeforeItsBaseException()
+    {
+        var specification = new TestExceptionSpecification();
+        specification.Handle<InvalidOperationException>(exception => exception.Message == "retryable");
+        var aggregate = new AggregateException(
+            new InvalidOperationException("retryable", new Exception("root cause")),
+            new TimeoutException("unrelated"));
+
+        Assert.True(specification.Matches(aggregate));
+    }
+
+    [Fact]
+    public void Predicate_ExaminesDistinctRootCauseWhenDirectAggregateInnerDoesNotPass()
+    {
+        var specification = new TestExceptionSpecification();
+        specification.Handle<Exception>(exception => exception.Message == "root cause");
+        var aggregate = new AggregateException(
+            new InvalidOperationException("outer", new Exception("root cause")),
+            new TimeoutException("unrelated"));
+
+        Assert.True(specification.Matches(aggregate));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EXCEPTION-FILTER", "immutable-snapshot")]
     public void Snapshot_IsDetachedFromLaterConfigurationAndCallerOwnedTypeArrays()
     {
