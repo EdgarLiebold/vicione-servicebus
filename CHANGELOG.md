@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- SQL Server schema provisioning now restores any missing transport-role
+  database permission when rerun. Previously one remaining permission made the
+  migrator skip all grants, leaving a separately provisioned transport account
+  unable to create views after `CREATE VIEW` was revoked. A native integration
+  test confirms the account is denied before reprovisioning and can create and
+  read a view afterward. The check also recognizes permissions granted with
+  grant option as already present.
 - Azure Service Bus now registers error-queue and dead-letter move sender
   supervisors with the connection lifecycle. A faulted delivery
   previously reached both its error queue and correlated fault consumer, but

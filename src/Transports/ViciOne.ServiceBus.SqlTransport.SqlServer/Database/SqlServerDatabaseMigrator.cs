@@ -34,17 +34,19 @@ DROP DATABASE [{0}];";
     INNER JOIN sys.database_principals p ON s.principal_id = p.principal_id
     WHERE s.name = '{1}' AND p.name = '{0}'
 )
-OR NOT EXISTS (
-    SELECT 1
+OR (
+    SELECT COUNT(DISTINCT dp.type)
     FROM sys.database_permissions dp
     WHERE dp.grantee_principal_id = DATABASE_PRINCIPAL_ID('{0}')
+      AND dp.class = 0
+      AND dp.state IN ('G', 'W')
       AND dp.type IN (
           'CRTB' -- CREATE TABLE
         , 'CRPR' -- CREATE PROCEDURE
         , 'CRVW' -- CREATE VIEW
         , 'RF'   -- REFERENCES
       )
-)
+) < 4
 BEGIN
     ALTER AUTHORIZATION ON SCHEMA::{1} TO [{0}];
     GRANT CREATE TABLE TO {0};

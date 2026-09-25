@@ -66,6 +66,35 @@ public sealed class SqlServerProvisioningCredentialTests
                 Assert.Equal(username, Assert.IsType<string>(await identity.ExecuteScalarAsync(cancellationToken)));
             }
 
+            await using (var adminDatabase = SqlServerAdminConnection(provider, database))
+            {
+                await adminDatabase.OpenAsync(cancellationToken);
+                await using var revoke = new SqlCommand("REVOKE CREATE VIEW FROM [transport]", adminDatabase);
+                await revoke.ExecuteNonQueryAsync(cancellationToken);
+            }
+
+            await using (var deniedAccount = new SqlConnection(accountBuilder.ConnectionString))
+            {
+                await deniedAccount.OpenAsync(cancellationToken);
+                await using var deniedView = new SqlCommand(
+                    "CREATE VIEW [transport].[ProvisioningPermissionProbe] AS SELECT 42 AS [Value]",
+                    deniedAccount);
+                SqlException denial = await Assert.ThrowsAsync<SqlException>(
+                    () => deniedView.ExecuteNonQueryAsync(cancellationToken));
+                Assert.Equal(262, denial.Number);
+            }
+
+            await migrator.CreateSchemaIfNotExistAsync(options, cancellationToken);
+
+            await using (var account = new SqlConnection(accountBuilder.ConnectionString))
+            {
+                await account.OpenAsync(cancellationToken);
+                await using var create = new SqlCommand("CREATE VIEW [transport].[ProvisioningPermissionProbe] AS SELECT 42 AS [Value]", account);
+                await create.ExecuteNonQueryAsync(cancellationToken);
+                await using var query = new SqlCommand("SELECT [Value] FROM [transport].[ProvisioningPermissionProbe]", account);
+                Assert.Equal(42, Convert.ToInt32(await query.ExecuteScalarAsync(cancellationToken)));
+            }
+
             await using SqlConnection admin = SqlServerAdminConnection(provider, "master");
             await admin.OpenAsync(cancellationToken);
             Assert.Equal(0, await SqlServerCachedPasswordCountAsync(admin, cancellationToken));
