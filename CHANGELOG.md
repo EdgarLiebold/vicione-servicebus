@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Amazon SQS FIFO receiving now has provider-facing tests for numeric sequence
+  order, per-group ordering in an interleaved batch, and progress of a second
+  group while the first group's dispatch is blocked. Missing or invalid FIFO
+  ordering attributes must stop the receiver before dispatch with the
+  corresponding diagnostic.
 - Amazon SQS receiver startup now has provider-facing regression tests proving
   queue metadata is resolved before polling, valid visibility settings are
   adopted, malformed or missing settings leave the configured value intact,
