@@ -96,34 +96,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
 
         try
         {
-            var busReceiveEndpointConfiguration = configurator.CreateBusEndpointConfiguration(x =>
-            {
-                x.ConfigureConsumeTopology = false;
-
-                x.DiscardFaultedMessages();
-                x.DiscardSkippedMessages();
-            });
-
-            var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>
-                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", $"The configured host does not implement {typeof(IHost<TEndpointConfigurator>)}.", "Correct the named configuration before starting the host"));
-
-            var bus = new ServiceBusRuntime(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
-                context.GetService<TimeProvider>() ?? TimeProvider.System);
-
-            ConnectReceiveEndpointObservers(context, bus);
-            ConnectReceiveObservers(context, bus);
-            ConnectConsumeObservers(context, bus);
-            ConnectSendObservers(context, bus);
-            ConnectPublishObservers(context, bus);
-
-            _hostConfiguration.BusConfiguration.BusObservers.PostCreate(bus);
-
-            var instance = CreateBusInstance(bus, host, _hostConfiguration, context);
-
-            foreach (var specification in busInstanceSpecifications)
-                specification.Configure(instance);
-
-            return instance;
+            return BuildConfiguredBus(configurator, context, busInstanceSpecifications);
         }
         catch (Exception ex)
         {
@@ -139,6 +112,40 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
 
             throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
         }
+    }
+
+    IBusInstance BuildConfiguredBus<T>(T configurator, IBusRegistrationContext context,
+        IReadOnlyList<IBusInstanceSpecification> busInstanceSpecifications)
+        where T : IBusFactory
+    {
+        var busReceiveEndpointConfiguration = configurator.CreateBusEndpointConfiguration(x =>
+        {
+            x.ConfigureConsumeTopology = false;
+
+            x.DiscardFaultedMessages();
+            x.DiscardSkippedMessages();
+        });
+
+        var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", $"The configured host does not implement {typeof(IHost<TEndpointConfigurator>)}.", "Correct the named configuration before starting the host"));
+
+        var bus = new ServiceBusRuntime(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
+            context.GetService<TimeProvider>() ?? TimeProvider.System);
+
+        ConnectReceiveEndpointObservers(context, bus);
+        ConnectReceiveObservers(context, bus);
+        ConnectConsumeObservers(context, bus);
+        ConnectSendObservers(context, bus);
+        ConnectPublishObservers(context, bus);
+
+        _hostConfiguration.BusConfiguration.BusObservers.PostCreate(bus);
+
+        var instance = CreateBusInstance(bus, host, _hostConfiguration, context);
+
+        foreach (var specification in busInstanceSpecifications)
+            specification.Configure(instance);
+
+        return instance;
     }
 
     static void ConnectBusObservers(IBusRegistrationContext context, IBusObserverConnector connector)

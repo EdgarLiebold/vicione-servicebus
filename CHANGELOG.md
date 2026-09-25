@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Fixed during the source review since 2026-09-06
 
+- Transport bus creation now keeps its configuration and fault-notification
+  boundary explicit. A DI regression test proves that a bus-instance
+  specification failure remains the reported cause even when a creation-fault
+  observer also throws; both failures reach the intended paths exactly once.
 - Typed and outer consume-output fault observers can no longer replace the
   original consume-dispatch failure with their own exception. Both groups are
   notified even when the typed observer fails, and diagnostic logger failures

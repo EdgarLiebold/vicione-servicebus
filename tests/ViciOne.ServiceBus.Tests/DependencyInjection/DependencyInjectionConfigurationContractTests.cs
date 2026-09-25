@@ -1021,6 +1021,31 @@ public sealed class DependencyInjectionConfigurationContractTests
         Assert.Contains("bus creation", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DI-FACTORY-CONTRACT", "construction-failure-survives-fault-observer-failure")]
+    public async Task TransportBusFactory_PreservesSpecificationFailureWhenFaultObserverAlsoFailsAsync()
+    {
+        var specificationFailure = new InvalidOperationException("specification failed");
+        var observationFailure = new InvalidOperationException("fault observer failed");
+        var specification = new RecordingBusInstanceSpecification(specificationFailure);
+        var observer = new ThrowingCreationFaultObserver(observationFailure);
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTestHarness();
+        services.AddSingleton<IBusObserver>(observer);
+        services.AddSingleton(Bind<IBus>.Create<IBusInstanceSpecification>(specification));
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
+
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            provider.GetRequiredService<IBusControl>());
+
+        Assert.Same(specificationFailure, exception.InnerException);
+        Assert.Equal(1, specification.ValidationCount);
+        Assert.Equal(1, specification.ConfigureCount);
+        Assert.Equal(1, observer.PostCreateCount);
+        Assert.Equal(1, observer.CreateFaultedCount);
+        Assert.Same(specificationFailure, observer.ObservedFailure);
+    }
+
     private static T CreateConfigurationProxy<T>(List<object> specifications)
         where T : class
     {
@@ -1293,6 +1318,36 @@ public sealed class DependencyInjectionConfigurationContractTests
             if (configureFailure != null)
                 throw configureFailure;
         }
+    }
+
+    private sealed class ThrowingCreationFaultObserver(Exception observationFailure) : IBusObserver
+    {
+        public int PostCreateCount { get; private set; }
+
+        public int CreateFaultedCount { get; private set; }
+
+        public Exception? ObservedFailure { get; private set; }
+
+        public void PostCreate(IBus bus) => PostCreateCount++;
+
+        public void CreateFaulted(Exception exception)
+        {
+            CreateFaultedCount++;
+            ObservedFailure = exception;
+            throw observationFailure;
+        }
+
+        public Task PreStartAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady) => Task.CompletedTask;
+
+        public Task StartFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public Task PreStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
     }
 
     private sealed class TestRider : IRider;
