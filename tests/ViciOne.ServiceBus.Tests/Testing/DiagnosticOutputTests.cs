@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -87,13 +88,42 @@ public sealed class DiagnosticOutputTests
     public async Task ActivityListener_RendersTheTraceOnceAndDisposesIdempotentlyAsync()
     {
         using var writer = new StringWriter();
-        var listener = new TestActivityListener(writer, "root-operation", "Operation", includeDetails: true);
+        await using var listener = new TestActivityListener(writer, "root-operation", "Operation", includeDetails: true);
         using var source = new ActivitySource("ViciOne.ServiceBus.Tests.DiagnosticOutput");
 
         using (Activity? activity = source.StartActivity("child-operation"))
         {
             Assert.NotNull(activity);
             activity.SetTag("test.value", "observed");
+        }
+
+        using (Activity? activity = source.StartActivity("saga-transition"))
+        {
+            Assert.NotNull(activity);
+            activity.SetTag(ServiceBusTelemetry.Attributes.SagaId, "saga-42");
+            activity.SetTag(ServiceBusTelemetry.Attributes.SagaStateBefore, "Ready");
+            activity.SetTag(ServiceBusTelemetry.Attributes.SagaStateAfter, "Completed");
+            activity.SetTag(ServiceBusTelemetry.Attributes.ProcessorName, "ignored-processor");
+        }
+
+        using (Activity? activity = source.StartActivity("saga-without-transition"))
+        {
+            Assert.NotNull(activity);
+            activity.SetTag(ServiceBusTelemetry.Attributes.SagaId, "saga-43");
+            activity.SetTag(ServiceBusTelemetry.Attributes.SagaStateBefore, "Ready");
+        }
+
+        using (Activity? activity = source.StartActivity("requested-consumer"))
+        {
+            Assert.NotNull(activity);
+            activity.SetTag(ServiceBusTelemetry.Attributes.ProcessorName, "OrderConsumer");
+            activity.SetTag(ServiceBusTelemetry.Attributes.RequestId, "request-91");
+        }
+
+        using (Activity? activity = source.StartActivity("plain-consumer"))
+        {
+            Assert.NotNull(activity);
+            activity.SetTag(ServiceBusTelemetry.Attributes.ProcessorName, "BillingConsumer");
         }
 
         await listener.DisposeAsync();
@@ -104,6 +134,17 @@ public sealed class DiagnosticOutputTests
         Assert.Contains("Details", firstOutput, StringComparison.Ordinal);
         Assert.Contains("root-operation", firstOutput, StringComparison.Ordinal);
         Assert.Contains("child-operation", firstOutput, StringComparison.Ordinal);
+        static string Row(string output, string operation) => Assert.Single(
+            output.Split('\n'), line => line.Contains(operation, StringComparison.Ordinal));
+        Assert.DoesNotContain("observed", Row(firstOutput, "child-operation"), StringComparison.Ordinal);
+        string transition = Row(firstOutput, "saga-transition");
+        Assert.Contains("saga-42: Ready -> Completed", transition, StringComparison.Ordinal);
+        Assert.DoesNotContain("ignored-processor", transition, StringComparison.Ordinal);
+        Assert.Contains("saga-43", Row(firstOutput, "saga-without-transition"), StringComparison.Ordinal);
+        Assert.DoesNotContain("Ready", Row(firstOutput, "saga-without-transition"), StringComparison.Ordinal);
+        Assert.Contains("request-91: OrderConsumer", Row(firstOutput, "requested-consumer"), StringComparison.Ordinal);
+        Assert.Contains("BillingConsumer", Row(firstOutput, "plain-consumer"), StringComparison.Ordinal);
+        Assert.DoesNotContain("request-91", Row(firstOutput, "plain-consumer"), StringComparison.Ordinal);
         Assert.Equal(firstOutput, writer.ToString());
     }
 
