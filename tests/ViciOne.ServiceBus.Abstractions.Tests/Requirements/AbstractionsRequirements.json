@@ -294,6 +294,48 @@
       "variantKey" : "timestamp"
    },
    {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidBatch_InvalidRangeLeavesArrayAndSequenceUntouched",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "guid-batch-invalid-range"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidBatch_NullArrayLeavesSequenceUntouched",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "guid-batch-null"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdBatch_InvalidRangeLeavesArrayAndSequenceUntouched",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "newid-batch-invalid-range"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdBatch_NullArrayLeavesSequenceUntouched",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "newid-batch-null"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidBatch_EmptyTailIsValidAndLeavesSequenceUntouched",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "guid-batch-empty-tail"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdBatch_EmptyTailIsValidAndLeavesSequenceUntouched",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "newid-batch-empty-tail"
+   },
+   {
       "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "ByteRoundTrip_ReturnsTheOriginalGuid",

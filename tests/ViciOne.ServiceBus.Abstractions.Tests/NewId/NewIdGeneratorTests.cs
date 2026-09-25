@@ -223,6 +223,141 @@ public sealed class NewIdGeneratorTests
         Assert.Equal(scalar.NextSequentialGuid(), ids[Rollover + 2]);
     }
 
+    [Theory]
+    [InlineData(false, -1, 1, "index")]
+    [InlineData(false, 3, 0, "index")]
+    [InlineData(false, 0, -1, "count")]
+    [InlineData(false, 2, 2, "count")]
+    [InlineData(false, 1, int.MaxValue, "count")]
+    [InlineData(true, -1, 1, "index")]
+    [InlineData(true, 3, 0, "index")]
+    [InlineData(true, 0, -1, "count")]
+    [InlineData(true, 2, 2, "count")]
+    [InlineData(true, 1, int.MaxValue, "count")]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "guid-batch-invalid-range")]
+    public void GuidBatch_InvalidRangeLeavesArrayAndSequenceUntouched(bool sequential, int index, int count, string parameter)
+    {
+        var generator = NewIdTestInputs.CreateGenerator();
+        var reference = NewIdTestInputs.CreateGenerator();
+        var sentinel = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+        var ids = new[] { sentinel, sentinel };
+
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            if (sequential)
+                generator.NextSequentialGuid(ids, index, count);
+            else
+                generator.NextGuid(ids, index, count);
+        });
+
+        Assert.Equal(parameter, error.ParamName);
+        Assert.Equal([sentinel, sentinel], ids);
+        Assert.Equal(
+            sequential ? reference.NextSequentialGuid() : reference.NextGuid(),
+            sequential ? generator.NextSequentialGuid() : generator.NextGuid());
+    }
+
+    [Theory]
+    [InlineData(-1, 1, "index")]
+    [InlineData(3, 0, "index")]
+    [InlineData(0, -1, "count")]
+    [InlineData(2, 2, "count")]
+    [InlineData(1, int.MaxValue, "count")]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "newid-batch-invalid-range")]
+    public void NewIdBatch_InvalidRangeLeavesArrayAndSequenceUntouched(int index, int count, string parameter)
+    {
+        var generator = NewIdTestInputs.CreateGenerator();
+        var reference = NewIdTestInputs.CreateGenerator();
+        var sentinel = reference.Next();
+        Assert.Equal(sentinel, generator.Next());
+        var ids = new[] { sentinel, sentinel };
+
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() => generator.Next(ids, index, count));
+
+        Assert.Equal(parameter, error.ParamName);
+        Assert.Equal([sentinel, sentinel], ids);
+        Assert.Equal(reference.Next(), generator.Next());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "newid-batch-null")]
+    public void NewIdBatch_NullArrayLeavesSequenceUntouched()
+    {
+        var generator = NewIdTestInputs.CreateGenerator();
+        var reference = NewIdTestInputs.CreateGenerator();
+
+        var error = Assert.Throws<ArgumentNullException>(() => generator.Next(null!, 0, 0));
+
+        Assert.Equal("ids", error.ParamName);
+        Assert.Equal(reference.Next(), generator.Next());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "guid-batch-null")]
+    public void GuidBatch_NullArrayLeavesSequenceUntouched(bool sequential)
+    {
+        var generator = NewIdTestInputs.CreateGenerator();
+        var reference = NewIdTestInputs.CreateGenerator();
+
+        var error = Assert.Throws<ArgumentNullException>(() =>
+        {
+            if (sequential)
+                generator.NextSequentialGuid(null!, 0, 0);
+            else
+                generator.NextGuid(null!, 0, 0);
+        });
+
+        Assert.Equal("ids", error.ParamName);
+        Assert.Equal(
+            sequential ? reference.NextSequentialGuid() : reference.NextGuid(),
+            sequential ? generator.NextSequentialGuid() : generator.NextGuid());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "guid-batch-empty-tail")]
+    public void GuidBatch_EmptyTailIsValidAndLeavesSequenceUntouched(bool sequential)
+    {
+        var generator = NewIdTestInputs.CreateGenerator();
+        var reference = NewIdTestInputs.CreateGenerator();
+        var sentinel = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+        var ids = new[] { sentinel, sentinel };
+
+        var segment = sequential
+            ? generator.NextSequentialGuid(ids, ids.Length, 0)
+            : generator.NextGuid(ids, ids.Length, 0);
+
+        Assert.Same(ids, segment.Array);
+        Assert.Equal(ids.Length, segment.Offset);
+        Assert.Equal(0, segment.Count);
+        Assert.Equal([sentinel, sentinel], ids);
+        Assert.Equal(
+            sequential ? reference.NextSequentialGuid() : reference.NextGuid(),
+            sequential ? generator.NextSequentialGuid() : generator.NextGuid());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "newid-batch-empty-tail")]
+    public void NewIdBatch_EmptyTailIsValidAndLeavesSequenceUntouched()
+    {
+        var generator = NewIdTestInputs.CreateGenerator();
+        var reference = NewIdTestInputs.CreateGenerator();
+        var sentinel = generator.Next();
+        Assert.Equal(sentinel, reference.Next());
+        var ids = new[] { sentinel, sentinel };
+
+        var segment = generator.Next(ids, ids.Length, 0);
+
+        Assert.Same(ids, segment.Array);
+        Assert.Equal(ids.Length, segment.Offset);
+        Assert.Equal(0, segment.Count);
+        Assert.Equal([sentinel, sentinel], ids);
+        Assert.Equal(reference.Next(), generator.Next());
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-NEWID-GENERATOR", "sequential-uniqueness")]
     public void SequentialGeneration_ProducesNoDuplicates()

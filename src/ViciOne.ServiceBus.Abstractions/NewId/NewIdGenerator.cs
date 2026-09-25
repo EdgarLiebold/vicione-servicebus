@@ -172,7 +172,12 @@ public class NewIdGenerator :
     /// <returns>The array segment produced by the operation.</returns>
     public ArraySegment<NewId> Next(NewId[] ids, int index, int count)
     {
-        if (index + count > ids.Length)
+        ArgumentNullException.ThrowIfNull(ids);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (index > ids.Length)
+            throw new ArgumentOutOfRangeException(nameof(index));
+        if (count > ids.Length - index)
             throw new ArgumentOutOfRangeException(nameof(count));
 
         var ticks = _tickProvider.Ticks;
@@ -205,7 +210,12 @@ public class NewIdGenerator :
     /// <returns>The array segment produced by the operation.</returns>
     public ArraySegment<Guid> NextGuid(Guid[] ids, int index, int count)
     {
-        if (index + count > ids.Length)
+        ArgumentNullException.ThrowIfNull(ids);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (index > ids.Length)
+            throw new ArgumentOutOfRangeException(nameof(index));
+        if (count > ids.Length - index)
             throw new ArgumentOutOfRangeException(nameof(count));
 
         var ticks = _tickProvider.Ticks;
@@ -283,7 +293,12 @@ public class NewIdGenerator :
     /// <returns>The array segment produced by the operation.</returns>
     public ArraySegment<Guid> NextSequentialGuid(Guid[] ids, int index, int count)
     {
-        if (index + count > ids.Length)
+        ArgumentNullException.ThrowIfNull(ids);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (index > ids.Length)
+            throw new ArgumentOutOfRangeException(nameof(index));
+        if (count > ids.Length - index)
             throw new ArgumentOutOfRangeException(nameof(count));
 
         var ticks = _tickProvider.Ticks;
