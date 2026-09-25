@@ -275,6 +275,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- EF-Core reliable inbox delivery now keeps lease acquisition separate from
+  the existing commit and failure-handling path. A quarantined delivery is
+  explicitly tested against duplicate dispatch: its consumer is not invoked
+  and its attempt count, failure details, and lease state remain unchanged.
 - Typed Durable Sender now resolves and validates its send context separately
   from constructing the serialized intent. The redundant transport-context
   check after the canonical `MessageSendContext` check is removed. New tests

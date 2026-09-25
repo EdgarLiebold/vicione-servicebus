@@ -123,61 +123,88 @@ internal sealed class EntityFrameworkReliableInboxContextFactory<TBus, TDbContex
                 _dbContext.Update(inbox);
             }
 
-            bool leasePersisted = false;
-            try
-            {
-                await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
-                leasePersisted = true;
-                var reliableContext = new EntityFrameworkReliableInboxContext<TBus, TDbContext, T>(
-                    context,
-                    options,
-                    _provider,
-                    _dbContext,
-                    inbox,
-                    _outbox,
-                    _timeProvider);
-                await next.SendAsync(reliableContext).ConfigureAwait(false);
-                await transaction.CommitAsync(operationCancellationToken).ConfigureAwait(false);
-                return;
-            }
-            catch (OperationCanceledException) when (operationCancellationToken.IsCancellationRequested)
-            {
-                await RollbackAsync(transaction).ConfigureAwait(false);
-                await AbortOutboxAsync().ConfigureAwait(false);
-                _dbContext.ChangeTracker.Clear();
-                throw;
-            }
-            catch (DbUpdateException) when (isNewInbox && !leasePersisted)
-            {
-                await RollbackAsync(transaction).ConfigureAwait(false);
-                _dbContext.ChangeTracker.Clear();
-                if (await InboxExistsAsync(key, operationCancellationToken).ConfigureAwait(false))
-                    continue;
+            if (await SendWithLeaseAsync(
+                context,
+                options,
+                next,
+                transaction,
+                inbox,
+                key,
+                attemptedDelivery,
+                isNewInbox,
+                operationCancellationToken).ConfigureAwait(false))
+                continue;
 
-                throw;
-            }
-            catch (Exception exception)
+            return;
+        }
+    }
+
+    async Task<bool> SendWithLeaseAsync<T>(
+        ConsumeContext<T> context,
+        OutboxConsumeOptions options,
+        IPipe<OutboxConsumeContext<T>> next,
+        Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction,
+        ReliableInboxRecord inbox,
+        ReliableInboxKey key,
+        int attemptedDelivery,
+        bool isNewInbox,
+        CancellationToken operationCancellationToken)
+        where T : class
+    {
+        bool leasePersisted = false;
+        try
+        {
+            await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
+            leasePersisted = true;
+            var reliableContext = new EntityFrameworkReliableInboxContext<TBus, TDbContext, T>(
+                context,
+                options,
+                _provider,
+                _dbContext,
+                inbox,
+                _outbox,
+                _timeProvider);
+            await next.SendAsync(reliableContext).ConfigureAwait(false);
+            await transaction.CommitAsync(operationCancellationToken).ConfigureAwait(false);
+            return false;
+        }
+        catch (OperationCanceledException) when (operationCancellationToken.IsCancellationRequested)
+        {
+            await RollbackAsync(transaction).ConfigureAwait(false);
+            await AbortOutboxAsync().ConfigureAwait(false);
+            _dbContext.ChangeTracker.Clear();
+            throw;
+        }
+        catch (DbUpdateException) when (isNewInbox && !leasePersisted)
+        {
+            await RollbackAsync(transaction).ConfigureAwait(false);
+            _dbContext.ChangeTracker.Clear();
+            if (await InboxExistsAsync(key, operationCancellationToken).ConfigureAwait(false))
+                return true;
+
+            throw;
+        }
+        catch (Exception exception)
+        {
+            await RollbackAsync(transaction).ConfigureAwait(false);
+            await AbortOutboxAsync().ConfigureAwait(false);
+            _dbContext.ChangeTracker.Clear();
+            ReliableInboxStatus? retained = await PersistFailureAsync(
+                key,
+                _timeProvider.GetUtcNow(),
+                exception,
+                attemptedDelivery).ConfigureAwait(false);
+            if (retained is ReliableInboxStatus.Consumed
+                or ReliableInboxStatus.Quarantined
+                or ReliableInboxStatus.Abandoned)
             {
-                await RollbackAsync(transaction).ConfigureAwait(false);
-                await AbortOutboxAsync().ConfigureAwait(false);
-                _dbContext.ChangeTracker.Clear();
-                ReliableInboxStatus? retained = await PersistFailureAsync(
-                    key,
-                    _timeProvider.GetUtcNow(),
-                    exception,
-                    attemptedDelivery).ConfigureAwait(false);
-                if (retained is ReliableInboxStatus.Consumed
-                    or ReliableInboxStatus.Quarantined
-                    or ReliableInboxStatus.Abandoned)
-                {
-                    return;
-                }
-
-                if (retained == ReliableInboxStatus.RetryScheduled)
-                    throw new ReliableInboxRetryRequiredException(exception);
-
-                throw;
+                return false;
             }
+
+            if (retained == ReliableInboxStatus.RetryScheduled)
+                throw new ReliableInboxRetryRequiredException(exception);
+
+            throw;
         }
     }
 

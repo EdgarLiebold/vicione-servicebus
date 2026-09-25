@@ -126,6 +126,43 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         Assert.Equal(0, fixture.Events.Count);
         await using ReliableInboxDbContext verification = fixture.CreateContext();
         Assert.Empty(await verification.BusinessRecords.ToListAsync(fixture.CancellationToken));
+
+        var duplicateOptions = new OutboxConsumeOptions
+        {
+            ConsumerId = quarantined.ConsumerId,
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        var duplicateInvocations = 0;
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> duplicate = InMemoryOutboxTestContextFactory.Create(
+                command, fixture.CancellationToken, messageId: messageId);
+            await factory.SendAsync(
+                duplicate,
+                duplicateOptions,
+                Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(_ =>
+                {
+                    duplicateInvocations++;
+                    return Task.CompletedTask;
+                }),
+                fixture.CancellationToken);
+        }
+
+        ReliableInboxRecord stillQuarantined = await verification.Set<ReliableInboxRecord>().AsNoTracking()
+            .SingleAsync(row => row.MessageId == messageId, fixture.CancellationToken);
+        Assert.Equal(0, duplicateInvocations);
+        Assert.Equal(ReliableInboxStatus.Quarantined, stillQuarantined.Status);
+        Assert.Equal(3, stillQuarantined.Attempts);
+        Assert.Equal(quarantined.FailedAt, stillQuarantined.FailedAt);
+        Assert.Equal(quarantined.QuarantinedAt, stillQuarantined.QuarantinedAt);
+        Assert.Equal(quarantined.FailureType, stillQuarantined.FailureType);
+        Assert.Null(stillQuarantined.LeaseToken);
+        Assert.Null(stillQuarantined.LeaseExpiresAt);
+        Assert.Equal(3, fixture.Attempts.Count);
     }
 
     [Fact]
