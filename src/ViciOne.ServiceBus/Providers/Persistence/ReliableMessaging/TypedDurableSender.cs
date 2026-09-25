@@ -58,6 +58,26 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
 
         cancellationToken.ThrowIfCancellationRequested();
         MessageContractIdentity contractIdentity = _contractCatalog.GetIdentity(typeof(TMessage));
+        MessageSendContext<TMessage> context = await CreateSendContextAsync(
+            destinationAddress, message, options, scheduledOptions, cancellationToken).ConfigureAwait(false);
+        SerializedDurableSend serialized = CreateSerializedSend(
+            destinationAddress, context, options, scheduledOptions, contractIdentity);
+
+        DurableSendAdmissionResult result = await _admission
+            .AdmitAsync(serialized, cancellationToken)
+            .ConfigureAwait(false);
+        result = ReliableMessagingProviderGuard.ValidateAdmission(serialized, result);
+        return new DurableSendReceipt(result.Id, result.Disposition, result.StoredCount, result.StoredBytes);
+    }
+
+    async Task<MessageSendContext<TMessage>> CreateSendContextAsync<TMessage>(
+        Uri destinationAddress,
+        TMessage message,
+        DurableSendOptions options,
+        OutgoingOptionsSnapshot? scheduledOptions,
+        CancellationToken cancellationToken)
+        where TMessage : class
+    {
         ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -81,12 +101,6 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
             OutgoingOptionsPipe.Apply(context, scheduledOptions);
         context.GetOrAddPayload(() => DurableSendEnvelopeMetadata.Instance);
 
-        if (context is not TransportSendContext transportContext)
-        {
-            throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The send context for bus '{typeof(TBus)}' is not a transport context and cannot be admitted by Durable Sender.", "Correct the named configuration before starting the host"));
-        }
-
         if (_payloadAdmission is not null)
         {
             bool messageDataOffloadObserved = context.TryGetPayload(out MessageDataAdmissionEvidence? evidence)
@@ -96,7 +110,18 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
                 messageDataOffloadObserved));
         }
 
-        byte[] body = transportContext.Body.ToArray();
+        return messageContext;
+    }
+
+    SerializedDurableSend CreateSerializedSend<TMessage>(
+        Uri destinationAddress,
+        MessageSendContext<TMessage> context,
+        DurableSendOptions options,
+        OutgoingOptionsSnapshot? scheduledOptions,
+        MessageContractIdentity contractIdentity)
+        where TMessage : class
+    {
+        byte[] body = context.Body.ToArray();
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));
@@ -117,7 +142,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
                 context,
                 options.DueAt ?? context.GetTimeProvider().GetUtcNow(),
                 durableProof);
-        var serialized = new SerializedDurableSend
+        return new SerializedDurableSend
         {
             Id = options.IdempotencyKey,
             ContractIdentity = contractIdentity,
@@ -129,11 +154,5 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
             CorrelationId = context.CorrelationId,
             DueAt = options.DueAt,
         };
-
-        DurableSendAdmissionResult result = await _admission
-            .AdmitAsync(serialized, cancellationToken)
-            .ConfigureAwait(false);
-        result = ReliableMessagingProviderGuard.ValidateAdmission(serialized, result);
-        return new DurableSendReceipt(result.Id, result.Disposition, result.StoredCount, result.StoredBytes);
     }
 }

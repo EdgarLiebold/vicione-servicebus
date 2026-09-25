@@ -275,6 +275,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Typed Durable Sender now resolves and validates its send context separately
+  from constructing the serialized intent. The redundant transport-context
+  check after the canonical `MessageSendContext` check is removed. New tests
+  verify that endpoints without transport capability and noncanonical send
+  contexts fail before durable admission, while preserving destination and
+  cancellation-token propagation.
 - Durable-send intent validation now keeps destination and media-type checks
   together in a focused operation. Validation order remains unchanged. Existing
   boundary tests cover the exception parameters, exact length limits, and
