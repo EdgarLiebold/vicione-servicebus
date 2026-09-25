@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ exchange-address tests verify that configured delayed and alternate
+  arguments reach the exchange declaration, while removed and incorrectly typed
+  arguments cannot silently become endpoint routing options.
 - RabbitMQ publish-topology tests now verify topic and fanout parent routing,
   exclusion without builder mutation, an alternate-exchange queue route, and
   direct implemented-contract hierarchy bindings using real broker-topology

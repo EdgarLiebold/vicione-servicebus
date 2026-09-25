@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -7,6 +8,100 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests;
 public sealed class RabbitMqEndpointAddressTests
 {
     private static readonly Uri HostAddress = new("rabbitmq://localhost/test");
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "configured-exchange-arguments-become-routing-address")]
+    public void ExchangeConfigurator_ProjectsDelayedAndAlternateRoutingIntoTheAddress()
+    {
+        var configurator = new RabbitMqExchangeConfigurator("orders", RabbitMQ.Client.ExchangeType.Direct,
+            durable: false, autoDelete: true);
+        configurator.SetExchangeArgument("x-delayed-type", RabbitMQ.Client.ExchangeType.Topic);
+        configurator.SetExchangeArgument(RabbitMQ.Client.Headers.AlternateExchange, "unroutable");
+
+        RabbitMqEndpointAddress address = configurator.GetEndpointAddress(new Uri("rabbitmq://broker/production"));
+        var settings = new RabbitMqSendSettings(address);
+        BrokerTopology topology = settings.GetBrokerTopology();
+
+        Assert.Equal("broker", address.Host);
+        Assert.Equal("production", address.VirtualHost);
+        Assert.Equal("orders", address.Name);
+        Assert.Equal(RabbitMqEndpointAddress.DelayedMessageExchangeType, address.ExchangeType);
+        Assert.Equal(RabbitMQ.Client.ExchangeType.Topic, address.DelayedType);
+        Assert.Equal("unroutable", address.AlternateExchange);
+        Assert.False(address.Durable);
+        Assert.True(address.AutoDelete);
+        Exchange exchange = Assert.Single(topology.Exchanges);
+        Assert.Equal("orders", exchange.ExchangeName);
+        Assert.Equal(RabbitMqEndpointAddress.DelayedMessageExchangeType, exchange.ExchangeType);
+        Assert.Equal(RabbitMQ.Client.ExchangeType.Topic, exchange.ExchangeArguments["x-delayed-type"]);
+        Assert.Equal("unroutable", exchange.ExchangeArguments[RabbitMQ.Client.Headers.AlternateExchange]);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "independent-routing-argument-projection")]
+    public void ExchangeConfigurator_ProjectsEachRoutingArgumentIndependently(bool delayed)
+    {
+        var configurator = new RabbitMqExchangeConfigurator("orders", RabbitMQ.Client.ExchangeType.Direct);
+        if (delayed)
+            configurator.SetExchangeArgument("x-delayed-type", RabbitMQ.Client.ExchangeType.Topic);
+        else
+            configurator.SetExchangeArgument(RabbitMQ.Client.Headers.AlternateExchange, "unroutable");
+
+        RabbitMqEndpointAddress address = configurator.GetEndpointAddress(HostAddress);
+        Exchange exchange = Assert.Single(new RabbitMqSendSettings(address).GetBrokerTopology().Exchanges);
+
+        Assert.Equal(delayed ? RabbitMqEndpointAddress.DelayedMessageExchangeType : RabbitMQ.Client.ExchangeType.Direct,
+            address.ExchangeType);
+        Assert.Equal(delayed ? RabbitMQ.Client.ExchangeType.Topic : null, address.DelayedType);
+        Assert.Equal(delayed ? null : "unroutable", address.AlternateExchange);
+        Assert.Equal(address.ExchangeType, exchange.ExchangeType);
+        if (delayed)
+        {
+            Assert.Equal(RabbitMQ.Client.ExchangeType.Topic, exchange.ExchangeArguments["x-delayed-type"]);
+            Assert.False(exchange.ExchangeArguments.ContainsKey(RabbitMQ.Client.Headers.AlternateExchange));
+        }
+        else
+        {
+            Assert.False(exchange.ExchangeArguments.ContainsKey("x-delayed-type"));
+            Assert.Equal("unroutable", exchange.ExchangeArguments[RabbitMQ.Client.Headers.AlternateExchange]);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "non-string-and-removed-routing-arguments-are-omitted")]
+    public void ExchangeConfigurator_OmitsNonStringAndRemovedRoutingArguments()
+    {
+        var configurator = new RabbitMqExchangeConfigurator("orders", RabbitMQ.Client.ExchangeType.Direct);
+        configurator.SetExchangeArgument("x-delayed-type", 25);
+        configurator.SetExchangeArgument(RabbitMQ.Client.Headers.AlternateExchange, "old-route");
+        configurator.SetExchangeArgument(RabbitMQ.Client.Headers.AlternateExchange, null);
+
+        RabbitMqEndpointAddress address = configurator.GetEndpointAddress(HostAddress);
+
+        Assert.Equal(RabbitMQ.Client.ExchangeType.Direct, address.ExchangeType);
+        Assert.Null(address.DelayedType);
+        Assert.Null(address.AlternateExchange);
+        Assert.Equal(new Uri("exchange:orders?type=direct"), address.ToShortAddress());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "non-string-alternate-does-not-become-routing-option")]
+    public void ExchangeConfigurator_RejectsANonStringAlternateWithoutLosingDelayedRouting()
+    {
+        var configurator = new RabbitMqExchangeConfigurator("orders", RabbitMQ.Client.ExchangeType.Direct);
+        configurator.SetExchangeArgument("x-delayed-type", RabbitMQ.Client.ExchangeType.Topic);
+        configurator.SetExchangeArgument(RabbitMQ.Client.Headers.AlternateExchange, 25);
+
+        RabbitMqEndpointAddress address = configurator.GetEndpointAddress(HostAddress);
+        Exchange exchange = Assert.Single(new RabbitMqSendSettings(address).GetBrokerTopology().Exchanges);
+
+        Assert.Equal(RabbitMQ.Client.ExchangeType.Topic, address.DelayedType);
+        Assert.Null(address.AlternateExchange);
+        Assert.Equal(RabbitMQ.Client.ExchangeType.Topic, exchange.ExchangeArguments["x-delayed-type"]);
+        Assert.False(exchange.ExchangeArguments.ContainsKey(RabbitMQ.Client.Headers.AlternateExchange));
+    }
 
     [Theory]
     [InlineData("alternateexchange", true)]
