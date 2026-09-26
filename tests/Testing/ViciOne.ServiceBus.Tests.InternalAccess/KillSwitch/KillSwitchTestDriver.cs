@@ -66,6 +66,8 @@ public sealed class KillSwitchTestDriver
 
     public Task ObserveAttemptAsync() => _killSwitch.PreConsumeAsync<object>(null!);
 
+    public Task ObserveSuccessfulCompletionAsync() => _killSwitch.PostConsumeAsync<object>(null!);
+
     public Task ObserveMatchingFailureAsync(Exception exception) => _killSwitch.ConsumeFaultAsync<object>(null!, exception);
 
     public async Task ObserveConsumerAndRoutingSlipCallbacksAsync(Exception executeException)

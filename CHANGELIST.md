@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10829 |
+| Added | 10831 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -87,6 +87,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/durable-quarantine-validation-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/eventhub-header-provider-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/eventhub-route-activity-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/five-gap-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/fresh-current-tree-progress-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/generic-header-policy-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/header-value-defaults-20260925.md` | Added |  |
@@ -15876,6 +15877,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipRequestResponseDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipSubscriptionDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierTestSupport.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/CourierTraceTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipBuilderContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipEventAccessorTests.cs` | Added |  |

@@ -12,6 +12,55 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport;
 public sealed class ChannelContextFactoryTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-LIFECYCLE", "operation-fault-invalidates-owner-before-next-channel-use")]
+    public async Task SendAsync_ChannelOperationFailureInvalidatesTheOwnerBeforeTheNextUseAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        IChannel firstChannel = CreateChannel();
+        IChannel replacementChannel = CreateChannel();
+        var factory = new TestChannelFactory(CreateContext(firstChannel, cancellationToken), CreateContext(replacementChannel, cancellationToken));
+        var supervisor = new PipeContextSupervisor<ChannelContext>(factory);
+        var expected = new InvalidOperationException("controlled channel operation failure");
+        var observedChannels = new List<IChannel>();
+        IPipe<ChannelContext> successfulOperation = Pipe.Execute<ChannelContext>(context =>
+        {
+            observedChannels.Add(context.Channel);
+        });
+        try
+        {
+            await supervisor.SendAsync(successfulOperation, cancellationToken);
+            IPipeContextAgent<ChannelContext> firstOwner = Assert.Single(factory.Created);
+            Assert.False(firstOwner.IsDisposed);
+
+            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                supervisor.SendAsync(Pipe.Execute<ChannelContext>(context =>
+                {
+                    observedChannels.Add(context.Channel);
+                    throw expected;
+                }), cancellationToken));
+
+            Assert.Same(expected, actual);
+            Assert.Single(factory.Created);
+            Assert.True(firstOwner.IsDisposed);
+            await supervisor.SendAsync(successfulOperation, cancellationToken);
+            await supervisor.SendAsync(successfulOperation, cancellationToken);
+
+            Assert.Equal(2, factory.Created.Count);
+            Assert.False(factory.Created[1].IsDisposed);
+            Assert.Collection(observedChannels,
+                channel => Assert.Same(firstChannel, channel),
+                channel => Assert.Same(firstChannel, channel),
+                channel => Assert.Same(replacementChannel, channel),
+                channel => Assert.Same(replacementChannel, channel));
+        }
+        finally
+        {
+            await supervisor.StopAsync("channel operation test completed", CancellationToken.None);
+        }
+        Assert.All(factory.Created, owner => Assert.True(owner.IsDisposed));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-LIFECYCLE", "active-lease-borrows-channel-and-links-cancellation")]
     public async Task CreateActiveContext_BorrowsTheChannelAndLinksBothCancellationSourcesAsync()
     {
@@ -240,13 +289,19 @@ public sealed class ChannelContextFactoryTests
         public string Reason => "bounded stop";
     }
 
-    private sealed class TestChannelFactory(ChannelContext owner) : IPipeContextFactory<ChannelContext>
+    private sealed class TestChannelFactory(params ChannelContext[] owners) : IPipeContextFactory<ChannelContext>
     {
         private readonly ChannelContextFactory _factory = new(null!, null);
 
         public IActivePipeContextAgent<ChannelContext>? Active { get; private set; }
+        public List<IPipeContextAgent<ChannelContext>> Created { get; } = [];
 
-        public IPipeContextAgent<ChannelContext> CreateContext(ISupervisor supervisor) => supervisor.AddContext(owner);
+        public IPipeContextAgent<ChannelContext> CreateContext(ISupervisor supervisor)
+        {
+            IPipeContextAgent<ChannelContext> owner = supervisor.AddContext(owners[Created.Count]);
+            Created.Add(owner);
+            return owner;
+        }
 
         public IActivePipeContextAgent<ChannelContext> CreateActiveContext(
             ISupervisor supervisor, IPipeContextHandle<ChannelContext> context, CancellationToken cancellationToken)

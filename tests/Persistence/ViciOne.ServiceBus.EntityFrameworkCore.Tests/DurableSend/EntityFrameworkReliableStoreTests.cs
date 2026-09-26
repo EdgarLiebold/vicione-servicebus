@@ -12,6 +12,90 @@ public sealed class EntityFrameworkReliableStoreTests
     private static readonly DateTimeOffset Epoch = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-RECOVERY", "repeat-cancellation-preserves-neighbors-and-capacity")]
+    public async Task Cancel_RemovedScheduleReturnsNotFoundWithoutChangingNeighborsAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("cancel-target", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("cancel-other", new RecordingValidator());
+        DateTimeOffset due = Epoch.AddHours(1);
+        SerializedDurableSend target = Message(91, [1, 2], [3]) with { DueAt = due };
+        SerializedDurableSend neighbor = Message(92, [4, 5, 6], [7, 8]) with { DueAt = due };
+        var limits = new DurableSendStoreLimits(10, 100);
+        await store.AdmitAsync(target, limits, Epoch, token);
+        await store.AdmitAsync(neighbor, limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+
+        ReliableMessagingOperationResult first = await ((IScheduleStore<ITestBus>)store).CancelAsync(target.Id, token);
+        Assert.Equal(new ReliableMessagingOperationResult(ReliableMessageReference.Outbox(target.Id),
+            ReliableMessagingOperationDisposition.Applied, "Pending", "Cancelled"), first);
+
+        IOutboxStore<ITestBus> restarted = database.CreateStore<ITestBus>("cancel-target", new RecordingValidator());
+        ReliableMessagingOperationResult repeated = await ((IScheduleStore<ITestBus>)restarted).CancelAsync(target.Id, token);
+        Assert.Equal(new ReliableMessagingOperationResult(ReliableMessageReference.Outbox(target.Id),
+            ReliableMessagingOperationDisposition.NotFound, null, null), repeated);
+        DurableSendStoreSnapshot retained = await restarted.GetSnapshotAsync(token);
+        DurableSendStoreSnapshot separate = await other.GetSnapshotAsync(token);
+        Assert.Equal((1, 5L), (retained.StoredCount, retained.StoredBytes));
+        Assert.Equal((1, 3L), (separate.StoredCount, separate.StoredBytes));
+
+        DurableSendDelivery delivery = Assert.Single(await restarted.ClaimDueAsync(due, 10, TimeSpan.FromMinutes(1), token));
+        DurableSendDelivery otherDelivery = Assert.Single(await other.ClaimDueAsync(due, 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(neighbor.Id, delivery.Message.Id);
+        Assert.Equal(neighbor.Body.ToArray(), delivery.Message.Body.ToArray());
+        Assert.Equal(neighbor.Metadata.ToArray(), delivery.Message.Metadata.ToArray());
+        Assert.Equal(due, delivery.Message.DueAt);
+        Assert.Equal(target.Id, otherDelivery.Message.Id);
+        Assert.Equal(target.Body.ToArray(), otherDelivery.Message.Body.ToArray());
+        Assert.Equal(target.Metadata.ToArray(), otherDelivery.Message.Metadata.ToArray());
+        Assert.Equal(due, otherDelivery.Message.DueAt);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "removed-target-actions-preserve-neighbor-quarantine")]
+    public async Task Inbox_RemovedTargetReturnsNotFoundForEveryOperatorActionWithoutChangingNeighborsAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IInboxStore<ITestBus> store = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("removed-inbox", new RecordingValidator());
+        IInboxStore<ITestBus> other = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("other-inbox", new RecordingValidator());
+        var target = new ReliableInboxKey(GuidFrom(93), GuidFrom(94));
+        var sameMessage = new ReliableInboxKey(target.MessageId, GuidFrom(95));
+        var sameConsumer = new ReliableInboxKey(GuidFrom(96), target.ConsumerId);
+        foreach ((IInboxStore<ITestBus> owner, ReliableInboxKey key) in new[]
+        {
+            (store, target), (store, sameMessage), (store, sameConsumer), (other, target),
+        })
+        {
+            ReliableInboxAcquireResult acquired = await owner.AcquireAsync(key, Epoch, TimeSpan.FromMinutes(1), token);
+            Assert.True(await owner.QuarantineAsync(key, Assert.IsType<ReliableInboxLease>(acquired.Lease),
+                "Tests.Permanent", Epoch.AddSeconds(1), token));
+        }
+        var query = new ReliableInboxQuarantineQuery { PageSize = 10 };
+        ReliableInboxQuarantineEntry[] neighbors = (await store.GetQuarantineAsync(query, token)).Entries
+            .Where(entry => entry.Key != target).OrderBy(entry => entry.Key.MessageId).ToArray();
+        Assert.Equal(2, neighbors.Length);
+        ReliableInboxQuarantineEntry separate = Assert.Single((await other.GetQuarantineAsync(query, token)).Entries);
+        Assert.Equal(new ReliableMessagingOperationResult(ReliableMessageReference.Inbox(target),
+            ReliableMessagingOperationDisposition.Applied, "Quarantined", "Discarded"),
+            await store.DiscardAsync(target, token));
+
+        IInboxStore<ITestBus> restarted = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("removed-inbox", new RecordingValidator());
+        ReliableMessagingOperationResult[] results =
+        [
+            await restarted.DiscardAsync(target, token),
+            await restarted.RequeueAsync(target, Epoch.AddMinutes(1), token),
+            await restarted.AbandonAsync(target, Epoch.AddMinutes(2), token),
+        ];
+        Assert.All(results, result => Assert.Equal(new ReliableMessagingOperationResult(
+            ReliableMessageReference.Inbox(target), ReliableMessagingOperationDisposition.NotFound, null, null), result));
+        Assert.Equal(neighbors, (await restarted.GetQuarantineAsync(query, token)).Entries
+            .OrderBy(entry => entry.Key.MessageId).ToArray());
+        Assert.Equal(separate, Assert.Single((await other.GetQuarantineAsync(query, token)).Entries));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-MODEL", "bounded-record-capacity-and-claim-indexes")]
     public void Model_MapsBoundedRecordsCapacityLedgerAndClaimIndexes()
     {

@@ -16,6 +16,22 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Open follow-up iteration after `e31250d82`: RabbitMQ operation-fault owner
+  invalidation, KillSwitch late-success guards, EF removed-target actions and
+  Courier execution traces now have concrete tests and read-only adversarial
+  reviews without a reported blocker. Each packet detects its deliberate
+  mutation; all product mutations were restored and scoped controls passed.
+  Current full project runs: RabbitMQ 474, EF 312, Core 6514 passed. These are
+  working-tree checks, not new exact-commit coverage evidence. Changelog is
+  updated; SQS successful-empty-poll shutdown is now verified (5/5 scoped,
+  296/296 full, mutation detected, restored 5/5). Its read-only review exposed
+  and closed an assertion gap around logged shutdown failures. See
+  [five-gap follow-up](coverage-a-plus-20260921/five-gap-followup.md).
+  Commit, full provider aggregate,
+  exact receipts and push remain open. Local packet evidence: artifacts/t24-
+  channel-status.md, t25-kill-switch-status.md, t26-ef-status.md and
+  t27-courier-status.md. No A+ completion or reduction of global gap counts is
+  claimed until a new complete measurement.
 - Full current measurement at `9676f789120dbfe33efb3ec44b43873d7fd41a15`:
   33 profiles,12597 passed executions,32 assemblies; line85091/93762
   (90.752117%), conservative branch30718/36841 (83.379930%),26061 method

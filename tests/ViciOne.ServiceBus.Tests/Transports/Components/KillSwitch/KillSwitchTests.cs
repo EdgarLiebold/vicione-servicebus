@@ -10,6 +10,59 @@ namespace ViciOne.ServiceBus.Tests.Transports.Components.KillSwitch;
 
 public sealed class KillSwitchTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-KILL-SWITCH-RECOVERY", "late-success-cannot-change-paused-or-terminated-state")]
+    public async Task LateSuccessfulCompletion_PreservesPausedOrTerminatedStateAndCountersAsync(bool terminalStop)
+    {
+        (KillSwitchTestDriver driver, ObservableTimeProvider time) = CreateDriver(
+            activationThreshold: 2, tripThresholdRatio: 0.50);
+        try
+        {
+            await driver.ObserveAttemptAsync();
+            await driver.ObserveFailureAsync(new InvalidOperationException("another delivery trips the switch"));
+            await WaitForPauseAsync(driver, 1);
+            await WaitForTimerAsync(time, 1);
+            if (terminalStop)
+                await CancelRecoveryAsync(driver);
+
+            var expected = new KillSwitchTestSnapshot(
+                terminalStop ? KillSwitchTestState.Terminated : KillSwitchTestState.Paused,
+                2, 0, 1, !terminalStop);
+            Assert.Equal(expected, driver.Snapshot);
+
+            await driver.ObserveSuccessfulCompletionAsync();
+
+            Assert.Equal(expected, driver.Snapshot);
+            Assert.Equal(["pause"], driver.Events);
+            Assert.Equal(0, driver.StartCount);
+            Assert.Equal(1, driver.PauseCount);
+            if (terminalStop)
+            {
+                time.Advance(TimeSpan.FromDays(1));
+                Assert.Equal(expected, driver.Snapshot);
+                Assert.Equal(["pause"], driver.Events);
+            }
+            else
+            {
+                time.Advance(TimeSpan.FromSeconds(1));
+                await WaitForStartAsync(driver, 1);
+                await driver.RecoveryTask.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+                Assert.Equal(new KillSwitchTestSnapshot(KillSwitchTestState.VerifyingRecovery, 0, 0, 0, false), driver.Snapshot);
+                await driver.ObserveSuccessAsync();
+                Assert.Equal(new KillSwitchTestSnapshot(KillSwitchTestState.VerifyingRecovery, 1, 1, 0, false), driver.Snapshot);
+                await driver.ObserveSuccessAsync();
+                Assert.Equal(new KillSwitchTestSnapshot(KillSwitchTestState.Running, 0, 0, 0, false), driver.Snapshot);
+                Assert.Equal(["pause", "start"], driver.Events);
+            }
+        }
+        finally
+        {
+            await CancelRecoveryAsync(driver);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-KILL-SWITCH-TRIP", "exact-activation-and-ratio-boundary")]
     public async Task ExactActivationAndRatioBoundary_TripsExactlyOnceAsync()

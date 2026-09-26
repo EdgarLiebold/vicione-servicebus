@@ -11,6 +11,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added SQS shutdown checks for an in-flight poll that returns an empty result
+  successfully after stop is signaled. No further provider poll or warning/error
+  is allowed; the test detects a consume-loop fault hidden by successful agent
+  completion. Existing cancellation-path controls remain covered.
+- Added RabbitMQ channel-owner invalidation checks after an acquired operation
+  fails, and KillSwitch checks that late successful completions cannot revive
+  paused or terminated endpoints or contaminate the next recovery window.
+- Added real-SQLite checks for repeated actions on removed schedules and inbox
+  entries. Exact NotFound results, retained neighbor messages and capacity
+  accounting are checked across store instance recreation and store identities.
+- Added real Courier execution tracing checks for tracking number, processor,
+  argument contract and caller/send/receive/process ancestry alongside successful
+  routing-slip completion. These additions verify existing product behavior;
+  they do not establish a new product-wide coverage result or A+ acceptance.
 - Refreshed the complete 33-profile coverage measurement at one source/test
   commit, including every local provider profile and CPU fallback mode:12,597
   passing executions. Line coverage is90.7521%, conservative branch coverage

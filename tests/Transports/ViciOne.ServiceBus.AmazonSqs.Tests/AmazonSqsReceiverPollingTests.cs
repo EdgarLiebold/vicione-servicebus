@@ -1,6 +1,8 @@
+using System.Collections.Concurrent;
 using System.Reflection;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Middleware;
@@ -28,8 +30,29 @@ public sealed class AmazonSqsReceiverPollingTests
     [InlineData("invalid", 30)]
     [InlineData(null, 30)]
     [RequirementCoverage("REQ-VSB-AWS-SQS-RECEIVE", "receiver-resolves-queue-before-poll-and-adopts-visibility")]
-    public async Task Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync(
-        string? providerVisibility, int expectedVisibility)
+    public Task Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync(
+        string? providerVisibility, int expectedVisibility) =>
+        VerifyPollingAsync(providerVisibility, expectedVisibility, successfulPollOnStop: false);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-RECEIVE", "successful-empty-poll-after-stop-does-not-repoll")]
+    public async Task Receiver_SuccessfulEmptyPollAfterStopCompletesWithoutPollingAgainAsync()
+    {
+        ILogContext? previous = LogContext.Current;
+        var logger = new StopLogger();
+        LogContext.ConfigureCurrentLogContext(logger);
+        try
+        {
+            await VerifyPollingAsync("45", 45, successfulPollOnStop: true);
+            Assert.Empty(logger.WarningsAndErrors);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
+    private static async Task VerifyPollingAsync(string? providerVisibility, int expectedVisibility, bool successfulPollOnStop)
     {
         QueueReceiveSettings settings = CreateSettings();
         settings.WaitTimeSeconds = 7;
@@ -38,6 +61,7 @@ public sealed class AmazonSqsReceiverPollingTests
         var lookupEntered = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         var pollEntered = new TaskCompletionSource<(string Name, int Limit, int Wait)>(TaskCreationOptions.RunContinuationsAsynchronously);
         var polls = 0;
+        var successfulPolls = 0;
         CancellationToken observedPollToken = default;
         IAmazonSQS sqs = InterfaceProxy<IAmazonSQS>.Create((method, _) => throw new NotSupportedException(method.Name));
         var attributes = new Dictionary<string, string> { [QueueAttributeName.QueueArn] = QueueArn };
@@ -104,6 +128,9 @@ public sealed class AmazonSqsReceiverPollingTests
 
         Assert.True(receiver.Stopped.IsCancellationRequested);
         Assert.True(observedPollToken.IsCancellationRequested);
+        Assert.True(receiver.Completed.IsCompletedSuccessfully);
+        Assert.Equal(1, Volatile.Read(ref polls));
+        Assert.Equal(successfulPollOnStop ? 1 : 0, Volatile.Read(ref successfulPolls));
 
         object? TryGetPayload(MethodInfo method, object?[]? args)
         {
@@ -131,7 +158,15 @@ public sealed class AmazonSqsReceiverPollingTests
             Interlocked.Increment(ref polls);
             observedPollToken = Assert.IsType<CancellationToken>(args[3]);
             pollEntered.TrySetResult((Assert.IsType<string>(args[0]), Assert.IsType<int>(args[1]), Assert.IsType<int>(args[2])));
-            await Task.Delay(Timeout.InfiniteTimeSpan, observedPollToken);
+            if (successfulPollOnStop)
+            {
+                var stopping = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                using CancellationTokenRegistration registration = observedPollToken.Register(() => stopping.TrySetResult());
+                await stopping.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+                Interlocked.Increment(ref successfulPolls);
+            }
+            else
+                await Task.Delay(Timeout.InfiniteTimeSpan, observedPollToken);
             return Array.Empty<Message>();
         }
     }
@@ -148,5 +183,21 @@ public sealed class AmazonSqsReceiverPollingTests
         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());
         var parent = new AmazonSqsEndpointConfiguration(topology);
         return new QueueReceiveSettings(parent.CreateEndpointConfiguration(false), QueueName, true, false);
+    }
+
+    private sealed class StopLogger : ILogger
+    {
+        public ConcurrentQueue<string> WarningsAndErrors { get; } = new();
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            if (logLevel >= LogLevel.Warning)
+                WarningsAndErrors.Enqueue(formatter(state, exception));
+        }
     }
 }
