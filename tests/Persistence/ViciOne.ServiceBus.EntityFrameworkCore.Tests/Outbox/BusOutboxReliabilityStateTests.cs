@@ -120,16 +120,20 @@ public sealed class BusOutboxReliabilityStateTests
     }
 
     [Theory]
-    [InlineData(-1)]
-    [InlineData(int.MaxValue)]
+    [InlineData(-1, false)]
+    [InlineData(int.MaxValue, false)]
+    [InlineData(-1, true)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "corrupt-attempt-count-is-quarantined")]
-    public void CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoop(int invalidAttempts)
+    public async Task CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoop(int invalidAttempts, bool emptyMessageId)
     {
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         using ServiceProvider provider = CreateProvider();
         var service = CreateService(provider);
         var state = CreateState();
         state.DeliveryAttempts = invalidAttempts;
         var message = CreateMessage(state.OutboxId, 29);
+        if (emptyMessageId)
+            message.MessageId = Guid.Empty;
 
         service.ApplyDeliveryFailure(state, message, new TimeoutException("timeout"));
 
@@ -139,6 +143,10 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(invalidAttempts, state.DeliveryAttempts);
         Assert.Null(state.LastExceptionType);
         Assert.Null(state.NextDeliveryTime);
+        fixture.DbContext.Add(state);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        fixture.DbContext.ChangeTracker.Clear();
+        await AssertQuarantineCanBeListedAsync(fixture.DbContext, state);
     }
 
     [Fact]
@@ -195,13 +203,21 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(TimeSpan.FromSeconds(expectedSeconds), delay);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(0, 1, false)]
+    [InlineData(-1, -1, false)]
+    [InlineData(int.MaxValue, int.MaxValue, false)]
+    [InlineData(-1, -1, true)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-QUARANTINE", "missing-destination-is-retained")]
-    public async Task MissingDestination_IsPersistedAsQuarantinedAndNeverDeletedAsDeliveredAsync()
+    public async Task MissingDestination_IsPersistedAsQuarantinedAndNeverDeletedAsDeliveredAsync(
+        int initialAttempts, int expectedAttempts, bool emptyMessageId)
     {
         await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         OutboxState state = CreateState();
+        state.DeliveryAttempts = initialAttempts;
         OutboxMessage message = CreatePersistableMessage(state.OutboxId, destinationAddress: null);
+        if (emptyMessageId)
+            message.MessageId = Guid.Empty;
         fixture.DbContext.AddRange(state, message);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
@@ -215,26 +231,31 @@ public sealed class BusOutboxReliabilityStateTests
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
         Assert.Equal(0, delivered);
         Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
-        Assert.Equal(1, persisted.DeliveryAttempts);
+        Assert.Equal(expectedAttempts, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.InvariantViolation, persisted.LastFailureKind);
         Assert.Equal(OutboxFailureCode.MissingDestinationAddress, persisted.LastFailureCode);
         Assert.Null(persisted.LastExceptionType);
         Assert.Null(persisted.Delivered);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
+        await AssertQuarantineCanBeListedAsync(fixture.DbContext, persisted);
     }
 
     [Theory]
-    [InlineData(0, 1)]
-    [InlineData(-1, -1)]
-    [InlineData(int.MaxValue, int.MaxValue)]
+    [InlineData(0, 1, false)]
+    [InlineData(-1, -1, false)]
+    [InlineData(int.MaxValue, int.MaxValue, false)]
+    [InlineData(0, 1, true)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-QUARANTINE", "corrupt-metadata-is-retained")]
-    public async Task CorruptPersistedMetadata_IsQuarantinedInsteadOfHotLoopingAsync(int initialAttempts, int expectedAttempts)
+    public async Task CorruptPersistedMetadata_IsQuarantinedInsteadOfHotLoopingAsync(
+        int initialAttempts, int expectedAttempts, bool emptyMessageId)
     {
         await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         OutboxState state = CreateState();
         state.DeliveryAttempts = initialAttempts;
         OutboxMessage message = CreatePersistableMessage(state.OutboxId, new Uri("loopback://localhost/valid"));
         message.Headers = "{";
+        if (emptyMessageId)
+            message.MessageId = Guid.Empty;
         fixture.DbContext.AddRange(state, message);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
@@ -253,6 +274,7 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxFailureCode.MetadataDeserializationFailed, persisted.LastFailureCode);
         Assert.Equal(typeof(System.Text.Json.JsonException).FullName, persisted.LastExceptionType);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
+        await AssertQuarantineCanBeListedAsync(fixture.DbContext, persisted);
     }
 
     [Fact]
@@ -361,6 +383,35 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Pending, persisted.Status);
         Assert.Equal(0, persisted.DeliveryAttempts);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
+    }
+
+    private static async Task AssertQuarantineCanBeListedAsync(DeliveryDbContext dbContext, OutboxState expected)
+    {
+        var healthy = new OutboxState
+        {
+            OutboxId = Guid.NewGuid(), BusKey = "default", Created = Now.AddMinutes(1),
+            Status = OutboxDeliveryStatus.Quarantined, DeliveryAttempts = 1,
+            LastFailureKind = OutboxFailureKind.Permanent, LastFailureCode = OutboxFailureCode.TransportSendFailed,
+            LastFailureTime = Now, FailedSequenceNumber = 100, FailedMessageId = Guid.NewGuid(),
+        };
+        dbContext.Add(healthy);
+        await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        dbContext.ChangeTracker.Clear();
+        var notification = new RecordingNotification();
+        var operations = new EntityFrameworkOutboxOperations<IBus, DeliveryDbContext>(
+            dbContext, notification, BusPersistenceIdentity<IBus>.Create("default"));
+        IReadOnlyList<OutboxQuarantineEntry> entries = await operations.GetQuarantinedAsync(10, TestContext.Current.CancellationToken);
+        Assert.Equal([expected.OutboxId, healthy.OutboxId], entries.Select(entry => entry.OutboxId));
+        OutboxQuarantineEntry entry = entries[0];
+        Assert.Equal(expected.OutboxId, entry.OutboxId);
+        Assert.Equal(expected.DeliveryAttempts, entry.DeliveryAttempts);
+        Assert.Equal(expected.LastFailureKind, entry.FailureKind);
+        Assert.Equal(expected.LastFailureCode, entry.FailureCode);
+        Assert.Equal(expected.LastFailureTime, entry.FailureTime);
+        Assert.Equal(expected.FailedSequenceNumber, entry.FailedSequenceNumber);
+        Assert.Equal(expected.FailedMessageId, entry.FailedMessageId);
+        Assert.Equal(1, entries[1].DeliveryAttempts);
+        Assert.Equal(0, notification.DeliveredCount);
     }
 
     private static EntityFrameworkTransactionalOutboxSource<IBus, DeliveryDbContext> CreateService(
@@ -521,6 +572,7 @@ public sealed class BusOutboxReliabilityStateTests
 
     private sealed class RecordingNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, DeliveryDbContext>>
     {
+        public int DeliveredCount { get; private set; }
         public Task WaitForDeliveryAsync(CancellationToken cancellationToken) =>
             cancellationToken.IsCancellationRequested
                 ? Task.FromCanceled(cancellationToken)
@@ -528,6 +580,7 @@ public sealed class BusOutboxReliabilityStateTests
 
         public void SignalDelivery()
         {
+            DeliveredCount++;
         }
     }
 

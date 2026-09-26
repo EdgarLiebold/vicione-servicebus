@@ -113,6 +113,85 @@ public sealed class EntityFrameworkOutboxOperationsTests
                 TestContext.Current.CancellationToken));
     }
 
+    [Theory]
+    [InlineData("empty-outbox", "outboxId", typeof(ArgumentException))]
+    [InlineData("zero-attempts", "deliveryAttempts", typeof(ArgumentOutOfRangeException))]
+    [InlineData("negative-attempts", "deliveryAttempts", typeof(ArgumentOutOfRangeException))]
+    [InlineData("missing-kind", "failureKind", typeof(ArgumentOutOfRangeException))]
+    [InlineData("unknown-kind", "failureKind", typeof(ArgumentOutOfRangeException))]
+    [InlineData("missing-code", "failureCode", typeof(ArgumentOutOfRangeException))]
+    [InlineData("unknown-code", "failureCode", typeof(ArgumentOutOfRangeException))]
+    [InlineData("missing-time", "failureTime", typeof(ArgumentNullException))]
+    [InlineData("missing-sequence", "failedSequenceNumber", typeof(ArgumentOutOfRangeException))]
+    [InlineData("zero-sequence", "failedSequenceNumber", typeof(ArgumentOutOfRangeException))]
+    [InlineData("negative-sequence", "failedSequenceNumber", typeof(ArgumentOutOfRangeException))]
+    [InlineData("missing-message", "failedMessageId", typeof(ArgumentException))]
+    [InlineData("empty-message", "failedMessageId", typeof(ArgumentException))]
+    [InlineData("negative-counter-wrong-kind", "deliveryAttempts", typeof(ArgumentOutOfRangeException))]
+    [InlineData("negative-counter-wrong-code", "deliveryAttempts", typeof(ArgumentOutOfRangeException))]
+    [InlineData("zero-invariant-counter", "deliveryAttempts", typeof(ArgumentOutOfRangeException))]
+    [InlineData("empty-message-wrong-kind", "failedMessageId", typeof(ArgumentException))]
+    [InlineData("empty-message-wrong-code", "failedMessageId", typeof(ArgumentException))]
+    [InlineData("missing-invariant-message", "failedMessageId", typeof(ArgumentException))]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "corrupt-quarantine-evidence-fails-closed-without-mutation")]
+    public async Task GetQuarantined_RejectsCorruptPersistedEvidenceWithoutMutatingItAsync(
+        string corruption, string expectedParameter, Type expectedException)
+    {
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
+        OutboxState state = CreateState(Guid.NewGuid(), FirstBusKey, OutboxDeliveryStatus.Quarantined);
+        if (corruption is "negative-counter-wrong-kind" or "zero-invariant-counter" or "empty-message-wrong-kind" or "missing-invariant-message")
+            state.LastFailureCode = OutboxFailureCode.InvalidDeliveryAttemptCount;
+        if (corruption is "negative-counter-wrong-code" or "zero-invariant-counter" or "empty-message-wrong-code" or "missing-invariant-message")
+            state.LastFailureKind = OutboxFailureKind.InvariantViolation;
+        fixture.DbContext.Add(state);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        (string Column, object Value) change = corruption switch
+        {
+            "empty-outbox" => ("OutboxId", Guid.Empty),
+            "zero-attempts" => ("DeliveryAttempts", 0),
+            "negative-attempts" => ("DeliveryAttempts", -1),
+            "missing-kind" => ("LastFailureKind", 0),
+            "unknown-kind" => ("LastFailureKind", int.MaxValue),
+            "missing-code" => ("LastFailureCode", 0),
+            "unknown-code" => ("LastFailureCode", int.MaxValue),
+            "missing-time" => ("LastFailureTime", DBNull.Value),
+            "missing-sequence" => ("FailedSequenceNumber", DBNull.Value),
+            "zero-sequence" => ("FailedSequenceNumber", 0),
+            "negative-sequence" => ("FailedSequenceNumber", -1),
+            "missing-message" or "missing-invariant-message" => ("FailedMessageId", DBNull.Value),
+            "empty-message" => ("FailedMessageId", Guid.Empty),
+            "negative-counter-wrong-kind" or "negative-counter-wrong-code" => ("DeliveryAttempts", -1),
+            "zero-invariant-counter" => ("DeliveryAttempts", 0),
+            "empty-message-wrong-kind" or "empty-message-wrong-code" => ("FailedMessageId", Guid.Empty),
+            _ => throw new ArgumentOutOfRangeException(nameof(corruption)),
+        };
+        await using var command = fixture.DbContext.Database.GetDbConnection().CreateCommand();
+        command.CommandText = $"UPDATE \"OutboxState\" SET \"{change.Column}\" = @value";
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = "@value";
+        parameter.Value = change.Value;
+        command.Parameters.Add(parameter);
+        int changed = await command.ExecuteNonQueryAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(1, changed);
+        fixture.DbContext.ChangeTracker.Clear();
+        string before = System.Text.Json.JsonSerializer.Serialize(await fixture.DbContext.Set<OutboxState>()
+            .AsNoTracking().SingleAsync(TestContext.Current.CancellationToken));
+        var notification = new RecordingNotification();
+        var operations = CreateOperations(fixture.DbContext, notification);
+
+        ArgumentException exception = await Assert.ThrowsAnyAsync<ArgumentException>(() =>
+            operations.GetQuarantinedAsync(1, TestContext.Current.CancellationToken));
+
+        Assert.IsType(expectedException, exception);
+        Assert.Equal(expectedParameter, exception.ParamName);
+        fixture.DbContext.ChangeTracker.Clear();
+        OutboxState persisted = await fixture.DbContext.Set<OutboxState>()
+            .AsNoTracking().SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(before, System.Text.Json.JsonSerializer.Serialize(persisted));
+        Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
+        Assert.Equal(0, notification.DeliveredCount);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "requeue-resets-owned-quarantine-and-signals")]
     public async Task Requeue_ResetsEveryFailureFieldAndSignalsOnlyAfterPersistenceAsync()

@@ -1,4 +1,7 @@
 using System.Collections.Concurrent;
+using System.Data;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -6,7 +9,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
 
-public sealed class SqlServerConcurrencyTests
+public sealed class SqlServerConcurrencyTests(ITestOutputHelper output)
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0097", "sqlserver-native-owner")]
@@ -82,6 +85,7 @@ public sealed class SqlServerConcurrencyTests
             "parallel-publish",
             cancellationToken);
         string queueName = fixture.Name("publish-input");
+        using var diagnostics = new DiagnosticLogScope();
         Guid[] expected = Enumerable.Range(0, messageCount).Select(_ => Guid.NewGuid()).ToArray();
         var counts = new ConcurrentDictionary<Guid, int>();
         var completed = NewObservation();
@@ -119,6 +123,17 @@ public sealed class SqlServerConcurrencyTests
                         .WaitAsync(fixture.OperationTimeout, token));
             await completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
+        catch (TimeoutException)
+        {
+            KeyValuePair<Guid, int>[] snapshot = counts.ToArray();
+            Guid[] missing = expected.Except(snapshot.Select(entry => entry.Key)).ToArray();
+            output.WriteLine($"Parallel publish timed out: received={snapshot.Length}/{messageCount}, missing={missing.Length}, duplicates={snapshot.Sum(entry => entry.Value - 1)}");
+            output.WriteLine($"Missing application IDs: {string.Join(",", missing)}");
+            foreach (string entry in diagnostics.Entries)
+                output.WriteLine(entry);
+            await WriteQueueSnapshotAsync(fixture, queueName);
+            throw;
+        }
         finally
         {
             if (started)
@@ -127,6 +142,65 @@ public sealed class SqlServerConcurrencyTests
 
         Assert.Equal(expected.Order(), counts.Keys.Order());
         Assert.All(counts, entry => Assert.Equal(1, entry.Value));
+    }
+
+    private async Task WriteQueueSnapshotAsync(SqlServerTestDatabase fixture, string queueName)
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            await using var connection = fixture.CreateConnection();
+            await connection.OpenAsync(timeout.Token);
+            await using var command = connection.CreateCommand();
+            command.CommandTimeout = 5;
+            string schema = fixture.Schema.Replace("]", "]]", StringComparison.Ordinal);
+            command.CommandText = $"""
+                SELECT SYSUTCDATETIME() AS ServerUtc, q.Name, q.Type,
+                       COUNT_BIG(d.MessageDeliveryId) AS Deliveries,
+                       COALESCE(SUM(CASE WHEN d.LockId IS NOT NULL THEN 1 ELSE 0 END), 0) AS RowsWithLockId,
+                       MIN(d.EnqueueTime) AS EarliestEnqueueOrLeaseExpiry,
+                       MAX(d.EnqueueTime) AS LatestEnqueueOrLeaseExpiry,
+                       MAX(d.DeliveryCount) AS MaximumDeliveryCount
+                FROM [{schema}].[Queue] q WITH (READUNCOMMITTED)
+                LEFT JOIN [{schema}].[MessageDelivery] d WITH (READUNCOMMITTED) ON d.QueueId = q.Id
+                WHERE q.Name = @queueName
+                GROUP BY q.Name, q.Type
+                ORDER BY q.Type;
+                """;
+            command.Parameters.Add("@queueName", SqlDbType.NVarChar, 256).Value = queueName;
+            await using var reader = await command.ExecuteReaderAsync(timeout.Token);
+            output.WriteLine("Queue snapshot (dirty, potentially inconsistent diagnostic read; types 1=normal, 2=error, 3=dead-letter):");
+            while (await reader.ReadAsync(timeout.Token))
+            {
+                output.WriteLine(string.Join("; ", Enumerable.Range(0, reader.FieldCount)
+                    .Select(index => $"{reader.GetName(index)}={reader.GetValue(index)}")));
+            }
+        }
+        catch (Exception exception)
+        {
+            output.WriteLine($"Queue snapshot failed without replacing the original timeout: {exception}");
+        }
+    }
+
+    private sealed class DiagnosticLogScope : ILogger, IDisposable
+    {
+        private readonly ILogContext? _previous = LogContext.Current;
+        private readonly ConcurrentQueue<string> _entries = new();
+
+        public DiagnosticLogScope() => LogContext.ConfigureCurrentLogContext(this);
+        public string[] Entries => _entries.ToArray();
+        public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Warning && logLevel != LogLevel.None;
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            if (!IsEnabled(logLevel))
+                return;
+            _entries.Enqueue($"{logLevel}: {formatter(state, exception)} {exception}");
+            while (_entries.Count > 100)
+                _entries.TryDequeue(out _);
+        }
+        public void Dispose() => LogContext.Current = _previous;
     }
 
     private static TaskCompletionSource NewObservation() =>

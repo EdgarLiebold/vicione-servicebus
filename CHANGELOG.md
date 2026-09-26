@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- EF outbox quarantine listing now preserves the corrupt attempt counter or empty
+  message identifier retained by the producer for classified invariant failures.
+  Previously those producer-created rows caused the entire listing to throw.
+  Regressions exercise production failure handling, persistence and listing with
+  a healthy neighboring row. Corruption cases still reject missing identifiers,
+  zero counters and invalid classifications without changing stored evidence.
+- The SQL Server parallel-publish test now captures missing message identifiers,
+  duplicate counts, warning/error logs and a bounded queue snapshot on timeout
+  before teardown. An injected timeout verified the diagnostics and was removed;
+  the original intermittent timeout's cause remains unresolved.
 - Copied-body stream tests now enforce exact declared lengths, complete short
   reads, stream disposal and isolation from source or returned-array mutation.
   Oversized declarations, including `long.MaxValue`, are rejected before the
