@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- ActiveMQ now registers send-first temporary destinations in the same connection
+  cache used by consumers. Previously a lazy reply endpoint could consume queue B
+  after the request had advertised an uncached queue A, losing the response despite
+  a successful native send. Queue/topic creation is serialized across sessions so
+  competing factories cannot leave unowned native destinations. Six regressions
+  cover both startup orders and concurrent creation; integration assertions bind
+  the request ID and actual native reply destination across send and response.
 - The ActiveMQ Classic future-delivery test now waits for a separate scheduled
   probe before checking that the original scheduler job was removed. Classic
   6.2.0 dispatches before updating its scheduler index; client receive/stop was

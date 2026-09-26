@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Apache.NMS;
 using ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -36,6 +37,7 @@ public sealed class ActiveMqTemporaryReplyTests
         var handlerEntered = NewObservation<bool>();
         var responseSent = NewObservation<bool>();
         var handlerFailure = NewObservation<Exception>();
+        var transportObservations = new TransportObservations();
         var responseCount = 0;
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
@@ -67,6 +69,8 @@ public sealed class ActiveMqTemporaryReplyTests
                 }
             }));
         });
+        using ConnectHandle sendObservation = bus.ConnectSendObserver(transportObservations);
+        using ConnectHandle receiveObservation = bus.ConnectReceiveObserver(transportObservations);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var requestCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         bool started = false;
@@ -105,6 +109,12 @@ public sealed class ActiveMqTemporaryReplyTests
             Assert.DoesNotContain(queueName, observed.Address.ToString(), StringComparison.Ordinal);
             Assert.True(string.IsNullOrEmpty(observed.Address.UserInfo));
             Assert.Equal(1, Volatile.Read(ref responseCount));
+            SentObservation requestSent = await transportObservations.RequestSent.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            SentObservation replySent = await transportObservations.ReplySent.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            Assert.NotNull(requestSent.RequestId);
+            Assert.Equal(requestSent.RequestId, replySent.RequestId);
+            Assert.Equal(requestSent.RequestId, response.RequestId);
+            Assert.Equal(observed.Address, replySent.NativeDestination);
         }
         catch (Exception exception)
         {
@@ -117,6 +127,8 @@ public sealed class ActiveMqTemporaryReplyTests
                 _output.WriteLine($"ReplyTo={replyObserved.Task.Result}");
             if (handlerFailure.Task.IsCompletedSuccessfully)
                 _output.WriteLine($"HandlerFailure={handlerFailure.Task.Result}");
+            foreach (string observation in transportObservations.Events)
+                _output.WriteLine(observation);
             using var diagnosticsTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             try
             {
@@ -181,4 +193,85 @@ public sealed class ActiveMqTemporaryReplyTests
         bool IsTopic,
         Uri Address,
         Guid CorrelationId);
+
+    private sealed record SentObservation(Guid? RequestId, Uri? NativeDestination);
+
+    private sealed class TransportObservations : ISendObserver, IReceiveObserver
+    {
+        readonly ConcurrentQueue<string> _events = new();
+        int _eventCount;
+
+        public TaskCompletionSource<SentObservation> RequestSent { get; } = NewObservation<SentObservation>();
+        public TaskCompletionSource<SentObservation> ReplySent { get; } = NewObservation<SentObservation>();
+        public IEnumerable<string> Events => _events.ToArray();
+
+        void Record(string value)
+        {
+            if (Interlocked.Increment(ref _eventCount) <= 32)
+                _events.Enqueue(value);
+        }
+
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class => Task.CompletedTask;
+
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class
+        {
+            Uri? nativeDestination = context.TryGetPayload(out ActiveMqSendContext? transport)
+                && transport.ReplyDestination is { } destination ? ToEndpointAddress(destination) : null;
+            var observation = new SentObservation(context.RequestId, nativeDestination);
+            Record($"Sent Type={typeof(T).Name}; RequestId={context.RequestId}; ContentType={context.ContentType}; "
+                + $"Destination={context.DestinationAddress}; NativeDestination={nativeDestination}");
+            if (typeof(T) == typeof(ReplyRequest))
+                RequestSent.TrySetResult(observation);
+            if (typeof(T) == typeof(ReplyResponse))
+                ReplySent.TrySetResult(observation);
+            return Task.CompletedTask;
+        }
+
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class
+        {
+            Record($"SendFault Type={typeof(T).Name}; RequestId={context.RequestId}; Exception={exception}");
+            return Task.CompletedTask;
+        }
+
+        public Task PreReceiveAsync(ReceiveContext context)
+        {
+            try
+            {
+                ActiveMqReceiveContext transport = context.GetPayload<ActiveMqReceiveContext>();
+                IMessage message = transport.TransportMessage;
+                context.TransportHeaders.TryGetHeader(MessageHeaders.RequestId, out object? requestId);
+                Record($"Receiving Input={context.InputAddress}; NativeDestination={ToEndpointAddress(message.NMSDestination)}; "
+                    + $"RequestIdHeader={requestId}; ContentType={context.ContentType}; MessageId={message.NMSMessageId}");
+            }
+            catch (Exception exception)
+            {
+                Record($"ReceiveObservationFailure={exception}");
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task PostReceiveAsync(ReceiveContext context)
+        {
+            Record($"Received Input={context.InputAddress}");
+            return Task.CompletedTask;
+        }
+
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType) where T : class
+        {
+            Record($"Consumed Type={typeof(T).Name}; RequestId={context.RequestId}; Consumer={consumerType}");
+            return Task.CompletedTask;
+        }
+
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception) where T : class
+        {
+            Record($"ConsumeFault Type={typeof(T).Name}; RequestId={context.RequestId}; Exception={exception}");
+            return Task.CompletedTask;
+        }
+
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
+        {
+            Record($"ReceiveFault Input={context.InputAddress}; Exception={exception}");
+            return Task.CompletedTask;
+        }
+    }
 }

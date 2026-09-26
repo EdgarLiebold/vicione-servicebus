@@ -166,7 +166,12 @@ public class ActiveMqSessionContext :
             && DestinationTypeMatches(destination, destinationType))
             return Task.FromResult(destination);
 
-        return _executor.ExecuteAsync(() => SessionUtil.GetDestination(_session, destinationName, destinationType), cancellationToken);
+        return _executor.ExecuteAsync(() => destinationType switch
+        {
+            DestinationType.TemporaryQueue => ConnectionContext.GetTemporaryQueue(_session, destinationName),
+            DestinationType.TemporaryTopic => ConnectionContext.GetTemporaryTopic(_session, destinationName),
+            _ => SessionUtil.GetDestination(_session, destinationName, destinationType)
+        }, cancellationToken);
     }
 
     bool DestinationTypeMatches(IDestination destination, DestinationType destinationType)

@@ -85,7 +85,10 @@ public class ActiveMqConnectionContext :
     /// <returns>The cached or newly resolved temporary queue.</returns>
     public IQueue GetTemporaryQueue(ISession session, string topicName)
     {
-        return (IQueue)_temporaryEntities.GetOrAdd(topicName, _ => (IQueue)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryQueue));
+        // Different sessions share this cache. GetOrAdd alone may invoke a native
+        // creation factory twice and leave the losing destination unowned.
+        lock (_temporaryEntities)
+            return (IQueue)_temporaryEntities.GetOrAdd(topicName, _ => (IQueue)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryQueue));
     }
 
     /// <summary>Gets or creates the cached temporary topic for a destination name.</summary>
@@ -94,7 +97,8 @@ public class ActiveMqConnectionContext :
     /// <returns>The cached or newly resolved temporary topic.</returns>
     public ITopic GetTemporaryTopic(ISession session, string topicName)
     {
-        return (ITopic)_temporaryEntities.GetOrAdd(topicName, _ => (ITopic)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryTopic));
+        lock (_temporaryEntities)
+            return (ITopic)_temporaryEntities.GetOrAdd(topicName, _ => (ITopic)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryTopic));
     }
 
     /// <summary>Tries to retrieve a cached temporary destination by name.</summary>
@@ -112,23 +116,26 @@ public class ActiveMqConnectionContext :
     /// <returns><see langword="true" /> when a cached destination was deleted; otherwise, <see langword="false" />.</returns>
     public bool TryRemoveTemporaryEntity(ISession session, string name)
     {
-        if (_temporaryEntities.TryRemove(name, out var destination))
+        IDestination? destination;
+        lock (_temporaryEntities)
         {
-            try
-            {
-                session.DeleteDestination(destination);
-                return true;
-            }
-            catch
-            {
-                // A failed broker delete must remain discoverable for a later retry. Do not
-                // overwrite a newer mapping if another operation recreated the same name.
-                _temporaryEntities.TryAdd(name, destination);
-                throw;
-            }
+            if (!_temporaryEntities.TryRemove(name, out destination))
+                return false;
         }
 
-        return false;
+        try
+        {
+            session.DeleteDestination(destination);
+            return true;
+        }
+        catch
+        {
+            // A failed broker delete must remain discoverable for a later retry. Do not
+            // overwrite a newer mapping if another operation recreated the same name.
+            lock (_temporaryEntities)
+                _temporaryEntities.TryAdd(name, destination);
+            throw;
+        }
     }
 
     /// <summary>Releases the resources owned by this instance.</summary>

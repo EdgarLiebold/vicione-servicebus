@@ -16,6 +16,29 @@
 
 ## Current open work after the completed first reading
 
+- ActiveMQ reply ownership correction, after `f8730e2a6`: its exact-commit unit
+  collection passed all 20 profiles (11,920 cases), but the provider suite failed
+  1/100 in `RawRequest_UsesProviderTemporaryReplyQueueAsync(activemq)` with a
+  completed response send and no client response. `artifacts/m1l09/tests.log`
+  retains the failure. The new read-only review traced a lazy-endpoint ordering
+  defect: `GetDestinationAsync(TemporaryQueue)` could create an uncached native
+  queue before `GetQueueAsync` registered a different one for the consumer.
+  Both explicit temporary destination kinds now use the shared connection cache.
+  Native creation is serialized; cache removal/restoration uses the same lock,
+  while broker deletion runs outside the monitor.
+  `SendAndConsume_ResolveTheSameTemporaryDestinationRegardlessOfStartupOrderAsync`
+  reproduced both send-first failures before the fix (two distinct native
+  identities); both consumer-first controls passed. The restored full unit
+  profile passes 200/200 with no skips. `ConcurrentCreators_ShareOneOwnedDestinationAsync`
+  killed the lock-removal mutant for both kinds (8 topics and 2 queues instead
+  of one). This verifies the exercised overlap, not every possible schedule.
+  Evidence: `/private/tmp/servicebus-reply-owner-red.log`,
+  `/private/tmp/servicebus-reply-owner-lock-mutant.log`, and
+  `/private/tmp/servicebus-reply-owner-restored-full.log`. Product source hash
+  restored to `117a796f37ac4c607f77c709d0f4985661458003ca6422f701339c6c8a77d531`.
+  The four instrumented reply cases passed before this product correction;
+  that earlier pass is diagnostic validation, not a stability fix. Fresh
+  exact-commit provider and whole-product collection remain required.
 - `OneTimeContextPayload`: confirmed publication race. The setup task becomes
   terminal before `_running` is cleared under the lock. An immediate retry can
   receive the old fault/cancellation; `Evict` after successful await can reject a
