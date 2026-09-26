@@ -633,6 +633,50 @@ public sealed class RequestClientLifecycleTests
         Assert.Same(messageException, responseException.InnerException);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "repeated-cancel-preserves-send-failure-during-cleanup")]
+    public async Task RepeatedCancel_DuringFailureCleanupPreservesTheOriginalSendFailureAsync()
+    {
+        var timeProvider = new BlockingTimerDisposalTimeProvider();
+        var context = new RecordingClientFactoryContext(timeProvider, new RequestTimeout(TimeSpan.FromMinutes(1)));
+        var expected = new InvalidOperationException("The transport rejected the request.");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(new LifecycleRequest("send-failure"), cancellationToken));
+                throw expected;
+            });
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
+
+        try
+        {
+            await timeProvider.Timer.DisposalStarted.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            RequestException original = await Assert.ThrowsAsync<RequestException>(() =>
+                response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            Assert.Same(expected, original.InnerException);
+            Assert.False(handle.Message.IsCompleted);
+
+            handle.Cancel();
+            handle.Cancel();
+
+            Assert.False(handle.Message.IsCompleted);
+            Assert.Same(original, await Assert.ThrowsAsync<RequestException>(() =>
+                handle.GetResponseAsync<AlternateLifecycleResponse>(true, CancellationToken.None)
+                    .WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken)));
+            timeProvider.Timer.ReleaseDisposal();
+
+            Assert.Same(expected, await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                handle.Message.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken)));
+            Assert.Same(original, await Assert.ThrowsAsync<RequestException>(() =>
+                response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken)));
+        }
+        finally
+        {
+            timeProvider.Timer.ReleaseDisposal();
+        }
+    }
+
     private static async Task AssertSourceIsDisposedAsync(CancellationTokenSource source)
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));

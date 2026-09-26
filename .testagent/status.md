@@ -16,6 +16,13 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Open T30 cancellation packet: Event Hubs confirmation tests pass 2/2 and
+  both detect cancellation incorrectly reported as success; restored controls
+  pass 2/2. Request lifecycle passes 20/20; removing only the terminal guard
+  makes the new repeated-Cancel/failure-cleanup case fail while 19 controls
+  pass. The mutation is restored; its final control passes 20/20. Both
+  packets received read-only adversarial review. No new aggregate or A+
+  acceptance is claimed. See [T30 evidence](coverage-a-plus-20260921/t30-cancellation-followup.md).
 - Complete measurement at `90239365cd318da3baafbc7de3bec0c1e83cfaf7` supersedes
   the pending measurement notes below: all 33 profiles and four fixture groups
   passed; 12,604 executions, 32 assemblies, lines 85107/93762 (90.7691815%),

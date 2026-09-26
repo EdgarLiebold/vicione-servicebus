@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added Event Hubs confirmation cancellation checks for partition/offset
+  isolation, replacement admission, exact cancellation tokens, preserved
+  terminal outcomes and rejection after processor shutdown. Added a request
+  lifecycle check that repeated cancellation during failure cleanup cannot
+  replace the original transport or response exception. Both packets detect
+  deliberate incorrect terminal-state changes; product-wide measurement of
+  this packet remains pending.
 - Completed the 33-profile measurement for the five-gap test packet: 12,604
   passing executions, 90.7692% line coverage and 83.3989% conservative branch
   coverage. All five targeted line gaps are closed. Four newly observed
