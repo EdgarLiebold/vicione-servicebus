@@ -1,4 +1,5 @@
 using System.Reflection;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -10,15 +11,32 @@ namespace ViciOne.ServiceBus.Tests.Transformation;
 public sealed class ActivityTransformAsyncTests
 {
     [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(false, true, false)]
+    [InlineData(true, false, false)]
+    [InlineData(true, true, false)]
+    [InlineData(false, false, true)]
+    [InlineData(false, true, true)]
+    [InlineData(true, false, true)]
+    [InlineData(true, true, true)]
+    [RequirementCoverage("REQ-VSB-ACTIVITY-TRANSFORM", "pending-initialization-preserves-or-replaces-data-and-awaits-next")]
+    public Task PendingInitialization_PreservesContextAndAwaitsTheDownstreamOutcomeAsync(bool compensate, bool replace, bool downstreamFails) =>
+        compensate
+            ? CheckSuccessAsync<CompensateContext<Data>>(replace, downstreamFails, context => context.Log)
+            : CheckSuccessAsync<ExecuteContext<Data>>(replace, downstreamFails, context => context.Arguments);
+
+    [Theory]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]
     [InlineData(true, true)]
-    [RequirementCoverage("REQ-VSB-ACTIVITY-TRANSFORM", "pending-initialization-preserves-or-replaces-data-and-awaits-next")]
-    public Task PendingInitialization_PreservesContextAndAwaitsTheDownstreamOutcomeAsync(bool compensate, bool replace) =>
-        compensate
-            ? CheckSuccessAsync<CompensateContext<Data>>(replace, context => context.Log)
-            : CheckSuccessAsync<ExecuteContext<Data>>(replace, context => context.Arguments);
+    [RequirementCoverage("REQ-VSB-CONSUME-TRANSFORM", "pending-initialization-preserves-message-envelope-and-downstream-outcome")]
+    public Task PendingConsumeInitialization_PreservesMessageAndEnvelopeUntilDownstreamCompletesAsync(bool replace, bool downstreamFails) =>
+        CheckSuccessAsync<ConsumeContext<Data>>(replace, downstreamFails, context => context.Message);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUME-TRANSFORM", "pending-initialization-failure-never-reaches-consumer")]
+    public Task PendingConsumeInitializationFailure_NeverReachesTheConsumerAsync() => CheckFailureAsync<ConsumeContext<Data>>();
 
     [Theory]
     [InlineData(false)]
@@ -27,8 +45,8 @@ public sealed class ActivityTransformAsyncTests
     public Task PendingInitializationFailure_PreservesTheCauseWithoutInvokingTheNextStageAsync(bool compensate) =>
         compensate ? CheckFailureAsync<CompensateContext<Data>>() : CheckFailureAsync<ExecuteContext<Data>>();
 
-    private static async Task CheckSuccessAsync<TContext>(bool replace, Func<TContext, Data> getData)
-        where TContext : class, ActivityContext
+    private static async Task CheckSuccessAsync<TContext>(bool replace, bool downstreamFails, Func<TContext, Data> getData)
+        where TContext : class, PipeContext
     {
         using var owner = new CancellationTokenSource();
         var fixture = new Fixture(owner.Token);
@@ -49,24 +67,35 @@ public sealed class ActivityTransformAsyncTests
         TContext forwarded = await next.Entered.Task.WaitAsync(Timeout(), TestContext.Current.CancellationToken);
 
         Assert.Same(result, getData(forwarded));
-        Assert.Equal(fixture.TrackingNumber, forwarded.TrackingNumber);
+        if (forwarded is ActivityContext activity)
+            Assert.Equal(fixture.TrackingNumber, activity.TrackingNumber);
+        else
+            Assert.Equal(fixture.TrackingNumber, ((ConsumeContext<Data>)(object)forwarded).CorrelationId);
         Assert.Equal(owner.Token, forwarded.CancellationToken);
         if (replace)
             Assert.NotSame(original, forwarded);
         else
             Assert.Same(original, forwarded);
         Assert.False(operation.IsCompleted);
-        var expected = new InvalidOperationException("downstream rejected the transformed activity");
-        next.Completion.SetException(expected);
-        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => operation.WaitAsync(Timeout(), TestContext.Current.CancellationToken));
-
-        Assert.Same(expected, actual);
+        if (downstreamFails)
+        {
+            var expected = new InvalidOperationException("downstream rejected the transformed message");
+            next.Completion.SetException(expected);
+            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => operation.WaitAsync(Timeout(), TestContext.Current.CancellationToken));
+            Assert.Same(expected, actual);
+        }
+        else
+        {
+            next.Completion.SetResult();
+            await operation.WaitAsync(Timeout(), TestContext.Current.CancellationToken);
+            Assert.True(operation.IsCompletedSuccessfully);
+        }
         Assert.Equal(1, next.Calls);
         Assert.Equal("original", fixture.Original.Value);
     }
 
-    private static async Task CheckFailureAsync<TContext>() where TContext : class, ActivityContext
+    private static async Task CheckFailureAsync<TContext>() where TContext : class, PipeContext
     {
         using var owner = new CancellationTokenSource();
         var fixture = new Fixture(owner.Token);
@@ -130,15 +159,21 @@ public sealed class ActivityTransformAsyncTests
         public object? Input { get; private set; }
         public TaskCompletionSource<InitializeContext<Data>> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public TContext CreateContext<TContext>() where TContext : class => Strict<TContext>((method, _) => method.Name switch
+        public TContext CreateContext<TContext>() where TContext : class
         {
-            "get_Arguments" or "get_Log" => Original,
-            "get_TrackingNumber" => TrackingNumber,
-            "get_CancellationToken" => _token,
-            "get_ReceiveContext" => _receive,
-            "get_SerializerContext" => _serializer,
-            _ => throw new InvalidOperationException(method.Name),
-        });
+            if (typeof(TContext) == typeof(ConsumeContext<Data>))
+                return (TContext)(object)new MessageConsumeContext<Data>(CreateContext<ConsumeContext>(), Original);
+
+            return Strict<TContext>((method, _) => method.Name switch
+            {
+                "get_Arguments" or "get_Log" => Original,
+                "get_TrackingNumber" or "get_CorrelationId" => TrackingNumber,
+                "get_CancellationToken" => _token,
+                "get_ReceiveContext" => _receive,
+                "get_SerializerContext" => _serializer,
+                _ => throw new InvalidOperationException(method.Name),
+            });
+        }
     }
 
     private sealed class RecordingPipe<TContext> : IPipe<TContext> where TContext : class, PipeContext

@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Extended asynchronous transform checks with successful downstream completion
+  and Consume-context replacement/failure behavior, preserving the tested
+  correlation ID and cancellation token. A controlled wrong-context change is
+  detected by the replacement-message assertions.
 - Added controlled asynchronous activity-transform tests for initialization
   ordering, context/data identity, downstream completion and exact failure
   propagation. They detect a prematurely completed compensation pipeline when

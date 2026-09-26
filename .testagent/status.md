@@ -16,6 +16,16 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Transform completion follow-up extends the controlled matrix to 15 passing
+  cases: successful downstream completion for Execute/Compensate, plus async
+  Consume preserve/replace and failure behavior using a real typed context
+  wrapper. Consume evidence covers CorrelationId and token, not every envelope
+  field. The full Transformation namespace passes 26/26, requirement projection
+  1/1 and formatting verification passes. Replacing the async Consume projection
+  with the original context fails exactly two Replace cases on wrong data while
+  13 controls pass. Product source is restored with a clean diff; restored tests
+  pass 15/15. Read-only adversarial review found no concrete blocker. A fresh
+  commit-bound coverage profile and publication are pending for this extension.
 - Pending activity transforms: six controlled Execute/Compensate cases pass,
   checking a genuinely incomplete initializer, preserve/replace identity,
   inherited token/tracking/data, awaiting downstream completion, exact downstream
