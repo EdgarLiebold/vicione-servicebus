@@ -1,7 +1,9 @@
 using System.Threading.Channels;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Testing;
@@ -13,6 +15,65 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
 
 public sealed class EntityFrameworkReliableInboxPipelineTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "failure-state-write-and-logger-fault-preserve-consumer-failure-and-rollback")]
+    public async Task FailureStateWriteFailure_PreservesConsumerFailureAndRollsBackEveryEffectAsync(bool loggerThrows)
+    {
+        var persistenceFailure = new DbUpdateException("failure-state-write");
+        var interceptor = new FailureStateWriteInterceptor(persistenceFailure);
+        var logger = new FailureStateLogger(loggerThrows);
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync(interceptor, logger);
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        Guid messageId = Guid.NewGuid();
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        var consumerFailure = new ExpectedConsumerFailure();
+        var invocations = 0;
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            IPublishEndpoint publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, fixture.CancellationToken, messageId: messageId);
+
+            ExpectedConsumerFailure actual = await Assert.ThrowsAsync<ExpectedConsumerFailure>(() =>
+                factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(
+                    async context =>
+                    {
+                        invocations++;
+                        db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "rolled-back" });
+                        await publishEndpoint.PublishAsync(new ReliableInboxEvent(command.CorrelationId), fixture.CancellationToken);
+                        await context.SetConsumedAsync(fixture.CancellationToken);
+                        Assert.True(await db.BusinessRecords.AnyAsync(fixture.CancellationToken));
+                        Assert.True(await db.Set<DurableSendRecord>().AnyAsync(fixture.CancellationToken));
+                        throw consumerFailure;
+                    }), fixture.CancellationToken));
+
+            Assert.Same(consumerFailure, actual);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+
+        Assert.Equal(1, invocations);
+        Assert.Equal(1, interceptor.FailureWriteAttempts);
+        Assert.Equal(CancellationToken.None, interceptor.FailureWriteToken);
+        Assert.Equal(1, logger.Count);
+        Assert.Same(persistenceFailure, logger.Exception);
+        Assert.Equal(0, fixture.Events.Count);
+        await using ReliableInboxDbContext verification = fixture.CreateContext();
+        Assert.Empty(await verification.BusinessRecords.ToListAsync(fixture.CancellationToken));
+        Assert.Empty(await verification.Set<ReliableInboxRecord>().ToListAsync(fixture.CancellationToken));
+        Assert.Empty(await verification.Set<DurableSendRecord>().ToListAsync(fixture.CancellationToken));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "business-inbox-outbox-commit-and-duplicate-suppression")]
     public async Task SuccessfulConsumer_CommitsBusinessInboxAndOutboxAtomicallyAndSuppressesDuplicateAsync()
@@ -379,7 +440,9 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         public ReliableInboxDbContext CreateContext() => new(
             new DbContextOptionsBuilder<ReliableInboxDbContext>().UseSqlite(_connectionString).Options);
 
-        public static async Task<ReliableInboxFixture> CreateAsync()
+        public static async Task<ReliableInboxFixture> CreateAsync(
+            IInterceptor? interceptor = null,
+            ILogger<EntityFrameworkReliableInboxContextFactory<IBus, ReliableInboxDbContext>>? failureLogger = null)
         {
             CancellationToken cancellationToken = TestContext.Current.CancellationToken;
             TimeSpan timeout = TimeSpan.FromSeconds(15);
@@ -389,10 +452,17 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
             var events = new EventProbe();
             var services = new ServiceCollection();
             services.AddLogging();
+            if (failureLogger is not null)
+                services.AddSingleton(failureLogger);
             services.AddSingleton(attempts);
             services.AddSingleton(events);
             services.AddSingleton<IEntityFrameworkDurableSendCommitDurabilityValidator<IBus>, NoOpDurabilityValidator>();
-            services.AddPooledDbContextFactory<ReliableInboxDbContext>(builder => builder.UseSqlite(connectionString));
+            services.AddPooledDbContextFactory<ReliableInboxDbContext>(builder =>
+            {
+                builder.UseSqlite(connectionString);
+                if (interceptor is not null)
+                    builder.AddInterceptors(interceptor);
+            });
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
@@ -492,6 +562,47 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
             File.Delete(path);
             File.Delete(path + "-wal");
             File.Delete(path + "-shm");
+        }
+    }
+
+    sealed class FailureStateWriteInterceptor(Exception failure) : SaveChangesInterceptor
+    {
+        public int FailureWriteAttempts { get; private set; }
+
+        public CancellationToken FailureWriteToken { get; private set; }
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        {
+            if (eventData.Context!.ChangeTracker.Entries<ReliableInboxRecord>()
+                .Any(entry => entry.Entity.Status == ReliableInboxStatus.RetryScheduled))
+            {
+                FailureWriteAttempts++;
+                FailureWriteToken = cancellationToken;
+                throw failure;
+            }
+
+            return ValueTask.FromResult(result);
+        }
+    }
+
+    sealed class FailureStateLogger(bool throws) : ILogger<EntityFrameworkReliableInboxContextFactory<IBus, ReliableInboxDbContext>>
+    {
+        public int Count { get; private set; }
+
+        public Exception? Exception { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Count++;
+            Exception = exception;
+            if (throws)
+                throw new InvalidOperationException("failure-logger");
         }
     }
 
