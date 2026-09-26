@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- One-time setup now clears its running state before publishing success, failure
+  or cancellation. Immediate eviction or retry can no longer observe a terminal
+  result while the setup still rejects a new attempt. The caller retains the
+  original attempt's task even when a completion continuation starts another
+  attempt immediately. Six controlled reentrancy regressions preserve exception
+  identity, cancellation tokens and exactly one healthy follow-up attempt.
 - ActiveMQ now registers send-first temporary destinations in the same connection
   cache used by consumers. Previously a lazy reply endpoint could consume queue B
   after the request had advertised an uncached queue A, losing the response despite

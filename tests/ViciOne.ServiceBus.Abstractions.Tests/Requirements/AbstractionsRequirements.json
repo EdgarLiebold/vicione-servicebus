@@ -1213,6 +1213,13 @@
    {
       "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TerminalContinuation_CanStartANewAttemptWithoutChangingTheOriginalResultAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.OneTimeCompletionTests",
+      "variantKey" : "terminal-continuation-can-evict-or-retry"
+   },
+   {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "OneTimeSetup_ExecutesOnceForEveryConcurrentCallerAsync",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
       "variantKey" : "concurrent-single-flight"

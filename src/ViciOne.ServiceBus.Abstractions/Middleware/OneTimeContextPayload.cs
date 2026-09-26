@@ -48,33 +48,35 @@ class OneTimeContextPayload<TPayload> :
                 ?? throw new InvalidOperationException("The one-time setup method factory returned null.");
 
             _running = true;
-            _ = RunSetupAsync(setup, _value);
-            return _value.Task;
+            TaskCompletionSource<bool> completion = _value;
+            _ = RunSetupAsync(setup, completion);
+            return completion.Task;
         }
     }
 
     async Task RunSetupAsync(OneTimeSetupMethod setup, TaskCompletionSource<bool> completion)
     {
+        Exception? failure = null;
         try
         {
             await setup.SetupPayloadAsync().ConfigureAwait(false);
-            completion.TrySetResult(true);
-        }
-        catch (OperationCanceledException canceled)
-        {
-            completion.TrySetCanceled(canceled.CancellationToken);
         }
         catch (Exception exception)
         {
-            completion.TrySetException(exception);
+            failure = exception;
         }
-        finally
+
+        lock (this)
         {
-            lock (this)
-            {
-                if (ReferenceEquals(_value, completion))
-                    _running = false;
-            }
+            if (ReferenceEquals(_value, completion))
+                _running = false;
+
+            if (failure is OperationCanceledException canceled)
+                completion.TrySetCanceled(canceled.CancellationToken);
+            else if (failure != null)
+                completion.TrySetException(failure);
+            else
+                completion.TrySetResult(true);
         }
     }
 }

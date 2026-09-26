@@ -73,12 +73,22 @@
   The four instrumented reply cases passed before this product correction;
   that earlier pass is diagnostic validation, not a stability fix. Fresh
   exact-commit provider and whole-product collection remain required.
-- `OneTimeContextPayload`: confirmed publication race. The setup task becomes
-  terminal before `_running` is cleared under the lock. An immediate retry can
-  receive the old fault/cancellation; `Evict` after successful await can reject a
-  completed operation and mask a downstream topology error. Publish state and
-  completion atomically under the same lock, with deterministic regressions.
-  Read-only review: `/root/outbox_proof_redteam`; not yet repaired.
+- `OneTimeContextPayload`: publication race repaired in the current follow-up.
+  State is cleared before terminal publication under the same monitor, and
+  `RunOneTimeAsync` returns its original captured completion even if an immediate
+  continuation evicts/retries. All six cases of
+  `TerminalContinuation_CanStartANewAttemptWithoutChangingTheOriginalResultAsync`
+  failed against the old code and pass after correction: success/fault/cancel,
+  each with synchronous or deferred setup completion. The controlled scheduler
+  executes queued terminal continuations immediately; this is a deterministic
+  reentrancy probe, not a claimed ThreadPool timing reproduction. Assertions
+  preserve task identity, original exception/token, exactly two attempts and
+  successful independent retry. Existing public-pipeline concurrency cases remain.
+  Logs: `/private/tmp/servicebus-one-time-red.log`,
+  `/private/tmp/servicebus-one-time-green.log`,
+  `/private/tmp/servicebus-one-time-full.log`. Read-only Red Team
+  `/root/outbox_proof_redteam` approved the product and tests. Final exact-commit
+  Abstractions/Core receipts remain required.
 - `GraphValidation`: confirmed self-edge omission and stale Tarjan indices on
   repeated validation. `TopologicalSort` retains `Visited`; `Node.CompareTo` and
   weighted `Edge.CompareTo` have defective comparison contracts. The only current
