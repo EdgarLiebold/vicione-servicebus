@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added real-SQLite Saga load/query checks that preserve the original operation
+  exception when rollback also fails. Tests prove transaction identity, an
+  uncancelable rollback attempt, no commit, owned-context disposal and healthy
+  subsequent reads. Three deliberate faults are detected; restored controls
+  pass 2/2. The full product-wide measurement of this packet remains pending.
 - Completed the T33 measurement across all 33 profiles: 12,693 passing
   executions, 90.9441% line and 83.4641% conservative branch coverage. All 30
   outbox scheduling overload bodies now have full line coverage. Across the

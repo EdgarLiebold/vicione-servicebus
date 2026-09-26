@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10843 |
+| Added | 10845 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -199,6 +199,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t33-outbox-scheduling.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t34-ef-rollback.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -14989,6 +14990,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/DbContextSagaRepositoryContextTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRollbackFailureTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SagaClassMapTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SqliteOptimisticSagaConcurrencyTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/SqlLockStatementProviderTests.cs` | Added |  |

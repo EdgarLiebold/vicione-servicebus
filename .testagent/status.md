@@ -16,6 +16,11 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T34 focused EF Saga rollback verification complete: both Load/Find cases
+  pass; read-only review has no blocker. Three valid isolated mutations are
+  detected and restored; final control 2/2. An earlier noncompiling mutation
+  attempt is recorded separately. [Evidence](coverage-a-plus-20260921/t34-ef-rollback.md).
+  Commit, full measurement and push remain pending. T33 stays authoritative.
 - Complete T33 measurement at `2409092a95fa34501ff4ebe88f91783376117ebb`:
   all 33 profiles/four fixture groups passed; 12,693 executions, lines
   85271/93762 (90.9440925%), conservative branches 30749/36841 (83.4640754%),
