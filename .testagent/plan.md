@@ -7,10 +7,10 @@ read recorded in [source-read-completion.json](source-read-completion.json).
 The current remainder is empty. Use [status.md](status.md#current-open-work-after-the-completed-first-reading)
 for the explicit open defects and their evidence limits.
 
-1. Finish exact-commit verification of the ActiveMQ temporary reply ownership
-   correction and its typed queue/topic cache follow-up. Native reply addressing
-   now has a separate regression and a killed wrong-type mutant. The package
-   gate is green; fresh unit/broker receipts must bind the final source commit.
+1. ActiveMQ temporary reply ownership and its typed queue/topic cache follow-up
+   are verified at source commit `4594a1ca9`: 206 unit and 100 broker cases.
+   Native reply addressing has a separate regression and a killed wrong-type
+   mutant. The package gate is green. See the p3 receipts in status.md.
    The scheduling barrier is already verified and pushed in
    `f8730e2a6`; its provider run exposed the separate send-first reply-queue defect.
 2. Measure the corrected provider profile and then the whole product at a single

@@ -42,8 +42,14 @@
   Six additional API snapshot differences were traced to earlier commits
   `363766248`, `5ebda66d2`, `2f3a4b6eb`, `302920ea9`, `540fecbb9`, all after
   the previous baseline `e0cf987c8`. They are stale inventory corrections.
-  Fresh exact-commit unit and broker receipts for this typed follow-up remain
-  required before push; the n2 receipts do not validate the newer source.
+  Final source commit `4594a1ca9bf13202bf6271dce7998505340d35b8` passed
+  `artifacts/p3u10/receipt.json` (206 unit cases) and
+  `artifacts/p3l09/receipt.json` (100 Classic/Artemis broker cases), both with
+  zero failures or skips. Both receipts bind source tree
+  `70854fea24e71d83be426d7025f9c20f312ff364` and test tree
+  `630eb4a12d51996e00504f16e222300f0367c011`; no whole-product A+ inference
+  is made from these two profiles. The restored post-mutant full unit run is
+  `/private/tmp/servicebus-reply-types-restored.log` (206/206).
 - ActiveMQ reply ownership correction, after `f8730e2a6`: its exact-commit unit
   collection passed all 20 profiles (11,920 cases), but the provider suite failed
   1/100 in `RawRequest_UsesProviderTemporaryReplyQueueAsync(activemq)` with a
