@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added Event Hubs processor lifecycle tests proving cancellation forwarding,
+  isolation of equal offsets in distinct partitions, shutdown waiting for an
+  in-flight checkpoint, and subsequent client re-leasing. Both deliberate faults
+  are detected; restored controls pass 2/2 with no skips. Checkpoint callbacks
+  are simulated; the full all-profile measurement remains pending.
+
 - Added Event Hubs checkpoint tests for newest accepted offset, ordered fallback,
   healthy continuation after rejected updates, and cancellation of a waiting
   admission in a full queue. Exact callback order, stored offset and tokens are

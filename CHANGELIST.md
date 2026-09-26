@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10852 |
+| Added | 10854 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -205,6 +205,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t34-ef-rollback.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t35-recurring-completion.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t36-eventhubs-checkpoint.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t37-eventhubs-processor-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15342,6 +15343,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceiveAdmissionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/PendingConfirmationCancellationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ProcessorCheckpointLifecycleTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Infrastructure/EventHubLocalFixture.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |

@@ -16,6 +16,12 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T37 focused processor lifecycle verification passes 2/2, format0. Two isolated
+  mutations are detected (missing cancellation forwarding; premature shutdown),
+  both restored; isolated final control2/2. Independent read-only review has no
+  blocker. [Evidence and limits](coverage-a-plus-20260921/t37-eventhubs-processor-lifecycle.md).
+  Commit, full measurement and push remain open; T36 stays authoritative.
+
 - T36 focused Event Hubs checkpoint tests (2026-09-27) pass 5/5, format0;
   read-only review has no blocker. Three valid mutations fail3/4/1cases,
   controls pass, all restored; final isolated control5/5. Initial build and
