@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- ActiveMQ connection exception listeners now run in an observed lifecycle task.
+  Failed or partially successful registration retires the connection through its
+  owning agent; removal failures after disposal are contained, including failures
+  in diagnostic logging. A failed close keeps the listener available until a
+  successful cleanup retry. Deterministic tests verify native operation order,
+  resource ownership, failure identity, throwing loggers and null configuration.
+  The previous unguarded registration callback was reproduced terminating the
+  test process with an unhandled provider exception.
 - ActiveMQ temporary-reply integration tests now distinguish handler entry,
   native reply-address inspection, response-send completion and client receipt.
   Handler failures are surfaced directly, with correlation and bounded queue

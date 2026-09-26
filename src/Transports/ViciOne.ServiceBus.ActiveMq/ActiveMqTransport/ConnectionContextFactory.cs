@@ -19,6 +19,7 @@ public class ConnectionContextFactory :
     /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
     public ConnectionContextFactory(IActiveMqHostConfiguration hostConfiguration)
     {
+        ArgumentNullException.ThrowIfNull(hostConfiguration);
         _hostConfiguration = hostConfiguration;
     }
 
@@ -47,7 +48,7 @@ public class ConnectionContextFactory :
 
             // Claim the transition before Stop is invoked, because NMS can report another
             // exception synchronously while that stop tears the connection down.
-            _ = StopAfterConnectionExceptionAsync(exception, stopCompletion);
+            StopAfterConnectionExceptionAsync(exception, stopCompletion).IgnoreUnobservedExceptions();
         }
 
         async Task StopAfterConnectionExceptionAsync(Exception exception, TaskCompletionSource stopCompletion)
@@ -58,7 +59,7 @@ public class ConnectionContextFactory :
             }
             catch (Exception stopException)
             {
-                LogContext.Error?.Log(stopException, "Stopping faulted ActiveMQ connection context failed");
+                LogLifecycleFailure(stopException, "Stopping faulted ActiveMQ connection context failed");
             }
             finally
             {
@@ -66,17 +67,59 @@ public class ConnectionContextFactory :
             }
         }
 
-        context.GetAwaiter().OnCompleted(() =>
+        MonitorConnectionAsync().IgnoreUnobservedExceptions();
+
+        async Task MonitorConnectionAsync()
         {
-            if (!context.IsCompletedSuccessfully)
+            ConnectionContext connectionContext;
+            try
+            {
+                connectionContext = await context.ConfigureAwait(false);
+            }
+            catch
+            {
+                // The context task owns startup failure; no listener was acquired.
                 return;
+            }
 
-            var connectionContext = context.Result;
-            connectionContext.Connection.ExceptionListener += HandleConnectionException;
+            int listenerRemoved = 0;
+            void RemoveListener()
+            {
+                if (Interlocked.Exchange(ref listenerRemoved, 1) != 0)
+                    return;
+                try
+                {
+                    connectionContext.Connection.ExceptionListener -= HandleConnectionException;
+                }
+                catch (Exception exception)
+                {
+                    LogLifecycleFailure(exception, "Removing ActiveMQ connection exception listener failed");
+                }
+            }
 
-            contextHandle.Completed.GetAwaiter().OnCompleted(() =>
-                connectionContext.Connection.ExceptionListener -= HandleConnectionException);
-        });
+            try
+            {
+                connectionContext.Connection.ExceptionListener += HandleConnectionException;
+            }
+            catch (Exception exception)
+            {
+                // A provider may register the listener before throwing. The agent still owns cleanup.
+                RemoveListener();
+                LogLifecycleFailure(exception, "Registering ActiveMQ connection exception listener failed");
+                HandleConnectionException(exception);
+                return;
+            }
+
+            try
+            {
+                await contextHandle.Completed.ConfigureAwait(false);
+            }
+            finally
+            {
+                // Retain the listener during a failed cleanup attempt so a later fault can retry it.
+                RemoveListener();
+            }
+        }
 
         return contextHandle;
     }
@@ -150,6 +193,18 @@ public class ConnectionContextFactory :
             {
                 // Diagnostics must not replace the original connection failure or cancellation.
             }
+        }
+    }
+
+    static void LogLifecycleFailure(Exception exception, string message)
+    {
+        try
+        {
+            LogContext.Error?.Log(exception, message);
+        }
+        catch
+        {
+            // A failed diagnostic sink must not escape an owned lifecycle operation.
         }
     }
 
