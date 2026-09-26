@@ -109,11 +109,15 @@ public sealed class ActiveMqSchedulingTests
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "schedule-future");
         string queueName = fixture.Name("input");
+        string fenceQueueName = fixture.Name("scheduler-fence");
+        bool needsSchedulerFence = flavor != ActiveMqBroker.ArtemisFlavor;
         Guid flowId = Guid.NewGuid();
+        Guid fenceId = Guid.NewGuid();
         var delivered = NewObservation<Guid>();
+        var fenceDelivered = NewObservation<Guid>();
         var deliveryCount = 0;
         var observer = new ScheduleObserver();
-        var receives = new ReceiveCompletionObserver(1);
+        var receives = new ReceiveCompletionObserver(needsSchedulerFence ? 2 : 1);
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
@@ -124,6 +128,12 @@ public sealed class ActiveMqSchedulingTests
                 delivered.TrySetResult(context.Message.FlowId);
                 return Task.CompletedTask;
             }));
+            if (needsSchedulerFence)
+                configurator.ReceiveEndpoint(fenceQueueName, endpoint => endpoint.Handler<SchedulerFence>(context =>
+                {
+                    fenceDelivered.TrySetResult(context.Message.FlowId);
+                    return Task.CompletedTask;
+                }));
         });
         using ConnectHandle observerHandle = bus.ConnectSendObserver(observer);
         using ConnectHandle receiveHandle = bus.ConnectReceiveObserver(receives);
@@ -148,13 +158,32 @@ public sealed class ActiveMqSchedulingTests
             AssertSinglePositiveDelay(FutureDelay, observer.DelaysFor<ScheduledDelivery>());
             Assert.Equal(1, await fixture.GetScheduledMessageCountAsync(queueName, cancellationToken));
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+            if (needsSchedulerFence)
+            {
+                // Classic 6.2.0 dispatches before removing a job from its index. A new job
+                // cannot enter the current iteration: insertion needs its index write lock.
+                // Receiving this later job proves that the previous removal round completed.
+                await scheduler.ScheduleSendAsync(
+                        new Uri($"queue:{fenceQueueName}"),
+                        TimeProvider.System.GetUtcNow().UtcDateTime.Add(BrokerDelay),
+                        new SchedulerFence(fenceId),
+                        cancellationToken)
+                    .WaitAsync(fixture.OperationTimeout, cancellationToken);
+                AssertSinglePositiveDelay(BrokerDelay, observer.DelaysFor<SchedulerFence>());
+                TimeSpan fenceDelay = Assert.Single(observer.DelaysFor<SchedulerFence>());
+                Assert.True(checked((long)fenceDelay.TotalMilliseconds) > 0,
+                    "The scheduler fence must retain a positive delay in the broker's millisecond header.");
+                Assert.Equal(fenceId, await fenceDelivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            }
+
             await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
 
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
-            Assert.Equal(1, receives.CompletedCount);
+            Assert.Equal(needsSchedulerFence ? 2 : 1, receives.CompletedCount);
             Assert.Equal(0, await fixture.GetScheduledMessageCountAsync(queueName, cancellationToken));
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
@@ -252,6 +281,8 @@ public sealed class ActiveMqSchedulingTests
     }
 
     public sealed record ScheduledDelivery(Guid FlowId);
+
+    public sealed record SchedulerFence(Guid FlowId);
 
     private sealed class ScheduleObserver : ISendObserver
     {

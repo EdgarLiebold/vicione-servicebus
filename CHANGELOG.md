@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The ActiveMQ Classic future-delivery test now waits for a separate scheduled
+  probe before checking that the original scheduler job was removed. Classic
+  6.2.0 dispatches before updating its scheduler index; client receive/stop was
+  not a cleanup barrier. The probe enters a later scheduler iteration while the
+  original exact delivery and queue-state assertions remain in place. Artemis
+  retains its existing queue-executor observation.
 - ActiveMQ connection exception listeners now run in an observed lifecycle task.
   Failed or partially successful registration retires the connection through its
   owning agent; removal failures after disposal are contained, including failures

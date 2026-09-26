@@ -7,8 +7,12 @@ read recorded in [source-read-completion.json](source-read-completion.json).
 The current remainder is empty. Use [status.md](status.md#current-open-work-after-the-completed-first-reading)
 for the explicit open defects and their evidence limits.
 
-1. Complete the unchanged-commit measurement of `0db6ec160`.
-2. Integrate and measure the reviewed ActiveMQ factory correction `37cb05530`.
+1. Finish the scheduler-test correction exposed by the incomplete measurement
+   of `0db6ec160`: verify a separate Classic scheduler-iteration barrier, including
+   a counterprobe that reduces its positive delay to a zero-millisecond wire value.
+2. Measure the corrected provider profile and then the whole product at a single
+   commit. The reviewed ActiveMQ factory correction `37cb05530` and completed
+   first-read accounting were integrated and pushed as `1518a78e1`.
 3. Fix the newly confirmed one-time setup publication race and retained graph
    defects with meaningful public behavior regressions and adversarial review.
 4. Assess the formatter padding dependency and correct the inaccurate error-filter

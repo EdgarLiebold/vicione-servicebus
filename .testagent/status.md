@@ -45,7 +45,26 @@
   still reported one job instead of zero. This is not evidence of early delivery.
   The failed run is retained in `artifacts/k9l09/tests.log`; no complete coverage
   aggregate or A+ acceptance is claimed from this partial measurement. The
-  scheduler observation and broker cleanup ordering require investigation.
+  ordering defect in the test was traced to the pinned Classic 6.2.0 source:
+  `JobSchedulerImpl.mainLoop` dispatches before removal and holds the index read
+  lock; insertion of a new job requires its write lock. A separate scheduled
+  probe created after receipt therefore cannot dispatch until the prior removal
+  round has completed. The correction uses that barrier and preserves the target
+  delivery, scheduled-count and exact queue-statistics assertions. Artemis keeps
+  its existing executor-flush observation. The probe must retain a positive
+  integer-millisecond wire delay, not merely a positive `TimeSpan`.
+  Sources: [scheduler](https://raw.githubusercontent.com/apache/activemq/activemq-6.2.0/activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/scheduler/JobSchedulerImpl.java),
+  [scheduler store](https://raw.githubusercontent.com/apache/activemq/activemq-6.2.0/activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/scheduler/JobSchedulerStoreImpl.java),
+  [synchronous index processing](https://raw.githubusercontent.com/apache/activemq/activemq-6.2.0/activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/AbstractKahaDBStore.java).
+  Scoped Red Team `/root/outbox_proof_redteam`: final PASS. The corrected full
+  provider suite passed 100/100 with no skips (`artifacts/scheduler-fence-full.log`).
+  A temporary pre-send mutation set only the probe delay to 0.5 ms: both Classic
+  protocols failed the new millisecond assertion while Artemis passed (2 failures,
+  1 pass; `artifacts/scheduler-fence-submillisecond-mutant.log`). The mutation was
+  removed and the complete test-file SHA-256 restored to
+  `f8bcc2b3c490851dc9be9e939bf2b69bad139e0d2cd858cde0cf92517e71094f`.
+  Exact-commit provider collection and the new whole-product aggregate remain
+  pending; the earlier request/reply timeout is a separate unresolved finding.
 - ActiveMQ factory: `37cb05530` repairs listener-accessor exceptions, fault-stop
   logging and null configuration. Red-first evidence includes an actual unhandled
   exception terminating the test host (exit 134). Eight new cases and the restored
