@@ -18,8 +18,8 @@ for the explicit open defects and their evidence limits.
    receipts from the new source tree. The factory correction and completed
    first-read accounting are already integrated and pushed.
 3. The one-time setup publication correction has six red/green controlled
-   reentrancy cases and a clean adversarial review; finish its exact-commit
-   Abstractions/Core verification. Then repair the retained graph defects with
+   reentrancy cases, a clean adversarial review and exact-commit verification:
+   928 Abstractions and 6,457 Core tests at `6e180ef29`. Repair the retained graph defects with
    meaningful behavior regressions and adversarial review.
 4. Assess the formatter padding dependency and correct the inaccurate error-filter
    summary manually. Preserve the unresolved provider stability findings.

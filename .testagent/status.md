@@ -88,7 +88,10 @@
   `/private/tmp/servicebus-one-time-green.log`,
   `/private/tmp/servicebus-one-time-full.log`. Read-only Red Team
   `/root/outbox_proof_redteam` approved the product and tests. Final exact-commit
-  Abstractions/Core receipts remain required.
+  receipts at `6e180ef29` passed: `artifacts/q4u17/receipt.json` contains 928
+  Abstractions cases; `artifacts/q4u00/receipt.json` contains 6,457 Core cases.
+  Both runs have zero failures/skips and successful builds without warnings.
+  These two profiles do not constitute a new whole-product coverage aggregate.
 - `GraphValidation`: confirmed self-edge omission and stale Tarjan indices on
   repeated validation. `TopologicalSort` retains `Visited`; `Node.CompareTo` and
   weighted `Edge.CompareTo` have defective comparison contracts. The only current
@@ -97,6 +100,14 @@
   have no current callers. Repair the retained graph behavior; decide unused
   internals from verified callsites before adding tests solely for coverage.
   Read-only review: `/root/assembly_scan_redteam`; not yet repaired.
+- Graph repair boundary confirmed again at `6e180ef29`: reset all Tarjan nodes
+  before traversing any edge and recognize singleton components only when they
+  contain a self-edge. Remove unused topological sorting and comparison methods
+  after the verified repo-wide callsite search; retain the live MessageFabric
+  cycle-validation chain. Add direct self-edge, post-validation mutation and
+  repeated-failure regressions with an acyclic control, then retain the existing
+  MessageFabric binding/rollback regressions. The architecture type-name list is
+  an exported-type deny-list, not a requirement that unused internal types exist.
 - `IntrinsicsHelper.EncodeBase32`: byte 22 of stack padding influences output
   index 24. No `SkipLocalsInit` or current runtime failure was demonstrated.
   Explicit initialization and a meaningful formatter regression remain to assess;
