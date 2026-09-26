@@ -5934,10 +5934,10 @@
     "baselineSha256": "1f9fbaa6960097fb28413b3c0ddf7a2efeffe688d633067aa73db7624add1ac1",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "640de23a3bd1095521ac07670b5cb425e74eec77",
+    "targetGitBlobOid": "acbd084c502140055e7bc1f5640e4ccae5f3b406",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TimeSpanExtensions.cs",
-    "targetSha256": "c0f1f36693c48f177c4a1bd32c530e74a11d790a193df818e2abfd2c55b35ea0"
+    "targetSha256": "5e98776d4b2833c682bf60c1bf73a04387485988d883a4b510dc8493d88c83d2"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -5964,10 +5964,10 @@
     "baselineSha256": "06a198737735efd59914f4c75eb4a887212b278cc425352dee977d7c72a7e3e7",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "965a6906a8d10c05ed31864388adc2e7aee44e43",
+    "targetGitBlobOid": "b59849c03340e12a2727e67d84ad0babed92fa18",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/AdjacencyList.cs",
-    "targetSha256": "a95a5cf2fa55b34588b5a4487419b2ea2e22c3e8125c7cc7dfc77489641756c2"
+    "targetSha256": "fefaaad09c692b9fd2ebfb0751437a83f87bd921814a1e27cdf1246787604211"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -5994,10 +5994,10 @@
     "baselineSha256": "d4fd7065e7229493374ecd8294622bc26f6dbcf82b0673dc80bb57dae96c1df2",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "912c7d857c52a30fa23a014fa26fc42c9c0031dc",
+    "targetGitBlobOid": "31aeaacbfc95e9c69fbe383d0f10a425e4d243a4",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/DependencyGraph.cs",
-    "targetSha256": "920afc9cbd404c560a562a0b8b7cdab40119489bfa03611f03645cd3e64f2aaa"
+    "targetSha256": "ea040c7820cf81844e34caf631d9ba1e4cb66fa8a2837d12f18248a624f6fbe0"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -6009,10 +6009,10 @@
     "baselineSha256": "98441475c12d2b5f95e416e543bcb2e5e3404c62885ccc69c4645bc77e0f1d82",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "97b58a63a6dd5c2f1e699e3a9dec33c52261e9d9",
+    "targetGitBlobOid": "25a76df8f490acf840cbfb4a806e0d098b0a4bfc",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/DependencyGraphNode.cs",
-    "targetSha256": "79941795c30a2fdb058c7404d27fe1f32ed387f44a824cbfee43642a253b2607"
+    "targetSha256": "32392558d2405fdbb633ef9cb607057c5174c83370356f4716b979df569532a1"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -6024,10 +6024,10 @@
     "baselineSha256": "5f2f96f2f8f3b1b4d6460c62bdd9b983a7f9b94c2d57c84a1ee63733c0d0a17e",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "d76e53c6f3958efd07731cbfc130a0b5d7a156ce",
+    "targetGitBlobOid": "c4d9526988c220a556278e0bcdf6e9f6fa9e0fe7",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/Edge.cs",
-    "targetSha256": "5f65c2a9464fbf4ffea3d0db520e114bcb50505cf52c61d8318ae16e38217c80"
+    "targetSha256": "09426187a138ef3b1e6a789a1526105d89a834834ae11b04a1e2703a3216388f"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -6039,10 +6039,10 @@
     "baselineSha256": "92e85b702e61889bab46fee38b4df1a0d4dbde8b1a0a68ee5d82f4256fc7a817",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "821108e91e63837a8b2e467d0ba746fcdceba0b0",
+    "targetGitBlobOid": "31eb19aa4c8441b981a53390b63ce38e2ab256b5",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/Node.cs",
-    "targetSha256": "d1fa9ea2c6257eb2086a76e8fa3a70d57fb2a605752a6d3ffae7faab3db3eb55"
+    "targetSha256": "ebe560f0224fc8ab376d79f02488520640a1b7e5716d98fbeb49bfd9f2bf1c0d"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -6084,10 +6084,10 @@
     "baselineSha256": "75c84b0108a08bf96bb1fb659c6f932bfd4d54d7c637071f491fd725c50f9b1f",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "f3d65cd4a0ab3876941d8fdab7f9c04790b74a74",
+    "targetGitBlobOid": "9991a8425b487dfe4acefd8fcf5a990bcddf3e62",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/Tarjan.cs",
-    "targetSha256": "51e01b3fed4e1001592ec488b20974d80bf2b94baad198b5bc26976f189dd0e6"
+    "targetSha256": "56ec5f9050626ec60ac0032ffdd59121f6699a5bfe9d244bb803407122d0664f"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -6106,18 +6106,18 @@
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
-    "baselineDisposition": "MOVED_EXACT",
+    "baselineDisposition": "RETIRED_DELETED",
     "baselineGitBlobOid": "e8fc385cc197b5ad1ffcef3a9786de2e05b31f42",
     "baselineGitMode": "100644",
     "baselineKey": "edd4d405659d6179555f34245c03e43d66d15f541410a18c4ad0c5454d253b36",
     "baselinePathSha256": "79ee8d6b232535c8bac6ae5e43ed69d9342c61d3350c86b254fa6ecb0d18b502",
     "baselineSha256": "928951bec7cff0c0f369491b1c130d95be5f372652fd12d4d5405ffbeef62e40",
     "pathDisposition": "RENAMED",
-    "targetExists": true,
-    "targetGitBlobOid": "2fb50c26c3a77f2f0a13e26df442542f45bb75cc",
-    "targetGitMode": "100644",
-    "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/TopologicalSort.cs",
-    "targetSha256": "3a7ae44c41062f1394f5a6af378bfc435859815ab62ed727e793f259e0de26a8"
+    "retirementCommit": "688eba261b21b4b5bc7852355ac9c116f4d7d545",
+    "retirementEvidence": "ROOT_CHANGE_LIST",
+    "retirementTree": "c2fcc9d87ad0c455358e2b0fc939e08ecdd61259",
+    "targetExists": false,
+    "targetPath": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/TopologicalSort.cs"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -7509,10 +7509,10 @@
     "baselineSha256": "4948a2da2b39ca42e6f43787f880114e5587dff96a39c210223e5bfb013caf14",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "388e9b2c46b7e8efc4eaafd2d61497c09d4c12d9",
+    "targetGitBlobOid": "10a090b786e931082f5438f1d5c058a645455189",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/ExceptionSpecification.cs",
-    "targetSha256": "a8bd9c52af52e94137abaa239583983199e9c39361a6d578b0b5108298a040aa"
+    "targetSha256": "bb8ffe2d21618af84720dfe2a76cf45efafb51ddddfc5b99a3a6bbd679a73852"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -8634,10 +8634,10 @@
     "baselineSha256": "369c85cbe974b2b180031362be31f4648f01a11cf0c8435b9a5363516e74a847",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "82deb8b2c910d4b1f372eb50c77ca27e28233192",
+    "targetGitBlobOid": "dffdfc41edb31e3602db393c0a8b1f39efe79162",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Middleware/OneTimeContextPayload.cs",
-    "targetSha256": "91674dc0ef53f644efdf318d361f7dc6bca2ace08ac8aa8acee6d9a67a5a1675"
+    "targetSha256": "5333dcd4aa68ec096fe916948f05b100c3796512cfa1930ecde7080acb22d39c"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -8964,10 +8964,10 @@
     "baselineSha256": "e49c1072b7deba3edef21af288defad513ad803ef60630e55b68cfa05d9666fe",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "2df08665f864ae08bc1442f08feb735409e407d2",
+    "targetGitBlobOid": "a08026bf8929147e242c5ab4db96ccd0dd20b62c",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/IntrinsicsHelper.cs",
-    "targetSha256": "f87a2a603b9ff2ff398a0acf779a7c8b8b26e00749deb8dc0b6873dd8189d830"
+    "targetSha256": "bdf65ebba4369eae899ef7b0f13ec12abf23eb7465cd353aefa47844ffa44657"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -8994,10 +8994,10 @@
     "baselineSha256": "a0e58b58f1c10f9b601618b3b9bda4c2be7196ebff1b88ca2f3a9c8813c66b94",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "a4982a6cb8ed1549628602f7f5a8aea37f8c1c50",
+    "targetGitBlobOid": "1df9bd3b0edeb8dc41ab096f78a946d16e1ab9d9",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdGenerator.cs",
-    "targetSha256": "eba7845594b6191cabb99902c7f7f0951c2fda449519f0081e79850b8cbd69b4"
+    "targetSha256": "327b310904717121923123c8555326e70527d8682617fdbf763cb4e62b0d57ea"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -12354,10 +12354,10 @@
     "baselineSha256": "bb71d2c3c01b2f8bb76ed87bd476d434cc2dd8fac7c7085dda0fef4857d92c4b",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "88f48b8f5f2b0983239a54ee11dbc526d2130ceb",
+    "targetGitBlobOid": "f3bd0a1f02b41df51d7ff7db6c9d85c557657126",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Transports/TransportSetHeaderAdapter.cs",
-    "targetSha256": "4c137c71c52090624f2393336159501863b12f1d7c2045c1fe484b928e26fc0e"
+    "targetSha256": "81b2d2f0361907727c762b181b32153ff803fcf411801e32800387e03bfcf89e"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -12564,10 +12564,10 @@
     "baselineSha256": "e185bf751081c18f987211478850b38dbb8bc551ffecd63f3f6a21f09ba678bb",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "609807f522d0c4763e2c5c1d4845d639812c803b",
+    "targetGitBlobOid": "b461ea339edf550a53186d5e42263b1af9082c3a",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Abstractions/Util/PendingTaskCollection.cs",
-    "targetSha256": "4e05e04b6435a983679a8d4544207b9267bfba78c935c667660bb577d012059b"
+    "targetSha256": "b40708d1d7266dfc9ce982a0554b1845bffeb302805ba17d57fdd20ae8cb0de5"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -12774,10 +12774,10 @@
     "baselineSha256": "db4df4081cce08d4441deb6eb9a4f7d299cc7413f66fbe867efc54b677960853",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "f13c25cdb14ff1ce29de0fe23b323b77998b3961",
+    "targetGitBlobOid": "5fe510fc9a176c6d70f08b623ccf5eb6ec0188b6",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus.Analyzers/MessageContractAnalyzer.cs",
-    "targetSha256": "591b23a2d8dbb49e92849415363e1554086d13ecc9af90374a11ddf5c488b6c4"
+    "targetSha256": "ff6fb04cbde9c9e1dcbbd99c2091b058bf048ecfbc414a6ca956dd9b0a8321c4"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -33429,10 +33429,10 @@
     "baselineSha256": "422126f0540a057d8097bc420c986dbe7bd8544ed51bea6f71b2afed7e01d1ce",
     "pathDisposition": "RENAMED",
     "targetExists": true,
-    "targetGitBlobOid": "a67b3f12a042430eeaf5e5b36268346913694bbe",
+    "targetGitBlobOid": "a73105252837edf236aa6330b912a74908ef3871",
     "targetGitMode": "100644",
     "targetPath": "src/ViciOne.ServiceBus/Middleware/ErrorTransportFilter.cs",
-    "targetSha256": "52cf1d775d665b36b17a8b4a502b40f25f1bc935833f04a22c8bf471b1787a69"
+    "targetSha256": "eaefbf6d3e88a7ac798078aca2f8939fd96e57585678aec300c7469440871fa1"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",

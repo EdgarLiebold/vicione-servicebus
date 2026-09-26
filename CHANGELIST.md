@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10750 |
-| Modified | 844 |
-| Deleted | 4806 |
+| Added | 10821 |
+| Modified | 843 |
+| Deleted | 4807 |
 | Renamed | 1 |
 
 | Path | Status | Baseline path |
@@ -32,13 +32,28 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260919/research.md` | Added |  |
 | `.testagent/coverage-a-plus-20260919/status.md` | Added |  |
 | `.testagent/coverage-a-plus-20260919/unit-gate-diagnostics.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/abstractions-exception-header-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/abstractions-unused-helper-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/active-mq-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/activity-compact-rendering-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/activity-detail-rendering-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/amazon-sns-relative-topic-address-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-connection-creation-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-consume-topology-connection-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-fifo-receiver-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-move-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/amazon-sqs-naming-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-publish-topology-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-queue-creation-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-queue-ownership-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-queue-policy-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/amazon-sqs-receive-validation-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-receiver-polling-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-send-transport-dispatch-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-send-transport-selection-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/amazon-sqs-sns-validation-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/amazon-sqs-subscription-identity-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/amazon-sqs-topology-cleanup-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/amazon-sqs-topology-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/assembly-scan-failure-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/assembly-scan-phase.md` | Added |  |
@@ -62,24 +77,40 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/circuit-breaker-settings-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/consume-delegate-transform-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/consumer-definition-concurrency-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/copied-send-only-json-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/coverage-receipt-runner-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/cron-month-lookup-complexity-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/cron-named-field-complexity-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/cron-weekday-complexity-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/current-unit-matrix-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/dictionary-mutation-dead-code-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/durable-quarantine-validation-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/eventhub-header-provider-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/eventhub-route-activity-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/fresh-current-tree-progress-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/generic-header-policy-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/header-value-defaults-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/host-path-decoding-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/in-memory-consumer-commit-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/job-schedule-zone-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/job-state-machine-complexity-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/jobservice-coordination-registration-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/jobservice-receive-partition-test-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/local-integration-coverage-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/message-limits-validation-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/message-scheduler-initialized-contract-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/message-scheduler-runtime-contract-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/message-type-cache-validation-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/newid-batch-range-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/newid-guid-batch-rollover-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/newid-identity-boxing-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/newid-scalar-fallback-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/old-work-closure.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/payload-admission-observer-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/pending-task-completion-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/plan.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/postgresql-maintenance-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-attempt-f3848534c-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-08d41e4b6.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-09235f22d.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-0ef230802.md` | Added |  |
@@ -133,20 +164,24 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-transport-factory-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/property-accessor-ref-return-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/quartz-suspect-manual-schedule-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/query-string-address-contract-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/rabbitmq-connection-context-factory-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/rabbitmq-durable-destination-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/rabbitmq-endpoint-parser-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/rabbitmq-registration-options-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/rabbitmq-send-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/rabbitmq-topology-logging-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/receipt-audit-2d8635d3a.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/recurring-scheduler-dispatch-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/reliable-messaging-jitter-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/request-rate-dynamic-limit-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/research.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/saga-instance-equality-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/schedule-send-accepted-identity-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/signed-duration-format-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/sns-subscription-all-attributes-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/sns-subscription-attribute-read-phase.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/sql-header-provider-20260925.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/sql-host-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/sql-topology-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/sql-validation-taxonomy-phase.md` | Added |  |
@@ -511,6 +546,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/iteration242/visualizer-api-member-mapping.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
+| `.testagent/source-read-completion.json` | Added |  |
 | `.testagent/source-read-remainder.txt` | Added |  |
 | `.testagent/status.md` | Added |  |
 | `AGENTS.md` | Modified | `AGENTS.md` |
@@ -5964,6 +6000,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Abstractions/Internals/Extensions/ITypeCache.cs` | Deleted | `src/MassTransit.Abstractions/Internals/Extensions/ITypeCache.cs` |
 | `src/MassTransit.Abstractions/Internals/Extensions/InterfaceExtensions.cs` | Deleted | `src/MassTransit.Abstractions/Internals/Extensions/InterfaceExtensions.cs` |
 | `src/MassTransit.Abstractions/Internals/GraphValidation/TarjanNodeProperties.cs` | Deleted | `src/MassTransit.Abstractions/Internals/GraphValidation/TarjanNodeProperties.cs` |
+| `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSort.cs` | Deleted | `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSort.cs` |
 | `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSortNodeProperties.cs` | Deleted | `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSortNodeProperties.cs` |
 | `src/MassTransit.Abstractions/Internals/Reflection/IReadOnlyPropertyCache.cs` | Deleted | `src/MassTransit.Abstractions/Internals/Reflection/IReadOnlyPropertyCache.cs` |
 | `src/MassTransit.Abstractions/Internals/Reflection/IReadWritePropertyCache.cs` | Deleted | `src/MassTransit.Abstractions/Internals/Reflection/IReadWritePropertyCache.cs` |
@@ -11080,12 +11117,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/DependencyGraphNode.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/DependencyGraphNode.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/Edge.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/Edge.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/ITarjanNodeProperties.cs` | Added |  |
-| `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/ITopologicalSortNodeProperties.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/Node.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/Node.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/NodeList.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/NodeList.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/NodeTable.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/NodeTable.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/Tarjan.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/Tarjan.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/TopologicalSort.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSort.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/IMessageTypeCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/IMessageTypeCache.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/ITypeCache.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Outgoing/OutgoingOptionsPipe.cs` | Added |  |
@@ -15034,6 +15069,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs` | Added |  |
@@ -15119,7 +15155,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendContextContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/Configuration/ActiveMqHostSettingsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionCreationFailureTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionListenerFailureTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/MessageProducerCacheTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/TemporaryDestinationOwnershipTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/TransportHeaderExtensionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ApiSurfaceGlobalUsings.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Brokers/BrokerOutageControlClientTests.cs` | Added |  |
@@ -15170,6 +15209,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchResponseTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatcherCancellationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsClientContextApiTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsClientContextQueueEvictionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConnectionCreationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConsumeTopologyConnectionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsDelayTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsEndpointAddressTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsEndpointConfigurationTests.cs` | Added |  |
@@ -15180,17 +15222,27 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsLifecycleBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsMessageBodyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsMessageNameFormatterTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsPublishTopologyDiscoveryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsQueueSubscriptionEntityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsReceiveContextTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsReceiveLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsReceiverFifoTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsReceiverPollingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendFailureClassifierTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendTransportContextTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendTransportDispatchTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendTransportSelectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopologyCleanupTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopologyEntityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopologyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsVisibilityConfigurationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ApiSurfaceGlobalUsings.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/DurableResourceStoreTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/PublishDiscoveryFixtures/ScanMessage.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/QueueCacheCreationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/QueueCacheOwnershipTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/QueuePolicyPermissionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/SharedConnectionContextTests.cs` | Added |  |
@@ -15304,12 +15356,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqEndpointAddressTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqHostAddressTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/AmqpTimestampExtensionsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/ChannelContextFactoryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/ClusterNodeTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/ConfigurationHostSettingsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/IPublishScanMessage.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/PublishScanGenericMessage.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/PublishScanMessage.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqHostConfigurationExtensionsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqHostRetryPolicyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqPublishTopologyConfigurationExtensionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqReliabilityRegistrationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqStreamConfigurationTests.cs` | Added |  |
@@ -15317,8 +15371,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/MoveTransportHeadersTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Operations/RabbitMqFaultRedriveTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqCleanupTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConsumerFilterTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqDurableSendDispatcherBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqHeaderProviderTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqMessageSendContextContractTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqMoveTransportTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqPurgeOnStartupFilterTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqQueueRedeliveryPlanTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqReceiveContextTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqReceiveLockContextTests.cs` | Added |  |
@@ -15327,6 +15386,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqTopologyEntityCacheTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqBrokerTopologyContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqBusTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqMessagePublishTopologyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqSendSettingsContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqTopologyLoggingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/TransportLifetimeTests.cs` | Added |  |
@@ -15497,6 +15557,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Contexts/PipeContextTimeProviderExtensionsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Contracts/MessageContractIdentityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/DurableSend/DurableSendContractsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/DependencyGraphTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Dispatching/EndpointDispatcherTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/QueryStringExtensionsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TaskExtensionsTests.cs` | Added |  |
@@ -15504,6 +15565,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeRelationshipExtensionsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Outgoing/OutgoingOptionsPipeTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/TaskTimeoutTimeProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/TimeSpanExtensionsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/MessageData/MessageDataPolicyTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/MessageTooLargeExceptionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/MessageUrnTests.cs` | Added |  |
@@ -15523,6 +15585,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Send/SendPipeSpecificationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ExceptionFilters/ExceptionSpecificationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ListPayloadCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/OneTimeCompletionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/PipeExtensionsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ScopePipeContextTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdApiShapeTests.cs` | Added |  |
@@ -15558,9 +15621,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Topology/TopologyBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Topology/TopologyConfigurationObserverTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Topology/TopologyPipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Transports/DictionaryTransportSetHeaderAdapterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Transports/PublishEndpointTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Transports/TransportSetHeaderAdapterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/TypeCacheTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ConnectableTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/PendingTaskCollectionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/packages.lock.json` | Added |  |
@@ -15568,6 +15634,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/CodeFixProviderContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Fixtures/ServiceBusCodeFixFixture.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/MessageContractCodeFixProvider/MessageContractCodeFixScenarioTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/MessageContractCodeFixProvider/MessageContractCollectionFixTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/CodeFixRequirements.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj` | Added |  |
@@ -15581,6 +15648,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioCatalogTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageDataInitializerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/NestedCollectionContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Requirements/AnalyzerRequirements.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Rules/RuleAnalyzerTests.cs` | Added |  |
@@ -15851,6 +15919,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedSendEndpointTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/MessageDiagnosticRedactorTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryConsumerCommitTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryReliableStoreTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingProviderGuardTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs` | Added |  |
@@ -16393,7 +16462,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/api-conventions/RenameTaskLikeMethods.cs` | Added |  |
 | `tools/api-conventions/SynchronizeAsyncTestReferences.cs` | Added |  |
 | `tools/api-conventions/packages.lock.json` | Added |  |
+| `tools/ci/aggregate_coverage_receipts.py` | Added |  |
 | `tools/ci/coverage.settings.xml` | Added |  |
+| `tools/ci/coverage_receipt.py` | Added |  |
 | `tools/ci/fixtures/__init__.py` | Added |  |
 | `tools/ci/fixtures/broker_logs.py` | Added |  |
 | `tools/ci/fixtures/compose_fixture.py` | Added |  |
