@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10826 |
+| Added | 10827 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -16396,6 +16396,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transactions/SystemTransactionContextTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transactions/TransactionContextExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transformation/ActivityTransformAsyncTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transformation/TransformPipelineTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/BusDepotTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/BusHealthLifecycleTests.cs` | Added |  |

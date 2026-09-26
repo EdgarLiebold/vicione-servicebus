@@ -16,6 +16,17 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Pending activity transforms: six controlled Execute/Compensate cases pass,
+  checking a genuinely incomplete initializer, preserve/replace identity,
+  inherited token/tracking/data, awaiting downstream completion, exact downstream
+  exception identity and suppression of downstream invocation on initialization
+  failure. The full Transformation namespace passes 17/17; requirement
+  projection and format verification pass. A separate-worktree counterchange
+  discarding the compensation downstream await fails exactly its two affected
+  rows while four controls pass. Source has been restored with a clean diff;
+  the restored six-case validation passes 6/6. Read-only adversarial
+  review found no concrete blocker. This bounded filter test does not claim
+  real initializer integration or closure of the Consume async path.
 - Courier message-data follow-up: three real in-memory routing-slip cases pass
   for stored argument/log resolution and deterministic argument/log expiry at
   the exact repository-clock TTL boundary. External observations verify exact

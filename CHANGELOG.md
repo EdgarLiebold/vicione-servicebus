@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added controlled asynchronous activity-transform tests for initialization
+  ordering, context/data identity, downstream completion and exact failure
+  propagation. They detect a prematurely completed compensation pipeline when
+  its downstream task is not awaited.
 - Added real Courier routing-slip tests for repository-backed arguments and
   compensation logs, including deterministic expiry before execution and before
   compensation. Assertions preserve exact content/reference/tracking identity
