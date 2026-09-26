@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 using Xunit;
@@ -11,6 +12,61 @@ namespace ViciOne.ServiceBus.Tests.ReliableMessaging;
 
 public sealed class ReliableInMemoryIntegrationTests
 {
+    [Theory]
+    [InlineData(1)]
+    [InlineData(3)]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "active-cancellation-preserves-token-without-retry-quarantine-or-outbox-delivery")]
+    public async Task ConsumerCancellation_PreservesTheOriginalTokenWithoutRetryQuarantineOrOutboxDeliveryAsync(int maximumAttempts)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var cancellation = new CancellationTokenSource();
+        var probe = new CancellationProbe(cancellation);
+        var observation = new ReliableObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(probe)
+            .AddSingleton(observation)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration, maximumAttempts);
+                configuration.AddConsumer<CancellationConsumer>();
+                configuration.AddConsumer<ReliableEventConsumer>();
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: cancellationToken)
+            .WaitAsync(timeout, cancellationToken);
+        Guid messageId = NewId.NextGuid();
+        try
+        {
+            await harness.Bus.PublishAsync(new ReliableCommand(messageId, 0),
+                send => send.MessageId = messageId, cancellationToken);
+            Exception? observed = await probe.Completed.Task.WaitAsync(timeout, cancellationToken);
+            OperationCanceledException failure = Assert.IsType<OperationCanceledException>(observed);
+            Assert.Same(probe.Failure, failure);
+            Assert.Equal(cancellation.Token, failure.CancellationToken);
+            Assert.Equal(1, probe.PreparedMessages);
+            IInboxStore<IBus> inbox = provider.GetRequiredService<IInboxStore<IBus>>();
+            ReliableInboxAcquireResult retained = await inbox.AcquireAsync(
+                new ReliableInboxKey(messageId, probe.ConsumerId), probe.StartedAt,
+                TimeSpan.FromMinutes(1), cancellationToken);
+            Assert.Equal(ReliableInboxAcquireDisposition.Busy, retained.Disposition);
+            Assert.Equal(1, retained.Attempt);
+            Assert.Empty((await inbox.GetQuarantineAsync(new ReliableInboxQuarantineQuery(), cancellationToken)).Entries);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Empty(observation.Events);
+        Assert.Empty(harness.Consumed.Snapshot<ReliableEvent>());
+        DurableSendStoreSnapshot snapshot = await provider.GetRequiredService<IOutboxStore<IBus>>()
+            .GetSnapshotAsync(cancellationToken);
+        Assert.Equal(0, snapshot.StoredCount);
+        Assert.Equal(0, snapshot.StoredBytes);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "concurrent-duplicate-message-id-executes-body-once")]
     public async Task InboxLock_AllowsExactlyOneOfThreeConcurrentDeliveriesToPublishTheHundredEventsAsync()
@@ -209,7 +265,7 @@ public sealed class ReliableInMemoryIntegrationTests
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
 
-    private static void ConfigureReliableMessaging(IBusRegistrationConfigurator configuration)
+    private static void ConfigureReliableMessaging(IBusRegistrationConfigurator configuration, int maximumAttempts = 3)
     {
         configuration.Limits(MessageLimits.Conservative);
         configuration.UseReliableMessaging(reliable =>
@@ -222,7 +278,7 @@ public sealed class ReliableInMemoryIntegrationTests
             });
             reliable.Delivery(delivery =>
             {
-                delivery.MaximumAttempts = 3;
+                delivery.MaximumAttempts = maximumAttempts;
                 delivery.InitialRetryDelay = TimeSpan.FromMilliseconds(20);
                 delivery.MaximumRetryDelay = TimeSpan.FromMilliseconds(50);
                 delivery.RetryJitterFraction = 0;
@@ -238,6 +294,41 @@ public sealed class ReliableInMemoryIntegrationTests
         });
     }
 
+
+    public sealed class CancellationProbe(CancellationTokenSource cancellation)
+    {
+        public CancellationTokenSource Cancellation { get; } = cancellation;
+        public Guid ConsumerId { get; } = Guid.NewGuid();
+        public DateTimeOffset StartedAt { get; set; }
+        public int PreparedMessages { get; set; }
+        public OperationCanceledException Failure { get; } = new(cancellation.Token);
+        public TaskCompletionSource<Exception?> Completed { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    public sealed class CancellationConsumer(IServiceProvider provider, CancellationProbe probe) : IConsumer<ReliableCommand>
+    {
+        public async Task ConsumeAsync(ConsumeContext<ReliableCommand> context)
+        {
+            Exception? observed = null;
+            try
+            {
+                probe.StartedAt = DateTimeOffset.UtcNow;
+                await InMemoryInboxPipelineTestDriver.SendAsync(provider, context, probe.ConsumerId, async inner =>
+                {
+                    await inner.Advanced().PublishAsync(new ReliableEvent(context.Message.MessageId, "canceled-intent"),
+                        probe.Cancellation.Token);
+                    probe.PreparedMessages++;
+                    probe.Cancellation.Cancel();
+                    throw probe.Failure;
+                }, probe.Cancellation.Token);
+            }
+            catch (Exception exception)
+            {
+                observed = exception;
+            }
+            probe.Completed.TrySetResult(observed);
+        }
+    }
 
     public sealed class InboxObservation
     {

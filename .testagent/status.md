@@ -14,7 +14,46 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Current open work after the completed first reading
+## Current checkpoint — 2026-09-26
+
+- First reading remains complete under the PO's agreed Git/trust convention.
+- The complete measurement at `98ac8bb78eb97acc4efe3bff7b5a586968ce0b5f`
+  passed all 33 profiles with 12,522 test executions: 84,957/93,762 lines
+  (90.6092%), conservative branches 30,652/36,841 (83.2008%), and zero
+  methods above CRAP 30 among 26,061 measured methods. All 4,132 tracked C#
+  source files compile; the PDB reconciliation accounts for 2,775 measured
+  files and 1,357 without visible sequence points, with no unmeasured
+  instrumentable source. These figures are the prior exact-commit baseline,
+  not a measurement of the newer tests.
+- `94843bf63` refreshed the provenance inventories. The source identity gate
+  passed with zero findings and byte-identical license; package artifact and
+  vulnerability checks passed. The baseline Unit/Architecture run passed
+  10,823/10,823. Raw measurements remain under `artifacts/t7*`.
+- `e2680c4d8` and `d80b8efa8` are pushed. Five additional SQLite cases prove
+  original consumer-error preservation when failure-state persistence/logger
+  fail and preservation of all three terminal inbox states committed after
+  rollback. Their two counterchanges were killed by 2/2 and 3/3 cases;
+  product source was restored by SHA-256. The exact final EF subset passed
+  10/10 with no skips. Read-only adversarial review cleared the corrected
+  fixtures and external progress witnesses.
+- The follow-up packet covers active InMemory cancellation and job-schedule
+  admission. Both cancellation cases passed and killed the omitted-catch
+  mutant 2/2. Seven schedule cases passed; removing validation failed all
+  four negative cases while all three positive controls remained green.
+  Original product sources are restored by SHA-256. The combined restored
+  subset passes 17/17, including requirement projection, without skips.
+  Read-only adversarial review cleared both bounded contracts. The schedule
+  fixture records consumer-output publication and serialization calls; it
+  does not claim transport or serializer integration. Raw logs are
+  `artifacts/servicebus-t10-*.log`. Fresh complete measurement and final
+  gates remain pending. No whole-product A+ acceptance is claimed.
+- Explicit PO follow-up: after Coverage/CRAP completion, use Roslyn to
+  generate the complete API of **all repositories**, including their
+  associated XML comments, and assess API contracts, consistency and
+  documentation against A+ quality. This is additional pending work;
+  the ServiceBus measurements do not establish its completion.
+
+## Earlier checkpoints (historical; superseded by the current checkpoint)
 
 - Candidate `1f50e6961` is pushed. SQL regression verification passed 217 unit and
   75 real-provider cases, including all seven provisioning cases. Its fresh `s6`

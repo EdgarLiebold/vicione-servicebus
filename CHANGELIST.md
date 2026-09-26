@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10821 |
+| Added | 10823 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -15070,6 +15070,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
 | `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs` | Added |  |
@@ -16048,6 +16049,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceBusObserverTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/StartJobConsumerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/JobService/SubmitJobConsumerTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/SuperviseJobConsumerTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
