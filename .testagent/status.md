@@ -101,7 +101,9 @@
   comparison methods and their otherwise uncalled entry points were removed
   after repo-wide caller review. The live MessageFabric validation chain remains.
   Read-only Red Team `/root/assembly_scan_redteam`: PASS. Final exact-commit
-  Abstractions/Core verification remains required.
+  verification at `688eba261` passed `artifacts/r5u17/receipt.json` (932 native
+  Abstractions cases) and `artifacts/r5u00/receipt.json` (6,457 Core cases,
+  including MessageFabric and the architecture boundary tests).
 - `IntrinsicsHelper.EncodeBase32`: first 32 stack-buffer bytes are now explicitly
   zeroed before the 16-byte input copy. A temporary post-clear `buffer[22]=0xff`
   mutation failed 8/17 existing formatter cases, including reference-text
@@ -109,10 +111,24 @@
   Restored full Abstractions run passes 932/932
   (`/private/tmp/servicebus-graph-padding-restored.log`). This is an initialization
   dependency correction, not a demonstrated prior runtime failure from default
-  stack initialization. Native and fallback exact-commit profiles remain due.
+  stack initialization. Exact-commit fallback profiles also passed at `688eba261`:
+  `artifacts/r5u18/receipt.json` (AVX2 disabled) and
+  `artifacts/r5u19/receipt.json` (all hardware intrinsics disabled), 932 cases each.
+  All four r5 profiles have zero failures/skips and warning-free builds; they do
+  not replace the still-required whole-product aggregate.
 - `ErrorTransportFilter`: manually corrected its summary to sending the failed
   receive through the error transport and continuing the exception pipeline.
   Read-only Red Team `/root/outbox_proof_redteam` approved this and the padding fix.
+- Next SQL Server risk target: `GrantAccessAsync` remains the last method above
+  CRAP 30 in the last valid whole-product aggregate (34.272, complexity 28,
+  48/60 lines at `0377ee4f3`). Read-only review identified meaningful missing
+  provider cases: transport identity only in ConnectionString; restoring removed
+  role membership; and a same-name database user where a role is expected.
+  `PrincipalExistsSql` checks only the name before role grants. Unintended grants
+  to that user are a concrete suspicion to reproduce, not yet a proven defect.
+  Test with real SQL Server and verify actual effective permissions. Integrated
+  and managed-identity authentication remain infrastructure-dependent paths;
+  fake query values do not prove their authorization behavior.
 - ActiveMQ temporary reply: the original 99/100 run at `0377ee4f3` timed out;
   isolated 4/4 and 100/100 reruns passed without a root-cause fix. `0db6ec160`
   adds verified phase/correlation/queue diagnostics. The later p3 correction and

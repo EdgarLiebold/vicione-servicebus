@@ -23,9 +23,11 @@ for the explicit open defects and their evidence limits.
    validation is now corrected with three red regressions and an acyclic control;
    unused sorting/comparison helpers are removed after callsite and Red Team review.
 4. Formatter SIMD padding and the inaccurate error-filter summary are corrected;
-   existing formatter references kill a poisoned-padding mutant. Finish native,
-   no-AVX2, scalar Abstractions and Core receipts for this source commit.
-5. Continue product-wide line/branch/CRAP work and the final scope-wide audit.
+   existing formatter references kill a poisoned-padding mutant. At `688eba261`,
+   native/no-AVX2/scalar Abstractions profiles pass 932 each and Core passes 6,457.
+5. Reproduce the SQL Server role-name collision suspicion and verify effective
+   permissions for ConnectionString identity and repaired role membership.
+   Then complete product-wide line/branch/CRAP measurement and the scope-wide audit.
 
 The numbered iteration plans below are historical records, not the current
 first-read balance or an A+ acceptance statement.
