@@ -16,6 +16,17 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete T34 measurement at `a019ca1b287c5745def01ca0ddae42d2e55877db`:
+  all 33 profiles/four fixture groups passed; 12,695 executions, lines
+  85267/93762 (90.9398264%), conservative branches 30749/36841 (83.4640754%),
+  0 CRAP >30. Target EF RollbackAsync is 5/5 lines. Remaining 4464 line gaps
+  (2784 zero,1680 partial), plus1505 branch-only; union5969. Outside the target,
+  changed observations leave net four fewer covered physical lines than T33.
+  Independent review confirmed 487 hashes and physical +6/-10 lines, net -4.
+  Measurement and read-only review are complete; recurring scheduling is next.
+  [Report and limitations](coverage-a-plus-20260921/product-wide-profile-a019ca1b2.md).
+  This supersedes T34 pending measurement notes below. A+ remains open.
+
 - T34 focused EF Saga rollback verification complete: both Load/Find cases
   pass; read-only review has no blocker. Three valid isolated mutations are
   detected and restored; final control 2/2. An earlier noncompiling mutation

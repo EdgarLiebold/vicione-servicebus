@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed T34 across all 33 profiles: 12,695 passing executions, 90.9398%
+  line and 83.4641% conservative branch coverage. EF Saga RollbackAsync is
+  fully covered at 5/5 lines. Changed observations elsewhere leave net four
+  fewer covered lines than T33; their causes remain open. There are 4,464
+  line-gap identities and 1,505 additional branch-only candidates. A+ is open.
+
 - Added real-SQLite Saga load/query checks that preserve the original operation
   exception when rollback also fails. Tests prove transaction identity, an
   uncancelable rollback attempt, no commit, owned-context disposal and healthy

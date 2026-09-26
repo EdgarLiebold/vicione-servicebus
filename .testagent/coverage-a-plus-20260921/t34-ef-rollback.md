@@ -1,7 +1,8 @@
-# T34: preserve EF Saga failure during failed rollback — open
+# T34: preserve EF Saga failure during failed rollback
 
 Base: `ad9160ffb70a1bf0a928f3c9abc72745203ebe5a`.
-T33 at `2409092a9` remains the authoritative complete measurement.
+Full T34 measurement at `a019ca1b2` is complete; see the
+[product-wide report](product-wide-profile-a019ca1b2.md).
 
 `FailedRollback_PreservesPrimaryErrorAndReleasesOwnedContextAsync` exercises both
 public LoadAsync and FindAsync on the optimistic Saga repository with real
@@ -49,6 +50,8 @@ the requirement manifest maps both cases to REQ-VSB-EF-SAGA-FACTORY.
 | Isolated artifacts/t34-restored.log | 606077c084bacd7adf72272feb85151f6a479ab774c8b5c7c11995381481b771 |
 
 Raw logs remain local. Isolated path: /private/tmp/servicebus-reply-investigation.
-Remaining: canonical CHANGELIST, commit, all 33
-fresh exact-commit profiles, independent aggregate review and authorized push.
-The focused result is not a new aggregate or product-wide A+ acceptance.
+All 33 fresh exact-commit profiles and four fixture groups passed, 12,695 test
+executions. RollbackAsync has 5/5 lines and CRAP 1. Independent aggregate review
+confirmed 487 hashes, all counts and the physical line delta. This report closes
+the packet's measurement and review. Neither the focused
+result nor the complete aggregate constitutes product-wide A+ acceptance.
