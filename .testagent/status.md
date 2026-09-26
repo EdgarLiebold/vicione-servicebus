@@ -16,6 +16,17 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete T35 measurement (closed 2026-09-27) at
+  `3a59fff96f220f54e56467293641ff12be3607d4`: all 33 profiles/four fixture groups
+  passed; 12,827 executions, lines85367/93762 (91.0464794%), conservative
+  branches30788/36841 (83.5699357%), 0 CRAP >30. Remaining4467 line gaps
+  (2784zero,1683partial), plus1508 branch-only, union5975. Target scheduler
+  coverage increased but admission guards remain; no line-gap identity closed.
+  Three gaps reappeared elsewhere. Independent review confirmed487 hashes and
+  physical+110/-10lines, net+100. Measurement and review are complete.
+  [Report](coverage-a-plus-20260921/product-wide-profile-3a59fff96.md).
+  This supersedes T35 pending measurement notes below. A+ remains open.
+
 - T35 recurring scheduling focused tests pass 132/132; read-only review has
   no remaining blocker. Three Publish-scheduler mutations fail 24/12/18 cases
   respectively, with controls passing; all restored, final control 132/132.

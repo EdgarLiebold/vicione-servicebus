@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed T35 across all 33 profiles: 12,827 passing executions, 91.0465%
+  line and 83.5699% conservative branch coverage. Both recurring schedulers
+  have stronger command/pipe/completion evidence. Coverage increased by 100
+  physical lines and 39 conservative branches; method guards remain, and
+  three line-gap identities reappeared elsewhere. A+ remains open.
+
 - Added 132 recurring-scheduling cases across endpoint/publish schedulers,
   explicit/publish destinations, message and pipe forms, and delayed success,
   failure or cancellation. Assertions check exact contracts, payloads, schedule

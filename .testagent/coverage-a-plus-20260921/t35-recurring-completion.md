@@ -1,7 +1,8 @@
-# T35: Wiederkehrendes Scheduling und Endpoint-Abschluss — offen
+# T35: Wiederkehrendes Scheduling und Endpoint-Abschluss
 
 Basis: `306e1f93b6ba792c586520dca3c018ad17c18b8e`.
-Die vollständige T34-Messung bei `a019ca1b2` bleibt maßgeblich.
+Die [vollständige T35-Messung](product-wide-profile-3a59fff96.md) bei
+`3a59fff96` ist abgeschlossen.
 
 `RecurringSchedulingCompletionTests.Scheduling_PreservesCommandAndWaitsForEndpointCompletionAsync`
 prüft 132 Kombinationen: zwei Schedulerimplementierungen, explizites Send-Ziel
@@ -73,5 +74,7 @@ Die Rohdateien bleiben lokal. Der Quellhash gilt für die finale Testdatei.
 | GATE artifacts/t35-missing-await-mutant.log | 945451c422e1d90c2fb9140db8908cb378e7a5e8ebd172bcb96ca56e5a3a29d2 |
 | GATE artifacts/t35-restored.log | 236e8266c11b6be4ba59688bb7ee89523aa1b316875d378d2dfdac7409586a3f |
 
-Offen: kanonische CHANGELIST, Commit, alle 33 frischen Profile am exakten Commit,
-unabhängiges Review des Aggregats und autorisierter Push. Kein A+-Abschluss.
+Alle 33 frischen Profile am exakten Commit und vier Providergruppen bestanden,
+12.827 erfolgreiche Ausführungen. Unabhängiges Review bestätigt 487 Hashes,
+alle Summen und den physischen Zeilendifferenzvergleich. Messung und Review
+dieser Iteration sind abgeschlossen. Kein produktweiter A+-Abschluss.
