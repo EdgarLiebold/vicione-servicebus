@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added RabbitMQ nested consume-binding regression tests for the exact directed
+  exchange tree, settings, sibling parent restoration and rejection before
+  declaration when a parent binding is missing. These tests strengthen existing
+  behavior without changing production code.
 - Added five real-SQLite inbox cases for failure-state persistence/logger faults
   and terminal winners committed after rollback, two in-memory cancellation
   cases after prepared publication, and seven job-schedule admission/boundary

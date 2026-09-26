@@ -16,6 +16,27 @@
 
 ## Current checkpoint — 2026-09-26
 
+- A+ acceptance remains open. The PO explicitly requested disposition of the
+  remaining coverage gaps before the all-repository Roslyn audit. The accepted
+  baseline contains 2,828 zero-line-covered and 1,712 partially line-covered
+  method identities across 1,283 files. A hash-checked reconstruction adds
+  1,532 fully line-covered identities with conservative branch gaps: 6,072
+  distinct identities require review. Generated method identities are included;
+  these counts do not equal handwritten method counts. Conservative branch
+  counts can require reconciliation of complementary profile paths. No entry
+  is accepted merely because its CRAP value or complexity is low.
+  Raw inventories: `artifacts/t12-gap-review-ledger.json` and
+  `artifacts/t12-branch-gap-ledger.json`.
+- The first bounded follow-up adds nested RabbitMQ consume-binding contracts:
+  exact directed tree, settings, siblings at two levels and rejection without
+  declaration when no parent exists. Baseline tests pass 2/2; compiled
+  requirement projection passes 1/1. Read-only adversarial review passed the
+  assertions and its missing projection finding was fixed. Removing cursor
+  restoration in a separate worktree fails the tree test on the wrong parent
+  (`child` versus `grandchild`), while the guard control passes. The production
+  change has been reverted with a clean source diff; restored tests pass 2/2.
+  The complete RabbitMQ unit project passes 473/473 without skips. These results
+  do not yet update the product-wide aggregate or close the broader gap review.
 - Final measurement at `2464cdc45eabf470664f287b05b713482cc6ea0a` is complete:
   33 exact-count profiles, 32 product assemblies, 12,536 passing executions,
   zero failures/skips in the accepted receipts. Lines: 84,968/93,762 (90.6209%);

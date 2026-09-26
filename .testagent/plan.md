@@ -32,7 +32,13 @@ for the current checkpoint, explicit open work and evidence limits.
    checks passed. The final adversarial numerical/integrity review also passed;
    publish the reconciled documentation. Existing package and vulnerability evidence retains
    its original commit and source/configuration-equivalence qualification.
-6. After coverage/CRAP completion, use Roslyn to inventory the complete API and
+6. Before claiming A+ completion, review and explicitly dispose the union of
+   4,540 line-gap method identities and 1,532 additional conservative branch-gap
+   identities. Prioritize product behavior and failure consequences, reconcile
+   complementary profile paths, and use strong assertions and counterchanges.
+   Start with nested RabbitMQ consume bindings and activity transformations;
+   do not treat zero CRAP hotspots as closure of these gaps.
+7. After coverage/CRAP completion, use Roslyn to inventory the complete API and
    associated XML comments across all repositories, then assess contracts,
    consistency and documentation. That follow-up is not covered by ServiceBus
    test results or by its existing package API baseline.

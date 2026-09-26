@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10824 |
+| Added | 10825 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -15389,6 +15389,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqBrokerTopologyContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqBusTopologyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqMessagePublishTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqNestedConsumeBindingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqSendSettingsContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqTopologyLoggingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/TransportLifetimeTests.cs` | Added |  |
