@@ -16,7 +16,11 @@ entry below records what the current work changed for anyone reading the source.
   admission in a full queue. Exact callback order, stored offset and tokens are
   checked with real batching and confirmation objects. Three mutations are
   detected; restored controls pass 5/5. Provider storage remains simulated;
-  the complete all-profile measurement of this packet is pending.
+  all 33 profiles now pass with 12,832 executions. Line coverage remains
+  91.0465%; conservative branch coverage is 83.5754%. BatchCheckpointer's
+  measured coverage is unchanged; behavioral evidence is stronger. There are
+  still 4,467 line-gap identities and 1,509 additional branch-only candidates.
+  A+ remains open.
 
 - Completed T35 across all 33 profiles: 12,827 passing executions, 91.0465%
   line and 83.5699% conservative branch coverage. Both recurring schedulers

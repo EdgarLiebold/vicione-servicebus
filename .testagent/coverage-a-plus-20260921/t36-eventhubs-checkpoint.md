@@ -1,7 +1,7 @@
-# T36: Event-Hubs-Checkpoints und begrenzte Admission — offen
+# T36: Event-Hubs-Checkpoints und begrenzte Admission
 
 Basis `889c8984c4ebb18b2f6fe84ec4121a71db5be0f2`.
-T35 bei `3a59fff96` bleibt die maßgebliche vollständige Messung.
+Die vollständige Messung dieses Pakets liegt bei `3aea04fae` vor.
 Microsoft code-testing-agent und run-tests wurden angewandt; der zuvor
 read-only geprüfte Plan liegt lokal in artifacts/t36-eventhubs-checkpoint-plan.md.
 Die dort aufgeführten Produktquellen und benachbarten Cancellation-Tests wurden
@@ -72,5 +72,11 @@ Rohdateien bleiben lokal; Hashes veröffentlichen sie nicht.
 | GATE artifacts/t36-ignore-cancellation-mutant.log | 337c3bfa158c0fbb546b586fc7e7c95c714c454213a7dda10916d9c643ed94f1 |
 | GATE artifacts/t36-restored.log | b800818a77f5914a2afe0c0140b60ecb7d08d7d31d6ad941bbfbfedcbcfaada3 |
 
-Offen: kanonische CHANGELIST, Commit, alle 33 frischen Messprofile, unabhängiger
-Aggregatreview, Dokumentationsabschluss und autorisierter Push. Kein A+-Abschluss.
+Commit und alle 33 frischen Messprofile sind abgeschlossen: 12.832 erfolgreiche
+Testausführungen, vier Providergruppen mit Exit 0. Der
+[Gesamtbericht](product-wide-profile-3aea04fae.md) dokumentiert unveränderte
+Line Coverage, zwei zusätzliche konservative Branch-Beobachtungen und weiterhin
+offene Lücken. Der unabhängige Abschlussreview bestätigt 487 Datei-Hashes,
+alle Profile und Assemblies sowie physisch +2/-2 Zeilen ohne Accounting-Blocker.
+Der autorisierte Push folgt nach dem Dokumentationscommit.
+Kein A+-Abschluss.

@@ -21,7 +21,15 @@
   controls pass, all restored; final isolated control5/5. Initial build and
   noncompiling mutation attempts are documented and not counted as evidence.
   [Evidence and limits](coverage-a-plus-20260921/t36-eventhubs-checkpoint.md).
-  Commit, complete measurement and push remain pending; T35 stays authoritative.
+  Commit `3aea04fae7f291d5c219f87b9a07f2df4935429e` and complete measurement
+  now pass: 33 profiles, four fixture groups, 12,832 executions; lines85367/93762
+  (91.0464794%), conservative branches30790/36841 (83.5753644%), 0 CRAP >30.
+  Remaining4467 line gaps (2785zero,1682partial), plus1509 branch-only, union5976.
+  BatchCheckpointer coverage is unchanged; one line-gap identity closes elsewhere
+  and another opens. [Report](coverage-a-plus-20260921/product-wide-profile-3aea04fae.md).
+  Final independent review confirms487 hashes, 32 assemblies and physical
+  +2/-2lines with no accounting blocker. Measurement/review are complete;
+  authorized push follows the documentation commit. A+ stays open.
 
 - Complete T35 measurement (closed 2026-09-27) at
   `3a59fff96f220f54e56467293641ff12be3607d4`: all 33 profiles/four fixture groups
