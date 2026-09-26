@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10827 |
+| Added | 10828 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -15008,6 +15008,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzOutboxSchedulingIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzPersistentStoreAcceptanceTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzRecurringDeliveryIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaIdRequestIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestTimeoutIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaSchedulingIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduleSerializationBoundaryTests.cs` | Added |  |

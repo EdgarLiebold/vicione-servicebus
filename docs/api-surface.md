@@ -19,6 +19,22 @@ Consumer configuration belongs in `AddConsumer<T>(...)`. Reliable messaging and 
 belong inside the owning bus block. Startup validation rejects missing limits, transport ambiguity,
 incomplete capability configuration, and unsupported durable transport combinations.
 
+## Saga request timeouts and scheduler cancellation
+
+A Saga request with a positive `Timeout` schedules an expiry message and cancels
+that schedule when any accepted response or request fault arrives. Select a
+scheduler that supports cancellation, such as the Quartz integration, for this
+workflow. `ConfigureDelayedMessageScheduler()` uses transport delivery delay;
+it cannot recall an accepted message. Its cancellation API throws
+`NotSupportedException`, which also fails Saga response/fault processing when
+that processing attempts to cancel a positive timeout.
+
+Without a separate request-ID property, a Saga request uses the Saga's correlation
+ID as its outgoing `RequestId`. Default response and fault correlation reads that
+header, not an ID inside the response body. The three-response overload accepts
+all three declared response types. Timeout correlation reads the timeout
+message's `RequestId`. Explicit correlation callbacks may override these defaults.
+
 ## Advanced SPI
 
 Framework extensions use `ViciOne.ServiceBus.Advanced` and its focused child namespaces:

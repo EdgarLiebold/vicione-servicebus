@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added real Quartz-backed Saga-ID request tests for all three response types,
+  service faults and timeout dispatch. Misleading body IDs must not redirect
+  responses away from the request-header owner. Response/fault cases verify
+  removal of the actual scheduled trigger; a controlled wrong-correlation
+  change is detected. Documented the cancellation requirement for positive
+  Saga request timeouts and the limitation of transport-delayed scheduling.
 - Added completed-initializer transform cases across Execute, Compensate,
   Consume and Send, checking preserved/replaced data, context identity and
   downstream success/failure without premature completion.

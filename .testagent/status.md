@@ -16,6 +16,23 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Saga-ID requests: five real Quartz cases pass for three response types,
+  service fault and actual stored timeout-job dispatch, using positive timeouts
+  throughout. The complete Quartz suite passes 272/272 and final formatting
+  verification passes. Service responses are gated until the actual timeout
+  trigger exists; response/fault cases require its confirmed cancellation.
+  A wrong-body-ID correlation mutant fails exactly the Third case on wrong
+  outcome ownership; four controls pass. Product source is restored and the
+  restored run passes 5/5. Read-only review found no blocker. The abandoned
+  Core diagnostic fixture selected a non-cancelable delayed scheduler; its
+  failed evidence is retained under artifacts, not accepted as a green test.
+  The API guide now explains this scheduler limitation. Exact-commit measurement
+  and publication remain pending; no natural wall-clock expiry claim is made.
+- Completed-initializer transforms were measured and published at
+  `7a3f2e27b8119ce3d47ede5c1ac593d5dc1fffbf`: Core 6,505/6,505, zero
+  failures/skips and build warnings/errors. All ten TransformFilter method
+  identities have full line/branch coverage, method CRAP at most4. This
+  supersedes the pending measurement/publication note for that packet below.
 - Completed-initializer transform matrix adds sixteen Execute/Compensate/
   Consume/Send cases across preserve/replace and downstream success/failure.
   The Transformation namespace passes 47/47, requirement projection 1/1 and
