@@ -16,6 +16,20 @@
 
 ## Current open work after the completed first reading
 
+- SQL Server principal validation: three genuine permission-transfer defects were
+  reproduced against the original migrator. Both role/user kind collisions and a
+  same-name database user mapped to another login transferred schema ownership and
+  granted CREATE VIEW to the wrong principal. Validation now precedes role grants;
+  existing SQL users are checked against the actual transport connection identity,
+  including contained users and an intended login that can connect as sysadmin.
+  No existing principal is automatically remapped. Seven focused cases pass
+  (`artifacts/sql-permission-complete.log`); original failures are retained in
+  `artifacts/sql-permission-red3.log` and `artifacts/sql-permission-sid-red.log`.
+  Earlier red/red2 runs were fixture setup failures, not product regressions.
+  Read-only Red Team `/root/outbox_proof_redteam` approved the final diff, including
+  the cancellation catch filter. Full SQL suites and fresh whole-product coverage
+  remain pending. These tests add no Windows, Entra or Azure SQL authentication
+  evidence; no whole-product A+ claim follows from the focused pass.
 - Follow-up to `2309b2ff2`: the exact-commit ActiveMQ receipts are green
   (`artifacts/n2u10/receipt.json`: 200 unit cases;
   `artifacts/n2l09/receipt.json`: 100 broker cases). Adversarial review then

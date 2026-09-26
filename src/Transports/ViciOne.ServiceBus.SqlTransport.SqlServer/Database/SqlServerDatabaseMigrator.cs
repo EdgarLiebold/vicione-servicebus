@@ -25,7 +25,7 @@ END";
 ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 DROP DATABASE [{0}];";
 
-    const string PrincipalExistsSql = @"SELECT COUNT(*) FROM sys.database_principals WHERE [name] = @Name";
+    const string PrincipalTypeSql = @"SELECT [type] FROM sys.database_principals WHERE [name] = @Name";
     const string CreateRoleSql = @"CREATE ROLE {0} AUTHORIZATION [dbo]";
 
     const string GrantRoleSql = @"IF NOT EXISTS (
@@ -1950,12 +1950,18 @@ END
     {
         string role = SqlServerIdentifier.ValidateRegular(options.Role, nameof(options.Role));
 
-        int? result = await ExecuteScalarAsync<int>(
+        string? roleType = await ExecuteScalarAsync<string>(
             connection.Connection,
-            PrincipalExistsSql,
+            PrincipalTypeSql,
             new { Name = role },
             cancellationToken).ConfigureAwait(false);
-        if (result is null or 0)
+        if (roleType != null && roleType != "R")
+            throw new InvalidOperationException($"The configured transport role '{role}' is occupied by a different principal type.");
+
+        string username = await ResolveUsernameAsync(connection.Connection, options, cancellationToken).ConfigureAwait(false);
+        bool userExists = await ValidateExistingUserAsync(connection.Connection, options, username, cancellationToken).ConfigureAwait(false);
+
+        if (roleType == null)
         {
             _ = await ExecuteScalarAsync<int>(
                 connection.Connection,
@@ -1974,40 +1980,9 @@ END
 
         _logger.LogDebug("Role {Role} granted access to schema {Schema}", role, schema);
 
-        string? username = options.Username;
-        if (string.IsNullOrWhiteSpace(username))
+        if (!userExists)
         {
-            SqlConnectionStringBuilder transportBuilder = SqlServerTransportConnection.CreateBuilder(options);
-            if (!string.IsNullOrWhiteSpace(transportBuilder.UserID))
-                username = transportBuilder.UserID;
-        }
-
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            var administrativeBuilder = new SqlConnectionStringBuilder(connection.Connection.ConnectionString);
-            if (administrativeBuilder.IntegratedSecurity)
-            {
-                await using SqlCommand command = new("SELECT ORIGINAL_LOGIN()", connection.Connection);
-
-                username = (await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false))?.ToString();
-            }
-            else if (administrativeBuilder.Authentication == SqlAuthenticationMethod.ActiveDirectoryManagedIdentity)
-            {
-                await using SqlCommand command = new("SELECT CURRENT_USER", connection.Connection);
-                username = (await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false))?.ToString();
-            }
-        }
-
-        username = SqlServerIdentifier.ValidatePrincipal(username, nameof(options.Username));
-
-        result = await ExecuteScalarAsync<int>(
-            connection.Connection,
-            PrincipalExistsSql,
-            new { Name = username },
-            cancellationToken).ConfigureAwait(false);
-        if (result is null or 0)
-        {
-            result = await ExecuteScalarAsync<int>(
+            _ = await ExecuteScalarAsync<int>(
                 connection.Connection,
                 string.Format(CreateUserSql, schema, username),
                 null,
@@ -2016,7 +1991,7 @@ END
             _logger.LogDebug("User {Username} created", username);
         }
 
-        result = await ExecuteScalarAsync<int>(
+        int? result = await ExecuteScalarAsync<int>(
             connection.Connection,
             string.Format(IsRoleMemberSql, role, username),
             null,
@@ -2031,6 +2006,81 @@ END
 
             _logger.LogDebug("User {Username} added to role {Role}", username, role);
         }
+    }
+
+    static async Task<string> ResolveUsernameAsync(SqlConnection connection, SqlTransportOptions options, CancellationToken cancellationToken)
+    {
+        string? username = options.Username;
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            SqlConnectionStringBuilder transportBuilder = SqlServerTransportConnection.CreateBuilder(options);
+            if (!string.IsNullOrWhiteSpace(transportBuilder.UserID))
+                username = transportBuilder.UserID;
+        }
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            var administrativeBuilder = new SqlConnectionStringBuilder(connection.ConnectionString);
+            if (administrativeBuilder.IntegratedSecurity)
+            {
+                await using SqlCommand command = new("SELECT ORIGINAL_LOGIN()", connection);
+
+                username = (await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false))?.ToString();
+            }
+            else if (administrativeBuilder.Authentication == SqlAuthenticationMethod.ActiveDirectoryManagedIdentity)
+            {
+                await using SqlCommand command = new("SELECT CURRENT_USER", connection);
+                username = (await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false))?.ToString();
+            }
+        }
+
+        return SqlServerIdentifier.ValidatePrincipal(username, nameof(options.Username));
+    }
+
+    static async Task<bool> ValidateExistingUserAsync(SqlConnection connection, SqlTransportOptions options, string username,
+        CancellationToken cancellationToken)
+    {
+        string? principalType = await ExecuteScalarAsync<string>(
+            connection,
+            PrincipalTypeSql,
+            new { Name = username },
+            cancellationToken).ConfigureAwait(false);
+        if (principalType == null)
+            return false;
+        if (principalType is "R" or "A")
+            throw new InvalidOperationException($"The configured transport user '{username}' identifies a role rather than a user.");
+
+        SqlConnectionStringBuilder builder = SqlServerTransportConnection.CreateBuilder(options);
+        if (principalType != "S" || builder.IntegratedSecurity
+            || builder.Authentication is not (SqlAuthenticationMethod.NotSpecified or SqlAuthenticationMethod.SqlPassword))
+            return true;
+
+        byte[]? expectedSid = await ExecuteScalarAsync<byte[]>(connection,
+            "SELECT sid FROM sys.database_principals WHERE [name] = @Name", new { Name = username },
+            cancellationToken).ConfigureAwait(false);
+        int authenticationType = await ExecuteScalarAsync<int>(connection,
+            "SELECT authentication_type FROM sys.database_principals WHERE [name] = @Name", new { Name = username },
+            cancellationToken).ConfigureAwait(false);
+        await using var transportConnection = new SqlConnection(builder.ConnectionString);
+        byte[]? authenticatedSid;
+        try
+        {
+            await transportConnection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            authenticatedSid = await ExecuteScalarAsync<byte[]>(transportConnection,
+                authenticationType == 2
+                    ? "SELECT sid FROM sys.database_principals WHERE principal_id = USER_ID()"
+                    : "SELECT SUSER_SID()", null,
+                cancellationToken).ConfigureAwait(false);
+        }
+        catch (SqlException exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new InvalidOperationException($"The configured login cannot authenticate the existing transport user '{username}'.", exception);
+        }
+
+        if (expectedSid == null || authenticatedSid == null || !expectedSid.AsSpan().SequenceEqual(authenticatedSid))
+            throw new InvalidOperationException($"The existing transport user '{username}' belongs to a different login identity.");
+
+        return true;
     }
 
     static string GetDatabaseName(SqlTransportOptions options)

@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- SQL Server provisioning validates existing principal kinds and SQL login identity
+  before transferring schema ownership or granting transport permissions. A user
+  occupying the role name, a role occupying the user name, or a same-name user
+  mapped to another login is rejected. Regression tests reproduced all three
+  unintended permission transfers. Real database tests also verify contained users
+  without server logins, connection-string credentials, membership repair and
+  quoted passwords. Existing user mappings are never silently rewritten.
 - Dependency-graph validation now detects self-edges and rechecks all nodes on
   every validation, including after a prior failure or newly added edge. Four
   regressions distinguish real cycles from shared descendants and disconnected
