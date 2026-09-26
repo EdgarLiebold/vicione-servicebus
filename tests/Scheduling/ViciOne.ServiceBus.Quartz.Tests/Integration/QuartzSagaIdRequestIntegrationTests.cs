@@ -25,17 +25,29 @@ public sealed class QuartzSagaIdRequestIntegrationTests
     [InlineData("fault")]
     [InlineData("timeout")]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "saga-id-three-responses-fault-and-real-timeout")]
-    public async Task SagaIdRequest_RoutesToTheHeaderOwnerAndCancelsOrDeliversItsRealTimeoutAsync(string kind)
+    public Task SagaIdRequest_RoutesToTheHeaderOwnerAndCancelsOrDeliversItsRealTimeoutAsync(string kind) => RunAsync(kind, false);
+
+    [Theory]
+    [InlineData("first")]
+    [InlineData("second")]
+    [InlineData("third")]
+    [InlineData("fault")]
+    [InlineData("timeout")]
+    [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "correlation-callbacks-override-default-owner-without-canceling-its-timeout")]
+    public Task CustomCorrelation_SelectsTheBodyOwnerAndPreservesTheOtherSagaTimeoutAsync(string kind) => RunAsync(kind, true);
+
+    private static async Task RunAsync(string kind, bool useBodyCorrelation)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid activeId = NewId.NextGuid();
         Guid controlId = NewId.NextGuid();
+        Guid expectedOwner = useBodyCorrelation ? controlId : activeId;
         string prefix = $"quartz-saga-id-{NewId.NextGuid():N}";
         var inputAddress = new Uri($"loopback://localhost/{prefix}-saga");
         var serviceAddress = new Uri($"loopback://localhost/{prefix}-service");
         var repository = new InMemorySagaRepository<RequestState>();
-        var machine = new RequestMachine(serviceAddress);
+        var machine = new RequestMachine(serviceAddress, useBodyCorrelation);
         var requestSeen = new TaskCompletionSource<RequestEnvelope>(TaskCreationOptions.RunContinuationsAsynchronously);
         var releaseService = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var outcome = new TaskCompletionSource<Outcome>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -70,7 +82,7 @@ public sealed class QuartzSagaIdRequestIntegrationTests
             }));
         });
         var scheduled = new QuartzSagaRequestTimeoutIntegrationTests.ScheduleMessageCapture();
-        var canceled = new ConsumeCompletionObserver<CancelScheduledMessage>(_ => true);
+        var canceled = new ConsumeCompletionObserver<CancelScheduledMessage>(message => message.TokenId == expectedOwner);
         var primed = new ConsumeCompletionObserver<Prime>(_ => true);
         var started = new ConsumeCompletionObserver<Begin>(_ => true);
         var response = new ResponseObserver();
@@ -104,22 +116,23 @@ public sealed class QuartzSagaIdRequestIntegrationTests
             releaseService.SetResult();
             if (kind == "timeout")
                 await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, cancellationToken);
-            else
-                await canceled.Completed.WaitAsync(timeout, cancellationToken);
 
             Outcome result = await outcome.Task.WaitAsync(timeout, cancellationToken);
             await response.Completed.WaitAsync(timeout, cancellationToken);
             string detail = kind switch { "fault" => "validation rejected", "timeout" => "expired", _ => kind };
-            Assert.Equal(new Outcome(activeId, kind, controlId, detail), result);
-            RequestState active = State(repository, activeId);
+            Assert.Equal(new Outcome(expectedOwner, kind, controlId, detail), result);
+            RequestState active = State(repository, expectedOwner);
             Assert.Equal(machine.Finished, active.CurrentState);
             Assert.Equal(1, active.Count);
             Assert.Equal(kind == "fault" ? typeof(ExpectedServiceFailure).FullName : string.Empty, active.ErrorType);
             if (kind != "timeout")
             {
+                await canceled.Completed.WaitAsync(timeout, cancellationToken);
                 Assert.Equal(1, canceled.ObservedCount);
-                Assert.False(await fixture.Scheduler.Exists(triggerKey, cancellationToken));
+                Assert.Equal(useBodyCorrelation, await fixture.Scheduler.Exists(triggerKey, cancellationToken));
             }
+            else if (useBodyCorrelation)
+                Assert.True(await fixture.Scheduler.Exists(triggerKey, cancellationToken));
         }
         finally
         {
@@ -127,7 +140,7 @@ public sealed class QuartzSagaIdRequestIntegrationTests
             await fixture.Bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
-        RequestState control = State(repository, controlId);
+        RequestState control = State(repository, useBodyCorrelation ? activeId : controlId);
         Assert.Equal(machine.Validation.Pending, control.CurrentState);
         Assert.Equal(0, control.Count);
         Assert.Equal(string.Empty, control.Kind);
@@ -162,13 +175,22 @@ public sealed class QuartzSagaIdRequestIntegrationTests
 
     public sealed class RequestMachine : ViciOneServiceBusStateMachine<RequestState>
     {
-        public RequestMachine(Uri serviceAddress)
+        public RequestMachine(Uri serviceAddress, bool useBodyCorrelation = false)
         {
             InstanceState(state => state.CurrentState);
             Request(() => Validation, settings =>
             {
                 settings.ServiceAddress = serviceAddress;
                 settings.Timeout = TimeSpan.FromHours(1);
+                if (useBodyCorrelation)
+                {
+                    settings.Completed = correlation => correlation.CorrelateById(context => context.Message.CorrelationId);
+                    settings.Completed2 = correlation => correlation.CorrelateById(context => context.Message.CorrelationId);
+                    settings.Completed3 = correlation => correlation.CorrelateById(context => context.Message.CorrelationId);
+                    settings.Faulted = correlation => correlation.CorrelateById(context => context.Message.Message.CorrelationId);
+                    settings.TimeoutExpired = correlation => correlation.CorrelateById(context =>
+                        (context.Message.Message ?? throw new InvalidOperationException("Missing timed-out request")).CorrelationId);
+                }
             });
             Initially(
                 When(Primed).TransitionTo(Validation.Pending),

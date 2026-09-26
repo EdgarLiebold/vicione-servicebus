@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added real Quartz checks for all five Saga request correlation callbacks.
+  Each override must select its configured Saga instead of the default owner,
+  preserve the other Saga and its trigger, and address cancellation to the
+  selected owner. Ignoring the third-response callback is detected independently
+  of the unchanged default-correlation cases.
 - Added real Quartz-backed Saga-ID request tests for all three response types,
   service faults and timeout dispatch. Misleading body IDs must not redirect
   responses away from the request-header owner. Response/fault cases verify

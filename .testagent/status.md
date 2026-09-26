@@ -16,6 +16,22 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Correlation callback follow-up adds five real Quartz cases: all three response
+  callbacks, fault and timeout must select the configured body ownerB despite
+  default ownerA, preserving A and its trigger. Default cases remain intact and
+  cancellation observations additionally require the chosen owner's token.
+  Final full Quartz passes277/277 and verify-only formatting passes. Omitting
+  only Completed3 callback invocation fails CustomThird on wrong Saga identity,
+  while9controls pass. Source is restored. Initial restored build failed with
+  MSB4166 before tests; its diagnostic directory is absent and cause unproven.
+  Single-node build recheck passes without warnings/errors and the restored
+  class passes10/10. Commit-bound measurement and publication remain pending.
+- The previous default Saga-ID matrix was measured and published at
+  `42028e7b2eb21ba0a92c208ec397f0c08e09f8aa`: Quartz272/272, zero failures,
+  skips or build warnings/errors; receipt hashes verified. The outer three-response
+  Request(settings) overload has full line/branch coverage and CRAP1. Separate
+  generated correlation callbacks/guards are not closed by that outer score.
+  This supersedes the previous packet's pending measurement/publication note.
 - Saga-ID requests: five real Quartz cases pass for three response types,
   service fault and actual stored timeout-job dispatch, using positive timeouts
   throughout. The complete Quartz suite passes 272/272 and final formatting
