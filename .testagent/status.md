@@ -16,6 +16,20 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Completed-initializer transform matrix adds sixteen Execute/Compensate/
+  Consume/Send cases across preserve/replace and downstream success/failure.
+  The Transformation namespace passes 47/47, requirement projection 1/1 and
+  verify-only formatting passes. Existing pending-initializer oracles remain
+  intact. Read-only adversarial review found no blocker. The separate-worktree
+  wrong-message counterchange for synchronous Send fails exactly two Replace
+  cases while 34 controls pass. Product source is restored with a clean diff;
+  the restored class passes 36/36. Commit-bound measurement and publication
+  remain pending.
+- Send follow-up was measured and published at
+  `d432f9a1bb65109ea8e0ec75d378509733491fef`: Core 6,489/6,489, zero
+  failures/skips, zero build warnings/errors, receipt hashes verified. The
+  async Send local function now has full line/branch coverage and CRAP 2.
+  This supersedes that follow-up's pending measurement/publication note below.
 - Send-transform follow-up adds five cases using real send contexts and proxies.
   The final Transformation namespace passes 31/31; requirement projection 1/1
   and verify-only formatting pass. Snapshot assertions preserve message/request

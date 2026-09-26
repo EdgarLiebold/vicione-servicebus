@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added completed-initializer transform cases across Execute, Compensate,
+  Consume and Send, checking preserved/replaced data, context identity and
+  downstream success/failure without premature completion.
 - Added asynchronous send-transform checks for message replacement, preserved
   identity/address/header metadata, downstream completion and initializer
   failure without forwarding. A controlled wrong-message change is detected

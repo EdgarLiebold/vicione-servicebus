@@ -12,6 +12,34 @@ namespace ViciOne.ServiceBus.Tests.Transformation;
 public sealed class ActivityTransformAsyncTests
 {
     [Theory]
+    [InlineData("execute", false, false)]
+    [InlineData("execute", false, true)]
+    [InlineData("execute", true, false)]
+    [InlineData("execute", true, true)]
+    [InlineData("compensate", false, false)]
+    [InlineData("compensate", false, true)]
+    [InlineData("compensate", true, false)]
+    [InlineData("compensate", true, true)]
+    [InlineData("consume", false, false)]
+    [InlineData("consume", false, true)]
+    [InlineData("consume", true, false)]
+    [InlineData("consume", true, true)]
+    [InlineData("send", false, false)]
+    [InlineData("send", false, true)]
+    [InlineData("send", true, false)]
+    [InlineData("send", true, true)]
+    [RequirementCoverage("REQ-VSB-TRANSFORM-COMPLETED-INITIALIZATION", "all-contexts-preserve-or-replace-data-and-await-downstream")]
+    public Task CompletedInitialization_PreservesIdentityAndAwaitsDownstreamAsync(string stage, bool replace, bool downstreamFails) =>
+        stage switch
+        {
+            "execute" => CheckSuccessAsync<ExecuteContext<Data>>(replace, downstreamFails, context => context.Arguments, true),
+            "compensate" => CheckSuccessAsync<CompensateContext<Data>>(replace, downstreamFails, context => context.Log, true),
+            "consume" => CheckSuccessAsync<ConsumeContext<Data>>(replace, downstreamFails, context => context.Message, true),
+            "send" => CheckSuccessAsync<SendContext<Data>>(replace, downstreamFails, context => context.Message, true),
+            _ => throw new ArgumentOutOfRangeException(nameof(stage)),
+        };
+
+    [Theory]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]
@@ -59,7 +87,8 @@ public sealed class ActivityTransformAsyncTests
     public Task PendingInitializationFailure_PreservesTheCauseWithoutInvokingTheNextStageAsync(bool compensate) =>
         compensate ? CheckFailureAsync<CompensateContext<Data>>() : CheckFailureAsync<ExecuteContext<Data>>();
 
-    private static async Task CheckSuccessAsync<TContext>(bool replace, bool downstreamFails, Func<TContext, Data> getData)
+    private static async Task CheckSuccessAsync<TContext>(bool replace, bool downstreamFails, Func<TContext, Data> getData,
+        bool initializationCompleted = false)
         where TContext : class, PipeContext
     {
         using var owner = new CancellationTokenSource();
@@ -73,16 +102,21 @@ public sealed class ActivityTransformAsyncTests
         Guid? requestId = outbound?.RequestId;
         Uri? destination = outbound?.DestinationAddress;
 
+        Data result = replace ? new Data("transformed") : fixture.Original;
+        InitializeContext<Data> initialized = Strict<InitializeContext<Data>>((method, _) => method.Name == "get_Message"
+            ? result : throw new InvalidOperationException(method.Name));
+        if (initializationCompleted)
+            fixture.Completion.SetResult(initialized);
+
         Task operation = filter.SendAsync(original, next);
 
         Assert.False(operation.IsCompleted);
-        Assert.Equal(0, next.Calls);
+        Assert.Equal(initializationCompleted ? 1 : 0, next.Calls);
         Assert.Same(fixture.Original, fixture.Input);
         Assert.Same(fixture.Seed, fixture.InitializationContext);
         Assert.Equal(owner.Token, fixture.InheritedContext!.CancellationToken);
-        Data result = replace ? new Data("transformed") : fixture.Original;
-        fixture.Completion.SetResult(Strict<InitializeContext<Data>>((method, _) => method.Name == "get_Message"
-            ? result : throw new InvalidOperationException(method.Name)));
+        if (!initializationCompleted)
+            fixture.Completion.SetResult(initialized);
         TContext forwarded = await next.Entered.Task.WaitAsync(Timeout(), TestContext.Current.CancellationToken);
 
         Assert.Same(result, getData(forwarded));
