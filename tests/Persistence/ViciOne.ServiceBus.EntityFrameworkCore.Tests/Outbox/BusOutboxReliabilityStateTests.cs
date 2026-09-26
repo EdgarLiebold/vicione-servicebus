@@ -124,7 +124,7 @@ public sealed class BusOutboxReliabilityStateTests
     [InlineData(int.MaxValue, false)]
     [InlineData(-1, true)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "corrupt-attempt-count-is-quarantined")]
-    public async Task CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoop(int invalidAttempts, bool emptyMessageId)
+    public async Task CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoopAsync(int invalidAttempts, bool emptyMessageId)
     {
         await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         using ServiceProvider provider = CreateProvider();
@@ -389,10 +389,16 @@ public sealed class BusOutboxReliabilityStateTests
     {
         var healthy = new OutboxState
         {
-            OutboxId = Guid.NewGuid(), BusKey = "default", Created = Now.AddMinutes(1),
-            Status = OutboxDeliveryStatus.Quarantined, DeliveryAttempts = 1,
-            LastFailureKind = OutboxFailureKind.Permanent, LastFailureCode = OutboxFailureCode.TransportSendFailed,
-            LastFailureTime = Now, FailedSequenceNumber = 100, FailedMessageId = Guid.NewGuid(),
+            OutboxId = Guid.NewGuid(),
+            BusKey = "default",
+            Created = Now.AddMinutes(1),
+            Status = OutboxDeliveryStatus.Quarantined,
+            DeliveryAttempts = 1,
+            LastFailureKind = OutboxFailureKind.Permanent,
+            LastFailureCode = OutboxFailureCode.TransportSendFailed,
+            LastFailureTime = Now,
+            FailedSequenceNumber = 100,
+            FailedMessageId = Guid.NewGuid(),
         };
         dbContext.Add(healthy);
         await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);

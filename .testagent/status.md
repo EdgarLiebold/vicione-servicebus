@@ -16,6 +16,33 @@
 
 ## Current open work after the completed first reading
 
+- Candidate `1f50e6961` is pushed. SQL regression verification passed 217 unit and
+  75 real-provider cases, including all seven provisioning cases. Its fresh `s6`
+  collection completed all 20 unit/portability profiles (11,962 executions), plus
+  Azure Service Bus 30, PostgreSQL 79 and SQL Server 75 cases. This remains a
+  partial 23/33 collection, not a final aggregate. Engineering Release build
+  passed with zero warnings/errors, and the package gate passed 31 packages,
+  18 journeys, four isolated consumers and 30 API baselines.
+  The broader Unit/Architecture gate found two failing tests out of 10,823:
+  a stale ActiveMQ background-task text expectation and the naming gate's two
+  missing Async suffixes. These are manually corrected; the focused background
+  gate passes 3/3; the repository-wide asynchronous-name check passes 1/1,
+  the EF outbox/projection subset passes 27/27, and ActiveMQ passes 206/206.
+  Logs are `/private/tmp/servicebus-s6-architecture-fix.log`,
+  `/private/tmp/servicebus-s6-async-naming.log`,
+  `/private/tmp/servicebus-s6-ef-naming.log` and
+  `/private/tmp/servicebus-s6-amq-naming.log`.
+  An earlier runner invocation executed no tests because of
+  incorrect command arguments; only the corrected invocation counts as evidence.
+  The shared provider fixture failed before test execution because a root
+  RabbitMQ healthcheck created a root-owned 0400 Erlang cookie. A deterministic
+  CLI probe reproduces unreadability; the corrected broker-user probe preserves
+  0400 permissions and successfully starts the actual broker afterward. Both
+  healthcheck commands now use `gosu rabbitmq`. Read-only Red Team approved the
+  fixture correction and the stale architecture-guard repair. The independent
+  provider restart was canceled before measuring to avoid continuing a superseded
+  test candidate. Final full gates and the 33-profile measurement must run after
+  these corrections; older `s6` receipts must not be relabeled as the new commit.
 - SQL Server principal validation: three genuine permission-transfer defects were
   reproduced against the original migrator. Both role/user kind collisions and a
   same-name database user mapped to another login transferred schema ownership and

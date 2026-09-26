@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- RabbitMQ fixture health checks run as the broker user. An early root diagnostic
+  could create an unreadable root-owned Erlang cookie after the entrypoint's
+  ownership setup, preventing broker startup. A forced diagnostic-before-start
+  probe reproduces the ownership failure and verifies the corrected startup.
+- Updated the background-work architecture guard for the observed ActiveMQ stop
+  and monitor tasks, and corrected two asynchronous test/helper names together
+  with their requirement projection.
 - SQL Server provisioning validates existing principal kinds and SQL login identity
   before transferring schema ownership or granting transport permissions. A user
   occupying the role name, a role occupying the user name, or a same-name user

@@ -102,7 +102,9 @@ public sealed class BackgroundWorkOwnershipTests
         string activeMqConnection = Source(activeMqOwners[0]);
         Assert.Contains("Task? faultStopTask", activeMqConnection, StringComparison.Ordinal);
         Assert.Contains("faultStopTask = stopCompletion.Task;", activeMqConnection, StringComparison.Ordinal);
-        Assert.Contains("_ = StopAfterConnectionExceptionAsync(exception, stopCompletion);", activeMqConnection, StringComparison.Ordinal);
+        Assert.Contains("StopAfterConnectionExceptionAsync(exception, stopCompletion).IgnoreUnobservedExceptions();", activeMqConnection,
+            StringComparison.Ordinal);
+        Assert.Contains("MonitorConnectionAsync().IgnoreUnobservedExceptions();", activeMqConnection, StringComparison.Ordinal);
         Assert.Contains("await contextHandle.Stop", activeMqConnection, StringComparison.Ordinal);
         Assert.DoesNotContain("Task.Yield", activeMqConnection, StringComparison.Ordinal);
 

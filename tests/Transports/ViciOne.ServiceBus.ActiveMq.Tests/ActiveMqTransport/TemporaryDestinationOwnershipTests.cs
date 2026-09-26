@@ -33,7 +33,7 @@ public sealed class TemporaryDestinationOwnershipTests
         int queueCreations = 0;
         IMessageProducer producer = InterfaceProxy<IMessageProducer>.Create((method, args) => method.Name switch
         {
-            nameof(IMessageProducer.SendAsync) => Capture(Assert.IsAssignableFrom<IMessage>(args![0])),
+            nameof(IMessageProducer.SendAsync) => CaptureAsync(Assert.IsAssignableFrom<IMessage>(args![0])),
             nameof(IMessageProducer.CloseAsync) => Task.CompletedTask,
             nameof(IDisposable.Dispose) => null,
             _ => throw new InvalidOperationException($"Unexpected producer operation: {method.Name}"),
@@ -86,7 +86,7 @@ public sealed class TemporaryDestinationOwnershipTests
             return replyQueue;
         }
 
-        Task Capture(IMessage message)
+        Task CaptureAsync(IMessage message)
         {
             Assert.Null(sent);
             sent = message;

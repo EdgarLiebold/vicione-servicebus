@@ -34,7 +34,9 @@ services:
     healthcheck:
       # Readiness must cover the management API as well: the test set up creates the 'test'
       # virtual host over HTTP, so a broker that answers AMQP but not HTTP is not ready.
-      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_port_connectivity"]
+      # Run as the broker user: an early root diagnostic can create a root-owned cookie before
+      # the broker starts, making the same cookie unreadable to its Erlang process.
+      test: ["CMD-SHELL", "gosu rabbitmq rabbitmq-diagnostics -q check_running && gosu rabbitmq rabbitmq-diagnostics -q check_port_connectivity"]
       interval: 5s
       timeout: 10s
       retries: 24
