@@ -117,20 +117,51 @@ public class ConnectionContextFactory :
         }
         catch (OperationCanceledException)
         {
-            connection?.Dispose();
+            DisposeFailedConnection(connection);
             throw;
         }
         catch (NMSConnectionException ex)
         {
-            connection?.Dispose();
-            LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
+            DisposeFailedConnection(connection);
+            LogConnectionFailure(ex);
             throw new ActiveMqConnectionException("Connection exception: " + description, ex);
         }
         catch (Exception ex)
         {
-            connection?.Dispose();
-            LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
+            DisposeFailedConnection(connection);
+            LogConnectionFailure(ex);
             throw new ActiveMqConnectionException("Create Connection Faulted: " + description, ex);
+        }
+    }
+
+    static void DisposeFailedConnection(IConnection? connection)
+    {
+        try
+        {
+            connection?.Dispose();
+        }
+        catch (Exception exception)
+        {
+            try
+            {
+                LogContext.Error?.Log(exception, "Disposing failed ActiveMQ connection failed");
+            }
+            catch
+            {
+                // Diagnostics must not replace the original connection failure or cancellation.
+            }
+        }
+    }
+
+    void LogConnectionFailure(Exception exception)
+    {
+        try
+        {
+            LogContext.Warning?.Log(exception, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
+        }
+        catch
+        {
+            // The original failure determines retry behavior even if its logger fails.
         }
     }
 }

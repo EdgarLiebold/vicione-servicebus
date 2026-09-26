@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- ActiveMQ connection creation now preserves the original cancellation or
+  classified provider failure when disposing a failed connection also throws.
+  Cleanup and warning-log failures are contained so diagnostic listeners cannot
+  replace the retry-relevant cause. Twelve deterministic cases verify acquisition,
+  startup, exactly-once cleanup and exception/token identity, including a throwing
+  logger. The previous integration-only coverage of these failure paths varied
+  between otherwise successful broker runs.
 - Message-contract analysis now follows nested collection element contracts
   instead of comparing collection implementation properties such as `Count`.
   Existing nested implicit-array initializers are repaired at every leaf by the
