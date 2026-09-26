@@ -16,6 +16,21 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Outgoing message-data retention adds five exact-duration cases plus overflow:
+  send TTL wins over policy TTL, extra retention is added only to send TTL,
+  fallback and unlimited retention stay exact, and MaxValue is accepted while
+  addition overflow fails before any repository call. All successful cases
+  assert bytes, value/address, token and one write. Read-only review strengthens
+  the recording counter to count entry. Full Core passes6511/6511; verify-only
+  formatting passes. Removing addition fails exactly3 cases with8controls passing.
+  Product source is restored and its class passes11/11 again. Exact-commit
+  measurement remains pending.
+  This validates duration selection, not every provider's absolute expiry range.
+- Missing-header checkpoint below was measured281/281 at
+  `9e6bed24d5cbf2d02e8fbe7621151738c9b76760`,18 report/log/binary hashes
+  verified, pushed and remote-confirmed. Four header selectors have full
+  line/branch coverage and CRAP2; their four callbacks have full coverage and
+  CRAP4 in that report. Other overloads and the global gap ledger remain open.
 - Missing-header follow-up adds four real Quartz cases for First/Second/Third
   and Fault replies. A valid body owner must not replace an absent RequestId:
   require the exact RequestException, unchanged two Sagas, no outcome or

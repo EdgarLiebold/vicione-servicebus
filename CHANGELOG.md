@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added outgoing message-data retention checks for send-policy precedence,
+  additional retention, unlimited storage and exact duration boundaries.
+  Overflow must fail before repository access. Tests detect omitted retention
+  addition while preserving fallback and existing provider behavior controls.
 - Added real Quartz checks rejecting all three Saga response types and fault
   replies when RequestId is absent. A valid body identity must not silently
   select a Saga; rejection preserves both Sagas and the actual scheduled timeout.

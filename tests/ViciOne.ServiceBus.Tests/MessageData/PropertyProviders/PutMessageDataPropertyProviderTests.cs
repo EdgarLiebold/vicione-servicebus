@@ -6,12 +6,76 @@ using ViciOne.ServiceBus.Initializers.PropertyProviders;
 using ViciOne.ServiceBus.MessageData.PropertyProviders;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.MessageData.PropertyProviders;
 
 public sealed class PutMessageDataPropertyProviderTests
 {
+    [Theory]
+    [InlineData(7L, 19L, 3L, 10L)]
+    [InlineData(7L, 19L, null, 7L)]
+    [InlineData(null, 19L, 3L, 19L)]
+    [InlineData(null, null, 3L, null)]
+    [InlineData(long.MaxValue - 1, 19L, 1L, long.MaxValue)]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PROPERTY-PROVIDERS", "retention-precedence-addition-and-unlimited-storage")]
+    public async Task RetentionPolicy_SelectsTheExactLifetimeWithoutChangingTheStoredValueAsync(
+        long? sendTicks, long? policyTicks, long? extraTicks, long? expectedTicks)
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var repository = new RecordingRepository();
+        var root = new BaseInitializeContext(cancellationToken);
+        var send = new MessageSendContext<TestMessage>(new TestMessage(), cancellationToken)
+        {
+            TimeToLive = Duration(sendTicks)
+        };
+        root.GetOrAddPayload<SendContext>(() => send);
+        InitializeContext<TestMessage, TestInput> context = root.CreateMessageContext(send.Message)
+            .CreateInputContext(new TestInput(new PutMessageData<string>("retained payload")));
+        var provider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromResult<MessageData<string>?>(new PutMessageData<string>("retained payload"))),
+            repository,
+            new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1,
+                timeToLive: Duration(policyTicks), extraTimeToLive: Duration(extraTicks)));
+
+        MessageData<string> result = Assert.IsAssignableFrom<MessageData<string>>(
+            await provider.GetPropertyAsync(context, cancellationToken));
+
+        Assert.Equal(Duration(expectedTicks), repository.TimeToLive);
+        Assert.Equal(repository.Address, result.Address);
+        Assert.Equal("retained payload", await result.Value);
+        Assert.Equal(Encoding.UTF8.GetBytes("retained payload"), repository.Bytes);
+        Assert.Equal(cancellationToken, repository.CancellationToken);
+        Assert.Equal(1, repository.PutCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PROPERTY-PROVIDERS", "retention-overflow-fails-before-storage")]
+    public async Task RetentionOverflow_FailsBeforeWritingAnyRepositoryDataAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var repository = new RecordingRepository();
+        var root = new BaseInitializeContext(cancellationToken);
+        var send = new MessageSendContext<TestMessage>(new TestMessage(), cancellationToken) { TimeToLive = TimeSpan.MaxValue };
+        root.GetOrAddPayload<SendContext>(() => send);
+        InitializeContext<TestMessage, TestInput> context = root.CreateMessageContext(send.Message)
+            .CreateInputContext(new TestInput(new PutMessageData<string>("must not be stored")));
+        var provider = new PutMessageDataPropertyProvider<TestInput, string>(
+            new ScriptedInputProvider(Task.FromResult<MessageData<string>?>(new PutMessageData<string>("must not be stored"))),
+            repository,
+            new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1, extraTimeToLive: TimeSpan.FromTicks(1)));
+
+        MessageDataException error = await Assert.ThrowsAsync<MessageDataException>(() => provider.GetPropertyAsync(context, cancellationToken));
+
+        Assert.IsType<OverflowException>(error.InnerException);
+        Assert.Equal("The outgoing message lifetime and additional repository retention exceed the supported duration.", error.Message);
+        Assert.Equal(0, repository.PutCalls);
+        Assert.Empty(repository.Bytes);
+    }
+
+    private static TimeSpan? Duration(long? ticks) => ticks.HasValue ? TimeSpan.FromTicks(ticks.Value) : null;
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY-RESOLUTION", "owner-bound-repository-and-policy")]
     public async Task ConstructorRepositoryAndPolicy_AreUsedByTheProviderAsync()
@@ -188,12 +252,12 @@ public sealed class PutMessageDataPropertyProviderTests
             TimeSpan? timeToLive = null,
             CancellationToken cancellationToken = default)
         {
+            PutCalls++;
             using var copy = new MemoryStream();
             await stream.CopyToAsync(copy, cancellationToken);
             Bytes = copy.ToArray();
             CancellationToken = cancellationToken;
             TimeToLive = timeToLive;
-            PutCalls++;
             return Address;
         }
     }
