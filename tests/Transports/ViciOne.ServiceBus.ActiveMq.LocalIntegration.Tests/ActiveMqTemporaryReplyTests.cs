@@ -7,6 +7,10 @@ namespace ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests;
 
 public sealed class ActiveMqTemporaryReplyTests
 {
+    readonly ITestOutputHelper _output;
+
+    public ActiveMqTemporaryReplyTests(ITestOutputHelper output) => _output = output;
+
     [Theory]
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
@@ -21,7 +25,7 @@ public sealed class ActiveMqTemporaryReplyTests
     public Task RawRequest_UsesProviderTemporaryReplyQueueAsync(string flavor) =>
         AssertTemporaryReplyQueueAsync(flavor, rawSerializer: true);
 
-    private static async Task AssertTemporaryReplyQueueAsync(string flavor, bool rawSerializer)
+    private async Task AssertTemporaryReplyQueueAsync(string flavor, bool rawSerializer)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(
             flavor,
@@ -29,6 +33,9 @@ public sealed class ActiveMqTemporaryReplyTests
         string queueName = fixture.Name("service");
         Guid correlationId = Guid.NewGuid();
         var replyObserved = NewObservation<ReplyObservation>();
+        var handlerEntered = NewObservation<bool>();
+        var responseSent = NewObservation<bool>();
+        var handlerFailure = NewObservation<Exception>();
         var responseCount = 0;
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
@@ -38,20 +45,33 @@ public sealed class ActiveMqTemporaryReplyTests
 
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<ReplyRequest>(async context =>
             {
-                ActiveMqReceiveContext transport = context.Advanced().ReceiveContext.GetPayload<ActiveMqReceiveContext>();
-                IDestination replyTo = Assert.IsAssignableFrom<IDestination>(transport.TransportMessage.NMSReplyTo);
-                replyObserved.TrySetResult(new ReplyObservation(
-                    replyTo.IsTemporary,
-                    replyTo.IsQueue,
-                    replyTo.IsTopic,
-                    ToEndpointAddress(replyTo),
-                    context.Message.CorrelationId));
+                handlerEntered.TrySetResult(true);
                 Interlocked.Increment(ref responseCount);
-                await context.RespondAsync(new ReplyResponse(context.Message.CorrelationId));
+                try
+                {
+                    ActiveMqReceiveContext transport = context.Advanced().ReceiveContext.GetPayload<ActiveMqReceiveContext>();
+                    IDestination replyTo = Assert.IsAssignableFrom<IDestination>(transport.TransportMessage.NMSReplyTo);
+                    replyObserved.TrySetResult(new ReplyObservation(
+                        replyTo.IsTemporary,
+                        replyTo.IsQueue,
+                        replyTo.IsTopic,
+                        ToEndpointAddress(replyTo),
+                        context.Message.CorrelationId));
+                    await context.RespondAsync(new ReplyResponse(context.Message.CorrelationId));
+                    responseSent.TrySetResult(true);
+                }
+                catch (Exception exception)
+                {
+                    handlerFailure.TrySetResult(exception);
+                    throw;
+                }
             }));
         });
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var requestCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         bool started = false;
+        Exception? primaryFailure = null;
+        Task<Response<ReplyResponse>>? responseTask = null;
 
         try
         {
@@ -60,10 +80,20 @@ public sealed class ActiveMqTemporaryReplyTests
             IRequestClient<ReplyRequest> client = bus.CreateRequestClient<ReplyRequest>(
                 new Uri($"queue:{queueName}"),
                 new RequestTimeout(fixture.OperationTimeout));
-            Response<ReplyResponse> response = await client.GetResponseAsync<ReplyResponse>(
+            responseTask = client.GetResponseAsync<ReplyResponse>(
                     new ReplyRequest(correlationId),
-                    cancellationToken)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+                    requestCancellation.Token);
+            TimeSpan watchdog = fixture.OperationTimeout + TimeSpan.FromSeconds(5);
+            using var watchdogCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            watchdogCancellation.CancelAfter(watchdog);
+            foreach (Task phase in new Task[] { responseTask, responseSent.Task })
+            {
+                Task first = await Task.WhenAny(phase, handlerFailure.Task).WaitAsync(watchdogCancellation.Token);
+                if (handlerFailure.Task.IsCompletedSuccessfully)
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(await handlerFailure.Task).Throw();
+                await first;
+            }
+            Response<ReplyResponse> response = await responseTask;
             ReplyObservation observed = await replyObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(correlationId, response.Message.CorrelationId);
@@ -76,10 +106,58 @@ public sealed class ActiveMqTemporaryReplyTests
             Assert.True(string.IsNullOrEmpty(observed.Address.UserInfo));
             Assert.Equal(1, Volatile.Read(ref responseCount));
         }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            _output.WriteLine($"Flavor={flavor}; Queue={queueName}; CorrelationId={correlationId}; "
+                + $"HandlerEntered={handlerEntered.Task.IsCompleted}; ReplyObserved={replyObserved.Task.Status}; "
+                + $"ResponseSent={responseSent.Task.IsCompleted}; ClientResponse={responseTask?.Status}; "
+                + $"HandlerCalls={Volatile.Read(ref responseCount)}");
+            if (replyObserved.Task.IsCompletedSuccessfully)
+                _output.WriteLine($"ReplyTo={replyObserved.Task.Result}");
+            if (handlerFailure.Task.IsCompletedSuccessfully)
+                _output.WriteLine($"HandlerFailure={handlerFailure.Task.Result}");
+            using var diagnosticsTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            try
+            {
+                var queue = await fixture.GetClassicQueueStatisticsAsync(queueName, diagnosticsTimeout.Token);
+                _output.WriteLine($"QueueStatistics={queue}");
+            }
+            catch (Exception diagnosticsFailure)
+            {
+                _output.WriteLine($"QueueStatisticsFailure={diagnosticsFailure}");
+            }
+            throw;
+        }
         finally
         {
+            if (responseTask is not null)
+                _ = responseTask.ContinueWith(task => _ = task.Exception, CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+            Exception? cleanupFailure = null;
+            try
+            {
+                await requestCancellation.CancelAsync();
+            }
+            catch (Exception exception)
+            {
+                cleanupFailure = exception;
+                _output.WriteLine($"RequestCancellationFailure={exception}");
+            }
             if (started)
-                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            {
+                try
+                {
+                    await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+                }
+                catch (Exception exception)
+                {
+                    cleanupFailure = cleanupFailure is null ? exception : new AggregateException(cleanupFailure, exception);
+                    _output.WriteLine($"BusStopFailure={exception}");
+                }
+            }
+            if (primaryFailure is null && cleanupFailure is not null)
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(cleanupFailure).Throw();
         }
     }
 

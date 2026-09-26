@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- ActiveMQ temporary-reply integration tests now distinguish handler entry,
+  native reply-address inspection, response-send completion and client receipt.
+  Handler failures are surfaced directly, with correlation and bounded queue
+  diagnostics before teardown; cleanup cannot replace the primary failure.
+  The product request deadline is unchanged and the outer watchdog has one
+  shared budget. An injected post-send failure verified both protocol paths
+  and was removed. The original intermittent request timeout remains unresolved.
 - ActiveMQ connection creation now preserves the original cancellation or
   classified provider failure when disposing a failed connection also throws.
   Cleanup and warning-log failures are contained so diagnostic listeners cannot
