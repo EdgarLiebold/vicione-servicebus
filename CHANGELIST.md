@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10835 |
+| Added | 10837 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -193,6 +193,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/state-machine-schedule-activity-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/status.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15214,6 +15215,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests.csproj` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchIdentityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchResponseTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatcherCancellationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsClientContextApiTests.cs` | Added |  |

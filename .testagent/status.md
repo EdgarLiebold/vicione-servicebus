@@ -16,6 +16,12 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Open T31 SQS batch packet: four new cases pass with read-only adversarial
+  review and bounded result/disposal waits. Wrong-caller mapping and missing
+  success-duplicate validation each fail their intended case with three
+  controls passing. Both product mutations are restored; final control 4/4.
+  [Evidence and open gates](coverage-a-plus-20260921/t31-sqs-batch-followup.md).
+  Commit, all-profile exact measurement and push remain pending.
 - Complete T30 measurement at `3264ed26c3914a44fff2ef3291750b766efda870`:
   all 33 profiles and four fixture groups passed; 12,607 executions, lines
   85101/93762 (90.7627824%), conservative branches 30732/36841 (83.4179311%),

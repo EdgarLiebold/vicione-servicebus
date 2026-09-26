@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added SQS batch identity checks for reordered mixed success/failure results
+  and atomic rejection of duplicate or contradictory response IDs. Every
+  caller's exact outcome, complete request membership and provider token are
+  checked. Deliberate wrong-caller and missing-duplicate-guard changes are
+  detected; product source is restored. Full packet measurement is pending.
 - Completed all 33 profiles for the cancellation packet: 12,607 passing
   executions; all four targeted cancellation methods have full line/observed
   branch coverage. Overall coverage is 90.7628% lines and 83.4179% conservative
