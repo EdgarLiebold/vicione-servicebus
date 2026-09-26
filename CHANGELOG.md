@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added real Quartz checks rejecting all three Saga response types and fault
+  replies when RequestId is absent. A valid body identity must not silently
+  select a Saga; rejection preserves both Sagas and the actual scheduled timeout.
+  A controlled third-response fallback to body correlation is detected while
+  the other thirteen response/correlation cases remain passing controls.
 - Added real Quartz checks for all five Saga request correlation callbacks.
   Each override must select its configured Saga instead of the default owner,
   preserve the other Saga and its trigger, and address cancellation to the

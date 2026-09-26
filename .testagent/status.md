@@ -16,6 +16,20 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Missing-header follow-up adds four real Quartz cases for First/Second/Third
+  and Fault replies. A valid body owner must not replace an absent RequestId:
+  require the exact RequestException, unchanged two Sagas, no outcome or
+  cancellation, and the original real trigger after bus drain. Scoped14/14 and
+  full Quartz281/281 pass. Read-only adversarial review found no blocker.
+  Replacing only Completed3's missing-header guard with body correlation fails
+  MissingThird while13controls pass; product source is restored and the final
+  class passes14/14 again. Exact-commit measurement is pending. Verify-only formatting passes
+  after a sandbox pipe-permission failure; initial test compilation required the
+  missing Middleware namespace import. No product fix or global A+ is claimed.
+- The callback checkpoint below was subsequently measured277/277 at
+  `d41ae3b4f223867965e2227f26fbfde4a40ff5f0`, all18 recorded report/log/binary
+  hashes verified, pushed and confirmed against the remote branch. This closes
+  its pending measurement/publication note, not the product-wide coverage gaps.
 - Correlation callback follow-up adds five real Quartz cases: all three response
   callbacks, fault and timeout must select the configured body ownerB despite
   default ownerA, preserving A and its trigger. Default cases remain intact and

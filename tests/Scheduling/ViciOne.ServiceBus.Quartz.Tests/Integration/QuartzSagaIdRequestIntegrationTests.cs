@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using Quartz;
 using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Advanced.Observers;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
@@ -36,7 +37,15 @@ public sealed class QuartzSagaIdRequestIntegrationTests
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "correlation-callbacks-override-default-owner-without-canceling-its-timeout")]
     public Task CustomCorrelation_SelectsTheBodyOwnerAndPreservesTheOtherSagaTimeoutAsync(string kind) => RunAsync(kind, true);
 
-    private static async Task RunAsync(string kind, bool useBodyCorrelation)
+    [Theory]
+    [InlineData("first")]
+    [InlineData("second")]
+    [InlineData("third")]
+    [InlineData("fault")]
+    [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "missing-request-header-preserves-sagas-and-real-timeout")]
+    public Task MissingRequestId_RejectsTheResponseWithoutChangingEitherSagaOrItsTimeoutAsync(string kind) => RunAsync(kind, false, true);
+
+    private static async Task RunAsync(string kind, bool useBodyCorrelation, bool missingHeader = false)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -64,6 +73,8 @@ public sealed class QuartzSagaIdRequestIntegrationTests
                 requestSeen.TrySetResult(new RequestEnvelope(context.RequestId, context.Message.CorrelationId,
                     context.ResponseAddress, context.Headers.Get<object>(MessageHeaders.Request.Accept)));
                 await releaseService.Task.WaitAsync(timeout, context.CancellationToken);
+                if (missingHeader)
+                    return;
                 switch (kind)
                 {
                     case "first": await context.RespondAsync(new First(controlId, "first")); break;
@@ -86,6 +97,9 @@ public sealed class QuartzSagaIdRequestIntegrationTests
         var primed = new ConsumeCompletionObserver<Prime>(_ => true);
         var started = new ConsumeCompletionObserver<Begin>(_ => true);
         var response = new ResponseObserver();
+        Guid probeMessageId = NewId.NextGuid();
+        var rejected = new RejectedResponseObserver(inputAddress, probeMessageId);
+        using ConnectHandle rejectedHandle = fixture.Bus.ConnectReceiveObserver(rejected);
         using ConnectHandle scheduledHandle = fixture.Bus.ConnectConsumeObserver(scheduled);
         using ConnectHandle canceledHandle = fixture.Bus.ConnectConsumeObserver(canceled);
         using ConnectHandle primedHandle = fixture.Bus.ConnectConsumeObserver(primed);
@@ -114,25 +128,47 @@ public sealed class QuartzSagaIdRequestIntegrationTests
             Assert.False(outcome.Task.IsCompleted);
 
             releaseService.SetResult();
-            if (kind == "timeout")
-                await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, cancellationToken);
-
-            Outcome result = await outcome.Task.WaitAsync(timeout, cancellationToken);
-            await response.Completed.WaitAsync(timeout, cancellationToken);
-            string detail = kind switch { "fault" => "validation rejected", "timeout" => "expired", _ => kind };
-            Assert.Equal(new Outcome(expectedOwner, kind, controlId, detail), result);
-            RequestState active = State(repository, expectedOwner);
-            Assert.Equal(machine.Finished, active.CurrentState);
-            Assert.Equal(1, active.Count);
-            Assert.Equal(kind == "fault" ? typeof(ExpectedServiceFailure).FullName : string.Empty, active.ErrorType);
-            if (kind != "timeout")
+            if (missingHeader)
             {
-                await canceled.Completed.WaitAsync(timeout, cancellationToken);
-                Assert.Equal(1, canceled.ObservedCount);
-                Assert.Equal(useBodyCorrelation, await fixture.Scheduler.Exists(triggerKey, cancellationToken));
-            }
-            else if (useBodyCorrelation)
+                switch (kind)
+                {
+                    case "first": await SendWithoutRequestIdAsync(input, new First(activeId, kind), probeMessageId, cancellationToken); break;
+                    case "second": await SendWithoutRequestIdAsync(input, new Second(activeId, kind), probeMessageId, cancellationToken); break;
+                    case "third": await SendWithoutRequestIdAsync(input, new Third(activeId, kind), probeMessageId, cancellationToken); break;
+                    case "fault":
+                        Fault<Validate> fault = new ValidationFault(NewId.NextGuid(), NewId.NextGuid(), DateTimeOffset.UtcNow,
+                            [new ValidationExceptionInfo()], ViciOne.ServiceBus.Metadata.HostMetadataCache.Host,
+                            [MessageUrn.ForTypeString<Validate>()], new Validate(activeId));
+                        await SendWithoutRequestIdAsync(input, fault, probeMessageId, cancellationToken);
+                        break;
+                }
+                Task completed = await Task.WhenAny(rejected.Fault, outcome.Task).WaitAsync(timeout, cancellationToken);
+                Assert.Same(rejected.Fault, completed);
+                Assert.Equal("Missing RequestId", Assert.IsType<RequestException>(await rejected.Fault).Message);
                 Assert.True(await fixture.Scheduler.Exists(triggerKey, cancellationToken));
+            }
+            else
+            {
+                if (kind == "timeout")
+                    await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, cancellationToken);
+
+                Outcome result = await outcome.Task.WaitAsync(timeout, cancellationToken);
+                await response.Completed.WaitAsync(timeout, cancellationToken);
+                string detail = kind switch { "fault" => "validation rejected", "timeout" => "expired", _ => kind };
+                Assert.Equal(new Outcome(expectedOwner, kind, controlId, detail), result);
+                RequestState active = State(repository, expectedOwner);
+                Assert.Equal(machine.Finished, active.CurrentState);
+                Assert.Equal(1, active.Count);
+                Assert.Equal(kind == "fault" ? typeof(ExpectedServiceFailure).FullName : string.Empty, active.ErrorType);
+                if (kind != "timeout")
+                {
+                    await canceled.Completed.WaitAsync(timeout, cancellationToken);
+                    Assert.Equal(1, canceled.ObservedCount);
+                    Assert.Equal(useBodyCorrelation, await fixture.Scheduler.Exists(triggerKey, cancellationToken));
+                }
+                else if (useBodyCorrelation)
+                    Assert.True(await fixture.Scheduler.Exists(triggerKey, cancellationToken));
+            }
         }
         finally
         {
@@ -144,9 +180,65 @@ public sealed class QuartzSagaIdRequestIntegrationTests
         Assert.Equal(machine.Validation.Pending, control.CurrentState);
         Assert.Equal(0, control.Count);
         Assert.Equal(string.Empty, control.Kind);
+        Assert.Equal(string.Empty, control.Detail);
+        Assert.Equal(string.Empty, control.ErrorType);
         Assert.Equal(Guid.Empty, control.BodyId);
-        Assert.Single(outcomes);
-        Assert.Equal(1, response.Count);
+        if (missingHeader)
+        {
+            RequestState active = State(repository, activeId);
+            Assert.Equal(machine.Validation.Pending, active.CurrentState);
+            Assert.Equal(0, active.Count);
+            Assert.Equal(string.Empty, active.Kind);
+            Assert.Equal(string.Empty, active.Detail);
+            Assert.Equal(string.Empty, active.ErrorType);
+            Assert.Equal(Guid.Empty, active.BodyId);
+            Assert.Empty(outcomes);
+            Assert.Equal(0, response.Count);
+            Assert.Equal(0, canceled.ObservedCount);
+            Assert.True(await fixture.Scheduler.Exists(QuartzTriggerKey.ForOneTime(activeId, fixture.SchedulerNamespace), cancellationToken));
+        }
+        else
+        {
+            Assert.Single(outcomes);
+            Assert.Equal(1, response.Count);
+        }
+    }
+
+    private static Task SendWithoutRequestIdAsync<T>(ISendEndpoint endpoint, T message, Guid messageId, CancellationToken cancellationToken)
+        where T : class => endpoint.SendAsync(message, Pipe.Execute<SendContext<T>>(context =>
+        {
+            context.MessageId = messageId;
+            context.RequestId = null;
+        }), cancellationToken);
+
+    public sealed record ValidationFault(Guid FaultId, Guid? FaultedMessageId, DateTimeOffset Timestamp,
+        ExceptionInfo[] Exceptions, HostInfo Host, string[] FaultMessageTypes, Validate Message) : Fault<Validate>;
+
+    public sealed class ValidationExceptionInfo : ExceptionInfo
+    {
+        public string ExceptionType => typeof(ExpectedServiceFailure).FullName!;
+        public ExceptionInfo? InnerException => null;
+        public string StackTrace => string.Empty;
+        public string Message => "validation rejected";
+        public string Source => nameof(QuartzSagaIdRequestIntegrationTests);
+        public IDictionary<string, object>? Data => null;
+    }
+
+    private sealed class RejectedResponseObserver(Uri inputAddress, Guid messageId) : IReceiveObserver
+    {
+        private readonly TaskCompletionSource<Exception> _fault = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public Task<Exception> Fault => _fault.Task;
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
+        public Task PostReceiveAsync(ReceiveContext context) => Task.CompletedTask;
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType) where T : class => Task.CompletedTask;
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception) where T : class => Task.CompletedTask;
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
+        {
+            Guid? receivedId = context.TryGetPayload(out ConsumeContext? consume) ? consume.MessageId : context.GetMessageId();
+            if (context.InputAddress == inputAddress && receivedId == messageId)
+                _fault.TrySetResult(exception);
+            return Task.CompletedTask;
+        }
     }
 
     private static RequestState State(InMemorySagaRepository<RequestState> repository, Guid id) =>
