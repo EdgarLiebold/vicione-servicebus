@@ -59,6 +59,7 @@ internal static class IntrinsicsHelper
         Debug.Assert(output.Length >= 26);
 
         Span<byte> buffer = stackalloc byte[64];
+        buffer[..Vector256<byte>.Count].Clear();
         span.CopyTo(buffer[6..]);
 
         var inputVector = MemoryMarshal.Read<Vector256<byte>>(buffer);

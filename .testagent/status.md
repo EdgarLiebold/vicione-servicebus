@@ -92,31 +92,31 @@
   Abstractions cases; `artifacts/q4u00/receipt.json` contains 6,457 Core cases.
   Both runs have zero failures/skips and successful builds without warnings.
   These two profiles do not constitute a new whole-product coverage aggregate.
-- `GraphValidation`: confirmed self-edge omission and stale Tarjan indices on
-  repeated validation. `TopologicalSort` retains `Visited`; `Node.CompareTo` and
-  weighted `Edge.CompareTo` have defective comparison contracts. The only current
-  product caller, `MessageFabric`, constructs a fresh graph and rejects self-bind
-  before graph validation, limiting current product impact. Sorting/comparison
-  have no current callers. Repair the retained graph behavior; decide unused
-  internals from verified callsites before adding tests solely for coverage.
-  Read-only review: `/root/assembly_scan_redteam`; not yet repaired.
-- Graph repair boundary confirmed again at `6e180ef29`: reset all Tarjan nodes
-  before traversing any edge and recognize singleton components only when they
-  contain a self-edge. Remove unused topological sorting and comparison methods
-  after the verified repo-wide callsite search; retain the live MessageFabric
-  cycle-validation chain. Add direct self-edge, post-validation mutation and
-  repeated-failure regressions with an acyclic control, then retain the existing
-  MessageFabric binding/rollback regressions. The architecture type-name list is
-  an exported-type deny-list, not a requirement that unused internal types exist.
-- `IntrinsicsHelper.EncodeBase32`: byte 22 of stack padding influences output
-  index 24. No `SkipLocalsInit` or current runtime failure was demonstrated.
-  Explicit initialization and a meaningful formatter regression remain to assess;
-  this is an initialization dependency, not a proven current formatter failure.
-- `ErrorTransportFilter`: its summary claims fault generation, while this filter
-  only moves the faulted receive and continues the pipeline. Correct manually.
+- `GraphValidation`: repaired self-edge omission and stale traversal state.
+  All nodes reset before any DFS; a singleton is cyclic only with a self-edge.
+  `DependencyGraphTests` adds self-edge, mutation-after-success, repeated-failure
+  and disconnected/shared-descendant control cases. Original source failed three
+  cases and passed the acyclic control (`/private/tmp/servicebus-graph-red.log`).
+  The corrected full Abstractions run passes 932/932. Unused topological sorting,
+  comparison methods and their otherwise uncalled entry points were removed
+  after repo-wide caller review. The live MessageFabric validation chain remains.
+  Read-only Red Team `/root/assembly_scan_redteam`: PASS. Final exact-commit
+  Abstractions/Core verification remains required.
+- `IntrinsicsHelper.EncodeBase32`: first 32 stack-buffer bytes are now explicitly
+  zeroed before the 16-byte input copy. A temporary post-clear `buffer[22]=0xff`
+  mutation failed 8/17 existing formatter cases, including reference-text
+  corruption at output index 24 (`/private/tmp/servicebus-padding-mutant.log`).
+  Restored full Abstractions run passes 932/932
+  (`/private/tmp/servicebus-graph-padding-restored.log`). This is an initialization
+  dependency correction, not a demonstrated prior runtime failure from default
+  stack initialization. Native and fallback exact-commit profiles remain due.
+- `ErrorTransportFilter`: manually corrected its summary to sending the failed
+  receive through the error transport and continuing the exception pipeline.
+  Read-only Red Team `/root/outbox_proof_redteam` approved this and the padding fix.
 - ActiveMQ temporary reply: the original 99/100 run at `0377ee4f3` timed out;
   isolated 4/4 and 100/100 reruns passed without a root-cause fix. `0db6ec160`
-  adds verified phase/correlation/queue diagnostics. Stability remains open.
+  adds verified phase/correlation/queue diagnostics. The later p3 correction and
+  successful 100-case broker receipt above supersede this historical failure.
 - The full measurement at `0db6ec160` has 32 successful profile receipts, but
   ActiveMQ finished with 99/100 passing. `FutureSchedule_IsInvisibleUntilDueThenDeliveredAsync`
   (`activemq`) failed at line 158: after delivery and bus stop the scheduler

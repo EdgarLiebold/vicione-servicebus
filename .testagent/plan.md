@@ -19,10 +19,12 @@ for the explicit open defects and their evidence limits.
    first-read accounting are already integrated and pushed.
 3. The one-time setup publication correction has six red/green controlled
    reentrancy cases, a clean adversarial review and exact-commit verification:
-   928 Abstractions and 6,457 Core tests at `6e180ef29`. Repair the retained graph defects with
-   meaningful behavior regressions and adversarial review.
-4. Assess the formatter padding dependency and correct the inaccurate error-filter
-   summary manually. Preserve the unresolved provider stability findings.
+   928 Abstractions and 6,457 Core tests at `6e180ef29`. Graph self-edge/repeat
+   validation is now corrected with three red regressions and an acyclic control;
+   unused sorting/comparison helpers are removed after callsite and Red Team review.
+4. Formatter SIMD padding and the inaccurate error-filter summary are corrected;
+   existing formatter references kill a poisoned-padding mutant. Finish native,
+   no-AVX2, scalar Abstractions and Core receipts for this source commit.
 5. Continue product-wide line/branch/CRAP work and the final scope-wide audit.
 
 The numbered iteration plans below are historical records, not the current

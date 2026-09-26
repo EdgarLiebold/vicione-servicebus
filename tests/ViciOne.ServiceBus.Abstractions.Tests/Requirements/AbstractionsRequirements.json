@@ -1,5 +1,33 @@
 [
    {
+      "requirementId" : "REQ-VSB-GRAPH-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SelfEdge_IsRejectedWithItsNodeIdentity",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.DependencyGraphTests",
+      "variantKey" : "self-edge-is-a-cycle"
+   },
+   {
+      "requirementId" : "REQ-VSB-GRAPH-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EdgeAddedAfterSuccessfulValidation_IsCheckedAgainstExistingEdges",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.DependencyGraphTests",
+      "variantKey" : "new-cycle-after-success-is-detected"
+   },
+   {
+      "requirementId" : "REQ-VSB-GRAPH-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RepeatedValidation_StillRejectsTheCycleAndExcludesDisconnectedNodes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.DependencyGraphTests",
+      "variantKey" : "failed-validation-remains-repeatable"
+   },
+   {
+      "requirementId" : "REQ-VSB-GRAPH-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SharedDescendantsAndDisconnectedEdges_RemainValidAcrossRepeatedChecks",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.DependencyGraphTests",
+      "variantKey" : "shared-descendants-and-disconnected-edges-remain-acyclic"
+   },
+   {
       "requirementId" : "REQ-VSB-BINARY-MESSAGE-BODY",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "Constructor_CopiesOnlyTheSelectedContent",

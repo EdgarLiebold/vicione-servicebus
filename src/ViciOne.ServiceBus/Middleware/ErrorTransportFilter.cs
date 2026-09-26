@@ -4,8 +4,7 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
-/// In the case of an exception, the message is moved to the destination transport. If the receive had not yet been
-/// faulted, a fault is generated.
+/// Sends a failed receive to its configured error transport, then continues the exception pipeline.
 /// </summary>
 public class ErrorTransportFilter :
     IFilter<ExceptionReceiveContext>

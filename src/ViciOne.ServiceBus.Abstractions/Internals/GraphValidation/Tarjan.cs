@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ViciOne.ServiceBus.Internals.GraphValidation;
 
@@ -17,6 +18,12 @@ internal class Tarjan<T, TNode>
         _index = 0;
         Result = new List<IList<TNode>>();
         _stack = new Stack<TNode>();
+
+        foreach (var node in _list.SourceNodes)
+        {
+            node.Index = -1;
+            node.LowLink = -1;
+        }
 
         foreach (var node in _list.SourceNodes)
         {
@@ -60,7 +67,7 @@ internal class Tarjan<T, TNode>
             }
             while (!v.Equals(n));
 
-            if (component.Count != 1 || !v.Equals(component[0]))
+            if (component.Count > 1 || _list.GetEdges(v).Any(edge => ReferenceEquals(edge.Target, v)))
                 Result.Add(component);
         }
     }

@@ -45,8 +45,4 @@ internal class AdjacencyList<T, TNode>
         edges.Add(new Edge<T, TNode>(source, target, weight));
     }
 
-    public TNode GetNode(T key)
-    {
-        return _nodeList[key];
-    }
 }

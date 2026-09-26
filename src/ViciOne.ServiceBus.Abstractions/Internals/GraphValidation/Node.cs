@@ -11,13 +11,6 @@ internal class Node<T>
         Value = value;
     }
 
-    public int CompareTo(DependencyGraphNode<T>? other)
-    {
-        return !Equals(other)
-            ? 0
-            : -1;
-    }
-
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))

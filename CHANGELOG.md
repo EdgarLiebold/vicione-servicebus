@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Dependency-graph validation now detects self-edges and rechecks all nodes on
+  every validation, including after a prior failure or newly added edge. Four
+  regressions distinguish real cycles from shared descendants and disconnected
+  acyclic edges. Unused internal topological sorting and comparison methods were
+  removed after a repository-wide caller check; live message-fabric validation
+  remains intact.
+- The SIMD Base32 formatter explicitly initializes its input padding. Existing
+  independent reference strings detect poisoned padding at output position 24;
+  no prior runtime failure from default stack initialization is claimed.
+- Corrected the error-transport filter summary to describe sending and pipeline
+  continuation; this filter does not itself generate a fault message.
 - One-time setup now clears its running state before publishing success, failure
   or cancellation. Immediate eviction or retry can no longer observe a terminal
   result while the setup still rejects a new attempt. The caller retains the
