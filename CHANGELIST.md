@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10825 |
+| Added | 10826 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -15864,6 +15864,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierHostResultContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierHostResultParameterContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierMessageContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/CourierMessageDataIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierRegistrationBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierResultMessageStateContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipBuilderDeepContractTests.cs` | Added |  |

@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added real Courier routing-slip tests for repository-backed arguments and
+  compensation logs, including deterministic expiry before execution and before
+  compensation. Assertions preserve exact content/reference/tracking identity
+  and distinguish stage-specific data failures from successful effects.
 - Added RabbitMQ nested consume-binding regression tests for the exact directed
   exchange tree, settings, sibling parent restoration and rejection before
   declaration when a parent binding is missing. These tests strengthen existing

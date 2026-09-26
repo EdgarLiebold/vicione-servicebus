@@ -16,6 +16,20 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Courier message-data follow-up: three real in-memory routing-slip cases pass
+  for stored argument/log resolution and deterministic argument/log expiry at
+  the exact repository-clock TTL boundary. External observations verify exact
+  values, addresses, stage order and tracking identity; terminal events verify
+  the owning failure stage and prevent false success. The compiled requirement
+  projection passes 1/1 and the complete Courier namespace passes 385/385.
+  Omitting only compensation-log transform registration in a separate worktree
+  fails the log-expiry row on `MessageDataException` versus the expected
+  `MessageDataNotFoundException`, while argument expiry remains green. Product
+  source is restored with a clean diff; all three restored tests pass. Read-only
+  adversarial review found no concrete oracle or event-semantics defect, and
+  formatting verification passed. This is bounded behavior evidence; fresh
+  commit-bound coverage and publication are pending. It does not establish both
+  synchronous/asynchronous initializer branches or global A+ completion.
 - A+ acceptance remains open. The PO explicitly requested disposition of the
   remaining coverage gaps before the all-repository Roslyn audit. The accepted
   baseline contains 2,828 zero-line-covered and 1,712 partially line-covered
