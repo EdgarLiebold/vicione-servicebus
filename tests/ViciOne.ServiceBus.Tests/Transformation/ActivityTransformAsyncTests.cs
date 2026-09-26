@@ -4,12 +4,26 @@ using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Transformation;
 
 public sealed class ActivityTransformAsyncTests
 {
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-SEND-TRANSFORM", "pending-initialization-preserves-envelope-and-awaits-send-outcome")]
+    public Task PendingSendInitialization_PreservesEnvelopeAndAwaitsTheSendOutcomeAsync(bool replace, bool downstreamFails) =>
+        CheckSuccessAsync<SendContext<Data>>(replace, downstreamFails, context => context.Message);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-TRANSFORM", "pending-initialization-failure-never-reaches-send")]
+    public Task PendingSendInitializationFailure_NeverReachesTheSendPipeAsync() => CheckFailureAsync<SendContext<Data>>();
+
     [Theory]
     [InlineData(false, false, false)]
     [InlineData(false, true, false)]
@@ -54,6 +68,11 @@ public sealed class ActivityTransformAsyncTests
         var next = new RecordingPipe<TContext>();
         var filter = (IFilter<TContext>)(object)new TransformFilter<Data>(fixture.Initializer);
 
+        var outbound = original as SendContext<Data>;
+        Guid? messageId = outbound?.MessageId;
+        Guid? requestId = outbound?.RequestId;
+        Uri? destination = outbound?.DestinationAddress;
+
         Task operation = filter.SendAsync(original, next);
 
         Assert.False(operation.IsCompleted);
@@ -69,6 +88,20 @@ public sealed class ActivityTransformAsyncTests
         Assert.Same(result, getData(forwarded));
         if (forwarded is ActivityContext activity)
             Assert.Equal(fixture.TrackingNumber, activity.TrackingNumber);
+        else if (forwarded is SendContext<Data> send)
+        {
+            var originalSend = (SendContext<Data>)(object)original;
+            Assert.Equal(fixture.TrackingNumber, send.CorrelationId);
+            Assert.Equal(messageId, send.MessageId);
+            Assert.Equal(destination, send.DestinationAddress);
+            Assert.Equal(requestId, send.RequestId);
+            Assert.Equal(messageId, originalSend.MessageId);
+            Assert.Equal(destination, originalSend.DestinationAddress);
+            Assert.Equal(requestId, originalSend.RequestId);
+            Assert.Same(originalSend.Headers, send.Headers);
+            Assert.Equal("trace-value", send.Headers.Get<string>("transform-trace"));
+            Assert.Same(fixture.Original, originalSend.Message);
+        }
         else
             Assert.Equal(fixture.TrackingNumber, ((ConsumeContext<Data>)(object)forwarded).CorrelationId);
         Assert.Equal(owner.Token, forwarded.CancellationToken);
@@ -161,6 +194,18 @@ public sealed class ActivityTransformAsyncTests
 
         public TContext CreateContext<TContext>() where TContext : class
         {
+            if (typeof(TContext) == typeof(SendContext<Data>))
+            {
+                var send = new MessageSendContext<Data>(Original, _token)
+                {
+                    CorrelationId = TrackingNumber,
+                    RequestId = NewId.NextGuid(),
+                    DestinationAddress = new Uri("loopback://localhost/transformed-send"),
+                };
+                send.Headers.Set("transform-trace", "trace-value");
+                return (TContext)(object)send;
+            }
+
             if (typeof(TContext) == typeof(ConsumeContext<Data>))
                 return (TContext)(object)new MessageConsumeContext<Data>(CreateContext<ConsumeContext>(), Original);
 

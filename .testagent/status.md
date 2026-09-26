@@ -16,6 +16,22 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Send-transform follow-up adds five cases using real send contexts and proxies.
+  The final Transformation namespace passes 31/31; requirement projection 1/1
+  and verify-only formatting pass. Snapshot assertions preserve message/request
+  IDs and destination alongside correlation, cancellation and header identity.
+  The separate-worktree wrong-context counterchange fails exactly two Send
+  Replace rows while eighteen controls pass. Product source is restored with
+  a clean diff; the restored run passes 20/20. Read-only adversarial review and
+  its snapshot follow-up found no blocker. Commit-bound measurement and push
+  remain pending; this is no full transport or synchronous-path claim.
+- Previous transform completion was measured at published commit
+  `136128057f0461b9d7e04887863d361e0feb97bc`: Core passes 6,484/6,484,
+  zero failures/skips, with verified receipt/log/report hashes. Async Execute,
+  Compensate and Consume local functions have full line/branch coverage;
+  async Send retains branch-rate 0.5 and outer Execute/Compensate/Send retain
+  branch-rate 0.75. This supersedes the pending measurement/publication note
+  for that extension below, without changing the global A+ acceptance status.
 - Transform completion follow-up extends the controlled matrix to 15 passing
   cases: successful downstream completion for Execute/Compensate, plus async
   Consume preserve/replace and failure behavior using a real typed context

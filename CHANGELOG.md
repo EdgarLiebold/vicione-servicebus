@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added asynchronous send-transform checks for message replacement, preserved
+  identity/address/header metadata, downstream completion and initializer
+  failure without forwarding. A controlled wrong-message change is detected
+  by both replacement cases while preserve cases remain green.
 - Extended asynchronous transform checks with successful downstream completion
   and Consume-context replacement/failure behavior, preserving the tested
   correlation ID and cancellation token. A controlled wrong-context change is
