@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Copied-body stream tests now enforce exact declared lengths, complete short
+  reads, stream disposal and isolation from source or returned-array mutation.
+  Oversized declarations, including `long.MaxValue`, are rejected before the
+  source stream opens. Removing the trailing-byte check failed the new
+  truncation regression; all 40 admission contract tests pass after restoration.
+  Transport-text selection is now a separate helper from copy admission, with
+  the original size-check and strict-JSON validation order preserved.
 - Durable payload replay now retains the offload evidence that was actually
   admitted when producing another persistence proof. Previously the current
   send context could replace the original proof's flag, either losing valid

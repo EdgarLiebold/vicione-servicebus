@@ -1,7 +1,9 @@
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Mime;
 using System.Text;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -458,6 +460,74 @@ public sealed class BoundedSerializerAdmissionContractTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ENVELOPE", "copied-stream-short-reads-retain-isolated-exact-bytes")]
+    public void CopiedStream_RetainsExactBytesAcrossShortReadsAndSourceMutation()
+    {
+        byte[] bytes = "<ABC>"u8.ToArray();
+        var source = new StreamMessageBody(bytes, bytes.Length);
+        var admission = Admission(3, 5);
+        var locator = new TestCopiedLocator { LocatedRange = (true, 1, 3) };
+
+        AdmittedCopyMessageBody body = AdmittedCopyMessageBody.Create(
+            source, BinaryContentType, Serialization(locator), admission, durableProof: null);
+
+        Assert.Equal(5, source.Stream.ReadCalls);
+        Assert.True(source.Stream.Disposed);
+        Assert.Equal(1, locator.Calls);
+        Assert.Equal(5, body.Length);
+        bytes.AsSpan().Fill((byte)'X');
+        byte[] exposed = body.ToArray();
+        exposed.AsSpan().Fill((byte)'Y');
+        using Stream retained = body.OpenReadStream();
+        Assert.False(retained.CanWrite);
+        Assert.Equal("<ABC>"u8.ToArray(), ReadAll(retained));
+        Assert.Equal("<ABC>"u8.ToArray(), body.ToArray());
+        Assert.True(admission.TryCreateDurableProof(BinaryContentType.ToString(), out DurablePayloadAdmissionProof proof));
+        Assert.Equal(3, proof.SerializedBodyBytes);
+        Assert.True(proof.MatchesEnvelope(body.ToArray(), BinaryContentType.ToString()));
+    }
+
+    [Theory]
+    [InlineData(4, "The copied message body exceeded its declared byte length.")]
+    [InlineData(6, "The copied message body ended before its declared byte length.")]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ENVELOPE", "copied-stream-false-length-rejected-before-admission")]
+    public void CopiedStream_RejectsFalseLengthBeforeBodyExtraction(long declaredLength, string expectedMessage)
+    {
+        var source = new StreamMessageBody("<ABC>"u8.ToArray(), declaredLength);
+        var admission = Admission(6, 6);
+        var locator = new TestCopiedLocator { LocatedRange = (true, 1, 3) };
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            AdmittedCopyMessageBody.Create(source, BinaryContentType, Serialization(locator), admission, durableProof: null));
+
+        Assert.Equal(expectedMessage, exception.Message);
+        Assert.True(source.Stream.Disposed);
+        Assert.Equal(0, locator.Calls);
+        Assert.False(admission.TryCreateDurableProof(BinaryContentType.ToString(), out _));
+    }
+
+    [Theory]
+    [InlineData(6)]
+    [InlineData(long.MaxValue)]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-ENVELOPE", "copied-stream-oversize-rejected-before-opening")]
+    public void CopiedStream_RejectsOversizeBeforeOpening(long declaredLength)
+    {
+        var source = new StreamMessageBody("<ABC>"u8.ToArray(), declaredLength);
+        var admission = Admission(3, 5);
+        var locator = new TestCopiedLocator { LocatedRange = (true, 1, 3) };
+
+        PayloadAdmissionException exception = Assert.Throws<PayloadAdmissionException>(() =>
+            AdmittedCopyMessageBody.Create(source, BinaryContentType, Serialization(locator), admission, durableProof: null));
+
+        Assert.Equal(PayloadAdmissionStage.TransportEnvelope, exception.Stage);
+        Assert.Equal(declaredLength, exception.ActualBytes);
+        Assert.Equal(5, exception.ConfiguredLimitBytes);
+        Assert.Equal(0, source.OpenCalls);
+        Assert.Equal(0, locator.Calls);
+        Assert.False(admission.TryCreateDurableProof(BinaryContentType.ToString(), out _));
+    }
+
     private static BoundedSerializerMessageBody Create(
         TestBoundedSerializer serializer, PayloadAdmissionSerializationContext admission)
         => BoundedSerializerMessageBody.Create(new MessageSendContext<TestMessage>(new TestMessage()), serializer, admission);
@@ -486,6 +556,40 @@ public sealed class BoundedSerializerAdmissionContractTests
         using var buffer = new MemoryStream();
         stream.CopyTo(buffer);
         return buffer.ToArray();
+    }
+
+    private sealed class StreamMessageBody(byte[] bytes, long declaredLength) : MessageBody
+    {
+        public ChunkedReadStream Stream { get; } = new(bytes);
+        public int OpenCalls { get; private set; }
+        public long Length => declaredLength;
+        public byte[] ToArray() => throw new InvalidOperationException("Admission must read the bounded stream.");
+        public Stream OpenReadStream()
+        {
+            OpenCalls++;
+            return Stream;
+        }
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text)
+        {
+            text = null;
+            return false;
+        }
+    }
+
+    private sealed class ChunkedReadStream(byte[] bytes) : MemoryStream(bytes, writable: false)
+    {
+        public int ReadCalls { get; private set; }
+        public bool Disposed { get; private set; }
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            ReadCalls++;
+            return base.Read(buffer, offset, Math.Min(count, 1));
+        }
+        protected override void Dispose(bool disposing)
+        {
+            Disposed = true;
+            base.Dispose(disposing);
+        }
     }
 
     private sealed class TestMessage;

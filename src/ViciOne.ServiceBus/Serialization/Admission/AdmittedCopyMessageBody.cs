@@ -93,15 +93,7 @@ internal sealed class AdmittedCopyMessageBody : MessageBody, IPayloadAdmittedMes
         // exact extractor, the entire copied envelope is conservatively charged as body.
         serialization.TryGetMessageDeserializer(contentType, out IMessageDeserializer? deserializer);
 
-        TransportTextKind textKind = deserializer switch
-        {
-            SystemTextJsonMessageSerializer or SystemTextJsonRawMessageSerializer => TransportTextKind.Json,
-            ICopiedEnvelopeBodyExtractor when contentType.MediaType.Equals(
-                "application/vnd.vicione.servicebus+msgpack", StringComparison.OrdinalIgnoreCase) => TransportTextKind.Base64,
-            _ when contentType.MediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase)
-                || contentType.MediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase) => TransportTextKind.Json,
-            _ => TransportTextKind.None,
-        };
+        TransportTextKind textKind = GetTransportTextKind(deserializer, contentType);
 
         if (content.Length > admission.Runtime.MaximumTransportEnvelopeBytes)
             throw new PayloadAdmissionException(
@@ -132,6 +124,17 @@ internal sealed class AdmittedCopyMessageBody : MessageBody, IPayloadAdmittedMes
 
         return new AdmittedCopyMessageBody(content, admission, textKind);
     }
+
+    static TransportTextKind GetTransportTextKind(IMessageDeserializer? deserializer, ContentType contentType)
+        => deserializer switch
+        {
+            SystemTextJsonMessageSerializer or SystemTextJsonRawMessageSerializer => TransportTextKind.Json,
+            ICopiedEnvelopeBodyExtractor when contentType.MediaType.Equals(
+                "application/vnd.vicione.servicebus+msgpack", StringComparison.OrdinalIgnoreCase) => TransportTextKind.Base64,
+            _ when contentType.MediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase)
+                || contentType.MediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase) => TransportTextKind.Json,
+            _ => TransportTextKind.None,
+        };
 
     static ReadOnlyMemory<byte> LocateSerializedBody(ICopiedEnvelopeBodyLocator locator, byte[] content)
     {
