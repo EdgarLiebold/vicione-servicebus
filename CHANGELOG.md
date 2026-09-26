@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed the T32 measurement across all 33 profiles: 12,615 passing
+  executions, 90.7852% line and 83.4586% conservative branch coverage. SQS
+  ApplyResponse and EF AwaitConsumerCompletionAsync now have complete line and
+  observed branch coverage. Five line gaps closed and two reappeared elsewhere;
+  4,501 line-gap identities and 1,505 branch-only candidates remain. A+ is open.
 - Added SQS checks for absent opposite result collections in all-success and
   all-failure batch responses, and real-SQLite checks for consumer completion
   preceding dispatch transition and rejection of a reclaimed lease's old owner.

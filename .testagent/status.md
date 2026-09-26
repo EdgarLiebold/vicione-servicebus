@@ -16,6 +16,15 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete T32 measurement at `791e29af42f85e4b08462f9d08b84f128d6403b6`:
+  all 33 profiles and four fixture groups passed; 12,615 executions, lines
+  85122/93762 (90.7851795%), conservative branches 30747/36841 (83.4586466%),
+  0 CRAP >30. Both focused target methods have full lines/observed branches.
+  Remaining 4501 line gaps (2795 zero,1706 partial), plus1505 branch-only;
+  five line gaps closed and two reappeared. Independent accounting review
+  confirmed 487 evidence hashes and all counts without a blocker.
+  [Report](coverage-a-plus-20260921/product-wide-profile-791e29af4.md).
+  This supersedes T32 pending measurement notes below. A+ remains open.
 - T32 focused verification complete: SQS optional-result cases pass 6/6;
   real-SQLite completion/lease cases pass 15/15. Four isolated mutations are
   detected, manually restored and followed by green controls. Read-only review

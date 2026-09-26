@@ -2,6 +2,15 @@
 
 ## Latest product-wide profile
 
+The latest complete profile is `791e29af4`: 33 profiles, 32 assemblies,
+12,615 passing executions, 85,122/93,762 lines and conservative branches
+30,747/36,841. Remaining: 4,501 line-gap identities and 1,505 branch-only
+candidates; none exceeds CRAP 30. Both T32 target methods have full line and
+observed branch coverage. A+ remains open. See
+[T32 complete report](product-wide-profile-791e29af4.md).
+
+## Previous T31 profile
+
 The latest complete profile is `6a0aca709`: 33 valid profiles, 32 assemblies,
 12,611 passing executions, 85,116/93,762 lines and conservative branches
 30,736/36,841. There are 4,504 method identities with line gaps and another

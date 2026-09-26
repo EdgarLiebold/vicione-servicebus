@@ -1,7 +1,9 @@
-# T32: optional provider results and durable lease transitions — open
+# T32: optional provider results and durable lease transitions
 
 Base HEAD: `f35191a7e4bac51da49fdedf8a5eb7df3c0d9cca`.
-Authoritative complete measurement remains `6a0aca709`; no new aggregate yet.
+Complete measurement now exists at `791e29af4`; see
+[the report](product-wide-profile-791e29af4.md). Earlier pending notes below
+describe the focused phase before this complete measurement.
 
 ## SQS optional result collections
 
@@ -69,8 +71,11 @@ database races or process restart behavior.
 | Isolated artifacts/t32-ef-ownership-mutant.log | 5173ca4521a256efae7e38c6af870e67ee3978c57b9d2312ca14ea0043f898e5 |
 | Isolated artifacts/t32-ef-restored.log | ba2d38c2b21c7b78685c913e2bb7df1e57fc230659ae45dbbad4cea6beb19a67 |
 
-## Remaining iteration work
+## Complete measurement and review
 
-Complete changelog, commit,
-all 33 fresh exact-commit profiles, aggregate review and authorized push.
-The SQS focused pass alone does not establish closure of its branch gap or A+.
+The packet is committed at `791e29af4`, with all 33 fresh profiles and four
+fixture groups passing. Both target methods have full line/observed branch
+coverage. Independent aggregate review confirmed 487 hashes, completeness,
+counts and delta without an accounting blocker. This document accompanies the
+authorized documentation successor and remote push.
+The complete result still does not establish product-wide A+.
