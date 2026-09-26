@@ -16,6 +16,15 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete T33 measurement at `2409092a95fa34501ff4ebe88f91783376117ebb`:
+  all 33 profiles/four fixture groups passed; 12,693 executions, lines
+  85271/93762 (90.9440925%), conservative branches 30749/36841 (83.4640754%),
+  0 CRAP >30. All 30 targeted scheduling bodies have full line coverage.
+  Remaining 4465 line gaps (2783 zero,1682 partial), plus1506 branch-only;
+  37 gaps closed, one Saga MarkInUse gap reappeared. Independent accounting
+  review confirmed 487 hashes and all counts without a blocker.
+  [Report](coverage-a-plus-20260921/product-wide-profile-2409092a9.md).
+  This supersedes T33 pending measurement notes below. A+ remains open.
 - T33 outbox-scheduling focused verification complete: 78/78 cases pass,
   read-only adversarial review has no blocker, three isolated mutations are
   detected, manually restored and followed by a green 78/78 control.

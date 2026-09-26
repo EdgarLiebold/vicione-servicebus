@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed the T33 measurement across all 33 profiles: 12,693 passing
+  executions, 90.9441% line and 83.4641% conservative branch coverage. All 30
+  outbox scheduling overload bodies now have full line coverage. Across the
+  product, 37 line gaps closed and one reappeared; 4,465 line-gap identities
+  and 1,506 branch-only candidates remain. Product-wide A+ is still open.
 - Added outbox scheduling lifecycle checks across typed, runtime and initialized
   messages, pipe variants and explicit/input/publish destinations. Tests verify
   exact schedule metadata, real checkpoint rollback, deferred cancellation,

@@ -2,6 +2,14 @@
 
 ## Latest product-wide profile
 
+The latest complete profile is `2409092a9`: 33 profiles, 32 assemblies,
+12,693 passing executions, 85,271/93,762 lines and conservative branches
+30,749/36,841. Remaining: 4,465 line-gap identities and 1,506 branch-only
+candidates; none exceeds CRAP 30. All 30 targeted scheduling bodies have full
+line coverage. A+ remains open. See [T33 report](product-wide-profile-2409092a9.md).
+
+## Previous T32 profile
+
 The latest complete profile is `791e29af4`: 33 profiles, 32 assemblies,
 12,615 passing executions, 85,122/93,762 lines and conservative branches
 30,747/36,841. Remaining: 4,501 line-gap identities and 1,505 branch-only

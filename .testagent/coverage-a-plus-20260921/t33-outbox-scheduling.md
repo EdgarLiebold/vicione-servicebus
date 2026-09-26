@@ -1,7 +1,8 @@
-# T33: outbox scheduling lifecycle — open
+# T33: outbox scheduling lifecycle
 
 Base: `9bc5ff1dd76b485dbbc120a2a561eaa1387e512b`.
-Authoritative complete measurement remains T32 at `791e29af4`.
+Complete T33 measurement now exists at `2409092a9`; see
+[the report](product-wide-profile-2409092a9.md).
 T32 retains 32 line-gap identities and 127 missed lines in
 InMemoryOutboxMessageSchedulerContext. This packet targets product contracts,
 not one test per measured identity.
@@ -71,6 +72,9 @@ held pending, so these tests do not establish delayed-provider await behavior.
 Ordinary full discard and retry checkpoint discard have different lifecycles;
 these tests deliberately use the latter for rollback followed by commit.
 
-Finish canonical CHANGELIST, commit,
-all 33 fresh profiles, aggregate/delta review and authorized push. No new full
-coverage result or A+ acceptance is claimed by this focused pass.
+The packet is committed at `2409092a9`; all 33 fresh profiles and four fixture
+groups pass. All 30 scheduling bodies have full line coverage, while five
+identities in the target source still have line gaps. Independent aggregate
+review confirmed 487 hashes, complete scope, counts and delta without an
+accounting blocker. This document accompanies the authorized documentation
+successor and remote push. Product-wide A+ remains open.
