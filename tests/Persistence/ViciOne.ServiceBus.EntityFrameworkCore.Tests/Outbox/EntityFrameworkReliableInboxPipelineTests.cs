@@ -16,6 +16,98 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
 public sealed class EntityFrameworkReliableInboxPipelineTests
 {
     [Theory]
+    [InlineData(ReliableInboxStatus.Consumed)]
+    [InlineData(ReliableInboxStatus.Quarantined)]
+    [InlineData(ReliableInboxStatus.Abandoned)]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "terminal-winner-after-rollback-is-not-overwritten-by-failure")]
+    public async Task TerminalWinnerAfterRollback_PreservesEveryFieldAndSuppressesRetryAsync(ReliableInboxStatus terminalStatus)
+    {
+        var interceptor = new AfterRollbackInterceptor();
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync(interceptor);
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        Guid messageId = Guid.NewGuid();
+        var receivedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc);
+        ReliableInboxRecord? winner = null;
+        var invocations = 0;
+        var persistedAttempts = 0;
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            IPublishEndpoint publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, fixture.CancellationToken, messageId: messageId);
+            await factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(
+                async context =>
+                {
+                    invocations++;
+                    ReliableInboxRecord processing = await db.Set<ReliableInboxRecord>().SingleAsync(fixture.CancellationToken);
+                    Assert.Equal(ReliableInboxStatus.Processing, processing.Status);
+                    winner = new ReliableInboxRecord
+                    {
+                        StoreKey = processing.StoreKey,
+                        MessageId = messageId,
+                        ConsumerId = options.ConsumerId,
+                        Status = terminalStatus,
+                        Attempts = 7,
+                        ReceivedAt = receivedAt,
+                        CompletedAt = terminalStatus == ReliableInboxStatus.Consumed ? receivedAt.AddMinutes(1) : null,
+                        FailedAt = terminalStatus == ReliableInboxStatus.Consumed ? null : receivedAt.AddMinutes(2),
+                        QuarantinedAt = terminalStatus == ReliableInboxStatus.Consumed ? null : receivedAt.AddMinutes(3),
+                        FailureType = terminalStatus == ReliableInboxStatus.Consumed ? null : "previous-consumer-failure",
+                    };
+                    interceptor.AfterRollback = async () =>
+                    {
+                        await using ReliableInboxDbContext competing = fixture.CreateContext();
+                        Assert.Empty(await competing.BusinessRecords.ToListAsync(fixture.CancellationToken));
+                        Assert.Empty(await competing.Set<DurableSendRecord>().ToListAsync(fixture.CancellationToken));
+                        Assert.Empty(await competing.Set<ReliableInboxRecord>().ToListAsync(fixture.CancellationToken));
+                        competing.Add(winner);
+                        await competing.SaveChangesAsync(fixture.CancellationToken);
+                    };
+                    db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "losing-attempt" });
+                    await publishEndpoint.PublishAsync(new ReliableInboxEvent(command.CorrelationId), fixture.CancellationToken);
+                    await context.SetConsumedAsync(fixture.CancellationToken);
+                    Assert.True(await db.BusinessRecords.AnyAsync(fixture.CancellationToken));
+                    Assert.True(await db.Set<DurableSendRecord>().AnyAsync(fixture.CancellationToken));
+                    persistedAttempts++;
+                    throw new ExpectedConsumerFailure();
+                }), fixture.CancellationToken);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+
+        Assert.Equal(1, invocations);
+        Assert.Equal(1, persistedAttempts);
+        Assert.Equal(1, interceptor.CompletedCallbacks);
+        Assert.NotNull(winner);
+        await using ReliableInboxDbContext verification = fixture.CreateContext();
+        ReliableInboxRecord retained = await verification.Set<ReliableInboxRecord>().SingleAsync(fixture.CancellationToken);
+        Assert.Equal(winner.StoreKey, retained.StoreKey);
+        Assert.Equal(messageId, retained.MessageId);
+        Assert.Equal(options.ConsumerId, retained.ConsumerId);
+        Assert.Equal(terminalStatus, retained.Status);
+        Assert.Equal(7, retained.Attempts);
+        Assert.Equal(receivedAt, retained.ReceivedAt);
+        Assert.Equal(winner.CompletedAt, retained.CompletedAt);
+        Assert.Equal(winner.FailedAt, retained.FailedAt);
+        Assert.Equal(winner.QuarantinedAt, retained.QuarantinedAt);
+        Assert.Equal(winner.FailureType, retained.FailureType);
+        Assert.Null(retained.DueAt);
+        Assert.Null(retained.LeaseToken);
+        Assert.Null(retained.LeaseExpiresAt);
+        Assert.Empty(await verification.BusinessRecords.ToListAsync(fixture.CancellationToken));
+        Assert.Empty(await verification.Set<DurableSendRecord>().ToListAsync(fixture.CancellationToken));
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "failure-state-write-and-logger-fault-preserve-consumer-failure-and-rollback")]
@@ -562,6 +654,26 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
             File.Delete(path);
             File.Delete(path + "-wal");
             File.Delete(path + "-shm");
+        }
+    }
+
+    sealed class AfterRollbackInterceptor : DbTransactionInterceptor
+    {
+        public Func<Task>? AfterRollback { get; set; }
+
+        public int CompletedCallbacks { get; private set; }
+
+        public override async Task TransactionRolledBackAsync(
+            System.Data.Common.DbTransaction transaction, TransactionEndEventData eventData,
+            CancellationToken cancellationToken = default)
+        {
+            Func<Task>? callback = AfterRollback;
+            AfterRollback = null;
+            if (callback is not null)
+            {
+                await callback();
+                CompletedCallbacks++;
+            }
         }
     }
 
