@@ -46,24 +46,33 @@ public sealed class ActivityEndpointConfigurationTests
     [RequirementCoverage("REQ-VSB-COURIER-ENDPOINT-CONFIGURATION", "derived-endpoint-name-is-published-once-under-contention")]
     public async Task DerivedEndpointName_IsPublishedOnceUnderContentionAsync()
     {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var definition = new BlockingEndpointDefinition(new PermissiveSettings());
         IEndpointNameFormatter formatter = DefaultEndpointNameFormatter.Instance;
         const int workerCount = 16;
         using var ready = new CountdownEvent(workerCount);
         using var start = new ManualResetEventSlim();
-        Task<string>[] tasks = Enumerable.Range(0, workerCount).Select(_ => Task.Run(() =>
+        Task<string>[] tasks = Enumerable.Range(0, workerCount).Select(_ => Task.Factory.StartNew(() =>
         {
             ready.Signal();
-            start.Wait(TestContext.Current.CancellationToken);
+            start.Wait(cancellationToken);
             return definition.GetEndpointName(formatter);
-        }, TestContext.Current.CancellationToken)).ToArray();
+        }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default)).ToArray();
 
-        Assert.True(ready.Wait(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
-        start.Set();
-        Assert.True(definition.FormatEntered.Wait(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
-        SpinWait.SpinUntil(() => definition.FormatCalls > 1, TimeSpan.FromMilliseconds(250));
-        definition.ReleaseFormat.Set();
-        string[] names = await Task.WhenAll(tasks).WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        string[] names;
+        try
+        {
+            Assert.True(ready.Wait(TimeSpan.FromSeconds(5), cancellationToken));
+            start.Set();
+            Assert.True(definition.FormatEntered.Wait(TimeSpan.FromSeconds(5), cancellationToken));
+            SpinWait.SpinUntil(() => definition.FormatCalls > 1, TimeSpan.FromMilliseconds(250));
+        }
+        finally
+        {
+            start.Set();
+            definition.ReleaseFormat.Set();
+            names = await Task.WhenAll(tasks).WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
+        }
 
         Assert.All(names, name => Assert.Equal("atomic-endpoint", name));
         Assert.Equal(1, definition.FormatCalls);

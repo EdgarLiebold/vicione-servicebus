@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The endpoint-name contention test now starts dedicated workers instead of
+  exhausting thread-pool workers behind a synchronous start gate. It always
+  releases and joins its workers after failed setup assertions. A counterprobe
+  replacing the shared product lock with per-call locks failed with 16 formatter
+  calls instead of one; the shared product lock was restored afterward.
 - SQL Server schema provisioning now restores any missing transport-role
   database permission when rerun. Previously one remaining permission made the
   migrator skip all grants, leaving a separately provisioned transport account
