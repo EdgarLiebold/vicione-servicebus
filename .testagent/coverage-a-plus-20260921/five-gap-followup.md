@@ -4,6 +4,10 @@ This packet adds behavioral regression protection for the five gaps observed
 by the last complete measurement. It changes tests, not production source.
 Closing each measured gap remains unproven until the new complete measurement.
 
+Update: the [complete 90239365c measurement](product-wide-profile-90239365c.md)
+now proves all five targeted line gaps closed. It supersedes pending measurement
+notes below while preserving this pre-measurement packet's verification history.
+
 ## Requirements and concrete tests
 
 | Contract | Test |

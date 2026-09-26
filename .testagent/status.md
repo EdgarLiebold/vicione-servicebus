@@ -16,6 +16,17 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete measurement at `90239365cd318da3baafbc7de3bec0c1e83cfaf7` supersedes
+  the pending measurement notes below: all 33 profiles and four fixture groups
+  passed; 12,604 executions, 32 assemblies, lines 85107/93762 (90.7691815%),
+  conservative branches 30725/36841 (83.3989305%), 0 methods CRAP >30.
+  Remaining line gaps: 4506 (2800 zero, 1706 partial), plus 1509 branch-only.
+  All five targeted line gaps are closed; total delta is ten closed/four newly
+  observed, with no source change. New cancellation gaps in EventHubs and
+  ClientRequestHandle remain open review candidates. See
+  [complete measurement](coverage-a-plus-20260921/product-wide-profile-90239365c.md).
+  No A+ acceptance. All measurement processes are terminal; remote checkpoint
+  follows this report commit.
 - Open follow-up iteration after `e31250d82`: RabbitMQ operation-fault owner
   invalidation, KillSwitch late-success guards, EF removed-target actions and
   Courier execution traces now have concrete tests and read-only adversarial

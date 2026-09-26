@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed the 33-profile measurement for the five-gap test packet: 12,604
+  passing executions, 90.7692% line coverage and 83.3989% conservative branch
+  coverage. All five targeted line gaps are closed. Four newly observed
+  cancellation-path gaps remain under review; product-wide A+ remains open.
 - Added SQS shutdown checks for an in-flight poll that returns an empty result
   successfully after stop is signaled. No further provider poll or warning/error
   is allowed; the test detects a consume-loop fault hidden by successful agent
