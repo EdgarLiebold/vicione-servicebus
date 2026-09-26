@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added Event Hubs checkpoint tests for newest accepted offset, ordered fallback,
+  healthy continuation after rejected updates, and cancellation of a waiting
+  admission in a full queue. Exact callback order, stored offset and tokens are
+  checked with real batching and confirmation objects. Three mutations are
+  detected; restored controls pass 5/5. Provider storage remains simulated;
+  the complete all-profile measurement of this packet is pending.
+
 - Completed T35 across all 33 profiles: 12,827 passing executions, 91.0465%
   line and 83.5699% conservative branch coverage. Both recurring schedulers
   have stronger command/pipe/completion evidence. Coverage increased by 100

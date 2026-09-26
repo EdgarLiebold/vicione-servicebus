@@ -16,6 +16,13 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T36 focused Event Hubs checkpoint tests (2026-09-27) pass 5/5, format0;
+  read-only review has no blocker. Three valid mutations fail3/4/1cases,
+  controls pass, all restored; final isolated control5/5. Initial build and
+  noncompiling mutation attempts are documented and not counted as evidence.
+  [Evidence and limits](coverage-a-plus-20260921/t36-eventhubs-checkpoint.md).
+  Commit, complete measurement and push remain pending; T35 stays authoritative.
+
 - Complete T35 measurement (closed 2026-09-27) at
   `3a59fff96f220f54e56467293641ff12be3607d4`: all 33 profiles/four fixture groups
   passed; 12,827 executions, lines85367/93762 (91.0464794%), conservative
