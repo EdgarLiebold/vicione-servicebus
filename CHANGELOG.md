@@ -11,6 +11,19 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- EF outbox factory tests now reject absent, incomplete and byte-mismatched
+  payload-admission evidence before persistence. A matching proof preserves
+  the exact envelope and application headers. The proof check is a separate
+  factory helper, keeping admission validation distinct from metadata assembly.
+  Removing its envelope-match check failed the new mismatch case; restoring
+  the check passes all 281 EF unit tests.
+- SQL Server timestamp-projection tests now explicitly make their two inserted
+  deliveries due before invoking the normal and partitioned fetch procedures.
+  Exact timestamp values, UTC offsets and SQL result types remain asserted.
+  Returning `datetime2` instead of `datetimeoffset` failed the projection test;
+  the restored procedures pass all 69 SQL Server integration tests. This removes
+  the test's immediate-readiness assumption, but does not establish the cause of
+  the earlier intermittent empty fetch.
 - The endpoint-name contention test now starts dedicated workers instead of
   exhausting thread-pool workers behind a synchronous start gate. It always
   releases and joins its workers after failed setup assertions. A counterprobe

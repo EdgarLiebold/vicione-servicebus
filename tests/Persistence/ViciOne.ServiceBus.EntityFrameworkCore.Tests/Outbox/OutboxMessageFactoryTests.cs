@@ -1,8 +1,11 @@
+using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Serialization;
 using ViciOne.ServiceBus.Transports;
 using Xunit;
 
@@ -124,6 +127,62 @@ public sealed class OutboxMessageFactoryTests
         Assert.Equal(outboxId, message.OutboxId);
         Assert.Null(message.InboxMessageId);
         Assert.Null(message.InboxConsumerId);
+    }
+
+    [Theory]
+    [InlineData("missing")]
+    [InlineData("body-only")]
+    [InlineData("envelope-only")]
+    [InlineData("different-envelope")]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "factory-rejects-missing-incomplete-or-mismatched-admission")]
+    public void Create_RejectsAnAdmittedBodyWithoutItsCompleteMatchingProof(string proofState)
+    {
+        MessageSendContext<FactoryMessage> context = CreateContext();
+        MessageBody body = context.Serializer.GetMessageBody(context);
+        byte[] bytes = body.ToArray();
+        if (proofState != "missing")
+        {
+            byte[] validatedBytes = (byte[])bytes.Clone();
+            if (proofState == "different-envelope")
+                validatedBytes[^1] ^= 1;
+            PayloadAdmissionSerializationTestDriver.AttachAdmissionEvidence(context,
+                proofState == "envelope-only" ? null : bytes,
+                proofState == "body-only" ? null : validatedBytes);
+        }
+
+        InvalidOperationException failure = Assert.Throws<InvalidOperationException>(() =>
+            OutboxMessageFactory.Create(context, ServiceBusMetadataJson.ObjectDeserializer,
+                new FakeTimeProvider(Now), outboxId: Guid.NewGuid(), admittedBody: body));
+
+        Assert.Equal("The EF outbox has no complete payload admission proof for its serialized envelope.", failure.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "factory-persists-matching-admission-proof-and-application-headers")]
+    public void Create_PersistsTheExactAdmittedEnvelopeAndItsProofAlongsideApplicationHeaders()
+    {
+        MessageSendContext<FactoryMessage> context = CreateContext();
+        context.Headers.Set("tenant", "north");
+        MessageBody body = context.Serializer.GetMessageBody(context);
+        byte[] bytes = body.ToArray();
+        using JsonDocument envelope = JsonDocument.Parse(bytes);
+        byte[] applicationBody = Encoding.UTF8.GetBytes(envelope.RootElement.GetProperty("message").GetRawText());
+        Assert.True(applicationBody.Length < bytes.Length);
+        PayloadAdmissionSerializationTestDriver.AttachAdmissionEvidence(context, applicationBody, bytes);
+        Guid outboxId = Guid.NewGuid();
+
+        OutboxMessage stored = OutboxMessageFactory.Create(context,
+            ServiceBusMetadataJson.ObjectDeserializer, new FakeTimeProvider(Now),
+            outboxId: outboxId, admittedBody: body);
+        stored.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
+
+        Assert.Equal(bytes, Encoding.UTF8.GetBytes(stored.Body));
+        Assert.Equal(outboxId, stored.OutboxId);
+        Assert.Equal("north", ((MessageContext)stored).Headers.Get<string>("tenant"));
+        var proof = PayloadAdmissionSerializationTestDriver.ReadDurableProof(stored, bytes, stored.ContentType);
+        Assert.Equal(applicationBody.Length, proof.BodyBytes);
+        Assert.False(proof.OffloadObserved);
+        Assert.True(proof.MatchesEnvelope);
     }
 
     private static MessageSendContext<FactoryMessage> CreateContext() => new(new FactoryMessage("payload"))

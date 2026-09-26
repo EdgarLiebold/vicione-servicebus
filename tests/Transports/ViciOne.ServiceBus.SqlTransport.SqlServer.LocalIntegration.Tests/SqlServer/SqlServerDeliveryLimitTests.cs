@@ -98,8 +98,8 @@ public sealed class SqlServerDeliveryLimitTests
         DateTimeOffset sentTime = new(2026, 9, 5, 8, 15, 30, TimeSpan.Zero);
         DateTimeOffset expirationTime = sentTime.AddHours(4);
 
-        await InsertDeliveryAsync(connection, fixture.Schema, normalQueue, sentTime, expirationTime, cancellationToken);
-        await InsertDeliveryAsync(connection, fixture.Schema, partitionedQueue, sentTime, expirationTime, cancellationToken);
+        await InsertDueDeliveryAsync(connection, fixture.Schema, normalQueue, sentTime, expirationTime, cancellationToken);
+        await InsertDueDeliveryAsync(connection, fixture.Schema, partitionedQueue, sentTime, expirationTime, cancellationToken);
 
         TransportTimestamps normal = await FetchTransportTimestampsAsync(
             connection,
@@ -198,7 +198,7 @@ public sealed class SqlServerDeliveryLimitTests
         Assert.True(Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)) > 0);
     }
 
-    private static async Task InsertDeliveryAsync(
+    private static async Task InsertDueDeliveryAsync(
         SqlConnection connection,
         string schema,
         string queueName,
@@ -216,7 +216,15 @@ public sealed class SqlServerDeliveryLimitTests
         command.Parameters.AddWithValue("sentTime", sentTime);
         command.Parameters.AddWithValue("expirationTime", expirationTime);
 
-        Assert.True(Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)) > 0);
+        long deliveryId = Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
+        Assert.True(deliveryId > 0);
+
+        await using var makeDue = new SqlCommand(
+            $"UPDATE [{schema}].[MessageDelivery] SET EnqueueTime = DATEADD(DAY, -1, SYSUTCDATETIME()) "
+            + "WHERE MessageDeliveryId = @deliveryId",
+            connection);
+        makeDue.Parameters.AddWithValue("deliveryId", deliveryId);
+        Assert.Equal(1, await makeDue.ExecuteNonQueryAsync(cancellationToken));
     }
 
     private static async Task<TransportTimestamps> FetchTransportTimestampsAsync(

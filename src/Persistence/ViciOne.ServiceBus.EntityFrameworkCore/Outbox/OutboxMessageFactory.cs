@@ -29,19 +29,9 @@ internal static class OutboxMessageFactory
 
         MessageBody body = admittedBody ?? context.Serializer.GetMessageBody(context);
         string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
-        DurablePayloadAdmissionProof? proof = null;
-        if (admittedBody is not null)
-        {
-            if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
-                || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof admittedProof)
-                || !admittedProof.MatchesEnvelope(body.ToArray(), contentType))
-            {
-                throw new InvalidOperationException(
-                    "The EF outbox has no complete payload admission proof for its serialized envelope.");
-            }
-
-            proof = admittedProof;
-        }
+        DurablePayloadAdmissionProof? proof = admittedBody is null
+            ? null
+            : RequireAdmissionProof(context, body, contentType);
 
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         var outboxMessage = new OutboxMessage
@@ -83,6 +73,20 @@ internal static class OutboxMessageFactory
         }
 
         return outboxMessage;
+    }
+
+    static DurablePayloadAdmissionProof RequireAdmissionProof<T>(SendContext<T> context, MessageBody body, string contentType)
+        where T : class
+    {
+        if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
+            || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
+            || !proof.MatchesEnvelope(body.ToArray(), contentType))
+        {
+            throw new InvalidOperationException(
+                "The EF outbox has no complete payload admission proof for its serialized envelope.");
+        }
+
+        return proof;
     }
 
     static void ValidateOwner(Guid? inboxMessageId, Guid? inboxConsumerId, Guid? outboxId)
