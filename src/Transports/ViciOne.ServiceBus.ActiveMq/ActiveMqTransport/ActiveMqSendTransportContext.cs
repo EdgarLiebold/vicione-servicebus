@@ -197,7 +197,7 @@ public class ActiveMqSendTransportContext :
         if (string.IsNullOrWhiteSpace(endpointName))
             throw new InvalidOperationException("The response address must contain an endpoint name.");
 
-        transportMessage.NMSReplyTo = sessionContext.GetTemporaryDestination(endpointName)
+        transportMessage.NMSReplyTo = sessionContext.GetTemporaryDestination(endpointName, DestinationType.TemporaryQueue)
             ?? (context.ResponseAddress.TryGetValueFromQueryString("temporary", out _)
                 ? await sessionContext.GetDestinationAsync(endpointName, DestinationType.TemporaryQueue)
                 : await sessionContext.GetDestinationAsync(endpointName, DestinationType.Queue));

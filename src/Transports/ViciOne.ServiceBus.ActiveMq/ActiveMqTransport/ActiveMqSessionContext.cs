@@ -161,7 +161,7 @@ public class ActiveMqSessionContext :
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<IDestination>(cancellationToken);
 
-        if (ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination)
+        if (ConnectionContext.TryGetTemporaryEntity(destinationName, destinationType, out var destination)
             && destination != null
             && DestinationTypeMatches(destination, destinationType))
             return Task.FromResult(destination);
@@ -277,7 +277,7 @@ public class ActiveMqSessionContext :
 
         return _executor.ExecuteAsync(() =>
         {
-            if (!ConnectionContext.TryRemoveTemporaryEntity(_session, topicName))
+            if (!ConnectionContext.TryRemoveTemporaryEntity(_session, topicName, DestinationType.TemporaryTopic))
                 SessionUtil.DeleteTopic(_session, topicName);
         }, cancellationToken);
     }
@@ -295,16 +295,17 @@ public class ActiveMqSessionContext :
 
         return _executor.ExecuteAsync(() =>
         {
-            if (!ConnectionContext.TryRemoveTemporaryEntity(_session, queueName))
+            if (!ConnectionContext.TryRemoveTemporaryEntity(_session, queueName, DestinationType.TemporaryQueue))
                 SessionUtil.DeleteQueue(_session, queueName);
         }, cancellationToken);
     }
 
-    /// <summary>Gets a cached temporary destination by name.</summary>
+    /// <summary>Gets a cached temporary destination by name and destination type.</summary>
     /// <param name="name">The destination name.</param>
+    /// <param name="destinationType">The queue or topic destination type.</param>
     /// <returns>The cached destination, or <see langword="null" /> when it is not registered.</returns>
-    public IDestination? GetTemporaryDestination(string name)
+    public IDestination? GetTemporaryDestination(string name, DestinationType destinationType)
     {
-        return ConnectionContext.TryGetTemporaryEntity(name, out var destination) ? destination : null;
+        return ConnectionContext.TryGetTemporaryEntity(name, destinationType, out var destination) ? destination : null;
     }
 }

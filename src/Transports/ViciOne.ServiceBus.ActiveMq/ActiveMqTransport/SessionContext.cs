@@ -99,8 +99,9 @@ public interface SessionContext :
     /// <returns>A task that completes when deletion has finished.</returns>
     Task DeleteQueueAsync(string queueName, CancellationToken cancellationToken = default);
 
-    /// <summary>Gets a registered temporary destination by name.</summary>
+    /// <summary>Gets a registered temporary destination by name and destination type.</summary>
     /// <param name="name">The destination name.</param>
+    /// <param name="destinationType">The queue or topic destination type.</param>
     /// <returns>The temporary destination, or <see langword="null" /> when it is not registered.</returns>
-    IDestination? GetTemporaryDestination(string name);
+    IDestination? GetTemporaryDestination(string name, DestinationType destinationType);
 }

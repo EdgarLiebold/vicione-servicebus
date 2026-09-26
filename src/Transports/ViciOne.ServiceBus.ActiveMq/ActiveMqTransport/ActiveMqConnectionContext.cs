@@ -22,7 +22,7 @@ public class ActiveMqConnectionContext :
 {
     readonly IConnection _connection;
     readonly TaskExecutor _executor;
-    readonly ConcurrentDictionary<string, IDestination> _temporaryEntities;
+    readonly ConcurrentDictionary<(string Name, DestinationType Type), IDestination> _temporaryEntities;
 
     /// <summary>
     /// Matches consumer destinations that follow the configured ActiveMQ virtual-topic naming pattern.
@@ -46,7 +46,7 @@ public class ActiveMqConnectionContext :
         Topology = hostConfiguration.Topology;
 
         _executor = new TaskExecutor();
-        _temporaryEntities = new ConcurrentDictionary<string, IDestination>();
+        _temporaryEntities = new ConcurrentDictionary<(string Name, DestinationType Type), IDestination>();
 
         _virtualTopicConsumerPattern = new Regex(hostConfiguration.Topology.PublishTopology.VirtualTopicConsumerPattern, RegexOptions.Compiled);
     }
@@ -88,7 +88,8 @@ public class ActiveMqConnectionContext :
         // Different sessions share this cache. GetOrAdd alone may invoke a native
         // creation factory twice and leave the losing destination unowned.
         lock (_temporaryEntities)
-            return (IQueue)_temporaryEntities.GetOrAdd(topicName, _ => (IQueue)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryQueue));
+            return (IQueue)_temporaryEntities.GetOrAdd((topicName, DestinationType.TemporaryQueue),
+                _ => (IQueue)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryQueue));
     }
 
     /// <summary>Gets or creates the cached temporary topic for a destination name.</summary>
@@ -98,28 +99,32 @@ public class ActiveMqConnectionContext :
     public ITopic GetTemporaryTopic(ISession session, string topicName)
     {
         lock (_temporaryEntities)
-            return (ITopic)_temporaryEntities.GetOrAdd(topicName, _ => (ITopic)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryTopic));
+            return (ITopic)_temporaryEntities.GetOrAdd((topicName, DestinationType.TemporaryTopic),
+                _ => (ITopic)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryTopic));
     }
 
-    /// <summary>Tries to retrieve a cached temporary destination by name.</summary>
+    /// <summary>Tries to retrieve a cached temporary destination by name and destination type.</summary>
     /// <param name="name">The destination name.</param>
+    /// <param name="destinationType">The queue or topic destination type.</param>
     /// <param name="destination">The cached destination, when found.</param>
     /// <returns><see langword="true" /> when the destination is cached; otherwise, <see langword="false" />.</returns>
-    public bool TryGetTemporaryEntity(string name, out IDestination? destination)
+    public bool TryGetTemporaryEntity(string name, DestinationType destinationType, out IDestination? destination)
     {
-        return _temporaryEntities.TryGetValue(name, out destination);
+        return _temporaryEntities.TryGetValue((name, TemporaryType(destinationType)), out destination);
     }
 
     /// <summary>Tries to remove a cached temporary destination and delete it from the broker.</summary>
     /// <param name="session">The session used to delete the broker destination.</param>
     /// <param name="name">The cached destination name.</param>
+    /// <param name="destinationType">The queue or topic destination type to remove.</param>
     /// <returns><see langword="true" /> when a cached destination was deleted; otherwise, <see langword="false" />.</returns>
-    public bool TryRemoveTemporaryEntity(ISession session, string name)
+    public bool TryRemoveTemporaryEntity(ISession session, string name, DestinationType destinationType)
     {
+        var key = (name, TemporaryType(destinationType));
         IDestination? destination;
         lock (_temporaryEntities)
         {
-            if (!_temporaryEntities.TryRemove(name, out destination))
+            if (!_temporaryEntities.TryRemove(key, out destination))
                 return false;
         }
 
@@ -133,10 +138,17 @@ public class ActiveMqConnectionContext :
             // A failed broker delete must remain discoverable for a later retry. Do not
             // overwrite a newer mapping if another operation recreated the same name.
             lock (_temporaryEntities)
-                _temporaryEntities.TryAdd(name, destination);
+                _temporaryEntities.TryAdd(key, destination);
             throw;
         }
     }
+
+    static DestinationType TemporaryType(DestinationType destinationType) => destinationType switch
+    {
+        DestinationType.Queue or DestinationType.TemporaryQueue => DestinationType.TemporaryQueue,
+        DestinationType.Topic or DestinationType.TemporaryTopic => DestinationType.TemporaryTopic,
+        _ => throw new ArgumentOutOfRangeException(nameof(destinationType), destinationType, "A queue or topic destination type is required.")
+    };
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that completes after connection and executor cleanup.</returns>

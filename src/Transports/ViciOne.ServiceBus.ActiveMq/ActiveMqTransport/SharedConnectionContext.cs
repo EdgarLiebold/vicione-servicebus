@@ -58,14 +58,14 @@ public class SharedConnectionContext :
     }
 
     /// <inheritdoc />
-    public bool TryGetTemporaryEntity(string name, out IDestination? destination)
+    public bool TryGetTemporaryEntity(string name, DestinationType destinationType, out IDestination? destination)
     {
-        return _context.TryGetTemporaryEntity(name, out destination);
+        return _context.TryGetTemporaryEntity(name, destinationType, out destination);
     }
 
     /// <inheritdoc />
-    public bool TryRemoveTemporaryEntity(ISession session, string name)
+    public bool TryRemoveTemporaryEntity(ISession session, string name, DestinationType destinationType)
     {
-        return _context.TryRemoveTemporaryEntity(session, name);
+        return _context.TryRemoveTemporaryEntity(session, name, destinationType);
     }
 }

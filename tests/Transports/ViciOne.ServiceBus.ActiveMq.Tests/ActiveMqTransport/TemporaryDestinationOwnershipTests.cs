@@ -12,6 +12,175 @@ public sealed class TemporaryDestinationOwnershipTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "native-request-reply-address-ignores-same-name-topic")]
+    public async Task RequestSend_UsesTheReplyQueueDespiteASameNameTopicAsync(bool queueAlreadyCreated)
+    {
+        const string name = "reply-name";
+        var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
+        var configuration = new ActiveMqBusConfiguration(topology);
+        configuration.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker.internal:61616"));
+        IConnection nativeConnection = InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+        {
+            nameof(IConnection.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected connection operation: {method.Name}"),
+        });
+        await using var connection = new ActiveMqConnectionContext(nativeConnection, configuration.HostConfiguration, CancellationToken.None);
+        ITemporaryQueue replyQueue = TemporaryQueue(1);
+        ITemporaryTopic conflictingTopic = TemporaryTopic(2);
+        var serviceQueue = new Apache.NMS.ActiveMQ.Commands.ActiveMQQueue("service");
+        IMessage? sent = null;
+        int queueCreations = 0;
+        IMessageProducer producer = InterfaceProxy<IMessageProducer>.Create((method, args) => method.Name switch
+        {
+            nameof(IMessageProducer.SendAsync) => Capture(Assert.IsAssignableFrom<IMessage>(args![0])),
+            nameof(IMessageProducer.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected producer operation: {method.Name}"),
+        });
+        ISession nativeSession = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.CreateTemporaryTopic) => conflictingTopic,
+            nameof(ISession.CreateTemporaryQueue) => CreateReplyQueue(),
+            nameof(ISession.CreateBytesMessage) => new Apache.NMS.ActiveMQ.Commands.ActiveMQBytesMessage { Content = (byte[])args![0]! },
+            nameof(ISession.CreateProducerAsync) when ReferenceEquals(args![0], serviceQueue) => Task.FromResult(producer),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected session operation: {method.Name}"),
+        });
+        await using var session = new ActiveMqSessionContext(connection, nativeSession, CancellationToken.None);
+        await session.GetDestinationAsync(name, DestinationType.TemporaryTopic, TestContext.Current.CancellationToken);
+        if (queueAlreadyCreated)
+            await session.GetDestinationAsync(name, DestinationType.TemporaryQueue, TestContext.Current.CancellationToken);
+
+        var serialization = InterfaceProxy<ISerialization>.Create((method, _) =>
+            throw new InvalidOperationException($"Unexpected serialization operation: {method.Name}"));
+        var endpoint = InterfaceProxy<ViciOne.ServiceBus.Transports.ReceiveEndpointContext>.Create((method, _) => method.Name switch
+        {
+            "get_Serialization" => serialization,
+            _ => throw new InvalidOperationException($"Unexpected endpoint operation: {method.Name}"),
+        });
+        var supervisor = InterfaceProxy<ISessionContextSupervisor>.Create((method, _) =>
+            throw new InvalidOperationException($"Unexpected supervisor operation: {method.Name}"));
+        var transport = new ActiveMqSendTransportContext(configuration.HostConfiguration, endpoint, supervisor,
+            Pipe.Empty<SessionContext>(), "service", DestinationType.Queue);
+        var context = new TransportActiveMqSendContext<ReplyRequest>(new ReplyRequest("request-17"), TestContext.Current.CancellationToken)
+        {
+            ReplyDestination = serviceQueue,
+            ResponseAddress = new Uri($"activemq://broker.internal/{name}?temporary=true"),
+            Serializer = new ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer(System.Text.Json.JsonSerializerOptions.Default),
+        };
+
+        await transport.SendAsync(session, context, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(sent);
+        ITemporaryQueue nativeReply = Assert.IsAssignableFrom<ITemporaryQueue>(sent.NMSReplyTo);
+        Assert.Equal(replyQueue.QueueName, nativeReply.QueueName);
+        Assert.Equal(1, queueCreations);
+        Assert.Same(replyQueue, session.GetTemporaryDestination(name, DestinationType.TemporaryQueue));
+        Assert.Same(conflictingTopic, session.GetTemporaryDestination(name, DestinationType.TemporaryTopic));
+
+        ITemporaryQueue CreateReplyQueue()
+        {
+            queueCreations++;
+            return replyQueue;
+        }
+
+        Task Capture(IMessage message)
+        {
+            Assert.Null(sent);
+            sent = message;
+            return Task.CompletedTask;
+        }
+    }
+
+    public sealed record ReplyRequest(string Value);
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "same-name-temporary-queue-and-topic-have-independent-ownership")]
+    public async Task SameNameQueueAndTopic_KeepIndependentIdentityAndCleanupAsync(bool topicFirst, bool failFirstDelete)
+    {
+        const string name = "same-name";
+        int created = 0;
+        var deleted = new List<IDestination>();
+        var deleteFailure = new NMSException("native delete failed");
+        bool failDelete = failFirstDelete;
+        IConnection nativeConnection = InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+        {
+            nameof(IConnection.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected connection operation: {method.Name}"),
+        });
+        var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
+        var configuration = new ActiveMqBusConfiguration(topology);
+        configuration.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker.internal:61616"));
+        await using var connection = new ActiveMqConnectionContext(nativeConnection, configuration.HostConfiguration, CancellationToken.None);
+        ISession nativeSession = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.CreateTemporaryQueue) => TemporaryQueue(++created),
+            nameof(ISession.CreateTemporaryTopic) => TemporaryTopic(++created),
+            nameof(ISession.DeleteDestination) => Delete(Assert.IsAssignableFrom<IDestination>(args![0])),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected session operation: {method.Name}"),
+        });
+        await using var session = new ActiveMqSessionContext(connection, nativeSession, CancellationToken.None);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        DestinationType firstKind = topicFirst ? DestinationType.TemporaryTopic : DestinationType.TemporaryQueue;
+        DestinationType secondKind = topicFirst ? DestinationType.TemporaryQueue : DestinationType.TemporaryTopic;
+        IDestination first = await session.GetDestinationAsync(name, firstKind, cancellationToken);
+        IDestination second = await session.GetDestinationAsync(name, secondKind, cancellationToken);
+        IDestination queue = topicFirst ? second : first;
+        IDestination topic = topicFirst ? first : second;
+
+        Assert.IsAssignableFrom<ITemporaryQueue>(queue);
+        Assert.IsAssignableFrom<ITemporaryTopic>(topic);
+        Assert.NotSame(queue, topic);
+        Assert.Same(queue, await session.GetDestinationAsync(name, DestinationType.TemporaryQueue, cancellationToken));
+        Assert.Same(topic, await session.GetDestinationAsync(name, DestinationType.TemporaryTopic, cancellationToken));
+        Assert.Equal(2, created);
+        Assert.Same(queue, session.GetTemporaryDestination(name, DestinationType.TemporaryQueue));
+        Assert.Same(topic, session.GetTemporaryDestination(name, DestinationType.TemporaryTopic));
+
+        if (failFirstDelete)
+        {
+            NMSException actual = await Assert.ThrowsAsync<NMSException>(() => session.DeleteQueueAsync(name, cancellationToken));
+            Assert.Same(deleteFailure, actual);
+            Assert.Same(queue, await session.GetDestinationAsync(name, DestinationType.TemporaryQueue, cancellationToken));
+            Assert.Same(topic, await session.GetDestinationAsync(name, DestinationType.TemporaryTopic, cancellationToken));
+            failDelete = false;
+        }
+
+        await session.DeleteQueueAsync(name, cancellationToken);
+        Assert.Same(topic, await session.GetDestinationAsync(name, DestinationType.TemporaryTopic, cancellationToken));
+        Assert.All(deleted, destination => Assert.Same(queue, destination));
+        Assert.Equal(failFirstDelete ? 2 : 1, deleted.Count);
+        IDestination replacementQueue = await session.GetDestinationAsync(name, DestinationType.TemporaryQueue, cancellationToken);
+        Assert.NotSame(queue, replacementQueue);
+        Assert.Equal(3, created);
+        await session.DeleteTopicAsync(name, cancellationToken);
+        Assert.Same(topic, deleted[^1]);
+        Assert.Same(replacementQueue, await session.GetDestinationAsync(name, DestinationType.TemporaryQueue, cancellationToken));
+        IDestination replacementTopic = await session.GetDestinationAsync(name, DestinationType.TemporaryTopic, cancellationToken);
+        Assert.NotSame(topic, replacementTopic);
+        Assert.Equal(4, created);
+
+        object? Delete(IDestination destination)
+        {
+            deleted.Add(destination);
+            if (failDelete)
+                throw deleteFailure;
+            return null;
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "concurrent-temporary-resolution-creates-one-native-entity")]
     public async Task ConcurrentCreators_ShareOneOwnedDestinationAsync(bool topic)
     {
@@ -63,7 +232,7 @@ public sealed class TemporaryDestinationOwnershipTests
         IDestination[] destinations = await Task.WhenAll(callers);
         Assert.Equal(1, Volatile.Read(ref created));
         Assert.All(destinations, destination => Assert.Same(destinations[0], destination));
-        Assert.True(connection.TryGetTemporaryEntity("shared", out IDestination? registered));
+        Assert.True(connection.TryGetTemporaryEntity("shared", topic ? DestinationType.TemporaryTopic : DestinationType.TemporaryQueue, out IDestination? registered));
         Assert.Same(destinations[0], registered);
 
         IDestination CreateNative()
@@ -114,8 +283,8 @@ public sealed class TemporaryDestinationOwnershipTests
         }
 
         Assert.Same(consumeDestination, sendDestination);
-        Assert.Same(sendDestination, sender.GetTemporaryDestination(logicalName));
-        Assert.Same(sendDestination, receiver.GetTemporaryDestination(logicalName));
+        Assert.Same(sendDestination, sender.GetTemporaryDestination(logicalName, kind));
+        Assert.Same(sendDestination, receiver.GetTemporaryDestination(logicalName, kind));
         Assert.Same(sendDestination, await sender.GetDestinationAsync(logicalName, kind, cancellationToken));
         Assert.Equal(1, Volatile.Read(ref created));
 

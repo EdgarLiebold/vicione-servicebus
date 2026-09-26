@@ -16,6 +16,34 @@
 
 ## Current open work after the completed first reading
 
+- Follow-up to `2309b2ff2`: the exact-commit ActiveMQ receipts are green
+  (`artifacts/n2u10/receipt.json`: 200 unit cases;
+  `artifacts/n2l09/receipt.json`: 100 broker cases). Adversarial review then
+  identified equal-name queue/topic collisions in the string-only cache.
+  The cache now uses normalized `(name, destination type)` keys throughout
+  creation, lookup, deletion and failed-delete restoration. The three provider
+  extension methods now require `DestinationType`; all wrappers and reply
+  addressing forward it explicitly. Application request APIs are unchanged.
+  `SameNameQueueAndTopic_KeepIndependentIdentityAndCleanupAsync` failed all four
+  cases before this correction and verifies both creation orders and deletion
+  failure recovery. `RequestSend_UsesTheReplyQueueDespiteASameNameTopicAsync`
+  checks the native producer's `NMSReplyTo` with an absent or existing queue
+  beside a same-name topic. Both cases kill a Topic-instead-of-Queue lookup
+  mutant. The full corrected unit suite passes 206/206 without skips.
+  Logs: `/private/tmp/servicebus-reply-types-red.log`,
+  `/private/tmp/servicebus-reply-send-mutant.log`,
+  `/private/tmp/servicebus-reply-types-full.log`.
+  Read-only Red Team `/root/outbox_proof_redteam` approved the product fix and
+  the additional native-send assertions. Package/API gate passed 18 journeys,
+  31 packages, four isolated consumers and 30 runtime assemblies; its clean
+  checkout failure exposed a missing restore for the API inventory tool, now
+  fixed in the gate script. Log:
+  `/private/tmp/servicebus-reply-types-packages-restored.log`.
+  Six additional API snapshot differences were traced to earlier commits
+  `363766248`, `5ebda66d2`, `2f3a4b6eb`, `302920ea9`, `540fecbb9`, all after
+  the previous baseline `e0cf987c8`. They are stale inventory corrections.
+  Fresh exact-commit unit and broker receipts for this typed follow-up remain
+  required before push; the n2 receipts do not validate the newer source.
 - ActiveMQ reply ownership correction, after `f8730e2a6`: its exact-commit unit
   collection passed all 20 profiles (11,920 cases), but the provider suite failed
   1/100 in `RawRequest_UsesProviderTemporaryReplyQueueAsync(activemq)` with a

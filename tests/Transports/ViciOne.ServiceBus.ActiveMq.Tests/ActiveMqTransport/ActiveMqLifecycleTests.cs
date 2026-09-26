@@ -432,7 +432,7 @@ public sealed class ActiveMqLifecycleTests
                 _ => Default(method.ReturnType),
             }));
         IDestination destination = InterfaceProxy<IDestination>.Create((method, _) => Default(method.ReturnType));
-        TemporaryEntities(context)["temp-orders"] = destination;
+        TemporaryEntities(context)[("temp-orders", DestinationType.TemporaryQueue)] = destination;
         IDestination? deleted = null;
         ISession session = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
         {
@@ -440,12 +440,12 @@ public sealed class ActiveMqLifecycleTests
             _ => Default(method.ReturnType),
         });
 
-        bool removed = context.TryRemoveTemporaryEntity(session, "temp-orders");
+        bool removed = context.TryRemoveTemporaryEntity(session, "temp-orders", DestinationType.TemporaryQueue);
 
         Assert.True(removed);
         Assert.Same(destination, deleted);
-        Assert.False(context.TryGetTemporaryEntity("temp-orders", out _));
-        Assert.False(context.TryRemoveTemporaryEntity(session, "temp-orders"));
+        Assert.False(context.TryGetTemporaryEntity("temp-orders", DestinationType.TemporaryQueue, out _));
+        Assert.False(context.TryRemoveTemporaryEntity(session, "temp-orders", DestinationType.TemporaryQueue));
     }
 
     [Fact]
@@ -459,7 +459,7 @@ public sealed class ActiveMqLifecycleTests
                 _ => Default(method.ReturnType),
             }));
         IDestination destination = InterfaceProxy<IDestination>.Create((method, _) => Default(method.ReturnType));
-        TemporaryEntities(context)["temp-orders"] = destination;
+        TemporaryEntities(context)[("temp-orders", DestinationType.TemporaryQueue)] = destination;
         ISession session = InterfaceProxy<ISession>.Create((method, _) => method.Name switch
         {
             nameof(ISession.DeleteDestination) => throw new NMSException("delete failed"),
@@ -467,10 +467,10 @@ public sealed class ActiveMqLifecycleTests
         });
 
         NMSException exception = Assert.Throws<NMSException>(
-            () => context.TryRemoveTemporaryEntity(session, "temp-orders"));
+            () => context.TryRemoveTemporaryEntity(session, "temp-orders", DestinationType.TemporaryQueue));
 
         Assert.Equal("delete failed", exception.Message);
-        Assert.True(context.TryGetTemporaryEntity("temp-orders", out IDestination? restored));
+        Assert.True(context.TryGetTemporaryEntity("temp-orders", DestinationType.TemporaryQueue, out IDestination? restored));
         Assert.NotNull(restored);
         Assert.Same(destination, restored);
     }
@@ -508,7 +508,7 @@ public sealed class ActiveMqLifecycleTests
             nameof(ISession.CloseAsync) => Task.CompletedTask,
             _ => Default(method.ReturnType),
         });
-        TemporaryEntities(connectionContext)["logical-name"] = registeredTopic;
+        TemporaryEntities(connectionContext)[("logical-name", DestinationType.TemporaryTopic)] = registeredTopic;
         await using var sessionContext = new ActiveMqSessionContext(
             connectionContext,
             session,
@@ -555,7 +555,7 @@ public sealed class ActiveMqLifecycleTests
             nameof(ISession.CloseAsync) => Task.CompletedTask,
             _ => Default(method.ReturnType),
         });
-        TemporaryEntities(connectionContext)["VirtualTopic.logical-name"] = registeredTopic;
+        TemporaryEntities(connectionContext)[("VirtualTopic.logical-name", DestinationType.TemporaryTopic)] = registeredTopic;
         await using var sessionContext = new ActiveMqSessionContext(
             connectionContext,
             session,
@@ -581,8 +581,8 @@ public sealed class ActiveMqLifecycleTests
         return new ActiveMqConnectionContext(connection, busConfiguration.HostConfiguration, CancellationToken.None);
     }
 
-    private static ConcurrentDictionary<string, IDestination> TemporaryEntities(ActiveMqConnectionContext context) =>
-        Assert.IsType<ConcurrentDictionary<string, IDestination>>(
+    private static ConcurrentDictionary<(string, DestinationType), IDestination> TemporaryEntities(ActiveMqConnectionContext context) =>
+        Assert.IsType<ConcurrentDictionary<(string, DestinationType), IDestination>>(
             typeof(ActiveMqConnectionContext)
                 .GetField("_temporaryEntities", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .GetValue(context));

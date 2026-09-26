@@ -18,6 +18,15 @@ entry below records what the current work changed for anyone reading the source.
   competing factories cannot leave unowned native destinations. Six regressions
   cover both startup orders and concurrent creation; integration assertions bind
   the request ID and actual native reply destination across send and response.
+- Temporary ActiveMQ registrations now separate equal queue and topic names.
+  Lookup, deletion and failed-delete restoration retain the requested type, and
+  response addressing explicitly selects a queue. The three low-level context
+  lookup/deletion methods now require `DestinationType`; provider extension
+  implementations must forward it. Four regressions exercise both creation orders
+  and cleanup with and without a native deletion failure. Two native-send cases
+  additionally verify the actual reply queue address beside a same-name topic;
+  both reject a deliberately wrong topic lookup. The package verification script
+  now restores its API inventory tool before building it in a clean checkout.
 - The ActiveMQ Classic future-delivery test now waits for a separate scheduled
   probe before checking that the original scheduler job was removed. Classic
   6.2.0 dispatches before updating its scheduler index; client receive/stop was

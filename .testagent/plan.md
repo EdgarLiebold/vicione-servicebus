@@ -8,7 +8,10 @@ The current remainder is empty. Use [status.md](status.md#current-open-work-afte
 for the explicit open defects and their evidence limits.
 
 1. Finish exact-commit verification of the ActiveMQ temporary reply ownership
-   correction. The scheduling barrier is already verified and pushed in
+   correction and its typed queue/topic cache follow-up. Native reply addressing
+   now has a separate regression and a killed wrong-type mutant. The package
+   gate is green; fresh unit/broker receipts must bind the final source commit.
+   The scheduling barrier is already verified and pushed in
    `f8730e2a6`; its provider run exposed the separate send-first reply-queue defect.
 2. Measure the corrected provider profile and then the whole product at a single
    commit. Do not combine the 20 successful unit receipts of `f8730e2a6` with

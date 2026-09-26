@@ -131,6 +131,10 @@ done
 
 # Keep the normal project restore out of the package-only consumer cache. The
 # public-API inventory resolves assemblies exclusively from this clean folder.
+"$dotnet_cli" restore "$repository_root/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj" \
+  --locked-mode \
+  "${build_server_arguments[@]}"
+
 export NUGET_PACKAGES="$global_packages"
 
 expected_packages=(

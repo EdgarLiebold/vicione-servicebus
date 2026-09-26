@@ -43,15 +43,17 @@ public interface ConnectionContext :
     /// <returns>The cached or newly resolved temporary topic.</returns>
     ITopic GetTemporaryTopic(ISession session, string topicName);
 
-    /// <summary>Tries to retrieve a cached temporary destination by name.</summary>
+    /// <summary>Tries to retrieve a cached temporary destination by name and destination type.</summary>
     /// <param name="name">The destination name.</param>
+    /// <param name="destinationType">The queue or topic destination type.</param>
     /// <param name="destination">The cached destination, when found.</param>
     /// <returns><see langword="true" /> when the destination is cached; otherwise, <see langword="false" />.</returns>
-    bool TryGetTemporaryEntity(string name, out IDestination? destination);
+    bool TryGetTemporaryEntity(string name, DestinationType destinationType, out IDestination? destination);
 
     /// <summary>Tries to remove a cached temporary destination and delete it from the broker.</summary>
     /// <param name="session">The session used to delete the broker destination.</param>
     /// <param name="name">The cached destination name.</param>
+    /// <param name="destinationType">The queue or topic destination type to remove.</param>
     /// <returns><see langword="true" /> when a cached destination was deleted; otherwise, <see langword="false" />.</returns>
-    bool TryRemoveTemporaryEntity(ISession session, string name);
+    bool TryRemoveTemporaryEntity(ISession session, string name, DestinationType destinationType);
 }

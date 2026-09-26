@@ -87,9 +87,9 @@ public class SharedSessionContext :
     }
 
     /// <inheritdoc />
-    public IDestination? GetTemporaryDestination(string name)
+    public IDestination? GetTemporaryDestination(string name, DestinationType destinationType)
     {
-        return _context.GetTemporaryDestination(name);
+        return _context.GetTemporaryDestination(name, destinationType);
     }
 
     /// <inheritdoc />

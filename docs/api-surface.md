@@ -39,6 +39,16 @@ The machine-readable support matrix is [provider-capabilities.json](provider-cap
 Unsupported reliable-messaging combinations fail during startup rather than selecting a weaker
 delivery boundary.
 
+ActiveMQ extension contexts identify a temporary destination by both its logical
+name and its queue/topic type. `ConnectionContext.TryGetTemporaryEntity`,
+`ConnectionContext.TryRemoveTemporaryEntity` and
+`SessionContext.GetTemporaryDestination` require a `DestinationType` argument.
+Queue and TemporaryQueue select the queue registration; Topic and TemporaryTopic
+select the topic registration. Equal names may therefore coexist across the two
+types, and deleting one does not remove the other. Response addressing explicitly
+selects the temporary queue registration. Custom implementations of these transport
+contexts must forward the destination type; application request APIs are unaffected.
+
 For Azure Service Bus publishing, configure topic properties through
 `IServiceBusMessagePublishTopologyConfigurator` before a subscription or broker topology evaluates
 them. `IServiceBusMessagePublishTopology<T>.CreateTopicOptions` returns a separate SDK options

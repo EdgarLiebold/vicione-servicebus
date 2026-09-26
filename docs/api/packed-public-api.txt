@@ -3735,6 +3735,7 @@ TYPE class public ViciOne.ServiceBus.Topology.MessageTopology [interfaces=ViciOn
   METHOD protected virtual ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<T> CreateMessageTopology<T>() [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
   METHOD public virtual final System.Void SetEntityNameFormatter(ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter entityNameFormatter)
   METHOD public virtual final ViciOne.ServiceBus.Advanced.ConnectHandle ConnectMessageTopologyConfigurationObserver(ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurationObserver observer)
+  PROPERTY System.Boolean HasConfiguredMessageTopologies { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.IEntityNameFormatter EntityNameFormatter { public-get[modifiers=virtual final];  }
 TYPE class public ViciOne.ServiceBus.Topology.MessageTopology<TMessage> [interfaces=ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator<TMessage>]
   CTOR public ViciOne.ServiceBus.Topology.MessageTopology<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter<TMessage> entityNameFormatter)
@@ -4017,8 +4018,8 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.ActiveMqConnectionContext [base=Vi
   METHOD public virtual final Apache.NMS.IQueue GetTemporaryQueue(Apache.NMS.ISession session, System.String topicName)
   METHOD public virtual final Apache.NMS.ITopic GetTemporaryTopic(Apache.NMS.ISession session, System.String topicName)
   METHOD public virtual final System.Boolean IsVirtualTopicConsumer(System.String name)
-  METHOD public virtual final System.Boolean TryGetTemporaryEntity(System.String name, out Apache.NMS.IDestination destination [nullability={read=Nullable;write=Nullable}])
-  METHOD public virtual final System.Boolean TryRemoveTemporaryEntity(Apache.NMS.ISession session, System.String name)
+  METHOD public virtual final System.Boolean TryGetTemporaryEntity(System.String name, Apache.NMS.DestinationType destinationType, out Apache.NMS.IDestination destination [nullability={read=Nullable;write=Nullable}])
+  METHOD public virtual final System.Boolean TryRemoveTemporaryEntity(Apache.NMS.ISession session, System.String name, Apache.NMS.DestinationType destinationType)
   METHOD public virtual final System.Threading.Tasks.Task<Apache.NMS.ISession> CreateSessionAsync(System.Threading.CancellationToken cancellationToken)
   METHOD public virtual final System.Threading.Tasks.ValueTask DisposeAsync()
   PROPERTY Apache.NMS.IConnection Connection { public-get[modifiers=virtual final];  }
@@ -4175,7 +4176,7 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.ActiveMqSendTransportProvider [int
 TYPE class public ViciOne.ServiceBus.ActiveMq.ActiveMqSessionContext [base=ViciOne.ServiceBus.Middleware.ScopePipeContext,interfaces=System.IAsyncDisposable&ViciOne.ServiceBus.ActiveMq.SessionContext]
   CTOR public ViciOne.ServiceBus.ActiveMq.ActiveMqSessionContext(ViciOne.ServiceBus.ActiveMq.ConnectionContext connectionContext, Apache.NMS.ISession session, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual final Apache.NMS.IBytesMessage CreateBytesMessage(System.Byte[] content)
-  METHOD public virtual final Apache.NMS.IDestination GetTemporaryDestination(System.String name) [return-nullability={read=Nullable;write=Nullable}]
+  METHOD public virtual final Apache.NMS.IDestination GetTemporaryDestination(System.String name, Apache.NMS.DestinationType destinationType) [return-nullability={read=Nullable;write=Nullable}]
   METHOD public virtual final Apache.NMS.IMessage CreateMessage()
   METHOD public virtual final Apache.NMS.ITextMessage CreateTextMessage(System.String content)
   METHOD public virtual final System.Threading.Tasks.Task DeleteQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
@@ -4434,8 +4435,8 @@ TYPE interface public ViciOne.ServiceBus.ActiveMq.ConnectionContext [interfaces=
   METHOD public abstract Apache.NMS.IQueue GetTemporaryQueue(Apache.NMS.ISession session, System.String topicName)
   METHOD public abstract Apache.NMS.ITopic GetTemporaryTopic(Apache.NMS.ISession session, System.String topicName)
   METHOD public abstract System.Boolean IsVirtualTopicConsumer(System.String name)
-  METHOD public abstract System.Boolean TryGetTemporaryEntity(System.String name, out Apache.NMS.IDestination destination [nullability={read=Nullable;write=Nullable}])
-  METHOD public abstract System.Boolean TryRemoveTemporaryEntity(Apache.NMS.ISession session, System.String name)
+  METHOD public abstract System.Boolean TryGetTemporaryEntity(System.String name, Apache.NMS.DestinationType destinationType, out Apache.NMS.IDestination destination [nullability={read=Nullable;write=Nullable}])
+  METHOD public abstract System.Boolean TryRemoveTemporaryEntity(Apache.NMS.ISession session, System.String name, Apache.NMS.DestinationType destinationType)
   METHOD public abstract System.Threading.Tasks.Task<Apache.NMS.ISession> CreateSessionAsync(System.Threading.CancellationToken cancellationToken)
   PROPERTY Apache.NMS.IConnection Connection { public-get[modifiers=abstract];  }
   PROPERTY System.String Description { public-get[modifiers=abstract];  }
@@ -4606,7 +4607,7 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.ReplyToSendEndpoint [base=ViciOne.
 TYPE class public ViciOne.ServiceBus.ActiveMq.ScopeSessionContext [base=ViciOne.ServiceBus.Middleware.ScopePipeContext,interfaces=ViciOne.ServiceBus.ActiveMq.SessionContext]
   CTOR public ViciOne.ServiceBus.ActiveMq.ScopeSessionContext(ViciOne.ServiceBus.ActiveMq.SessionContext context, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual final Apache.NMS.IBytesMessage CreateBytesMessage(System.Byte[] content)
-  METHOD public virtual final Apache.NMS.IDestination GetTemporaryDestination(System.String name) [return-nullability={read=Nullable;write=Nullable}]
+  METHOD public virtual final Apache.NMS.IDestination GetTemporaryDestination(System.String name, Apache.NMS.DestinationType destinationType) [return-nullability={read=Nullable;write=Nullable}]
   METHOD public virtual final Apache.NMS.IMessage CreateMessage()
   METHOD public virtual final Apache.NMS.ITextMessage CreateTextMessage(System.String content)
   METHOD public virtual final System.Threading.Tasks.Task DeleteQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
@@ -4627,7 +4628,7 @@ TYPE interface public ViciOne.ServiceBus.ActiveMq.SendSettings [interfaces=ViciO
   METHOD public abstract ViciOne.ServiceBus.ActiveMq.Topology.BrokerTopology GetBrokerTopology()
 TYPE interface public ViciOne.ServiceBus.ActiveMq.SessionContext [interfaces=ViciOne.ServiceBus.Advanced.PipeContext]
   METHOD public abstract Apache.NMS.IBytesMessage CreateBytesMessage(System.Byte[] content)
-  METHOD public abstract Apache.NMS.IDestination GetTemporaryDestination(System.String name) [return-nullability={read=Nullable;write=Nullable}]
+  METHOD public abstract Apache.NMS.IDestination GetTemporaryDestination(System.String name, Apache.NMS.DestinationType destinationType) [return-nullability={read=Nullable;write=Nullable}]
   METHOD public abstract Apache.NMS.IMessage CreateMessage()
   METHOD public abstract Apache.NMS.ITextMessage CreateTextMessage(System.String content)
   METHOD public abstract System.Threading.Tasks.Task DeleteQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
@@ -4652,8 +4653,8 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.SharedConnectionContext [base=Vici
   METHOD public virtual final Apache.NMS.IQueue GetTemporaryQueue(Apache.NMS.ISession session, System.String topicName)
   METHOD public virtual final Apache.NMS.ITopic GetTemporaryTopic(Apache.NMS.ISession session, System.String topicName)
   METHOD public virtual final System.Boolean IsVirtualTopicConsumer(System.String name)
-  METHOD public virtual final System.Boolean TryGetTemporaryEntity(System.String name, out Apache.NMS.IDestination destination [nullability={read=Nullable;write=Nullable}])
-  METHOD public virtual final System.Boolean TryRemoveTemporaryEntity(Apache.NMS.ISession session, System.String name)
+  METHOD public virtual final System.Boolean TryGetTemporaryEntity(System.String name, Apache.NMS.DestinationType destinationType, out Apache.NMS.IDestination destination [nullability={read=Nullable;write=Nullable}])
+  METHOD public virtual final System.Boolean TryRemoveTemporaryEntity(Apache.NMS.ISession session, System.String name, Apache.NMS.DestinationType destinationType)
   PROPERTY System.String Description { public-get[modifiers=virtual final];  }
   PROPERTY System.Threading.CancellationToken CancellationToken { public-get[modifiers=override];  }
   PROPERTY System.Uri HostAddress { public-get[modifiers=virtual final];  }
@@ -4661,7 +4662,7 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.SharedConnectionContext [base=Vici
 TYPE class public ViciOne.ServiceBus.ActiveMq.SharedSessionContext [base=ViciOne.ServiceBus.Middleware.ProxyPipeContext,interfaces=ViciOne.ServiceBus.ActiveMq.SessionContext]
   CTOR public ViciOne.ServiceBus.ActiveMq.SharedSessionContext(ViciOne.ServiceBus.ActiveMq.SessionContext context, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual final Apache.NMS.IBytesMessage CreateBytesMessage(System.Byte[] content)
-  METHOD public virtual final Apache.NMS.IDestination GetTemporaryDestination(System.String name) [return-nullability={read=Nullable;write=Nullable}]
+  METHOD public virtual final Apache.NMS.IDestination GetTemporaryDestination(System.String name, Apache.NMS.DestinationType destinationType) [return-nullability={read=Nullable;write=Nullable}]
   METHOD public virtual final Apache.NMS.IMessage CreateMessage()
   METHOD public virtual final Apache.NMS.ITextMessage CreateTextMessage(System.String content)
   METHOD public virtual final System.Threading.Tasks.Task DeleteQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
@@ -6491,6 +6492,7 @@ TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionExcepti
 TYPE struct public ViciOne.ServiceBus.AzureServiceBus.ServiceBusEndpointAddress
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusEndpointAddress(System.Uri hostAddress, System.String name, System.Nullable<System.TimeSpan> autoDelete = null, ViciOne.ServiceBus.AzureServiceBus.ServiceBusEndpointAddress.AddressType type = 0)
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusEndpointAddress(System.Uri hostAddress, System.Uri address, ViciOne.ServiceBus.AzureServiceBus.ServiceBusEndpointAddress.AddressType type = 0)
+  FIELD public readonly System.Int32 Port
   FIELD public readonly System.Nullable<System.TimeSpan> AutoDelete
   FIELD public readonly System.String Host
   FIELD public readonly System.String Name
@@ -6530,6 +6532,7 @@ TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost [base=ViciOn
   PROPERTY ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusTopology Topology { public-get;  }
 TYPE struct public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHostAddress
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHostAddress(System.Uri address)
+  FIELD public readonly System.Int32 Port
   FIELD public readonly System.String Host
   FIELD public readonly System.String Scheme
   FIELD public readonly System.String Scope
@@ -6914,6 +6917,7 @@ TYPE class public ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusMessageP
   GENERIC TMessage{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}
   METHOD public System.Void AddImplementedMessageConfigurator<T>(ViciOne.ServiceBus.AzureServiceBus.IServiceBusMessagePublishTopologyConfigurator<T> configurator, System.Boolean direct) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
   METHOD public override System.Boolean TryGetPublishAddress(System.Uri baseAddress, out System.Uri publishAddress [nullability={read=Nullable;write=Nullable}])
+  METHOD public override System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual final System.Void Apply(ViciOne.ServiceBus.AzureServiceBus.Topology.IPublishEndpointBrokerTopologyBuilder builder)
   METHOD public virtual final System.Void EnableDuplicateDetection(System.TimeSpan historyTimeWindow)
   METHOD public virtual final ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionConfigurator GetSubscriptionConfigurator(System.String subscriptionName)
@@ -13920,7 +13924,7 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.Configuration.ConfigurationSql
   PROPERTY System.String Area { public-get[modifiers=virtual final]; public-set; } [nullability={read=Nullable;write=Nullable}]
   PROPERTY System.String ConnectionTag { public-get[modifiers=virtual final]; public-set; } [nullability={read=Nullable;write=Nullable}]
   PROPERTY System.String Database { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
-  PROPERTY System.String Host { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
+  PROPERTY System.String Host { public-get[modifiers=virtual]; public-set[modifiers=virtual]; } [nullability={read=Nullable;write=Nullable}]
   PROPERTY System.String InstanceName { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
   PROPERTY System.String Password { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
   PROPERTY System.String Schema { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
@@ -15307,6 +15311,7 @@ TYPE class public ViciOne.ServiceBus.Advanced.Middleware.ActivePipeContextAgent<
   CTOR public ViciOne.ServiceBus.Advanced.Middleware.ActivePipeContextAgent<TContext>(ViciOne.ServiceBus.Advanced.Middleware.IActivePipeContextHandle<TContext> context)
   GENERIC TContext{flags=ReferenceTypeConstraint;constraints=[ViciOne.ServiceBus.Advanced.PipeContext];nullable=[1];unmanaged=false}
   METHOD protected override System.Threading.Tasks.Task StopAgentAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext context)
+  METHOD public System.IDisposable BeginUse()
   METHOD public override System.String ToString()
 TYPE class public ViciOne.ServiceBus.Advanced.Middleware.AsyncPipeContextAgent<TContext> [sealed,interfaces=ViciOne.ServiceBus.Advanced.Middleware.IAsyncPipeContextAgent<TContext>]
   CTOR public ViciOne.ServiceBus.Advanced.Middleware.AsyncPipeContextAgent<TContext>()
