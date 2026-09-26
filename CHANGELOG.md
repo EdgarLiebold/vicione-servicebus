@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Durable payload replay now retains the offload evidence that was actually
+  admitted when producing another persistence proof. Previously the current
+  send context could replace the original proof's flag, either losing valid
+  offload evidence or claiming an offload that never occurred. Both directions
+  failed a two-generation replay regression before the correction; all 35
+  bounded-serializer admission contract tests pass after it. The regression
+  also checks the next replay's acceptance or rejection under a stricter
+  message-data threshold, exact bytes, body length and envelope binding.
 - EF outbox factory tests now reject absent, incomplete and byte-mismatched
   payload-admission evidence before persistence. A matching proof preserves
   the exact envelope and application headers. The proof check is a separate

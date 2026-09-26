@@ -24,7 +24,7 @@ internal sealed class PayloadAdmissionSerializationContext
         => ((TrackingRuntime)Runtime).HasCompleteAdmissionFor(serializedLength);
 
     public bool TryCreateDurableProof(string contentType, out DurablePayloadAdmissionProof proof)
-        => ((TrackingRuntime)Runtime).TryCreateDurableProof(MessageDataOffloadObserved, contentType, out proof);
+        => ((TrackingRuntime)Runtime).TryCreateDurableProof(contentType, out proof);
 
     public void AdmitDurableReplay(ReadOnlyMemory<byte> envelope, string contentType, DurablePayloadAdmissionProof proof)
     {
@@ -40,6 +40,7 @@ internal sealed class PayloadAdmissionSerializationContext
     {
         private readonly IPayloadAdmissionRuntime _inner;
         private int _serializedBodyBytes = -1;
+        private bool _messageDataOffloadObserved;
         private long _validatedEnvelopeLength = -1;
         private byte[]? _validatedEnvelopeSha256;
 
@@ -50,7 +51,6 @@ internal sealed class PayloadAdmissionSerializationContext
                 && Volatile.Read(ref _validatedEnvelopeLength) == serializedLength;
 
         public bool TryCreateDurableProof(
-            bool messageDataOffloadObserved,
             string contentType,
             out DurablePayloadAdmissionProof proof)
         {
@@ -62,7 +62,7 @@ internal sealed class PayloadAdmissionSerializationContext
                 return false;
             }
 
-            proof = DurablePayloadAdmissionProof.Create(bodyBytes, messageDataOffloadObserved, hash, contentType);
+            proof = DurablePayloadAdmissionProof.Create(bodyBytes, Volatile.Read(ref _messageDataOffloadObserved), hash, contentType);
             return true;
         }
 
@@ -73,6 +73,7 @@ internal sealed class PayloadAdmissionSerializationContext
         public PayloadAdmissionResult EvaluateSerializedBody(ReadOnlyMemory<byte> serializedBody, bool messageDataOffloadObserved)
         {
             PayloadAdmissionResult result = _inner.EvaluateSerializedBody(serializedBody, messageDataOffloadObserved);
+            Volatile.Write(ref _messageDataOffloadObserved, messageDataOffloadObserved);
             Volatile.Write(ref _serializedBodyBytes, serializedBody.Length);
             return result;
         }
@@ -89,6 +90,7 @@ internal sealed class PayloadAdmissionSerializationContext
         public void ValidatePreviouslyAdmittedBodyLength(int serializedBodyBytes, bool messageDataOffloadObserved)
         {
             _inner.ValidatePreviouslyAdmittedBodyLength(serializedBodyBytes, messageDataOffloadObserved);
+            Volatile.Write(ref _messageDataOffloadObserved, messageDataOffloadObserved);
             Volatile.Write(ref _serializedBodyBytes, serializedBodyBytes);
         }
     }

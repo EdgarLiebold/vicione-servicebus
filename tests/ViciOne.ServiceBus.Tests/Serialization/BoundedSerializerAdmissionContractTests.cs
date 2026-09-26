@@ -316,6 +316,50 @@ public sealed class BoundedSerializerAdmissionContractTests
         Assert.Equal(1, locator.Calls);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-MESSAGE-DATA", "durable-copy-replay-preserves-offload-proof-across-generations")]
+    public void DurableCopiedEnvelope_PreservesProvenOffloadEvidenceAcrossReplayGenerations(bool originalOffloadObserved)
+    {
+        byte[] source = "<ABC>"u8.ToArray();
+        var originalAdmission = Admission(3, 5, messageDataOffloadObserved: originalOffloadObserved);
+        var locator = new TestCopiedLocator { LocatedRange = (true, 1, 3) };
+        _ = AdmittedCopyMessageBody.Create(source.AsMemory(), BinaryContentType,
+            Serialization(locator), originalAdmission, durableProof: null);
+        Assert.True(originalAdmission.TryCreateDurableProof(BinaryContentType.ToString(), out DurablePayloadAdmissionProof originalProof));
+
+        var firstReplayAdmission = Admission(3, 5, messageDataOffloadObserved: !originalOffloadObserved);
+        AdmittedCopyMessageBody firstReplay = AdmittedCopyMessageBody.Create(source.AsMemory(), BinaryContentType,
+            Serialization(locator), firstReplayAdmission, originalProof);
+        Assert.Equal(source, firstReplay.ToArray());
+        Assert.True(firstReplayAdmission.TryCreateDurableProof(BinaryContentType.ToString(), out DurablePayloadAdmissionProof replayProof));
+        Assert.Equal(originalOffloadObserved, replayProof.MessageDataOffloadObserved);
+        Assert.Equal(3, replayProof.SerializedBodyBytes);
+        Assert.True(replayProof.MatchesEnvelope(source, BinaryContentType.ToString()));
+
+        var secondReplayAdmission = Admission(3, 5, messageDataOffloadObserved: !originalOffloadObserved,
+            messageDataThresholdBytes: 2);
+        if (originalOffloadObserved)
+        {
+            AdmittedCopyMessageBody secondReplay = AdmittedCopyMessageBody.Create(source.AsMemory(), BinaryContentType,
+                Serialization(locator), secondReplayAdmission, replayProof);
+            Assert.Equal(source, secondReplay.ToArray());
+            Assert.True(secondReplayAdmission.HasCompleteAdmissionFor(source.Length));
+        }
+        else
+        {
+            PayloadAdmissionException exception = Assert.Throws<PayloadAdmissionException>(() =>
+                AdmittedCopyMessageBody.Create(source.AsMemory(), BinaryContentType,
+                    Serialization(locator), secondReplayAdmission, replayProof));
+            Assert.Equal(PayloadAdmissionStage.MessageData, exception.Stage);
+            Assert.Equal(3, exception.ActualBytes);
+            Assert.Equal(2, exception.ConfiguredLimitBytes);
+            Assert.False(secondReplayAdmission.HasCompleteAdmissionFor(source.Length));
+        }
+        Assert.Equal(1, locator.Calls);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-BODY", "durable-copy-replay-respects-current-body-limit")]
     public void DurableCopiedEnvelope_RejectsAProvenBodyUnderATighterCurrentLimit()
