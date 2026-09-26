@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10846 |
+| Added | 10848 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -201,6 +201,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t33-outbox-scheduling.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t34-ef-rollback.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t35-recurring-completion.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16309,6 +16310,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerInitializedContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerRuntimeContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulerContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulingCompletionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RedeliverExtensionsContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulerProviderContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulerTimeProviderTests.cs` | Added |  |

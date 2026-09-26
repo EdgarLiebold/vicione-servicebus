@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added 132 recurring-scheduling cases across endpoint/publish schedulers,
+  explicit/publish destinations, message and pipe forms, and delayed success,
+  failure or cancellation. Assertions check exact contracts, payloads, schedule
+  values, headers, caller/provider tokens and completion semantics. Three
+  Publish-scheduler mutations are detected; restored controls pass 132/132.
+  The complete product-wide measurement of this packet remains pending.
+
 - Completed T34 across all 33 profiles: 12,695 passing executions, 90.9398%
   line and 83.4641% conservative branch coverage. EF Saga RollbackAsync is
   fully covered at 5/5 lines. Changed observations elsewhere leave net four

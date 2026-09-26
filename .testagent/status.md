@@ -16,6 +16,13 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T35 recurring scheduling focused tests pass 132/132; read-only review has
+  no remaining blocker. Three Publish-scheduler mutations fail 24/12/18 cases
+  respectively, with controls passing; all restored, final control 132/132.
+  Verify-only format passes. Failed diagnostic attempts are recorded explicitly.
+  [Evidence and limits](coverage-a-plus-20260921/t35-recurring-completion.md).
+  Commit, complete measurement and push remain pending; T34 stays authoritative.
+
 - Complete T34 measurement at `a019ca1b287c5745def01ca0ddae42d2e55877db`:
   all 33 profiles/four fixture groups passed; 12,695 executions, lines
   85267/93762 (90.9398264%), conservative branches 30749/36841 (83.4640754%),
