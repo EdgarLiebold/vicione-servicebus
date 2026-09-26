@@ -1,7 +1,9 @@
-# T31: SQS batch identity — iteration open
+# T31: SQS batch identity — complete measurement recorded
 
 Base HEAD: `82f587ad903552522b4a6966e856e6574388f8d0`.
-These are working-tree test results, not a new exact-commit aggregate.
+The focused results below were followed by the complete exact-commit measurement
+at `6a0aca7096ad93db552fcb31fb099961033001f0`.
+See [complete results and remaining gaps](product-wide-profile-6a0aca709.md).
 
 ## Contracts and tests
 
@@ -54,9 +56,11 @@ Raw logs are local ignored artifacts, not published by these hashes.
 | Isolated artifacts/t31-sqs-duplicate-mutant.log | fd4ea045322474dcc6a1b46de46fcab671639f773b22f68bb4677753347b4809 |
 | Isolated artifacts/t31-sqs-restored.log | 744b390a32529c647fe9cdc030e79b69d311cc4614c0f03de3d36a56b81c188a |
 
-## Remaining iteration gates
+## Completed measurement and remaining work
 
-Commit with the canonical change list, run fresh exact-commit measurement across
-all 33 profiles including complete SQS requirement projections, reconcile method
-gaps, independently review accounting, record results and push. Until then the
-authoritative aggregate remains 3264ed26c; no A+ or coverage increase is claimed.
+All 33 fresh profiles passed at the exact commit, including full SQS300/300 and
+requirement projections. All four fixture groups were cleaned successfully.
+Independent accounting review verified 487 hashes and the five-closed/two-new
+line-gap delta. ApplyResponse reaches20/20 lines,16/18 branches,CRAP18; its two
+optional-collection branches remain open. The documentation successor is ready
+for authorized push with the test commit. The complete A+ program remains open.

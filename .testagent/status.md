@@ -16,6 +16,14 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete T31 measurement at `6a0aca7096ad93db552fcb31fb099961033001f0`:
+  all 33 profiles and four fixture groups passed; 12,611 executions, lines
+  85116/93762 (90.7787803%), conservative branches 30736/36841 (83.4287886%),
+  0 CRAP >30. SQS ApplyResponse is 20/20 lines,16/18 branches,CRAP18.
+  Remaining 4504 line gaps plus1510 branch-only; five line gaps closed and
+  two newly observed. Independent review verified 487 evidence hashes.
+  [Complete report and limits](coverage-a-plus-20260921/product-wide-profile-6a0aca709.md).
+  This supersedes T31 pending measurement notes below. A+ remains open.
 - Open T31 SQS batch packet: four new cases pass with read-only adversarial
   review and bounded result/disposal waits. Wrong-caller mapping and missing
   success-duplicate validation each fail their intended case with three

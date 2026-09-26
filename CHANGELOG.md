@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed all 33 profiles for the SQS batch packet: 12,611 passing executions,
+  90.7788% line and 83.4288% conservative branch coverage. ApplyResponse now
+  has 20/20 lines and CRAP18, with two branches still open. Five line gaps
+  closed and two newly appeared; no product-wide A+ acceptance is claimed.
 - Added SQS batch identity checks for reordered mixed success/failure results
   and atomic rejection of duplicate or contradictory response IDs. Every
   caller's exact outcome, complete request membership and provider token are
