@@ -16,6 +16,18 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Full current measurement at `9676f789120dbfe33efb3ec44b43873d7fd41a15`:
+  33 profiles,12597 passed executions,32 assemblies; line85091/93762
+  (90.752117%), conservative branch30718/36841 (83.379930%),26061 method
+  identities,0 CRAP strictly above30. Current gaps:4512 line gaps (2802 zero,
+  1710 partial) plus1509 branch-only review candidates, union6021. Relative to
+  baseline,33 line-gap identities closed and5 formerly full identities now have
+  gaps; those5 remain under investigation. No A+ acceptance. Initial local runs
+  used the wrong profile and were excluded; all13 locals were remeasured through
+  canonical fixtures, all4 fixture groups exited0. See
+  [the complete checkpoint](coverage-a-plus-20260921/product-wide-profile-9676f7891.md)
+  for fingerprints, invocation failure history and remaining risks. This
+  supersedes the retention packet's pending measurement note below.
 - Outgoing message-data retention adds five exact-duration cases plus overflow:
   send TTL wins over policy TTL, extra retention is added only to send TTL,
   fallback and unlimited retention stay exact, and MaxValue is accepted while

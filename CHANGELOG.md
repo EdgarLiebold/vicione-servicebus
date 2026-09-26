@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Refreshed the complete 33-profile coverage measurement at one source/test
+  commit, including every local provider profile and CPU fallback mode:12,597
+  passing executions. Line coverage is90.7521%, conservative branch coverage
+  is83.3799%;4,512 method identities retain line gaps. Five newly observed gaps
+  remain under investigation. The measurement does not declare A+ completion.
 - Added outgoing message-data retention checks for send-policy precedence,
   additional retention, unlimited storage and exact duration boundaries.
   Overflow must fail before repository access. Tests detect omitted retention
