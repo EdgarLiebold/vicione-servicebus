@@ -16,6 +16,15 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Complete T30 measurement at `3264ed26c3914a44fff2ef3291750b766efda870`:
+  all 33 profiles and four fixture groups passed; 12,607 executions, lines
+  85101/93762 (90.7627824%), conservative branches 30732/36841 (83.4179311%),
+  0 methods CRAP >30. All four targeted cancellation methods have full line
+  and observed branch coverage. Five line gaps closed and six newly appeared;
+  remaining 4507 line gaps plus1504 branch-only. Line coverage decreased by
+  six lines despite the targeted improvements; the six new gaps remain open.
+  [Complete report](coverage-a-plus-20260921/product-wide-profile-3264ed26c.md).
+  This supersedes the packet's pending measurement notes below. No A+ acceptance.
 - Open T30 cancellation packet: Event Hubs confirmation tests pass 2/2 and
   both detect cancellation incorrectly reported as success; restored controls
   pass 2/2. Request lifecycle passes 20/20; removing only the terminal guard

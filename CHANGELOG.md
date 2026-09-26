@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed all 33 profiles for the cancellation packet: 12,607 passing
+  executions; all four targeted cancellation methods have full line/observed
+  branch coverage. Overall coverage is 90.7628% lines and 83.4179% conservative
+  branches. Six newly observed method gaps remain under investigation; covered
+  lines decreased by six versus the previous run. A+ remains open.
 - Added Event Hubs confirmation cancellation checks for partition/offset
   isolation, replacement admission, exact cancellation tokens, preserved
   terminal outcomes and rejection after processor shutdown. Added a request

@@ -1,8 +1,9 @@
-# T30: cancellation follow-up — iteration remains open
+# T30: cancellation follow-up — complete measurement recorded
 
 Base HEAD: `59925b8ab86a85c6fcce002062bc97b86b8f6e99`.
-The new tests are working-tree changes, not yet exact-commit coverage evidence.
-The authoritative product-wide measurement remains `90239365c` (33 profiles).
+The tests were committed and measured at `3264ed26c3914a44fff2ef3291750b766efda870`.
+The complete 33-profile measurement supersedes the initial working-tree runs;
+see [measurement and remaining risks](product-wide-profile-3264ed26c.md).
 
 ## Event Hubs confirmation contracts
 
@@ -63,8 +64,10 @@ CTS disposal, which have dedicated existing tests.
 | Isolated `artifacts/t30-request-mutant.log` | `30e96cdb8a59b6e621ffcf5d88ea0d740d17b19b0df7f2d3827baadbee0b6c83` |
 | Isolated `artifacts/t30-request-restored.log` | `5326772295a82520c23cfcc771fb9dc09f3b3d5b54bb75c80b283e222de52510` |
 
-## Remaining work in this iteration
+## Completion and remaining program work
 
-- Validate the requirement projections with the complete test runs; adversarial review, mutation checks and changelog are recorded.
-- Commit the packet, run isolated exact-commit checks and all 33 canonical coverage profiles, reconcile the gap identities, then document and push.
-- Do not infer new coverage percentages or A+ completion from the focused runs above.
+- Complete project runs, including requirement projections, passed in all 33 canonical profiles at the exact commit.
+- Adversarial reviews, deliberate mutations and restored controls are recorded; all four targeted methods have full line and observed branch coverage.
+- Independent accounting review verified 487 evidence hashes and the five-closed/six-new delta. The source tree is unchanged.
+- The documentation successor records the current gaps and is prepared for authorized push with the test commit.
+- The six newly observed gaps and the broader A+ program remain open; focused successes do not establish A+.
