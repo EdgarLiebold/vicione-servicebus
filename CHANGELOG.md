@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added outbox scheduling lifecycle checks across typed, runtime and initialized
+  messages, pipe variants and explicit/input/publish destinations. Tests verify
+  exact schedule metadata, real checkpoint rollback, deferred cancellation,
+  repeated commit, provider errors and successful recovery without phantom
+  cleanup. Focused 78/78 cases pass; three isolated mutations are detected.
+  The complete all-profile measurement of this packet remains pending.
 - Completed the T32 measurement across all 33 profiles: 12,615 passing
   executions, 90.7852% line and 83.4586% conservative branch coverage. SQS
   ApplyResponse and EF AwaitConsumerCompletionAsync now have complete line and

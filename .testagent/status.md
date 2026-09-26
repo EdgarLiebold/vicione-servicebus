@@ -16,6 +16,11 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T33 outbox-scheduling focused verification complete: 78/78 cases pass,
+  read-only adversarial review has no blocker, three isolated mutations are
+  detected, manually restored and followed by a green 78/78 control.
+  [Evidence and limits](coverage-a-plus-20260921/t33-outbox-scheduling.md).
+  Commit, full measurement and push remain pending. T32 remains authoritative.
 - Complete T32 measurement at `791e29af42f85e4b08462f9d08b84f128d6403b6`:
   all 33 profiles and four fixture groups passed; 12,615 executions, lines
   85122/93762 (90.7851795%), conservative branches 30747/36841 (83.4586466%),

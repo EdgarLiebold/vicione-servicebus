@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10840 |
+| Added | 10842 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -197,6 +197,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t33-outbox-scheduling.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16130,6 +16131,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxMessageSchedulerBoundaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxSchedulingLifecycleTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextHandleLifecycleTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorFailureTests.cs` | Added |  |
