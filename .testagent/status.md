@@ -1,14 +1,61 @@
 # A+ remediation test status
 
-> Current first-read accounting (PO rule, 2026-09-19):
-> [source-read-remainder.txt](source-read-remainder.txt) is the single active list.
-> A current `src` path touched in commit
-> `e01a5e5eb3411412229221bd58b170b583ce6caa` or afterward, including the
-> working tree, counts as completely read for this accounting purpose. At source
-> checkpoint `bac2c88f91f08fbef7cbc4ca6d391ced51c31793`, 100 of 4,207
-> current paths remain (87 C# and 13 other files). Older read counts below are
-> historical checkpoints, not the current first-read balance. This rule does
-> not by itself establish current-byte A+ review or test coverage.
+> Current first-read accounting, 2026-09-26: **zero files remain for first reading**.
+> The PO's inclusive Git baseline remains
+> `e01a5e5eb3411412229221bd58b170b583ce6caa`.
+> At source checkpoint `37cb05530079ee673239d13bc225b948a5d49036`, Git history
+> accounts for 4,121 of 4,212 current `src` paths. Nine entries from the former
+> 100-file list were already covered by later commits. The primary assistant
+> manually read all remaining 91 files completely in this session: 78 C# and
+> 13 other files, 3,164 lines. [source-read-completion.json](source-read-completion.json)
+> records the exact paths and SHA-256 hashes; [source-read-remainder.txt](source-read-remainder.txt)
+> is the empty current remainder. Hashes identify the bytes and do not prove
+> reading or A+ quality. The user's trust convention applies. All older counts
+> below are historical. First reading is complete; defect remediation and A+
+> verification are not.
+
+## Current open work after the completed first reading
+
+- `OneTimeContextPayload`: confirmed publication race. The setup task becomes
+  terminal before `_running` is cleared under the lock. An immediate retry can
+  receive the old fault/cancellation; `Evict` after successful await can reject a
+  completed operation and mask a downstream topology error. Publish state and
+  completion atomically under the same lock, with deterministic regressions.
+  Read-only review: `/root/outbox_proof_redteam`; not yet repaired.
+- `GraphValidation`: confirmed self-edge omission and stale Tarjan indices on
+  repeated validation. `TopologicalSort` retains `Visited`; `Node.CompareTo` and
+  weighted `Edge.CompareTo` have defective comparison contracts. The only current
+  product caller, `MessageFabric`, constructs a fresh graph and rejects self-bind
+  before graph validation, limiting current product impact. Sorting/comparison
+  have no current callers. Repair the retained graph behavior; decide unused
+  internals from verified callsites before adding tests solely for coverage.
+  Read-only review: `/root/assembly_scan_redteam`; not yet repaired.
+- `IntrinsicsHelper.EncodeBase32`: byte 22 of stack padding influences output
+  index 24. No `SkipLocalsInit` or current runtime failure was demonstrated.
+  Explicit initialization and a meaningful formatter regression remain to assess;
+  this is an initialization dependency, not a proven current formatter failure.
+- `ErrorTransportFilter`: its summary claims fault generation, while this filter
+  only moves the faulted receive and continues the pipeline. Correct manually.
+- ActiveMQ temporary reply: the original 99/100 run at `0377ee4f3` timed out;
+  isolated 4/4 and 100/100 reruns passed without a root-cause fix. `0db6ec160`
+  adds verified phase/correlation/queue diagnostics. Stability remains open.
+- The full measurement at `0db6ec160` has 32 successful profile receipts, but
+  ActiveMQ finished with 99/100 passing. `FutureSchedule_IsInvisibleUntilDueThenDeliveredAsync`
+  (`activemq`) failed at line 158: after delivery and bus stop the scheduler
+  still reported one job instead of zero. This is not evidence of early delivery.
+  The failed run is retained in `artifacts/k9l09/tests.log`; no complete coverage
+  aggregate or A+ acceptance is claimed from this partial measurement. The
+  scheduler observation and broker cleanup ordering require investigation.
+- ActiveMQ factory: `37cb05530` repairs listener-accessor exceptions, fault-stop
+  logging and null configuration. Red-first evidence includes an actual unhandled
+  exception terminating the test host (exit 134). Eight new cases and the restored
+  full 194-case unit suite pass; an ordering mutant fails exactly three cases.
+  Read-only Red Team passes the scoped change. Full provider/coverage validation
+  of this product change remains pending.
+- SQL Server `GrantAccessAsync` remains the measured CRAP hotspot (34.272 at
+  `0377ee4f3`); broader line/branch coverage and final API/package gates remain.
+
+## Historical iteration records
 
 ## Iteration 132 connected ownership/liveness package complete; original goal active
 

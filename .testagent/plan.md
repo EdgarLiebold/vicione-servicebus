@@ -1,5 +1,23 @@
 # A+ remediation test plan
 
+## Current continuation, 2026-09-26
+
+First reading is complete under the PO's Git baseline plus the 91-file manual
+read recorded in [source-read-completion.json](source-read-completion.json).
+The current remainder is empty. Use [status.md](status.md#current-open-work-after-the-completed-first-reading)
+for the explicit open defects and their evidence limits.
+
+1. Complete the unchanged-commit measurement of `0db6ec160`.
+2. Integrate and measure the reviewed ActiveMQ factory correction `37cb05530`.
+3. Fix the newly confirmed one-time setup publication race and retained graph
+   defects with meaningful public behavior regressions and adversarial review.
+4. Assess the formatter padding dependency and correct the inaccurate error-filter
+   summary manually. Preserve the unresolved provider stability findings.
+5. Continue product-wide line/branch/CRAP work and the final scope-wide audit.
+
+The numbered iteration plans below are historical records, not the current
+first-read balance or an A+ acceptance statement.
+
 ## Iteration 132 connected ownership and liveness package
 
 1. Complete main FULL shared support/graph reading and exact sorted Git/read/parser
