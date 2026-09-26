@@ -4,30 +4,38 @@
 
 First reading is complete under the PO's Git baseline plus the 91-file manual
 read recorded in [source-read-completion.json](source-read-completion.json).
-The current remainder is empty. Use [status.md](status.md#current-open-work-after-the-completed-first-reading)
-for the explicit open defects and their evidence limits.
+The current remainder is empty. Use [status.md](status.md)
+for the current checkpoint, explicit open work and evidence limits.
 
-1. ActiveMQ temporary reply ownership and its typed queue/topic cache follow-up
-   are verified at source commit `4594a1ca9`: 206 unit and 100 broker cases.
-   Native reply addressing has a separate regression and a killed wrong-type
-   mutant. The package gate is green. See the p3 receipts in status.md.
-   The scheduling barrier is already verified and pushed in
-   `f8730e2a6`; its provider run exposed the separate send-first reply-queue defect.
-2. Measure the corrected provider profile and then the whole product at a single
-   commit. Do not combine the 20 successful unit receipts of `f8730e2a6` with
-   receipts from the new source tree. The factory correction and completed
-   first-read accounting are already integrated and pushed.
-3. The one-time setup publication correction has six red/green controlled
-   reentrancy cases, a clean adversarial review and exact-commit verification:
-   928 Abstractions and 6,457 Core tests at `6e180ef29`. Graph self-edge/repeat
-   validation is now corrected with three red regressions and an acyclic control;
-   unused sorting/comparison helpers are removed after callsite and Red Team review.
-4. Formatter SIMD padding and the inaccurate error-filter summary are corrected;
-   existing formatter references kill a poisoned-padding mutant. At `688eba261`,
-   native/no-AVX2/scalar Abstractions profiles pass 932 each and Core passes 6,457.
-5. Reproduce the SQL Server role-name collision suspicion and verify effective
-   permissions for ConnectionString identity and repaired role membership.
-   Then complete product-wide line/branch/CRAP measurement and the scope-wide audit.
+1. Completed product corrections include ActiveMQ temporary reply ownership and
+   typed destination caches, one-time setup publication, graph repeat/self-edge
+   validation, SIMD padding and SQL Server principal-kind/SID validation with
+   effective permission checks. Their regressions, counterchanges and provider
+   evidence are recorded in status.md; these are not pending investigations.
+2. The complete baseline at `98ac8bb78` has 33 profiles, 32 measured assemblies,
+   12,522 executions and no method with CRAP above 30. The source/PDB denominator
+   audit accounts for all 4,132 compiled product C# files. Retain its explicit
+   distinction between measured files and files without visible sequence points.
+3. The final candidate `2464cdc45` adds fourteen contract cases for EF inbox
+   failure persistence and terminal winners, in-memory cancellation and job
+   schedule validation. Product sources remain byte-identical to the baseline.
+   All 33 final profiles passed with 12,536 executions. The complete aggregate
+   records 90.6209% lines, 83.2089% conservative branches and zero CRAP > 30.
+4. Preserve the failed Azure cleanup measurement and its isolated diagnostic
+   pass. The original cleanup cancellation was not reproduced and its cause
+   remains unproven.
+   The complete Azure recheck passed 30/30 with unchanged timeouts and assertions.
+   The initial Unit/Architecture run passed 10,836 of 10,837 cases. The missing
+   generated NuGet/MSBuild imports were restored successfully; the complete
+   architecture recheck passed 445/445 without skips.
+5. Identity, exact-count aggregation, method-level CRAP inventory and CHANGELIST
+   checks passed. The final adversarial numerical/integrity review also passed;
+   publish the reconciled documentation. Existing package and vulnerability evidence retains
+   its original commit and source/configuration-equivalence qualification.
+6. After coverage/CRAP completion, use Roslyn to inventory the complete API and
+   associated XML comments across all repositories, then assess contracts,
+   consistency and documentation. That follow-up is not covered by ServiceBus
+   test results or by its existing package API baseline.
 
 The numbered iteration plans below are historical records, not the current
 first-read balance or an A+ acceptance statement.

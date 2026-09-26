@@ -9,7 +9,19 @@
 | Microsoft skills are mandatory | This campaign uses `code-testing-agent` for this plan, `find-untested-sources` for the static pairing inventory, `coverage-analysis` for ranked CRAP, `run-tests` for MTP commands, and performs `test-gap-analysis` plus `assertion-quality` before completion. |
 | adversarial red-team reviews | Read-only review after each coherent phase, followed by a green narrow run and a final product-wide rerun on the exact measured bytes. |
 
-## Sequential implementation phases
+## Current continuation
+
+The phase list below preserves the campaign's initial implementation plan and
+its then-current progress labels. It is not the current open-work ledger.
+The [current continuation](../plan.md#current-continuation-2026-09-26) and
+[status checkpoint](../status.md) supersede those labels. The complete
+`98ac8bb78` measurement and the final `2464cdc45` measurement are separate;
+only the latter can verify the fourteen subsequently added contract cases.
+All final provider receipts, the architecture recheck, identity and aggregate
+are complete. The passed final evidence review and publication are recorded in the
+current checkpoint; the historical labels below remain unchanged.
+
+## Initial sequential implementation phases (historical)
 
 1. **RabbitMQ transport primitives and topology — complete.** Add exact AMQP header,
    transport-property, move-header, topology-probe, declaration equality/hash,

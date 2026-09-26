@@ -2,6 +2,16 @@
 
 ## Latest product-wide profile
 
+The final measured candidate is `2464cdc45`: 33 valid profiles, 32 assemblies,
+12,536 passing test executions, 84,968/93,762 lines (90.6209%) and conservative
+branches 30,655/36,841 (83.2089%). No method exceeds CRAP 30 among 26,061 methods.
+The exact-count and full method inventories retain all measured gaps. Architecture
+passed 445/445 after correcting the restore preparation; identity and clean
+CHANGELIST checks passed. See [the final report](product-wide-profile-2464cdc45.md)
+and [current status](../status.md) for failed attempts, limits and review state.
+
+## Earlier product-wide profiles (historical)
+
 An attempted refresh at `f3848534c` produced 24 passing reports and exposed
 architecture-gate bookkeeping defects, which were repaired. The complete
 Architecture suite then passed 445/445 and Amazon SQS passed 295/295; read-only

@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added five real-SQLite inbox cases for failure-state persistence/logger faults
+  and terminal winners committed after rollback, two in-memory cancellation
+  cases after prepared publication, and seven job-schedule admission/boundary
+  cases. Exact exception/token, persistence, outgoing-message and schedule-field
+  assertions distinguish controlled product counterchanges. These fourteen
+  cases strengthen existing behavior; they introduce no production-code change.
 - RabbitMQ fixture health checks run as the broker user. An early root diagnostic
   could create an unreadable root-owned Erlang cookie after the entrypoint's
   ownership setup, preventing broker startup. A forced diagnostic-before-start

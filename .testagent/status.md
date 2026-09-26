@@ -16,6 +16,34 @@
 
 ## Current checkpoint — 2026-09-26
 
+- Final measurement at `2464cdc45eabf470664f287b05b713482cc6ea0a` is complete:
+  33 exact-count profiles, 32 product assemblies, 12,536 passing executions,
+  zero failures/skips in the accepted receipts. Lines: 84,968/93,762 (90.6209%);
+  conservative branches: 30,655/36,841 (83.2089%); 26,061 measured methods,
+  none above CRAP 30. The complete inventory retains 4,540 methods with at least
+  one uncovered line; zero CRAP hotspots does not mean every method is covered.
+  See [the final measurement report](coverage-a-plus-20260921/product-wide-profile-2464cdc45.md).
+- Initial Unit/Architecture: 10,836/10,837 passed. Missing generated NuGet imports
+  for local projects caused the sole architecture failure. After restoring them,
+  the whole Architecture project passed 445/445. Identity passed with zero
+  findings and byte-identical license; clean-checkout CHANGELIST passed 16,474
+  entries. This is a failed initial run plus successful correction/recheck,
+  not a claimed single green 10,837-case invocation.
+- The initial Azure profile failed 1/30 on cleanup cancellation; unchanged
+  isolated and complete rechecks passed 1/1 and 30/30. Its original cause remains
+  unproven. The first SQL measurement passed 75/75 but its receipt was rejected
+  because the lead edited documentation during execution. That patch was saved
+  and reversed; the frozen recheck passed 75/75 with a valid receipt. Neither
+  rejected attempt contributes to the final aggregate.
+- Final numerical/integrity review passed: a separate read-only agent verified
+  every accepted receipt/report/log/binary hash and independently reconstructed
+  the complete line, conservative branch and method results from raw XML.
+  The latest behavioral packet has no critical open finding in its bounded
+  review. Measurement and technical review are complete; this documentation
+  records their limits and is the successor to the measured commit. No
+  numerical A+ percentage was defined for lines or branches; the campaign uses
+  its documented complete-measurement, behavioral-assertion, gap/mutation and
+  no-critical-open-gap criteria. Microsoft analysis defaults are not A+ grades.
 - First reading remains complete under the PO's agreed Git/trust convention.
 - The complete measurement at `98ac8bb78eb97acc4efe3bff7b5a586968ce0b5f`
   passed all 33 profiles with 12,522 test executions: 84,957/93,762 lines
@@ -45,8 +73,8 @@
   Read-only adversarial review cleared both bounded contracts. The schedule
   fixture records consumer-output publication and serialization calls; it
   does not claim transport or serializer integration. Raw logs are
-  `artifacts/servicebus-t10-*.log`. Fresh complete measurement and final
-  gates remain pending. No whole-product A+ acceptance is claimed.
+  `artifacts/servicebus-t10-*.log`. Fresh complete measurement and corrected
+  gates and the completed final evidence review are recorded above.
 - Explicit PO follow-up: after Coverage/CRAP completion, use Roslyn to
   generate the complete API of **all repositories**, including their
   associated XML comments, and assess API contracts, consistency and
@@ -237,8 +265,10 @@
   1 pass; `artifacts/scheduler-fence-submillisecond-mutant.log`). The mutation was
   removed and the complete test-file SHA-256 restored to
   `f8bcc2b3c490851dc9be9e939bf2b69bad139e0d2cd858cde0cf92517e71094f`.
-  Exact-commit provider collection and the new whole-product aggregate remain
-  pending; the earlier request/reply timeout is a separate unresolved finding.
+  At this historical checkpoint, exact-commit provider collection, the new
+  whole-product aggregate and the separate request/reply timeout were pending.
+  The later p3 ownership correction and complete `98ac8bb78` aggregate supersede
+  those pending labels, as recorded above; they are not current open findings.
 - ActiveMQ factory: `37cb05530` repairs listener-accessor exceptions, fault-stop
   logging and null configuration. Red-first evidence includes an actual unhandled
   exception terminating the test host (exit 134). Eight new cases and the restored
