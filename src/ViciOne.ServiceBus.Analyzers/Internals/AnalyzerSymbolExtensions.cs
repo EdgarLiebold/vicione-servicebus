@@ -150,6 +150,17 @@ internal static class AnalyzerSymbolExtensions
         return false;
     }
 
+    /// <summary>Gets the element type of a supported message-contract collection.</summary>
+    /// <param name="type">The collection type to inspect.</param>
+    /// <param name="elementType">The collection element type.</param>
+    /// <returns>Whether the type is a recognized array, list, collection or enumerable.</returns>
+    public static bool TryGetCollectionElementType(this ITypeSymbol type, out ITypeSymbol elementType)
+        => type.IsImmutableArray(out elementType)
+            || type.IsList(out elementType)
+            || type.IsArray(out elementType)
+            || type.IsCollection(out elementType)
+            || type.IsEnumerable(out elementType);
+
     /// <summary>Determines whether a symbol represents <see cref="ImmutableArray{T}" />.</summary>
     /// <param name="type">The type to inspect.</param>
     /// <param name="typeArgument">The immutable array element type.</param>

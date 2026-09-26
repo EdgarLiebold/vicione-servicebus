@@ -147,11 +147,7 @@ public sealed class MessageContractCodeFixProvider :
     {
         if (initializer.Expression is ImplicitArrayCreationExpressionSyntax implicitArrayCreationExpressionSyntax)
         {
-            if (contractProperty.Type.IsImmutableArray(out var contractElementType)
-                || contractProperty.Type.IsList(out contractElementType)
-                || contractProperty.Type.IsArray(out contractElementType)
-                || contractProperty.Type.IsCollection(out contractElementType)
-                || contractProperty.Type.IsEnumerable(out contractElementType))
+            if (contractProperty.Type.TryGetCollectionElementType(out var contractElementType))
             {
                 await FindAnonymousTypesWithMessageContractsInTreeAsync(
                         dictionary,
@@ -177,11 +173,7 @@ public sealed class MessageContractCodeFixProvider :
                  && method.ReturnType.IsList(out var methodReturnTypeArgument)
                  && methodReturnTypeArgument.IsAnonymousType)
         {
-            if (contractProperty.Type.IsImmutableArray(out var contractElementType) ||
-                contractProperty.Type.IsList(out contractElementType) ||
-                contractProperty.Type.IsArray(out contractElementType) ||
-                contractProperty.Type.IsCollection(out contractElementType) ||
-                contractProperty.Type.IsEnumerable(out contractElementType))
+            if (contractProperty.Type.TryGetCollectionElementType(out var contractElementType))
             {
                 await FindAnonymousTypesWithMessageContractsInTreeAsync(
                         dictionary,
@@ -208,6 +200,12 @@ public sealed class MessageContractCodeFixProvider :
             {
                 await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, anonymousObjectArrayInitializer,
                     contractElementType, semanticModel, cancellationToken).ConfigureAwait(false);
+            }
+            else if (expression is ImplicitArrayCreationExpressionSyntax nestedArray
+                && contractElementType.TryGetCollectionElementType(out var nestedElementType))
+            {
+                await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, nestedArray,
+                    nestedElementType, semanticModel, cancellationToken).ConfigureAwait(false);
             }
         }
     }
@@ -309,11 +307,7 @@ public sealed class MessageContractCodeFixProvider :
     {
         ExpressionSyntax expression;
 
-        if (contractProperty.Type.IsImmutableArray(out var contractElementType) ||
-            contractProperty.Type.IsList(out contractElementType) ||
-            contractProperty.Type.IsArray(out contractElementType) ||
-            contractProperty.Type.IsCollection(out contractElementType) ||
-            contractProperty.Type.IsEnumerable(out contractElementType))
+        if (contractProperty.Type.TryGetCollectionElementType(out var contractElementType))
         {
             if (path.Contains(contractElementType, SymbolEqualityComparer.Default))
                 expression = CreateEmptyArray(contractElementType);

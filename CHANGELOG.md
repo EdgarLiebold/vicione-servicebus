@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Message-contract analysis now follows nested collection element contracts
+  instead of comparing collection implementation properties such as `Count`.
+  Existing nested implicit-array initializers are repaired at every leaf by the
+  missing-property code fix, preserving values, element order and dimensions.
+  Regressions cover missing, incompatible and complete leaf values, two and three
+  collection levels, and scalar-to-collection conversion. Collection recognition
+  is shared by analysis and the code fix; synthesizing a completely omitted
+  nested collection remains outside this correction.
 - EF outbox quarantine listing now preserves the corrupt attempt counter or empty
   message identifier retained by the producer for classified invariant failures.
   Previously those producer-created rows caused the entire listing to throw.

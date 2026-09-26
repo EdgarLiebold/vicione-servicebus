@@ -1,5 +1,19 @@
 [
   {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
+    "variantKey": "nested-arrays-preserve-all-elements-and-dimensions",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCollectionFixTests",
+    "testMethod": "MissingPropertiesFix_RepairsNestedArraysWithoutFlatteningOrDroppingElementsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
+    "variantKey": "all-collection-elements-preserve-values-and-order",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCollectionFixTests",
+    "testMethod": "MissingPropertiesFix_RepairsEveryArrayElementWithoutChangingExistingValuesAsync"
+  },
+  {
     "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
     "variantKey": "task-delay-overload",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",

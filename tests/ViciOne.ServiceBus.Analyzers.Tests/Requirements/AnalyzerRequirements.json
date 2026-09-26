@@ -1,5 +1,12 @@
 [
   {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "nested-collection-leaf-compatibility-and-missing-properties",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.NestedCollectionContractTests",
+    "testMethod": "NestedCollections_ReportLeafContractsWithoutCollectionImplementationPropertiesAsync"
+  },
+  {
     "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE",
     "variantKey": "no-compilation-bound-fields",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",

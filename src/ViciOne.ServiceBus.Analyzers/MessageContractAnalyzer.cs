@@ -258,6 +258,11 @@ public sealed class MessageContractAnalyzer :
         if (typeConversion.CanConvert(contractElementType, inputElementType))
             return true;
 
+        var collectionResult = EnumerableTypesAreStructurallyCompatible(typeConversion, contractElementType,
+            inputElementType, typePath, path, incompatibleProperties);
+        if (collectionResult.HasValue)
+            return collectionResult.Value;
+
         if (contractElementType.TypeKind.IsClassOrInterface())
         {
             if (!TypesAreStructurallyCompatible(typeConversion, contractElementType, inputElementType, typePath, path, incompatibleProperties))
@@ -342,6 +347,15 @@ public sealed class MessageContractAnalyzer :
 
         try
         {
+            if (contractType.TryGetCollectionElementType(out var contractElementType))
+            {
+                return inputType.TryGetCollectionElementType(out var inputElementType)
+                    && HasMissingProperties(inputElementType, contractElementType, path, typePath, missingProperties);
+            }
+
+            if (!contractType.TypeKind.IsClassOrInterface())
+                return false;
+
             List<IPropertySymbol> contractProperties = contractType.GetSerializableProperties();
             List<IPropertySymbol> inputProperties = GetInputProperties(inputType);
             var result = false;
@@ -393,7 +407,6 @@ public sealed class MessageContractAnalyzer :
                     || inputProperty.Type.IsArray(out inputElementType)
                     || inputProperty.Type.IsCollection(out inputElementType)
                     || inputProperty.Type.IsEnumerable(out inputElementType))
-                && contractElementType.TypeKind.IsClassOrInterface()
                 && HasMissingProperties(inputElementType, contractElementType, path, typePath, missingProperties))
                 return true;
 
