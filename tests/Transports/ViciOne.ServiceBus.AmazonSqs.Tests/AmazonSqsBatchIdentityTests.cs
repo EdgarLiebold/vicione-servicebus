@@ -85,6 +85,48 @@ public sealed class AmazonSqsBatchIdentityTests
         }
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-BATCH", "absent-opposite-result-list-preserves-every-outcome")]
+    public async Task OneSidedResponse_WithAbsentOppositeListPreservesEveryOutcomeAsync(bool allSuccessful)
+    {
+        using var owner = new CancellationTokenSource();
+        using var caller = new CancellationTokenSource();
+        using var client = new ResponseClient(allSuccessful ? ResponseKind.AllSuccessful : ResponseKind.AllFailed);
+        var batcher = new SendBatcher(client, QueueUrl, owner.Token, new FourEntrySettings());
+        try
+        {
+            Task[] calls = Bodies.Select(body => batcher.ExecuteAsync(new SendMessageBatchRequestEntry("", body), caller.Token)).ToArray();
+            for (int index = 0; index < calls.Length; index++)
+            {
+                if (allSuccessful)
+                {
+                    await calls[index].WaitAsync(WaitTimeout, TestContext.Current.CancellationToken);
+                    Assert.True(calls[index].IsCompletedSuccessfully);
+                }
+                else
+                {
+                    AmazonSqsTransportException failure = await Assert.ThrowsAsync<AmazonSqsTransportException>(() =>
+                        calls[index].WaitAsync(WaitTimeout, TestContext.Current.CancellationToken));
+                    Assert.Equal($"Send failed: Rejected-{Bodies[index]}", failure.Message);
+                    Assert.True(calls[index].IsFaulted);
+                }
+            }
+
+            Assert.NotNull(client.Response);
+            if (allSuccessful)
+                Assert.Null(client.Response.Failed);
+            else
+                Assert.Null(client.Response.Successful);
+            AssertRequest(client, owner.Token, caller.Token);
+        }
+        finally
+        {
+            await batcher.DisposeAsync().AsTask().WaitAsync(WaitTimeout, TestContext.Current.CancellationToken);
+        }
+    }
+
     private static void AssertRequest(ResponseClient client, CancellationToken owner, CancellationToken caller)
     {
         Assert.Equal(1, client.CallCount);
@@ -102,6 +144,8 @@ public sealed class AmazonSqsBatchIdentityTests
         DuplicateSuccess,
         DuplicateFailure,
         OverlappingOutcome,
+        AllSuccessful,
+        AllFailed,
     }
 
     private sealed class FourEntrySettings : BatchSettings
@@ -123,6 +167,7 @@ public sealed class AmazonSqsBatchIdentityTests
         public CancellationToken Token { get; private set; }
         public (string Id, string Body)[] Entries { get; private set; } = [];
         public string? DuplicateId { get; private set; }
+        public SendMessageBatchResponse? Response { get; private set; }
 
         public override Task<SendMessageBatchResponse> SendMessageBatchAsync(
             SendMessageBatchRequest request, CancellationToken cancellationToken = default)
@@ -153,6 +198,20 @@ public sealed class AmazonSqsBatchIdentityTests
                 response.Failed.Add(new BatchResultErrorEntry { Id = DuplicateId, Code = "Duplicate", Message = "contradictory outcome" });
             }
 
+            if (kind == ResponseKind.AllSuccessful)
+            {
+                response.Successful = request.Entries.AsEnumerable().Reverse()
+                    .Select(entry => new SendMessageBatchResultEntry { Id = entry.Id }).ToList();
+                response.Failed = null;
+            }
+            else if (kind == ResponseKind.AllFailed)
+            {
+                response.Successful = null;
+                response.Failed = request.Entries.AsEnumerable().Reverse()
+                    .Select(entry => new BatchResultErrorEntry { Id = entry.Id, Code = "Rejected", Message = entry.MessageBody }).ToList();
+            }
+
+            Response = response;
             return Task.FromResult(response);
         }
     }

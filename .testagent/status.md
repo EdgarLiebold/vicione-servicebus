@@ -16,6 +16,13 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T32 focused verification complete: SQS optional-result cases pass 6/6;
+  real-SQLite completion/lease cases pass 15/15. Four isolated mutations are
+  detected, manually restored and followed by green controls. Read-only review
+  confirmed the ordered byte assertion fix. No product source changes remain.
+  [Evidence and remaining gates](coverage-a-plus-20260921/t32-optional-results-and-leases.md).
+  Commit, all 33 fresh exact-commit profiles and push are pending; T31 remains
+  the authoritative complete measurement. Global A+ is open.
 - Complete T31 measurement at `6a0aca7096ad93db552fcb31fb099961033001f0`:
   all 33 profiles and four fixture groups passed; 12,611 executions, lines
   85116/93762 (90.7787803%), conservative branches 30736/36841 (83.4287886%),

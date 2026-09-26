@@ -96,6 +96,116 @@ public sealed class EntityFrameworkReliableStoreTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-STORE", "consumer-completion-precedes-dispatch-transition-without-resurrection")]
+    public async Task AwaitConsumerCompletion_AfterConsumerRemovalPreservesNeighborsAndCapacityAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("completion-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("completion-other", new RecordingValidator());
+        SerializedDurableSend target = Message(101, [1, 2], [3]);
+        SerializedDurableSend neighbor = Message(102, [4, 5, 6], [7, 8]) with { DueAt = Epoch.AddHours(1) };
+        var limits = new DurableSendStoreLimits(10, 100);
+        await store.AdmitAsync(target, limits, Epoch, token);
+        await store.AdmitAsync(neighbor, limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+        DurableSendDelivery dispatch = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(target.Id, dispatch.Message.Id);
+        DurableSendStoreSnapshot before = await store.GetSnapshotAsync(token);
+        Assert.Equal((2, 8L), (before.StoredCount, before.StoredBytes));
+
+        Assert.True(await store.CompleteConsumerDeliveryAsync(target.Id, dispatch.GenerationToken, Epoch.AddSeconds(1), token));
+
+        DurableSendStoreSnapshot completed = await store.GetSnapshotAsync(token);
+        Assert.Equal((1, 5L), (completed.StoredCount, completed.StoredBytes));
+        DurableSendStoreSnapshot separate = await other.GetSnapshotAsync(token);
+        Assert.Equal((1, 3L), (separate.StoredCount, separate.StoredBytes));
+        DurableSendRecord[] retained = await ReadRecordsAsync(database, token);
+        Assert.Equal(2, retained.Length);
+        Assert.DoesNotContain(retained, row => row.StoreKey == "completion-owner" && row.Id == target.Id.Value);
+        Assert.Contains(retained, row => row.StoreKey == "completion-other" && row.Id == target.Id.Value);
+
+        Assert.False(await store.AwaitConsumerCompletionAsync(target.Id, dispatch.Lease, 17, Epoch.AddMinutes(9), token));
+
+        Assert.Equal(completed, await store.GetSnapshotAsync(token));
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        AssertRecordsUnchanged(retained, await ReadRecordsAsync(database, token));
+        DurableSendDelivery remaining = Assert.Single(await store.ClaimDueAsync(Epoch.AddHours(1), 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(neighbor.Id, remaining.Message.Id);
+        Assert.Equal(neighbor.Body.ToArray(), remaining.Message.Body.ToArray());
+        Assert.Equal(neighbor.Metadata.ToArray(), remaining.Message.Metadata.ToArray());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-STORE", "stale-dispatch-transition-preserves-reclaimed-owner")]
+    public async Task AwaitConsumerCompletion_WithStaleLeasePreservesCurrentOwnerAndItsCompletionAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("lease-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("lease-other", new RecordingValidator());
+        SerializedDurableSend target = Message(103, [1, 2], [3]);
+        SerializedDurableSend neighbor = Message(104, [4, 5, 6], [7, 8]) with { DueAt = Epoch.AddHours(1) };
+        var limits = new DurableSendStoreLimits(10, 100);
+        await store.AdmitAsync(target, limits, Epoch, token);
+        await store.AdmitAsync(neighbor, limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+        DurableSendDelivery old = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(1), token));
+        DurableSendDelivery current = Assert.Single(await store.ClaimDueAsync(Epoch.AddMinutes(2), 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(target.Id, old.Message.Id);
+        Assert.Equal(target.Id, current.Message.Id);
+        Assert.NotEqual(old.Lease.Token, current.Lease.Token);
+        Assert.Equal(old.GenerationToken, current.GenerationToken);
+        DurableSendRecord[] before = await ReadRecordsAsync(database, token);
+        DurableSendRecord owned = Assert.Single(before, row => row.StoreKey == "lease-owner" && row.Id == target.Id.Value);
+        Assert.Equal(current.Lease.Token, owned.LeaseToken);
+        Assert.Equal(0, owned.DeliveryAttempts);
+        Assert.Null(owned.NextAttemptAt);
+        DurableSendStoreSnapshot capacity = await store.GetSnapshotAsync(token);
+        DurableSendStoreSnapshot separate = await other.GetSnapshotAsync(token);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            store.AwaitConsumerCompletionAsync(target.Id, old.Lease, 17, Epoch.AddMinutes(9), token));
+
+        Assert.Equal($"Durable send '{target.Id}' is not owned by lease '{old.Lease.Token}'.", failure.Message);
+        AssertRecordsUnchanged(before, await ReadRecordsAsync(database, token));
+        Assert.Equal(capacity, await store.GetSnapshotAsync(token));
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+
+        Assert.True(await store.AwaitConsumerCompletionAsync(target.Id, current.Lease, 2, Epoch.AddMinutes(7), token));
+        DurableSendRecord[] waiting = await ReadRecordsAsync(database, token);
+        DurableSendRecord transitioned = Assert.Single(waiting, row => row.StoreKey == "lease-owner" && row.Id == target.Id.Value);
+        Assert.Equal(DurableSendStatus.AwaitingConsumerCompletion, transitioned.Status);
+        Assert.Equal(2, transitioned.DeliveryAttempts);
+        Assert.Equal(Epoch.AddMinutes(7).UtcDateTime, transitioned.NextAttemptAt);
+        Assert.Null(transitioned.LeaseToken);
+        Assert.Null(transitioned.LeaseExpiresAt);
+        AssertRecordsUnchanged(before.Where(row => row != owned).ToArray(), waiting.Where(row => row != transitioned).ToArray());
+        Assert.True(await store.CompleteConsumerDeliveryAsync(target.Id, current.GenerationToken, Epoch.AddMinutes(3), token));
+        DurableSendStoreSnapshot completed = await store.GetSnapshotAsync(token);
+        Assert.Equal((1, 5L), (completed.StoredCount, completed.StoredBytes));
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        AssertRecordsUnchanged(before.Where(row => row != owned).ToArray(), await ReadRecordsAsync(database, token));
+    }
+
+    private static void AssertRecordsUnchanged(DurableSendRecord[] expected, DurableSendRecord[] actual)
+    {
+        Assert.Equal(expected.Select(row => (row.StoreKey, row.Id)), actual.Select(row => (row.StoreKey, row.Id)));
+        for (int index = 0; index < expected.Length; index++)
+        {
+            Assert.Equivalent(expected[index], actual[index], strict: true);
+            Assert.Equal(expected[index].Body, actual[index].Body);
+            Assert.Equal(expected[index].Metadata, actual[index].Metadata);
+        }
+    }
+
+    private static async Task<DurableSendRecord[]> ReadRecordsAsync(DurableDatabase database, CancellationToken token)
+    {
+        await using DurableDbContext context = database.Factory.CreateDbContext();
+        return await context.Set<DurableSendRecord>().AsNoTracking().OrderBy(row => row.StoreKey).ThenBy(row => row.Id).ToArrayAsync(token);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-MODEL", "bounded-record-capacity-and-claim-indexes")]
     public void Model_MapsBoundedRecordsCapacityLedgerAndClaimIndexes()
     {

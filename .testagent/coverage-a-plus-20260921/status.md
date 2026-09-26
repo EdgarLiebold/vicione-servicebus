@@ -2,7 +2,17 @@
 
 ## Latest product-wide profile
 
-The final measured candidate is `2464cdc45`: 33 valid profiles, 32 assemblies,
+The latest complete profile is `6a0aca709`: 33 valid profiles, 32 assemblies,
+12,611 passing executions, 85,116/93,762 lines and conservative branches
+30,736/36,841. There are 4,504 method identities with line gaps and another
+1,510 with branch-only gaps; none exceeds CRAP 30. A+ remains open. See
+[T31 complete report](product-wide-profile-6a0aca709.md).
+T32 focused verification is complete; its all-profile measurement is pending.
+See [T32 evidence](t32-optional-results-and-leases.md).
+
+## Earlier checkpoint
+
+The earlier measured candidate is `2464cdc45`: 33 valid profiles, 32 assemblies,
 12,536 passing test executions, 84,968/93,762 lines (90.6209%) and conservative
 branches 30,655/36,841 (83.2089%). No method exceeds CRAP 30 among 26,061 methods.
 The exact-count and full method inventories retain all measured gaps. Architecture

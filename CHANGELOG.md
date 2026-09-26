@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added SQS checks for absent opposite result collections in all-success and
+  all-failure batch responses, and real-SQLite checks for consumer completion
+  preceding dispatch transition and rejection of a reclaimed lease's old owner.
+  Tests assert exact caller outcomes, persisted bytes, store isolation and
+  capacity. Read-only review strengthened ordered byte assertions. Four isolated
+  mutations were detected and restored; focused controls pass 6/6 and 15/15.
+  The new packet's complete 33-profile measurement remains pending.
 - Completed all 33 profiles for the SQS batch packet: 12,611 passing executions,
   90.7788% line and 83.4288% conservative branch coverage. ApplyResponse now
   has 20/20 lines and CRAP18, with two branches still open. Five line gaps
