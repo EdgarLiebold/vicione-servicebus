@@ -22,11 +22,20 @@
   synchronization defect (6,736pass/1fail), traced to the enclosing consumer's
   retained failed send. Corrected assertions preserve inner recovery and check
   outer quarantine after shutdown. Focused corrected verification passes15/15;
-  bounded read-only correction review finds no blocker. Full33 is pending.
+  bounded read-only correction review finds no blocker. Commit5c3e6c3a4 passes
+  all33profiles/12,953executions and four fixture groups without retries.
+  Lines85,536/93,749; conservative branches30,862/36,843;0CRAP>30.
+  Linegaps4,424=2,755zero+1,669partial; branch-only1,514; union5,938.
+  Independent audit confirms487hashes/66bindings and all66old/newXML, exact totals
+  and physical+17/-13lines. No accounting blocker. Documentation is complete;
+  authorized remote synchronization follows.
   No product code change. [Evidence](coverage-a-plus-20260921/t45-inmemory-inbox-pipeline.md).
+  [Measurement](coverage-a-plus-20260921/product-wide-profile-5c3e6c3a4.md).
 - Efficiency rule: focused tests while implementing, bounded review and
   counterprobes, then one exact-commit full33 measurement per coherent packet.
   An additional full restored suite needs a specific remaining risk.
+- PO reiterates larger packages: next packet groups ActiveMQ, RabbitMQ and
+  SNS/SQS header contracts; one final full measurement and push for that packet.
 
 ## Previous packet — T44
 

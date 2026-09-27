@@ -21,8 +21,9 @@ entry below records what the current work changed for anyone reading the source.
   the new test's global quarantine expectation: nested recovery does not clear
   a failed send registered with the enclosing consumer. Assertions now check
   both consumer states at their completion boundaries. Corrected isolated
-  verification passes 15/15 with no review blocker; full measurement remains
-  pending. No product defect is claimed.
+  verification passes 15/15 with no review blocker. Commit5c3e6c3a4 passes all33
+  profiles and12,953executions:85,536/93,749lines and conservative30,862/36,843
+  branches. No product defect is claimed; global A+ remains open.
 
 - Added eighteen EF reliable-store regression cases for composite inbox
   pagination, stale or removed leases, failure atomicity, initialization recovery,

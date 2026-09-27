@@ -1,4 +1,4 @@
-# T45: InMemory reliable-inbox pipeline — in progress
+# T45: InMemory reliable-inbox pipeline
 
 Base: `148de7e49bba248fc5a2f74a0d4be1f97c5de1f3` (T44 audited and pushed).
 Microsoft code-testing-agent focused workflow and run-tests remain applicable.
@@ -132,4 +132,12 @@ real timer or clock-advance contract is asserted. It checks externally observabl
 state and ability to complete, not all private inbox fields. Existing stale-owner
 behavior replaces the original consumer error with an ownership exception; this
 is recorded, not silently presented as original-error preservation. Source
-product code remains unchanged. This packet and the overall A+ goal are open.
+product code remains unchanged. The overall A+ goal remains open.
+
+## Final measurement
+
+Commit5c3e6c3a4 passes all33profiles,12,953executions and four fixture groups.
+No measurement retry was required. Canonical aggregation confirms85,536/93,749
+lines, conservative30,862/36,843branches and0CRAP>30. Detailed accounting and
+remaining gaps: [measurement report](product-wide-profile-5c3e6c3a4.md).
+Independent final accounting review and documentation push complete this packet.
