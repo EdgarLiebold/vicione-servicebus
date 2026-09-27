@@ -85,9 +85,11 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         {
             Assert.Empty(await verification.BusinessRecords.AsNoTracking().ToArrayAsync(token));
             Assert.Empty(await verification.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
-            DurableSendCapacityState failedCapacity = await verification.Set<DurableSendCapacityState>()
-                .AsNoTracking().SingleAsync(token);
-            Assert.Equal((0, 0L), (failedCapacity.StoredCount, failedCapacity.StoredBytes));
+            DurableSendCapacityState[] failedCapacity = await verification.Set<DurableSendCapacityState>()
+                .AsNoTracking().ToArrayAsync(token);
+            Assert.InRange(failedCapacity.Length, 0, 1);
+            Assert.All(failedCapacity, capacity =>
+                Assert.Equal((0, 0L), (capacity.StoredCount, capacity.StoredBytes)));
         }
 
         await using (AsyncServiceScope retryScope = fixture.Services.CreateAsyncScope())

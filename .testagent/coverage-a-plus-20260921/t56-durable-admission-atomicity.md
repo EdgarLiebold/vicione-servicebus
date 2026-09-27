@@ -15,7 +15,7 @@ three pairs and 15 unpaired sources. It does not measure runtime coverage.
 
 | Path | Failure and recovery proof |
 | --- | --- |
-| EF reliable inbox, SQLite | A first business record and outgoing intent are explicitly saved inside the serializable transaction. A second oversized publish raises body admission and the outer retry signal. Fresh database reads show no business or outgoing row, empty capacity and a due retry with one attempt. A later invocation commits only a distinct replacement ID and exact serialized text; consumed attempts become two. |
+| EF reliable inbox, SQLite | A first business record and outgoing intent are explicitly saved inside the serializable transaction. A second oversized publish raises body admission and the outer retry signal. Fresh database reads show no business or outgoing row, zero capacity if the background service initialized its ledger, and a due retry with one attempt. A later invocation commits only a distinct replacement ID and exact serialized text; consumed attempts become two. |
 | Direct EF scoped outbox, SQLite | A later oversized `AddSend` rejects without implicitly deciding ownership of an earlier accepted intent. Explicit `AbortAsync` removes it; deliberate `CommitAsync` retains it. Fresh database reads check exact IDs and capacity before and after another valid batch. |
 | EF reliable inbox, PostgreSQL | The same saved-partial-attempt rollback, persisted retry and replacement-content assertions run against a fresh real PostgreSQL database and the public `UseReliableMessaging(...UseEntityFramework<AdmissionDbContext>())` registration. The scoped factory is invoked directly. The delivery host is not started because its concurrent polling races the test's deliberate partial save under serializable isolation. This is provider persistence evidence, not broker-dispatch evidence. |
 
@@ -55,3 +55,10 @@ SHA256 `a498485c40fc71eb0012f027005d5eb446e43a4977949b69d2cc6327e622e7d0`.
 One frozen 33-profile run, independent receipt/coverage audit, changelog,
 CHANGELIST and authorized push are pending. Global A+ and the all-repository
 Roslyn API/XML-comment review remain open.
+
+The first full run stopped at profile13 (EF unit):342/343 passed. The new test
+assumed a zero-valued capacity row always existed after rollback, but the
+delivery service may or may not have initialized it beforehand. The assertion
+now accepts either no row or one row with exact zero count/bytes. No product
+code changed. Earlier profiles belong to the old test tree and cannot be
+combined with receipts from the corrected commit.
