@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added six EF Core inbox regression cases for stale and removed consumer
+  attempts across completion, retry and quarantine. Real SQLite assertions prove
+  current-owner fencing, exact persisted state, no resurrection and unchanged
+  same-message, same-consumer and other-store neighbors. All five deliberate
+  faults are detected; main and restored isolated EF suites pass 322/322.
+  Production behavior already passes these cases. Full measurement remains
+  pending.
+
 - Fixed Azure Functions receiver cache collisions that dispatched messages to the
   previously selected consumer at the same queue or subscription path. Cache keys
   now distinguish transport, dispatch kind and handler type; each pipeline gets

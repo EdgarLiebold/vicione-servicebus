@@ -1,5 +1,14 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T43 packet
+
+Six EF Core inbox cases cover stale and missing consumer transitions, with real
+persisted-state and neighbor-preservation assertions. Main and restored isolated
+tests pass 322/322; five deliberate faults are detected. Final evidence review
+has no concrete blocker. Exact-commit full measurement remains pending. No
+global A+ claim.
+See [T43 evidence](t43-inbox-ownership-transitions.md).
+
 ## Current T42 packet
 
 Azure Functions receiver isolation defects are corrected. Fifteen behavior cases

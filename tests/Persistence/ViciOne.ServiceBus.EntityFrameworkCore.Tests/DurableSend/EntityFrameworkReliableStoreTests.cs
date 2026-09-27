@@ -11,6 +11,136 @@ public sealed class EntityFrameworkReliableStoreTests
 {
     private static readonly DateTimeOffset Epoch = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
 
+    [Theory]
+    [InlineData("complete")]
+    [InlineData("retry")]
+    [InlineData("quarantine")]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "stale-consumer-transition-preserves-current-owner-and-neighbors")]
+    public async Task Inbox_StaleTransitionPreservesCurrentOwnerAndNeighborsAsync(string operation)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IInboxStore<ITestBus> store = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("stale-owner", new RecordingValidator());
+        IInboxStore<ITestBus> other = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("stale-other", new RecordingValidator());
+        var target = new ReliableInboxKey(GuidFrom(111), GuidFrom(112));
+        ReliableInboxAcquireResult first = await store.AcquireAsync(target, Epoch, TimeSpan.FromMinutes(1), token);
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired, first.Disposition);
+        Assert.Equal(1, first.Attempt);
+        ReliableInboxLease oldLease = Assert.IsType<ReliableInboxLease>(first.Lease);
+        Assert.Equal(Epoch.AddMinutes(1), oldLease.ExpiresAt);
+        foreach ((IInboxStore<ITestBus> owner, ReliableInboxKey key) in new[]
+        {
+            (store, new ReliableInboxKey(target.MessageId, GuidFrom(113))),
+            (store, new ReliableInboxKey(GuidFrom(114), target.ConsumerId)),
+            (other, target),
+        })
+        {
+            Assert.Equal(ReliableInboxAcquireDisposition.Acquired,
+                (await owner.AcquireAsync(key, Epoch, TimeSpan.FromMinutes(10), token)).Disposition);
+        }
+
+        IInboxStore<ITestBus> restarted = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("stale-owner", new RecordingValidator());
+        ReliableInboxAcquireResult current = await restarted.AcquireAsync(target, oldLease.ExpiresAt, TimeSpan.FromMinutes(2), token);
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired, current.Disposition);
+        Assert.Equal(2, current.Attempt);
+        ReliableInboxLease currentLease = Assert.IsType<ReliableInboxLease>(current.Lease);
+        Assert.NotEqual(oldLease.Token, currentLease.Token);
+        Assert.Equal(Epoch.AddMinutes(3), currentLease.ExpiresAt);
+        ReliableInboxRecord[] before = await ReadInboxRecordsAsync(database, token);
+        Assert.Equal(4, before.Length);
+        ReliableInboxRecord owned = Assert.Single(before, row => row.StoreKey == "stale-owner"
+            && row.MessageId == target.MessageId && row.ConsumerId == target.ConsumerId);
+        Assert.Equal(currentLease.Token, owned.LeaseToken);
+        Assert.Equal(currentLease.ExpiresAt.UtcDateTime, owned.LeaseExpiresAt);
+        Assert.Equal(ReliableInboxStatus.Processing, owned.Status);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            ApplyInboxTransitionAsync(restarted, operation, target, oldLease, token));
+
+        Assert.Equal($"Reliable inbox '{target}' is not owned by lease '{oldLease.Token}'.", failure.Message);
+        AssertInboxRecordsUnchanged(before, await ReadInboxRecordsAsync(database, token));
+
+        DateTimeOffset completedAt = Epoch.AddMinutes(2);
+        Assert.True(await restarted.CompleteAsync(target, currentLease, completedAt, token));
+        ReliableInboxRecord[] after = await ReadInboxRecordsAsync(database, token);
+        ReliableInboxRecord completed = Assert.Single(after, row => row.StoreKey == "stale-owner"
+            && row.MessageId == target.MessageId && row.ConsumerId == target.ConsumerId);
+        Assert.Equal(ReliableInboxStatus.Consumed, completed.Status);
+        Assert.Equal(completedAt.UtcDateTime, completed.CompletedAt);
+        Assert.Equal(2, completed.Attempts);
+        Assert.Null(completed.LeaseToken);
+        Assert.Null(completed.LeaseExpiresAt);
+        AssertInboxRecordsUnchanged(before.Where(row => row != owned).ToArray(),
+            after.Where(row => row != completed).ToArray());
+        ReliableInboxAcquireResult duplicate = await restarted.AcquireAsync(target, Epoch.AddDays(1), TimeSpan.FromMinutes(1), token);
+        Assert.Equal(ReliableInboxAcquireDisposition.AlreadyConsumed, duplicate.Disposition);
+        Assert.Null(duplicate.Lease);
+        Assert.Equal(2, duplicate.Attempt);
+    }
+
+    [Theory]
+    [InlineData("complete")]
+    [InlineData("retry")]
+    [InlineData("quarantine")]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "removed-consumer-transition-does-not-resurrect-or-change-neighbors")]
+    public async Task Inbox_RemovedTransitionReturnsFalseWithoutResurrectionOrNeighborChangesAsync(string operation)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IInboxStore<ITestBus> store = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("removed-owner", new RecordingValidator());
+        IInboxStore<ITestBus> other = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("removed-other", new RecordingValidator());
+        var target = new ReliableInboxKey(GuidFrom(121), GuidFrom(122));
+        ReliableInboxAcquireResult acquired = await store.AcquireAsync(target, Epoch, TimeSpan.FromMinutes(1), token);
+        ReliableInboxLease oldLease = Assert.IsType<ReliableInboxLease>(acquired.Lease);
+        foreach ((IInboxStore<ITestBus> owner, ReliableInboxKey key) in new[]
+        {
+            (store, new ReliableInboxKey(target.MessageId, GuidFrom(123))),
+            (store, new ReliableInboxKey(GuidFrom(124), target.ConsumerId)),
+            (other, target),
+        })
+        {
+            Assert.Equal(ReliableInboxAcquireDisposition.Acquired,
+                (await owner.AcquireAsync(key, Epoch, TimeSpan.FromMinutes(10), token)).Disposition);
+        }
+        Assert.True(await store.QuarantineAsync(target, oldLease, "Tests.Permanent", Epoch.AddSeconds(1), token));
+        Assert.Equal(new ReliableMessagingOperationResult(ReliableMessageReference.Inbox(target),
+            ReliableMessagingOperationDisposition.Applied, "Quarantined", "Discarded"),
+            await store.DiscardAsync(target, token));
+        ReliableInboxRecord[] retained = await ReadInboxRecordsAsync(database, token);
+        Assert.Equal(3, retained.Length);
+        Assert.DoesNotContain(retained, row => row.StoreKey == "removed-owner"
+            && row.MessageId == target.MessageId && row.ConsumerId == target.ConsumerId);
+        IInboxStore<ITestBus> restarted = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("removed-owner", new RecordingValidator());
+
+        Assert.False(await ApplyInboxTransitionAsync(restarted, operation, target, oldLease, token));
+
+        AssertInboxRecordsUnchanged(retained, await ReadInboxRecordsAsync(database, token));
+    }
+
+    private static void AssertInboxRecordsUnchanged(ReliableInboxRecord[] expected, ReliableInboxRecord[] actual)
+    {
+        Assert.Equal(expected.Select(row => (row.StoreKey, row.MessageId, row.ConsumerId)),
+            actual.Select(row => (row.StoreKey, row.MessageId, row.ConsumerId)));
+        for (int index = 0; index < expected.Length; index++)
+            Assert.Equivalent(expected[index], actual[index], strict: true);
+    }
+
+    private static Task<bool> ApplyInboxTransitionAsync(IInboxStore<ITestBus> store, string operation,
+        ReliableInboxKey key, ReliableInboxLease lease, CancellationToken token) => operation switch
+        {
+            "complete" => store.CompleteAsync(key, lease, Epoch.AddMinutes(2), token),
+            "retry" => store.ScheduleRetryAsync(key, lease, Epoch.AddMinutes(9), "Tests.StaleRetry", Epoch.AddMinutes(2), token),
+            "quarantine" => store.QuarantineAsync(key, lease, "Tests.StaleQuarantine", Epoch.AddMinutes(2), token),
+            _ => throw new ArgumentOutOfRangeException(nameof(operation)),
+        };
+
+    private static async Task<ReliableInboxRecord[]> ReadInboxRecordsAsync(DurableDatabase database, CancellationToken token)
+    {
+        await using DurableDbContext context = database.Factory.CreateDbContext();
+        return await context.Set<ReliableInboxRecord>().AsNoTracking().OrderBy(row => row.StoreKey)
+            .ThenBy(row => row.MessageId).ThenBy(row => row.ConsumerId).ToArrayAsync(token);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-RELIABLE-RECOVERY", "repeat-cancellation-preserves-neighbors-and-capacity")]
     public async Task Cancel_RemovedScheduleReturnsNotFoundWithoutChangingNeighborsAsync()
