@@ -16,13 +16,16 @@ entry below records what the current work changed for anyone reading the source.
   retaining exact delivery and broker-state assertions. Both protocols pass;
   deliberately blocking finalization causes both to fail at the deadline, and
   restored isolated controls pass. The first T38 full measurement remains recorded
-  as failed; a fresh complete measurement is required.
+  as failed; fresh T38b passes33profiles/12878executions at7c617f34c, including
+  ActiveMQ100/100. Lines85396/93762, conservative branches30809/36841,
+  no CRAP strictly above30; A+ remains unproven.
 
 - Added 44 Azure Service Bus subscription processor cases for message/session
   callbacks, exact arguments/tokens, awaited completion, configuration guards,
   start/stop/close/dispose and documented warning behavior. Four deliberate faults
   are detected; restored controls pass44/44 without skips. No real broker or full
-  SDK-processor disposal claim; complete product-wide measurement is pending.
+  SDK-processor disposal claim. T38b covers69/69 method lines and41/44 branches
+  in SubscriptionClientContext; three branches remain open.
 
 - Added Event Hubs processor lifecycle tests proving cancellation forwarding,
   isolation of equal offsets in distinct partitions, shutdown waiting for an

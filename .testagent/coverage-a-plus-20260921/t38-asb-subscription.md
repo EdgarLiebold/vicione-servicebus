@@ -104,5 +104,8 @@ verändert den Scheduler nicht. Kein Produktcode wurde geändert.
 | GATE artifacts/t38-quartz-retained.log | 89d07090feeb633a833deb1c91bacfd40223e2686e4abaf4164051c14c02091f |
 | GATE artifacts/t38-quartz-restored.log | f66580b1009e4ea7a3f1643a9571f18558683efec09f31e79c535f439c27db86 |
 
-Offen: Korrekturcommit, vollständige frische33-Profil-Messung unter t38b,
-Aggregatreview und autorisierter Push. T37 bleibt die maßgebliche vollständige Messung.
+Korrekturcommit: `7c617f34cd7fadf6a6fdab32b4178b1008da5a9d`.
+Die frische [T38b-Gesamtmessung](product-wide-profile-7c617f34c.md) besteht33Profile
+und12878Ausführungen einschließlich vier erfolgreicher Fixturegruppen.
+Aggregatreview abgeschlossen ohne Accounting-Blocker. Der autorisierte Push folgt
+nach dem Dokumentationscommit. A+ bleibt unbelegt.

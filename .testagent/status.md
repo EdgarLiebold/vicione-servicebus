@@ -25,8 +25,14 @@
   (99/100), after28 verified profiles. TriggerFinalized preceded store removal.
   Bounded Exists observation fixes the test synchronization; original oracles remain.
   MAIN2/2, lifecycle counterprobe2expected failures, restored GATE2/2, format0.
-  Correction commit, fresh t38b measurement and push remain pending;
-  T37 stays authoritative. Failed run is retained separately.
+  Correction committed as7c617f34c. Fresh t38b measurement passes33profiles,
+  12878executions and all four fixturegroups includingcleanup.
+  Lines85396/93762, conservative branches30809/36841, no CRAP>30.
+  Gaps4456=2779zero+1677partial;1506additional branch-only, union5962.
+  [Full measurement](coverage-a-plus-20260921/product-wide-profile-7c617f34c.md).
+  Independent aggregate review passed487hashes/66bindings and physical OR delta
+  +26/-1. Push follows the documentation commit; A+ remains unproven.
+  Failed T38 run is retained separately.
 
 - T37 focused processor lifecycle verification passes 2/2, format0. Two isolated
   mutations are detected (missing cancellation forwarding; premature shutdown),
