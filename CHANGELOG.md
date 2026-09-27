@@ -22,8 +22,12 @@ entry below records what the current work changed for anyone reading the source.
   the combined local control passes34/34 including requirement projection. A test
   observer mismatch on typed consume faults was corrected without changing product
   error semantics. Two isolated counterprobes detect neighbor deletion and a missing
-  final-batch delivery watermark; product files were byte-restored. Final packet
-  acceptance remains open.
+  final-batch delivery watermark; product files were byte-restored. The frozen
+  33-profile/provider measurement passes13,218 tests without failures or skips;
+  line coverage is85,899/93,754 (91.62169%), conservative branch coverage
+  31,035/36,845 (84.23124%), with zero method CRAP>30. The remaining5,819
+  method gap identities keep global A+ open. Independent read-only audit verifies
+  all33 receipts,487 hashes and exact XML-derived aggregate counts.
 
 - Corrected a race in the SQS Quartz integration test discovered by the T54 full
   measurement: consumer delivery can precede Quartz trigger removal. The test now
