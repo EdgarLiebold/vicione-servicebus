@@ -1,5 +1,15 @@
 # A+ remediation test plan
 
+## Current T50 — one larger serialization package
+
+Follow [T50 acceptance map](coverage-a-plus-20260921/t50-json-boundary-journeys.md):
+decimal/dictionary contracts, configured envelope admission, forwarding isolation
+and lazy payload failures. Build and run focused tests after the combined edit;
+resolve concrete failures without repeating global profiles. Combined adversarial
+review, three detected/restored counterprobes and 56/56 final controls are complete.
+One exact-commit full33 and its audit/publication follow the implementation freeze.
+T49 is complete/pushed at `fd3c32976`; older current labels are historical.
+
 ## Current T49 — Courier outbox, retry and timeout
 
 T48 is completed and pushed at `704163364`. Use the three concrete journey/test

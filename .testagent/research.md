@@ -1,5 +1,15 @@
 # A+ remediation research
 
+## Current T50 — JSON boundaries across conversion, admission and forwarding
+
+T49 is complete and pushed at `fd3c32976`. The larger connected scope, one
+bounded Roslyn pairing (60 sources/50 tests), existing evidence and acceptance
+map are in [T50](coverage-a-plus-20260921/t50-json-boundary-journeys.md).
+The combined families are implemented; a raw-forwarding contract-loss defect is
+reproduced and corrected. Three counterprobes are detected and SHA-restored;
+56/56 final controls and verify-only formatting pass. Freeze before the sole full
+measurement. Earlier current/publication labels below are historical.
+
 ## Current T49 — combined Courier outbox journeys
 
 T48 is completed and remotely verified at `704163364`. The bounded inventory,

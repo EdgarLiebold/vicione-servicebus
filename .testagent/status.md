@@ -1,5 +1,20 @@
 # A+ remediation test status
 
+## Current T50 — implementation in progress
+
+T49 is complete/pushed at `fd3c32976`. T50 combines JSON conversion, configured
+envelope admission, forwarding and lazy payload error boundaries in one larger
+packet. Mandatory skills and one bounded Roslyn pairing are complete; see
+[acceptance map](coverage-a-plus-20260921/t50-json-boundary-journeys.md).
+The 44 new cases, requirement projection and existing forwarding controls pass
+56/56. A confirmed raw-forwarding contract-loss defect is corrected; its original
+implementation fails the exact regression with three companion controls passing.
+Three one-cause counterprobes are detected and SHA-restored. Final restored
+controls pass 56/56; verify-only formatting passes. All 5,880 MAIN/GATE source/test
+files match. Implementation freeze, full33/audit and publication remain.
+No new measurement has run; the verified global metrics below remain T49.
+Global A+ remains open.
+
 ## Current T49 — combined Courier journeys
 
 T48 is pushed and remotely verified at `704163364`. T49 implements twelve real

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10893 |
+| Added | 10897 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -231,6 +231,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t47-saga-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t48-multibus-host-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t49-courier-outbox-journeys.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t50-json-boundary-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16363,6 +16364,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/BoundedSerializerAdmissionContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/ConfiguredJsonCopyAdmissionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/DeserializeVariableExtensionsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs` | Added |  |
@@ -16371,8 +16373,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Serialization/ForwardMessageTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/HeaderRoundTripTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/HostMetadataRoundTripTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/JsonForwardBranchIsolationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/JsonMessageTypeMappingRegistryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/JsonObjectConsumptionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/JsonValueReceiveBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyContractAssertions.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessageIdHeadersTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MinimalEnvelopeRedeliveryTests.cs` | Added |  |

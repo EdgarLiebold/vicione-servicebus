@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected raw JSON forwarding through a consumed interface losing the original
+  concrete message contract URNs. The preserving serializer now receives the
+  original declared contract set, so a concrete downstream consumer can still
+  be selected. The combined JSON-boundary packet adds value-conversion failures,
+  configured envelope admission and independent forwarding targets. Its raw
+  regression fails against the original implementation while three forwarding
+  controls pass. All three isolated counterprobes are detected and restored;
+  56/56 combined corrected controls pass with zero build warnings/errors. Final
+  product-wide measurement and global A+ acceptance remain open.
+
 - Added twelve combined Courier journeys for execute retry with route replacement
   or termination, successful and exhausted compensation retries, and activity
   deadlines during execution or compensation. Real received effects distinguish
