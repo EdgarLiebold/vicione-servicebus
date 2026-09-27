@@ -79,4 +79,7 @@ blocker within the reviewed scope. The final review confirmed all five detected
 faults, restored 395/395 control, byte-identical product/test/manifest files and
 the strengthened message identity assertion. Broker/settlement behavior and
 external registration-context fallback remain outside this packet's proof.
-Exact-commit full 33-profile measurement remains pending. Global A+ stays open.
+Exact-commit measurement at `c28e9feb41f8146869e33b0f361ecd3e920f581b` passes
+all 33 profiles and 12,923 executions, with all four fixture groups exiting 0.
+See [full profile and remaining gaps](product-wide-profile-c28e9feb4.md).
+Global A+ stays open.

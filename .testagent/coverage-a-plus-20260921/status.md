@@ -4,10 +4,20 @@
 
 Azure Functions receiver isolation defects are corrected. Fifteen behavior cases
 and five detected counterprobes have restored isolated 395/395 control evidence.
-Exact-commit product-wide measurement is pending; no new A+ claim.
+Exact-commit product-wide measurement passes all 33 profiles; no new A+ claim.
 See [T42 evidence](t42-functions-receiver-isolation.md).
 
 ## Latest product-wide profile
+
+The latest complete profile is `c28e9feb4`: 33 profiles, 32 assemblies,
+12,923 passing executions, 85,480/93,749 lines (91.17964%) and conservative
+branches 30,840/36,843 (83.70654%). All four fixture groups exit 0. Remaining:
+4,432 line-gap identities (2,756 zero and 1,676 partial) plus 1,511 branch-only
+candidates, union 5,943. None exceeds CRAP 30. Generated ReceiverKey accessors
+remain explicitly included; changed identities are reconciled separately.
+See [T42 full report](product-wide-profile-c28e9feb4.md). A+ remains open.
+
+## Previous T41 profile
 
 The latest complete profile is `118cc5ded`: 33 profiles, 32 assemblies,
 12,908 passing executions, 85,401/93,751 lines (91.09343%) and conservative

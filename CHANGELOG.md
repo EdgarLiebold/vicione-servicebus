@@ -18,7 +18,10 @@ entry below records what the current work changed for anyone reading the source.
   all-handler dispatch no longer requires the optional Saga capability. Fifteen
   behavior cases cover consumers, saga state, activities, invalid subscriptions
   and typed-bus context. All five deliberate faults are detected; restored
-  isolated tests pass 395/395. Full product measurement remains pending.
+  isolated tests pass 395/395. Full measurement at c28e9feb4 passes all 33
+  profiles and 12,923 executions: 85,480/93,749 lines and conservative
+  30,840/36,843 branches. Changed method identities and generated accessors
+  remain separately accounted for; global A+ remains open.
 
 - Added six Cron regression cases for invalid tokens, Unicode whitespace and
   calendar-union ordering across month boundaries, coincident dates and year
