@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added ten Saga journey cases across Core and Quartz. Real transport verifies
+  owner/event-dependent callback metadata, pending factories and sends, primary
+  dispatch failures and failed compensation. Reusing a Saga for a second request
+  proves that late responses, faults and timeout messages from the first request
+  cannot change the second request or cancel its real Quartz trigger. Both trigger
+  existence and removal are observed. Selected callback-pipe and timeout-owner
+  counterchanges are detected; restored combined checks pass20/20 Core and22/22
+  Quartz, with no product source change. The combined packet's product-wide
+  measurement remains pending; these focused results do not establish global A+.
+
 - Fixed ActiveMQ receive timestamps being shifted by the local UTC offset when
   the OpenWire SDK returns a local DateTime. The provider now converts the
   timestamp to UTC before checking epoch eligibility and exposing its instant.

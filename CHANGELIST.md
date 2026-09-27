@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10881 |
+| Added | 10884 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -225,6 +225,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t44-ef-store-contracts.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t45-inmemory-inbox-pipeline.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t46-transport-headers.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t47-saga-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15048,6 +15049,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzPersistentStoreAcceptanceTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzRecurringDeliveryIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaIdRequestIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestGenerationIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestTimeoutIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaSchedulingIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduleSerializationBoundaryTests.cs` | Added |  |
@@ -16265,6 +16267,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorBuilderDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorFaultDispatchDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorProxyObserverDeepContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCallbackJourneyIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCancellationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeConversionRetryActivitiesDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventStatusAccessorDeepContractTests.cs` | Added |  |

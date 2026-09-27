@@ -14,7 +14,31 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Current packet — T46
+## Current packet — T47 (in progress)
+
+- One combined Saga callback/request-generation packet; see
+  [research and acceptance map](coverage-a-plus-20260921/t47-saga-journeys.md).
+- Seven new real-transport callback journeys plus requirement projection pass
+  8/8 in the isolated checkout; Release build has zero warnings/errors.
+  Cases cover two owners, pending factory and send stages, factory/send/callback
+  errors, delivered compensation, and a failed recovery callback producing the
+  exact second exception without a false recovery transition.
+- Three new Quartz generation-isolation cases plus projection pass 4/4 with
+  zero build warnings/errors. Request1 response/fault/timeout replay must
+  leave Request2's identity/state and actual trigger unchanged, with no premature
+  CancelScheduledMessage, followed by a valid completion/cleanup control.
+- Read-only review found no blocker in the callback cases. The missing positive
+  first-trigger-existence oracle from generation review is fixed and green.
+  Final review confirmed the correction. Callback-pipe bypass fails7/7; incorrect
+  timeout ownership fails1/3 with both other replay controls green. Sources are
+  SHA-restored; combined Core20/20 and Quartz22/22 pass, zero build warnings/errors.
+  Verify-only formatting passes with both test projects loaded; canonical
+  CHANGELIST verifies16,535 entries. The single full33 measurement remains pending.
+- Product sources are unchanged; implementation is ready for exact-commit
+  measurement. No new product-wide result or T47 push is claimed yet.
+  The accepted T46 metrics below remain the current measured baseline.
+
+## Completed packet — T46
 
 - Combined ActiveMQ, RabbitMQ and SNS/SQS header packet:40 additional cases,
   stronger RabbitMQ intermediate-state assertions and one ActiveMQ UTC fix.

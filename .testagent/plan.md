@@ -1,5 +1,22 @@
 # A+ remediation test plan
 
+## Current T47 — one combined implementation and measurement packet
+
+Use [t47-saga-journeys.md](coverage-a-plus-20260921/t47-saga-journeys.md) for the
+acceptance map and current results. Callback ownership, pending factory/send,
+primary failures and failed compensation map to
+`StateMachineCallbackJourneyIntegrationTests.CallbackJourney_PreservesOwnershipAndCompletesOnlyTheSelectedOutcomeAsync`.
+Request-generation isolation and real Quartz cleanup map to
+`QuartzSagaRequestGenerationIntegrationTests.PreviousRequestMessages_CannotCompleteOrCancelTheNextRequestOfTheSameSagaAsync`.
+Existing request/timeout suites provide complementary multi-response, missing-ID
+and real expiration coverage; do not recreate their overload matrices.
+
+Finish implementation and the combined read-only review, verify focused controls
+and single-cause counterprobes, restore, then perform one full33 exact-commit
+measurement and independent numerical audit. Update changelog and canonical
+CHANGELIST, commit and use the already-authorized push. T47 remains open until all
+these gates finish; the continuation and iteration records below are historical.
+
 ## Current continuation, 2026-09-26
 
 First reading is complete under the PO's Git baseline plus the 91-file manual

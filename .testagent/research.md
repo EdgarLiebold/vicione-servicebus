@@ -1,5 +1,27 @@
 # A+ remediation research
 
+## Current T47 — combined Saga journeys
+
+The current packet research, single Roslyn pairing result, existing behavior
+evidence and acceptance map are in
+[t47-saga-journeys.md](coverage-a-plus-20260921/t47-saga-journeys.md).
+The first source reading remains complete; the iteration histories below do not
+reopen it. T46 is completed and pushed at `1011ef1dd`; T47 is not yet accepted.
+
+The bounded source scope is request declaration/correlation, request activities,
+timeout cancellation, SendCallbackExtensions, SendActivity/FaultedSendActivity and
+their behavior chains. New real-transport tests combine two Saga owners, pending
+factory/send stages, callback metadata and compensation failures. A Quartz journey
+reuses one Saga for two request generations and injects an old response, fault or
+timeout while the second request and its real trigger are active. This closes a
+generation-isolation gap absent from the existing single-request Quartz journeys.
+The stale timeout is an injected late message, not a second firing of a deleted job.
+
+Requirements: preserve larger coherent packets; use mandatory Microsoft test
+skills; add only product-contract discriminators; adversarial read-only review and
+isolated counterprobes; one final full33 with exact-commit coverage/CRAP; document
+limits and publish only after validation. No new global source inventory is needed.
+
 ## Iteration 132 connected ownership and liveness remediation
 
 The original goal and secured input 3e4eae03435f3b7343bb63a1eac66eeca2269139
