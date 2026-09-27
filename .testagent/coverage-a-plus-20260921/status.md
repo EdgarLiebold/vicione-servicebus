@@ -2,6 +2,19 @@
 
 ## Latest product-wide profile
 
+The latest complete profile is `d286a336a`: 33 profiles, 32 assemblies,
+12,902 passing executions, 85,407/93,762 lines and conservative branches
+30,814/36,841. Remaining: 4,446 line-gap identities (2,771 zero and 1,675
+partial) plus 1,511 branch-only candidates. None exceeds CRAP 30. SQL fixture
+startup failed before tests and was separately retried with evidence preserved.
+See [T40 report](product-wide-profile-d286a336a.md). A+ remains open.
+
+T41 Cron focused verification, adversarial review and three counterprobes are
+complete; restored isolated Core tests pass 6731/6731. Exact-commit full
+measurement remains pending. See [T41 evidence](t41-cron-boundaries.md).
+
+## Previous T33 profile
+
 The latest complete profile is `2409092a9`: 33 profiles, 32 assemblies,
 12,693 passing executions, 85,271/93,762 lines and conservative branches
 30,749/36,841. Remaining: 4,465 line-gap identities and 1,506 branch-only

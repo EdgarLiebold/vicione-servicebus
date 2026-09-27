@@ -174,10 +174,10 @@ internal sealed class CronExpression :
             if (expr.IndexOf(',') != -1)
             {
                 foreach (var value in expr.SpanSplit(','))
-                    StoreExpressionValues(0, value, index);
+                    StoreExpressionValues(value, index);
             }
             else
-                StoreExpressionValues(0, expr, index);
+                StoreExpressionValues(expr, index);
 
             index++;
         }
@@ -186,7 +186,7 @@ internal sealed class CronExpression :
             throw new FormatException("Unexpected end of expression.");
 
         if (index <= CronExpressionConstants.Year)
-            StoreExpressionValues(0, "*".AsSpan(), CronExpressionConstants.Year);
+            StoreExpressionValues("*".AsSpan(), CronExpressionConstants.Year);
     }
 
     static void ValidateListSyntax(ReadOnlySpan<char> field, int type)
@@ -473,39 +473,33 @@ internal sealed class CronExpression :
         return (value, end, ParseIncrement(span, suffixIndex, CronExpressionConstants.DayOfWeek));
     }
 
-    void StoreExpressionValues(int position, ReadOnlySpan<char> span, int type)
+    void StoreExpressionValues(ReadOnlySpan<char> span, int type)
     {
-        var index = position;
-        if (index < span.Length && char.IsWhiteSpace(span[index]))
-            index = SkipWhiteSpace(position, span);
-
-        if (index >= span.Length)
-            return;
-
-        switch (span[index])
+        // BuildExpression supplies normalized, nonempty tokens.
+        switch (span[0])
         {
             case >= 'A' and <= 'Z' when !span.SequenceEqual("L".AsSpan()) && !_regex.IsMatch(span.ToString()):
-                StoreExpressionGeneralValue(type, span, index);
+                StoreExpressionGeneralValue(type, span, 0);
                 break;
 
             case '?':
-                StoreExpressionQuestionMark(type, span, index);
+                StoreExpressionQuestionMark(type, span, 0);
                 break;
 
             case '*':
             case '/':
-                StoreExpressionStarOrSlash(type, span, index);
+                StoreExpressionStarOrSlash(type, span, 0);
                 break;
 
             case 'L':
-                StoreExpressionL(type, span, index);
+                StoreExpressionL(type, span, 0);
                 break;
 
             case >= '0' and <= '9':
-                StoreExpressionNumeric(type, span, index);
+                StoreExpressionNumeric(type, span, 0);
                 break;
             default:
-                throw new FormatException($"Unexpected character: {span[index]}");
+                throw new FormatException($"Unexpected character: {span[0]}");
         }
     }
 
@@ -705,15 +699,6 @@ internal sealed class CronExpression :
             _lastDayOfMonth,
             _years
         ).ToString();
-    }
-
-    static int SkipWhiteSpace(int position, ReadOnlySpan<char> span)
-    {
-        for (; position < span.Length && char.IsWhiteSpace(span[position]); position++)
-        {
-        }
-
-        return position;
     }
 
     static (int min, int max, string errorMessage) GetValidationParameters(int type)
@@ -1291,12 +1276,7 @@ internal sealed class CronExpression :
                 : dayOfMonthProgressResult;
         }
 
-        if (dayOfWeekProgressResult is { Date: not null, RestartLoop: false })
-            return dayOfWeekProgressResult;
-        if (dayOfMonthProgressResult is { Date: not null, RestartLoop: false })
-            return dayOfMonthProgressResult;
-
-        return dayOfWeekProgressResult.Date!.Value < dayOfMonthProgressResult.Date!.Value
+        return !dayOfWeekProgressResult.RestartLoop
             ? dayOfWeekProgressResult
             : dayOfMonthProgressResult;
     }

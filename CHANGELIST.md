@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10864 |
+| Added | 10866 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -213,6 +213,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t38-asb-subscription.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t39-dynamodb-validation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t40-rabbitmq-factory-options.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t41-cron-boundaries.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16089,6 +16090,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/StartJobConsumerTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/SubmitJobConsumerTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/JobService/SuperviseJobConsumerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionBoundaryRegressionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs` | Added |  |

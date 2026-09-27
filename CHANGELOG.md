@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added six Cron regression cases for invalid tokens, Unicode whitespace and
+  calendar-union ordering across month boundaries, coincident dates and year
+  exhaustion. Removed unreachable private parser guards and simplified calendar
+  selection with preserved semantics. Three deliberate faults are detected;
+  restored isolated Core tests pass 6731/6731 without skips. Product-wide
+  measurement is pending; no A+ claim. See the T41 evidence packet.
+
 - Added eight RabbitMQ factory-option cases proving independent message/frame
   limits, certificate/provider/static-credential priority and actual cluster
   resolver selection with port/TLS projection. Four deliberate faults are detected;
