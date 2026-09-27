@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10909 |
+| Added | 10912 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -237,6 +237,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t50-json-boundary-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t51-receive-settlement-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t52-scheduling-admission-journeys.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t53-saga-persistence-integrity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -14943,7 +14944,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaConcurrencyTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaEntityConversionIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaIntegrityTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaRepositoryIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaStorageBoundaryTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Configuration/AzureTableConfigurationContractTests.cs` | Added |  |

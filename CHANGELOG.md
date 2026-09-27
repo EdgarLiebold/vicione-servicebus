@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a connected Azure Table saga-persistence verification packet: 13 cases
+  cover corrupted native and serialized rows through public loads and real
+  consumption, schema evolution with absent versus explicit empty values, and
+  exact UTF-16/binary/UTC storage limits. Rejected inserts and updates perform
+  no HTTP writes; existing rows, ETags and neighbors remain intact. Repaired
+  sagas continue through the same repository. Independent review strengthens
+  the JSON error-category oracle; two isolated counterprobes are detected and
+  restored. Final focused controls pass19/19 with zero build warnings/errors.
+  No product defect is claimed from this test-only packet. Its complete coverage
+  measurement and global A+ acceptance remain open.
 - Added a connected scheduling verification packet: 32 cases cover publish
   admission before initializer or endpoint effects, control-command resolution
   and delivery ownership, invalid Quartz replacements and provider failures.

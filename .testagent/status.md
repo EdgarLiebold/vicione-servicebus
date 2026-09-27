@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## Current T53 — ready for frozen measurement
+
+Authoritative starting HEAD is `322dcc16d`; tracked worktree was clean before
+T53. Protected `TestResults/` and `review/` remain untouched. Single bounded
+Roslyn pairing is complete (32 inputs, 15 paired/seven unpaired sources).
+Read-only selection review supports the four connected persistence families.
+The four families are implemented in13 cases across two test files; requirement
+projection is bound. Independent review's JSON exception-oracle finding is fixed.
+The reused repair-entity EDM defect in the test fixture is corrected using a
+fresh entity, with actual repaired type/value and load asserted. Combined restored
+controls pass19/19, no skips; build has zero warnings/errors. Both isolated probes
+are detected (native error swallowing3/6, string boundary2/5) and original source
+hashes restored. All5,889 src/tests paths match MAIN/GATE; final verify-only format
+exits0. No product source change exists. Freeze for one full33 measurement and
+independent audit before publication. T52 remains the latest complete coverage
+measurement; global A+ is open. Details: [T53](coverage-a-plus-20260921/t53-saga-persistence-integrity.md).
+
 ## Current T52 — complete measurement and audit
 
 T51 is complete and remotely verified at `e0e9d3c38`. T52 scope and existing-test

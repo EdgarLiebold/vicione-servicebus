@@ -1,5 +1,18 @@
 # A+ remediation research
 
+## Current T53 — persisted saga integrity
+
+T52 is complete and pushed at `322dcc16d`. Reuse its measured worklist; no new
+coverage run is needed for selection. The bounded Azure Table pairing contains
+22 sources, seven tests and three projects: 15 paired and seven unpaired sources.
+Static pairing is not proof of missing runtime coverage. Existing full native/
+serialized roundtrip and individual converter guards are retained. Four connected
+families cover corrupted native values, schema evolution, exact storage limits
+and corrupted serialized values through real persistence and consume paths.
+See [T53 acceptance map](coverage-a-plus-20260921/t53-saga-persistence-integrity.md).
+Implementation, independent review, two detected/restored counterprobes and19/19
+final focused controls are complete. Full-product measurement remains pending.
+
 ## Current T52 — scheduling admission and failure ownership
 
 T51 is complete/pushed at `e0e9d3c38`. The next connected packet uses its existing

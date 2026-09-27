@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## Current T53 — one combined persistence package
+
+All four [T53 families](coverage-a-plus-20260921/t53-saga-persistence-integrity.md)
+are implemented together. Real Azure Table storage, outgoing SDK writes, exact
+row/ETag and neighbor assertions prove rejection and recovery. Adversarial review,
+two detected/restored counterprobes and19/19 restored controls are complete.
+Freeze for one complete measurement, independent audit and authorized push.
+T52 publication is complete; its older publication instructions are historical.
+
 ## Current T52 — one connected scheduling boundary package
 
 The [T52 acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md)
