@@ -20,7 +20,15 @@
   mutations are detected (missing cancellation forwarding; premature shutdown),
   both restored; isolated final control2/2. Independent read-only review has no
   blocker. [Evidence and limits](coverage-a-plus-20260921/t37-eventhubs-processor-lifecycle.md).
-  Commit, full measurement and push remain open; T36 stays authoritative.
+  Commit364da8b1380bea366764ed913ad69404dabae022 and full measurement pass:
+  33profiles, four fixture groups,12834 executions;85371/93762lines (91.0507455%),
+  30788/36841conservative branches (83.5699357%),0CRAP>30. Remaining4466linegaps
+  (2783zero,1683partial),1508branch-only,union5974. Canceled now3/3lines;
+  unrelated observation changes are not attributed to the new tests.
+  [Report](coverage-a-plus-20260921/product-wide-profile-364da8b13.md).
+  Final independent review confirms487 hashes,32assemblies and physical+8/-4
+  lines without accounting blocker. Measurement/review complete; authorized
+  push follows the documentation commit. A+ is not established.
 
 - T36 focused Event Hubs checkpoint tests (2026-09-27) pass 5/5, format0;
   read-only review has no blocker. Three valid mutations fail3/4/1cases,

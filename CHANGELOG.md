@@ -15,7 +15,11 @@ entry below records what the current work changed for anyone reading the source.
   isolation of equal offsets in distinct partitions, shutdown waiting for an
   in-flight checkpoint, and subsequent client re-leasing. Both deliberate faults
   are detected; restored controls pass 2/2 with no skips. Checkpoint callbacks
-  are simulated; the full all-profile measurement remains pending.
+  are simulated. All 33 profiles now pass with 12,834 executions; line coverage
+  is 91.0507%, conservative branch coverage 83.5699%. ProcessorLockContext.Canceled
+  reaches 3/3 lines. There remain 4,466 line-gap identities and 1,508 additional
+  branch-only candidates. Unrelated observation changes are not attributed to
+  the new tests. A+ remains open.
 
 - Added Event Hubs checkpoint tests for newest accepted offset, ordered fallback,
   healthy continuation after rejected updates, and cancellation of a waiting

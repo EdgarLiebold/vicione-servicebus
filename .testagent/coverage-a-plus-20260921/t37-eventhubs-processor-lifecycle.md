@@ -1,4 +1,4 @@
-# T37: Event-Hubs-Processor-Cancellation und Partition-Shutdown — offen
+# T37: Event-Hubs-Processor-Cancellation und Partition-Shutdown
 
 Basis `8e741200848fa1496628bf2db81b02d023d18c79`.
 Microsoft code-testing-agent und run-tests wurden angewandt; SDK 10.0.302,
@@ -63,6 +63,10 @@ Hashes veröffentlichen sie nicht.
 | GATE artifacts/t37-missing-drain-mutant.log | 3de4a8a3bbcca5f8701153bec5caf0224b5ae48fbe5baed3df2f64b1ab9a201c |
 | GATE artifacts/t37-restored.log | 7b1a6e5ae359b0d7627117c6d4c5117c974be2583ffc92aaad54fe8f9aeed962 |
 
-Offen: kanonische CHANGELIST, Commit, vollständige frische 33-Profil-Messung,
-Aggregatreview und autorisierter Push. T36 bleibt die maßgebliche vollständige
-Messung. Kein A+-Abschluss.
+Commit `364da8b1380bea366764ed913ad69404dabae022` und vollständige frische
+33-Profil-Messung sind abgeschlossen: 12.834 erfolgreiche Testausführungen,
+vier Providergruppen mit Exit 0. Canceled erreicht 3/3 Zeilen; siehe
+[Gesamtbericht](product-wide-profile-364da8b13.md). Der unabhängige Aggregatreview
+bestätigt 487 Hashes, alle Profile/Assemblies und physisch +8/-4 Zeilen ohne
+Accounting-Blocker. Autorisierter Push folgt nach dem Dokumentationscommit.
+Kein A+-Abschluss.
