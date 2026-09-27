@@ -25,9 +25,17 @@
   overwrite protection fails the precise intermediate-value assertion.
 - Read-only implementation and AMQP-helper reviews find no concrete blocker.
   SNS/SQS filter-discard counterprobes each fail4/12; restored controls13/13.
-  All four mutation targets match MAIN bytes after restoration. Combined final
-  gates and ONE full33 measurement remain open.
-- Last complete measurement remains T45 below. No new coverage claim.
+  All four mutation targets match MAIN bytes after restoration.
+- Commit01617f4ec passes ONE complete33-profile measurement:12,993 executions,
+  four fixture groups exit0, no failed profile or retry. Lines85,587/93,753
+  (91.28988%); conservative branches30,903/36,845 (83.87298%); no CRAP>30.
+  Remaining4409line gaps(2751zero/1658partial),1508branch-only,union5917.
+- Independent audit confirms487hashes/66bindings and all66old/new XML reports.
+  Target gains45lines/38branches are separated from non-target observations.
+  Two explicit non-generic enumerator wrappers and one move-header branch
+  remain unverified; LINQ Cast does not prove non-generic dispatch. No concrete
+  integrity blocker; global A+ remains open. Documentation publication follows.
+  [Complete measurement](coverage-a-plus-20260921/product-wide-profile-01617f4ec.md).
   [Packet evidence](coverage-a-plus-20260921/t46-transport-headers.md).
 
 ## Previous packet — T45

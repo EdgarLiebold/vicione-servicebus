@@ -20,8 +20,11 @@ entry below records what the current work changed for anyone reading the source.
   reserved metadata and SNS/SQS filtering of normalized scalar values.
   All four selected deliberate faults are detected; restored isolated checks
   pass21/21 ActiveMQ,21/21 RabbitMQ and13/13 SNS/SQS including requirement
-  projections. Read-only reviews found no concrete blocker. The final
-  product-wide measurement remains in progress; no global A+ claim is made.
+  projections. Commit01617f4ec passes all33 product-wide profiles and12,993
+  executions without retries:85,587/93,753lines and conservative30,903/36,845
+  branches. Independent behavioral and numerical reviews found no concrete
+  blocker. Remaining enumeration-wrapper and branch gaps stay documented;
+  no global A+ claim is made.
 
 - Added six InMemory reliable-inbox behavior cases for ownership changes during
   consumer failure, delayed consumer commits and admission rejection followed by

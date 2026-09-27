@@ -2,7 +2,7 @@
 
 Base4a4296133 (T45 audited and remote-confirmed). PO explicitly requests larger
 coherent packets. ActiveMQ, RabbitMQ and SNS/SQS form one implementation/review
-packet with one final full33 measurement; no such measurement has started.
+packet with one final full33 measurement, now complete at commit01617f4ec.
 Microsoft code-testing-agent research/plan/implement workflow applies, with
 run-tests, find-untested-sources, assertion-quality and test-gap-analysis.
 
@@ -33,7 +33,7 @@ normalization tests are retained, not duplicated as separate behavior claims.
 | Contract | Test methods | Added cases |
 | --- | --- | ---: |
 | Native map overwrite/remove preserves neighbor values and wire types | PrimitiveMapHeadersTests.Set_ChangesOnlyThePermittedNativeProperty | 8 |
-| String replace/remove, all readers, invalid writes, explicit unsupported typed retrieval | Remaining four PrimitiveMapHeadersTests methods | 4 |
+| String replace/remove, point/GetAll/generic/LINQ readers, invalid writes, explicit unsupported typed retrieval | Remaining four PrimitiveMapHeadersTests methods | 4 |
 | Native IDs cannot be replaced by application properties; both OpenWire and AMQP preserve UTC milliseconds and UTC epoch eligibility | ActiveMqHeaderProviderTests methods | 8 |
 | Missing broker timestamp cannot be spoofed; scalar lookup agrees with enumeration | RabbitMqHeaderProviderTests.MissingTimestamp_CannotBeSuppliedByAnApplicationHeader and ScalarLookup_AgreesWithEnumerationWithoutLosingFalsyValues | 7 |
 | Empty header table/string removal preserves neighbors | MoveTransportHeadersTests.EmptyTableAndStringRemoval_PreserveAbsenceAndUnrelatedValues | 1 |
@@ -126,6 +126,20 @@ confirms all three target test projects and ActiveMQ product project loaded,
 with no formatting changes required (`t46-format-diagnostic.log`). No automatic
 source/comment editing was performed. `git diff --check` also passes.
 
-Remaining: canonical change list,
-implementation commit, ONE full33 measurement, independent evidence audit,
-documentation completion and push. Packet and global A+ remain open.
+## Final measurement and closure
+
+Commit01617f4eca3d3b79e6cd9a348f37eca7d8905b4a passes all33 profiles and12,993
+executions without failed profiles or retries. Four fixture groups exit0 with
+empty findings. Lines85,587/93,753; conservative branches30,903/36,845; no CRAP>30.
+Target sources gain45 covered lines and38 covered branches. Fourteen target
+line gaps close; other observations are reconciled separately in the
+[complete report](product-wide-profile-01617f4ec.md).
+
+Independent read-only audit confirms487hashes,66runner/settings bindings,
+all66old/new XML reports, identities and source-mapped changes without a concrete
+blocker. Remaining4409line gaps plus1508branch-only entries keep A+ open.
+The explicit non-generic PrimitiveMap/MoveTransport enumerator wrappers remain
+0/1 each: LINQ Cast may use generic dispatch. Tests prove those LINQ consumer
+values, not direct non-generic invocation. MoveTransportHeaders object Set
+retains one conservative branch gap. These limitations remain visible; no
+coverage-only test was added to conceal them. Documentation publication follows.

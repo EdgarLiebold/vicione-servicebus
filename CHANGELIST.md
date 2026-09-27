@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10880 |
+| Added | 10881 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -112,6 +112,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/plan.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/postgresql-maintenance-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-attempt-f3848534c-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-01617f4ec.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-08d41e4b6.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-09235f22d.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-0ef230802.md` | Added |  |

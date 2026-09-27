@@ -1,6 +1,27 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current T43 packet
+## Current T46 packet and latest complete profile
+
+The combined ActiveMQ, RabbitMQ and SNS/SQS header packet is verified at
+`01617f4eca3d3b79e6cd9a348f37eca7d8905b4a`. Forty added cases and a real
+ActiveMQ timestamp correction pass all 33 profiles, 12,993 executions and four
+provider fixture groups without retries. Lines: 85,587/93,753 (91.28988%).
+Conservative branches: 30,903/36,845 (83.87298%). No method exceeds CRAP 30.
+Remaining: 4,409 line-gap entries and 1,508 additional branch-only entries.
+
+Four deliberate faults are detected; restored focused checks and independent
+behavioral/numerical reviews have no concrete blocker. Target gains are
+separated from other execution observations. Explicit non-generic enumerator
+wrappers and one move-header branch remain visible as gaps. Global A+ is open.
+See [T46 evidence](t46-transport-headers.md) and
+[complete T46 report](product-wide-profile-01617f4ec.md).
+
+The completed T44 and T45 packets and profiles are linked in the canonical
+[campaign status](../status.md). Older sections below are historical checkpoints,
+not current first-read balances or current A+ claims. Continue larger coherent
+behavior packets with focused development checks and one final full measurement.
+
+## Previous T43 packet
 
 Six EF Core inbox cases cover stale and missing consumer transitions, with real
 persisted-state and neighbor-preservation assertions. Main and restored isolated
@@ -10,14 +31,14 @@ has no concrete blocker. Exact-commit full measurement passes 33 profiles and
 No global A+ claim.
 See [T43 evidence](t43-inbox-ownership-transitions.md).
 
-## Current T42 packet
+## Previous T42 packet
 
 Azure Functions receiver isolation defects are corrected. Fifteen behavior cases
 and five detected counterprobes have restored isolated 395/395 control evidence.
 Exact-commit product-wide measurement passes all 33 profiles; no new A+ claim.
 See [T42 evidence](t42-functions-receiver-isolation.md).
 
-## Latest product-wide profile
+## Historical T43 product-wide profile
 
 The latest complete profile is `a763757b4`: 33 profiles, 32 assemblies,
 12,929 passing executions, 85,485/93,749 lines (91.18497%) and conservative
