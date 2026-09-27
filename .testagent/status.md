@@ -1,5 +1,28 @@
 # A+ remediation test status
 
+## Current T51 — implementation validated; counterprobes in progress
+
+T50 completed and remotely verified at `0f7f19e30`. T51 spans receive completion,
+duplicate fallback and SQS/SQL/Azure settlement contracts. One bounded Roslyn
+pairing is complete (35 sources/16 tests/13 projects; 20 paired/15 unpaired),
+with exact inputs and output retained. Read-only selection review is complete;
+five changed/new test files implement ten methods and 39 cases (Azure10, Core
+duplicate settlement9, SQS7, SQL11, dispatch-order2), all requirement-bound.
+Final restored controls pass Core21/21, SQS17/17, SQL16/16 and Azure18/18, including
+the Azure cleanup-token change. Initial test-authoring
+errors were corrected: AggregateException base-exception expectations, four SQS
+analyzer token errors, and the SQL test-only FakeTimeProvider lockfile addition.
+No product source change is intended. The first isolated counterprobe removes
+ReceiveCompleted awaiting: both new dispatcher cases fail, three existing cases
+pass. SQS drain mutation fails exactly2/7; ignored SQL move rejection fails1/11.
+All three are manually restored with original SHA-256 verified. All5,884 src/tests
+paths match MAIN/GATE byte-for-byte. Assertion-quality assessment is recorded for
+all ten new methods. Read-only closure review has no concrete blocker; verify-only
+formatting exits0 without changes. Implementation freeze and full33 measurement remain.
+No new coverage measurement has run. See
+[acceptance map](coverage-a-plus-20260921/t51-receive-settlement-journeys.md).
+The latest complete metrics remain T50b; global A+ remains open.
+
 ## Current T50 — complete measurement and audit
 
 Corrected implementation `a74627818` passes all 33 profiles: 13,076 executions,

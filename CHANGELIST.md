@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10898 |
+| Added | 10903 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -233,6 +233,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t48-multibus-host-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t49-courier-outbox-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t50-json-boundary-journeys.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t51-receive-settlement-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15287,6 +15288,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendTransportContextTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendTransportDispatchTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSendTransportSelectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsSettlementBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopologyCleanupTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopologyEntityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopologyTests.cs` | Added |  |
@@ -15325,6 +15327,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.csproj` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ApiSurfaceGlobalUsings.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/AzureServiceBusTransport/ServiceBusReceiveLockContextTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/AzureServiceBusTransportMetadataTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureFunctionsTestExtensionsBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTestHarnessBoundaryTests.cs` | Added |  |
@@ -15560,6 +15563,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlSendContextTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlSendTransportContextLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlSettlementBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlTransportConnectionOpenTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlTransportMessageTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Scheduling/SqlScheduleMessageProviderTests.cs` | Added |  |
@@ -16487,6 +16491,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Transports/ReceiveLifecycleTerminalityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/ReceiveMessageLimitsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/ReceivePipeDispatcherTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/Receiving/PendingReceiveSettlementBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveContextProxyTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveLockContextTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveNotificationContractTests.cs` | Added |  |

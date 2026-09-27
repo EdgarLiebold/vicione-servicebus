@@ -1,5 +1,13 @@
 # A+ remediation test plan
 
+## Current T51 — one combined receive/settlement package
+
+Implement the [T51 acceptance map](coverage-a-plus-20260921/t51-receive-settlement-journeys.md)
+across Core, SQS, SQL and Azure after completing existing-test comparison.
+Batch implementation before focused project validation; then combined read-only
+review, counterprobes, restored controls, one complete measurement and publication.
+T50 is completed/pushed at `0f7f19e30`; its older publication notes are historical.
+
 ## Current T50 — one larger serialization package
 
 Corrected commit `a74627818` now passes all 33 profiles and four fixture groups.

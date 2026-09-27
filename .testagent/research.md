@@ -1,5 +1,16 @@
 # A+ remediation research
 
+## Current T51 — receive lifecycle across transport contracts
+
+T50 is completed and remotely verified at `0f7f19e30`. T51 combines Core receive
+ordering/duplicate fallback with SQS visibility, SQL terminal lock transitions
+and Azure expiry/abandonment. The single bounded Roslyn pairing and acceptance
+checklist are in [T51](coverage-a-plus-20260921/t51-receive-settlement-journeys.md).
+Existing measured T50b gaps guide selection; no new coverage run is needed.
+Implementation now contains ten methods and 39 requirement-bound cases. Focused
+Core/SQS/SQL/Azure controls pass; isolated counterprobes and the final measurement
+remain open. The T51 report retains initial authoring failures and review limits.
+
 ## Current T50 — JSON boundaries across conversion, admission and forwarding
 
 The corrected full33 measurement at `a74627818` is complete: 13,076 passing

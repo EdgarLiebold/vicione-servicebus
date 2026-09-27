@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a connected receive/settlement verification packet across Core, Amazon
+  SQS, SQL transport and Azure Service Bus: 39 cases cover exhausted duplicate
+  fallbacks, canceled waiters, pending receive work, renewal failure and drain,
+  rejected ownership, exact settlement metadata and awaited abandonment.
+  Three isolated counterprobes are detected and manually restored; final focused
+  controls pass72/72 without skips. This packet changes tests and the SQL test-only
+  fake-time dependency; it does not claim a newly fixed product defect. Its full
+  product coverage/CRAP measurement remains pending.
 - Corrected raw JSON forwarding through a consumed interface losing the original
   concrete message contract URNs. The preserving serializer now receives the
   nonempty original declared contract set, so a concrete downstream consumer can still
