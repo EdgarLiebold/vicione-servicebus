@@ -1,6 +1,22 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current T47 packet and latest complete profile
+## Current T48 packet and latest complete profile
+
+The combined MultiBus host, health and scheduler packet is verified at
+`3422dc2fd46687c68af55fba4aa08b76d48536dd`. Seventeen new cases pass one complete
+33-profile measurement: 13,020 executions, 32 assemblies, four clean fixture
+groups and no retries. Lines 85,703/93,753 (91.41361%); conservative branches
+30,937/36,845 (83.96526%). No method exceeds CRAP 30.
+Remaining: 4,375 line gaps plus 1,525 additional branch-only gaps, union 5,900.
+
+Two isolated ownership faults are detected; restored combined controls pass
+50/50. Independent behavioral, integrity and numerical audits find no blocker.
+The complete physical delta is 122 gains / six losses, net 116. Fourteen line-gap
+closures move to branch-only; global A+ remains open. See
+[T48 evidence](t48-multibus-host-ownership.md) and
+[complete T48 report](product-wide-profile-3422dc2fd.md).
+
+## Completed T47 packet
 
 The combined Saga callback and request-generation packet is verified at
 `7d0e3d332b935cdb4e5ddbcd883c9bd15a73b26e`. Ten new cases pass one complete

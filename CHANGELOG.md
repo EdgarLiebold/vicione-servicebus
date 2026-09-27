@@ -19,7 +19,10 @@ entry below records what the current work changed for anyone reading the source.
   clock. Received recurring/control commands retain exact identities. These tests
   prove command routing, not execution by an external scheduler. Product sources
   are unchanged. Both injected ownership faults are detected, and 50/50 restored
-  new/existing controls pass; the packet's final measurement remains pending.
+  new/existing controls pass. Commit `3422dc2fd` passes one complete 33-profile
+  measurement with 13,020 successful executions. Lines rise to 85,703/93,753;
+  conservative branches to 30,937/36,845. Independent integrity and numerical
+  audits confirm the deltas and retained branch-only gaps. Global A+ remains open.
 
 - Added ten Saga journey cases across Core and Quartz. Real transport verifies
   owner/event-dependent callback metadata, pending factories and sends, primary

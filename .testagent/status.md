@@ -14,14 +14,14 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Current packet — T48
+## Latest verified packet — T48
 
 - T47 is completed and pushed at `50bd0a527`. The historical pending-publication
   instruction in its section below is superseded.
 - [MultiBus host ownership](coverage-a-plus-20260921/t48-multibus-host-ownership.md)
   combines host lifecycle, health validation/isolation and scoped scheduler
-  command delivery. Seventeen cases in two new files are implemented, not yet
-  accepted. One bounded Roslyn pairing pass and read-only adversarial review are
+  command delivery. Seventeen cases in two new files are verified. One bounded
+  Roslyn pairing pass and read-only adversarial review are
   complete; no false-green blocker identified in the current oracles.
 - Corrected baseline passes 18/18; isolated wrong-health-owner and
   wrong-publish-owner counterprobes fail 12/14 and 1/3 as intended. Both source
@@ -29,10 +29,19 @@
   warnings/errors. All 5,875 source/test paths match the isolated checkout.
 - Final read-only review and verify-only formatting pass. Test-only Hosting
   restore succeeds; initial compile/exception-wrapper errors and restricted
-  connection-loop attempts are retained as nonacceptance evidence. Final full33
-  measurement and publication remain open. No new product-wide metric claimed.
+  connection-loop attempts are retained as nonacceptance evidence.
+- Commit `3422dc2fd` passes one complete 33-profile measurement with 13,020
+  successful executions, zero failures/skips and four clean fixture groups.
+  Lines 85,703/93,753 (91.41361%); conservative branches 30,937/36,845 (83.96526%);
+  26,071 unchanged method identities and zero CRAP above 30.
+- Independent audit confirms 487 hashes, 66 runner/settings bindings, nine
+  broker logs and all method/physical counts. Remaining: 4,375 line gaps plus
+  1,525 branch-only, union 5,900. Fourteen line-gap closures migrate to branch-only
+  and stay open. [Complete report](coverage-a-plus-20260921/product-wide-profile-3422dc2fd.md).
+- Publish completion documentation, then continue with larger coherent packages.
+  Global A+ remains open; first source reading is not reopened.
 
-## Latest verified packet — T47
+## Completed packet — T47
 
 - One combined Saga callback/request-generation packet; see
   [research and acceptance map](coverage-a-plus-20260921/t47-saga-journeys.md).

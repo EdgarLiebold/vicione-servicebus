@@ -1,6 +1,6 @@
 # T48 — MultiBus host, health and scheduler ownership
 
-Status: implementation verified; final measurement pending. Baseline: completed and pushed T47,
+Status: complete measurement and independent audit verified. Baseline: completed and pushed T47,
 `50bd0a527e9be580daa84ba3eaa034107f2811d9`. No T48 acceptance claimed.
 
 ## Requirements and bounded research
@@ -125,3 +125,20 @@ not passing evidence. Authorized replacements succeed. Verify-only formatting
 on ViciOne.ServiceBus.Tests.Unit.slnx succeeds without changes; the initial use
 of the nonexistent shorthand Tests.Unit.slnx is retained as a failed command,
 not evidence. The complete implementation is ready for one full33 measurement.
+
+## Final complete measurement and audit
+
+Commit `3422dc2fd46687c68af55fba4aa08b76d48536dd` passes the sole complete
+33-profile measurement: 13,020 successful executions, 32 assemblies, four clean
+fixture groups and no retries. Lines 85,703/93,753 (91.41361%); conservative
+branches 30,937/36,845 (83.96526%); 26,071 identities and zero CRAP above 30.
+Remaining: 4,375 line gaps (2,720 zero / 1,655 partial), 1,525 branch-only,
+union 5,900. Product source bytes and physical denominators remain unchanged.
+
+Independent audit confirms 487 hashes, 66 runner/settings bindings, nine broker
+logs, every method row and all physical deltas without discrepancy. Net 116
+physical gains comprise 122 gains and six losses. Fourteen line-gap closures
+move to branch-only and remain open. No global A+ acceptance follows.
+See [complete report](product-wide-profile-3422dc2fd.md) for attribution limits,
+artifact hashes and the three highest remaining line-gap CRAP values.
+Publish the completed packet before starting the next larger behavior package.

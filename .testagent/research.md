@@ -8,6 +8,10 @@ publication wording below is historical. One bounded Roslyn pairing pass is
 complete. Test planning follows the mandatory Microsoft code-testing-agent and
 test-gap-analysis skills. No new global inventory or full measurement is needed
 before implementing the combined health, hosting and scheduler journeys.
+The completed T48 implementation at `3422dc2fd` now has one successful full33
+measurement and independent numerical/integrity audit; see
+[final evidence](coverage-a-plus-20260921/product-wide-profile-3422dc2fd.md).
+Publish the packet before selecting the next larger behavior scope.
 
 ## Current T47 — combined Saga journeys
 
