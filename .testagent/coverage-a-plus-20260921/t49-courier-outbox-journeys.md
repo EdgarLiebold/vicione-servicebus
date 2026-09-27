@@ -1,11 +1,11 @@
 # T49 — Courier outbox, retry, revision and timeout journeys
 
 Status: combined implementation, read-only assertion review, detected
-counterprobes, SHA restoration and 69/69 restored controls complete. Final
-measurement and numerical audit remain open.
+counterprobes, SHA restoration, 69/69 restored controls, the sole complete
+measurement and independent numerical/integrity audit are complete.
 Baseline is pushed T48 `7041633644cf4263d008f487cc88fcbd608416af`.
-The preceding goal turn made progress by completing and remotely verifying T48.
-No T49 coverage improvement is claimed yet.
+Measured implementation: `ad3ddbd4050f04d8096c1054d9b509cd015ab883`.
+See [final evidence](product-wide-profile-ad3ddbd40.md). Global A+ remains open.
 
 ## Requirements and scope
 
@@ -121,15 +121,22 @@ The restored build completed with zero warnings/errors. Combined controls pass
 Core project loaded and zero of 5,727 files changed. All 5,877 MAIN/GATE source
 and test paths are byte-identical. No build or counterprobe remains active.
 Original hashes are in `artifacts/t49-source-restore-hashes.json`.
-Next: commit/freeze and run the sole full33 measurement. Measurement helpers are
-prepared but `t49-measure-all.py` still has a pending implementation-commit marker.
-Read-only helper review confirms T48 baseline, Core +12 (13,032 total expected
-executions), unchanged 33-profile/provider/CPU scope and nine primary sources.
+The frozen implementation passes the sole full33 measurement: 13,032 successful
+executions, no failures/skips, 32 assemblies and four clean fixture groups.
+The reviewed helper retains T48 baseline, Core +12, unchanged provider/CPU scope
+and nine primary sources. No retry measurement or pending process remains.
 
-## Remaining gates
+## Final result and continuation
 
-Implement all journeys and requirement bindings; narrow build/test corrections;
-combined adversarial assertion review; targeted one-cause counterprobes with
-source hashes/restoration and positive controls; implementation commit; one
-full33 run; physical line/branch and method-CRAP reconciliation; independent
-integrity audit; completion records, canonical CHANGELIST, commit and push.
+Lines are 85,771/93,753 (91.48614%); conservative branches 30,948/36,845
+(83.99511%); all 26,071 method identities are retained and none has CRAP > 30.
+Independent integrity and numerical audit confirms all counts and transitions.
+The remaining union is 5,855 identities: 4,333 line gaps and 1,522 branch-only.
+The final report distinguishes direct behavior evidence from incidental coverage
+changes. Complete the documentation/CHANGELIST publication with authorized push.
+
+For subsequent work, select a substantially larger connected code area with
+several behavior families before implementation. Use focused checks while
+building; perform combined adversarial review and one final full measurement
+after the whole package is ready. Do not use individual test files as packet
+boundaries. Mandatory Microsoft skills and strong product oracles still apply.

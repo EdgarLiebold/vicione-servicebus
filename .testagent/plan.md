@@ -6,8 +6,18 @@ T48 is completed and pushed at `704163364`. Use the three concrete journey/test
 mappings and remaining gates in
 [T49](coverage-a-plus-20260921/t49-courier-outbox-journeys.md). Their combined
 implementation/review, two detected counterprobes, SHA restoration, 69/69
-new/existing controls and verify-only formatting are complete. Commit/freeze
-before the sole full33 measurement. No T49 coverage improvement is claimed yet.
+new/existing controls and verify-only formatting are complete. Implementation
+`ad3ddbd40` also passes the sole full33 measurement and independent final audit:
+13,032 executions, 91.48614% lines, 83.99511% conservative branches and zero
+CRAP > 30. The remaining gap union is 5,855; global A+ remains open. See
+[final evidence](coverage-a-plus-20260921/product-wide-profile-ad3ddbd40.md).
+
+After documentation/CHANGELIST publication, select a substantially larger
+connected code area spanning several behavior families. Finish that combined
+implementation before the next complete measurement. Use focused development
+checks and a combined adversarial review; individual test files are not packet
+boundaries. Mandatory Microsoft skills and product-quality assertions remain
+required. Older pending-measurement/publication labels below are historical.
 
 ## Current T48 — combined MultiBus ownership journeys
 

@@ -20,8 +20,12 @@ entry below records what the current work changed for anyone reading the source.
   isolation. Both sequential and concurrent delivery are exercised. Read-only
   review strengthened the negative event assertions. Missing compensation-outbox
   registration and incorrect timeout-token propagation are detected by isolated
-  counterprobes. Product source remains unchanged; final product-wide measurement
-  and overall A+ acceptance remain open.
+  counterprobes. Product source remains unchanged; 69/69 restored controls pass.
+  Commit `ad3ddbd40` passes one complete 33-profile measurement with 13,032
+  successful executions. Lines reach 85,771/93,753; conservative branches reach
+  30,948/36,845. Independent integrity and numerical audit confirms all counts,
+  physical changes and gap transitions without discrepancy. Overall A+ remains
+  open with 5,855 remaining line/branch-gap identities and zero CRAP > 30.
 
 - Added seventeen combined MultiBus host and scheduler scenarios. Real Generic
   Host lifecycle tests distinguish each bus's health options, failure floor and

@@ -7,8 +7,14 @@ single Roslyn pairing, existing-test comparison and acceptance checklist are in
 [T49](coverage-a-plus-20260921/t49-courier-outbox-journeys.md). Execute
 retry/revision, compensation retry/log preservation, and activity timeout with
 outbox effects are implemented as one packet; reviewed counterprobes are detected
-and 69/69 restored controls pass. The older current/publication labels below are
-historical; no new overall measurement is needed during implementation.
+and 69/69 restored controls pass. The sole complete measurement of `ad3ddbd40`
+and independent final audit are complete without discrepancy; see
+[final evidence](coverage-a-plus-20260921/product-wide-profile-ad3ddbd40.md).
+It records 13,032 executions, 91.48614% lines, 83.99511% conservative branches,
+zero CRAP > 30 and 5,855 remaining gap identities. Global A+ remains open.
+The older current/publication labels below are historical. Select larger
+connected areas with several behavior families for subsequent packets; reuse
+this inventory and avoid repeated overall measurements during implementation.
 
 ## Current T48 — MultiBus host ownership
 

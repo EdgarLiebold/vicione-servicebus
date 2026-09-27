@@ -1,6 +1,23 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current T48 packet and latest complete profile
+## Current T49 packet and latest complete profile
+
+The Courier outbox/retry/timeout packet is verified at
+`ad3ddbd4050f04d8096c1054d9b509cd015ab883`. Twelve new cases pass one complete
+33-profile measurement: 13,032 executions, 32 assemblies, four clean fixture
+groups, no failures/skips or retries. Lines: 85,771/93,753 (91.48614%);
+conservative branches: 30,948/36,845 (83.99511%); zero methods with CRAP > 30.
+Remaining: 4,333 line gaps and 1,522 branch-only, union 5,855.
+
+Both isolated faults are detected; source hashes are restored and combined
+controls pass 69/69. Independent integrity and numerical audit confirms all
+receipts, hashes, method inventories and transitions without a blocker. See
+[complete T49 report](product-wide-profile-ad3ddbd40.md).
+Global A+ remains open. Subsequent packages must span larger connected code
+areas and multiple behavior families, with focused checks during implementation
+and one complete measurement after the combined review.
+
+## Completed T48 packet
 
 The combined MultiBus host, health and scheduler packet is verified at
 `3422dc2fd46687c68af55fba4aa08b76d48536dd`. Seventeen new cases pass one complete

@@ -8,9 +8,17 @@ retry/exhaustion and timeout/outbox ownership. Final focused baseline passes
 13/13 including requirement projection, with zero build warnings/errors.
 Read-only review corrections are included. Both counterprobes are detected,
 source hashes restored, 69/69 new/existing controls pass, and verify-only formatting
-makes no changes. One final full33 measurement, numerical audit and publication remain open; see
-[T49](coverage-a-plus-20260921/t49-courier-outbox-journeys.md). The last complete
-global figures remain T48; no new coverage improvement is claimed.
+makes no changes. Implementation `ad3ddbd40` passes its sole full33 measurement:
+13,032 successful executions, no failures/skips, 32 assemblies and four clean
+fixture groups. Lines: 85,771/93,753 (91.48614%); conservative branches:
+30,948/36,845 (83.99511%); 26,071 identities and zero CRAP > 30.
+Independent audit confirms hashes, receipts, all method rows and physical/gap
+transitions without discrepancy. Remaining: 4,333 line gaps plus 1,522
+branch-only, union 5,855. See
+[final T49 evidence](coverage-a-plus-20260921/product-wide-profile-ad3ddbd40.md).
+Global A+ remains open. Finish documentation/CHANGELIST publication, then work
+in substantially larger connected code areas with multiple behavior families
+per measurement. Older pending-publication labels below are historical.
 
 > Current first-read accounting, 2026-09-26: **zero files remain for first reading**.
 > The PO's inclusive Git baseline remains
@@ -26,7 +34,7 @@ global figures remain T48; no new coverage improvement is claimed.
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Latest verified packet — T48
+## Previous verified packet — T48
 
 - T47 is completed and pushed at `50bd0a527`. The historical pending-publication
   instruction in its section below is superseded.
