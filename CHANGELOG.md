@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a connected scheduling verification packet: 32 cases cover publish
+  admission before initializer or endpoint effects, control-command resolution
+  and delivery ownership, invalid Quartz replacements and provider failures.
+  Existing target schedules and same-name neighbors in other groups remain intact
+  on rejection; subsequent valid commands preserve exact payloads and headers.
+  Read-only review strengthened asynchronous failure and header assertions.
+  All three isolated counterprobes are detected and manually restored; final
+  focused controls pass179/179 without skips. No product defect is claimed from
+  this test-only packet. Its full-product measurement and global A+ closure remain
+  pending.
 - Added a connected receive/settlement verification packet across Core, Amazon
   SQS, SQL transport and Azure Service Bus: 39 cases cover exhausted duplicate
   fallbacks, canceled waiters, pending receive work, renewal failure and drain,

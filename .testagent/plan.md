@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## Current T52 — one connected scheduling boundary package
+
+Follow the [T52 acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md).
+Complete bounded comparison and read-only selection review, then implement all
+admission/resolution/control families before one focused validation checkpoint.
+Do not duplicate the existing132 completion cases or add guard-only padding.
+One final full33 follows combined review, counterprobes and restored controls.
+T51 is complete and remotely verified at `e0e9d3c38`.
+
 ## Current T51 — one combined receive/settlement package
 
 The [T51 acceptance map](coverage-a-plus-20260921/t51-receive-settlement-journeys.md)

@@ -1,5 +1,32 @@
 # A+ remediation test status
 
+## Current T52 — combined implementation started
+
+T51 is complete and remotely verified at `e0e9d3c38`. T52 scope and existing-test
+comparison are documented in [the acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md).
+One Roslyn pairing is complete; existing132 recurring completion cases prevent
+duplicative success-matrix work. Read-only selection review confirms four families
+and excludes another nullparameter matrix. RecurringControlOwnershipTests now
+implements twelve cases: cancel/pause/resume, resolver/send failure or cancellation,
+exact key/time/token and recovery on the same instance. Its variant is bound.
+RecurringPublishAdmissionTests adds sixteen cases for generic/runtime/declared/
+initialized payloads across both command routes and two unavailable-target modes.
+RecurringReplacementIntegrityTests adds four real-bus/Quartz cases for invalid
+cron/zone replacements and factory/store failures, retaining the existing target
+and same-name/different-group neighbor before successful recovery. All variants
+are bound. Core28/28 and Quartz4/4 pass; final builds have zero warnings/errors.
+The independent read-only review's asynchronous-provider-failure and stale-header
+oracle findings are corrected and rechecked. Three independent counterprobes are
+detected: Quartz missing await1/4, control missing await2/12, invalid publish
+fallback2/16. All are manually restored with original source hashes verified.
+Combined restored controls pass Core160/160 and Quartz19/19, no skips, and both
+builds have zero warnings/errors. All5,887 source/test paths match MAIN/GATE.
+Both verify-only format checks exit0 without changes. The implementation freeze
+and single product-wide measurement follow. No product source change or new
+metrics exist.
+Latest complete metrics remain T51:91.53094% lines,84.08554% conservative branches,
+zero CRAP>30 and5,850 remaining gap identities. Global A+ remains open.
+
 ## Current T51 — complete measurement and audit
 
 T50 completed and remotely verified at `0f7f19e30`. T51 spans receive completion,

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10904 |
+| Added | 10908 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -235,6 +235,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t49-courier-outbox-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t50-json-boundary-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t51-receive-settlement-journeys.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t52-scheduling-admission-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15071,6 +15072,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSchedulerLifecycleObserverTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSchedulingCommandValidationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzTriggerKeyTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/RecurringReplacementIntegrityTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/ScheduledMessageExpirationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/SchedulerCommandIntegrationTests.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/InheritedBehaviorDispositionTests.cs` | Added |  |
@@ -16361,6 +16363,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/ExplicitRedeliveryIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerInitializedContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerRuntimeContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringControlOwnershipTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringPublishAdmissionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulerContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulingCompletionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RedeliverExtensionsContractTests.cs` | Added |  |

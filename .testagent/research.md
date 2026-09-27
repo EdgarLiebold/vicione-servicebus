@@ -1,5 +1,20 @@
 # A+ remediation research
 
+## Current T52 — scheduling admission and failure ownership
+
+T51 is complete/pushed at `e0e9d3c38`. The next connected packet uses its existing
+gap inventory, not a new measurement. One bounded Roslyn pairing finds60 paired
+and14 unpaired sources (74source/59tests/five projects). Existing recurring
+completion coverage already has132 cases; it is retained. New work focuses on
+rejection before collaborator effects, endpoint/topology resolution and control
+failure ownership. See [acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md).
+Read-only scope review confirms four families and rejects a duplicate nullparameter
+matrix. All four families are now implemented in three test files: twelve control
+ownership cases, sixteen publish-admission cases and four Quartz replacement/provider
+cases. Quartz uses a real bus and real scheduler; only the provider failure seam is
+delegated. Requirements are bound. The first combined validation checkpoint has
+started in the isolated gate checkout; no passing T52 result is claimed yet.
+
 ## Current T51 — receive lifecycle across transport contracts
 
 T50 is completed and remotely verified at `0f7f19e30`. T51 combines Core receive
