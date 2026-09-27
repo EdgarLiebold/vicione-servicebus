@@ -12,8 +12,11 @@ Read-only scope review confirms four families and rejects a duplicate nullparame
 matrix. All four families are now implemented in three test files: twelve control
 ownership cases, sixteen publish-admission cases and four Quartz replacement/provider
 cases. Quartz uses a real bus and real scheduler; only the provider failure seam is
-delegated. Requirements are bound. The first combined validation checkpoint has
-started in the isolated gate checkout; no passing T52 result is claimed yet.
+delegated. Requirements are bound. Final restored controls pass179/179; the frozen
+full33 passes13,147 tests with91.54160% lines,84.10997% conservative branches and
+zero CRAP>30. Independent integrity and numerical audits agree. Remaining
+union5,843 is the current worklist, including generated identities; global A+
+remains open.
 
 ## Current T51 — receive lifecycle across transport contracts
 

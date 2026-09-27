@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T52 — combined implementation started
+## Current T52 — complete measurement and audit
 
 T51 is complete and remotely verified at `e0e9d3c38`. T52 scope and existing-test
 comparison are documented in [the acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md).
@@ -21,11 +21,15 @@ detected: Quartz missing await1/4, control missing await2/12, invalid publish
 fallback2/16. All are manually restored with original source hashes verified.
 Combined restored controls pass Core160/160 and Quartz19/19, no skips, and both
 builds have zero warnings/errors. All5,887 source/test paths match MAIN/GATE.
-Both verify-only format checks exit0 without changes. The implementation freeze
-and single product-wide measurement follow. No product source change or new
-metrics exist.
-Latest complete metrics remain T51:91.53094% lines,84.08554% conservative branches,
-zero CRAP>30 and5,850 remaining gap identities. Global A+ remains open.
+Both verify-only format checks exit0 without changes. Frozen implementation
+`ad84a5ac6` passes13,147 tests across all33 profiles, no failures/skips, and four
+fixture groups exit0. Lines85,823/93,753 (91.54160%); conservative branches
+30,992/36,847 (84.10997%);26,071 methods and zero CRAP>30. Remaining line gaps
+4,317 plus branch-only1,526 give union5,843. Independent integrity/numerical audit
+confirms487 hashes,66 bindings, nine broker logs and all66 T51/T52 XML reports.
+No product source change exists. The [complete T52 report](coverage-a-plus-20260921/product-wide-profile-ad84a5ac6.md)
+supersedes T51. Global A+ remains open. Authorized publication follows this
+documentation commit.
 
 ## Current T51 — complete measurement and audit
 

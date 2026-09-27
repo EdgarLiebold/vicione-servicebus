@@ -1,7 +1,15 @@
 # T52 — scheduling admission and failure ownership
 
-Status: combined implementation, review and counterprobes complete; measurement pending.
+Status: implementation, review, counterprobes, full measurement and audit complete.
 T51 is complete and remotely verified at `e0e9d3c38`.
+
+T52 is measured at `ad84a5ac6`: all33 profiles pass13,147 tests without failures
+or skips, and four fixture groups exit0. Independent integrity and numerical
+audits agree. Lines85,823/93,753 (91.54160%); conservative branches30,992/36,847
+(84.10997%); zero CRAP>30. Remaining union5,843 includes generated identities.
+The [complete report](product-wide-profile-ad84a5ac6.md) records exact inputs,
+reconciled deltas and artifact hashes. Global A+ remains open. Preparation and
+checkpoint notes below are chronological, not outstanding claims.
 
 ## User requirements and evidence plan
 

@@ -19,8 +19,10 @@ entry below records what the current work changed for anyone reading the source.
   Read-only review strengthened asynchronous failure and header assertions.
   All three isolated counterprobes are detected and manually restored; final
   focused controls pass179/179 without skips. No product defect is claimed from
-  this test-only packet. Its full-product measurement and global A+ closure remain
-  pending.
+  this test-only packet. Its full-product measurement passes13,147 tests across
+  all33 profiles and four clean fixture groups:91.54160% lines,84.10997%
+  conservative branches, zero CRAP>30. Independent integrity and numerical audit
+  agree. Global A+ remains open with5,843 line/branch gap identities.
 - Added a connected receive/settlement verification packet across Core, Amazon
   SQS, SQL transport and Azure Service Bus: 39 cases cover exhausted duplicate
   fallbacks, canceled waiters, pending receive work, renewal failure and drain,

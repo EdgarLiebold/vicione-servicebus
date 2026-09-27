@@ -2,11 +2,14 @@
 
 ## Current T52 — one connected scheduling boundary package
 
-Follow the [T52 acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md).
-Complete bounded comparison and read-only selection review, then implement all
-admission/resolution/control families before one focused validation checkpoint.
-Do not duplicate the existing132 completion cases or add guard-only padding.
-One final full33 follows combined review, counterprobes and restored controls.
+The [T52 acceptance map](coverage-a-plus-20260921/t52-scheduling-admission-journeys.md)
+is implemented across four families,32 cases and three test files. Independent
+review, three detected counterprobes,179 restored controls, verify-only formatting
+and one full33 are complete. Implementation `ad84a5ac6` passes13,147 tests;
+independent integrity and numerical audit agrees. Finish documentation/CHANGELIST
+and authorized publication, then select the next larger contract-based packet
+from the T52 worklists. No new measurement is needed for selection. Remaining
+union5,843 includes generated identities; global A+ remains open.
 T51 is complete and remotely verified at `e0e9d3c38`.
 
 ## Current T51 — one combined receive/settlement package
