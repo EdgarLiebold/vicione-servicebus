@@ -2,10 +2,13 @@
 
 ## Current T51 — one combined receive/settlement package
 
-Implement the [T51 acceptance map](coverage-a-plus-20260921/t51-receive-settlement-journeys.md)
-across Core, SQS, SQL and Azure after completing existing-test comparison.
-Batch implementation before focused project validation; then combined read-only
-review, counterprobes, restored controls, one complete measurement and publication.
+The [T51 acceptance map](coverage-a-plus-20260921/t51-receive-settlement-journeys.md)
+is implemented across Core, SQS, SQL and Azure. Combined review, three detected
+counterprobes,72 restored controls and one full33 measurement are complete.
+Commit `b42dcf790` passes13,115 tests; independent numerical/integrity audit agrees.
+Finish documentation/CHANGELIST and authorized publication, then select the next
+larger contract-based packet from the T51 worklists. No broad measurement for
+selection and no global A+ claim. Remaining union5,850 includes generated identities.
 T50 is completed/pushed at `0f7f19e30`; its older publication notes are historical.
 
 ## Current T50 — one larger serialization package

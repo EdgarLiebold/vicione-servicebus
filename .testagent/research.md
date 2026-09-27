@@ -8,8 +8,11 @@ and Azure expiry/abandonment. The single bounded Roslyn pairing and acceptance
 checklist are in [T51](coverage-a-plus-20260921/t51-receive-settlement-journeys.md).
 Existing measured T50b gaps guide selection; no new coverage run is needed.
 Implementation now contains ten methods and 39 requirement-bound cases. Focused
-Core/SQS/SQL/Azure controls pass; isolated counterprobes and the final measurement
-remain open. The T51 report retains initial authoring failures and review limits.
+Core/SQS/SQL/Azure controls and three counterprobes pass their intended checks.
+The complete measurement at `b42dcf790` passes13,115 tests in33 profiles, with
+91.53094% lines,84.08554% conservative branches and zero CRAP>30. Independent
+audit agrees. T51 worklists now guide further selection; union5,850 remains open.
+The T51 report retains initial authoring failures and review limits.
 
 ## Current T50 — JSON boundaries across conversion, admission and forwarding
 

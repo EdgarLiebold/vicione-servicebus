@@ -17,8 +17,11 @@ entry below records what the current work changed for anyone reading the source.
   rejected ownership, exact settlement metadata and awaited abandonment.
   Three isolated counterprobes are detected and manually restored; final focused
   controls pass72/72 without skips. This packet changes tests and the SQL test-only
-  fake-time dependency; it does not claim a newly fixed product defect. Its full
-  product coverage/CRAP measurement remains pending.
+  fake-time dependency; it does not claim a newly fixed product defect. The full
+  product measurement passes13,115 tests in33 profiles with four clean fixture
+  groups:91.53094% line coverage,84.08554% conservative branch coverage and zero
+  methods with CRAP>30. Independent integrity/numerical audit agrees; global A+
+  remains open with5,850 line/branch gap identities, including generated methods.
 - Corrected raw JSON forwarding through a consumed interface losing the original
   concrete message contract URNs. The preserving serializer now receives the
   nonempty original declared contract set, so a concrete downstream consumer can still

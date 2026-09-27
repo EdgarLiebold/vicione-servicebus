@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T51 — implementation validated; counterprobes in progress
+## Current T51 — complete measurement and audit
 
 T50 completed and remotely verified at `0f7f19e30`. T51 spans receive completion,
 duplicate fallback and SQS/SQL/Azure settlement contracts. One bounded Roslyn
@@ -18,10 +18,16 @@ pass. SQS drain mutation fails exactly2/7; ignored SQL move rejection fails1/11.
 All three are manually restored with original SHA-256 verified. All5,884 src/tests
 paths match MAIN/GATE byte-for-byte. Assertion-quality assessment is recorded for
 all ten new methods. Read-only closure review has no concrete blocker; verify-only
-formatting exits0 without changes. Implementation freeze and full33 measurement remain.
-No new coverage measurement has run. See
+formatting exits0 without changes. Frozen implementation `b42dcf790` passes all33
+profiles:13,115 tests, no failures/skips, four fixture groups exit0. Lines are
+85,813/93,753 (91.53094%); conservative branches30,983/36,847 (84.08554%);
+26,071 method identities and zero CRAP>30. Remaining line gaps4,323 plus
+branch-only1,527 give union5,850. Independent integrity and numerical audit
+passes without discrepancies. See
 [acceptance map](coverage-a-plus-20260921/t51-receive-settlement-journeys.md).
-The latest complete metrics remain T50b; global A+ remains open.
+The [complete T51 report](coverage-a-plus-20260921/product-wide-profile-b42dcf790.md)
+supersedes T50b for current metrics; global A+ remains open. Authorized publication
+follows this documentation commit.
 
 ## Current T50 — complete measurement and audit
 

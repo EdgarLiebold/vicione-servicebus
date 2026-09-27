@@ -1,7 +1,8 @@
 # T51 — receive ownership, renewal and terminal settlement
 
 Status: implementation, three counterprobes, restored controls, read-only closure
-review and verify-only formatting complete; frozen full33 measurement pending.
+review, verify-only formatting, frozen full33 measurement and independent audit
+complete. See [full measurement](product-wide-profile-b42dcf790.md).
 Baseline: completed/pushed T50 `0f7f19e30`, measured implementation `a74627818`.
 
 ## Scope and user requirements
