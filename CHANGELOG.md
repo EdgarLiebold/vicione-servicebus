@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added twelve combined Courier journeys for execute retry with route replacement
+  or termination, successful and exhausted compensation retries, and activity
+  deadlines during execution or compensation. Real received effects distinguish
+  committed attempts from discarded attempts; logs, variable removal and failure
+  ownership are checked through the complete routing-slip pipeline. Controlled
+  pending work and an independent healthy slip prove deadline and outbox
+  isolation. Both sequential and concurrent delivery are exercised. Read-only
+  review strengthened the negative event assertions. Missing compensation-outbox
+  registration and incorrect timeout-token propagation are detected by isolated
+  counterprobes. Product source remains unchanged; final product-wide measurement
+  and overall A+ acceptance remain open.
+
 - Added seventeen combined MultiBus host and scheduler scenarios. Real Generic
   Host lifecycle tests distinguish each bus's health options, failure floor and
   continued delivery when the other bus stops; invalid options identify their

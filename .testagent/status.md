@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## Current T49 — combined Courier journeys
+
+T48 is pushed and remotely verified at `704163364`. T49 implements twelve real
+Courier journey cases across execute retry/revision/termination, compensation
+retry/exhaustion and timeout/outbox ownership. Final focused baseline passes
+13/13 including requirement projection, with zero build warnings/errors.
+Read-only review corrections are included. Both counterprobes are detected,
+source hashes restored, 69/69 new/existing controls pass, and verify-only formatting
+makes no changes. One final full33 measurement, numerical audit and publication remain open; see
+[T49](coverage-a-plus-20260921/t49-courier-outbox-journeys.md). The last complete
+global figures remain T48; no new coverage improvement is claimed.
+
 > Current first-read accounting, 2026-09-26: **zero files remain for first reading**.
 > The PO's inclusive Git baseline remains
 > `e01a5e5eb3411412229221bd58b170b583ce6caa`.

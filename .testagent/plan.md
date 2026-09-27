@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## Current T49 — Courier outbox, retry and timeout
+
+T48 is completed and pushed at `704163364`. Use the three concrete journey/test
+mappings and remaining gates in
+[T49](coverage-a-plus-20260921/t49-courier-outbox-journeys.md). Their combined
+implementation/review, two detected counterprobes, SHA restoration, 69/69
+new/existing controls and verify-only formatting are complete. Commit/freeze
+before the sole full33 measurement. No T49 coverage improvement is claimed yet.
+
 ## Current T48 — combined MultiBus ownership journeys
 
 The acceptance map in
