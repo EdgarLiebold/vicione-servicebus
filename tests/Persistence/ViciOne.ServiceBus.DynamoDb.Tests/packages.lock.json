@@ -11,6 +11,15 @@
           "AWSSDK.Core": "[4.0.102.4, 5.0.0)"
         }
       },
+      "Microsoft.Extensions.DependencyInjection": {
+        "type": "Direct",
+        "requested": "[10.0.12, )",
+        "resolved": "10.0.12",
+        "contentHash": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12"
+        }
+      },
       "Microsoft.Testing.Extensions.CodeCoverage": {
         "type": "Direct",
         "requested": "[18.10.0, )",

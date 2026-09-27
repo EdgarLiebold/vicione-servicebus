@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10858 |
+| Added | 10860 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -209,6 +209,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t36-eventhubs-checkpoint.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t37-eventhubs-processor-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t38-asb-subscription.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t39-dynamodb-validation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -14939,6 +14940,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/DynamoDbRequirements.json` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbRegistrationValidationTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaFailureBoundaryTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaRepositoryConfigurationTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/ViciOne.ServiceBus.DynamoDb.Tests.csproj` | Added |  |

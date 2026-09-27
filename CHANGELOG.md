@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added 16 DynamoDB registration validation cases covering complete diagnostics,
+  rejection before registration/context creation, valid TTL boundaries, immutable
+  registered options and lazy context creation through actual DI. Three deliberate
+  faults are detected; restored isolated controls pass 44/44 without skips.
+  No product code change or cloud persistence claim. Full measurement pending.
+
 - Fixed an ActiveMQ Quartz integration-test race: trigger finalization precedes
   job-store removal. The test now observes removal within a bounded deadline while
   retaining exact delivery and broker-state assertions. Both protocols pass;

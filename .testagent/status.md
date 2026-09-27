@@ -16,6 +16,12 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T39 DynamoDB validation: 16 new cases, MAIN and restored isolated control
+  44/44, format exit 0. Three deliberate faults detected by 2/3/12 cases.
+  Read-only review's aggregate text assertion gap corrected. No product changes.
+  [Evidence and limits](coverage-a-plus-20260921/t39-dynamodb-validation.md).
+  Exact-commit full measurement and push pending; A+ remains open.
+
 - T38 focused subscription processor verification passes44/44, format0.
   Four isolated mutations detected3/3/3/1cases with controls passing, restored;
   final isolated control44/44. Initial SDK setup failure is documented separately.
