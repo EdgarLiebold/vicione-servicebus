@@ -16,8 +16,10 @@ entry below records what the current work changed for anyone reading the source.
   current-owner fencing, exact persisted state, no resurrection and unchanged
   same-message, same-consumer and other-store neighbors. All five deliberate
   faults are detected; main and restored isolated EF suites pass 322/322.
-  Production behavior already passes these cases. Full measurement remains
-  pending.
+  Production behavior already passes these cases. Full measurement at a763757b4
+  passes 33 profiles and 12,929 executions. The ownership/missing helper reaches
+  9/9 lines, 4/4 branches and CRAP 4. Product totals: 85,485/93,749 lines and
+  conservative 30,839/36,843 branches. Non-target gaps remain recorded; A+ is open.
 
 - Fixed Azure Functions receiver cache collisions that dispatched messages to the
   previously selected consumer at the same queue or subscription path. Cache keys

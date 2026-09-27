@@ -58,7 +58,10 @@ completion. State snapshots are fresh persisted data, not self-comparisons.
 
 Bounded read-only plan, implementation and final evidence reviews found no
 concrete blocker. All five failure oracles and the restored control were verified.
-Exact-commit full 33-profile measurement remains pending.
+Exact-commit measurement at `a763757b48083befb64cd8e3e7ff3c39304b819f` passes
+all 33 profiles and 12,929 executions. RequireOwnedOrMissingAsync reaches 9/9
+lines, 4/4 conservative branches and CRAP 4. See
+[full measurement and remaining gaps](product-wide-profile-a763757b4.md).
 
 ## Limits
 

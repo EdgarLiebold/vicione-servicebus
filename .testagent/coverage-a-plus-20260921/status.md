@@ -5,8 +5,9 @@
 Six EF Core inbox cases cover stale and missing consumer transitions, with real
 persisted-state and neighbor-preservation assertions. Main and restored isolated
 tests pass 322/322; five deliberate faults are detected. Final evidence review
-has no concrete blocker. Exact-commit full measurement remains pending. No
-global A+ claim.
+has no concrete blocker. Exact-commit full measurement passes 33 profiles and
+12,929 executions; target helper reaches 9/9 lines, 4/4 branches and CRAP 4.
+No global A+ claim.
 See [T43 evidence](t43-inbox-ownership-transitions.md).
 
 ## Current T42 packet
@@ -17,6 +18,21 @@ Exact-commit product-wide measurement passes all 33 profiles; no new A+ claim.
 See [T42 evidence](t42-functions-receiver-isolation.md).
 
 ## Latest product-wide profile
+
+The latest complete profile is `a763757b4`: 33 profiles, 32 assemblies,
+12,929 passing executions, 85,485/93,749 lines (91.18497%) and conservative
+branches 30,839/36,843 (83.70382%). All four fixture groups exit 0. Remaining:
+4,432 line-gap identities (2,756 zero and 1,676 partial) plus 1,514 branch-only
+candidates, union 5,946. No CRAP above 30. Source and method identities are
+unchanged; non-target observation changes remain explicitly recorded.
+See [T43 full report](product-wide-profile-a763757b4.md). A+ remains open.
+
+Following the user's efficiency feedback, subsequent iterations bundle coherent
+behavior areas before one full measurement. The next EF-store packet includes
+pagination, durable-send ownership, failure atomicity/recovery and scheduling
+override behavior, with narrow tests and targeted reviews during implementation.
+
+## Previous T42 profile
 
 The latest complete profile is `c28e9feb4`: 33 profiles, 32 assemblies,
 12,923 passing executions, 85,480/93,749 lines (91.17964%) and conservative
