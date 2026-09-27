@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Transports;
 
@@ -13,12 +16,9 @@ namespace ViciOne.ServiceBus.AzureServiceBus;
 public class MessageReceiver :
     IMessageReceiver
 {
-    const string PathDelimiter = @"/";
-    const string SubscriptionsSubPath = "Subscriptions";
-
     readonly IAsyncBusHandle _busHandle;
     readonly IServiceBusHostConfiguration _hostConfiguration;
-    readonly ConcurrentDictionary<string, Lazy<IServiceBusMessageReceiver>> _receivers;
+    readonly ConcurrentDictionary<ReceiverKey, Lazy<IServiceBusMessageReceiver>> _receivers;
     readonly IBusRegistrationContext _registration;
 
     /// <summary>Creates a receiver bound to an Azure Service Bus bus instance.</summary>
@@ -33,7 +33,7 @@ public class MessageReceiver :
         _registration = registration;
         _busHandle = busHandle;
 
-        _receivers = new ConcurrentDictionary<string, Lazy<IServiceBusMessageReceiver>>();
+        _receivers = new ConcurrentDictionary<ReceiverKey, Lazy<IServiceBusMessageReceiver>>();
     }
 
     /// <summary>Dispatches a queue delivery through every matching configured consumer and saga.</summary>
@@ -43,11 +43,7 @@ public class MessageReceiver :
     /// <returns>The cached queue receiver's dispatch task.</returns>
     public Task HandleAsync(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
-        var receiver = CreateMessageReceiver(queueName, cfg =>
-        {
-            cfg.ConfigureConsumers(_registration);
-            cfg.ConfigureSagas(_registration);
-        });
+        var receiver = CreateMessageReceiver(queueName, ReceiverKind.All, null, ConfigureAll);
 
         return receiver.HandleAsync(message, cancellationToken);
     }
@@ -60,11 +56,7 @@ public class MessageReceiver :
     /// <returns>The cached subscription receiver's dispatch task.</returns>
     public Task HandleAsync(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
-        var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
-        {
-            cfg.ConfigureConsumers(_registration);
-            cfg.ConfigureSagas(_registration);
-        });
+        var receiver = CreateMessageReceiver(topicPath, subscriptionName, ReceiverKind.All, null, ConfigureAll);
 
         return receiver.HandleAsync(message, cancellationToken);
     }
@@ -78,9 +70,9 @@ public class MessageReceiver :
     public Task HandleConsumerAsync<TConsumer>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer
     {
-        var receiver = CreateMessageReceiver(queueName, cfg =>
+        var receiver = CreateMessageReceiver(queueName, ReceiverKind.Consumer, typeof(TConsumer), (registration, cfg) =>
         {
-            cfg.ConfigureConsumer<TConsumer>(_registration);
+            cfg.ConfigureConsumer<TConsumer>(registration);
         });
 
         return receiver.HandleAsync(message, cancellationToken);
@@ -96,9 +88,9 @@ public class MessageReceiver :
     public Task HandleConsumerAsync<TConsumer>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer
     {
-        var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
+        var receiver = CreateMessageReceiver(topicPath, subscriptionName, ReceiverKind.Consumer, typeof(TConsumer), (registration, cfg) =>
         {
-            cfg.ConfigureConsumer<TConsumer>(_registration);
+            cfg.ConfigureConsumer<TConsumer>(registration);
         });
 
         return receiver.HandleAsync(message, cancellationToken);
@@ -113,9 +105,9 @@ public class MessageReceiver :
     public Task HandleSagaAsync<TSaga>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga
     {
-        var receiver = CreateMessageReceiver(queueName, cfg =>
+        var receiver = CreateMessageReceiver(queueName, ReceiverKind.Saga, typeof(TSaga), (registration, cfg) =>
         {
-            cfg.ConfigureSaga<TSaga>(_registration);
+            cfg.ConfigureSaga<TSaga>(registration);
         });
 
         return receiver.HandleAsync(message, cancellationToken);
@@ -131,9 +123,9 @@ public class MessageReceiver :
     public Task HandleSagaAsync<TSaga>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga
     {
-        var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
+        var receiver = CreateMessageReceiver(topicPath, subscriptionName, ReceiverKind.Saga, typeof(TSaga), (registration, cfg) =>
         {
-            cfg.ConfigureSaga<TSaga>(_registration);
+            cfg.ConfigureSaga<TSaga>(registration);
         });
 
         return receiver.HandleAsync(message, cancellationToken);
@@ -148,9 +140,9 @@ public class MessageReceiver :
     public Task HandleExecuteActivityAsync<TActivity>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TActivity : class
     {
-        var receiver = CreateMessageReceiver(queueName, cfg =>
+        var receiver = CreateMessageReceiver(queueName, ReceiverKind.ExecuteActivity, typeof(TActivity), (registration, cfg) =>
         {
-            cfg.ConfigureExecuteActivity(_registration, typeof(TActivity));
+            cfg.ConfigureExecuteActivity(registration, typeof(TActivity));
         });
 
         return receiver.HandleAsync(message, cancellationToken);
@@ -161,35 +153,35 @@ public class MessageReceiver :
     {
     }
 
-    IServiceBusMessageReceiver CreateMessageReceiver(string queueName, Action<IReceiveEndpointConfigurator> configure)
+    IServiceBusMessageReceiver CreateMessageReceiver(string queueName, ReceiverKind kind, Type? handlerType,
+        Action<IRegistrationContext, IReceiveEndpointConfigurator> configure)
     {
         if (string.IsNullOrWhiteSpace(queueName))
             throw new ArgumentNullException(nameof(queueName));
         if (configure == null)
             throw new ArgumentNullException(nameof(configure));
 
-        return _receivers.GetOrAdd(queueName, name => new Lazy<IServiceBusMessageReceiver>(() =>
+        return _receivers.GetOrAdd(new ReceiverKey(queueName, null, false, kind, handlerType), _ => new Lazy<IServiceBusMessageReceiver>(() =>
         {
             var endpointConfiguration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName);
 
             var configurator = new QueueBrokeredMessageReceiverConfiguration(_hostConfiguration, endpointConfiguration);
 
-            configure(configurator);
+            configure(CreateRegistrationContext(), configurator);
 
             return configurator.Build();
         })).Value;
     }
 
-    IServiceBusMessageReceiver CreateMessageReceiver(string topicPath, string subscriptionName, Action<IReceiveEndpointConfigurator> configure)
+    IServiceBusMessageReceiver CreateMessageReceiver(string topicPath, string subscriptionName, ReceiverKind kind, Type? handlerType,
+        Action<IRegistrationContext, IReceiveEndpointConfigurator> configure)
     {
         if (string.IsNullOrWhiteSpace(topicPath))
             throw new ArgumentNullException(nameof(topicPath));
         if (configure == null)
             throw new ArgumentNullException(nameof(configure));
 
-        var subscriptionPath = string.Concat(topicPath, PathDelimiter, SubscriptionsSubPath, PathDelimiter, subscriptionName);
-
-        return _receivers.GetOrAdd(subscriptionPath, name => new Lazy<IServiceBusMessageReceiver>(() =>
+        return _receivers.GetOrAdd(new ReceiverKey(topicPath, subscriptionName, true, kind, handlerType), _ => new Lazy<IServiceBusMessageReceiver>(() =>
         {
             var topicConfigurator = new ServiceBusTopicConfigurator(topicPath, false);
 
@@ -201,9 +193,32 @@ public class MessageReceiver :
 
             var configurator = new SubscriptionBrokeredMessageReceiverConfiguration(_hostConfiguration, endpointConfiguration);
 
-            configure(configurator);
+            configure(CreateRegistrationContext(), configurator);
 
             return configurator.Build();
         })).Value;
     }
+
+    IRegistrationContext CreateRegistrationContext()
+    {
+        return new BusRegistrationContext(_registration, _registration.GetRequiredService<IContainerSelector>(),
+            _registration as ISetScopedConsumeContext ?? _registration.GetRequiredService<ISetScopedConsumeContext>(), _registration.BusType);
+    }
+
+    static void ConfigureAll(IRegistrationContext registration, IReceiveEndpointConfigurator configurator)
+    {
+        configurator.ConfigureConsumers(registration);
+        if (registration.GetServices<IConsumerKind>().Any(kind => string.Equals(kind.Name, "Saga", StringComparison.Ordinal)))
+            configurator.ConfigureSagas(registration);
+    }
+
+    enum ReceiverKind
+    {
+        All,
+        Consumer,
+        Saga,
+        ExecuteActivity
+    }
+
+    readonly record struct ReceiverKey(string Path, string? Subscription, bool IsSubscription, ReceiverKind Kind, Type? HandlerType);
 }

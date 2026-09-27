@@ -1,5 +1,12 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T42 packet
+
+Azure Functions receiver isolation defects are corrected. Fifteen behavior cases
+and five detected counterprobes have restored isolated 395/395 control evidence.
+Exact-commit product-wide measurement is pending; no new A+ claim.
+See [T42 evidence](t42-functions-receiver-isolation.md).
+
 ## Latest product-wide profile
 
 The latest complete profile is `118cc5ded`: 33 profiles, 32 assemblies,

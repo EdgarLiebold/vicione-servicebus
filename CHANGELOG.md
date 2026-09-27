@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed Azure Functions receiver cache collisions that dispatched messages to the
+  previously selected consumer at the same queue or subscription path. Cache keys
+  now distinguish transport, dispatch kind and handler type; each pipeline gets
+  independent registration state while preserving bus ownership. Consumer-only
+  all-handler dispatch no longer requires the optional Saga capability. Fifteen
+  behavior cases cover consumers, saga state, activities, invalid subscriptions
+  and typed-bus context. All five deliberate faults are detected; restored
+  isolated tests pass 395/395. Full product measurement remains pending.
+
 - Added six Cron regression cases for invalid tokens, Unicode whitespace and
   calendar-union ordering across month boundaries, coincident dates and year
   exhaustion. Removed unreachable private parser guards and simplified calendar
