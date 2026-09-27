@@ -84,6 +84,14 @@ public sealed class ActiveMqQuartzSchedulingTests
             await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
             TriggerKey finalizedKey = await finalized.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(schedule.TokenId.ToString("N"), finalizedKey.Name);
+            // Quartz raises TriggerFinalized before the job store removes the completed trigger.
+            // Observe that asynchronous removal without changing the scheduler state.
+            using (var removalTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+            {
+                removalTimeout.CancelAfter(fixture.OperationTimeout);
+                while (await scheduler.Exists(finalizedKey, removalTimeout.Token))
+                    await Task.Delay(TimeSpan.FromMilliseconds(10), removalTimeout.Token);
+            }
             IReadOnlyCollection<TriggerKey> remainingTriggers = await scheduler
                 .GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup(), cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

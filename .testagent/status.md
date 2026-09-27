@@ -21,7 +21,12 @@
   final isolated control44/44. Initial SDK setup failure is documented separately.
   Read-only review has no remaining blocker.
   [Evidence and limits](coverage-a-plus-20260921/t38-asb-subscription.md).
-  Commit, complete measurement and push remain pending; T37 stays authoritative.
+  Committed as11362883c; full measurement failed in ActiveMQ Quartz scheduling
+  (99/100), after28 verified profiles. TriggerFinalized preceded store removal.
+  Bounded Exists observation fixes the test synchronization; original oracles remain.
+  MAIN2/2, lifecycle counterprobe2expected failures, restored GATE2/2, format0.
+  Correction commit, fresh t38b measurement and push remain pending;
+  T37 stays authoritative. Failed run is retained separately.
 
 - T37 focused processor lifecycle verification passes 2/2, format0. Two isolated
   mutations are detected (missing cancellation forwarding; premature shutdown),

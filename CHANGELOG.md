@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed an ActiveMQ Quartz integration-test race: trigger finalization precedes
+  job-store removal. The test now observes removal within a bounded deadline while
+  retaining exact delivery and broker-state assertions. Both protocols pass;
+  deliberately blocking finalization causes both to fail at the deadline, and
+  restored isolated controls pass. The first T38 full measurement remains recorded
+  as failed; a fresh complete measurement is required.
+
 - Added 44 Azure Service Bus subscription processor cases for message/session
   callbacks, exact arguments/tokens, awaited completion, configuration guards,
   start/stop/close/dispose and documented warning behavior. Four deliberate faults

@@ -66,6 +66,43 @@ Hashes veröffentlichen sie nicht.
 | GATE artifacts/t38-guard-mutant.log | 4a219e50fad5af99cbe64ee4d0e83a2fb9c0eecf2ee5f1b8e6bf472ffda41b1d |
 | GATE artifacts/t38-restored.log | 2de218efc5955009e4c514bb388280e4c19d8db257b3f4011aee4c41810c1331 |
 
-Offen: kanonische CHANGELIST, Commit, vollständige frische 33-Profil-Messung,
-Aggregatreview und autorisierter Push. T37 bleibt die maßgebliche vollständige
-Messung.
+## Gesamtmessung und Quartz-Testkorrektur
+
+Der erste vollständige Lauf am Commit
+`11362883c6c0e3399c927f86b75f325a19cd7faa` endete mit Exit1:
+28 Profile/12556 erfolgreiche Ausführungen verifiziert, ActiveMQ lokal99/100,
+vier weitere Profile nicht ausgeführt. Kein gültiges Gesamtaggregat.
+AzureServiceBus.Tests bestand380/380 einschließlich der44 neuen Fälle.
+
+`ActiveMqQuartzSchedulingTests.QuartzScheduledPublish_ReachesConsumerExactlyOnceAsync`
+scheiterte für activemq an der Trigger-Abwesenheitsassertion. Quartz4.0.1 meldet
+TriggerFinalized vor NotifyJobStoreJobComplete; der Callback beweist noch keine
+Store-Entfernung. Reihenfolge anhand der offiziellen JobRunShell/RAMJobStore-
+Quellen geprüft. Der Test wartet nun nach der Tokenprüfung mit eigenem Zeitlimit
+auf `IScheduler.Exists(finalizedKey) == false`. Alle bisherigen Abwesenheits-,
+Zustellungs- und Brokerzählerassertionen bleiben erhalten. Die Zustandsabfrage
+verändert den Scheduler nicht. Kein Produktcode wurde geändert.
+
+- Erster Korrekturlauf scheiterte beim Build: CheckExists existiert in der
+  installierten Version nicht. API anhand lokaler Quartz-XML auf Exists korrigiert.
+- Korrigierte MAIN-Kontrolle:2/2, Exit0, keine Skips; Verify-only-Formatprüfung0.
+- Isolierte Lifecycle-Gegenprobe: TriggerFinalized signalisiert den Test und
+  wartet anschließend auf ein Gate. Dadurch kann Quartz den echten ursprünglichen
+  Trigger noch nicht entfernen. Beide Protokolle scheitern nach30s am Removal-Wait
+  mit TaskCanceledException, Exit2. Cleanup gibt das Gate vor Bus-Stop/Lease-Dispose
+  frei. Kein Quartz-Produktmutant und kein aus dem Exitcode abgeleiteter Worker-Join.
+- Gegenprobe manuell zurückgenommen, MAIN/GATE bytegleich; restaurierte isolierte
+  Kontrolle2/2, Exit0, keine Skips. Read-only-Review ohne weiteren Blocker.
+
+| Zusätzlicher lokaler Nachweis | SHA-256 |
+| --- | --- |
+| MAIN artifacts/t38-profile-29/tests.log | 9ff97c13f813bb245e8bb7c997905d0caf3a8b525ea1e0f3a834ff6c1a621b72 |
+| MAIN artifacts/t38-profile-progress.json | 07bab1289e10b778464024c48bc7bc379c7fe6bf9b3914166d981f04736e8a20 |
+| MAIN artifacts/t38-quartz-fix.log | cf124368bd8c8901f4f5cb4a1186dfba623ddece92ebc6541d624e7f6df6dc62 |
+| MAIN artifacts/t38-quartz-fix-corrected.log | 441147d3a01a80bbb6011e3fc5850f6b2ae2236d0c8897ddce447be5a55544d2 |
+| MAIN artifacts/t38-quartz-format.log | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| GATE artifacts/t38-quartz-retained.log | 89d07090feeb633a833deb1c91bacfd40223e2686e4abaf4164051c14c02091f |
+| GATE artifacts/t38-quartz-restored.log | f66580b1009e4ea7a3f1643a9571f18558683efec09f31e79c535f439c27db86 |
+
+Offen: Korrekturcommit, vollständige frische33-Profil-Messung unter t38b,
+Aggregatreview und autorisierter Push. T37 bleibt die maßgebliche vollständige Messung.
