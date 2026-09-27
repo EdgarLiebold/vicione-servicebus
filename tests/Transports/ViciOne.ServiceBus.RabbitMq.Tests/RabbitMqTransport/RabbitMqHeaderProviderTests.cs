@@ -10,6 +10,57 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport;
 public sealed class RabbitMqHeaderProviderTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HEADERS", "absent-broker-timestamp-cannot-be-spoofed")]
+    public void MissingTimestamp_CannotBeSuppliedByAnApplicationHeader()
+    {
+        var properties = new BasicProperties
+        {
+            Headers = new Dictionary<string, object?>
+            {
+                [MessageHeaders.TransportSentTime.ToLowerInvariant()] = "2026-09-27T12:00:00Z",
+                ["neighbor"] = "retained"
+            }
+        };
+        var provider = new RabbitMqHeaderProvider(new ConsumeContext("", "", "", 1, properties));
+
+        Assert.False(properties.IsTimestampPresent());
+        Assert.False(provider.TryGetHeader(MessageHeaders.TransportSentTime, out object? timestamp));
+        Assert.Null(timestamp);
+        Assert.DoesNotContain(provider.GetAll(), pair =>
+            pair.Key.Equals(MessageHeaders.TransportSentTime, StringComparison.OrdinalIgnoreCase));
+        Assert.True(provider.TryGetHeader("neighbor", out object? neighbor));
+        Assert.Equal("retained", neighbor);
+        Assert.Equal("2026-09-27T12:00:00Z", properties.Headers[MessageHeaders.TransportSentTime.ToLowerInvariant()]);
+    }
+
+    [Theory]
+    [InlineData("value", true)]
+    [InlineData("", false)]
+    [InlineData(" \t", false)]
+    [InlineData(null, false)]
+    [InlineData(0, true)]
+    [InlineData(false, true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HEADERS", "native-scalar-lookup-and-enumeration-agree")]
+    public void ScalarLookup_AgreesWithEnumerationWithoutLosingFalsyValues(object? candidate, bool available)
+    {
+        var properties = new BasicProperties
+        {
+            Headers = new Dictionary<string, object?> { ["Candidate"] = candidate, ["neighbor"] = "retained" }
+        };
+        var provider = new RabbitMqHeaderProvider(new ConsumeContext("", "", "", 1, properties));
+
+        Assert.Equal(available, provider.TryGetHeader("cAnDiDaTe", out object? actual));
+        Assert.Equal(available ? candidate : null, actual);
+        Dictionary<string, object> all = provider.GetAll().ToDictionary(pair => pair.Key, pair => pair.Value);
+        Assert.Equal(available, all.ContainsKey("Candidate"));
+        if (available)
+            Assert.Equal(candidate, all["Candidate"]);
+        Assert.Equal("retained", all["neighbor"]);
+        Assert.Equal(available ? 3 : 2, all.Count);
+        Assert.Equal(candidate, properties.Headers["Candidate"]);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-HEADERS", "consume-context-is-required")]
     public void Constructor_RejectsAMissingConsumeContext()
     {

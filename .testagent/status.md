@@ -14,7 +14,23 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Current packet — T45
+## Current packet — T46
+
+- Combined ActiveMQ, RabbitMQ and SNS/SQS header packet:40 additional cases,
+  stronger RabbitMQ intermediate-state assertions and one ActiveMQ UTC fix.
+- Main OpenWire/AMQP checks and requirement projection pass21/21 under
+  `TZ=Europe/Berlin`; isolated baseline and restored control also pass21/21.
+  Reintroducing the timestamp defect fails3/8 native provider cases.
+- RabbitMQ isolated baseline and restored control pass21/21; bypassing
+  overwrite protection fails the precise intermediate-value assertion.
+- Read-only implementation and AMQP-helper reviews find no concrete blocker.
+  SNS/SQS filter-discard counterprobes each fail4/12; restored controls13/13.
+  All four mutation targets match MAIN bytes after restoration. Combined final
+  gates and ONE full33 measurement remain open.
+- Last complete measurement remains T45 below. No new coverage claim.
+  [Packet evidence](coverage-a-plus-20260921/t46-transport-headers.md).
+
+## Previous packet — T45
 
 - Six InMemory inbox behavior cases cover ownership changes, delayed commits
   and admission recovery. Four valid counterprobes are detected and restored.
@@ -28,7 +44,7 @@
   Linegaps4,424=2,755zero+1,669partial; branch-only1,514; union5,938.
   Independent audit confirms487hashes/66bindings and all66old/newXML, exact totals
   and physical+17/-13lines. No accounting blocker. Documentation is complete;
-  authorized remote synchronization follows.
+  remote documentation commit4a4296133 is confirmed pushed.
   No product code change. [Evidence](coverage-a-plus-20260921/t45-inmemory-inbox-pipeline.md).
   [Measurement](coverage-a-plus-20260921/product-wide-profile-5c3e6c3a4.md).
 - Efficiency rule: focused tests while implementing, bounded review and

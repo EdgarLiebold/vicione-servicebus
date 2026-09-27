@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10876 |
+| Added | 10880 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -223,6 +223,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t43-inbox-ownership-transitions.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t44-ef-store-contracts.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t45-inmemory-inbox-pipeline.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t46-transport-headers.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15191,6 +15192,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqMessageBodyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqRecoveryObserverTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqSendFailureClassifierTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqHeaderProviderTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendContextContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
@@ -15198,6 +15200,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionCreationFailureTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionListenerFailureTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/MessageProducerCacheTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/PrimitiveMapHeadersTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/TemporaryDestinationOwnershipTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/TransportHeaderExtensionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ApiSurfaceGlobalUsings.cs` | Added |  |
@@ -15246,6 +15249,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests.csproj` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonHeaderValueConverterTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchIdentityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchResponseTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatcherCancellationTests.cs` | Added |  |

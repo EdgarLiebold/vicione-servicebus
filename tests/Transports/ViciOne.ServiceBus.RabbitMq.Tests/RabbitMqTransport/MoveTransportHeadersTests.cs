@@ -16,7 +16,11 @@ public sealed class MoveTransportHeadersTests
 
         headers.Set("existing", "first");
         headers.Set("existing", "ignored", overwrite: false);
+        Assert.Equal("first", properties.Headers!["existing"]);
+        headers.Set("existing", null, overwrite: false);
+        Assert.Equal("first", properties.Headers["existing"]);
         headers.Set("new", 17, overwrite: false);
+        Assert.Equal(17, properties.Headers["new"]);
         headers.Set("missing", null, overwrite: false);
         headers.Set("existing", "replaced", overwrite: true);
         headers.Set("new", null, overwrite: true);
@@ -28,6 +32,35 @@ public sealed class MoveTransportHeadersTests
         Assert.False(properties.Headers.ContainsKey("missing"));
         Assert.Equal("key", Assert.Throws<ArgumentNullException>(() => headers.Set(null!, "value")).ParamName);
         Assert.Equal("key", Assert.Throws<ArgumentNullException>(() => headers.Set(null!, 1, true)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-MOVE-HEADERS", "empty-table-and-string-removal-preserve-neighbors")]
+    public void EmptyTableAndStringRemoval_PreserveAbsenceAndUnrelatedValues()
+    {
+        var properties = new BasicProperties();
+        var headers = new MoveTransportHeaders(properties);
+
+        Assert.Null(properties.Headers);
+        Assert.False(headers.TryGetHeader("missing", out object? missing));
+        Assert.Null(missing);
+        Assert.Empty(headers.GetAll());
+        Assert.Empty(headers);
+        Assert.Empty(((System.Collections.IEnumerable)headers).Cast<HeaderValue>());
+        Assert.Null(properties.Headers);
+
+        headers.Set("target", "remove");
+        headers.Set("neighbor", false, true);
+        headers.Set("target", null);
+        headers.Set("missing", null);
+
+        Assert.False(headers.TryGetHeader("target", out object? removed));
+        Assert.Null(removed);
+        HeaderValue retained = Assert.Single(((System.Collections.IEnumerable)headers).Cast<HeaderValue>());
+        Assert.Equal("neighbor", retained.Key);
+        Assert.False(Assert.IsType<bool>(retained.Value));
+        Assert.Single(properties.Headers!);
+        Assert.False(Assert.IsType<bool>(properties.Headers!["neighbor"]));
     }
 
     [Fact]

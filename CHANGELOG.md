@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed ActiveMQ receive timestamps being shifted by the local UTC offset when
+  the OpenWire SDK returns a local DateTime. The provider now converts the
+  timestamp to UTC before checking epoch eligibility and exposing its instant.
+  Regression cases use real OpenWire and AMQP message objects, preserve exact
+  milliseconds and reject timestamps at or before the epoch. The combined
+  transport-header packet also verifies native-map overwrite/removal, RabbitMQ
+  reserved metadata and SNS/SQS filtering of normalized scalar values.
+  All four selected deliberate faults are detected; restored isolated checks
+  pass21/21 ActiveMQ,21/21 RabbitMQ and13/13 SNS/SQS including requirement
+  projections. Read-only reviews found no concrete blocker. The final
+  product-wide measurement remains in progress; no global A+ claim is made.
+
 - Added six InMemory reliable-inbox behavior cases for ownership changes during
   consumer failure, delayed consumer commits and admission rejection followed by
   explicit operator recovery. Assertions prove discarded buffered messages,

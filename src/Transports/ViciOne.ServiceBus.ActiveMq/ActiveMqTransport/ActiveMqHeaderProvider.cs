@@ -58,9 +58,13 @@ public class ActiveMqHeaderProvider :
 
         if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
-            if (_message.NMSTimestamp > DateTimeConstants.Epoch.UtcDateTime)
+            DateTime timestamp = _message.NMSTimestamp;
+            DateTime utcTimestamp = timestamp.Kind == DateTimeKind.Local
+                ? timestamp.ToUniversalTime()
+                : DateTime.SpecifyKind(timestamp, DateTimeKind.Utc);
+            if (utcTimestamp > DateTimeConstants.Epoch.UtcDateTime)
             {
-                value = new DateTimeOffset(DateTime.SpecifyKind(_message.NMSTimestamp, DateTimeKind.Utc));
+                value = new DateTimeOffset(utcTimestamp);
                 return true;
             }
         }
